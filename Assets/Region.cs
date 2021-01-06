@@ -166,6 +166,10 @@ namespace Assets
             }
 
             public float LengthSqr => x * x + y * y;
+
+            public static Point operator -(Point a, Point b) => new Point(a.x - b.x, a.y - b.y); 
+            public static explicit operator Point(Vector2 v) => new Point((int) v.x, (int) v.y);
+            public static implicit operator Vector2(Point p) => new Vector2(p.x, p.y);
         }
 
         public IEnumerable<Point> Neighbors(Point p)

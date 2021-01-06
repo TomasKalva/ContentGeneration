@@ -14,11 +14,15 @@ namespace Assets
 
     class Agents
     {
+        private int simulationSpeed;
         List<Agent> agents;
+        List<Spawner> spawners;
 
-        public Agents()
+        public Agents(int simulationSpeed)
         {
             this.agents = new List<Agent>();
+            this.spawners = new List<Spawner>();
+            this.simulationSpeed = simulationSpeed;
         }
 
         public void AddAgent(Agent agent)
@@ -26,41 +30,58 @@ namespace Assets
             agents.Add(agent);
         }
 
+        public void AddSpawner(Spawner spawner)
+        {
+            spawners.Add(spawner);
+        }
+
         public IEnumerator Step(TerrainMap map, Mesh mesh, MeshCollider meshCollider)
+        {
+            while (true)
+            {
+                for (int i = 0; i < simulationSpeed; i++)
+                {
+                    if (spawners.Any())
+                    {
+                        var s = spawners.First();
+                        s.Step(this, map);
+                        if (s.Finished)
+                            spawners.Remove(s);
+                    }
+                    foreach (var a in agents)
+                    {
+                        a.Step(map);
+                    }
+                    agents.RemoveAll(a => a.Finished);
+                }
+                map.UpdateMesh(mesh, meshCollider);
+                yield return new WaitForSeconds(0.01f);
+            }
+        }
+
+        public IEnumerable WaitUntilAgentsFinish()
         {
             while (agents.Any())
             {
-                foreach (var a in agents)
-                {
-                    for(int i=0;i<100;i++)
-                        a.Step(map);
-                }
-                map.UpdateMesh(mesh, meshCollider);
-                agents.RemoveAll(a => a.Finished);
-                yield return new WaitForSeconds(0.01f);
+                yield return null;
             }
         }
     }
 
     abstract class Agent
     {
-        public int X { get; protected set; }
-        public int Y { get; protected set; }
+        public Vector2 Position { get; protected set; }
         protected int Steps { get; set; }
-        public Agent()
+        private Brush brush;
+        public Agent(Brush brush)
         {
             Steps = int.MaxValue;
-            X = 50;
-            Y = 50;
+            SetPosition(new Vector2(50f, 50f));
+            this.brush = brush;
         }
-        public Agent SetX(int x)
+        public Agent SetPosition(Vector2 pos)
         {
-            X = x;
-            return this;
-        }
-        public Agent SetY(int y)
-        {
-            Y = y;
+            Position = pos;
             return this;
         }
         public Agent SetSteps(int steps)
@@ -71,147 +92,89 @@ namespace Assets
         public void Step(TerrainMap map)
         {
             StepLogic(map);
-            Move(Random.Range(0, 3) - 1, Random.Range(0, 3) - 1, map);
+            brush.Stroke(map, Position);
             Steps--;
+        }
+        protected void Move(float dx, float dy, TerrainMap map)
+        {
+            Position = new Vector2((Position.x + dx + map.Width) % map.Width, (Position.y + dy + map.Height) % map.Height);
         }
         public abstract void StepLogic(TerrainMap map);
         public bool Finished => Steps <= 0;
-        private void Move(int dx, int dy, TerrainMap map)
-        {
-            X = (X + dx + map.Width) % map.Width;
-            Y = (Y + dy + map.Height) % map.Height;
-        }
     }
 }
 
-class IncreasingAgent : Agent
+class BasicAgent : Agent
 {
-    public IncreasingAgent()
+    public BasicAgent(Brush brush):base(brush)
     {
     }
 
     public override void StepLogic(TerrainMap map)
     {
-        map.ChangeHeight(X, Y, Random.value * 0.1f);
+        //Move(Random.Range(0, 3) - 1, Random.Range(0, 3) - 1, map);
+        var angle = Random.value * 2 * Mathf.PI;
+        Move(Mathf.Cos(angle), Mathf.Sin(angle), map);
     }
 }
 
-class BrushAgent : Agent
+class RepulsedAgent : Agent
 {
-    Brush brush;
+    Vector2 repulsor;
 
-    public BrushAgent(Brush brush)
+    public RepulsedAgent(Brush brush, Vector2 repulsor) : base(brush)
     {
-        this.brush = brush;
+        this.repulsor = repulsor;
+    }
+
+    private float InverseSmoothstep(float y)
+    {
+        return 0.5f - Mathf.Sin(Mathf.Asin(1.0f - 2.0f * y) / 3.0f);
     }
 
     public override void StepLogic(TerrainMap map)
     {
-        brush.Stroke(map, X, Y);
+        var diff = repulsor - Position;
+        var aToRepulsor = Mathf.Atan2(diff.y, diff.x);
+        var rand = Random.value;
+        var angle = aToRepulsor + 2 * Mathf.PI * InverseSmoothstep(rand);
+        Move(Mathf.Cos(angle), Mathf.Sin(angle), map);
     }
 }
 
-class AveragerAgent : Agent
+class ClimbinAgent : Agent
 {
-    private Area area;
-    private Function function;
-    float averagingSpeed;
-
-    public AveragerAgent(Area area, Function function, float averagingSpeed)
+    public ClimbinAgent(Brush brush) : base(brush)
     {
-        this.area = area;
-        this.function = function;
-        this.averagingSpeed = averagingSpeed;
     }
 
     public override void StepLogic(TerrainMap map)
     {
-        float totalChange = 0f;
-        foreach (var p in area.GetPoints())
-        {
-            var coords = area.ToAbsolute(new Point(X,Y), p);
-            totalChange += function.Apply(p, map[coords]);
-        }
-        foreach(var p in area.GetPoints())
-        {
-            var coords = area.ToAbsolute(new Point(X, Y), p);
-            map[coords] = map[coords] * (1 - averagingSpeed) + totalChange * averagingSpeed;
-        }
-        //map.SetHeight(X, Y, totalChange);
+        var newPoint = map.GetNeighbors((Point)Position).MaxArg(p => map[p]);
+        var d = newPoint - Position;
+        Move(d.x, d.y, map);
     }
 }
 
-class AreaChangerAgent : Agent
+class DescendingAgent : Agent
 {
-    private Area area;
-    private Function function;
+    float? height;
 
-    public AreaChangerAgent(Area area, Function function)
+    public DescendingAgent(Brush brush) : base(brush)
     {
-        this.area = area;
-        this.function = function;
     }
 
     public override void StepLogic(TerrainMap map)
     {
-        foreach (var p in area.GetPoints())
+        var newPoint = map.GetNeighbors((Point)Position).MinArg(p => map[p]);
+        var newHeight = map[newPoint];
+        // end if height can't be changed anymore
+        if (height != null && height.Value - newHeight < 0.0001f)
         {
-            var coords = area.ToAbsolute(new Point(X, Y), p);
-            map[coords] += function.Apply(p, map[coords]);
+            Steps = 0;
         }
-    }
-}
-
-abstract class Brush
-{
-    public abstract void Stroke(TerrainMap map, int x, int y);
-}
-
-class AreaChangerBrush : Brush
-{
-    private Area area;
-    private Function function;
-
-    public AreaChangerBrush(Area area, Function function)
-    {
-        this.area = area;
-        this.function = function;
-    }
-    public override void Stroke(TerrainMap map, int x, int y)
-    {
-        foreach (var p in area.GetPoints())
-        {
-            var coords = area.ToAbsolute(new Point(x, y), p);
-            map[coords] += function.Apply(p, map[coords]);
-        }
-    }
-}
-
-class AveragerBrush : Brush
-{
-    Area area;
-    Function function;
-    float averagingSpeed;
-
-    public AveragerBrush(Area area, Function function, float averagingSpeed)
-    {
-        this.area = area;
-        this.function = function;
-        this.averagingSpeed = averagingSpeed;
-    }
-
-    public override void Stroke(TerrainMap map, int x, int y)
-    {
-        float totalChange = 0f;
-        foreach (var p in area.GetPoints())
-        {
-            var coords = area.ToAbsolute(new Point(x, y), p);
-            totalChange += function.Apply(p, map[coords]);
-        }
-        foreach (var p in area.GetPoints())
-        {
-            var coords = area.ToAbsolute(new Point(x, y), p);
-            map[coords] = map[coords] * (1 - averagingSpeed) + totalChange * averagingSpeed;
-        }
+        height = newHeight;
+        var d = newPoint - Position;
+        Move(d.x, d.y, map);
     }
 }

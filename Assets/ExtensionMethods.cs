@@ -15,6 +15,12 @@ namespace Assets
             return list[i];
         }
 
+        public static T GetRandom<T>(this IEnumerable<T> enumerable)
+        {
+            var i = UnityEngine.Random.Range(0, enumerable.Count());
+            return enumerable.ElementAt(i);
+        }
+
         public static T MaxArg<T>(this IEnumerable<T> enumerable, Func<T, float> f)
         {
             var best = enumerable.FirstOrDefault();
@@ -29,6 +35,11 @@ namespace Assets
                 }
             }
             return best;
+        }
+
+        public static T MinArg<T>(this IEnumerable<T> enumerable, Func<T, float> f)
+        {
+            return enumerable.MaxArg(a => -f(a));
         }
 
         public static int PlusMinusOne()

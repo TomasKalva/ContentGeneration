@@ -5,39 +5,35 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static Assets.Region;
+using Random = UnityEngine.Random;
 
 public class TerrainGenerator : MonoBehaviour
 {
-    
+    public int simulationSpeed;
+    public int mapWidth;
+    public int mapHeight;
 
     void Start()
     {
         Mesh mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
         var meshCollider = GetComponent<MeshCollider>();
-        var terrainMap = new TerrainMap(200, 200, 0.1f);
+        var terrainMap = new TerrainMap(mapWidth, mapHeight, 0.1f);
         terrainMap.UpdateMesh(mesh, meshCollider);
         var b1 = new Vector2(0.1f, 0.0f);
         var b2 = new Vector2(0.0f, 0.1f);
 
-        var agents = new Agents();
-        /*agents.AddAgent(new IncreasingAgent());
-        agents.AddAgent(new IncreasingAgent());*/
-        var averagerBrush = new AveragerBrush(new Rectangle(-2, -2, 2, 2), new Linear(1 / 25f), 0.01f);
-        var strongAveragerBrush = new AveragerBrush(new Rectangle(-2, -2, 2, 2), new Linear(1 / 25f), 0.1f);
-        var largeHillBrush = new AreaChangerBrush(new Circle(5), new Parabola(0.004f, 0.5f, b1, b2));
-        var smallHillBrush = new AreaChangerBrush(new Circle(3),new Parabola(0.03f, 0.1f, b1, b2));
-        var riverBrush = new AreaChangerBrush(new Circle(4), new Parabola(-0.006f, 0.3f, b1, b2));
+        var agents = new Agents(simulationSpeed);
+        agents.AddSpawner(new NoiseMapSpawner());
+        agents.AddSpawner(new VolcanoSpawner(50, new Point(50, 50), 5, 80, 30, 50));
+        /*agents.AddSpawner(new VolcanoSpawner(30, new Point(50, 70), 5, 80, 20, 50));
+        agents.AddSpawner(new VolcanoSpawner(30, new Point(50, 90), 5, 80, 20, 50));
+        agents.AddSpawner(new VolcanoSpawner(30, new Point(50, 110), 5, 80, 20, 50));
 
-        agents.AddAgent(new BrushAgent(averagerBrush));
-        agents.AddAgent(new BrushAgent(averagerBrush));
-        agents.AddAgent(new BrushAgent(averagerBrush));
-        agents.AddAgent(new BrushAgent(strongAveragerBrush));
 
-        agents.AddAgent(new BrushAgent(largeHillBrush));
-        agents.AddAgent(new BrushAgent(smallHillBrush));
-        agents.AddAgent(new BrushAgent(smallHillBrush));
-        agents.AddAgent(new BrushAgent(riverBrush));
+        agents.AddSpawner(new RandomMapSpawner());*/
+        //agents.AddSpawner(new SmoothingAgentsSpawner());
+
 
         StartCoroutine(agents.Step(terrainMap, mesh, meshCollider));
     }
@@ -47,6 +43,12 @@ public class TerrainGenerator : MonoBehaviour
     {
         
     }
+}
+
+static class DrawingParameters
+{
+    public static Vector2 b1 = new Vector2(0.1f, 0.0f);
+    public static Vector2 b2 = new Vector2(0.0f, 0.1f);
 }
 
 class TerrainMap
@@ -80,7 +82,7 @@ class TerrainMap
         {
             for (int j = 0; j < height; j++)
             {
-                vertices[i + j * height] = new Vector3(i * side, 0, j * side);
+                vertices[i + j * height] = new Vector3(i * DrawingParameters.b1.x, 0, j * DrawingParameters.b2.y);
             }
         }
 
@@ -118,8 +120,8 @@ class TerrainMap
         mesh.triangles = triangles;
         mesh.RecalculateNormals();
 
-        /*meshCollider.sharedMesh = null;
-        meshCollider.sharedMesh = mesh;*/
+        meshCollider.sharedMesh = null;
+        meshCollider.sharedMesh = mesh;
     }
 
     public void ChangeHeight(int x, int y, float change)
@@ -130,6 +132,20 @@ class TerrainMap
     {
         vertices[VertexIndex(x, y)].y = change;
     }
+
+    public IEnumerable<Point> GetNeighbors(Point p)
+    {
+        yield return new Point(p.x - 1, p.y);
+        yield return new Point(p.x - 1, p.y + 1);
+        yield return new Point(p.x, p.y + 1);
+        yield return new Point(p.x + 1, p.y + 1);
+        yield return new Point(p.x +1, p.y);
+        yield return new Point(p.x + 1, p.y - 1);
+        yield return new Point(p.x, p.y - 1);
+        yield return new Point(p.x - 1, p.y - 1);
+    }
+
+    public Point RandomPoint => new Point(Random.Range(0, Width), Random.Range(0, Height));
 }
 
 abstract class Area
@@ -143,6 +159,11 @@ abstract class Area
     /// Maps points from area space to absolute world space.
     /// </summary>
     public abstract Point ToAbsolute(Point newOrigin, Point p);
+
+    public IEnumerable<Point> GetAbsolutePoints(Point newOrigin)
+    {
+        return GetPoints().Select(p => ToAbsolute(newOrigin, p));
+    }
 }
 
 class Rectangle : Area
