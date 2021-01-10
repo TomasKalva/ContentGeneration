@@ -97,7 +97,7 @@ public class MovingSphere : MonoBehaviour {
 
 	void FixedUpdate ()
 	{
-		TryDisableGravity();
+		//TryDisableGravity();
 		UpdateState();
 		AdjustVelocity();
 
