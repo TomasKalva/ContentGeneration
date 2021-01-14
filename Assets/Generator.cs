@@ -145,9 +145,9 @@ class GeneticAlgorithm
         for (int i = 0; i < genCount; i++)
         {
             Best = population.MaxArg(Fitness).Clone();
+            Selection();
             Crossover();
             Mutation();
-            Selection();
             // elitism
             population[0] = Best;
             yield return null;

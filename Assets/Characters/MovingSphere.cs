@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class MovingSphere : MonoBehaviour {
 
@@ -35,9 +36,9 @@ public class MovingSphere : MonoBehaviour {
 
 	bool desiredJump;
 
-	public Vector3 contactNormal, steepNormal;
+	Vector3 contactNormal, steepNormal;
 
-	public int groundContactCount, steepContactCount;
+	int groundContactCount, steepContactCount;
 
 	bool OnGround => groundContactCount > 0;
 
@@ -51,6 +52,28 @@ public class MovingSphere : MonoBehaviour {
 
 	Vector3 upAxis, rightAxis, forwardAxis;
 
+	public abstract class Ability
+    {
+		public abstract void DoLogic(MovingSphere player);
+    }
+
+    public class JumpAbility : Ability
+    {
+		float speed;
+
+        public JumpAbility(float speed)
+        {
+            this.speed = speed;
+        }
+
+        public override void DoLogic(MovingSphere player)
+        {
+			player.JumpNoChecks(speed);
+        }
+    }
+
+    List<Ability> abilityQueue;
+
 	void OnValidate () {
 		minGroundDotProduct = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad);
 		minStairsDotProduct = Mathf.Cos(maxStairsAngle * Mathf.Deg2Rad);
@@ -59,6 +82,7 @@ public class MovingSphere : MonoBehaviour {
 	void Awake () {
 		body = GetComponent<Rigidbody>();
 		upAxis = Vector3.up;
+		abilityQueue = new List<Ability>();
 		OnValidate();
 	}
 
@@ -95,6 +119,14 @@ public class MovingSphere : MonoBehaviour {
 		}
 	}
 
+	void PreventWallCollision()
+    {
+		if(body.SweepTest(velocity.normalized, out var info, velocity.magnitude * Time.fixedDeltaTime)){
+			velocity -= Vector3.Dot(info.normal, velocity) * info.normal;
+			//velocity = new Vector3(0f, velocity.y, 0f);  
+		}
+    }
+
 	void FixedUpdate ()
 	{
 		//TryDisableGravity();
@@ -105,6 +137,14 @@ public class MovingSphere : MonoBehaviour {
 			desiredJump = false;
 			Jump(Physics.gravity);
 		}
+
+		foreach(var ablity in abilityQueue)
+        {
+			ablity.DoLogic(this);
+        }
+		abilityQueue.Clear();
+
+		PreventWallCollision();
 
 		body.velocity = velocity;
 		ClearState();
@@ -158,6 +198,7 @@ public class MovingSphere : MonoBehaviour {
 		if (dot > 0f) {
 			velocity = (velocity - hit.normal * dot).normalized * speed;
 		}
+		Debug.Log($"Snapped to ground. Steps since last grounded: {stepsSinceLastGrounded}, Steps since last jump: {stepsSinceLastJump}");
 		return true;
 	}
 
@@ -204,10 +245,6 @@ public class MovingSphere : MonoBehaviour {
 		if (OnGround) {
 			jumpDirection = contactNormal;
 		}
-		else if (OnSteep) {
-			jumpDirection = steepNormal;
-			jumpPhase = 0;
-		}
 		else if (maxAirJumps > 0 && jumpPhase <= maxAirJumps) {
 			if (jumpPhase == 0) {
 				jumpPhase = 1;
@@ -215,19 +252,37 @@ public class MovingSphere : MonoBehaviour {
 			jumpDirection = contactNormal;
 		}
 		else {
+			Debug.Log("Can't jump because not grounded and too many air jumps.");
 			return;
 		}
 
-		stepsSinceLastJump = 0;
-		jumpPhase += 1;
+
+
+		/*stepsSinceLastJump = 0;
+		jumpPhase += 1;*/
 		float jumpSpeed = Mathf.Sqrt(2f * gravity.magnitude * jumpHeight);
-		jumpDirection = (jumpDirection + upAxis).normalized;
+		JumpNoChecks(jumpSpeed);
+		/*jumpDirection = (jumpDirection + upAxis).normalized;
 		float alignedSpeed = Vector3.Dot(velocity, jumpDirection);
 		if (alignedSpeed > 0f) {
 			jumpSpeed = Mathf.Max(jumpSpeed - alignedSpeed, 0f);
 		}
-		velocity += jumpDirection * jumpSpeed;
+		velocity += jumpDirection * jumpSpeed;*/
 	}
+
+	public void JumpNoChecks(float speed)
+    {
+		stepsSinceLastJump = 0;
+		jumpPhase += 1;
+		velocity = Vector3.up * speed;
+		body.velocity = velocity;
+		Debug.Log(velocity);
+	}
+
+	public void PerformAbility(Ability ability)
+    {
+		abilityQueue.Add(ability);
+    }
 
 	void OnCollisionEnter (Collision collision) {
 		EvaluateCollision(collision);
