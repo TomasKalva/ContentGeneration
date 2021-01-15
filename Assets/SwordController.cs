@@ -1,14 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static MovingSphere;
+using static MovingAgent;
 
 [RequireComponent(typeof(Collider)),RequireComponent(typeof(Animator))]
 public class SwordController : MonoBehaviour
 {
     Animator animator;
     [SerializeField]
-    MovingSphere owner;
+    MovingAgent owner;
 
     // Start is called before the first frame update
     void Start()
@@ -29,7 +29,7 @@ public class SwordController : MonoBehaviour
     {
         if (other.tag == "Enemy")
         {
-            owner.PerformAbility(new JumpAbility(15f));// JumpNoChecks(20f);
+            owner.PerformInstruction(new JumpInstruction(15f));// JumpNoChecks(20f);
         }
     }
 }

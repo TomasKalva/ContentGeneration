@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Assets;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class MovingSphere : MonoBehaviour {
+
+public class MovingAgent : MonoBehaviour {
 
 	[SerializeField, Range(0f, 100f)]
 	float maxSpeed = 10f;
@@ -51,10 +53,48 @@ public class MovingSphere : MonoBehaviour {
 	int stepsSinceLastGrounded, stepsSinceLastJump;
 
 	Vector3 upAxis, rightAxis, forwardAxis;
+	bool fixedUpdateHappened;
+
+	public abstract class AgentInstruction
+	{
+		public abstract void Do(MovingAgent movingAgent);
+	}
+
+	public class JumpInstruction : AgentInstruction
+	{
+		float speed;
+
+		public JumpInstruction(float speed)
+		{
+			this.speed = speed;
+		}
+
+		public override void Do(MovingAgent player)
+		{
+			player.JumpNoChecks(speed);
+		}
+	}
+
+	public class MoveInstruction : AgentInstruction
+	{
+		Vector2 direction;
+
+		public MoveInstruction(Vector2 direction)
+		{
+			this.direction = direction;
+		}
+
+		public override void Do(MovingAgent player)
+		{
+			player.desiredVelocity =
+				new Vector3(direction.x, 0f, direction.y) * player.maxSpeed;
+		}
+	}
+
 
 	public abstract class Ability
     {
-		public abstract void DoLogic(MovingSphere player);
+		public abstract void DoLogic(MovingAgent player);
     }
 
     public class JumpAbility : Ability
@@ -66,13 +106,13 @@ public class MovingSphere : MonoBehaviour {
             this.speed = speed;
         }
 
-        public override void DoLogic(MovingSphere player)
+        public override void DoLogic(MovingAgent player)
         {
 			player.JumpNoChecks(speed);
         }
     }
 
-    List<Ability> abilityQueue;
+    public List<AgentInstruction> instructionQueue;
 
 	void OnValidate () {
 		minGroundDotProduct = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad);
@@ -82,55 +122,47 @@ public class MovingSphere : MonoBehaviour {
 	void Awake () {
 		body = GetComponent<Rigidbody>();
 		upAxis = Vector3.up;
-		abilityQueue = new List<Ability>();
+		instructionQueue = new List<AgentInstruction>();
+		fixedUpdateHappened = false;
 		OnValidate();
 	}
 
 	void Update () {
-		Vector2 playerInput;
+		/*Vector2 playerInput;
 		playerInput.x = Input.GetAxis("Horizontal");
 		playerInput.y = Input.GetAxis("Vertical");
 		playerInput = Vector2.ClampMagnitude(playerInput, 1f);
 		if (playerInputSpace != null)
 		{
-			rightAxis = ProjectDirectionOnPlane(playerInputSpace.right, upAxis);
-			forwardAxis = ProjectDirectionOnPlane(playerInputSpace.forward, upAxis);
+			rightAxis = ExtensionMethods.ProjectDirectionOnPlane(playerInputSpace.right, upAxis);
+			forwardAxis = ExtensionMethods.ProjectDirectionOnPlane(playerInputSpace.forward, upAxis);
 		}
 		else
 		{
-			rightAxis = ProjectDirectionOnPlane(Vector3.right, upAxis);
-			forwardAxis = ProjectDirectionOnPlane(Vector3.forward, upAxis);
+			rightAxis = ExtensionMethods.ProjectDirectionOnPlane(Vector3.right, upAxis);
+			forwardAxis = ExtensionMethods.ProjectDirectionOnPlane(Vector3.forward, upAxis);
 		}
 		desiredVelocity =
 		new Vector3(playerInput.x, 0f, playerInput.y) * maxSpeed;
 
-		desiredJump |= Input.GetButtonDown("Jump");
-	}
-
-	void TryDisableGravity()
-    {
-		if (!OnGround)
-		{
-			body.useGravity = true;
-		}
-		else
-		{
-			body.useGravity = false;
-		}
+		desiredJump |= Input.GetButtonDown("Jump");*/
 	}
 
 	void PreventWallCollision()
     {
 		if(body.SweepTest(velocity.normalized, out var info, velocity.magnitude * Time.fixedDeltaTime)){
 			velocity -= Vector3.Dot(info.normal, velocity) * info.normal;
-			//velocity = new Vector3(0f, velocity.y, 0f);  
 		}
     }
 
 	void FixedUpdate ()
 	{
-		//TryDisableGravity();
 		UpdateState();
+
+		foreach (var instruction in instructionQueue)
+		{
+			instruction.Do(this);
+		}
 		AdjustVelocity();
 
 		if (desiredJump) {
@@ -138,16 +170,12 @@ public class MovingSphere : MonoBehaviour {
 			Jump(Physics.gravity);
 		}
 
-		foreach(var ablity in abilityQueue)
-        {
-			ablity.DoLogic(this);
-        }
-		abilityQueue.Clear();
 
 		PreventWallCollision();
 
 		body.velocity = velocity;
 		ClearState();
+		fixedUpdateHappened = true;
 	}
 
 	void ClearState () {
@@ -216,9 +244,12 @@ public class MovingSphere : MonoBehaviour {
 		return false;
 	}
 
-	void AdjustVelocity () {
-		Vector3 xAxis = ProjectDirectionOnPlane(rightAxis, contactNormal).normalized;
-		Vector3 zAxis = ProjectDirectionOnPlane(forwardAxis, contactNormal).normalized;
+	void AdjustVelocity ()
+	{
+		rightAxis = ExtensionMethods.ProjectDirectionOnPlane(playerInputSpace.right, upAxis);
+		forwardAxis = ExtensionMethods.ProjectDirectionOnPlane(playerInputSpace.forward, upAxis);
+		Vector3 xAxis = ExtensionMethods.ProjectDirectionOnPlane(rightAxis, contactNormal).normalized;
+		Vector3 zAxis = ExtensionMethods.ProjectDirectionOnPlane(forwardAxis, contactNormal).normalized;
 
 		//when moving up, the y vector shouldn't be projected to the plane
 		var xzVelocity = velocity - velocity.y * Vector3.up;
@@ -232,10 +263,6 @@ public class MovingSphere : MonoBehaviour {
 			Mathf.MoveTowards(currentX, desiredVelocity.x, maxSpeedChange);
 		float newZ =
 			Mathf.MoveTowards(currentZ, desiredVelocity.z, maxSpeedChange);
-		//Debug.Log("currentX: " +  currentX + "; currentZ: " +  currentZ);
-		//Debug.Log("newX: " + newX + "; newZ: " + newZ);
-		//Debug.Log("diffX: " + (newX - currentX) + "; diffZ: " + (newZ - currentZ));
-		//Debug.Log("velocity X: " + velocity.x + "; Z: " + velocity.z);
 
 		velocity += xAxis * (newX - currentX) + zAxis * (newZ - currentZ);
 	}
@@ -256,18 +283,8 @@ public class MovingSphere : MonoBehaviour {
 			return;
 		}
 
-
-
-		/*stepsSinceLastJump = 0;
-		jumpPhase += 1;*/
 		float jumpSpeed = Mathf.Sqrt(2f * gravity.magnitude * jumpHeight);
 		JumpNoChecks(jumpSpeed);
-		/*jumpDirection = (jumpDirection + upAxis).normalized;
-		float alignedSpeed = Vector3.Dot(velocity, jumpDirection);
-		if (alignedSpeed > 0f) {
-			jumpSpeed = Mathf.Max(jumpSpeed - alignedSpeed, 0f);
-		}
-		velocity += jumpDirection * jumpSpeed;*/
 	}
 
 	public void JumpNoChecks(float speed)
@@ -279,10 +296,19 @@ public class MovingSphere : MonoBehaviour {
 		Debug.Log(velocity);
 	}
 
-	public void PerformAbility(Ability ability)
+	public void PerformInstruction(AgentInstruction instruction)
     {
-		abilityQueue.Add(ability);
+		instructionQueue.Add(instruction);
     }
+
+	public void TryClearInstructions()
+    {
+        if (fixedUpdateHappened)
+        {
+			instructionQueue.Clear();
+        }
+		fixedUpdateHappened = false;
+	}
 
 	void OnCollisionEnter (Collision collision) {
 		EvaluateCollision(collision);
@@ -306,11 +332,6 @@ public class MovingSphere : MonoBehaviour {
 				steepNormal += normal;
 			}
 		}
-	}
-
-	Vector3 ProjectDirectionOnPlane(Vector3 direction, Vector3 normal)
-	{
-		return (direction - Vector3.Dot(direction, normal) * normal).normalized;
 	}
 
 	float GetMinDot (int layer) {

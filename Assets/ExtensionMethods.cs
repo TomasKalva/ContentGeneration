@@ -46,5 +46,10 @@ namespace Assets
         {
             return UnityEngine.Random.Range(0, 2) == 0 ? 1 : -1;
         }
+
+        public static Vector3 ProjectDirectionOnPlane(Vector3 direction, Vector3 normal)
+        {
+            return (direction - Vector3.Dot(direction, normal) * normal).normalized;
+        }
     }
 }
