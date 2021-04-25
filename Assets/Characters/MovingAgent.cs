@@ -36,6 +36,8 @@ public class MovingAgent : MonoBehaviour {
 
 	Vector3 velocity, desiredVelocity;
 
+	Vector3 direction;
+
 	bool desiredJump;
 
 	Vector3 contactNormal, steepNormal;
@@ -125,6 +127,7 @@ public class MovingAgent : MonoBehaviour {
 		instructionQueue = new List<AgentInstruction>();
 		fixedUpdateHappened = false;
 		OnValidate();
+		direction = Vector3.forward;
 	}
 
 	void Update () {
@@ -164,6 +167,7 @@ public class MovingAgent : MonoBehaviour {
 			instruction.Do(this);
 		}
 		AdjustVelocity();
+		AdjustDirection();
 
 		if (desiredJump) {
 			desiredJump = false;
@@ -242,6 +246,15 @@ public class MovingAgent : MonoBehaviour {
 			}
 		}
 		return false;
+	}
+
+	void AdjustDirection()
+    {
+		if (velocity.sqrMagnitude > 0.01)
+		{
+			direction = Vector3.Lerp(direction, velocity - new Vector3(0f, velocity.y, 0f), 0.2f);
+			body.rotation = Quaternion.FromToRotation(Vector3.forward, direction);
+		}
 	}
 
 	void AdjustVelocity ()
