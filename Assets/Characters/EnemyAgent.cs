@@ -13,7 +13,13 @@ public class EnemyAgent : MonoBehaviour
 	[SerializeField]
 	Transform targetPoint;
 
+	[SerializeField]
+	float minDistance;
 
+	bool GoToTarget()
+    {
+		return Vector3.Distance(transform.position, targetPoint.position) > minDistance;
+    }
 
 	// Start is called before the first frame update
 	void Start()
@@ -25,15 +31,17 @@ public class EnemyAgent : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-        if(!fighting.busy && fighting.CanAttack()){
+		movement.TryClearInstructions();
+
+		if (!fighting.busy && fighting.CanAttack()){
 			StartCoroutine(fighting.Attack());
         }
 
-        if (!fighting.busy)
+        if (!fighting.busy && GoToTarget())
 		{
 			Vector3 direction = targetPoint.position - movement.body.position;
 			Vector2 movementDirection = new Vector2(direction.x, direction.z);
-			movement.TryClearInstructions();
+			movementDirection = Vector2.ClampMagnitude(movementDirection, 1f);
 			movement.PerformInstruction(new MoveInstruction(movementDirection));
 		}
 	}
