@@ -2,12 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static MovingAgent;
+using static Movement;
 
-[RequireComponent(typeof(MovingAgent))]
-public class Character : MonoBehaviour
+[RequireComponent(typeof(Movement))]
+public class Agent : MonoBehaviour
 {
-	MovingAgent agent;
+	Movement movement;
 	[SerializeField]
 	Transform playerInputSpace;
 	Dictionary<string, AgentInstruction> instructions;
@@ -15,7 +15,7 @@ public class Character : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-		agent = GetComponent<MovingAgent>();
+		movement = GetComponent<Movement>();
 		instructions = new Dictionary<string, AgentInstruction>()
 		{
 			{"Jump", new JumpInstruction(15f) }
@@ -29,10 +29,10 @@ public class Character : MonoBehaviour
 		playerInput.x = Input.GetAxis("Horizontal");
 		playerInput.y = Input.GetAxis("Vertical");
 		playerInput = Vector2.ClampMagnitude(playerInput, 1f);
-		agent.TryClearInstructions();
+		movement.TryClearInstructions();
 		if (playerInputSpace != null)
 		{
-			agent.PerformInstruction(new MoveInstruction(playerInput));
+			movement.PerformInstruction(new MoveInstruction(playerInput));
 		}
 		else
 		{
@@ -43,7 +43,7 @@ public class Character : MonoBehaviour
         {
             if (Input.GetButtonDown(kvp.Key))
             {
-				agent.PerformInstruction(kvp.Value);
+				movement.PerformInstruction(kvp.Value);
             }
         }
 

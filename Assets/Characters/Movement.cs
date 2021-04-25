@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class MovingAgent : MonoBehaviour {
+public class Movement : MonoBehaviour {
 
 	[SerializeField, Range(0f, 100f)]
 	float maxSpeed = 10f;
@@ -32,7 +32,7 @@ public class MovingAgent : MonoBehaviour {
 	[SerializeField]
 	Transform playerInputSpace = default;
 
-	Rigidbody body;
+	public Rigidbody body;
 
 	Vector3 velocity, desiredVelocity;
 
@@ -57,9 +57,39 @@ public class MovingAgent : MonoBehaviour {
 	Vector3 upAxis, rightAxis, forwardAxis;
 	bool fixedUpdateHappened;
 
+	Vector3 Forward
+    {
+        get
+        {
+			if(playerInputSpace != null)
+            {
+				return playerInputSpace.forward;
+            }
+            else
+            {
+				return Vector3.forward;
+            }
+        }
+    }
+
+	Vector3 Right
+	{
+		get
+		{
+			if (playerInputSpace != null)
+			{
+				return playerInputSpace.right;
+			}
+			else
+			{
+				return Vector3.right;
+			}
+		}
+	}
+
 	public abstract class AgentInstruction
 	{
-		public abstract void Do(MovingAgent movingAgent);
+		public abstract void Do(Movement movingAgent);
 	}
 
 	public class JumpInstruction : AgentInstruction
@@ -71,7 +101,7 @@ public class MovingAgent : MonoBehaviour {
 			this.speed = speed;
 		}
 
-		public override void Do(MovingAgent player)
+		public override void Do(Movement player)
 		{
 			player.JumpNoChecks(speed);
 		}
@@ -86,7 +116,7 @@ public class MovingAgent : MonoBehaviour {
 			this.direction = direction;
 		}
 
-		public override void Do(MovingAgent player)
+		public override void Do(Movement player)
 		{
 			player.desiredVelocity =
 				new Vector3(direction.x, 0f, direction.y) * player.maxSpeed;
@@ -96,7 +126,7 @@ public class MovingAgent : MonoBehaviour {
 
 	public abstract class Ability
     {
-		public abstract void DoLogic(MovingAgent player);
+		public abstract void DoLogic(Movement player);
     }
 
     public class JumpAbility : Ability
@@ -108,7 +138,7 @@ public class MovingAgent : MonoBehaviour {
             this.speed = speed;
         }
 
-        public override void DoLogic(MovingAgent player)
+        public override void DoLogic(Movement player)
         {
 			player.JumpNoChecks(speed);
         }
@@ -128,27 +158,6 @@ public class MovingAgent : MonoBehaviour {
 		fixedUpdateHappened = false;
 		OnValidate();
 		direction = Vector3.forward;
-	}
-
-	void Update () {
-		/*Vector2 playerInput;
-		playerInput.x = Input.GetAxis("Horizontal");
-		playerInput.y = Input.GetAxis("Vertical");
-		playerInput = Vector2.ClampMagnitude(playerInput, 1f);
-		if (playerInputSpace != null)
-		{
-			rightAxis = ExtensionMethods.ProjectDirectionOnPlane(playerInputSpace.right, upAxis);
-			forwardAxis = ExtensionMethods.ProjectDirectionOnPlane(playerInputSpace.forward, upAxis);
-		}
-		else
-		{
-			rightAxis = ExtensionMethods.ProjectDirectionOnPlane(Vector3.right, upAxis);
-			forwardAxis = ExtensionMethods.ProjectDirectionOnPlane(Vector3.forward, upAxis);
-		}
-		desiredVelocity =
-		new Vector3(playerInput.x, 0f, playerInput.y) * maxSpeed;
-
-		desiredJump |= Input.GetButtonDown("Jump");*/
 	}
 
 	void PreventWallCollision()
@@ -259,8 +268,8 @@ public class MovingAgent : MonoBehaviour {
 
 	void AdjustVelocity ()
 	{
-		rightAxis = ExtensionMethods.ProjectDirectionOnPlane(playerInputSpace.right, upAxis);
-		forwardAxis = ExtensionMethods.ProjectDirectionOnPlane(playerInputSpace.forward, upAxis);
+		rightAxis = ExtensionMethods.ProjectDirectionOnPlane(Right, upAxis);
+		forwardAxis = ExtensionMethods.ProjectDirectionOnPlane(Forward, upAxis);
 		Vector3 xAxis = ExtensionMethods.ProjectDirectionOnPlane(rightAxis, contactNormal).normalized;
 		Vector3 zAxis = ExtensionMethods.ProjectDirectionOnPlane(forwardAxis, contactNormal).normalized;
 

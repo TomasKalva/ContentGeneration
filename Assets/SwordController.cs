@@ -1,14 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static MovingAgent;
+using static Movement;
 
 [RequireComponent(typeof(Collider)),RequireComponent(typeof(Animator))]
 public class SwordController : MonoBehaviour
 {
     Animator animator;
     [SerializeField]
-    MovingAgent owner;
+    Movement owner;
 
     // Start is called before the first frame update
     void Start()

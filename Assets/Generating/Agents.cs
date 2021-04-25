@@ -104,7 +104,7 @@ namespace Assets
     }
 }
 
-class BasicAgent : Agent
+class BasicAgent : Assets.Agent
 {
     public BasicAgent(Brush brush):base(brush)
     {
@@ -118,7 +118,7 @@ class BasicAgent : Agent
     }
 }
 
-class RepulsedAgent : Agent
+class RepulsedAgent : Assets.Agent
 {
     Vector2 repulsor;
 
@@ -142,7 +142,7 @@ class RepulsedAgent : Agent
     }
 }
 
-class ClimbinAgent : Agent
+class ClimbinAgent : Assets.Agent
 {
     public ClimbinAgent(Brush brush) : base(brush)
     {
@@ -156,7 +156,7 @@ class ClimbinAgent : Agent
     }
 }
 
-class DescendingAgent : Agent
+class DescendingAgent : Assets.Agent
 {
     float? height;
 
