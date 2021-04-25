@@ -29,7 +29,7 @@ public class SwordController : MonoBehaviour
     {
         if (other.tag == "Enemy")
         {
-            owner.PerformInstruction(new JumpInstruction(15f));// JumpNoChecks(20f);
+            owner.Jump(15f);// JumpNoChecks(20f);
         }
     }
 }

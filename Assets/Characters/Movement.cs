@@ -36,7 +36,7 @@ public class Movement : MonoBehaviour {
 
 	Vector3 velocity, desiredVelocity;
 
-	Vector3 direction;
+	Vector2 direction, desiredDirection;
 
 	bool desiredJump;
 
@@ -87,12 +87,33 @@ public class Movement : MonoBehaviour {
 		}
 	}
 
-	public abstract class AgentInstruction
+    #region API
+
+    public void Jump(float speed)
+    {
+		PerformInstruction(new JumpInstruction(speed));
+	}
+
+	public void Move(Vector2 direction)
+	{
+		PerformInstruction(new MoveInstruction(direction));
+	}
+
+	public void Turn(Vector2 direction)
+	{
+		PerformInstruction(new TurnInstruction(direction));
+	}
+
+    #endregion
+
+    #region Instructions
+
+    abstract class AgentInstruction
 	{
 		public abstract void Do(Movement movingAgent);
 	}
 
-	public class JumpInstruction : AgentInstruction
+	class JumpInstruction : AgentInstruction
 	{
 		float speed;
 
@@ -107,7 +128,7 @@ public class Movement : MonoBehaviour {
 		}
 	}
 
-	public class MoveInstruction : AgentInstruction
+	class MoveInstruction : AgentInstruction
 	{
 		Vector2 direction;
 
@@ -118,33 +139,32 @@ public class Movement : MonoBehaviour {
 
 		public override void Do(Movement player)
 		{
-			player.desiredVelocity =
-				new Vector3(direction.x, 0f, direction.y) * player.maxSpeed;
+			player.desiredVelocity = new Vector3(direction.x, 0f, direction.y) * player.maxSpeed;
+			if(player.desiredVelocity.sqrMagnitude > 0.1f)
+			{
+				player.desiredDirection = direction;
+			}
 		}
 	}
 
+	class TurnInstruction : AgentInstruction
+	{
+		Vector2 direction;
 
-	public abstract class Ability
-    {
-		public abstract void DoLogic(Movement player);
-    }
+		public TurnInstruction(Vector2 direction)
+		{
+			this.direction = direction;
+		}
 
-    public class JumpAbility : Ability
-    {
-		float speed;
+		public override void Do(Movement player)
+		{
+			player.desiredDirection = direction;
+		}
+	}
 
-        public JumpAbility(float speed)
-        {
-            this.speed = speed;
-        }
+	#endregion
 
-        public override void DoLogic(Movement player)
-        {
-			player.JumpNoChecks(speed);
-        }
-    }
-
-    public List<AgentInstruction> instructionQueue;
+	private List<AgentInstruction> instructionQueue;
 
 	void OnValidate () {
 		minGroundDotProduct = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad);
@@ -260,12 +280,11 @@ public class Movement : MonoBehaviour {
 	}
 
 	void AdjustDirection()
-    {
-		if (velocity.sqrMagnitude > 0.01)
-		{
-			direction = Vector3.Lerp(direction, velocity - new Vector3(0f, velocity.y, 0f), 0.2f);
-			body.rotation = Quaternion.FromToRotation(Vector3.forward, direction);
-		}
+	{
+		rightAxis = ExtensionMethods.ProjectDirectionOnPlane(Right, Vector3.up);
+		forwardAxis = ExtensionMethods.ProjectDirectionOnPlane(Forward, Vector3.up);
+		direction = Vector2.Lerp(direction, desiredDirection, 0.2f);
+		body.rotation = Quaternion.FromToRotation(Vector3.forward, direction.x * rightAxis + direction.y * forwardAxis/*new Vector3(direction.x, 0f, direction.y)*/);
 	}
 
 	void AdjustVelocity ()
@@ -317,10 +336,9 @@ public class Movement : MonoBehaviour {
 		jumpPhase += 1;
 		velocity = Vector3.up * speed;
 		body.velocity = velocity;
-		Debug.Log(velocity);
 	}
 
-	public void PerformInstruction(AgentInstruction instruction)
+	void PerformInstruction(AgentInstruction instruction)
     {
 		instructionQueue.Add(instruction);
     }

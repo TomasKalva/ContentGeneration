@@ -13,17 +13,12 @@ public class Agent : MonoBehaviour
 
 	[SerializeField]
 	Transform playerInputSpace;
-	Dictionary<string, AgentInstruction> instructions;
 
     // Start is called before the first frame update
     void Start()
     {
 		movement = GetComponent<Movement>();
 		fighting = GetComponent<Fighting>();
-		instructions = new Dictionary<string, AgentInstruction>()
-		{
-			{"Jump", new JumpInstruction(15f) }
-		};
     }
 
     // Update is called once per frame
@@ -42,7 +37,7 @@ public class Agent : MonoBehaviour
 		playerInput = Vector2.ClampMagnitude(playerInput, 1f);
 		if (playerInputSpace != null)
 		{
-			movement.PerformInstruction(new MoveInstruction(playerInput));
+			movement.Move(playerInput);
 		}
 		else
 		{
@@ -54,15 +49,9 @@ public class Agent : MonoBehaviour
 			StartCoroutine(fighting.Attack());
         }
 
-		foreach(var kvp in instructions)
+        if (Input.GetButtonDown("Jump"))
         {
-            if (Input.GetButtonDown(kvp.Key))
-            {
-				movement.PerformInstruction(kvp.Value);
-            }
-        }
-
-
-		//desiredJump |= Input.GetButtonDown("Jump");
+			movement.Jump(15f);
+		}
 	}
 }

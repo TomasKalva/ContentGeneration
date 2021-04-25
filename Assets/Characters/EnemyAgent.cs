@@ -32,17 +32,20 @@ public class EnemyAgent : MonoBehaviour
 	void Update()
 	{
 		movement.TryClearInstructions();
+		if (fighting.busy)
+			return;
 
-		if (!fighting.busy && fighting.CanAttack()){
+		if (fighting.CanAttack()){
 			StartCoroutine(fighting.Attack());
         }
 
-        if (!fighting.busy && GoToTarget())
+		Vector3 direction = targetPoint.position - movement.body.position;
+		Vector2 movementDirection = new Vector2(direction.x, direction.z);
+		if (GoToTarget())
 		{
-			Vector3 direction = targetPoint.position - movement.body.position;
-			Vector2 movementDirection = new Vector2(direction.x, direction.z);
 			movementDirection = Vector2.ClampMagnitude(movementDirection, 1f);
-			movement.PerformInstruction(new MoveInstruction(movementDirection));
+			movement.Move(movementDirection);
 		}
+		movement.Turn(movementDirection);
 	}
 }
