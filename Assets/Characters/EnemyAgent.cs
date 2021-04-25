@@ -4,11 +4,11 @@ using UnityEngine;
 using static Movement;
 
 [RequireComponent(typeof(Movement))]
-[RequireComponent(typeof(Fighting))]
+[RequireComponent(typeof(Acting))]
 public class EnemyAgent : MonoBehaviour
 {
 	Movement movement;
-	Fighting fighting;
+	Acting acting;
 
 	[SerializeField]
 	Transform targetPoint;
@@ -25,18 +25,18 @@ public class EnemyAgent : MonoBehaviour
 	void Start()
 	{
 		movement = GetComponent<Movement>();
-		fighting = GetComponent<Fighting>();
+		acting = GetComponent<Acting>();
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
 		movement.TryClearInstructions();
-		if (fighting.busy)
+		if (acting.busy)
 			return;
 
-		if (fighting.CanAttack()){
-			StartCoroutine(fighting.Attack());
+		if (acting.CanAttack()){
+			StartCoroutine(acting.Act(movement));
         }
 
 		Vector3 direction = targetPoint.position - movement.body.position;
@@ -48,4 +48,6 @@ public class EnemyAgent : MonoBehaviour
 		}
 		movement.Turn(movementDirection);
 	}
+
+
 }

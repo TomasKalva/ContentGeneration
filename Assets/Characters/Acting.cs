@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Fighting : MonoBehaviour
+public class Acting : MonoBehaviour
 {
     [SerializeField]
-    Attack attack;
+    Act attack;
 
     public bool busy;
 
@@ -14,12 +14,10 @@ public class Fighting : MonoBehaviour
         return attack.CanBeUsed();
     }
 
-    public IEnumerator Attack()
+    public IEnumerator Act(Movement movement)
     {
         busy = true;
-        Debug.Log(busy);
-        yield return attack.Act();
+        yield return attack.Perform(movement);
         busy = false;
-        Debug.Log(busy);
     }
 }

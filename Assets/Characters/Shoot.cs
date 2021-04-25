@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Shoot : Attack
+public class Shoot : Act
 {
     [SerializeField]
     Rigidbody ammo;
@@ -19,7 +19,7 @@ public class Shoot : Attack
     [SerializeField]
     float cooldown;
 
-    public override IEnumerator Act()
+    public override IEnumerator Perform(Movement movement)
     {
         yield return new WaitForSeconds(warmup);
         var bullet = Instantiate(ammo);

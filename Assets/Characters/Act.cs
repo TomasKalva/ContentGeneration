@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Attack : MonoBehaviour
+public class Act : MonoBehaviour
 {
     [SerializeField]
     Detector detector;
@@ -12,7 +12,7 @@ public class Attack : MonoBehaviour
         return detector.triggered;
     }
 
-    public virtual IEnumerator Act()
+    public virtual IEnumerator Perform(Movement movement)
     {
         Debug.Log("Started attack");
         yield return new WaitForSeconds(5f);

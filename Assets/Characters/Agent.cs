@@ -5,11 +5,11 @@ using UnityEngine;
 using static Movement;
 
 [RequireComponent(typeof(Movement))]
-[RequireComponent(typeof(Fighting))]
+[RequireComponent(typeof(Acting))]
 public class Agent : MonoBehaviour
 {
 	Movement movement;
-	Fighting fighting;
+	Acting fighting;
 
 	[SerializeField]
 	Transform playerInputSpace;
@@ -18,7 +18,7 @@ public class Agent : MonoBehaviour
     void Start()
     {
 		movement = GetComponent<Movement>();
-		fighting = GetComponent<Fighting>();
+		fighting = GetComponent<Acting>();
     }
 
     // Update is called once per frame
@@ -46,12 +46,16 @@ public class Agent : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-			StartCoroutine(fighting.Attack());
+			StartCoroutine(fighting.Act(movement));
         }
 
-        if (Input.GetButtonDown("Jump"))
+		if (Input.GetButtonDown("Dodge"))
+		{
+			movement.Dodge(20f);
+		}
+		if (Input.GetButtonDown("Roll"))
         {
-			movement.Jump(15f);
+			movement.Roll(20f);
 		}
 	}
 }

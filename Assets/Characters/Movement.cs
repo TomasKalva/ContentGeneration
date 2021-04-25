@@ -57,7 +57,7 @@ public class Movement : MonoBehaviour {
 	Vector3 upAxis, rightAxis, forwardAxis;
 	bool fixedUpdateHappened;
 
-	Vector3 Forward
+	Vector3 InpForward
     {
         get
         {
@@ -72,7 +72,7 @@ public class Movement : MonoBehaviour {
         }
     }
 
-	Vector3 Right
+	Vector3 InpRight
 	{
 		get
 		{
@@ -87,11 +87,46 @@ public class Movement : MonoBehaviour {
 		}
 	}
 
-    #region API
+	Vector3 InpForwardHoriz
+	{
+		get
+		{
+			return ExtensionMethods.ProjectDirectionOnPlane(InpForward, upAxis);
+		}
+	}
 
-    public void Jump(float speed)
+	Vector3 InpRightHoriz
+	{
+		get
+		{
+			return ExtensionMethods.ProjectDirectionOnPlane(InpRight, upAxis);
+		}
+	}
+
+	Vector3 AgentForward
     {
-		PerformInstruction(new JumpInstruction(speed));
+        get
+        {
+			Vector2 normalizedDir = direction.normalized;
+			return normalizedDir.x * InpRightHoriz + normalizedDir.y * InpForwardHoriz;
+		}
+    }
+
+	#region API
+
+	public void Jump(float speed)
+    {
+		PerformInstruction(new JumpInstruction(Vector3.up, speed));
+	}
+
+	public void Dodge(float speed)
+	{
+		PerformInstruction(new JumpInstruction(-AgentForward + 0.1f * Vector3.up, speed));
+	}
+
+	public void Roll(float speed)
+	{
+		PerformInstruction(new JumpInstruction(AgentForward + 0.1f * Vector3.up, speed));
 	}
 
 	public void Move(Vector2 direction)
@@ -115,16 +150,18 @@ public class Movement : MonoBehaviour {
 
 	class JumpInstruction : AgentInstruction
 	{
+		Vector3 direction;
 		float speed;
 
-		public JumpInstruction(float speed)
+		public JumpInstruction(Vector3 direction, float speed)
 		{
+			this.direction = direction;
 			this.speed = speed;
 		}
 
 		public override void Do(Movement player)
 		{
-			player.JumpNoChecks(speed);
+			player.JumpNoChecks(direction, speed);
 		}
 	}
 
@@ -222,6 +259,7 @@ public class Movement : MonoBehaviour {
 		stepsSinceLastJump += 1;
 		velocity = body.velocity;
 		desiredVelocity = Vector3.zero;
+		desiredDirection = Vector2.zero;
 		if (OnGround || SnapToGround() || CheckSteepContacts()) {
 			stepsSinceLastGrounded = 0;
 			if (stepsSinceLastJump > 1) {
@@ -281,18 +319,17 @@ public class Movement : MonoBehaviour {
 
 	void AdjustDirection()
 	{
-		rightAxis = ExtensionMethods.ProjectDirectionOnPlane(Right, Vector3.up);
-		forwardAxis = ExtensionMethods.ProjectDirectionOnPlane(Forward, Vector3.up);
-		direction = Vector2.Lerp(direction, desiredDirection, 0.2f);
-		body.rotation = Quaternion.FromToRotation(Vector3.forward, direction.x * rightAxis + direction.y * forwardAxis/*new Vector3(direction.x, 0f, direction.y)*/);
+		if (desiredDirection.sqrMagnitude > 0.01f)
+		{
+			direction = Vector2.Lerp(direction, desiredDirection, 0.2f);
+			body.rotation = Quaternion.FromToRotation(Vector3.forward, AgentForward);
+		}
 	}
 
 	void AdjustVelocity ()
 	{
-		rightAxis = ExtensionMethods.ProjectDirectionOnPlane(Right, upAxis);
-		forwardAxis = ExtensionMethods.ProjectDirectionOnPlane(Forward, upAxis);
-		Vector3 xAxis = ExtensionMethods.ProjectDirectionOnPlane(rightAxis, contactNormal).normalized;
-		Vector3 zAxis = ExtensionMethods.ProjectDirectionOnPlane(forwardAxis, contactNormal).normalized;
+		Vector3 xAxis = ExtensionMethods.ProjectDirectionOnPlane(InpRightHoriz, contactNormal).normalized;
+		Vector3 zAxis = ExtensionMethods.ProjectDirectionOnPlane(InpForwardHoriz, contactNormal).normalized;
 
 		//when moving up, the y vector shouldn't be projected to the plane
 		var xzVelocity = velocity - velocity.y * Vector3.up;
@@ -327,14 +364,14 @@ public class Movement : MonoBehaviour {
 		}
 
 		float jumpSpeed = Mathf.Sqrt(2f * gravity.magnitude * jumpHeight);
-		JumpNoChecks(jumpSpeed);
+		JumpNoChecks(Vector3.up, jumpSpeed);
 	}
 
-	public void JumpNoChecks(float speed)
+	public void JumpNoChecks(Vector3 direction, float speed)
     {
 		stepsSinceLastJump = 0;
 		jumpPhase += 1;
-		velocity = Vector3.up * speed;
+		velocity = direction * speed;
 		body.velocity = velocity;
 	}
 
