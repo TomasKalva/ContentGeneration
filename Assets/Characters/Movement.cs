@@ -201,6 +201,7 @@ public class Movement : MonoBehaviour {
 		stepsSinceLastGrounded += 1;
 		stepsSinceLastJump += 1;
 		velocity = body.velocity;
+		desiredVelocity = Vector3.zero;
 		if (OnGround || SnapToGround() || CheckSteepContacts()) {
 			stepsSinceLastGrounded = 0;
 			if (stepsSinceLastJump > 1) {

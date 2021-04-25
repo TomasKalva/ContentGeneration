@@ -5,9 +5,12 @@ using UnityEngine;
 using static Movement;
 
 [RequireComponent(typeof(Movement))]
+[RequireComponent(typeof(Fighting))]
 public class Agent : MonoBehaviour
 {
 	Movement movement;
+	Fighting fighting;
+
 	[SerializeField]
 	Transform playerInputSpace;
 	Dictionary<string, AgentInstruction> instructions;
@@ -16,6 +19,7 @@ public class Agent : MonoBehaviour
     void Start()
     {
 		movement = GetComponent<Movement>();
+		fighting = GetComponent<Fighting>();
 		instructions = new Dictionary<string, AgentInstruction>()
 		{
 			{"Jump", new JumpInstruction(15f) }
@@ -25,11 +29,17 @@ public class Agent : MonoBehaviour
     // Update is called once per frame
     void Update()
 	{
+		movement.TryClearInstructions();
+
+		if (fighting.busy)
+		{
+			return;
+		}
+
 		Vector2 playerInput;
 		playerInput.x = Input.GetAxis("Horizontal");
 		playerInput.y = Input.GetAxis("Vertical");
 		playerInput = Vector2.ClampMagnitude(playerInput, 1f);
-		movement.TryClearInstructions();
 		if (playerInputSpace != null)
 		{
 			movement.PerformInstruction(new MoveInstruction(playerInput));
@@ -38,6 +48,11 @@ public class Agent : MonoBehaviour
 		{
 			Debug.LogError("Input space is null");
 		}
+
+        if (Input.GetMouseButtonDown(0))
+        {
+			StartCoroutine(fighting.Attack());
+        }
 
 		foreach(var kvp in instructions)
         {

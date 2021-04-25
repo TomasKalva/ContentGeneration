@@ -11,4 +11,11 @@ public class Attack : MonoBehaviour
     {
         return detector.triggered;
     }
+
+    public virtual IEnumerator Act()
+    {
+        Debug.Log("Started attack");
+        yield return new WaitForSeconds(5f);
+        Debug.Log("Ended attack");
+    }
 }
