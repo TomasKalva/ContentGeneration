@@ -11,6 +11,7 @@ public class EnemyAgent : MonoBehaviour
 	[SerializeField]
 	Transform targetPoint;
 
+
 	// Start is called before the first frame update
 	void Start()
 	{
