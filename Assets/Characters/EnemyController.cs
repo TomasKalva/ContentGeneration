@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Movement;
 
-[RequireComponent(typeof(Movement))]
-[RequireComponent(typeof(Acting))]
-public class EnemyAgent : MonoBehaviour
+[RequireComponent(typeof(Agent))]
+public class EnemyController : MonoBehaviour
 {
-	Movement movement;
-	Acting acting;
+	Agent agent;
 
 	[SerializeField]
 	Transform targetPoint;
@@ -24,29 +22,28 @@ public class EnemyAgent : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
-		movement = GetComponent<Movement>();
-		acting = GetComponent<Acting>();
+		agent = GetComponent<Agent>();
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		movement.TryClearInstructions();
-		if (acting.busy)
+		agent.UpdateAgent();
+		if (agent.acting.busy)
 			return;
 
-		if (acting.CanAttack()){
-			StartCoroutine(acting.Act(movement));
+		if (agent.acting.CanAttack()){
+			StartCoroutine(agent.acting.Act(agent.movement));
         }
 
-		Vector3 direction = targetPoint.position - movement.body.position;
+		Vector3 direction = targetPoint.position - agent.movement.body.position;
 		Vector2 movementDirection = new Vector2(direction.x, direction.z);
 		if (GoToTarget())
 		{
 			movementDirection = Vector2.ClampMagnitude(movementDirection, 1f);
-			movement.Move(movementDirection);
+			agent.movement.Move(movementDirection);
 		}
-		movement.Turn(movementDirection);
+		agent.movement.Turn(movementDirection);
 	}
 
 

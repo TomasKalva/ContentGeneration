@@ -298,6 +298,7 @@ GameObject:
   - component: {fileID: 598716305}
   - component: {fileID: 598716306}
   - component: {fileID: 598716307}
+  - component: {fileID: 598716308}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -587,6 +588,20 @@ MonoBehaviour:
   speed: 20
   warmup: 0.5
   cooldown: 0.5
+--- !u!114 &598716308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 598716296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e41eaecd1dc3a54498010b4924eab9de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movement: {fileID: 0}
+  acting: {fileID: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1991,6 +2006,7 @@ GameObject:
   - component: {fileID: 1835034808}
   - component: {fileID: 1835034810}
   - component: {fileID: 1835034809}
+  - component: {fileID: 1835034811}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -2265,6 +2281,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attack: {fileID: 1835034809}
   busy: 0
+--- !u!114 &1835034811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1835034800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e41eaecd1dc3a54498010b4924eab9de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movement: {fileID: 0}
+  acting: {fileID: 0}
 --- !u!1 &1932092083
 GameObject:
   m_ObjectHideFlags: 0
