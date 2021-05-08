@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-			StartCoroutine(agent.acting.Act(agent.movement));
+			StartCoroutine(agent.acting.Act(agent));
         }
 
 		if (Input.GetButtonDown("Dodge"))

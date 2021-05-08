@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+[RequireComponent(typeof(Rigidbody))]
 public class Movement : MonoBehaviour {
 
 	[SerializeField, Range(0f, 100f)]

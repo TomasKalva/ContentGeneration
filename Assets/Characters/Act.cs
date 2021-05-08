@@ -12,7 +12,7 @@ public class Act : MonoBehaviour
         return detector.triggered;
     }
 
-    public virtual IEnumerator Perform(Movement movement)
+    public virtual IEnumerator Perform(Agent agent)
     {
         Debug.Log("Started attack");
         yield return new WaitForSeconds(5f);

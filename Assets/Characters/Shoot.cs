@@ -19,7 +19,7 @@ public class Shoot : Act
     [SerializeField]
     float cooldown;
 
-    public override IEnumerator Perform(Movement movement)
+    public override IEnumerator Perform(Agent agent)
     {
         yield return new WaitForSeconds(warmup);
         var bullet = Instantiate(ammo);

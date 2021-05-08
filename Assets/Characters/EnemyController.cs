@@ -33,7 +33,7 @@ public class EnemyController : MonoBehaviour
 			return;
 
 		if (agent.acting.CanAttack()){
-			StartCoroutine(agent.acting.Act(agent.movement));
+			StartCoroutine(agent.acting.Act(agent));
         }
 
 		Vector3 direction = targetPoint.position - agent.movement.body.position;

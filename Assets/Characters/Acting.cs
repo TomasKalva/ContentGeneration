@@ -14,10 +14,10 @@ public class Acting : MonoBehaviour
         return attack.CanBeUsed();
     }
 
-    public IEnumerator Act(Movement movement)
+    public IEnumerator Act(Agent agent)
     {
         busy = true;
-        yield return attack.Perform(movement);
+        yield return attack.Perform(agent);
         busy = false;
     }
 }
