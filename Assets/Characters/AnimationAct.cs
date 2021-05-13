@@ -4,9 +4,15 @@ using UnityEngine;
 
 public class AnimationAct : Act
 {
+    [SerializeField]
+    string animationName;
+
+    [SerializeField]
+    float duration;
+
     public override IEnumerator Perform(Agent agent)
     {
-        agent.animator.Play("Base Layer.Armature|TailStab");
-        yield return new WaitForSeconds(5); 
+        agent.animator.Play(animationName);
+        yield return new WaitForSeconds(duration); 
     }
 }
