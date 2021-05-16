@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: BrickWallMaterial
-  m_Shader: {fileID: -6465566751694194690, guid: 5ae55e454a635804d8e99390f3515208, type: 3}
+  m_Name: CobblestoneMaterial
+  m_Shader: {fileID: -6465566751694194690, guid: 278e2c5f45b5a8743ac4bcc9511692b7, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -52,7 +52,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalFromTexture_a79cc399a0cb4b0cbf99886c80941389_Texture_0:
-        m_Texture: {fileID: 2800000, guid: 8611250348e582a43a4405d924d2a277, type: 3}
+        m_Texture: {fileID: 2800000, guid: 23f0deb11e4db874cac2ab717723dd05, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -64,7 +64,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_75b6b289ad614f0ebea22d1ec3e4833b_Texture_1:
-        m_Texture: {fileID: 2800000, guid: 8611250348e582a43a4405d924d2a277, type: 3}
+        m_Texture: {fileID: 2800000, guid: 23f0deb11e4db874cac2ab717723dd05, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
