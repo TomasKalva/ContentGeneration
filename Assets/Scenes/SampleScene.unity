@@ -721,14 +721,14 @@ PrefabInstance:
     - target: {fileID: -8793958536205626301, guid: 2d0f07cc080af814f87cd3599c0f9b40, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 6fd50d799fcbd454e9cae2428db5e24f, type: 2}
+      objectReference: {fileID: 2100000, guid: 8443dd43055769044bde8eb38225bfb0, type: 2}
     - target: {fileID: -8679921383154817045, guid: 2d0f07cc080af814f87cd3599c0f9b40, type: 3}
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2d0f07cc080af814f87cd3599c0f9b40, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 22.79
+      value: -5.32
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2d0f07cc080af814f87cd3599c0f9b40, type: 3}
       propertyPath: m_LocalPosition.y
@@ -736,7 +736,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2d0f07cc080af814f87cd3599c0f9b40, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -57.34
+      value: -60.64
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2d0f07cc080af814f87cd3599c0f9b40, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2303,7 +2303,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c22777d6e868e4f2fb421913386b154e, type: 2}
+  - {fileID: 2100000, guid: d8fc67819fcaca846ad6408e1cf85a56, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2698,8 +2698,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f30feaafda3bb4042ae3667b458e7a05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetPoint: {fileID: 442413374}
-  minDistance: 1
+  targetPoint: {fileID: 1835034805}
+  minDistance: 3
 --- !u!65 &1794102864
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2927,7 +2927,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1835034800}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.16, y: 24.08, z: -120.38}
+  m_LocalPosition: {x: 15.14, y: 1.42, z: -28.54}
   m_LocalScale: {x: 0.5, y: 1, z: 0.5}
   m_Children:
   - {fileID: 1456614152}
