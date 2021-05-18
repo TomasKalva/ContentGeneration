@@ -1722,7 +1722,7 @@ GameObject:
   - component: {fileID: 1498218725}
   - component: {fileID: 1498218724}
   m_Layer: 0
-  m_Name: LeftHand
+  m_Name: LeftHandDetector
   m_TagString: Detector
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2699,7 +2699,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetPoint: {fileID: 1835034805}
-  minDistance: 3
+  minDistance: 4
 --- !u!65 &1794102864
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2927,7 +2927,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1835034800}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 15.14, y: 1.42, z: -28.54}
+  m_LocalPosition: {x: 15.14, y: -7.15, z: -60.9}
   m_LocalScale: {x: 0.5, y: 1, z: 0.5}
   m_Children:
   - {fileID: 1456614152}

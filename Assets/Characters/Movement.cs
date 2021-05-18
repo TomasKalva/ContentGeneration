@@ -220,10 +220,9 @@ public class Movement : MonoBehaviour {
 
 	void PreventWallCollision()
     {
-		/*if(body.SweepTest(velocity.normalized, out var info, velocity.magnitude * Time.fixedDeltaTime)){
+		if(body.SweepTest(velocity.normalized, out var info, velocity.magnitude * Time.fixedDeltaTime, QueryTriggerInteraction.Ignore)){
 			velocity -= Vector3.Dot(info.normal, velocity) * info.normal;
 		}
-		Debug.Log("Disabled prevent wall collision");*/
 	}
 
 	void FixedUpdate ()
