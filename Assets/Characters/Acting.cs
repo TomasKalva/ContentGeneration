@@ -22,8 +22,11 @@ public class Acting : MonoBehaviour
 
     public IEnumerator Act(Agent agent)
     {
-        busy = true;
-        yield return GetBestAct().Perform(agent);
-        busy = false;
+        var bestAct = GetBestAct();
+        if (bestAct) {
+            busy = true;
+            yield return bestAct.Perform(agent);
+            busy = false;
+        }
     }
 }

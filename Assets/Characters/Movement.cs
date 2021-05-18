@@ -9,6 +9,9 @@ public class Movement : MonoBehaviour {
 	[SerializeField, Range(0f, 100f)]
 	float maxSpeed = 10f;
 
+	[SerializeField, Range(0f, 1f)]
+	float rotationCoef = 0.2f;
+
 	[SerializeField, Range(0f, 100f)]
 	float maxAcceleration = 10f, maxAirAcceleration = 1f;
 
@@ -321,7 +324,7 @@ public class Movement : MonoBehaviour {
 	{
 		if (desiredDirection.sqrMagnitude > 0.01f)
 		{
-			direction = Vector2.Lerp(direction, desiredDirection, 0.2f);
+			direction = Vector2.Lerp(direction, desiredDirection, rotationCoef);
 			body.rotation = Quaternion.FromToRotation(Vector3.forward, AgentForward);
 		}
 	}
