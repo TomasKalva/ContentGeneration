@@ -676,7 +676,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5737c6fbdf150c54b995f289775066b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attack: {fileID: 598716307}
+  acts: []
   busy: 0
 --- !u!114 &598716307
 MonoBehaviour:
@@ -1479,6 +1479,7 @@ GameObject:
   - component: {fileID: 1408316356}
   - component: {fileID: 1408316355}
   - component: {fileID: 1408316354}
+  - component: {fileID: 1408316358}
   m_Layer: 0
   m_Name: TailStabDetector
   m_TagString: Detector
@@ -1578,6 +1579,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1408316352}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!54 &1408316358
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408316352}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1456614151
 GameObject:
   m_ObjectHideFlags: 0
@@ -1721,6 +1738,7 @@ GameObject:
   - component: {fileID: 1498218726}
   - component: {fileID: 1498218725}
   - component: {fileID: 1498218724}
+  - component: {fileID: 1498218728}
   m_Layer: 0
   m_Name: LeftHandDetector
   m_TagString: Detector
@@ -1820,6 +1838,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1498218722}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!54 &1498218728
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1498218722}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1507783603 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7506434962980956595, guid: 2d0f07cc080af814f87cd3599c0f9b40, type: 3}
@@ -2030,6 +2064,7 @@ GameObject:
   - component: {fileID: 1643895386}
   - component: {fileID: 1643895385}
   - component: {fileID: 1643895384}
+  - component: {fileID: 1643895388}
   m_Layer: 0
   m_Name: TailStabRightDetector
   m_TagString: Detector
@@ -2129,6 +2164,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1643895382}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!54 &1643895388
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1643895382}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1654628777
 GameObject:
   m_ObjectHideFlags: 0
@@ -2611,7 +2662,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5737c6fbdf150c54b995f289775066b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attack: {fileID: 1794102860}
+  acts:
+  - {fileID: 1794102860}
+  - {fileID: 1794102866}
+  - {fileID: 1794102867}
+  - {fileID: 1794102868}
   busy: 0
 --- !u!114 &1794102859
 MonoBehaviour:
@@ -3092,7 +3147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5737c6fbdf150c54b995f289775066b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attack: {fileID: 1835034809}
+  acts: []
   busy: 0
 --- !u!114 &1835034811
 MonoBehaviour:
@@ -3234,6 +3289,7 @@ GameObject:
   - component: {fileID: 1939586298}
   - component: {fileID: 1939586297}
   - component: {fileID: 1939586296}
+  - component: {fileID: 1939586300}
   m_Layer: 0
   m_Name: TailStabLeftDetector
   m_TagString: Detector
@@ -3333,3 +3389,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1939586294}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!54 &1939586300
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1939586294}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

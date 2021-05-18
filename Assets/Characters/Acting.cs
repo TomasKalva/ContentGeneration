@@ -1,23 +1,29 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Acting : MonoBehaviour
 {
     [SerializeField]
-    Act attack;
+    List<Act> acts;
 
     public bool busy;
 
-    public bool CanAttack()
+    private Act GetBestAct()
     {
-        return attack.CanBeUsed();
+        return acts.Where(act => act.CanBeUsed()).FirstOrDefault();
+    }
+
+    public bool CanAct()
+    {
+        return GetBestAct() != null;
     }
 
     public IEnumerator Act(Agent agent)
     {
         busy = true;
-        yield return attack.Perform(agent);
+        yield return GetBestAct().Perform(agent);
         busy = false;
     }
 }

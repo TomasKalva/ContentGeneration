@@ -32,7 +32,7 @@ public class EnemyController : MonoBehaviour
 		if (agent.acting.busy)
 			return;
 
-		if (agent.acting.CanAttack()){
+		if (agent.acting.CanAct()){
 			StartCoroutine(agent.acting.Act(agent));
         }
 
