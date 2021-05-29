@@ -24,14 +24,14 @@ public class TerrainGenerator : MonoBehaviour
         var b2 = new Vector2(0.0f, 0.1f);
 
         var agents = new Agents(simulationSpeed);
-        agents.AddSpawner(new NoiseMapSpawner());
-        agents.AddSpawner(new VolcanoSpawner(50, new Point(50, 50), 5, 80, 30, 50));
+        //agents.AddSpawner(new NoiseMapSpawner());
+        //agents.AddSpawner(new VolcanoSpawner(50, new Point(50, 50), 5, 80, 30, 50));
         /*agents.AddSpawner(new VolcanoSpawner(30, new Point(50, 70), 5, 80, 20, 50));
         agents.AddSpawner(new VolcanoSpawner(30, new Point(50, 90), 5, 80, 20, 50));
         agents.AddSpawner(new VolcanoSpawner(30, new Point(50, 110), 5, 80, 20, 50));
 
-
-        agents.AddSpawner(new RandomMapSpawner());*/
+        */
+        agents.AddSpawner(new RandomMapSpawner());
         //agents.AddSpawner(new SmoothingAgentsSpawner());
 
 
