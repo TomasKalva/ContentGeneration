@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Movement;
 
-[RequireComponent(typeof(Agent))]
+[RequireComponent(typeof(PlayerAgent))]
 public class PlayerController : MonoBehaviour
 {
-	Agent agent;
+	PlayerAgent agent;
 
 	[SerializeField]
 	Transform playerInputSpace;
@@ -15,14 +15,14 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
 	{
-		agent = GetComponent<Agent>();
+		agent = GetComponent<PlayerAgent>();
 	}
 
     // Update is called once per frame
     void Update()
 	{
 		agent.UpdateAgent();
-		if (agent.acting.busy)
+		if (agent.acting.Busy)
 		{
 			return;
 		}
@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
 		playerInput = Vector2.ClampMagnitude(playerInput, 1f);
 		if (playerInputSpace != null)
 		{
-			agent.movement.Move(playerInput);
+			agent.Move(playerInput);
 		}
 		else
 		{
@@ -42,16 +42,17 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-			StartCoroutine(agent.acting.Act(agent));
+			agent.Shoot();
         }
 
 		if (Input.GetButtonDown("Dodge"))
 		{
-			agent.movement.Dodge(20f);
+			agent.Dodge();
+
 		}
 		if (Input.GetButtonDown("Roll"))
         {
-			agent.movement.Roll(20f);
+			agent.Roll();
 		}
 	}
 }

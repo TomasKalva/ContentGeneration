@@ -29,19 +29,16 @@ public class EnemyController : MonoBehaviour
 	void Update()
 	{
 		agent.UpdateAgent();
-		if (agent.acting.busy)
+		if (agent.acting.Busy)
 			return;
 
-		if (agent.acting.CanAct()){
-			StartCoroutine(agent.acting.Act(agent));
-        }
 
 		Vector3 direction = targetPoint.position - agent.movement.body.position;
 		Vector2 movementDirection = new Vector2(direction.x, direction.z);
 		if (GoToTarget())
 		{
 			movementDirection = Vector2.ClampMagnitude(movementDirection, 1f);
-			agent.movement.Move(movementDirection);
+			agent.Move(movementDirection);
 		}
 		agent.movement.Turn(movementDirection);
 	}

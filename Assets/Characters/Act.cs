@@ -7,6 +7,9 @@ public class Act : MonoBehaviour
     [SerializeField]
     Detector detector;
 
+    [SerializeField]
+    public string actName;
+
     public bool CanBeUsed()
     {
         return detector.triggered;
@@ -14,8 +17,8 @@ public class Act : MonoBehaviour
 
     public virtual IEnumerator Perform(Agent agent)
     {
-        Debug.Log("Started attack");
+        Debug.Log("Started act");
         yield return new WaitForSeconds(5f);
-        Debug.Log("Ended attack");
+        Debug.Log("Ended act");
     }
 }
