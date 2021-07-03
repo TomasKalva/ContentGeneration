@@ -18,11 +18,10 @@ public class PlayerAgent : Agent
         acting.SelectAct("Dodge");
     }
 
-    public void Roll()
+    public void Roll(Vector2 direction)
     {
         ResetState();
-        movement.Roll(20f);
-        //animator.SetTrigger("Dodge");
-        acting.SelectAct("Roll");
+        var roll = acting.SelectAct("Roll") as Roll;
+        roll.Direction = direction;
     }
 }

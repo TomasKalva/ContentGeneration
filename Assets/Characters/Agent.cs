@@ -39,6 +39,9 @@ public class Agent : MonoBehaviour
     public Acting acting;
 	public Animator animator;
 
+	/// <summary>
+	/// Used for reseting animation back to idle.
+	/// </summary>
 	int stepsSinceMoved;
 
 	// Start is called before the first frame update
@@ -76,9 +79,17 @@ public class Agent : MonoBehaviour
 		if (direction.sqrMagnitude > 0.0001f && !acting.Busy)
 		{
 			var run = acting.SelectAct("Run") as Move;
-			run.SetDirection(direction);
+			run.Direction = direction;
 			stepsSinceMoved = 3;
         }
+	}
+
+	public void Turn(Vector2 direction)
+	{
+		if (direction.sqrMagnitude > 0.0001f && !acting.Busy)
+		{
+			movement.Turn(direction);
+		}
 	}
 
 	protected void ResetState()

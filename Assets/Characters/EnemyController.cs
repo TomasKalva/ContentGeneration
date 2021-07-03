@@ -37,13 +37,17 @@ public class EnemyController : MonoBehaviour
 			movementDirection = Vector2.ClampMagnitude(movementDirection, 1f);
 			agent.Move(movementDirection);
 		}
-		agent.movement.Turn(movementDirection);
-		foreach (var act in agent.acting.acts) 
+		agent.Turn(movementDirection);
+
+		if (!agent.acting.Busy)
 		{
-            if (act.CanBeUsed())
-            {
-				agent.acting.SelectAct(act);
-            }
+			foreach (var act in agent.acting.acts)
+			{
+				if (act.CanBeUsed())
+				{
+					agent.acting.SelectAct(act);
+				}
+			}
 		}
 
 		agent.UpdateAgent();

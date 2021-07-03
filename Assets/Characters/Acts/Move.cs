@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Move : AnimatedAct
 {
-    private Vector2 direction;
+    Vector2 direction;
 
-    public void SetDirection(Vector2 dir)
-    {
-        direction = dir;
+    public Vector2 Direction{
+        get => direction;
+        set => direction = value;
     }
 
     public override IEnumerator Perform(Agent agent)

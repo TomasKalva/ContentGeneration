@@ -35,11 +35,11 @@ public class PlayerController : MonoBehaviour
 		{
 			Debug.LogError("Input space is null");
 		}
-
-        if (Input.GetMouseButtonDown(0))
-        {
+		
+		if (Input.GetMouseButtonDown(0))
+		{
 			agent.Shoot();
-        }
+		}
 
 		if (Input.GetButtonDown("Dodge"))
 		{
@@ -47,8 +47,8 @@ public class PlayerController : MonoBehaviour
 
 		}
 		if (Input.GetButtonDown("Roll"))
-        {
-			agent.Roll();
+		{
+			agent.Roll(playerInput);
 		}
 
 		agent.UpdateAgent();

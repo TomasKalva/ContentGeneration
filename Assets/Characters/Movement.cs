@@ -116,21 +116,31 @@ public class Movement : MonoBehaviour {
 		}
     }
 
+	Vector3 InputToWorld(Vector2 inputVec)
+    {
+		return inputVec.x * InpRightHoriz + inputVec.y * InpForwardHoriz;
+	}
+
 	#region API
 
 	public void Jump(float speed)
     {
-		PerformInstruction(new JumpInstruction(Vector3.up, speed));
+		PerformInstruction(new ImpulseInstruction(Vector3.up, speed));
+	}
+
+	public void InputImpulse(Vector3 inputDirection, float speed)
+	{
+		PerformInstruction(new ImpulseInstruction(InputToWorld(inputDirection) , speed));
 	}
 
 	public void Dodge(float speed)
 	{
-		PerformInstruction(new JumpInstruction(-AgentForward + 0.1f * Vector3.up, speed));
+		PerformInstruction(new ImpulseInstruction(-AgentForward + 0.1f * Vector3.up, speed));
 	}
 
 	public void Roll(float speed)
 	{
-		PerformInstruction(new JumpInstruction(AgentForward + 0.1f * Vector3.up, speed));
+		PerformInstruction(new ImpulseInstruction(AgentForward + 0.1f * Vector3.up, speed));
 	}
 
 	public void Move(Vector2 direction)
@@ -152,12 +162,12 @@ public class Movement : MonoBehaviour {
 		public abstract void Do(Movement movingAgent);
 	}
 
-	class JumpInstruction : AgentInstruction
+	class ImpulseInstruction : AgentInstruction
 	{
 		Vector3 direction;
 		float speed;
 
-		public JumpInstruction(Vector3 direction, float speed)
+		public ImpulseInstruction(Vector3 direction, float speed)
 		{
 			this.direction = direction;
 			this.speed = speed;
