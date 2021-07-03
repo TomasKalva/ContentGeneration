@@ -5,22 +5,24 @@ using UnityEngine;
 
 public class PlayerAgent : Agent
 {
-    ManualActing manActing => (ManualActing)acting;
-
     public void Shoot()
     {
-        manActing.DoAct("Shoot");
+        acting.SelectAct("Shoot");
     }
 
     public void Dodge()
     {
+        ResetState();
         movement.Dodge(20f);
-        manActing.DoAct("Dodge");
+        //animator.SetTrigger("Dodge");
+        acting.SelectAct("Dodge");
     }
 
     public void Roll()
     {
+        ResetState();
         movement.Roll(20f);
-        manActing.DoAct("Roll");
+        //animator.SetTrigger("Dodge");
+        acting.SelectAct("Roll");
     }
 }

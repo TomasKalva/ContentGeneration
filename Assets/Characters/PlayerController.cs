@@ -21,11 +21,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
 	{
-		agent.UpdateAgent();
-		if (agent.acting.Busy)
-		{
-			return;
-		}
+		agent.StartReceivingControls();
 
 		Vector2 playerInput;
 		playerInput.x = Input.GetAxis("Horizontal");
@@ -54,5 +50,7 @@ public class PlayerController : MonoBehaviour
         {
 			agent.Roll();
 		}
+
+		agent.UpdateAgent();
 	}
 }

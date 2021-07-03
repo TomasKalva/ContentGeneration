@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimationAct : Act
+public class AnimatedAct : Act
 {
     [SerializeField]
-    string animationName;
+    protected string animationName;
 
     [SerializeField]
-    float duration;
+    protected float duration;
 
     public override IEnumerator Perform(Agent agent)
     {
-        agent.animator.Play(animationName);
+        agent.animator.CrossFade(animationName, 0.05f);
         yield return new WaitForSeconds(duration); 
     }
 }

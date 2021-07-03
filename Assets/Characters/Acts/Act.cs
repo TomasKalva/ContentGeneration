@@ -10,9 +10,12 @@ public class Act : MonoBehaviour
     [SerializeField]
     public string actName;
 
+    [SerializeField]
+    public int priority;
+
     public bool CanBeUsed()
     {
-        return detector.triggered;
+        return detector && detector.triggered;
     }
 
     public virtual IEnumerator Perform(Agent agent)

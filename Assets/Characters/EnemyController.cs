@@ -28,10 +28,7 @@ public class EnemyController : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		agent.UpdateAgent();
-		if (agent.acting.Busy)
-			return;
-
+		agent.StartReceivingControls();
 
 		Vector3 direction = targetPoint.position - agent.movement.body.position;
 		Vector2 movementDirection = new Vector2(direction.x, direction.z);
@@ -41,6 +38,15 @@ public class EnemyController : MonoBehaviour
 			agent.Move(movementDirection);
 		}
 		agent.movement.Turn(movementDirection);
+		foreach (var act in agent.acting.acts) 
+		{
+            if (act.CanBeUsed())
+            {
+				agent.acting.SelectAct(act);
+            }
+		}
+
+		agent.UpdateAgent();
 	}
 
 
