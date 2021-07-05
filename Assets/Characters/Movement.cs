@@ -41,7 +41,7 @@ public class Movement : MonoBehaviour {
 
 	public Vector3 velocity, desiredVelocity;
 
-	Vector2 direction, desiredDirection;
+	public Vector2 direction, desiredDirection;
 
 	bool desiredJump;
 
@@ -63,6 +63,8 @@ public class Movement : MonoBehaviour {
 	bool fixedUpdateHappened;
 
 	public VelocityUpdater VelocityUpdater { get; set; }
+
+	public List<MovementConstraint> Constraints { get; private set; }
 
 	Vector3 InpForward
     {
@@ -110,12 +112,13 @@ public class Movement : MonoBehaviour {
 		}
 	}
 
-	Vector3 AgentForward
+	public Vector3 AgentForward
     {
         get
         {
 			Vector2 normalizedDir = direction.normalized;
-			return normalizedDir.x * InpRightHoriz + normalizedDir.y * InpForwardHoriz;
+			return new Vector3(normalizedDir.x, 0f, normalizedDir.y);
+			//return normalizedDir.x * InpRightHoriz + normalizedDir.y * InpForwardHoriz;
 		}
     }
 
@@ -230,6 +233,7 @@ public class Movement : MonoBehaviour {
 		fixedUpdateHappened = false;
 		OnValidate();
 		direction = Vector3.forward;
+		Constraints = new List<MovementConstraint>();
 	}
 
 	void PreventWallCollision()
@@ -239,16 +243,9 @@ public class Movement : MonoBehaviour {
 		}
 	}
 
-	List<List<Vector3>> speeds = new List<List<Vector3>>();
-
 	void FixedUpdate ()
 	{
 		UpdateState();
-
-		foreach (var instruction in instructionQueue)
-		{
-			instruction.Do(this);
-		}
 
 		if (VelocityUpdater != null)
 		{
@@ -258,11 +255,15 @@ public class Movement : MonoBehaviour {
 			}
 		}
 
+		foreach (var instruction in instructionQueue)
+		{
+			instruction.Do(this);
+		}
+
 		if (VelocityUpdater == null)
 		{
 			AdjustVelocity();
 		}
-		AdjustDirection();
 
 		if (desiredJump) {
 			desiredJump = false;
@@ -272,6 +273,13 @@ public class Movement : MonoBehaviour {
 
 		PreventWallCollision();
 
+		foreach(var constraint in Constraints)
+        {
+			constraint.Constrain(this);
+        }
+		Constraints.RemoveAll(constr => constr.Finished);
+
+		AdjustDirection();
 		body.velocity = velocity;
 		ClearState();
 		fixedUpdateHappened = true;
@@ -349,7 +357,9 @@ public class Movement : MonoBehaviour {
 	{
 		if (desiredDirection.sqrMagnitude > 0.01f)
 		{
-			direction = Vector2.Lerp(direction, desiredDirection, rotationCoef);
+			var inpSpaceA = (Mathf.PI / 2f - Mathf.Atan2(playerInputSpace.forward.z, playerInputSpace.forward.x)) * Mathf.Rad2Deg;
+			var globalDesiredDirection = Quaternion.AngleAxis(inpSpaceA, Vector3.up) * new Vector3(desiredDirection.x, 0f, desiredDirection.y);
+			direction = Vector2.Lerp(direction, new Vector2(globalDesiredDirection.x, globalDesiredDirection.z), rotationCoef);
 			body.rotation = Quaternion.FromToRotation(Vector3.forward, AgentForward);
 		}
 	}

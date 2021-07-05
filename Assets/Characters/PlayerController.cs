@@ -41,15 +41,17 @@ public class PlayerController : MonoBehaviour
 			agent.Shoot();
 		}
 
-		if (Input.GetButtonDown("Dodge"))
-		{
-			agent.Dodge();
-
-		}
 		if (Input.GetButtonDown("Roll"))
 		{
-			agent.Roll(playerInput);
-		}
+			if( playerInput.sqrMagnitude > 0.001f)
+			{
+				agent.Roll(playerInput);
+			}
+            else
+			{
+				agent.Backstep();
+			}
+        }
 
 		agent.UpdateAgent();
 	}

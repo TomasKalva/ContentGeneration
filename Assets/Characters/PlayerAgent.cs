@@ -10,12 +10,10 @@ public class PlayerAgent : Agent
         acting.SelectAct("Shoot");
     }
 
-    public void Dodge()
+    public void Backstep()
     {
         ResetState();
-        movement.Dodge(20f);
-        //animator.SetTrigger("Dodge");
-        acting.SelectAct("Dodge");
+        acting.SelectAct("Backstep");
     }
 
     public void Roll(Vector2 direction)

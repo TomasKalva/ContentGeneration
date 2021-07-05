@@ -18,9 +18,54 @@ public class Roll : AnimatedAct
     public override IEnumerator Perform(Agent agent)
     {
         agent.animator.CrossFade(animationName, 0.05f);
-        var worldDirection = agent.movement.InputToWorld(Direction);
-        agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, worldDirection);
+        agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, agent.movement.InputToWorld(Direction));
+        var dirConstr = new VelocityInDirection(agent.movement.InputToWorld(Direction));
+        agent.movement.Constraints.Add(dirConstr);
+        var turnConstr = new TurnToDirection(Direction);
+        agent.movement.Constraints.Add(turnConstr);
+
         yield return new WaitForSeconds(duration);
+        dirConstr.Finished = true;
+        turnConstr.Finished = true;
+    }
+}
+
+public abstract class MovementConstraint
+{
+    public bool Finished { get; set; }
+    public abstract void Constrain(Movement movement);
+}
+
+public class VelocityInDirection : MovementConstraint
+{
+    Vector3 direction;
+
+    public VelocityInDirection(Vector3 direction)
+    {
+        this.direction = direction;
+    }
+
+    public override void Constrain(Movement movement)
+    {
+        if(Vector3.Dot(movement.velocity, direction) <= 0)
+        {
+            movement.velocity = Vector3.zero;
+        }
+    }
+}
+
+public class TurnToDirection : MovementConstraint
+{
+    Vector2 direction;
+
+    public TurnToDirection(Vector2 direction)
+    {
+        this.direction = direction;
+    }
+
+    public override void Constrain(Movement movement)
+    {
+        movement.desiredDirection = direction;
     }
 }
 
@@ -62,9 +107,9 @@ public class CurveVelocityUpdater : VelocityUpdater
 
         var speed0 = speedF.Evaluate((t - dt) / duration);
         var speed1 = speedF.Evaluate(t / duration);
-
         var dS = speed1 - speed0;
         movement.velocity += dS * direction;
+
         return t >= duration;
     }
 }
