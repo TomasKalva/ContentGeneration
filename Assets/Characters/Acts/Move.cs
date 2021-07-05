@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Move : AnimatedAct
-{
+{ 
     Vector2 direction;
 
     public Vector2 Direction{

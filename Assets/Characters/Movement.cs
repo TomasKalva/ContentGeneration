@@ -1,5 +1,6 @@
 ﻿using Assets;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -7,7 +8,7 @@ using UnityEngine;
 public class Movement : MonoBehaviour {
 
 	[SerializeField, Range(0f, 100f)]
-	float maxSpeed = 10f;
+	public float maxSpeed = 10f;
 
 	[SerializeField, Range(0f, 1f)]
 	float rotationCoef = 0.2f;
@@ -38,7 +39,7 @@ public class Movement : MonoBehaviour {
 
 	public Rigidbody body;
 
-	Vector3 velocity, desiredVelocity;
+	public Vector3 velocity, desiredVelocity;
 
 	Vector2 direction, desiredDirection;
 
@@ -60,6 +61,8 @@ public class Movement : MonoBehaviour {
 
 	Vector3 upAxis, rightAxis, forwardAxis;
 	bool fixedUpdateHappened;
+
+	public VelocityUpdater VelocityUpdater { get; set; }
 
 	Vector3 InpForward
     {
@@ -116,7 +119,7 @@ public class Movement : MonoBehaviour {
 		}
     }
 
-	Vector3 InputToWorld(Vector2 inputVec)
+	public Vector3 InputToWorld(Vector2 inputVec)
     {
 		return inputVec.x * InpRightHoriz + inputVec.y * InpForwardHoriz;
 	}
@@ -125,22 +128,22 @@ public class Movement : MonoBehaviour {
 
 	public void Jump(float speed)
     {
-		PerformInstruction(new ImpulseInstruction(Vector3.up, speed));
+		PerformInstruction(new ImpulseInstruction(speed * Vector3.up));
 	}
 
-	public void InputImpulse(Vector3 inputDirection, float speed)
+	public void Impulse(Vector3 velocity)
 	{
-		PerformInstruction(new ImpulseInstruction(InputToWorld(inputDirection) , speed));
+		PerformInstruction(new ImpulseInstruction(velocity));
 	}
 
 	public void Dodge(float speed)
 	{
-		PerformInstruction(new ImpulseInstruction(-AgentForward + 0.1f * Vector3.up, speed));
+		PerformInstruction(new ImpulseInstruction(speed * (-AgentForward + 0.1f * Vector3.up)));
 	}
 
 	public void Roll(float speed)
 	{
-		PerformInstruction(new ImpulseInstruction(AgentForward + 0.1f * Vector3.up, speed));
+		PerformInstruction(new ImpulseInstruction(speed * (AgentForward + 0.1f * Vector3.up)));
 	}
 
 	public void Move(Vector2 direction)
@@ -164,18 +167,16 @@ public class Movement : MonoBehaviour {
 
 	class ImpulseInstruction : AgentInstruction
 	{
-		Vector3 direction;
-		float speed;
+		Vector3 dV;
 
-		public ImpulseInstruction(Vector3 direction, float speed)
+		public ImpulseInstruction(Vector3 dV)
 		{
-			this.direction = direction;
-			this.speed = speed;
+			this.dV = dV;
 		}
 
 		public override void Do(Movement player)
 		{
-			player.JumpNoChecks(direction, speed);
+			player.JumpNoChecks(dV);
 		}
 	}
 
@@ -238,6 +239,8 @@ public class Movement : MonoBehaviour {
 		}
 	}
 
+	List<List<Vector3>> speeds = new List<List<Vector3>>();
+
 	void FixedUpdate ()
 	{
 		UpdateState();
@@ -246,7 +249,19 @@ public class Movement : MonoBehaviour {
 		{
 			instruction.Do(this);
 		}
-		AdjustVelocity();
+
+		if (VelocityUpdater != null)
+		{
+			if (VelocityUpdater.UpdateVelocity(this, Time.fixedDeltaTime))
+			{
+				VelocityUpdater = null;
+			}
+		}
+
+		if (VelocityUpdater == null)
+		{
+			AdjustVelocity();
+		}
 		AdjustDirection();
 
 		if (desiredJump) {
@@ -377,15 +392,15 @@ public class Movement : MonoBehaviour {
 		}
 
 		float jumpSpeed = Mathf.Sqrt(2f * gravity.magnitude * jumpHeight);
-		JumpNoChecks(Vector3.up, jumpSpeed);
+		JumpNoChecks(jumpSpeed * Vector3.up);
 	}
 
-	public void JumpNoChecks(Vector3 direction, float speed)
+	public void JumpNoChecks(Vector3 dV)
     {
 		stepsSinceLastJump = 0;
 		jumpPhase += 1;
-		velocity = direction * speed;
-		body.velocity = velocity;
+		velocity += dV;
+		//body.velocity = velocity;
 	}
 
 	void PerformInstruction(AgentInstruction instruction)
