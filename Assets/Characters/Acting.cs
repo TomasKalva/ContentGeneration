@@ -34,7 +34,7 @@ public class Acting : MonoBehaviour, IActing
 
     private Act GetNextAct()
     {
-        return selectedActs.MaxArg(act => act.priority);
+        return selectedActs.MaxArg(act => act ? act.priority : -1000_000);
     }
 
     public bool CanAct()
