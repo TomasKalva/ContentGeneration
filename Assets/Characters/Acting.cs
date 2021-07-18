@@ -17,6 +17,8 @@ public class Acting : MonoBehaviour, IActing
 
     public bool Busy { get; set; }
 
+    public Act ActiveAct { get; private set; }
+
     List<Act> selectedActs = new List<Act>();
 
     public Act SelectAct(string actName)
@@ -45,9 +47,9 @@ public class Acting : MonoBehaviour, IActing
 
     public void Act(Agent agent)
     {
-        var bestAct = GetNextAct();
-        if (bestAct) {
-            StartCoroutine(((IActing)this).ActSequence(agent, bestAct));
+        ActiveAct = GetNextAct();
+        if (ActiveAct) {
+            StartCoroutine(((IActing)this).ActSequence(agent, ActiveAct));
             selectedActs.Clear();
         }
     }

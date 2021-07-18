@@ -22,4 +22,20 @@ public class PlayerAgent : Agent
         var roll = acting.SelectAct("Roll") as Roll;
         roll.Direction = direction;
     }
+
+    public void Attack()
+    {
+        ResetState();
+        var currentAct = acting.ActiveAct;
+
+        // do a combo if slash is currently active
+        if (currentAct && currentAct.actName == "Slash")
+        {
+            acting.SelectAct("LeftSlash");
+        }
+        else
+        {
+            acting.SelectAct("Slash");
+        }
+    }
 }

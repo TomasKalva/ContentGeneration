@@ -51,7 +51,12 @@ public class PlayerController : MonoBehaviour
 			{
 				agent.Backstep();
 			}
-        }
+		}
+
+		if (Input.GetButtonDown("Attack"))
+		{
+			agent.Attack();
+		}
 
 		agent.UpdateAgent();
 	}
