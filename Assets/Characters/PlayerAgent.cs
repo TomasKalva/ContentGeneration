@@ -29,13 +29,16 @@ public class PlayerAgent : Agent
         var currentAct = acting.ActiveAct;
 
         // do a combo if slash is currently active
+        Attack attack;
         if (currentAct && currentAct.actName == "Slash")
         {
-            acting.SelectAct("LeftSlash");
+            attack = acting.SelectAct("LeftSlash") as Attack;
         }
         else
         {
-            acting.SelectAct("Slash");
+            attack = acting.SelectAct("Slash") as Attack;
         }
+        attack.Direction = movement.AgentForward;
+        Debug.Log(movement.AgentForward);
     }
 }
