@@ -60,7 +60,7 @@ namespace ContentGeneration.Assets.UI.Model
 
         void Update()
         {
-            var agentUiPos = viewCamera.WorldToScreenPoint(transform.position);
+            var agentUiPos = viewCamera.WorldToScreenPoint(transform.position + Vector3.up);
             ScreenPosX = agentUiPos.x;
             ScreenPosY = agentUiPos.y;
             Debug.Log(agentUiPos);

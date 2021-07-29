@@ -34,7 +34,16 @@ namespace ContentGeneration.Assets.UI.Components
             set { SetValue(ColorProperty, value); }
         }
 
+        public bool NoNumbers
+        {
+            get { return (bool)GetValue(NoNumbersProperty); }
+            set { SetValue(ColorProperty, value); }
+        }
+
         public static readonly DependencyProperty ColorProperty =
             DependencyProperty.Register("Color", typeof(Brush), typeof(ProgressBarNum), new UIPropertyMetadata());
+
+        public static readonly DependencyProperty NoNumbersProperty =
+            DependencyProperty.Register("NoNumbers", typeof(bool), typeof(ProgressBarNum), new UIPropertyMetadata(true));
     }
 }

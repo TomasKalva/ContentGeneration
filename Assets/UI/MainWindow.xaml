@@ -8,24 +8,16 @@
   mc:Ignorable="d"
   d:DesignWidth="767.667" d:DesignHeight="416"
   d:DataContext="{d:DesignInstance {x:Type local:ViewModel}, IsDesignTimeCreatable=True}">
-    <!--<Grid.RowDefinitions>
-            <RowDefinition Height="19*"/>
-            <RowDefinition Height="81*"/>
-        </Grid.RowDefinitions>
-        <Grid.Background>
-            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                <GradientStop Offset="0" Color="{Binding TopColor}"/>
-                <GradientStop Offset="1" Color="{Binding BottomColor}"/>
-            </LinearGradientBrush>
-        </Grid.Background>-->
-
     <Grid  VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <!-- Enemy health bars -->
         <Canvas>
             <ItemsControl ItemsSource="{Binding Enemies}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <comp:ProgressBarNum DataContext="{Binding Health}" Color="Red" Width="100" Height="10" Margin="5"/>
+                        <!-- Margin="-100000" to center the control... explanation here:
+                            https://stackoverflow.com/questions/13219321/positioning-an-element-inside-the-canvas-by-its-center-instead-of-the-top-left
+                        -->
+                        <comp:ProgressBarNum DataContext="{Binding Health}" Color="Red" Width="100" Height="10" Margin="-100000"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>
@@ -45,10 +37,10 @@
         <!-- UI elements -->
         <Grid Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30">
-                <comp:ProgressBarNum DataContext="{Binding PlayerState.Health}" Color="Red" Width="300" Height="30" Margin="5"/>
-                <comp:ProgressBarNum DataContext="{Binding PlayerState.Stamina}" Color="Green" Width="300" Height="30" Margin="5"/>
+                <comp:ProgressBarNum DataContext="{Binding PlayerState.Health}" Color="Red" Width="300" Height="15" Margin="5"/>
+                <comp:ProgressBarNum DataContext="{Binding PlayerState.Stamina}" Color="Green" Width="300" Height="15" Margin="5"/>
             </StackPanel>
-            <Border HorizontalAlignment="Left" VerticalAlignment="Bottom" Background="Orange" Width="50" Height="50" Margin="30">
+            <Border HorizontalAlignment="Left" VerticalAlignment="Bottom" Background="Orange" Width="70" Height="70" Margin="30">
                 <TextBlock Foreground="Black" TextAlignment="Center" VerticalAlignment="Center">Item1</TextBlock>
             </Border>
             <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="Orange" Width="80" Height="20" Margin="30">
