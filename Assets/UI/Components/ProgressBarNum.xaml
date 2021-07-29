@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="ContentGeneration.Assets.UI.Components.ProgressBarNum"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:util="clr-namespace:ContentGeneration.Assets.UI.Util"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             x:Name="parent"
+             d:DataContext="{d:DesignInstance util:FloatRange}">
+    <UserControl.Resources>
+        <DataTemplate x:Key="Unbound" DataType="ContentControl">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="{Binding ElementName=healthBar, Path=Value, StringFormat={}{0:0.#}}"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="Bound" DataType="ContentControl">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="{Binding ElementName=healthBar, Path=Value, StringFormat={}{0:0.#}}"/>
+                <TextBlock Text="/"/>
+                <TextBlock Text="{Binding ElementName=healthBar, Path=Maximum, StringFormat={}{0:0.#}}"/>
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Grid Margin="1">
+        <ProgressBar Name="healthBar" Background="DarkGray" Foreground="{Binding ElementName=parent, Path=Color}" 
+                     Value="{Binding ElementName=parent, Path=DataContext.Value, Mode=OneWay}" Maximum="{Binding ElementName=parent, Path=DataContext.Maximum, Mode=OneWay}"/>
+
+        <ContentControl x:Name="Text">
+            <ContentControl.Style>
+                <Style TargetType="ContentControl">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=parent, Path=DataContext.Unbound, Mode=OneWay}" Value="True">
+                            <Setter Property="ContentTemplate" Value="{StaticResource Unbound}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                    <Setter Property="ContentTemplate" Value="{StaticResource Bound}"/>
+                </Style>
+            </ContentControl.Style>
+        </ContentControl>
+    </Grid>
+</UserControl>

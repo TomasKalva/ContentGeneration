@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 D:\UnityProjects\ContentGeneration\Blend\App.xaml
-5181609310
+5-187242206
 
-9778455450
+91106917677
 16856625992
-Assets\BlueComponent.xaml;Assets\NewComponent.xaml;Assets\MainWindow.xaml;Assets\Components\ProgressBarNum.xaml;Assets\Theme.xaml;
+Assets\UI\BlueComponent.xaml;Assets\UI\NewComponent.xaml;Assets\UI\MainWindow.xaml;Assets\UI\Components\ProgressBarNum.xaml;Assets\UI\Theme.xaml;
 
 False
 

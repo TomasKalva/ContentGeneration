@@ -2,12 +2,12 @@
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:local="clr-namespace:ContentGeneration"
-  StartupUri="/ContentGeneration;component/Assets/MainWindow.xaml">
+  StartupUri="/ContentGeneration;component/Assets/UI/MainWindow.xaml">
   <Application.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/Noesis.GUI.Extensions;component/Theme/NoesisTheme.DarkBlue.xaml"/>
-        <ResourceDictionary Source="/ContentGeneration;component/Assets/Theme.xaml"/>
+        <ResourceDictionary Source="/ContentGeneration;component/Assets/UI/Theme.xaml"/>
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </Application.Resources>
