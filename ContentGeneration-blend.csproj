@@ -73,6 +73,10 @@
     <Compile Include="Assets\NewComponent.xaml.cs">
       <DependentUpon>NewComponent.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Assets\Components\ProgressBarNum.xaml.cs">
+      <DependentUpon>ProgressBarNum.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Assets\Util\FloatRange.cs" />
     <Compile Include="Blend\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -86,6 +90,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Assets\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Assets\Components\ProgressBarNum.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -113,6 +121,7 @@
     <None Include="packages.config" />
     <None Include="index.html" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

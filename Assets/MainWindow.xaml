@@ -4,6 +4,7 @@
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:local="clr-namespace:ContentGeneration"
+  xmlns:comp="clr-namespace:ContentGeneration.Assets.Components"
   mc:Ignorable="d"
   d:DataContext="{d:DesignInstance {x:Type local:ViewModel}, IsDesignTimeCreatable=True}">
   <Grid>
@@ -20,6 +21,7 @@
         <Button Content="Styled Button" Style="{StaticResource StyledButton}" Command="{Binding ButtonClicked}"/>
                 <local:NewComponent></local:NewComponent>
                 <local:BlueComponent></local:BlueComponent>
+                <comp:ProgressBarNum></comp:ProgressBarNum>
       </StackPanel>
     </Viewbox>
   </Grid>

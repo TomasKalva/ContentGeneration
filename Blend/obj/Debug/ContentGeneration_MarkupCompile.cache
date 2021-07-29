@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\
+D:\UnityProjects\ContentGeneration\Blend\obj\Debug\
 ContentGeneration
 none
 false
 DEBUG;TRACE
-C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\App.xaml
-4981891341
+D:\UnityProjects\ContentGeneration\Blend\App.xaml
+5181609310
 
-7-1951548282
-161930068657
-Assets\BlueComponent.xaml;Assets\NewComponent.xaml;Assets\MainWindow.xaml;Assets\Theme.xaml;
+9778455450
+16856625992
+Assets\BlueComponent.xaml;Assets\NewComponent.xaml;Assets\MainWindow.xaml;Assets\Components\ProgressBarNum.xaml;Assets\Theme.xaml;
 
 False
 

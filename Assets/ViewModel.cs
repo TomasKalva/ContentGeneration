@@ -27,6 +27,7 @@ namespace ContentGeneration
             {
 #if NOESIS
                 UnityEngine.Debug.Log("Button clicked");
+                TopColor = Color.FromRgb(0, 0, 0);
 #else
                 Console.WriteLine("Button clicked");
 #endif
