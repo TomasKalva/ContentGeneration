@@ -67,28 +67,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Assets\UI\BlueComponent.xaml.cs">
-      <DependentUpon>BlueComponent.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Assets\UI\NewComponent.xaml.cs">
-      <DependentUpon>NewComponent.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Assets\UI\Model\CharacterState.cs" />
     <Compile Include="Assets\UI\Components\ProgressBarNum.xaml.cs">
       <DependentUpon>ProgressBarNum.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Assets\UI\Util\Extensions.cs" />
     <Compile Include="Assets\UI\Util\FloatRange.cs" />
     <Compile Include="Blend\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Assets\UI\BlueComponent.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Assets\UI\NewComponent.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Assets\UI\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

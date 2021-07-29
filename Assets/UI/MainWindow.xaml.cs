@@ -22,6 +22,11 @@ namespace ContentGeneration.Assets.UI
             DataContext = new ViewModel();
         }
 
+        private void ProgressBarNum_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
 #if NOESIS
         private void InitializeComponent()
         {

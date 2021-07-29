@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace ContentGeneration
+namespace ContentGeneration.Assets.UI
 {
     public class DelegateCommand : ICommand
     {

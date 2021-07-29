@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 #endif
+using ContentGeneration.Assets.UI.Model;
 
 namespace ContentGeneration.Assets.UI
 {
@@ -19,10 +20,15 @@ namespace ContentGeneration.Assets.UI
         public Color BottomColor { get; set; }
         public DelegateCommand ButtonClicked { get; }
 
+        public CharacterState PlayerState { get; }
+
         public ViewModel()
         {
             TopColor = Color.FromRgb(17, 102, 157);
             BottomColor = Color.FromRgb(18, 57, 87);
+
+            PlayerState = new CharacterState();
+
             ButtonClicked = new DelegateCommand((p) =>
             {
 #if NOESIS

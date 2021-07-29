@@ -76,11 +76,7 @@ D:\UnityProjects\ContentGeneration\Blend\obj\Debug\ContentGeneration-blend.cspro
 D:\UnityProjects\ContentGeneration\Blend\obj\Debug\ContentGeneration.exe
 D:\UnityProjects\ContentGeneration\Blend\obj\Debug\ContentGeneration.pdb
 D:\UnityProjects\ContentGeneration\Blend\obj\Debug\Assets\UI\Theme.baml
-D:\UnityProjects\ContentGeneration\Blend\obj\Debug\Assets\UI\BlueComponent.g.cs
-D:\UnityProjects\ContentGeneration\Blend\obj\Debug\Assets\UI\NewComponent.g.cs
 D:\UnityProjects\ContentGeneration\Blend\obj\Debug\Assets\UI\MainWindow.g.cs
 D:\UnityProjects\ContentGeneration\Blend\obj\Debug\Assets\UI\Components\ProgressBarNum.g.cs
-D:\UnityProjects\ContentGeneration\Blend\obj\Debug\Assets\UI\BlueComponent.baml
-D:\UnityProjects\ContentGeneration\Blend\obj\Debug\Assets\UI\NewComponent.baml
 D:\UnityProjects\ContentGeneration\Blend\obj\Debug\Assets\UI\MainWindow.baml
 D:\UnityProjects\ContentGeneration\Blend\obj\Debug\Assets\UI\Components\ProgressBarNum.baml

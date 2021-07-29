@@ -6,23 +6,29 @@
   xmlns:local="clr-namespace:ContentGeneration.Assets.UI"
   xmlns:comp="clr-namespace:ContentGeneration.Assets.UI.Components"
   mc:Ignorable="d"
+  d:DesignWidth="767.667" d:DesignHeight="416"
   d:DataContext="{d:DesignInstance {x:Type local:ViewModel}, IsDesignTimeCreatable=True}">
-  <Grid>
-    <Grid.Background>
-      <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Offset="0" Color="{Binding TopColor}"/>
-        <GradientStop Offset="1" Color="{Binding BottomColor}"/>
-      </LinearGradientBrush>
-    </Grid.Background>
-    <Viewbox>
-      <StackPanel Margin="100">
-        <TextBlock Text="Hello World!" Foreground="White" TextAlignment="Center" FontSize="16"/>
-        <Button Content="Normal Button" Margin="0,10" Command="{Binding ButtonClicked}"/>
-        <Button Content="Styled Button" Style="{StaticResource StyledButton}" Command="{Binding ButtonClicked}"/>
-                <local:NewComponent></local:NewComponent>
-                <local:BlueComponent></local:BlueComponent>
-                <comp:ProgressBarNum></comp:ProgressBarNum>
-      </StackPanel>
-    </Viewbox>
-  </Grid>
+    <!--<Grid.RowDefinitions>
+            <RowDefinition Height="19*"/>
+            <RowDefinition Height="81*"/>
+        </Grid.RowDefinitions>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Offset="0" Color="{Binding TopColor}"/>
+                <GradientStop Offset="1" Color="{Binding BottomColor}"/>
+            </LinearGradientBrush>
+        </Grid.Background>-->
+
+    <Grid Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30">
+            <comp:ProgressBarNum DataContext="{Binding PlayerState.Health}" Color="Red" Width="300" Height="30" Margin="5"/>
+            <comp:ProgressBarNum DataContext="{Binding PlayerState.Stamina}" Color="Green" Width="300" Height="30" Margin="5"/>
+        </StackPanel>
+        <Border HorizontalAlignment="Left" VerticalAlignment="Bottom" Background="Orange" Width="50" Height="50" Margin="30">
+            <TextBlock Foreground="Black" TextAlignment="Center" VerticalAlignment="Center">Item1</TextBlock>
+        </Border>
+        <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="Orange" Width="80" Height="20" Margin="30">
+            <TextBlock Foreground="Black" TextAlignment="Center" VerticalAlignment="Center">Spirit: 42</TextBlock>
+        </Border>
+    </Grid>
 </UserControl>

@@ -24,7 +24,7 @@ namespace ContentGeneration.Assets.UI.Components
 #if NOESIS
         private void InitializeComponent()
         {
-            Noesis.GUI.LoadComponent(this, "Assets/BlueComponent.xaml");
+            Noesis.GUI.LoadComponent(this, "Assets/UI/Components/ProgressBarNum.xaml");
         }
 #endif
 
