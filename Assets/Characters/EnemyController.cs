@@ -37,7 +37,7 @@ public class EnemyController : MonoBehaviour
 			movementDirection = Vector2.ClampMagnitude(movementDirection, 1f);
 			agent.Move(movementDirection);
 		}
-		agent.Turn(movementDirection);
+		//agent.Turn(movementDirection);
 
 		if (!agent.acting.Busy)
 		{

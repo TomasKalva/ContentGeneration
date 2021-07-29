@@ -357,9 +357,19 @@ public class Movement : MonoBehaviour {
 	{
 		if (desiredDirection.sqrMagnitude > 0.01f)
 		{
-			var inpSpaceA = (Mathf.PI / 2f - Mathf.Atan2(playerInputSpace.forward.z, playerInputSpace.forward.x)) * Mathf.Rad2Deg;
-			var globalDesiredDirection = Quaternion.AngleAxis(inpSpaceA, Vector3.up) * new Vector3(desiredDirection.x, 0f, desiredDirection.y);
-			direction = Vector2.Lerp(direction, new Vector2(globalDesiredDirection.x, globalDesiredDirection.z), rotationCoef);
+			// update direction
+			if (playerInputSpace)
+			{
+				var inpSpaceA = (Mathf.PI / 2f - Mathf.Atan2(playerInputSpace.forward.z, playerInputSpace.forward.x)) * Mathf.Rad2Deg;
+				var globalDesiredDirection = Quaternion.AngleAxis(inpSpaceA, Vector3.up) * new Vector3(desiredDirection.x, 0f, desiredDirection.y);
+				direction = Vector2.Lerp(direction, new Vector2(globalDesiredDirection.x, globalDesiredDirection.z), rotationCoef);
+			}
+            else
+            {
+				direction = Vector2.Lerp(direction, desiredDirection, rotationCoef);
+			}
+
+			// update body rotation
 			body.rotation = Quaternion.FromToRotation(Vector3.forward, AgentForward);
 		}
 	}
