@@ -67,7 +67,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Assets\UI\Model\PlayerCharacterState.cs" />
     <Compile Include="Assets\UI\Model\CharacterState.cs" />
     <Compile Include="Assets\UI\Components\ProgressBarNum.xaml.cs">
       <DependentUpon>ProgressBarNum.xaml</DependentUpon>

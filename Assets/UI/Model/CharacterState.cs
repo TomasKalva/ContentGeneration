@@ -34,5 +34,43 @@ namespace ContentGeneration.Assets.UI.Model
             Health = new FloatRange(100, 42);
             Stamina = new FloatRange(100, 42);
         }
+
+ #region Screen position of health bars
+
+#if NOESIS
+        private float _screenPosX;
+        public float ScreenPosX
+        {
+            get { return _screenPosX; }
+            set { _screenPosX = value; PropertyChanged.OnPropertyChanged(this); }
+        }
+
+        private float _screenPosY;
+        public float ScreenPosY
+        {
+            get { return _screenPosY; }
+            set { _screenPosY = viewCamera.scaledPixelHeight - value; PropertyChanged.OnPropertyChanged(this); }
+        }
+
+        private Camera viewCamera;
+
+        void Start(){
+            viewCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
+        }
+
+        void Update()
+        {
+            var agentUiPos = viewCamera.WorldToScreenPoint(transform.position);
+            ScreenPosX = agentUiPos.x;
+            ScreenPosY = agentUiPos.y;
+            Debug.Log(agentUiPos);
+        }
+#else
+        public float ScreenPosX => 0f;
+
+        public float ScreenPosY => 0f;
+#endif
+
+        #endregion
     }
 }

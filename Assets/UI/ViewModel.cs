@@ -10,6 +10,7 @@ using System.Windows.Media;
 
 #endif
 using ContentGeneration.Assets.UI.Model;
+using System.Collections.ObjectModel;
 
 namespace ContentGeneration.Assets.UI
 {
@@ -24,6 +25,8 @@ namespace ContentGeneration.Assets.UI
 
         public CharacterState PlayerState { get; set; }
 
+        public ObservableCollection<CharacterState> Enemies { get; }
+
         public ViewModel()
         {
             TopColor = Color.FromRgb(17, 102, 157);
@@ -32,8 +35,10 @@ namespace ContentGeneration.Assets.UI
 
 #if NOESIS
             PlayerState =  GameObject.Find("Player").GetComponent<CharacterState>();
+            Enemies = new ObservableCollection<CharacterState>(Object.FindObjectsOfType<CharacterState>());
 #else
             PlayerState = new CharacterState();
+            Enemies = new ObservableCollection<CharacterState>();
 #endif
 
             ButtonClicked = new DelegateCommand((p) =>
