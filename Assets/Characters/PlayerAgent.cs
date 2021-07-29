@@ -39,6 +39,5 @@ public class PlayerAgent : Agent
             attack = acting.SelectAct("Slash") as Attack;
         }
         attack.Direction = movement.AgentForward;
-        Debug.Log(movement.AgentForward);
     }
 }

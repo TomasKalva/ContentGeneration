@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using ContentGeneration.Assets.UI.Model;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -38,6 +39,7 @@ public class Agent : MonoBehaviour
     public Movement movement;
     public Acting acting;
 	public Animator animator;
+	public CharacterState character;
 
 	/// <summary>
 	/// Used for reseting animation back to idle.
@@ -50,10 +52,9 @@ public class Agent : MonoBehaviour
 		movement = GetComponent<Movement>();
 		acting = GetComponent<Acting>();
 		animator = GetComponent<Animator>();
+		character = GetComponent<CharacterState>();
 		stepsSinceMoved = 0;
 	}
-
-
 
 	public void StartReceivingControls()
 	{

@@ -10,7 +10,7 @@ public class Generator : MonoBehaviour
     public Transform location;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         StartCoroutine(RunAlgorithm());
         //Generate();

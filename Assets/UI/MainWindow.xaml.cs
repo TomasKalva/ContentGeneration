@@ -1,6 +1,7 @@
 ﻿#if UNITY_5_3_OR_NEWER
 #define NOESIS
 using Noesis;
+using UnityEngine;
 #else
 using System;
 using System.Windows;
@@ -18,7 +19,9 @@ namespace ContentGeneration.Assets.UI
         public MainWindow()
         {
             InitializeComponent();
-
+            #if UNITY_5_3_OR_NEWER
+            Debug.Log("MainWindowInitialized");
+            #endif
             DataContext = new ViewModel();
         }
 

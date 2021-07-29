@@ -1,9 +1,17 @@
-﻿using ContentGeneration.Assets.UI.Util;
+﻿#if UNITY_5_3_OR_NEWER
+#define NOESIS
+using UnityEngine;
+#endif
+using ContentGeneration.Assets.UI.Util;
 using System.ComponentModel;
 
 namespace ContentGeneration.Assets.UI.Model
 {
-    public class CharacterState : INotifyPropertyChanged
+    public class CharacterState :
+#if NOESIS
+        MonoBehaviour,
+#endif
+        INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

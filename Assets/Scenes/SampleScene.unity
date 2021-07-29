@@ -835,6 +835,7 @@ MonoBehaviour:
   movement: {fileID: 0}
   acting: {fileID: 0}
   animator: {fileID: 0}
+  character: {fileID: 0}
 --- !u!1001 &671902884
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2579,6 +2580,7 @@ MonoBehaviour:
   movement: {fileID: 0}
   acting: {fileID: 0}
   animator: {fileID: 0}
+  character: {fileID: 0}
 --- !u!114 &1794102858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2809,6 +2811,7 @@ GameObject:
   - component: {fileID: 1835034813}
   - component: {fileID: 1835034804}
   - component: {fileID: 1835034803}
+  - component: {fileID: 1835034817}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -2883,7 +2886,70 @@ MonoBehaviour:
   duration: 0.5
   speedF:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: -0.060699265
+      outSlope: -0.060699265
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.008333325
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.6584363
+    - serializedVersion: 3
+      time: 0.32913256
+      value: 0
+      inSlope: -0.033431485
+      outSlope: -0.033431485
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.3310631
+      value: 0
+      inSlope: 0.18387713
+      outSlope: 0.18387713
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.14238322
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.48737627
+      value: 9.978894
+      inSlope: -0.08210614
+      outSlope: -0.08210614
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.7832777
+      value: 0
+      inSlope: 0.17331806
+      outSlope: 0.17331806
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.6572752
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.98749995
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -3181,6 +3247,7 @@ MonoBehaviour:
   movement: {fileID: 0}
   acting: {fileID: 0}
   animator: {fileID: 0}
+  character: {fileID: 0}
 --- !u!95 &1835034812
 Animator:
   serializedVersion: 3
@@ -3334,6 +3401,18 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1835034817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1835034800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 864700e08c77d7043935b66576020568, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1932092083
 GameObject:
   m_ObjectHideFlags: 0
