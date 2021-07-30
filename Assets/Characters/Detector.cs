@@ -10,11 +10,14 @@ public class Detector : MonoBehaviour
 
     public bool triggered;
 
+    public Collider other;
+
     private void OnTriggerEnter(Collider other)
     {
         if (detectionMask == (detectionMask | (1 << other.gameObject.layer)))
         {
             triggered = true;
+            this.other = other;
         }
     }
     private void OnTriggerExit(Collider other)
@@ -22,6 +25,7 @@ public class Detector : MonoBehaviour
         if (detectionMask == (detectionMask | (1 << other.gameObject.layer)))
         {
             triggered = false;
+            this.other = null;
         }
     }
 }

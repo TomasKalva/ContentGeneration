@@ -63,7 +63,6 @@ namespace ContentGeneration.Assets.UI.Model
             var agentUiPos = viewCamera.WorldToScreenPoint(transform.position + Vector3.up);
             ScreenPosX = agentUiPos.x;
             ScreenPosY = agentUiPos.y;
-            Debug.Log(agentUiPos);
         }
 #else
         public float ScreenPosX => 0f;

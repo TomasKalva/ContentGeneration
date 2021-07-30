@@ -14,6 +14,9 @@ public class Attack : AnimatedAct
         set => direction = value.normalized;
     }
 
+    [SerializeField]
+    Weapon weapon;
+
     public override IEnumerator Perform(Agent agent)
     {
         agent.animator.CrossFade(animationName, 0.05f);
@@ -22,8 +25,10 @@ public class Attack : AnimatedAct
         agent.movement.Constraints.Add(dirConstr);
         //var turnConstr = new TurnToDirection(Direction);
         //agent.movement.Constraints.Add(turnConstr);
+        weapon.Active = true;
 
         yield return new WaitForSeconds(duration);
+        weapon.Active = false;
         dirConstr.Finished = true;
         //turnConstr.Finished = true;
     }
