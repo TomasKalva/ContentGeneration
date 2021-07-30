@@ -15,6 +15,9 @@ namespace ContentGeneration.Assets.UI.Model
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+#if NOESIS
+        [SerializeField]
+#endif
         private FloatRange _health;
         public FloatRange Health
         {
@@ -22,6 +25,9 @@ namespace ContentGeneration.Assets.UI.Model
             set { _health = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
+#if NOESIS
+        [SerializeField]
+#endif
         private FloatRange _stamina;
         public FloatRange Stamina
         {

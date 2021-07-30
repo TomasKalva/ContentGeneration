@@ -1004,6 +1004,10 @@ PrefabInstance:
       value: scorpion
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 2d0f07cc080af814f87cd3599c0f9b40, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2d0f07cc080af814f87cd3599c0f9b40, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -3128,6 +3132,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  weapon: {fileID: 846497347068498945}
 --- !u!114 &1835034804
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3223,6 +3228,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  weapon: {fileID: 846497347068498945}
 --- !u!4 &1835034805
 Transform:
   m_ObjectHideFlags: 0
