@@ -964,7 +964,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -6717632140799681727, guid: 2d0f07cc080af814f87cd3599c0f9b40, type: 3}
       propertyPath: m_Name
-      value: RightClaw
+      value: bone.001
       objectReference: {fileID: 0}
     - target: {fileID: -6717632140799681727, guid: 2d0f07cc080af814f87cd3599c0f9b40, type: 3}
       propertyPath: m_Layer
@@ -980,7 +980,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -5268650061517341114, guid: 2d0f07cc080af814f87cd3599c0f9b40, type: 3}
       propertyPath: m_Name
-      value: Tail
+      value: Bone.019
       objectReference: {fileID: 0}
     - target: {fileID: -5268650061517341114, guid: 2d0f07cc080af814f87cd3599c0f9b40, type: 3}
       propertyPath: m_Layer
@@ -1020,7 +1020,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -2392169166197197084, guid: 2d0f07cc080af814f87cd3599c0f9b40, type: 3}
       propertyPath: m_Name
-      value: LeftClaw
+      value: Bone.015
       objectReference: {fileID: 0}
     - target: {fileID: -2392169166197197084, guid: 2d0f07cc080af814f87cd3599c0f9b40, type: 3}
       propertyPath: m_Layer
