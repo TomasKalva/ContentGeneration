@@ -12,6 +12,8 @@ public class Weapon : MonoBehaviour
     [SerializeField]
     float damage;
 
+    Agent owner;
+
     bool _active;
 
     public bool Active
@@ -35,6 +37,7 @@ public class Weapon : MonoBehaviour
     {
         detector = GetComponent<Detector>();
         currentlyHit = new List<Agent>();
+        owner = GetComponentInParent<Agent>();
     }
 
     // Update is called once per frame
@@ -43,7 +46,7 @@ public class Weapon : MonoBehaviour
         if (Active && detector.triggered)
         {
             var hitAgent = detector.other.GetComponentInParent<Agent>();
-            if (!currentlyHit.Contains(hitAgent))
+            if (hitAgent != owner && !currentlyHit.Contains(hitAgent))
             {
                 hitAgent.character.Health -= damage;
                 currentlyHit.Add(hitAgent);

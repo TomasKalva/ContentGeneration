@@ -14,13 +14,35 @@ public class Detector : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Enter(other);
+    }
+
+    /*private void OnCollisionEnter(Collision collision)
+    {
+        Enter(collision.collider);
+        Debug.Log("collision");
+    }*/
+
+    private void OnTriggerExit(Collider other)
+    {
+        Exit(other);
+    }
+
+    /*private void OnCollisionExit(Collision collision)
+    {
+        Exit(collision.collider);
+    }*/
+
+    private void Enter(Collider other)
+    {
         if (detectionMask == (detectionMask | (1 << other.gameObject.layer)))
         {
             triggered = true;
             this.other = other;
         }
     }
-    private void OnTriggerExit(Collider other)
+
+    private void Exit(Collider other)
     {
         if (detectionMask == (detectionMask | (1 << other.gameObject.layer)))
         {
