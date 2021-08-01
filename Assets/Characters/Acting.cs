@@ -12,14 +12,26 @@ public interface IActing
 
 public class Acting : MonoBehaviour, IActing
 {
+    static Act Idle;
+
     [SerializeField]
     public List<Act> acts;
 
     public bool Busy { get; set; }
 
-    public Act ActiveAct { get; private set; }
+    [SerializeField]
+    Act _activeAct;
+    public Act ActiveAct {
+        get => _activeAct ? _activeAct : Idle;
+        private set => _activeAct = value; 
+    }
 
     List<Act> selectedActs = new List<Act>();
+
+    void Awake()
+    {
+        Idle = gameObject.AddComponent<IdleAct>();
+    }
 
     public Act SelectAct(string actName)
     {

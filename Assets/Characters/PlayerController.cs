@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Movement;
 
-[RequireComponent(typeof(PlayerAgent))]
+[RequireComponent(typeof(HumanAgent))]
 public class PlayerController : MonoBehaviour
 {
-	PlayerAgent agent;
+	HumanAgent agent;
 
 	[SerializeField]
 	Transform playerInputSpace;
@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
 	{
-		agent = GetComponent<PlayerAgent>();
+		agent = GetComponent<HumanAgent>();
 	}
 
     // Update is called once per frame
@@ -36,10 +36,10 @@ public class PlayerController : MonoBehaviour
 			Debug.LogError("Input space is null");
 		}
 		
-		if (Input.GetMouseButtonDown(0))
+		/*if (Input.GetMouseButtonDown(0))
 		{
 			agent.Shoot();
-		}
+		}*/
 
 		if (Input.GetButtonDown("Roll"))
 		{

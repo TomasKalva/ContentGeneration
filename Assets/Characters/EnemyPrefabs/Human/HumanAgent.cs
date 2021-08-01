@@ -3,13 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class PlayerAgent : Agent
+public class HumanAgent : Agent
 {
-    public void Shoot()
-    {
-        acting.SelectAct("Shoot");
-    }
-
     public void Backstep()
     {
         ResetState();

@@ -2,6 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ActType
+{
+    IDLE,
+    DEFFENSIVE,
+    OFFENSIVE,
+}
+
 public class Act : MonoBehaviour
 {
     [SerializeField]
@@ -9,6 +16,9 @@ public class Act : MonoBehaviour
 
     [SerializeField]
     public string actName;
+
+    [SerializeField]
+    public ActType type;
 
     [SerializeField]
     public int priority;
@@ -23,5 +33,20 @@ public class Act : MonoBehaviour
         Debug.Log("Started act");
         yield return new WaitForSeconds(5f);
         Debug.Log("Ended act");
+    }
+}
+
+public class IdleAct : Act
+{
+    public IdleAct()
+    {
+        actName = "Idle";
+        type = ActType.IDLE;
+        priority = -100;
+    }
+
+    public override IEnumerator Perform(Agent agent)
+    {
+        yield return null;
     }
 }
