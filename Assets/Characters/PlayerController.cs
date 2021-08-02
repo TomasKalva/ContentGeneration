@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     void Awake()
 	{
 		agent = GetComponent<HumanAgent>();
+		Application.targetFrameRate = 60;
 	}
 
     // Update is called once per frame

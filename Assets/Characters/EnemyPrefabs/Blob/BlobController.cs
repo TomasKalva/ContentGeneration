@@ -51,8 +51,17 @@ public class BlobController : MonoBehaviour
 
 		if (!agent.acting.Busy)
 		{
+			// check if I can explode
+			if (explosionArea.triggered)
+			{
+				var hitAgent = explosionArea.other.GetComponentInParent<Agent>();
+				if (hitAgent != agent)
+				{
+					agent.Explode();
+				}
+			}
 			// check if I can rush towards enemy
-			if (rushArea.triggered)
+			else if (rushArea.triggered)
 			{
 				var hitAgent = rushArea.other.GetComponentInParent<Agent>();
 				if (hitAgent != agent)
