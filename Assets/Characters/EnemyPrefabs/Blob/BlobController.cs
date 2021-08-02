@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(HumanAgent))]
-public class HumanController : MonoBehaviour
+[RequireComponent(typeof(BlobAgent))]
+public class BlobController : MonoBehaviour
 {
-	HumanAgent agent;
+	BlobAgent agent;
 
 	[SerializeField]
 	Transform targetPoint;
@@ -14,7 +14,10 @@ public class HumanController : MonoBehaviour
 	float minDistance;
 
 	[SerializeField]
-	Detector attackArea;
+	Detector rushArea;
+
+	[SerializeField]
+	Detector explosionArea;
 
 	bool GoToTarget()
 	{
@@ -24,7 +27,7 @@ public class HumanController : MonoBehaviour
 	// Start is called before the first frame update
 	void Awake()
 	{
-		agent = GetComponent<HumanAgent>();
+		agent = GetComponent<BlobAgent>();
 		targetPoint = GameObject.Find("Player").transform;
 	}
 
@@ -48,20 +51,13 @@ public class HumanController : MonoBehaviour
 
 		if (!agent.acting.Busy)
 		{
-			// check if my attack hits enemy
-			if (attackArea.triggered)
+			// check if I can rush towards enemy
+			if (rushArea.triggered)
 			{
-				var hitAgent = attackArea.other.GetComponentInParent<Agent>();
+				var hitAgent = rushArea.other.GetComponentInParent<Agent>();
 				if (hitAgent != agent)
 				{
-					if (hitAgent.acting.ActiveAct.type == ActType.OFFENSIVE)
-					{
-						agent.Backstep();
-					}
-					else
-					{
-						agent.Attack();
-					}
+					agent.Rush(movementDirection);
 				}
 			}
 		}

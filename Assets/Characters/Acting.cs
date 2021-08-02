@@ -14,7 +14,6 @@ public class Acting : MonoBehaviour, IActing
 {
     static Act Idle;
 
-    [SerializeField]
     public List<Act> acts;
 
     public bool Busy { get; set; }
@@ -31,6 +30,7 @@ public class Acting : MonoBehaviour, IActing
     void Awake()
     {
         Idle = gameObject.AddComponent<IdleAct>();
+        acts = GetComponents<Act>().ToList();
     }
 
     public Act SelectAct(string actName)

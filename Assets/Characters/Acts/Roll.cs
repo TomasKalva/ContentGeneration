@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Roll : AnimatedAct
 {
-    [SerializeField, Curve(0f, 0f, 1f, 15f, true)]
+    [SerializeField, Curve(0f, 0f, 1f, 30f, true)]
     AnimationCurve speedF;
 
     Vector2 direction;
