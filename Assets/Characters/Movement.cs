@@ -261,12 +261,6 @@ public class Movement : MonoBehaviour {
 			}
 		}
 
-		/*foreach (var instruction in instructionQueue)
-		{
-			instruction.Do(this);
-		}*/
-		Debug.Log(desiredVelocity);
-
 		if (VelocityUpdater == null)
 		{
 			AdjustVelocity();

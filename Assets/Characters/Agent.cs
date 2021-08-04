@@ -68,11 +68,9 @@ public class Agent : MonoBehaviour
 
 	public void UpdateAgent()
 	{
-		//if (!acting.Busy)
-        {
-			acting.Act(this);
-		}
+		acting.Act(this);
 
+		movement.MovementUpdate();
 	}
 
 	public void Move(Vector2 direction)

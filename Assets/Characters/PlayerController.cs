@@ -93,7 +93,5 @@ public class PlayerController : MonoBehaviour
 
 		agent.UpdateAgent();
 
-		agent.movement.MovementUpdate();
-
 	}
 }

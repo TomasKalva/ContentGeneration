@@ -35,20 +35,6 @@ public class Roll : AnimatedAct
     {
         movementContraints.ForEach(con => con.Finished = true);
     }
-
-    /*public override IEnumerator Perform(Agent agent)
-    {
-        agent.animator.CrossFade(animationName, 0.05f);
-        agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, agent.movement.InputToWorld(Direction));
-        var dirConstr = new VelocityInDirection(agent.movement.InputToWorld(Direction));
-        agent.movement.Constraints.Add(dirConstr);
-        var turnConstr = new TurnToDirection(Direction);
-        agent.movement.Constraints.Add(turnConstr);
-
-        yield return new WaitForSeconds(duration);
-        dirConstr.Finished = true;
-        turnConstr.Finished = true;
-    }*/
 }
 
 public abstract class MovementConstraint

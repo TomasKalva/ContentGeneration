@@ -50,14 +50,4 @@ static class ExtensionMethods
     {
         return (direction - Vector3.Dot(direction, normal) * normal).normalized;
     }
-
-    public static IEnumerator ActSequence(this IActing acting, Agent agent, Act bestAct)
-    {
-        acting.Busy = true;
-        if (bestAct)
-        {
-            yield return bestAct.Perform(agent);
-        }
-        acting.Busy = false;
-    }
 }

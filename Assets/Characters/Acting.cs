@@ -69,8 +69,6 @@ public class Acting : MonoBehaviour, IActing
             }
         }
 
-        Debug.Log(_activeAct);
-
         if (Busy)
         {
             if (ActiveAct.UpdateAct(agent))

@@ -39,20 +39,4 @@ public class Attack : AnimatedAct
         weapon.Active = false;
         movementContraints.ForEach(con => con.Finished = true);
     }
-
-    public override IEnumerator Perform(Agent agent)
-    {
-        agent.animator.CrossFade(animationName, 0.05f);
-        agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, Direction);
-        var dirConstr = new VelocityInDirection(Direction);
-        agent.movement.Constraints.Add(dirConstr);
-        //var turnConstr = new TurnToDirection(Direction);
-        //agent.movement.Constraints.Add(turnConstr);
-        weapon.Active = true;
-
-        yield return new WaitForSeconds(duration);
-        weapon.Active = false;
-        dirConstr.Finished = true;
-        //turnConstr.Finished = true;
-    }
 }

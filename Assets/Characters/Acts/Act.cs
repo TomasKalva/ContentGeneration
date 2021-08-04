@@ -28,18 +28,17 @@ public class Act : MonoBehaviour
         return detector && detector.triggered;
     }
 
-    public virtual void StartAct(Agent agent) { }
+    public virtual void StartAct(Agent agent) 
+    { 
+        //Debug.Log("Started act"); 
+    }
     /// <summary>
     /// Returns true if finished.
     /// </summary>
     public virtual bool UpdateAct(Agent agent) => true;
-    public virtual void EndAct(Agent agent) { }
-
-    public virtual IEnumerator Perform(Agent agent)
+    public virtual void EndAct(Agent agent) 
     {
-        Debug.Log("Started act");
-        yield return new WaitForSeconds(5f);
-        Debug.Log("Ended act");
+        //Debug.Log("Ended act"); 
     }
 }
 
@@ -52,8 +51,6 @@ public class IdleAct : Act
         priority = -100;
     }
 
-    public override IEnumerator Perform(Agent agent)
-    {
-        yield return null;
-    }
+    public override void StartAct(Agent agent) { }
+    public override void EndAct(Agent agent) { }
 }
