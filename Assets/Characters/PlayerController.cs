@@ -22,6 +22,8 @@ public class PlayerController : MonoBehaviour
 
 	Dictionary<string, bool> buttonDown;
 
+	bool respawned;
+
 	// Start is called before the first frame update
 	void Awake()
 	{
@@ -76,6 +78,16 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
 	{
+        if (agent.character.Dead)
+		{
+			if (PlayerCharacterState.SpawnPoint && !respawned)
+			{
+				PlayerCharacterState.SpawnPoint.SpawnPlayer();
+				respawned = true;
+			}
+			//return;
+		}
+
 		agent.StartReceivingControls();
 
 		Vector2 playerInput;
@@ -126,9 +138,4 @@ public class PlayerController : MonoBehaviour
 		agent.UpdateAgent();
 
 	}
-
-    void OnDestroy()
-    {
-		PlayerCharacterState.SpawnPoint.SpawnPlayer();    
-    }
 }

@@ -41,7 +41,16 @@ namespace ContentGeneration.Assets.UI
             }
         }
 
-        public ObservableCollection<CharacterState> Enemies { get; set; }
+        ObservableCollection<CharacterState> enemies;
+        public ObservableCollection<CharacterState> Enemies
+        {
+            get => enemies;
+            private set
+            {
+                enemies = value;
+                PropertyChanged.OnPropertyChanged(this);
+            }
+        }
 
         string _message;
         public string Message
@@ -50,9 +59,23 @@ namespace ContentGeneration.Assets.UI
             set
             {
                 _message = value;
+                MessageOpacity = 1f;
                 PropertyChanged.OnPropertyChanged(this);
             }
         }
+
+        float _messageOpacity;
+
+        public float MessageOpacity
+        {
+            get => _messageOpacity;
+            set
+            {
+                _messageOpacity = value;
+                PropertyChanged.OnPropertyChanged(this);
+            }
+        }
+
 
 #if NOESIS
         private void Awake()
@@ -60,13 +83,20 @@ namespace ContentGeneration.Assets.UI
             TopColor = Color.FromRgb(17, 102, 157);
             BottomColor = Color.FromRgb(18, 57, 87);
 
-            Enemies = new ObservableCollection<CharacterState>(Object.FindObjectsOfType<CharacterState>());
-
-
             ButtonClicked = new DelegateCommand((p) =>
             {
                 UnityEngine.Debug.Log("Button clicked");
             });
+        }
+
+        void Start()
+        {
+            Enemies = new ObservableCollection<CharacterState>(Object.FindObjectsOfType<CharacterState>());
+        }
+
+        void Update()
+        {
+            MessageOpacity *= 0.99f;
         }
 #else
         public ViewModel()
@@ -78,6 +108,7 @@ namespace ContentGeneration.Assets.UI
             Enemies = new ObservableCollection<CharacterState>();
 
             Message = "Sample text";
+            MessageOpacity = 0.5f;
 
             ButtonClicked = new DelegateCommand((p) =>
             {
