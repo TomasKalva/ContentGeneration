@@ -1,4 +1,5 @@
 ﻿using Assets;
+using ContentGeneration.Assets.UI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,13 +19,25 @@ public class PlayerController : MonoBehaviour
 	void Awake()
 	{
 		agent = GetComponent<HumanAgent>();
-		//Application.targetFrameRate = 60;
+
+		Application.targetFrameRate = 80;
 
 		buttonDown = new Dictionary<string, bool>()
 		{
 			{"Roll", false },
 			{"Attack", false },
 		};
+	}
+
+    private void Start()
+    {
+		var camera = GameObject.Find("Main Camera");
+		playerInputSpace = camera.transform;
+		agent.movement.playerInputSpace = playerInputSpace;
+		camera.GetComponent<OrbitCamera>().focus = transform;
+
+		camera.GetComponent<ViewModel>().PlayerState = agent.character;
+
 	}
 
     void Update()

@@ -11,44 +11,67 @@ using System.Windows.Media;
 #endif
 using ContentGeneration.Assets.UI.Model;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using ContentGeneration.Assets.UI.Util;
 
 namespace ContentGeneration.Assets.UI
 {
     /// <summary>
     /// Logic for application ViewModel
     /// </summary>
-    public partial class ViewModel
+    public partial class ViewModel :
+#if NOESIS
+        MonoBehaviour,
+#endif
+        INotifyPropertyChanged
     {
         public Color TopColor { get; set; }
         public Color BottomColor { get; set; }
-        public DelegateCommand ButtonClicked { get; }
+        public DelegateCommand ButtonClicked { get; set; }
 
-        public CharacterState PlayerState { get; set; }
+        CharacterState _playerState;
+        public CharacterState PlayerState 
+        {
+            get => _playerState; 
+            set
+            {
+                _playerState = value;
+                PropertyChanged.OnPropertyChanged(this);
+            }
+        }
 
-        public ObservableCollection<CharacterState> Enemies { get; }
+        public ObservableCollection<CharacterState> Enemies { get; set; }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+#if NOESIS
+        private void Awake()
+        {
+            TopColor = Color.FromRgb(17, 102, 157);
+            BottomColor = Color.FromRgb(18, 57, 87);
+
+            Enemies = new ObservableCollection<CharacterState>(Object.FindObjectsOfType<CharacterState>());
+
+
+            ButtonClicked = new DelegateCommand((p) =>
+            {
+                UnityEngine.Debug.Log("Button clicked");
+            });
+        }
+#else
         public ViewModel()
         {
             TopColor = Color.FromRgb(17, 102, 157);
             BottomColor = Color.FromRgb(18, 57, 87);
 
-
-#if NOESIS
-            PlayerState =  GameObject.Find("Player").GetComponent<CharacterState>();
-            Enemies = new ObservableCollection<CharacterState>(Object.FindObjectsOfType<CharacterState>());
-#else
             PlayerState = new CharacterState();
             Enemies = new ObservableCollection<CharacterState>();
-#endif
 
             ButtonClicked = new DelegateCommand((p) =>
             {
-#if NOESIS
-                UnityEngine.Debug.Log("Button clicked");
-#else
                 Console.WriteLine("Button clicked");
-#endif
             });
         }
+#endif
     }
 }

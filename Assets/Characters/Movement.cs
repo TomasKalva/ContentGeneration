@@ -35,7 +35,7 @@ public class Movement : MonoBehaviour {
 	LayerMask probeMask = -1, stairsMask = -1;
 
 	[SerializeField]
-	Transform playerInputSpace = default;
+	public Transform playerInputSpace = default;
 
 	public Rigidbody body;
 

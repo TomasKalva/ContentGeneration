@@ -19,7 +19,11 @@ namespace ContentGeneration.Assets.UI
         public MainWindow()
         {
             InitializeComponent();
+#if NOESIS
+            DataContext = GameObject.Find("Main Camera").GetComponent<ViewModel>();
+#else
             DataContext = new ViewModel();
+#endif
         }
 
         private void ProgressBarNum_Loaded(object sender, RoutedEventArgs e)

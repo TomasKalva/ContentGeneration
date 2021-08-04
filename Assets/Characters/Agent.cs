@@ -47,7 +47,7 @@ public class Agent : MonoBehaviour
 	int stepsSinceMoved;
 
 	// Start is called before the first frame update
-	void Start()
+	void Awake()
 	{
 		movement = GetComponent<Movement>();
 		acting = GetComponent<Acting>();
