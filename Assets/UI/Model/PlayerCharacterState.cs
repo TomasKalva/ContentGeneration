@@ -1,0 +1,39 @@
+﻿#if UNITY_5_3_OR_NEWER
+#define NOESIS
+using UnityEngine;
+#endif
+using ContentGeneration.Assets.UI.Util;
+using System.ComponentModel;
+
+namespace ContentGeneration.Assets.UI.Model
+{
+    public class PlayerCharacterState : CharacterState {
+
+#if NOESIS
+        [SerializeField]
+        private InteractiveObject _currentInteractiveObject;
+        public InteractiveObject CurrentInteractiveObject
+        {
+            get { return _currentInteractiveObject; }
+            set { 
+                _currentInteractiveObject = value;
+                if (_currentInteractiveObject)
+                {
+                    CurrentInteractiveObjectState = value.state;
+                }
+                OnPropertyChanged(this); 
+            }
+        }
+#endif
+
+#if NOESIS
+        [SerializeField]
+#endif
+        private InteractiveObjectState _currentInteractiveObjectState;
+        public InteractiveObjectState CurrentInteractiveObjectState
+        {
+            get { return _currentInteractiveObjectState; }
+            set { _currentInteractiveObjectState = value; OnPropertyChanged(this); }
+        }
+    }
+}

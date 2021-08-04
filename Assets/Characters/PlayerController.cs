@@ -1,7 +1,10 @@
 ﻿using Assets;
 using ContentGeneration.Assets.UI;
+using ContentGeneration.Assets.UI.Model;
+using ContentGeneration.Assets.UI.Util;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static Movement;
 
@@ -9,6 +12,10 @@ using static Movement;
 public class PlayerController : MonoBehaviour
 {
 	HumanAgent agent;
+
+	PlayerCharacterState PlayerCharacterState => (PlayerCharacterState)agent.character;
+
+	World world;
 
 	[SerializeField]
 	Transform playerInputSpace;
@@ -19,6 +26,7 @@ public class PlayerController : MonoBehaviour
 	void Awake()
 	{
 		agent = GetComponent<HumanAgent>();
+		world = GameObject.Find("World").GetComponent<World>();
 
 		Application.targetFrameRate = 80;
 
@@ -26,6 +34,7 @@ public class PlayerController : MonoBehaviour
 		{
 			{"Roll", false },
 			{"Attack", false },
+			{"Interact", false },
 		};
 	}
 
@@ -36,14 +45,16 @@ public class PlayerController : MonoBehaviour
 		agent.movement.playerInputSpace = playerInputSpace;
 		camera.GetComponent<OrbitCamera>().focus = transform;
 
-		camera.GetComponent<ViewModel>().PlayerState = agent.character;
-
+		camera.GetComponent<ViewModel>().PlayerState = (PlayerCharacterState)agent.character;
 	}
 
     void Update()
     {
 		AddButtonsDown();
-    }
+
+		PlayerCharacterState.CurrentInteractiveObject = world.ObjectsCloseTo(transform.position, 5f).FirstOrDefault();
+
+	}
 
 	void AddButtonsDown()
     {
@@ -100,6 +111,13 @@ public class PlayerController : MonoBehaviour
 		if (buttonDown["Attack"])
 		{
 			agent.Attack();
+		}
+
+		var interactiveObject = PlayerCharacterState.CurrentInteractiveObject;
+
+		if (buttonDown["Interact"] && interactiveObject != null)
+		{
+			interactiveObject.Interact(agent);
 		}
 
 		ClearButtonsDown();

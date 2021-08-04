@@ -54,6 +54,17 @@
 
             <!-- Press A to interact -->
             <Border HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="50">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Style.Triggers>
+                            <!-- Not showing numbers -->
+                            <DataTrigger Binding="{Binding PlayerState.CurrentInteractiveObjectState}" Value="{x:Null}">
+                                <Setter Property="Opacity" Value="0" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                        <Setter Property="Opacity" Value="1"/>
+                    </Style>
+                </Border.Style>
                 <TextBlock Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="20">
                     <Run Text ="Press"/> 
                     <Run Text ="A" FontSize="30"/>
@@ -63,7 +74,7 @@
 
             <!-- Message -->
             <Border HorizontalAlignment="Center" VerticalAlignment="Top" Margin="100">
-                <TextBlock Text="{Binding Message}" Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="30">
+                <TextBlock Text="{Binding PlayerState.CurrentInteractiveObjectState.Name}" Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="30">
                 </TextBlock>
             </Border>
         </Grid>

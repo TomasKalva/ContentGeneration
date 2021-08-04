@@ -4,6 +4,7 @@ using UnityEngine;
 #endif
 using ContentGeneration.Assets.UI.Util;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace ContentGeneration.Assets.UI.Model
 {
@@ -41,6 +42,14 @@ namespace ContentGeneration.Assets.UI.Model
         {
             Health = new FloatRange(100, 42);
             Stamina = new FloatRange(100, 42);
+        }
+
+        /// <summary>
+        /// To be able to trigger property change from subclasses.
+        /// </summary>
+        protected void OnPropertyChanged(INotifyPropertyChanged thisInstance, [CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(thisInstance, new PropertyChangedEventArgs(name));
         }
 
  #region Screen position of health bars

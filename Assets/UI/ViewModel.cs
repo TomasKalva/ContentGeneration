@@ -30,8 +30,8 @@ namespace ContentGeneration.Assets.UI
         public Color BottomColor { get; set; }
         public DelegateCommand ButtonClicked { get; set; }
 
-        CharacterState _playerState;
-        public CharacterState PlayerState 
+        PlayerCharacterState _playerState;
+        public PlayerCharacterState PlayerState 
         {
             get => _playerState; 
             set
@@ -74,7 +74,7 @@ namespace ContentGeneration.Assets.UI
             TopColor = Color.FromRgb(17, 102, 157);
             BottomColor = Color.FromRgb(18, 57, 87);
 
-            PlayerState = new CharacterState();
+            PlayerState = new PlayerCharacterState();
             Enemies = new ObservableCollection<CharacterState>();
 
             Message = "Sample text";
