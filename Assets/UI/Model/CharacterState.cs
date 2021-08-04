@@ -35,6 +35,8 @@ namespace ContentGeneration.Assets.UI.Model
             set { _stamina = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
+        public bool Dead => Health <= 0f;
+
         public CharacterState()
         {
             Health = new FloatRange(100, 42);

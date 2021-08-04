@@ -28,11 +28,15 @@ public class BlobController : MonoBehaviour
 	void Awake()
 	{
 		agent = GetComponent<BlobAgent>();
-		targetPoint = GameObject.Find("Player").transform;
 	}
 
-	// Update is called once per frame
-	void Update()
+    void Start()
+    {
+		targetPoint = GameObject.FindGameObjectWithTag("Player").transform;
+	}
+
+    // Update is called once per frame
+    void Update()
 	{
 		agent.StartReceivingControls();
 

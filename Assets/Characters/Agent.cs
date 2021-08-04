@@ -1,4 +1,5 @@
 ﻿using ContentGeneration.Assets.UI.Model;
+using ContentGeneration.Assets.UI.Util;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -46,6 +47,8 @@ public class Agent : MonoBehaviour
 	/// </summary>
 	int stepsSinceMoved;
 
+	bool died;
+
 	// Start is called before the first frame update
 	void Awake()
 	{
@@ -68,6 +71,16 @@ public class Agent : MonoBehaviour
 
 	public void UpdateAgent()
 	{
+		if(character.Dead)
+        {
+            if (!died)
+			{
+				Die();
+				died = true;
+			}
+			return;
+        }
+
 		acting.Act(this);
 
 		movement.MovementUpdate();
@@ -95,4 +108,10 @@ public class Agent : MonoBehaviour
 	{
 		animator.SetBool("IsMoving", false);
 	}
+
+	public virtual void Die()
+    {
+		GameViewModel.ViewModel.Enemies.Remove(character);
+		Destroy(gameObject, 1f);
+    }
 }
