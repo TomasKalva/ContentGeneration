@@ -25,6 +25,7 @@ namespace ContentGeneration.Assets.UI
 #endif
         INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
         public Color TopColor { get; set; }
         public Color BottomColor { get; set; }
         public DelegateCommand ButtonClicked { get; set; }
@@ -42,7 +43,16 @@ namespace ContentGeneration.Assets.UI
 
         public ObservableCollection<CharacterState> Enemies { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        string _message;
+        public string Message
+        {
+            get => _message;
+            set
+            {
+                _message = value;
+                PropertyChanged.OnPropertyChanged(this);
+            }
+        }
 
 #if NOESIS
         private void Awake()
@@ -66,6 +76,8 @@ namespace ContentGeneration.Assets.UI
 
             PlayerState = new CharacterState();
             Enemies = new ObservableCollection<CharacterState>();
+
+            Message = "Sample text";
 
             ButtonClicked = new DelegateCommand((p) =>
             {

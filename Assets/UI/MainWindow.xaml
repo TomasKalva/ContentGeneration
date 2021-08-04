@@ -36,15 +36,35 @@
         
         <!-- UI elements -->
         <Grid Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <!-- Top left bars -->
             <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30">
                 <comp:ProgressBarNum DataContext="{Binding PlayerState.Health}" Color="Red" Width="300" Height="15" Margin="5"/>
                 <comp:ProgressBarNum DataContext="{Binding PlayerState.Stamina}" Color="Green" Width="300" Height="15" Margin="5"/>
             </StackPanel>
+
+            <!-- Bottom left item -->
             <Border HorizontalAlignment="Left" VerticalAlignment="Bottom" Background="Orange" Width="70" Height="70" Margin="30">
                 <TextBlock Foreground="Black" TextAlignment="Center" VerticalAlignment="Center">Item1</TextBlock>
             </Border>
+
+            <!-- Bottom right spirit -->
             <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="Orange" Width="80" Height="20" Margin="30">
                 <TextBlock Foreground="Black" TextAlignment="Center" VerticalAlignment="Center">Spirit: 42</TextBlock>
+            </Border>
+
+            <!-- Press A to interact -->
+            <Border HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="50">
+                <TextBlock Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="20">
+                    <Run Text ="Press"/> 
+                    <Run Text ="A" FontSize="30"/>
+                    <Run Text="to interact"/>
+                </TextBlock>
+            </Border>
+
+            <!-- Message -->
+            <Border HorizontalAlignment="Center" VerticalAlignment="Top" Margin="100">
+                <TextBlock Text="{Binding Message}" Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="30">
+                </TextBlock>
             </Border>
         </Grid>
     </Grid>

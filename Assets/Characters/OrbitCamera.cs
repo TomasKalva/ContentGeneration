@@ -73,7 +73,7 @@ public class OrbitCamera : MonoBehaviour
 	void Awake()
 	{
 		regularCamera = GetComponent<Camera>();
-		focusPoint = focus.position;
+		focusPoint = focus ? focus.position : Vector3.zero;
 		transform.localRotation = orbitRotation = Quaternion.Euler(orbitAngles);
 	}
 
