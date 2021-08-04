@@ -5,14 +5,20 @@ using UnityEngine;
 public class AgentSpawner : MonoBehaviour
 {
     [SerializeField]
+    bool spawnOnAwake = false;
+
+    [SerializeField]
     Agent spawnedAgent;
 
     private void Awake()
     {
-        Spawn();
+        if (spawnOnAwake)
+        {
+            Spawn();
+        }
     }
 
-    void Spawn()
+    public void Spawn()
     {
         Instantiate(spawnedAgent);
         spawnedAgent.transform.position = transform.position;

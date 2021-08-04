@@ -46,6 +46,7 @@ public class PlayerController : MonoBehaviour
 		camera.GetComponent<OrbitCamera>().focus = transform;
 
 		camera.GetComponent<ViewModel>().PlayerState = (PlayerCharacterState)agent.character;
+		PlayerCharacterState.SpawnPoint = GameObject.FindGameObjectWithTag("DefaultSpawnPoint").GetComponent<Bonfire>();
 	}
 
     void Update()
@@ -125,4 +126,9 @@ public class PlayerController : MonoBehaviour
 		agent.UpdateAgent();
 
 	}
+
+    void OnDestroy()
+    {
+		PlayerCharacterState.SpawnPoint.SpawnPlayer();    
+    }
 }

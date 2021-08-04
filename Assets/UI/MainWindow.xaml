@@ -74,7 +74,7 @@
 
             <!-- Message -->
             <Border HorizontalAlignment="Center" VerticalAlignment="Top" Margin="100">
-                <TextBlock Text="{Binding PlayerState.CurrentInteractiveObjectState.Name}" Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="30">
+                <TextBlock Text="{Binding Message}" Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="30">
                 </TextBlock>
             </Border>
         </Grid>

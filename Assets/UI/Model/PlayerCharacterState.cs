@@ -17,12 +17,17 @@ namespace ContentGeneration.Assets.UI.Model
             get { return _currentInteractiveObject; }
             set { 
                 _currentInteractiveObject = value;
-                if (_currentInteractiveObject)
-                {
-                    CurrentInteractiveObjectState = value.state;
-                }
+                CurrentInteractiveObjectState = value ? value.state : null;
                 OnPropertyChanged(this); 
             }
+        }
+
+        [SerializeField]
+        private Bonfire _spawnPoint;
+        public Bonfire SpawnPoint
+        {
+            get { return _spawnPoint; }
+            set { _spawnPoint = value; OnPropertyChanged(this); }
         }
 #endif
 
