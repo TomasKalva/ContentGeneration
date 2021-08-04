@@ -113,5 +113,6 @@ public class Agent : MonoBehaviour
     {
 		GameViewModel.ViewModel.Enemies.Remove(character);
 		Destroy(gameObject, 1f);
+		enabled = false;
     }
 }

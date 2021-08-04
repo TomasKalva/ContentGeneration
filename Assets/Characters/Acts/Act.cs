@@ -25,7 +25,7 @@ public class Act : MonoBehaviour
 
     public bool CanBeUsed()
     {
-        return detector && detector.triggered;
+        return detector && detector.Triggered;
     }
 
     public virtual void StartAct(Agent agent) 

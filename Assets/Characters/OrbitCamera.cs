@@ -93,7 +93,7 @@ public class OrbitCamera : MonoBehaviour
 
 		Vector3 rectOffset = lookDirection * regularCamera.nearClipPlane;
 		Vector3 rectPosition = lookPosition + rectOffset;
-		Vector3 castFrom = focus.position;
+		Vector3 castFrom = focus ? focus.position : previousFocusPoint;
 		Vector3 castLine = rectPosition - castFrom;
 		float castDistance = castLine.magnitude;
 		Vector3 castDirection = castLine / castDistance;
@@ -135,7 +135,7 @@ public class OrbitCamera : MonoBehaviour
 	void UpdateFocusPoint()
 	{
 		previousFocusPoint = focusPoint;
-		Vector3 targetPoint = focus.position;
+		Vector3 targetPoint = focus ? focus.position : previousFocusPoint;
 		if (focusRadius > 0f)
 		{
 			float distance = Vector3.Distance(targetPoint, focusPoint);

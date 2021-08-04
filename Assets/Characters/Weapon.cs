@@ -43,7 +43,7 @@ public class Weapon : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (Active && detector.triggered)
+        if (Active && detector.Triggered)
         {
             var hitAgent = detector.other.GetComponentInParent<Agent>();
             if (hitAgent != owner && !currentlyHit.Contains(hitAgent))
