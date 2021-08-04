@@ -59,10 +59,28 @@ public class Acting : MonoBehaviour, IActing
 
     public void Act(Agent agent)
     {
-        ActiveAct = GetNextAct();
-        if (ActiveAct) {
-            StartCoroutine(((IActing)this).ActSequence(agent, ActiveAct));
-            selectedActs.Clear();
+        if (!Busy)
+        {
+            ActiveAct = GetNextAct();
+            if (_activeAct != null)
+            {
+                ActiveAct.StartAct(agent);
+                Busy = true;
+            }
         }
+
+        Debug.Log(_activeAct);
+
+        if (Busy)
+        {
+            if (ActiveAct.UpdateAct(agent))
+            {
+                ActiveAct.EndAct(agent);
+                ActiveAct = null;
+                Busy = false;
+            }
+        }
+
+        selectedActs.Clear();
     }
 }

@@ -16,18 +16,21 @@ public class PlayerController : MonoBehaviour
     void Awake()
 	{
 		agent = GetComponent<HumanAgent>();
-		Application.targetFrameRate = 60;
+		//Application.targetFrameRate = 60;
 	}
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
 	{
 		agent.StartReceivingControls();
 
 		Vector2 playerInput;
 		playerInput.x = Input.GetAxis("Horizontal");
 		playerInput.y = Input.GetAxis("Vertical");
+		if (playerInput.y > 0.1f)
+			;
 		playerInput = Vector2.ClampMagnitude(playerInput, 1f);
+		//Debug.Log(playerInput);
 		if (playerInputSpace != null)
 		{
 			agent.Move(playerInput);
@@ -60,5 +63,8 @@ public class PlayerController : MonoBehaviour
 		}
 
 		agent.UpdateAgent();
+
+		agent.movement.MovementUpdate();
+
 	}
 }

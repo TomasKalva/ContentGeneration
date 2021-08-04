@@ -28,6 +28,13 @@ public class Act : MonoBehaviour
         return detector && detector.triggered;
     }
 
+    public virtual void StartAct(Agent agent) { }
+    /// <summary>
+    /// Returns true if finished.
+    /// </summary>
+    public virtual bool UpdateAct(Agent agent) => true;
+    public virtual void EndAct(Agent agent) { }
+
     public virtual IEnumerator Perform(Agent agent)
     {
         Debug.Log("Started act");

@@ -68,7 +68,7 @@ public class Agent : MonoBehaviour
 
 	public void UpdateAgent()
 	{
-		if (!acting.Busy)
+		//if (!acting.Busy)
         {
 			acting.Act(this);
 		}

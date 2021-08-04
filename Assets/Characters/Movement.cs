@@ -151,7 +151,13 @@ public class Movement : MonoBehaviour {
 
 	public void Move(Vector2 direction)
 	{
-		PerformInstruction(new MoveInstruction(direction));
+		//PerformInstruction(new MoveInstruction(direction));
+
+		desiredVelocity = new Vector3(direction.x, 0f, direction.y) * maxSpeed;
+		if (desiredVelocity.sqrMagnitude > 0.1f)
+		{
+			desiredDirection = direction;
+		}
 	}
 
 	public void Turn(Vector2 direction)
@@ -243,7 +249,7 @@ public class Movement : MonoBehaviour {
 		}
 	}
 
-	void FixedUpdate ()
+	public void MovementUpdate ()
 	{
 		UpdateState();
 
@@ -255,10 +261,11 @@ public class Movement : MonoBehaviour {
 			}
 		}
 
-		foreach (var instruction in instructionQueue)
+		/*foreach (var instruction in instructionQueue)
 		{
 			instruction.Do(this);
-		}
+		}*/
+		Debug.Log(desiredVelocity);
 
 		if (VelocityUpdater == null)
 		{
@@ -294,8 +301,8 @@ public class Movement : MonoBehaviour {
 		stepsSinceLastGrounded += 1;
 		stepsSinceLastJump += 1;
 		velocity = body.velocity;
-		desiredVelocity = Vector3.zero;
-		desiredDirection = Vector2.zero;
+		/*desiredVelocity = Vector3.zero;
+		desiredDirection = Vector2.zero;*/
 		if (OnGround || SnapToGround() || CheckSteepContacts()) {
 			stepsSinceLastGrounded = 0;
 			if (stepsSinceLastJump > 1) {
@@ -435,6 +442,8 @@ public class Movement : MonoBehaviour {
 			instructionQueue.Clear();
         }
 		fixedUpdateHappened = false;
+		desiredVelocity = Vector3.zero;
+		desiredDirection = Vector2.zero;
 	}
 
 	void OnCollisionEnter (Collision collision) {
