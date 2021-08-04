@@ -12,11 +12,40 @@ public class PlayerController : MonoBehaviour
 	[SerializeField]
 	Transform playerInputSpace;
 
-    // Start is called before the first frame update
-    void Awake()
+	Dictionary<string, bool> buttonDown;
+
+	// Start is called before the first frame update
+	void Awake()
 	{
 		agent = GetComponent<HumanAgent>();
 		//Application.targetFrameRate = 60;
+
+		buttonDown = new Dictionary<string, bool>()
+		{
+			{"Roll", false },
+			{"Attack", false },
+		};
+	}
+
+    void Update()
+    {
+		AddButtonsDown();
+    }
+
+	void AddButtonsDown()
+    {
+		foreach (var key in new List<string>(buttonDown.Keys))
+		{
+			buttonDown[key] |= Input.GetButtonDown(key);
+		}
+	}
+
+	void ClearButtonsDown()
+	{
+		foreach (var key in new List<string>(buttonDown.Keys))
+		{
+			buttonDown[key] = false;
+		}
 	}
 
     // Update is called once per frame
@@ -27,10 +56,8 @@ public class PlayerController : MonoBehaviour
 		Vector2 playerInput;
 		playerInput.x = Input.GetAxis("Horizontal");
 		playerInput.y = Input.GetAxis("Vertical");
-		if (playerInput.y > 0.1f)
-			;
+
 		playerInput = Vector2.ClampMagnitude(playerInput, 1f);
-		//Debug.Log(playerInput);
 		if (playerInputSpace != null)
 		{
 			agent.Move(playerInput);
@@ -45,7 +72,7 @@ public class PlayerController : MonoBehaviour
 			agent.Shoot();
 		}*/
 
-		if (Input.GetButtonDown("Roll"))
+		if (buttonDown["Roll"])
 		{
 			if( playerInput.sqrMagnitude > 0.001f)
 			{
@@ -57,10 +84,12 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 
-		if (Input.GetButtonDown("Attack"))
+		if (buttonDown["Attack"])
 		{
 			agent.Attack();
 		}
+
+		ClearButtonsDown();
 
 		agent.UpdateAgent();
 

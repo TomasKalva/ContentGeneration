@@ -17,6 +17,29 @@ public class Attack : AnimatedAct
     [SerializeField]
     Weapon weapon;
 
+    public override void StartAct(Agent agent)
+    {
+        timeElapsed = 0f;
+
+        agent.animator.CrossFade(animationName, 0.05f);
+        agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, Direction);
+
+        movementContraints = new List<MovementConstraint>()
+        {
+            new VelocityInDirection(Direction),
+        };
+
+        movementContraints.ForEach(con => agent.movement.Constraints.Add(con));
+
+        weapon.Active = true;
+    }
+
+    public override void EndAct(Agent agent)
+    {
+        weapon.Active = false;
+        movementContraints.ForEach(con => con.Finished = true);
+    }
+
     public override IEnumerator Perform(Agent agent)
     {
         agent.animator.CrossFade(animationName, 0.05f);

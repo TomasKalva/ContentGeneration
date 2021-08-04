@@ -15,7 +15,28 @@ public class Roll : AnimatedAct
         set => direction = value.normalized;
     }
 
-    public override IEnumerator Perform(Agent agent)
+    public override void StartAct(Agent agent)
+    {
+        timeElapsed = 0f;
+
+        agent.animator.CrossFade(animationName, 0.05f);
+        agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, agent.movement.InputToWorld(Direction));
+
+        movementContraints = new List<MovementConstraint>()
+        {
+            new VelocityInDirection(agent.movement.InputToWorld(Direction)),
+            new TurnToDirection(Direction),
+        };
+
+        movementContraints.ForEach(con => agent.movement.Constraints.Add(con));
+    }
+
+    public override void EndAct(Agent agent)
+    {
+        movementContraints.ForEach(con => con.Finished = true);
+    }
+
+    /*public override IEnumerator Perform(Agent agent)
     {
         agent.animator.CrossFade(animationName, 0.05f);
         agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, agent.movement.InputToWorld(Direction));
@@ -27,7 +48,7 @@ public class Roll : AnimatedAct
         yield return new WaitForSeconds(duration);
         dirConstr.Finished = true;
         turnConstr.Finished = true;
-    }
+    }*/
 }
 
 public abstract class MovementConstraint

@@ -19,13 +19,11 @@ public class Shoot : Act
     [SerializeField]
     float cooldown;
 
-    public override IEnumerator Perform(Agent agent)
+    public override void StartAct(Agent agent)
     {
-        yield return new WaitForSeconds(warmup);
         var bullet = Instantiate(ammo);
         bullet.transform.position = gun.position + gun.forward * 0.5f;
         bullet.transform.eulerAngles = gun.eulerAngles;
         bullet.velocity = gun.transform.forward * speed;
-        yield return new WaitForSeconds(cooldown);
     }
 }
