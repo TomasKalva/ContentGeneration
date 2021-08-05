@@ -8,7 +8,7 @@ public class AgentSpawner : MonoBehaviour
     bool spawnOnAwake = false;
 
     [SerializeField]
-    Agent spawnedAgent;
+    Agent agentPrefab;
 
     private void Awake()
     {
@@ -20,7 +20,7 @@ public class AgentSpawner : MonoBehaviour
 
     public void Spawn()
     {
-        Instantiate(spawnedAgent);
+        var spawnedAgent = Instantiate(agentPrefab);
         spawnedAgent.transform.position = transform.position;
         spawnedAgent.transform.rotation = transform.rotation;
     }

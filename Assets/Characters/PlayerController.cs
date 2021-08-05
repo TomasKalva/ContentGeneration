@@ -51,14 +51,16 @@ public class PlayerController : MonoBehaviour
 		var viewModel = camera.GetComponent<ViewModel>();
 		if (viewModel.PlayerState != null)
         {
+			// already spawned before
 			agent.GetComponent<CharacterRef>().CharacterState = viewModel.PlayerState;
 			viewModel.PlayerState.Reset();
         }
         else
 		{
-			viewModel.PlayerState = (PlayerCharacterState)agent.CharacterState;
+			// first spawn
+			viewModel.PlayerState = PlayerCharacterState;
+			PlayerCharacterState.SpawnPoint = GameObject.FindGameObjectWithTag("DefaultSpawnPoint").GetComponent<Bonfire>();
 		}
-		PlayerCharacterState.SpawnPoint = GameObject.FindGameObjectWithTag("DefaultSpawnPoint").GetComponent<Bonfire>();
 	}
 
     void Update()
@@ -90,7 +92,6 @@ public class PlayerController : MonoBehaviour
 	{
         if (agent.CharacterState.Dead)
 		{
-			Debug.Log("Character is dead");
 			if (PlayerCharacterState.SpawnPoint && !respawned)
 			{
 				PlayerCharacterState.SpawnPoint.SpawnPlayer();
@@ -146,7 +147,7 @@ public class PlayerController : MonoBehaviour
 
 		if (buttonDown["Suicide"])
 		{
-			agent.CharacterState.Health -= 10f;
+			agent.CharacterState.Health -= 1000f;
 		}
 
 		ClearButtonsDown();
