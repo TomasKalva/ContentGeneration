@@ -113,7 +113,6 @@ MonoBehaviour:
   detectionMask:
     serializedVersion: 2
     m_Bits: 512
-  triggered: 0
   other: {fileID: 0}
 --- !u!54 &1277739329626205837
 Rigidbody:
@@ -143,7 +142,6 @@ GameObject:
   - component: {fileID: 1277739329715723915}
   - component: {fileID: 1277739329715723914}
   - component: {fileID: 1277739329715723916}
-  - component: {fileID: 1277739329715723919}
   - component: {fileID: 1277739329715723912}
   - component: {fileID: 1277739329715723910}
   - component: {fileID: 1277739329715723911}
@@ -242,24 +240,6 @@ MonoBehaviour:
   acts:
   - {fileID: 1277739329715723912}
   _activeAct: {fileID: 0}
---- !u!114 &1277739329715723919
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1277739329715723953}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 864700e08c77d7043935b66576020568, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _health:
-    max: 100
-    value: 42
-  _stamina:
-    max: 100
-    value: 42
 --- !u!114 &1277739329715723912
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -395,7 +375,15 @@ MonoBehaviour:
   movement: {fileID: 0}
   acting: {fileID: 0}
   animator: {fileID: 0}
-  character: {fileID: 0}
+  character:
+    _health:
+      max: 100
+      value: 42
+    _stamina:
+      max: 100
+      value: 42
+    viewCamera: {fileID: 0}
+    agent: {fileID: 0}
 --- !u!114 &1277739329715723913
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -427,7 +415,15 @@ MonoBehaviour:
   movement: {fileID: 0}
   acting: {fileID: 0}
   animator: {fileID: 0}
-  character: {fileID: 0}
+  character:
+    _health:
+      max: 100
+      value: 42
+    _stamina:
+      max: 100
+      value: 42
+    viewCamera: {fileID: 0}
+    agent: {fileID: 0}
 --- !u!114 &1277739329715723906
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -648,7 +644,6 @@ MonoBehaviour:
   detectionMask:
     serializedVersion: 2
     m_Bits: 512
-  triggered: 0
   other: {fileID: 0}
 --- !u!54 &1277739330695269103
 Rigidbody:
@@ -766,7 +761,6 @@ MonoBehaviour:
   detectionMask:
     serializedVersion: 2
     m_Bits: 1024
-  triggered: 0
   other: {fileID: 0}
 --- !u!114 &1277739331109678264
 MonoBehaviour:

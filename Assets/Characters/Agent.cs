@@ -55,7 +55,7 @@ public class Agent : MonoBehaviour
 		movement = GetComponent<Movement>();
 		acting = GetComponent<Acting>();
 		animator = GetComponent<Animator>();
-		character = GetComponent<CharacterState>();
+		character = GetComponent<CharacterRef>().CharacterState;
 		stepsSinceMoved = 0;
 	}
 

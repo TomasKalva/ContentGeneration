@@ -13,6 +13,7 @@ using ContentGeneration.Assets.UI.Model;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using ContentGeneration.Assets.UI.Util;
+using System.Linq;
 
 namespace ContentGeneration.Assets.UI
 {
@@ -91,7 +92,7 @@ namespace ContentGeneration.Assets.UI
 
         void Start()
         {
-            Enemies = new ObservableCollection<CharacterState>(Object.FindObjectsOfType<CharacterState>());
+            Enemies = new ObservableCollection<CharacterState>(Object.FindObjectsOfType<CharacterReference>().Select(r => r.CharacterState));
         }
 
         void Update()

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(HumanAgent))]
+[RequireComponent(typeof(Agent))]
 public class ScorpionController : EnemyController<Agent>
 {
 }

@@ -877,7 +877,7 @@ GameObject:
   - component: {fileID: 3756998279321466961}
   - component: {fileID: 3756998279321466968}
   - component: {fileID: 3756998279321466975}
-  - component: {fileID: 3608586624731865237}
+  - component: {fileID: 8290063134227405010}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -1132,7 +1132,15 @@ MonoBehaviour:
   movement: {fileID: 0}
   acting: {fileID: 0}
   animator: {fileID: 0}
-  character: {fileID: 0}
+  character:
+    _health:
+      max: 100
+      value: 42
+    _stamina:
+      max: 100
+      value: 42
+    viewCamera: {fileID: 0}
+    agent: {fileID: 0}
 --- !u!114 &3756998279321466966
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1467,7 +1475,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   weapon: {fileID: 4583774768964158701}
---- !u!114 &3608586624731865237
+--- !u!114 &8290063134227405010
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1476,18 +1484,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3756998279321466972}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec55babb47a931546b436ee906608294, type: 3}
+  m_Script: {fileID: 11500000, guid: 54b0dcc6a06dbc541b2d0c515ac31d0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health:
-    max: 100
-    value: 70
-  _stamina:
-    max: 100
-    value: 42
-  _currentInteractiveObject: {fileID: 0}
-  _spawnPoint: {fileID: 0}
-  _currentInteractiveObjectState: {fileID: 0}
 --- !u!1 &3816295168689648068
 GameObject:
   m_ObjectHideFlags: 0

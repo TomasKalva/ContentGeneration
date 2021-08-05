@@ -113,7 +113,6 @@ MonoBehaviour:
   detectionMask:
     serializedVersion: 2
     m_Bits: 512
-  triggered: 0
   other: {fileID: 0}
 --- !u!54 &771520340
 Rigidbody:
@@ -336,7 +335,6 @@ GameObject:
   - component: {fileID: 1305044139398559210}
   - component: {fileID: 1305044139398559203}
   - component: {fileID: 1305044139398559204}
-  - component: {fileID: 1305044139398559126}
   - component: {fileID: 3751830682956774377}
   m_Layer: 10
   m_Name: Human
@@ -559,7 +557,15 @@ MonoBehaviour:
   movement: {fileID: 0}
   acting: {fileID: 0}
   animator: {fileID: 0}
-  character: {fileID: 0}
+  character:
+    _health:
+      max: 100
+      value: 42
+    _stamina:
+      max: 100
+      value: 42
+    viewCamera: {fileID: 0}
+    agent: {fileID: 0}
 --- !u!114 &1305044139398559213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -893,24 +899,6 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   weapon: {fileID: 1847371265212025174}
---- !u!114 &1305044139398559126
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1305044139398559207}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 864700e08c77d7043935b66576020568, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _health:
-    max: 100
-    value: 70
-  _stamina:
-    max: 100
-    value: 42
 --- !u!114 &3751830682956774377
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1100,7 +1088,6 @@ MonoBehaviour:
   detectionMask:
     serializedVersion: 2
     m_Bits: 1024
-  triggered: 0
   other: {fileID: 0}
 --- !u!114 &1847371265212025174
 MonoBehaviour:

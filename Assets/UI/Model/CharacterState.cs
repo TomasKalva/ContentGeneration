@@ -1,18 +1,19 @@
 ﻿#if UNITY_5_3_OR_NEWER
 #define NOESIS
 using UnityEngine;
+using UnityEditor;
 #endif
 using ContentGeneration.Assets.UI.Util;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System;
 
 namespace ContentGeneration.Assets.UI.Model
 {
-    public class CharacterState :
 #if NOESIS
-        MonoBehaviour,
+    [Serializable]
 #endif
-        INotifyPropertyChanged
+    public class CharacterState : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -45,6 +46,15 @@ namespace ContentGeneration.Assets.UI.Model
         }
 
         /// <summary>
+        /// Resets the state of the character.
+        /// </summary>
+        public void Reset()
+        {
+            Health = Health.Maximum;
+            Stamina = Stamina.Maximum;
+        }
+
+        /// <summary>
         /// To be able to trigger property change from subclasses.
         /// </summary>
         protected void OnPropertyChanged(INotifyPropertyChanged thisInstance, [CallerMemberName] string name = null)
@@ -69,18 +79,10 @@ namespace ContentGeneration.Assets.UI.Model
             set { _screenPosY = viewCamera.scaledPixelHeight - value; PropertyChanged.OnPropertyChanged(this); }
         }
 
-        private Camera viewCamera;
+        public Camera viewCamera;
 
-        void Start(){
-            viewCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
-        }
+        public Agent agent;
 
-        void Update()
-        {
-            var agentUiPos = viewCamera.WorldToScreenPoint(transform.position + Vector3.up);
-            ScreenPosX = agentUiPos.x;
-            ScreenPosY = agentUiPos.y;
-        }
 #else
         public float ScreenPosX => 0f;
 
