@@ -23,23 +23,10 @@ public class CrossbowmanController : EnemyController<CrossbowmanAgent>
 		if (backstepArea.Triggered)
 		{
 			agent.Strafe();
-			/*var hitAgent = backstepArea.other.GetComponentInParent<Agent>();
-			if (hitAgent != agent)
-			{
-				agent.Explode();
-			}*/
-		} else if (shootDetector.Triggered)
+		}
+		else if (shootDetector.Triggered)
         {
 			agent.Shoot();
         }
-		// check if I can rush towards enemy
-		/*else if (rushArea.Triggered)
-		{
-			var hitAgent = rushArea.other.GetComponentInParent<Agent>();
-			if (hitAgent != agent)
-			{
-				agent.Rush(movementDirection);
-			}
-		}*/
 	}
 }

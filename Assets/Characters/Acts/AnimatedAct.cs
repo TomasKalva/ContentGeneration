@@ -10,9 +10,14 @@ public class AnimatedAct : Act
     [SerializeField]
     protected float duration;
 
-    public float timeElapsed;
+    protected float timeElapsed;
 
     protected List<MovementConstraint> movementContraints;
+
+    public override void StartAct(Agent agent)
+    {
+        timeElapsed = 0f;
+    }
 
     public override bool UpdateAct(Agent agent)
     {

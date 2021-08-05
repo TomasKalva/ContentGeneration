@@ -2121,7 +2121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 1.5
-  rotationCoef: 0.2
+  rotationCoef: 1
   maxAcceleration: 100
   maxAirAcceleration: 1
   jumpHeight: 2
@@ -2176,7 +2176,6 @@ MonoBehaviour:
   priority: -10
   animationName: 
   duration: 0
-  timeElapsed: 0
 --- !u!95 &4000406437969525400
 Animator:
   serializedVersion: 3
@@ -2232,6 +2231,8 @@ GameObject:
   - component: {fileID: 4000406437969525427}
   - component: {fileID: 4000406437969525428}
   - component: {fileID: 4000406437969525429}
+  - component: {fileID: 4000406437969525430}
+  - component: {fileID: 4000406437969525431}
   m_Layer: 10
   m_Name: Crossbowman
   m_TagString: Untagged
@@ -2257,7 +2258,6 @@ MonoBehaviour:
   priority: 0
   animationName: 
   duration: 1.5
-  timeElapsed: 0
   speedF:
     serializedVersion: 2
     m_Curve:
@@ -2350,7 +2350,6 @@ MonoBehaviour:
   priority: 0
   animationName: 
   duration: 2.5
-  timeElapsed: 0
   ammo: {fileID: 1048959192}
   gun: {fileID: 1601316376}
   speed: 10
@@ -2371,8 +2370,13 @@ MonoBehaviour:
   type: 2
   priority: 0
   acts:
+  - {fileID: 4000406437969525430}
   - {fileID: 4000406437969525429}
+  - {fileID: 4000406437969525430}
   - {fileID: 4000406437969525429}
+  - {fileID: 4000406437969525430}
+  - {fileID: 4000406437969525429}
+  - {fileID: 4000406437969525430}
   - {fileID: 4000406437969525429}
 --- !u!114 &4000406437969525429
 MonoBehaviour:
@@ -2391,11 +2395,47 @@ MonoBehaviour:
   type: 2
   priority: 0
   animationName: 
-  duration: 0.2
-  timeElapsed: 0
+  duration: 0.05
   ammo: {fileID: 1048959192}
   gun: {fileID: 1601316376}
   speed: 10
+--- !u!114 &4000406437969525430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4000406437969525423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23f3e03d68c026c4698dc9067ac37f69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: TurnBy
+  type: 0
+  priority: 0
+  animationName: 
+  duration: 0
+  angle: 10
+--- !u!114 &4000406437969525431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4000406437969525423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40326cbe2c8099f4a86638e3fca69e3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: Wait
+  type: 0
+  priority: 0
+  animationName: 
+  duration: 0
 --- !u!1 &4000406438628661560
 GameObject:
   m_ObjectHideFlags: 0

@@ -239,7 +239,7 @@ public class Movement : MonoBehaviour {
 		instructionQueue = new List<AgentInstruction>();
 		fixedUpdateHappened = false;
 		OnValidate();
-		direction = Vector3.forward;
+		direction = Vector2.up;
 		Constraints = new List<MovementConstraint>();
 	}
 
