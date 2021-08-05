@@ -12,7 +12,9 @@ using System.Windows.Media;
 namespace ContentGeneration.Assets.UI.Components
 {
     /// <summary>
-    /// Interaction logic for ProgressBarNum.xaml
+    /// Interaction logic for ProgressBarNum.xaml.
+    /// 
+    /// Currently doesn't register changes inside of FloatRange provided as data context.
     /// </summary>
     public partial class ProgressBarNum : UserControl
     {
@@ -37,7 +39,7 @@ namespace ContentGeneration.Assets.UI.Components
         public bool NoNumbers
         {
             get { return (bool)GetValue(NoNumbersProperty); }
-            set { SetValue(ColorProperty, value); }
+            set { SetValue(NoNumbersProperty, value); }
         }
 
         public static readonly DependencyProperty ColorProperty =

@@ -50,8 +50,8 @@ namespace ContentGeneration.Assets.UI.Model
         /// </summary>
         public void Reset()
         {
-            Health = Health.Maximum;
-            Stamina = Stamina.Maximum;
+            Health += Health.Maximum;
+            Stamina += Stamina.Maximum;
         }
 
         /// <summary>

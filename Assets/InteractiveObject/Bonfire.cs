@@ -11,7 +11,7 @@ public class Bonfire : InteractiveObject
 
     public override void Interact(Agent agent)
     {
-        var playerState = agent.character as PlayerCharacterState;
+        var playerState = agent.CharacterState as PlayerCharacterState;
         if (playerState != null)
         {
             playerState.SpawnPoint = this;

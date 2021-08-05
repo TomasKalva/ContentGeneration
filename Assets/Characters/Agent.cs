@@ -40,7 +40,9 @@ public class Agent : MonoBehaviour
     public Movement movement;
     public Acting acting;
 	public Animator animator;
-	public CharacterState character;
+	public CharacterRef characterRef;
+
+	public CharacterState CharacterState => characterRef.CharacterState;
 
 	/// <summary>
 	/// Used for reseting animation back to idle.
@@ -55,7 +57,7 @@ public class Agent : MonoBehaviour
 		movement = GetComponent<Movement>();
 		acting = GetComponent<Acting>();
 		animator = GetComponent<Animator>();
-		character = GetComponent<CharacterRef>().CharacterState;
+		characterRef = GetComponent<CharacterRef>();
 		stepsSinceMoved = 0;
 	}
 
@@ -71,7 +73,7 @@ public class Agent : MonoBehaviour
 
 	public void UpdateAgent()
 	{
-		if(character.Dead)
+		if(CharacterState.Dead)
         {
             if (!died)
 			{
@@ -111,7 +113,7 @@ public class Agent : MonoBehaviour
 
 	public virtual void Die()
     {
-		GameViewModel.ViewModel.Enemies.Remove(character);
+		GameViewModel.ViewModel.Enemies.Remove(CharacterState);
 		Destroy(gameObject, 1f);
 		enabled = false;
     }

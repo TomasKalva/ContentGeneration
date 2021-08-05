@@ -48,7 +48,7 @@ public class Weapon : MonoBehaviour
             var hitAgent = detector.other.GetComponentInParent<Agent>();
             if (hitAgent != owner && !currentlyHit.Contains(hitAgent))
             {
-                hitAgent.character.Health -= damage;
+                hitAgent.CharacterState.Health -= damage;
                 currentlyHit.Add(hitAgent);
             }
         }

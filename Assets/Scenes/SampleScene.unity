@@ -683,7 +683,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1305044139398559207, guid: f792686f34df50342b2d59ccc74fe6e9, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1305044139398559126, guid: f792686f34df50342b2d59ccc74fe6e9, type: 3}
@@ -934,7 +934,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 2d0f07cc080af814f87cd3599c0f9b40, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1243164658977001897, guid: 2d0f07cc080af814f87cd3599c0f9b40, type: 3}
       propertyPath: m_Layer
@@ -2490,15 +2490,7 @@ MonoBehaviour:
   movement: {fileID: 0}
   acting: {fileID: 0}
   animator: {fileID: 0}
-  character:
-    _health:
-      max: 100
-      value: 42
-    _stamina:
-      max: 100
-      value: 42
-    viewCamera: {fileID: 0}
-    agent: {fileID: 0}
+  characterRef: {fileID: 0}
 --- !u!114 &1794102858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2775,15 +2767,7 @@ MonoBehaviour:
   movement: {fileID: 0}
   acting: {fileID: 0}
   animator: {fileID: 0}
-  character:
-    _health:
-      max: 100
-      value: 42
-    _stamina:
-      max: 100
-      value: 42
-    viewCamera: {fileID: 0}
-    agent: {fileID: 0}
+  characterRef: {fileID: 0}
 --- !u!1 &1939586294
 GameObject:
   m_ObjectHideFlags: 0
@@ -3026,7 +3010,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1277739329715723953, guid: 27e6970099e87fe4f9dfbd8ff2d06f76, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1277739329715723919, guid: 27e6970099e87fe4f9dfbd8ff2d06f76, type: 3}

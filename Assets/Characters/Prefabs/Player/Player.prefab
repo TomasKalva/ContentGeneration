@@ -1487,6 +1487,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54b0dcc6a06dbc541b2d0c515ac31d0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterState:
+    _health:
+      max: 100
+      value: 42
+    _stamina:
+      max: 100
+      value: 42
+    viewCamera: {fileID: 0}
+    agent: {fileID: 0}
+    _currentInteractiveObject: {fileID: 0}
+    _spawnPoint: {fileID: 0}
+    _currentInteractiveObjectState: {fileID: 0}
 --- !u!1 &3816295168689648068
 GameObject:
   m_ObjectHideFlags: 0

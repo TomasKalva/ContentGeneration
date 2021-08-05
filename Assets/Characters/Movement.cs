@@ -336,7 +336,7 @@ public class Movement : MonoBehaviour {
 		if (dot > 0f) {
 			velocity = (velocity - hit.normal * dot).normalized * speed;
 		}
-		Debug.Log($"Snapped to ground. Steps since last grounded: {stepsSinceLastGrounded}, Steps since last jump: {stepsSinceLastJump}");
+		//Debug.Log($"Snapped to ground. Steps since last grounded: {stepsSinceLastGrounded}, Steps since last jump: {stepsSinceLastJump}");
 		return true;
 	}
 

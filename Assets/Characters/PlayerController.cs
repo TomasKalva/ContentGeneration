@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
 {
 	HumanAgent agent;
 
-	PlayerCharacterState PlayerCharacterState => (PlayerCharacterState)agent.character;
+	PlayerCharacterState PlayerCharacterState => (PlayerCharacterState)agent.CharacterState;
 
 	World world;
 
@@ -37,6 +37,7 @@ public class PlayerController : MonoBehaviour
 			{"Roll", false },
 			{"Attack", false },
 			{"Interact", false },
+			{"Suicide", false },
 		};
 	}
 
@@ -47,7 +48,16 @@ public class PlayerController : MonoBehaviour
 		agent.movement.playerInputSpace = playerInputSpace;
 		camera.GetComponent<OrbitCamera>().focus = transform;
 
-		camera.GetComponent<ViewModel>().PlayerState = (PlayerCharacterState)agent.character;
+		var viewModel = camera.GetComponent<ViewModel>();
+		if (viewModel.PlayerState != null)
+        {
+			agent.GetComponent<CharacterRef>().CharacterState = viewModel.PlayerState;
+			viewModel.PlayerState.Reset();
+        }
+        else
+		{
+			viewModel.PlayerState = (PlayerCharacterState)agent.CharacterState;
+		}
 		PlayerCharacterState.SpawnPoint = GameObject.FindGameObjectWithTag("DefaultSpawnPoint").GetComponent<Bonfire>();
 	}
 
@@ -78,8 +88,9 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
 	{
-        if (agent.character.Dead)
+        if (agent.CharacterState.Dead)
 		{
+			Debug.Log("Character is dead");
 			if (PlayerCharacterState.SpawnPoint && !respawned)
 			{
 				PlayerCharacterState.SpawnPoint.SpawnPlayer();
@@ -131,6 +142,11 @@ public class PlayerController : MonoBehaviour
 		if (buttonDown["Interact"] && interactiveObject != null)
 		{
 			interactiveObject.Interact(agent);
+		}
+
+		if (buttonDown["Suicide"])
+		{
+			agent.CharacterState.Health -= 10f;
 		}
 
 		ClearButtonsDown();

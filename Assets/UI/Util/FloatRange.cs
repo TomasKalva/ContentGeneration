@@ -32,7 +32,7 @@ namespace ContentGeneration.Assets.UI.Util
         [SerializeField]
 #endif
         private float value;
-        public float Value { get => value; set { this.value = (float)Math.Max(0d, Math.Min(value, Maximum)); } }
+        public float Value { get => value; set { this.value = Math.Max(0f, Math.Min(value, Maximum)); } }
         public bool Unbound => Maximum == MAX_VALUE;
         public bool Full() => Value == Maximum;
 
@@ -55,7 +55,7 @@ namespace ContentGeneration.Assets.UI.Util
         public static bool operator >=(FloatRange r1, float d) => r1.Value >= d;
         public static bool operator <=(FloatRange r1, float d) => r1.Value <= d;
         public static implicit operator FloatRange(float d) => new FloatRange(MAX_VALUE, d);
-        public static implicit operator float(FloatRange r) => r.Value;
+        public static implicit operator float(FloatRange r) => new FloatRange(r.Maximum, r.Value);
 
     }
 }
