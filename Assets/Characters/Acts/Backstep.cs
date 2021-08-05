@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Backstep : AnimatedAct
 {
-    [SerializeField, Curve(0f, 0f, 1f, 15f, true)]
+    [SerializeField, Curve(0f, 0f, 1f, 30f, true)]
     AnimationCurve speedF;
 
     public override void StartAct(Agent agent)

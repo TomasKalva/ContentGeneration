@@ -87,6 +87,9 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
+	int physicsSteps = 0;
+	float time = 0f;
+
     // Update is called once per frame
     void FixedUpdate()
 	{

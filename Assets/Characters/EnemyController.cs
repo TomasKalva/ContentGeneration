@@ -11,7 +11,7 @@ public class EnemyController<AgentT> : MonoBehaviour where AgentT : Agent
 	[SerializeField]
 	Transform targetPoint;
 
-	Vector3 TargetPoint => targetPoint ? targetPoint.position : Vector3.zero;
+	protected Vector3 TargetPoint => targetPoint ? targetPoint.position : Vector3.zero;
 
 	[SerializeField]
 	float minDistance;

@@ -14,6 +14,12 @@ public class Weapon : MonoBehaviour
 
     Agent owner;
 
+    public Agent Owner
+    {
+        get => owner;
+        set =>  owner = value;
+    }
+
     bool _active;
 
     public bool Active
@@ -37,7 +43,10 @@ public class Weapon : MonoBehaviour
     {
         detector = GetComponent<Detector>();
         currentlyHit = new List<Agent>();
-        owner = GetComponentInParent<Agent>();
+        if (owner == null)
+        {
+            owner = GetComponentInParent<Agent>();
+        }
     }
 
     // Update is called once per frame

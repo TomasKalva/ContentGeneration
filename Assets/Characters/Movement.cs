@@ -162,7 +162,8 @@ public class Movement : MonoBehaviour {
 
 	public void Turn(Vector2 direction)
 	{
-		PerformInstruction(new TurnInstruction(direction));
+		desiredDirection = direction;
+		//PerformInstruction(new TurnInstruction(direction));
 	}
 
     #endregion

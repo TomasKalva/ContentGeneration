@@ -336,6 +336,7 @@ GameObject:
   - component: {fileID: 1305044139398559203}
   - component: {fileID: 1305044139398559204}
   - component: {fileID: 3751830682956774377}
+  - component: {fileID: 1570784099}
   m_Layer: 10
   m_Name: Human
   m_TagString: Untagged
@@ -557,15 +558,7 @@ MonoBehaviour:
   movement: {fileID: 0}
   acting: {fileID: 0}
   animator: {fileID: 0}
-  character:
-    _health:
-      max: 100
-      value: 42
-    _stamina:
-      max: 100
-      value: 42
-    viewCamera: {fileID: 0}
-    agent: {fileID: 0}
+  characterRef: {fileID: 0}
 --- !u!114 &1305044139398559213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -914,6 +907,27 @@ MonoBehaviour:
   targetPoint: {fileID: 0}
   minDistance: 2
   attackArea: {fileID: 549354967}
+--- !u!114 &1570784099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1305044139398559207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c1ca6a87ecf97d43bed157c7760b7c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterState:
+    _health:
+      max: 100
+      value: 42
+    _stamina:
+      max: 100
+      value: 42
+    viewCamera: {fileID: 0}
+    agent: {fileID: 0}
 --- !u!1 &1353838017733917823
 GameObject:
   m_ObjectHideFlags: 0
