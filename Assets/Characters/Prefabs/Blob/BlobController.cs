@@ -6,10 +6,10 @@ using UnityEngine;
 public class BlobController : EnemyController<BlobAgent>
 {
 	[SerializeField]
-	Detector rushArea;
+	ColliderDetector rushArea;
 
 	[SerializeField]
-	Detector explosionArea;
+	ColliderDetector explosionArea;
 
 	// Start is called before the first frame update
 	void Awake()

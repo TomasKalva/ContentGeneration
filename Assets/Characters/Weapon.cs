@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Detector))]
+[RequireComponent(typeof(ColliderDetector))]
 public class Weapon : MonoBehaviour
 {
-    Detector detector;
+    ColliderDetector detector;
 
     List<Agent> currentlyHit;
 
@@ -41,7 +41,7 @@ public class Weapon : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        detector = GetComponent<Detector>();
+        detector = GetComponent<ColliderDetector>();
         currentlyHit = new List<Agent>();
         if (owner == null)
         {

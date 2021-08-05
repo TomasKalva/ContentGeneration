@@ -16,4 +16,10 @@ public class CrossbowmanAgent : Agent
         ResetState();
         var attack = acting.SelectAct("Shoot");
     }
+
+    public void Strafe()
+    {
+        ResetState();
+        var attack = acting.SelectAct("Strafe");
+    }
 }

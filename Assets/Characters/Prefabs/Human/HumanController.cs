@@ -6,7 +6,7 @@ using UnityEngine;
 public class HumanController : EnemyController<HumanAgent>
 {
 	[SerializeField]
-	Detector attackArea;
+	ColliderDetector attackArea;
 
 	void Awake()
 	{

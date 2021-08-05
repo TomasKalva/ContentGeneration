@@ -6,7 +6,10 @@ using UnityEngine;
 public class CrossbowmanController : EnemyController<CrossbowmanAgent>
 {
 	[SerializeField]
-	Detector backstepArea;
+	ColliderDetector backstepArea;
+
+	[SerializeField]
+	RaycastDetector shootDetector;
 
 	// Start is called before the first frame update
 	void Awake()
@@ -19,13 +22,13 @@ public class CrossbowmanController : EnemyController<CrossbowmanAgent>
 		// check if I can explode
 		if (backstepArea.Triggered)
 		{
-			agent.Backstep();
+			agent.Strafe();
 			/*var hitAgent = backstepArea.other.GetComponentInParent<Agent>();
 			if (hitAgent != agent)
 			{
 				agent.Explode();
 			}*/
-		} else if ((TargetPoint - transform.position).magnitude <= 6f)
+		} else if (shootDetector.Triggered)
         {
 			agent.Shoot();
         }

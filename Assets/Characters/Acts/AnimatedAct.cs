@@ -10,7 +10,7 @@ public class AnimatedAct : Act
     [SerializeField]
     protected float duration;
 
-    protected float timeElapsed;
+    public float timeElapsed;
 
     protected List<MovementConstraint> movementContraints;
 

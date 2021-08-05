@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
-public class Detector : MonoBehaviour
+public class ColliderDetector : MonoBehaviour
 {
     [SerializeField]
     LayerMask detectionMask = -1;
