@@ -14,8 +14,6 @@ public class TurnBy : AnimatedAct
         var dir = agent.movement.direction;
         var desDir3d = Quaternion.Euler(0, angle, 0) * new Vector3(dir.x, 0f, dir.y);
         desiredDirection = new Vector2(desDir3d.x, desDir3d.z);
-        Debug.Log(dir);
-        Debug.Log(desiredDirection);
     }
 
     public override bool UpdateAct(Agent agent)

@@ -3,29 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Weapon : AreaDamage
+[RequireComponent(typeof(ColliderDetector))]
+public class AreaDamage : DamageDealer
 {
-    bool _active;
+    protected ColliderDetector detector;
 
-    public bool Active
+    protected override void Damage(Agent agent)
     {
-        get
-        {
-            return _active;
-        }
-        set
-        {
-            _active = value;
-            if (!_active)
-            {
-                ResetHitAgents();
-            }
-        }
+        agent.CharacterState.Health -= damage;
     }
 
     protected override IEnumerable<Agent> HitAgents()
     {
-        if (Active && detector.Triggered)
+        if (detector.Triggered)
         {
             return new Agent[1] { detector.other.GetComponentInParent<Agent>() };
         }
@@ -33,5 +23,10 @@ public class Weapon : AreaDamage
         {
             return Enumerable.Empty<Agent>();
         }
+    }
+
+    protected override void Initialize()
+    {
+        detector = GetComponent<ColliderDetector>();
     }
 }

@@ -11,6 +11,9 @@ public class CrossbowmanController : EnemyController<CrossbowmanAgent>
 	[SerializeField]
 	RaycastDetector shootDetector;
 
+	[SerializeField]
+	ColliderDetector strafeArea;
+
 	// Start is called before the first frame update
 	void Awake()
 	{
@@ -19,8 +22,11 @@ public class CrossbowmanController : EnemyController<CrossbowmanAgent>
 
     protected override void UpdateController(Vector2 movementDirection)
 	{
-		// check if I can explode
 		if (backstepArea.Triggered)
+		{
+			agent.Backstep();
+		}
+		else if (strafeArea.Triggered)
 		{
 			agent.Strafe();
 		}
