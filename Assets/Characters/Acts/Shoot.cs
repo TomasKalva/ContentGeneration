@@ -5,7 +5,7 @@ using UnityEngine;
 public class Shoot : AnimatedAct
 {
     [SerializeField]
-    Weapon ammo;
+    Projectile projectile;
 
     [SerializeField]
     Transform gun;
@@ -17,7 +17,7 @@ public class Shoot : AnimatedAct
     {
         timeElapsed = 0f;
 
-        var bullet = Instantiate(ammo);
+        var bullet = Instantiate(projectile);
         bullet.transform.position = gun.position + gun.forward * 0.5f;
         bullet.transform.eulerAngles = gun.eulerAngles;
         bullet.GetComponent<Rigidbody>().velocity = gun.transform.forward * speed;

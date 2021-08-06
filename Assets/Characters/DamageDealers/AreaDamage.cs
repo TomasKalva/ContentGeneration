@@ -8,10 +8,6 @@ public class AreaDamage : DamageDealer
 {
     protected ColliderDetector detector;
 
-    protected override void Damage(Agent agent)
-    {
-        agent.CharacterState.Health -= damage;
-    }
 
     protected override IEnumerable<Agent> HitAgents()
     {

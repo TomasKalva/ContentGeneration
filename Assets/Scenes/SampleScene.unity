@@ -1122,9 +1122,9 @@ GameObject:
   - component: {fileID: 1048959196}
   - component: {fileID: 1048959195}
   - component: {fileID: 1048959193}
-  - component: {fileID: 1048959192}
   - component: {fileID: 1048959191}
   - component: {fileID: 1048959194}
+  - component: {fileID: 1048959192}
   m_Layer: 0
   m_Name: Arrow
   m_TagString: Untagged
@@ -1171,10 +1171,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1048959189}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed199e28a2c93f5439bdee611f8c51c8, type: 3}
+  m_Script: {fileID: 11500000, guid: e5f2fa2673119df4e810a0987a63a74b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 5
+  timeUntilDestroyed: 4
 --- !u!114 &1048959193
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2482,7 +2483,7 @@ MonoBehaviour:
   priority: 0
   animationName: 
   duration: 2.5
-  ammo: {fileID: 1048959192}
+  ammo: {fileID: 0}
   gun: {fileID: 1601316376}
   speed: 10
 --- !u!114 &4000406437969525428
@@ -2531,7 +2532,7 @@ MonoBehaviour:
   priority: 0
   animationName: 
   duration: 0.05
-  ammo: {fileID: 1048959192}
+  ammo: {fileID: 0}
   gun: {fileID: 1601316376}
   speed: 10
 --- !u!114 &4000406437969525430

@@ -36,6 +36,7 @@ public abstract class DamageDealer : MonoBehaviour
                 currentlyHit.Add(hitAgent);
             }
         }
+        OnFixedUpdate();
     }
 
     protected void ResetHitAgents()
@@ -45,7 +46,12 @@ public abstract class DamageDealer : MonoBehaviour
 
     protected abstract IEnumerable<Agent> HitAgents();
 
-    protected abstract void Damage(Agent agent);
+    protected virtual void Damage(Agent agent)
+    {
+        agent.CharacterState.Health -= damage;
+    }
 
     protected abstract void Initialize();
+
+    protected virtual void OnFixedUpdate() { }
 }
