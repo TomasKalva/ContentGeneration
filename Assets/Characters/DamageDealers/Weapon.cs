@@ -7,7 +7,7 @@ public class Weapon : AreaDamage
 {
     bool _active;
 
-    public bool Active
+    public override bool Active
     {
         get
         {

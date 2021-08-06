@@ -3,11 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[RequireComponent(typeof(ColliderDetector))]
 public class AreaDamage : DamageDealer
 {
+    /// <summary>
+    /// The collider detector can be in children.
+    /// </summary>
     protected ColliderDetector detector;
 
+    public override bool Active 
+    { 
+        get => true;
+        set { } 
+    }
 
     protected override IEnumerable<Agent> HitAgents()
     {
@@ -23,6 +30,6 @@ public class AreaDamage : DamageDealer
 
     protected override void Initialize()
     {
-        detector = GetComponent<ColliderDetector>();
+        detector = GetComponentInChildren<ColliderDetector>();
     }
 }

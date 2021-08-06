@@ -20,4 +20,16 @@ public class LurkerAgent : Agent
         acting.SelectAct("Unburrow");
         Burrowed = false;
     }
+
+    public void Shockwave()
+    {
+        /*if (!Burrowed)
+        {
+            Debug.LogError("Can't cast shockwave while not burrowed!");
+            return;
+        }*/
+
+        ResetState();
+        acting.SelectAct("Shockwave");
+    }
 }

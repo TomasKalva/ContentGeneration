@@ -16,6 +16,9 @@ public abstract class DamageDealer : MonoBehaviour
         get => _owner;
         set =>  _owner = value;
     }
+
+    public abstract bool Active { get; set; }
+
     void Awake()
     {
         currentlyHit = new List<Agent>();

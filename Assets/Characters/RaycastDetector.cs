@@ -8,7 +8,7 @@ public class RaycastDetector : MonoBehaviour
     LayerMask detectionMask = -1;
 
     [SerializeField]
-    float distance;
+    public float distance;
 
     public Collider other;
 

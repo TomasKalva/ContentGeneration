@@ -27,5 +27,5 @@ public class Projectile : AreaDamage
         }
     }
 
-    public bool Active { get; set; }
+    public override bool Active { get; set; }
 }

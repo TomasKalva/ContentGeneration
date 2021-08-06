@@ -6,10 +6,10 @@ using UnityEngine;
 public class LurkerController : EnemyController<LurkerAgent>
 {
 	[SerializeField]
-	ColliderDetector burrowArea;
+	ColliderDetector unburrowArea;
 
 	[SerializeField]
-	ColliderDetector unburrowArea;
+	RaycastDetector shockwaveDetector;
 
 	// Start is called before the first frame update
 	void Awake()
@@ -17,16 +17,43 @@ public class LurkerController : EnemyController<LurkerAgent>
 		agent = GetComponent<LurkerAgent>();
 	}
 
-    protected override void UpdateController(Vector2 movementDirection)
-	{
+	bool WantsToUnburrow => unburrowArea.Triggered;
 
-		if (!agent.Burrowed && burrowArea.Triggered)
-		{
-			agent.Burrow();
-		}
-		else if (agent.Burrowed && unburrowArea.Triggered)
-		{
-			agent.Unburrow();
+
+	protected override void UpdateController(Vector2 movementDirection)
+	{
+        if (WantsToUnburrow)
+        {
+            if (agent.Burrowed)
+			{
+				agent.Unburrow();
+			}
+            else
+            {
+				// move away from target
+				var toTarget = TargetPoint - agent.transform.position;
+				var toTarget2d = new Vector2(toTarget.x, toTarget.z).normalized;
+				agent.Move(-toTarget2d);
+            }
+        }
+        else
+        {
+			if (shockwaveDetector.Triggered)
+			{
+				if (!agent.Burrowed)
+				{
+					agent.Burrow();
+				}
+                else
+				{
+					agent.Shockwave();
+				}
+            }
+            else if(DistanceToTarget >= shockwaveDetector.distance && agent.Burrowed)
+            {
+				// target is far away => unburrow to chase it
+				agent.Unburrow();
+            }
 		}
 	}
 }
