@@ -18,7 +18,7 @@ public class EnemyController<AgentT> : MonoBehaviour where AgentT : Agent
 
 	bool GoToTarget()
     {
-		return Vector3.Distance(transform.position, TargetPoint) > minDistance;
+		return agent.CanMove && Vector3.Distance(transform.position, TargetPoint) > minDistance;
     }
 
 	// Start is called before the first frame update

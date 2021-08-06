@@ -44,6 +44,8 @@ public class Agent : MonoBehaviour
 
 	public CharacterState CharacterState => characterRef.CharacterState;
 
+	public bool CanMove { get; set; } = true;
+
 	/// <summary>
 	/// Used for reseting animation back to idle.
 	/// </summary>
@@ -90,6 +92,12 @@ public class Agent : MonoBehaviour
 
 	public void Move(Vector2 direction)
     {
+        if (!CanMove)
+        {
+			Debug.LogError("Trying to move when CanMove is false!");
+			return;
+        }
+
 		if (direction.sqrMagnitude > 0.0001f && !acting.Busy)
 		{
 			var run = acting.SelectAct("Run") as Move;
