@@ -704,7 +704,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6555853987066315500}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.136, y: 0.036, z: 0.528}
+  m_LocalPosition: {x: -0.01, y: -0.502, z: 1.751}
   m_LocalScale: {x: 0.13305, y: 0.36796308, z: 0.13305}
   m_Children:
   - {fileID: 6555853988967143122}
@@ -1072,7 +1072,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   detectionMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 512
   other: {fileID: 0}
 --- !u!1 &7890128435323215789
 GameObject:
@@ -1148,7 +1148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 243349c2def8940438b4bd8f617b82f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 1.5
+  maxSpeed: 3
   rotationCoef: 0.01
   maxAcceleration: 100
   maxAirAcceleration: 1
@@ -1346,9 +1346,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetPoint: {fileID: 0}
   minDistance: 3
-  burrowArea: {fileID: 0}
-  unburrowArea: {fileID: 0}
-  shockwaveDetector: {fileID: 0}
+  unburrowArea: {fileID: 4236074383626822570}
+  shockwaveDetector: {fileID: 6555853987303637787}
 --- !u!114 &7890128435323215784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1406,10 +1405,10 @@ MonoBehaviour:
   type: 0
   priority: 0
   animationName: 
-  duration: 10
-  totalShocks: 5
-  distBetween: 0
-  start: {fileID: 0}
+  duration: 1
+  totalShocks: 8
+  distBetween: 1
+  start: {fileID: 6555853987303637786}
   shockPrefab: {fileID: 6077429248538318, guid: 0e8b0434339e8d74b87d3816fac54241, type: 3}
 --- !u!1 &7890128435737558074
 GameObject:

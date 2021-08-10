@@ -20,7 +20,7 @@ static class ExtensionMethods
         return enumerable.ElementAt(i);
     }
 
-    public static T MaxArg<T>(this IEnumerable<T> enumerable, Func<T, float> f)
+    public static T ArgMax<T>(this IEnumerable<T> enumerable, Func<T, float> f)
     {
         var best = enumerable.FirstOrDefault();
         float max = float.MinValue;
@@ -36,9 +36,9 @@ static class ExtensionMethods
         return best;
     }
 
-    public static T MinArg<T>(this IEnumerable<T> enumerable, Func<T, float> f)
+    public static T ArgMin<T>(this IEnumerable<T> enumerable, Func<T, float> f)
     {
-        return enumerable.MaxArg(a => -f(a));
+        return enumerable.ArgMax(a => -f(a));
     }
 
     public static int PlusMinusOne()
@@ -49,5 +49,10 @@ static class ExtensionMethods
     public static Vector3 ProjectDirectionOnPlane(Vector3 direction, Vector3 normal)
     {
         return (direction - Vector3.Dot(direction, normal) * normal).normalized;
+    }
+
+    public static bool PointInDirection(Vector3 start, Vector3 direction, Vector3 point)
+    {
+        return Vector3.Dot(direction, point - start) >= 0f;
     }
 }

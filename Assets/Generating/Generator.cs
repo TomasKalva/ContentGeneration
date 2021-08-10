@@ -144,7 +144,7 @@ class GeneticAlgorithm
     {
         for (int i = 0; i < genCount; i++)
         {
-            Best = population.MaxArg(Fitness).Clone();
+            Best = population.ArgMax(Fitness).Clone();
             Selection();
             Crossover();
             Mutation();

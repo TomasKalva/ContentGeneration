@@ -150,7 +150,7 @@ class ClimbinAgent : Assets.Agent
 
     public override void StepLogic(TerrainMap map)
     {
-        var newPoint = map.GetNeighbors((Point)Position).MaxArg(p => map[p]);
+        var newPoint = map.GetNeighbors((Point)Position).ArgMax(p => map[p]);
         var d = newPoint - Position;
         Move(d.x, d.y, map);
     }
@@ -166,7 +166,7 @@ class DescendingAgent : Assets.Agent
 
     public override void StepLogic(TerrainMap map)
     {
-        var newPoint = map.GetNeighbors((Point)Position).MinArg(p => map[p]);
+        var newPoint = map.GetNeighbors((Point)Position).ArgMin(p => map[p]);
         var newHeight = map[newPoint];
         // end if height can't be changed anymore
         if (height != null && height.Value - newHeight < 0.0001f)

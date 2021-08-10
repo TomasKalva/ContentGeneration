@@ -94,6 +94,8 @@ namespace ContentGeneration.Assets.UI.Model
             set { _screenPosY = viewCamera.scaledPixelHeight - value; PropertyChanged.OnPropertyChanged(this); }
         }
 
+        public Vector2 ScreenPos => new Vector2(ScreenPosX, ScreenPosY);
+
         public Camera viewCamera;
 
         public Agent agent;

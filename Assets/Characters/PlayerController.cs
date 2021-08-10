@@ -11,15 +11,15 @@ using static Movement;
 [RequireComponent(typeof(HumanAgent))]
 public class PlayerController : MonoBehaviour
 {
-	HumanAgent agent;
+	HumanAgent myAgent;
 
-	PlayerCharacterState PlayerCharacterState => (PlayerCharacterState)agent.CharacterState;
+	PlayerCharacterState PlayerCharacterState => (PlayerCharacterState)myAgent.CharacterState;
 
 	OrbitCamera orbitCamera;
 
 	World world;
 
-	bool camLockedOn;
+	Agent lockOnTarget;
 
 	[SerializeField]
 	Transform playerInputSpace;
@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
 	// Start is called before the first frame update
 	void Awake()
 	{
-		agent = GetComponent<HumanAgent>();
+		myAgent = GetComponent<HumanAgent>();
 		world = GameObject.Find("World").GetComponent<World>();
 
 
@@ -50,16 +50,16 @@ public class PlayerController : MonoBehaviour
     {
 		var camera = GameObject.Find("Main Camera");
 		playerInputSpace = camera.transform;
-		agent.movement.playerInputSpace = playerInputSpace;
+		myAgent.movement.playerInputSpace = playerInputSpace;
 		orbitCamera = camera.GetComponent<OrbitCamera>();
 		orbitCamera.DefaultCamUpdater = orbitCamera.FocusPlayer(transform);
-		camLockedOn = false;
+		lockOnTarget = null;
 
 		var viewModel = camera.GetComponent<ViewModel>();
 		if (viewModel.PlayerState != null)
         {
 			// already spawned before
-			agent.GetComponent<CharacterRef>().CharacterState = viewModel.PlayerState;
+			myAgent.GetComponent<CharacterRef>().CharacterState = viewModel.PlayerState;
 			viewModel.PlayerState.Reset();
         }
         else
@@ -76,28 +76,92 @@ public class PlayerController : MonoBehaviour
 
 		PlayerCharacterState.CurrentInteractiveObject = world.ObjectsCloseTo(transform.position, 5f).FirstOrDefault();
 
-		// Switch between free and locked camera
-        if (Input.GetButtonDown("LockOn"))
-        {
-            if (camLockedOn)
-			{
-				orbitCamera.CamUpdater = orbitCamera.FocusPlayer(agent.transform);
-				PlayerCharacterState.TargetedEnemy = null;
-			}
-            else
-			{
-				var lockOnTarget = world.Agents.Where(a => a != agent).FirstOrDefault();
-				orbitCamera.CamUpdater = orbitCamera.FocusOnEnemy(agent.transform, lockOnTarget?.transform);
-				PlayerCharacterState.TargetedEnemy = lockOnTarget?.CharacterState;
-			}
-			camLockedOn = !camLockedOn;
-        }
-		if(PlayerCharacterState.TargetedEnemy != null && PlayerCharacterState.TargetedEnemy.agent == null)
-        {
-			PlayerCharacterState.TargetedEnemy = null;
-        }
+		UpdateLockOn();
 
 	}
+
+	#region Lock on
+
+	float switchTargetTimer;
+
+	bool CanSwitchTarget()
+    {
+		return switchTargetTimer <= 0f;
+    }
+
+	void UpdateLockOn()
+    {
+		// Switch between free and locked camera
+		if (Input.GetButtonDown("LockOn"))
+		{
+			if (lockOnTarget)
+			{
+				LockOn(null);
+			}
+			else
+			{
+				LockOn(LockOnTarget(myAgent, orbitCamera.transform));
+			}
+		}
+
+		// Switch targets
+		switchTargetTimer -= Time.deltaTime;
+		if (lockOnTarget && CanSwitchTarget())
+		{
+			Vector2 cameraInput = new Vector2(
+					Input.GetAxis("Horizontal Camera"),
+					-Input.GetAxis("Vertical Camera")
+				);
+			if (cameraInput.magnitude > 0.1f)
+			{
+				var newLockOnTarget = SwitchLockOnTarget(myAgent, lockOnTarget, cameraInput);
+				if (newLockOnTarget != null)
+				{
+					LockOn(newLockOnTarget);
+					switchTargetTimer = 0.5f;
+				}
+			}
+		}
+
+		// Remove dead target from ui
+		if (PlayerCharacterState.TargetedEnemy != null && PlayerCharacterState.TargetedEnemy.agent == null)
+		{
+			LockOn(null);
+		}
+	}
+
+    /// <summary>
+    /// Lock on is removed if agent is null.
+    /// </summary>
+    void LockOn(Agent selectedAgent)
+	{
+		if (selectedAgent != null)
+		{
+			lockOnTarget = selectedAgent;
+			orbitCamera.CamUpdater = orbitCamera.FocusOnEnemy(myAgent.transform, lockOnTarget?.transform);
+			PlayerCharacterState.TargetedEnemy = lockOnTarget?.CharacterState;
+		}
+		else
+		{
+			orbitCamera.CamUpdater = orbitCamera.FocusPlayer(myAgent.transform);
+			lockOnTarget = null;
+			PlayerCharacterState.TargetedEnemy = null;
+		}
+	}
+
+	Agent LockOnTarget(Agent player, Transform cam)
+	{
+		return world.Agents.Where(agent => agent != player).ArgMax(agent => Vector3.Dot((agent.transform.position - cam.position).normalized, cam.forward));
+	}
+
+	Agent SwitchLockOnTarget(Agent player, Agent selected, Vector2 screenDirection)
+	{
+		return world.Agents.Where(agent => agent != player &&
+									Vector2.Dot(screenDirection, agent.CharacterState.ScreenPos - selected.CharacterState.ScreenPos) > 0f &&
+									ExtensionMethods.PointInDirection(orbitCamera.transform.position, orbitCamera.transform.forward, agent.transform.position))
+					.ArgMin(agent => (selected.CharacterState.ScreenPos - agent.CharacterState.ScreenPos).sqrMagnitude);
+	}
+#endregion
 
 	void AddButtonsDown()
     {
@@ -121,7 +185,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
 	{
-        if (agent.CharacterState.Dead)
+        if (myAgent.CharacterState.Dead)
 		{
 			if (PlayerCharacterState.SpawnPoint && !respawned)
 			{
@@ -131,7 +195,7 @@ public class PlayerController : MonoBehaviour
 			//return;
 		}
 
-		agent.StartReceivingControls();
+		myAgent.StartReceivingControls();
 
 		Vector2 playerInput;
 		playerInput.x = Input.GetAxis("Horizontal");
@@ -140,50 +204,45 @@ public class PlayerController : MonoBehaviour
 		playerInput = Vector2.ClampMagnitude(playerInput, 1f);
 		if (playerInputSpace != null)
 		{
-			agent.Move(playerInput);
+			myAgent.Move(playerInput);
 		}
 		else
 		{
 			Debug.LogError("Input space is null");
 		}
-		
-		/*if (Input.GetMouseButtonDown(0))
-		{
-			agent.Shoot();
-		}*/
 
 		if (buttonDown["Roll"])
 		{
 			if( playerInput.sqrMagnitude > 0.001f)
 			{
-				agent.Roll(playerInput);
+				myAgent.Roll(playerInput);
 			}
             else
 			{
-				agent.Backstep();
+				myAgent.Backstep();
 			}
 		}
 
 		if (buttonDown["Attack"])
 		{
-			agent.Attack();
+			myAgent.Attack();
 		}
 
 		var interactiveObject = PlayerCharacterState.CurrentInteractiveObject;
 
 		if (buttonDown["Interact"] && interactiveObject != null)
 		{
-			interactiveObject.Interact(agent);
+			interactiveObject.Interact(myAgent);
 		}
 
 		if (buttonDown["Suicide"])
 		{
-			agent.CharacterState.Health -= 1000f;
+			myAgent.CharacterState.Health -= 1000f;
 		}
 
 		ClearButtonsDown();
 
-		agent.UpdateAgent();
+		myAgent.UpdateAgent();
 
 	}
 }
