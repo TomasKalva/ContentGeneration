@@ -76,18 +76,25 @@ public class PlayerController : MonoBehaviour
 
 		PlayerCharacterState.CurrentInteractiveObject = world.ObjectsCloseTo(transform.position, 5f).FirstOrDefault();
 
+		// Switch between free and locked camera
         if (Input.GetButtonDown("LockOn"))
         {
             if (camLockedOn)
 			{
 				orbitCamera.CamUpdater = orbitCamera.FocusPlayer(agent.transform);
+				PlayerCharacterState.TargetedEnemy = null;
 			}
             else
 			{
 				var lockOnTarget = world.Agents.Where(a => a != agent).FirstOrDefault();
 				orbitCamera.CamUpdater = orbitCamera.FocusOnEnemy(agent.transform, lockOnTarget?.transform);
+				PlayerCharacterState.TargetedEnemy = lockOnTarget?.CharacterState;
 			}
 			camLockedOn = !camLockedOn;
+        }
+		if(PlayerCharacterState.TargetedEnemy != null && PlayerCharacterState.TargetedEnemy.agent == null)
+        {
+			PlayerCharacterState.TargetedEnemy = null;
         }
 
 	}

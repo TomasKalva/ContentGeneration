@@ -9,7 +9,7 @@ public class World : MonoBehaviour
     List<InteractiveObject> interactiveObjects;
     List<Agent> agents;
 
-    public IEnumerable<Agent> Agents => agents.Where(a => a != null);
+    public IEnumerable<Agent> Agents => agents.Where(a => a != null && !a.CharacterState.Dead);
 
     // Start is called before the first frame update
     void Start()

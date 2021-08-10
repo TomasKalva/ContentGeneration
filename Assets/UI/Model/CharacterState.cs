@@ -65,6 +65,21 @@ namespace ContentGeneration.Assets.UI.Model
  #region Screen position of health bars
 
 #if NOESIS
+        private float _uiScreenPosX;
+        public float UIScreenPosX
+        {
+            get { return _uiScreenPosX; }
+            set { _uiScreenPosX = value; PropertyChanged.OnPropertyChanged(this); }
+        }
+
+        private float _uiScreenPosY;
+        public float UIScreenPosY
+        {
+            get { return _uiScreenPosY; }
+            set { _uiScreenPosY = viewCamera.scaledPixelHeight - value; PropertyChanged.OnPropertyChanged(this); }
+        }
+
+
         private float _screenPosX;
         public float ScreenPosX
         {

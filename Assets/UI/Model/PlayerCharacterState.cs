@@ -31,6 +31,7 @@ namespace ContentGeneration.Assets.UI.Model
             get { return _spawnPoint; }
             set { _spawnPoint = value; OnPropertyChanged(this); }
         }
+
 #endif
 
 #if NOESIS
@@ -41,6 +42,16 @@ namespace ContentGeneration.Assets.UI.Model
         {
             get { return _currentInteractiveObjectState; }
             set { _currentInteractiveObjectState = value; OnPropertyChanged(this); }
+        }
+
+#if NOESIS
+        [SerializeField]
+#endif
+        private CharacterState _targetedEnemy;
+        public CharacterState TargetedEnemy
+        {
+            get { return _targetedEnemy; }
+            set { _targetedEnemy = value; OnPropertyChanged(this); }
         }
     }
 }

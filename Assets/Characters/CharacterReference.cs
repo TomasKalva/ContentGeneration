@@ -14,7 +14,12 @@ public class CharacterReference : CharacterReference<CharacterState>
     void Update()
     {
         var agentUiPos = characterState.viewCamera.WorldToScreenPoint(transform.position + Vector3.up);
-        characterState.ScreenPosX = agentUiPos.x;
-        characterState.ScreenPosY = agentUiPos.y;
+        characterState.UIScreenPosX = agentUiPos.x;
+        characterState.UIScreenPosY = agentUiPos.y;
+
+        var agentCenterPos = characterState.viewCamera.WorldToScreenPoint(transform.position);
+        characterState.ScreenPosX = agentCenterPos.x;
+        characterState.ScreenPosY = agentCenterPos.y;
+
     }
 }

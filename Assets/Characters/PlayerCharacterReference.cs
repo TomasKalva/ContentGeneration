@@ -14,7 +14,7 @@ public class PlayerCharacterReference : CharacterReference<PlayerCharacterState>
     void Update()
     {
         var agentUiPos = characterState.viewCamera.WorldToScreenPoint(transform.position + Vector3.up);
-        characterState.ScreenPosX = agentUiPos.x;
-        characterState.ScreenPosY = agentUiPos.y;
+        characterState.UIScreenPosX = agentUiPos.x;
+        characterState.UIScreenPosY = agentUiPos.y;
     }
 }

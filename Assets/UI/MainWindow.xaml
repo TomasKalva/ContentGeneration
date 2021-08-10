@@ -9,8 +9,8 @@
   d:DesignWidth="767.667" d:DesignHeight="416"
   d:DataContext="{d:DesignInstance {x:Type local:ViewModel}, IsDesignTimeCreatable=True}">
     <Grid  VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-        <!-- Enemy health bars -->
         <Canvas>
+            <!-- Enemy health bars -->
             <ItemsControl ItemsSource="{Binding Enemies}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -27,11 +27,23 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemContainerStyle>
                     <Style TargetType="{x:Type ContentPresenter}">
-                        <Setter Property="Canvas.Left" Value="{Binding ScreenPosX}"/>
-                        <Setter Property="Canvas.Top" Value="{Binding ScreenPosY}"/>
+                        <Setter Property="Canvas.Left" Value="{Binding UIScreenPosX}"/>
+                        <Setter Property="Canvas.Top" Value="{Binding UIScreenPosY}"/>
                     </Style>
                 </ItemsControl.ItemContainerStyle>
             </ItemsControl>
+            <!-- Lock on target -->
+            <Ellipse Width="10" Height="10" Fill="White" Canvas.Left="{Binding PlayerState.TargetedEnemy.ScreenPosX}" Canvas.Top="{Binding PlayerState.TargetedEnemy.ScreenPosY}"  Margin="-100000">
+                <Ellipse.Style>
+                    <Style>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding PlayerState.TargetEnemy}" Value="x:Null">
+                                <Setter Property="Ellipse.Visibility" Value="Hidden"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Ellipse.Style>
+            </Ellipse>
         </Canvas>
         
         <!-- UI elements -->
