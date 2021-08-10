@@ -35,9 +35,6 @@ public class OrbitCamera : MonoBehaviour
 	[SerializeField, Range(0f, 1f)]
 	float focusCentering = 0.5f;
 
-	[SerializeField, Range(1f, 360f)]
-	float rotationSpeed = 90f;
-
 	[SerializeField, Range(-89f, 89f)]
 	float minVerticalAngle = -45f, maxVerticalAngle = 45f;
 
@@ -59,13 +56,7 @@ public class OrbitCamera : MonoBehaviour
 
 	Vector2 orbitAngles = new Vector2(45f, 0f);
 
-	float lastManualRotationTime;
-
-	//Quaternion gravityAlignment = Quaternion.identity;
-
 	Quaternion orbitRotation;
-
-	//public bool LockOn { get; set; }
 
 	Vector3 CameraHalfExtends
 	{
@@ -85,18 +76,12 @@ public class OrbitCamera : MonoBehaviour
 
 	public CameraUpdater FocusPlayer(Transform player)
     {
-		return new FocusPoint(player);// () => player ? player.position : Vector3.zero;
+		return new FocusPoint(player);
 	}
 
 	public CameraUpdater FocusOnEnemy(Transform player, Transform enemy)
 	{
 		return new LockOn(player, enemy);
-		/*if (!player || !enemy)
-        {
-			return () => Vector3.zero;
-        }
-
-		return () => Vector3.Lerp(player.position, enemy.position, 0.5f);*/
 	}
 
 
@@ -213,7 +198,7 @@ public class OrbitCamera : MonoBehaviour
 		float alignDelay = 5f;
 
 		[SerializeField, Range(1f, 360f)]
-		float rotationSpeed = 90f;
+		float rotationSpeed = 270f;
 
 		[SerializeField, Range(0f, 90f)]
 		float alignSmoothRange = 45f;
@@ -237,8 +222,18 @@ public class OrbitCamera : MonoBehaviour
 			var directionFromTo = ExtensionMethods.ProjectDirectionOnPlane(to.position - from.position, Vector3.up);
 			float yaw = GetAngle(new Vector2(directionFromTo.x, directionFromTo.z));
 			float pitch = 30f;
-			cam.orbitAngles = new Vector2(pitch, yaw);
+			Vector2 desiredAngle = new Vector2(pitch, yaw);
+			Vector2 originalAngle = cam.orbitAngles;
+			cam.orbitAngles = MoveTowardsPitchYaw(originalAngle, desiredAngle, rotationSpeed * Time.deltaTime);
 			return true;
+		}
+
+		/// <summary>
+		/// Pitch in [-90, 90]. Yaw in [-180, 180].
+		/// </summary>
+		Vector2 MoveTowardsPitchYaw(Vector2 from, Vector2 to, float speed)
+        {
+			return new Vector2(Mathf.MoveTowardsAngle(from.x, to.x, speed), Mathf.MoveTowardsAngle(from.y, to.y, speed));
 		}
 	}
 
@@ -262,9 +257,8 @@ public class OrbitCamera : MonoBehaviour
 	{
         if (!CamUpdater.Update(this))
         {
-			CamUpdater = null;// new CameraUpdater();
+			CamUpdater = null;
         }
-		//CamUpdater.Update(this);
 		UpdateFocusPoint();
 
 		ConstrainAngles();
