@@ -674,6 +674,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 60.169, y: 45.349, z: 49.403}
+--- !u!114 &772109284 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4236074383626822570, guid: ca5a53281b6adbb468b83f339de2187f, type: 3}
+  m_PrefabInstance: {fileID: 1677089179310499990}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 512a2afead72d064ba5125369c40d71e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &811552633
 GameObject:
   m_ObjectHideFlags: 0
@@ -1615,6 +1626,10 @@ PrefabInstance:
       propertyPath: totalShocks
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 4236074383626822570, guid: ca5a53281b6adbb468b83f339de2187f, type: 3}
+      propertyPath: detectionMask.m_Bits
+      value: 512
+      objectReference: {fileID: 0}
     - target: {fileID: 6555853987066315501, guid: ca5a53281b6adbb468b83f339de2187f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.01
@@ -1671,6 +1686,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7890128435323215766, guid: ca5a53281b6adbb468b83f339de2187f, type: 3}
+      propertyPath: maxSpeed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7890128435323215786, guid: ca5a53281b6adbb468b83f339de2187f, type: 3}
+      propertyPath: unburrowArea
+      value: 
+      objectReference: {fileID: 772109284}
     - target: {fileID: 7890128435323215786, guid: ca5a53281b6adbb468b83f339de2187f, type: 3}
       propertyPath: shockwaveDetector
       value: 

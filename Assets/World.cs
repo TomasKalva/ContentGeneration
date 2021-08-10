@@ -7,11 +7,15 @@ public class World : MonoBehaviour
 {
 
     List<InteractiveObject> interactiveObjects;
+    List<Agent> agents;
+
+    public IEnumerable<Agent> Agents => agents.Where(a => a != null);
 
     // Start is called before the first frame update
     void Start()
     {
-       interactiveObjects = new List<InteractiveObject>(FindObjectsOfType<InteractiveObject>()); 
+       interactiveObjects = new List<InteractiveObject>(FindObjectsOfType<InteractiveObject>());
+       agents = new List<Agent>(FindObjectsOfType<Agent>());
     }
 
     public IEnumerable<InteractiveObject> ObjectsCloseTo(Vector3 point, float dist)

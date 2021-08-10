@@ -15,7 +15,11 @@ public class PlayerController : MonoBehaviour
 
 	PlayerCharacterState PlayerCharacterState => (PlayerCharacterState)agent.CharacterState;
 
+	OrbitCamera orbitCamera;
+
 	World world;
+
+	bool camLockedOn;
 
 	[SerializeField]
 	Transform playerInputSpace;
@@ -29,6 +33,7 @@ public class PlayerController : MonoBehaviour
 	{
 		agent = GetComponent<HumanAgent>();
 		world = GameObject.Find("World").GetComponent<World>();
+
 
 		Application.targetFrameRate = 80;
 
@@ -46,7 +51,9 @@ public class PlayerController : MonoBehaviour
 		var camera = GameObject.Find("Main Camera");
 		playerInputSpace = camera.transform;
 		agent.movement.playerInputSpace = playerInputSpace;
-		camera.GetComponent<OrbitCamera>().focus = transform;
+		orbitCamera = camera.GetComponent<OrbitCamera>();
+		orbitCamera.DefaultCamUpdater = orbitCamera.FocusPlayer(transform);
+		camLockedOn = false;
 
 		var viewModel = camera.GetComponent<ViewModel>();
 		if (viewModel.PlayerState != null)
@@ -68,6 +75,20 @@ public class PlayerController : MonoBehaviour
 		AddButtonsDown();
 
 		PlayerCharacterState.CurrentInteractiveObject = world.ObjectsCloseTo(transform.position, 5f).FirstOrDefault();
+
+        if (Input.GetButtonDown("LockOn"))
+        {
+            if (camLockedOn)
+			{
+				orbitCamera.CamUpdater = orbitCamera.FocusPlayer(agent.transform);
+			}
+            else
+			{
+				var lockOnTarget = world.Agents.Where(a => a != agent).FirstOrDefault();
+				orbitCamera.CamUpdater = orbitCamera.FocusOnEnemy(agent.transform, lockOnTarget?.transform);
+			}
+			camLockedOn = !camLockedOn;
+        }
 
 	}
 
