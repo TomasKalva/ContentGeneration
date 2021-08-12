@@ -25,8 +25,18 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <Border Background="Beige" Padding="1" Width="50" Height="50">
-        <ContentControl>
+    <Border Padding="1" Width="50" Height="50">
+        <Border.Style>
+            <Style TargetType="Border">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Selected}" Value="True">
+                        <Setter Property="Background" Value="Brown" />
+                    </DataTrigger>
+                </Style.Triggers>
+                <Setter Property="Background" Value="Beige"></Setter>
+            </Style>
+        </Border.Style>
+        <ContentControl >
             <ContentControl.Style>
                 <Style TargetType="ContentControl">
                     <Style.Triggers>

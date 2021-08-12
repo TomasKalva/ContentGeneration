@@ -95,9 +95,39 @@ namespace ContentGeneration.Assets.UI
             Enemies = new ObservableCollection<CharacterState>(Object.FindObjectsOfType<CharacterReference>().Select(r => r.CharacterState));
         }
 
+        float inputDelay;
+
+        bool CanTakeInput()
+        {
+            return inputDelay <= 0f;
+        }
+
         void Update()
         {
             MessageOpacity *= 0.99f;
+
+            // Let's handle input in update for now...
+            inputDelay -= Time.deltaTime;
+            var input = new Vector2(
+                Input.GetAxis("Noesis_Horizontal"),
+                Input.GetAxis("Noesis_Vertical")
+                );
+            if(input.magnitude >= 0.5 && CanTakeInput())
+            {
+                PlayerState.Inventory.MoveCursor(GetInputDirection(input.x), GetInputDirection(-input.y));
+                inputDelay = 0.15f;
+            }
+
+        }
+
+        int GetInputDirection(float i)
+        {
+            if (i > 0.1f)
+                return 1;
+            else if (i > -0.1f)
+                return 0;
+            else
+                return -1;
         }
 #else
         public ViewModel()

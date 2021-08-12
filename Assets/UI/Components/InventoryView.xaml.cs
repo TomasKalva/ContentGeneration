@@ -25,13 +25,5 @@ namespace ContentGeneration.Assets.UI.Components
             Noesis.GUI.LoadComponent(this, "Assets/UI/Components/InventoryView.xaml");
         }
 #endif
-        public InventorySlot SelectedSlot
-        {
-            get { return (InventorySlot)GetValue(SelectedItemProperty); }
-            set { SetValue(SelectedItemProperty, value); }
-        }
-
-        public static readonly DependencyProperty SelectedItemProperty =
-            DependencyProperty.Register("SelectedSlot", typeof(InventorySlot), typeof(InventoryView), new UIPropertyMetadata());
     }
 }

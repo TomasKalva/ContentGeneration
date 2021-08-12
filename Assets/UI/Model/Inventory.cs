@@ -1,4 +1,8 @@
-﻿using ContentGeneration.Assets.UI.Util;
+﻿#if UNITY_5_3_OR_NEWER
+#define NOESIS
+using UnityEngine;
+#endif
+using ContentGeneration.Assets.UI.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,7 +10,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace ContentGeneration.Assets.UI.Model
 {
     public enum SlotType
@@ -30,6 +33,17 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
+        bool _selected;
+        public bool Selected
+        {
+            get => _selected;
+            set
+            {
+                _selected = value;
+                PropertyChanged.OnPropertyChanged(this);
+            }
+        }
+
         public SlotType SlotType { get; }
         public int SlotId { get; }
 
@@ -37,6 +51,7 @@ namespace ContentGeneration.Assets.UI.Model
         {
             SlotType = slotType;
             SlotId = slotId;
+            Selected = false;
         }
     }
 
@@ -65,6 +80,23 @@ namespace ContentGeneration.Assets.UI.Model
                 PropertyChanged.OnPropertyChanged(this);
             }
         }
+
+        InventorySlot _selectedSlot;
+        public InventorySlot SelectedSlot
+        {
+            get => _selectedSlot;
+            private set
+            {
+                if(_selectedSlot != null)
+                    _selectedSlot.Selected = false;
+                _selectedSlot = value;
+                if (_selectedSlot != null)
+                    _selectedSlot.Selected = true;
+                PropertyChanged.OnPropertyChanged(this);
+            }
+        }
+
+        int ColumnsCount = 5;
 
         public Inventory()
         {
@@ -103,6 +135,8 @@ namespace ContentGeneration.Assets.UI.Model
 
             EquipItem(PassiveSlots[1]);
             UnequipItem(PassiveSlots[1]);
+
+            SelectedSlot = PassiveSlots[0];
         }
 
         InventorySlot AvailableSlot(IEnumerable<InventorySlot> slots)
@@ -143,5 +177,44 @@ namespace ContentGeneration.Assets.UI.Model
             newSlot.Item = from.Item;
             from.Item = null;
         }
+
+#if NOESIS
+
+        /// <summary>
+        /// Moves SelectedSlot across active and passive items.
+        /// </summary>
+        public void MoveCursor(int x, int y)
+        {
+            if (SelectedSlot.SlotType == SlotType.PASSIVE)
+            {
+                int newId = SelectedSlot.SlotId + x + y * ColumnsCount;
+                if(newId >= 0)
+                {
+                    newId = Mathf.Clamp(newId, 0, PassiveSlots.Count - 1);
+                    SelectedSlot = PassiveSlots[newId];
+                }
+                else
+                {
+                    newId = Mathf.Clamp(newId + ColumnsCount, 0, ActiveSlots.Count - 1);
+                    SelectedSlot = ActiveSlots[newId];
+                }
+            }
+            else
+            {
+
+                int newId = SelectedSlot.SlotId + x + y * ColumnsCount;
+                if (newId < ColumnsCount)
+                {
+                    newId = Mathf.Clamp(newId, 0, ActiveSlots.Count - 1);
+                    SelectedSlot = ActiveSlots[newId];
+                }
+                else
+                {
+                    newId = Mathf.Clamp(newId - ColumnsCount, 0, PassiveSlots.Count - 1);
+                    SelectedSlot = PassiveSlots[newId];
+                }
+            }
+        }
+#endif
     }
 }
