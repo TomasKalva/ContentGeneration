@@ -7,15 +7,26 @@
              mc:Ignorable="d" 
              x:Name="parent">
 
-    <StackPanel Background="Blue" Margin="10">
-        <StackPanel.Resources>
-            <Style x:Key="Margined" TargetType="{x:Type FrameworkElement}">
-                <Setter Property="Margin" Value="5"/>
-            </Style>
-        </StackPanel.Resources>
+    <UserControl.Style>
+        <Style TargetType="{x:Type UserControl}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Active}" Value="False">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Style>
+    <Border Background="Orange" BorderThickness="5" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <StackPanel Background="Blue" Margin="10">
+            <StackPanel.Resources>
+                <Style x:Key="Margined" TargetType="{x:Type FrameworkElement}">
+                    <Setter Property="Margin" Value="5"/>
+                </Style>
+            </StackPanel.Resources>
 
-        <comp:Items DataContext="{Binding ActiveSlots}" Columns="5" Rows="1" Style="{StaticResource Margined}"></comp:Items>
-        <comp:Items DataContext="{Binding PassiveSlots}" Columns="5" Rows="3" Style="{StaticResource Margined}"></comp:Items>
-        <comp:ItemDescriptionView DataContext="{Binding SelectedSlot.Item}" Style="{StaticResource Margined}" Width="250"></comp:ItemDescriptionView>
-    </StackPanel>
+            <comp:Items DataContext="{Binding ActiveSlots}" Columns="5" Rows="1" Style="{StaticResource Margined}"></comp:Items>
+            <comp:Items DataContext="{Binding PassiveSlots}" Columns="5" Rows="3" Style="{StaticResource Margined}"></comp:Items>
+            <comp:ItemDescriptionView DataContext="{Binding SelectedSlot.Item}" Style="{StaticResource Margined}" Width="270"></comp:ItemDescriptionView>
+        </StackPanel>
+    </Border>
 </UserControl>

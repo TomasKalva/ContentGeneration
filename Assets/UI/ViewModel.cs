@@ -118,6 +118,15 @@ namespace ContentGeneration.Assets.UI
                 inputDelay = 0.15f;
             }
 
+            if (Input.GetButtonDown("Noesis_Accept"))
+            {
+                PlayerState.Inventory.HandleClick();
+            }
+
+            if (Input.GetButtonDown("Noesis_Menu"))
+            {
+                PlayerState.Inventory.Active = !PlayerState.Inventory.Active;
+            }
         }
 
         int GetInputDirection(float i)

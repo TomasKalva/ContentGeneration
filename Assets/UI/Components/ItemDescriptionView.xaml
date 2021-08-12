@@ -10,7 +10,7 @@
              x:Name="parent"
              d:DataContext="{d:DesignInstance model:ItemState}">
     <StackPanel>
-        <TextBlock Text="{Binding Name}" Background="Yellow" TextAlignment="Center"></TextBlock>
-        <TextBlock Text="{Binding Description}" Background="Yellow" Height="100"  TextAlignment="Center"></TextBlock>
+        <TextBlock Text="{Binding Name}" Background="Beige" FontSize="22" TextAlignment="Center" Margin="0,0,0,3"></TextBlock>
+        <TextBlock Text="{Binding Description}" Background="Beige" Height="100"  TextAlignment="Center"></TextBlock>
     </StackPanel>
 </UserControl>

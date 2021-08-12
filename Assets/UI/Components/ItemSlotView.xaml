@@ -16,7 +16,7 @@
             <Border Background="Orange">
                 <TextBlock Text="{Binding Path=DataContext.Item.Name, 
                                     RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}" 
-                           VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" TextWrapping="WrapWithOverflow"/>
+                           VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" TextWrapping="WrapWithOverflow" FontSize="10"/>
             </Border>
         </DataTemplate>
 
@@ -25,12 +25,12 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <Border Padding="1" Width="50" Height="50">
+    <Border Padding="3" Width="50" Height="50">
         <Border.Style>
             <Style TargetType="Border">
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding Selected}" Value="True">
-                        <Setter Property="Background" Value="Brown" />
+                        <Setter Property="Background" Value="Black" />
                     </DataTrigger>
                 </Style.Triggers>
                 <Setter Property="Background" Value="Beige"></Setter>

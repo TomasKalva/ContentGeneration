@@ -98,6 +98,17 @@ namespace ContentGeneration.Assets.UI.Model
 
         int ColumnsCount = 5;
 
+        bool _active;
+        public bool Active
+        {
+            get => _active;
+            set
+            {
+                _active = value;
+                PropertyChanged.OnPropertyChanged(this);
+            }
+        }
+
         public Inventory()
         {
             PassiveSlots = new ObservableCollection<InventorySlot>();
@@ -137,6 +148,11 @@ namespace ContentGeneration.Assets.UI.Model
             UnequipItem(PassiveSlots[1]);
 
             SelectedSlot = PassiveSlots[0];
+
+
+#if !NOESIS
+            Active = true;
+#endif
         }
 
         InventorySlot AvailableSlot(IEnumerable<InventorySlot> slots)
@@ -160,12 +176,12 @@ namespace ContentGeneration.Assets.UI.Model
 
         void EquipItem(InventorySlot itemSlot)
         {
-            MoveFromSlotToSlots(itemSlot, PassiveSlots);
+            MoveFromSlotToSlots(itemSlot, ActiveSlots);
         }
 
         void UnequipItem(InventorySlot itemSlot)
         {
-            MoveFromSlotToSlots(itemSlot, ActiveSlots);
+            MoveFromSlotToSlots(itemSlot, PassiveSlots);
         }
 
         void MoveFromSlotToSlots(InventorySlot from, IEnumerable<InventorySlot> to)
@@ -185,6 +201,9 @@ namespace ContentGeneration.Assets.UI.Model
         /// </summary>
         public void MoveCursor(int x, int y)
         {
+            if(!Active)
+                return;
+
             if (SelectedSlot.SlotType == SlotType.PASSIVE)
             {
                 int newId = SelectedSlot.SlotId + x + y * ColumnsCount;
@@ -213,6 +232,21 @@ namespace ContentGeneration.Assets.UI.Model
                     newId = Mathf.Clamp(newId - ColumnsCount, 0, PassiveSlots.Count - 1);
                     SelectedSlot = PassiveSlots[newId];
                 }
+            }
+        }
+
+        public void HandleClick()
+        {
+            if(!Active)
+                return;
+
+            if(SelectedSlot.SlotType == SlotType.PASSIVE)
+            {
+                EquipItem(SelectedSlot);
+            }
+            else
+            {
+                UnequipItem(SelectedSlot);
             }
         }
 #endif
