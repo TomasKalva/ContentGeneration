@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="45" d:DesignWidth="180"
              x:Name="parent">
-    <Border Background="Black" Padding="1">
+    <Border Background="Transparent" Padding="2">
 
         <ItemsControl ItemsSource="{Binding}">
             <ItemsControl.ItemTemplate>
@@ -17,13 +17,15 @@
             </ItemsControl.ItemTemplate>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <StackPanel.Resources>
+                    <UniformGrid 
+                        Columns="{Binding Path=Columns, RelativeSource={RelativeSource AncestorType={x:Type comp:Items}}}"
+                        Rows="{Binding Path=Rows, RelativeSource={RelativeSource AncestorType={x:Type comp:Items}}}">
+                        <UniformGrid.Resources>
                             <Style TargetType="{x:Type comp:ItemSlotView}">
-                                <Setter Property="Margin" Value="0,0,10,0"/>
+                                <Setter Property="Margin" Value="0,5,5,0"/>
                             </Style>
-                        </StackPanel.Resources>
-                    </StackPanel>
+                        </UniformGrid.Resources>
+                    </UniformGrid>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>

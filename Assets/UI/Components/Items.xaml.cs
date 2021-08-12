@@ -24,5 +24,22 @@ namespace ContentGeneration.Assets.UI.Components
             Noesis.GUI.LoadComponent(this, "Assets/UI/Components/Items.xaml");
         }
 #endif
+        public int Columns
+        {
+            get { return (int)GetValue(ColumnsProperty); }
+            set { SetValue(ColumnsProperty, value); }
+        }
+
+        public static readonly DependencyProperty ColumnsProperty =
+            DependencyProperty.Register("Columns", typeof(int), typeof(Items), new UIPropertyMetadata());
+
+        public int Rows
+        {
+            get { return (int)GetValue(RowsProperty); }
+            set { SetValue(RowsProperty, value); }
+        }
+
+        public static readonly DependencyProperty RowsProperty =
+            DependencyProperty.Register("Rows", typeof(int), typeof(Items), new UIPropertyMetadata());
     }
 }

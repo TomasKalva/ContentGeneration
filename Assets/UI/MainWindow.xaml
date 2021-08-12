@@ -92,10 +92,9 @@
             </Border>
             
             <!-- Player's inventory -->
-            <Border Background="Orange"  Width="250" Height="250">
-                <comp:Items DataContext="{Binding PlayerState.Inventory.PassiveSlots}"></comp:Items>
+            <Border Background="Orange" BorderThickness="5" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <comp:InventoryView DataContext="{Binding PlayerState.Inventory}"/>
             </Border>
-            <comp:ItemSlotView></comp:ItemSlotView>
         </Grid>
     </Grid>
 </UserControl>

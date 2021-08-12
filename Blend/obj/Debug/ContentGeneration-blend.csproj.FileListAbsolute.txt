@@ -82,3 +82,7 @@ C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\Asset
 C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\Assets\UI\Components\Items.baml
 C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\Assets\UI\Components\ItemSlotView.g.cs
 C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\Assets\UI\Components\ItemSlotView.baml
+C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\Assets\UI\Components\InventoryView.g.cs
+C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\Assets\UI\Components\InventoryView.baml
+C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\Assets\UI\Components\ItemDescriptionView.g.cs
+C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\Assets\UI\Components\ItemDescriptionView.baml

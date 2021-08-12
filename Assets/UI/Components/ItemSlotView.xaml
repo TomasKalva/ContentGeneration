@@ -11,35 +11,33 @@
              x:Name="parent"
              d:DataContext="{d:DesignInstance model:InventorySlot}">
     <UserControl.Resources>
+        <!-- Slot contains item -->
         <DataTemplate x:Key="Full" DataType="ContentControl">
             <Border Background="Orange">
                 <TextBlock Text="{Binding Path=DataContext.Item.Name, 
-                                    RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" TextWrapping="WrapWithOverflow"/>
+                                    RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}" 
+                           VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" TextWrapping="WrapWithOverflow"/>
             </Border>
         </DataTemplate>
 
+        <!-- Slot is empty -->
         <DataTemplate x:Key="Empty" DataType="ContentControl">
         </DataTemplate>
     </UserControl.Resources>
 
-    <StackPanel>
-        <Border Background="Beige" Padding="1" Width="50" Height="50">
-            <TextBlock Text="{Binding Item.Name}"/>
-        </Border>
-        <Border Background="Beige" Padding="1" Width="50" Height="50">
-            <ContentControl>
-                <ContentControl.Style>
-                    <Style TargetType="ContentControl">
-                        <Style.Triggers>
-                            <!-- Show nothing if slot is empty -->
-                            <DataTrigger Binding="{Binding Item}" Value="{x:Null}">
-                                <Setter Property="ContentTemplate" Value="{StaticResource Empty}" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                        <Setter Property="ContentTemplate" Value="{StaticResource Full}"/>
-                    </Style>
-                </ContentControl.Style>
-            </ContentControl>
-        </Border>
-    </StackPanel>
+    <Border Background="Beige" Padding="1" Width="50" Height="50">
+        <ContentControl>
+            <ContentControl.Style>
+                <Style TargetType="ContentControl">
+                    <Style.Triggers>
+                        <!-- Show nothing if slot is empty -->
+                        <DataTrigger Binding="{Binding Item}" Value="{x:Null}">
+                            <Setter Property="ContentTemplate" Value="{StaticResource Empty}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                    <Setter Property="ContentTemplate" Value="{StaticResource Full}"/>
+                </Style>
+            </ContentControl.Style>
+        </ContentControl>
+    </Border>
 </UserControl>

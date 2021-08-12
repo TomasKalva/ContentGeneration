@@ -9,5 +9,6 @@ namespace ContentGeneration.Assets.UI.Model
     public class ItemState
     {
         public string Name { get; private set; } = "Red Ichor Essence";
+        public string Description { get; private set; } = "Red liquid";
     }
 }
