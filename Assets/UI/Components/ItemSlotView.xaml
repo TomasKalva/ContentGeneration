@@ -1,0 +1,45 @@
+﻿<UserControl x:Class="ContentGeneration.Assets.UI.Components.ItemSlotView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:util="clr-namespace:ContentGeneration.Assets.UI.Util"
+             xmlns:model="clr-namespace:ContentGeneration.Assets.UI.Model"
+             xmlns:comp="clr-namespace:ContentGeneration.Assets.UI.Components"
+             mc:Ignorable="d"
+             d:DesignHeight="50" d:DesignWidth="50"
+             x:Name="parent"
+             d:DataContext="{d:DesignInstance model:InventorySlot}">
+    <UserControl.Resources>
+        <DataTemplate x:Key="Full" DataType="ContentControl">
+            <Border Background="Orange">
+                <TextBlock Text="{Binding Path=DataContext.Item.Name, 
+                                    RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" TextWrapping="WrapWithOverflow"/>
+            </Border>
+        </DataTemplate>
+
+        <DataTemplate x:Key="Empty" DataType="ContentControl">
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <StackPanel>
+        <Border Background="Beige" Padding="1" Width="50" Height="50">
+            <TextBlock Text="{Binding Item.Name}"/>
+        </Border>
+        <Border Background="Beige" Padding="1" Width="50" Height="50">
+            <ContentControl>
+                <ContentControl.Style>
+                    <Style TargetType="ContentControl">
+                        <Style.Triggers>
+                            <!-- Show nothing if slot is empty -->
+                            <DataTrigger Binding="{Binding Item}" Value="{x:Null}">
+                                <Setter Property="ContentTemplate" Value="{StaticResource Empty}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                        <Setter Property="ContentTemplate" Value="{StaticResource Full}"/>
+                    </Style>
+                </ContentControl.Style>
+            </ContentControl>
+        </Border>
+    </StackPanel>
+</UserControl>

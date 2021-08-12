@@ -32,6 +32,7 @@
                     </Style>
                 </ItemsControl.ItemContainerStyle>
             </ItemsControl>
+            
             <!-- Lock on target -->
             <Ellipse Width="10" Height="10" Fill="White" Canvas.Left="{Binding PlayerState.TargetedEnemy.ScreenPosX}" Canvas.Top="{Binding PlayerState.TargetedEnemy.ScreenPosY}"  Margin="-100000">
                 <Ellipse.Style>
@@ -89,6 +90,12 @@
                 <TextBlock Text="{Binding Message}" Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="30">
                 </TextBlock>
             </Border>
+            
+            <!-- Player's inventory -->
+            <Border Background="Orange"  Width="250" Height="250">
+                <comp:Items DataContext="{Binding PlayerState.Inventory.PassiveSlots}"></comp:Items>
+            </Border>
+            <comp:ItemSlotView></comp:ItemSlotView>
         </Grid>
     </Grid>
 </UserControl>

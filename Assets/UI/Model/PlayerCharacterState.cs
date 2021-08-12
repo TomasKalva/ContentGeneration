@@ -53,5 +53,20 @@ namespace ContentGeneration.Assets.UI.Model
             get { return _targetedEnemy; }
             set { _targetedEnemy = value; OnPropertyChanged(this); }
         }
+
+#if NOESIS
+        [SerializeField]
+#endif
+        private Inventory _inventory;
+        public Inventory Inventory
+        {
+            get { return _inventory; }
+            set { _inventory = value; OnPropertyChanged(this); }
+        }
+
+        public PlayerCharacterState()
+        {
+            Inventory = new Inventory();
+        }
     }
 }

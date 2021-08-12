@@ -67,11 +67,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Assets\UI\Components\ItemSlotView.xaml.cs">
+      <DependentUpon>ItemSlotView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Assets\UI\Components\Items.xaml.cs">
+      <DependentUpon>Items.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Assets\UI\Model\InteractiveObjectState.cs" />
     <Compile Include="Assets\UI\Model\CharacterState.cs" />
     <Compile Include="Assets\UI\Components\ProgressBarNum.xaml.cs">
       <DependentUpon>ProgressBarNum.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Assets\UI\Model\Inventory.cs" />
+    <Compile Include="Assets\UI\Model\ItemState.cs" />
     <Compile Include="Assets\UI\Model\PlayerCharacterState.cs" />
     <Compile Include="Assets\UI\Util\Extensions.cs" />
     <Compile Include="Assets\UI\Util\FloatRange.cs" />
@@ -79,6 +87,14 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Assets\UI\Components\ItemSlotView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Assets\UI\Components\Items.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Assets\UI\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
