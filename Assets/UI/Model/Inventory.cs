@@ -318,16 +318,16 @@ namespace ContentGeneration.Assets.UI.Model
 
             SelectedSlot = ActiveSlots[pos];
         }
+#endif
 
         public void Update()
         {
             var activeItems = from slot in ActiveSlots where slot.Item != null select slot.Item;
             foreach (var item in activeItems)
             {
-                item.OnUpdate(character);        
+                item.OnUpdate(character);
             }
         }
-#endif
     }
 
     public class EnemyInventory : INotifyPropertyChanged, IInventory

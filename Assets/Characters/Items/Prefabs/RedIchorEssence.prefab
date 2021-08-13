@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &559200161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6559833045428984204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d054d1601b1d4f40b7421ced6f87d9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  item:
+    _name: Red Ichor Essence
+    _description: Once noble blood of the Great One now serves as beverage for those
+      in need
+--- !u!1001 &1672042955319520627
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5493687118069396730, guid: 11441b73fa9c64b41b699592cf5aaf4e, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5493687118069396730, guid: 11441b73fa9c64b41b699592cf5aaf4e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.563931
+      objectReference: {fileID: 0}
+    - target: {fileID: 5493687118069396730, guid: 11441b73fa9c64b41b699592cf5aaf4e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -9.070001
+      objectReference: {fileID: 0}
+    - target: {fileID: 5493687118069396730, guid: 11441b73fa9c64b41b699592cf5aaf4e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -44.272354
+      objectReference: {fileID: 0}
+    - target: {fileID: 5493687118069396730, guid: 11441b73fa9c64b41b699592cf5aaf4e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5493687118069396730, guid: 11441b73fa9c64b41b699592cf5aaf4e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5493687118069396730, guid: 11441b73fa9c64b41b699592cf5aaf4e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5493687118069396730, guid: 11441b73fa9c64b41b699592cf5aaf4e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5493687118069396730, guid: 11441b73fa9c64b41b699592cf5aaf4e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5493687118069396730, guid: 11441b73fa9c64b41b699592cf5aaf4e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5493687118069396730, guid: 11441b73fa9c64b41b699592cf5aaf4e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5493687118069396735, guid: 11441b73fa9c64b41b699592cf5aaf4e, type: 3}
+      propertyPath: m_Name
+      value: RedIchorEssence
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 11441b73fa9c64b41b699592cf5aaf4e, type: 3}
+--- !u!1 &6559833045428984204 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5493687118069396735, guid: 11441b73fa9c64b41b699592cf5aaf4e, type: 3}
+  m_PrefabInstance: {fileID: 1672042955319520627}
+  m_PrefabAsset: {fileID: 0}

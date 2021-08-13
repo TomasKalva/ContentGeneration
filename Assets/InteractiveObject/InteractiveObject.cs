@@ -12,7 +12,10 @@ public class InteractiveObject : MonoBehaviour
     void Awake()
     {
         state = GetComponent<InteractiveObjectState>();
+        Initialize();
     }
+
+    protected virtual void Initialize() { }
 
     public virtual void Interact(Agent agent)
     {

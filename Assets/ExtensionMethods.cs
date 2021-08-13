@@ -55,4 +55,9 @@ static class ExtensionMethods
     {
         return Vector3.Dot(direction, point - start) >= 0f;
     }
+
+    public static float PerFixedSecond(float value)
+    {
+        return value * Time.fixedDeltaTime;
+    }
 }
