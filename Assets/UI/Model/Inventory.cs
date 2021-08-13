@@ -277,7 +277,6 @@ namespace ContentGeneration.Assets.UI.Model
             if (Active)
                 return;
 
-            //var newSelectedId = (SelectedSlot.SlotId + (right ? 1 : -1) + ActiveSlots.Count) % ActiveSlots.Count;
             int count = 0;
             int pos = SelectedSlot.SlotId;
             while(count < ActiveSlots.Count)
