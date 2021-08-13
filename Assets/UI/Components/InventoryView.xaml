@@ -26,7 +26,7 @@
 
             <comp:Items DataContext="{Binding ActiveSlots}" Columns="5" Rows="1" Style="{StaticResource Margined}"></comp:Items>
             <comp:Items DataContext="{Binding PassiveSlots}" Columns="5" Rows="3" Style="{StaticResource Margined}"></comp:Items>
-            <comp:ItemDescriptionView DataContext="{Binding SelectedSlot.Item}" Style="{StaticResource Margined}" Width="270"></comp:ItemDescriptionView>
+            <comp:ItemDescriptionView DataContext="{Binding CursorSlot.Item}" Style="{StaticResource Margined}" Width="270"></comp:ItemDescriptionView>
         </StackPanel>
     </Border>
 </UserControl>

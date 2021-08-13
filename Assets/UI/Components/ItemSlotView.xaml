@@ -25,11 +25,14 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <Border Padding="3" Width="50" Height="50">
+    <Border Padding="3">
         <Border.Style>
             <Style TargetType="Border">
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding Selected}" Value="True">
+                        <Setter Property="Background" Value="Yellow" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Cursor}" Value="True">
                         <Setter Property="Background" Value="Black" />
                     </DataTrigger>
                 </Style.Triggers>

@@ -12,7 +12,7 @@
         <ItemsControl ItemsSource="{Binding}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <comp:ItemSlotView DataContext="{Binding}"></comp:ItemSlotView>
+                    <comp:ItemSlotView DataContext="{Binding}" Width="50" Height="50"></comp:ItemSlotView>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             <ItemsControl.ItemsPanel>

@@ -127,6 +127,16 @@ namespace ContentGeneration.Assets.UI
             {
                 PlayerState.Inventory.Active = !PlayerState.Inventory.Active;
             }
+
+            if (Input.GetButtonDown("UseItem"))
+            {
+                PlayerState.Inventory.UseItem();
+            }
+
+            if (Input.GetButtonDown("DropItem"))
+            {
+                PlayerState.Inventory.DropItem();
+            }
         }
 
         int GetInputDirection(float i)

@@ -56,9 +56,7 @@
             </StackPanel>
 
             <!-- Bottom left item -->
-            <Border HorizontalAlignment="Left" VerticalAlignment="Bottom" Background="Orange" Width="70" Height="70" Margin="30">
-                <TextBlock Foreground="Black" TextAlignment="Center" VerticalAlignment="Center">Item1</TextBlock>
-            </Border>
+            <comp:ItemSlotView DataContext="{Binding PlayerState.Inventory.SelectedSlot}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="70" Height="70" Margin="30"></comp:ItemSlotView>
 
             <!-- Bottom right spirit -->
             <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="Orange" Width="80" Height="20" Margin="30">

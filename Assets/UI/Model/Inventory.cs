@@ -44,6 +44,17 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
+        bool _cursor;
+        public bool Cursor
+        {
+            get => _cursor;
+            set
+            {
+                _cursor = value;
+                PropertyChanged.OnPropertyChanged(this);
+            }
+        }
+
         public SlotType SlotType { get; }
         public int SlotId { get; }
 
@@ -81,13 +92,28 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
+        InventorySlot _cursorSlot;
+        public InventorySlot CursorSlot
+        {
+            get => _cursorSlot;
+            private set
+            {
+                if(_cursorSlot != null)
+                    _cursorSlot.Cursor = false;
+                _cursorSlot = value;
+                if (_cursorSlot != null)
+                    _cursorSlot.Cursor = true;
+                PropertyChanged.OnPropertyChanged(this);
+            }
+        }
+
         InventorySlot _selectedSlot;
         public InventorySlot SelectedSlot
         {
             get => _selectedSlot;
             private set
             {
-                if(_selectedSlot != null)
+                if (_selectedSlot != null)
                     _selectedSlot.Selected = false;
                 _selectedSlot = value;
                 if (_selectedSlot != null)
@@ -112,26 +138,12 @@ namespace ContentGeneration.Assets.UI.Model
         public Inventory()
         {
             PassiveSlots = new ObservableCollection<InventorySlot>();
-            ActiveSlots = new ObservableCollection<InventorySlot>();
-
-            //var slot = new InventorySlot();
-
-            //slot.Item = new ItemState();
-            
             for(int i=0; i<15; i++)
             {
                 PassiveSlots.Add(new InventorySlot(SlotType.PASSIVE, i));
             }
-            /*PassiveSlots.Add(slot);
-            PassiveSlots.Add(new InventorySlot());
-            PassiveSlots.Add(new InventorySlot());
-            PassiveSlots.Add(new InventorySlot());
-            PassiveSlots.Add(new InventorySlot());
-            PassiveSlots.Add(new InventorySlot());
-            PassiveSlots.Add(new InventorySlot());
-            PassiveSlots.Add(new InventorySlot());
-            PassiveSlots.Add(new InventorySlot());*/
 
+            ActiveSlots = new ObservableCollection<InventorySlot>();
             for (int i = 0; i < 5; i++)
             {
                 ActiveSlots.Add(new InventorySlot(SlotType.ACTIVE, i));
@@ -147,7 +159,8 @@ namespace ContentGeneration.Assets.UI.Model
             EquipItem(PassiveSlots[1]);
             UnequipItem(PassiveSlots[1]);
 
-            SelectedSlot = PassiveSlots[0];
+            CursorSlot = PassiveSlots[0];
+            SelectedSlot = ActiveSlots[0];
 
 
 #if !NOESIS
@@ -204,33 +217,33 @@ namespace ContentGeneration.Assets.UI.Model
             if(!Active)
                 return;
 
-            if (SelectedSlot.SlotType == SlotType.PASSIVE)
+            if (CursorSlot.SlotType == SlotType.PASSIVE)
             {
-                int newId = SelectedSlot.SlotId + x + y * ColumnsCount;
+                int newId = CursorSlot.SlotId + x + y * ColumnsCount;
                 if(newId >= 0)
                 {
                     newId = Mathf.Clamp(newId, 0, PassiveSlots.Count - 1);
-                    SelectedSlot = PassiveSlots[newId];
+                    CursorSlot = PassiveSlots[newId];
                 }
                 else
                 {
                     newId = Mathf.Clamp(newId + ColumnsCount, 0, ActiveSlots.Count - 1);
-                    SelectedSlot = ActiveSlots[newId];
+                    CursorSlot = ActiveSlots[newId];
                 }
             }
             else
             {
 
-                int newId = SelectedSlot.SlotId + x + y * ColumnsCount;
+                int newId = CursorSlot.SlotId + x + y * ColumnsCount;
                 if (newId < ColumnsCount)
                 {
                     newId = Mathf.Clamp(newId, 0, ActiveSlots.Count - 1);
-                    SelectedSlot = ActiveSlots[newId];
+                    CursorSlot = ActiveSlots[newId];
                 }
                 else
                 {
                     newId = Mathf.Clamp(newId - ColumnsCount, 0, PassiveSlots.Count - 1);
-                    SelectedSlot = PassiveSlots[newId];
+                    CursorSlot = PassiveSlots[newId];
                 }
             }
         }
@@ -240,14 +253,30 @@ namespace ContentGeneration.Assets.UI.Model
             if(!Active)
                 return;
 
-            if(SelectedSlot.SlotType == SlotType.PASSIVE)
+            if(CursorSlot.SlotType == SlotType.PASSIVE)
             {
-                EquipItem(SelectedSlot);
+                EquipItem(CursorSlot);
             }
             else
             {
-                UnequipItem(SelectedSlot);
+                UnequipItem(CursorSlot);
             }
+        }
+
+        public void UseItem()
+        {
+            SelectedSlot.Item?.Use();
+        }
+
+        public void DropItem()
+        {
+            SelectedSlot.Item?.Drop();
+        }
+
+        public void ChangeSelected(bool right)
+        {
+            var newSelectedId = Mathf.Clamp(SelectedSlot.SlotId + (right ? 1 : -1), 0, ActiveSlots.Count);
+            SelectedSlot = ActiveSlots[newSelectedId];
         }
 #endif
     }
