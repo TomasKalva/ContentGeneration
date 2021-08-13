@@ -47,6 +47,7 @@ public class PlayerController : MonoBehaviour
 			{"Attack", false },
 			{"Interact", false },
 			{"Suicide", false },
+			{"UseItem", false },
 		};
 	}
 
@@ -192,6 +193,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
 	{
+		// Death and respawning
         if (myAgent.CharacterState.Dead)
 		{
 			if (PlayerCharacterState.SpawnPoint && !respawned)
@@ -199,7 +201,6 @@ public class PlayerController : MonoBehaviour
 				PlayerCharacterState.SpawnPoint.SpawnPlayer();
 				respawned = true;
 			}
-			//return;
 		}
 
 		myAgent.StartReceivingControls();
@@ -245,6 +246,11 @@ public class PlayerController : MonoBehaviour
 		if (buttonDown["Suicide"])
 		{
 			myAgent.CharacterState.Health -= 1000f;
+		}
+
+		if (buttonDown["UseItem"])
+		{
+			PlayerCharacterState.PlayerInventory.UseItem();
 		}
 
 		ClearButtonsDown();

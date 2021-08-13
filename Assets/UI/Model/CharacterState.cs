@@ -39,10 +39,13 @@ namespace ContentGeneration.Assets.UI.Model
 
         public bool Dead => Health <= 0f;
 
+        public IInventory Inventory { get; set; }
+
         public CharacterState()
         {
             Health = new FloatRange(100, 42);
             Stamina = new FloatRange(100, 42);
+            Inventory = new EnemyInventory(this);
         }
 
         /// <summary>
@@ -54,12 +57,21 @@ namespace ContentGeneration.Assets.UI.Model
             Stamina += Stamina.Maximum;
         }
 
+        /// <summary>
+        /// Returns true if item was added successfully.
+        /// </summary>
         public virtual bool AddItem(ItemState item)
         {
 #if NOESIS
             Debug.Log($"Adding item: {item}");
 #endif
+            Inventory.AddItem(item);
             return false;
+        }
+
+        public void Update()
+        {
+            Inventory.Update();
         }
 
         /// <summary>

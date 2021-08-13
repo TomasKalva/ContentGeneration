@@ -114,21 +114,21 @@ namespace ContentGeneration.Assets.UI
                 );
             if(input.magnitude >= 0.5 && CanTakeInput())
             {
-                if (PlayerState.Inventory.Active)
+                if (PlayerState.PlayerInventory.Active)
                 {
-                    PlayerState.Inventory.MoveCursor(GetInputDirection(input.x), GetInputDirection(-input.y));
+                    PlayerState.PlayerInventory.MoveCursor(GetInputDirection(input.x), GetInputDirection(-input.y));
                     inputDelay = 0.15f;
                 }
                 else
                 {
-                    PlayerState.Inventory.ChangeSelected(input.x > 0f);
+                    PlayerState.PlayerInventory.ChangeSelected(input.x > 0f);
                     inputDelay = 0.3f;
                 }
             }
 
             if (Input.GetButtonDown("Noesis_Accept"))
             {
-                PlayerState.Inventory.HandleClick();
+                PlayerState.PlayerInventory.HandleClick();
             }
 
             if (Input.GetButtonDown("Noesis_Menu"))
@@ -136,14 +136,9 @@ namespace ContentGeneration.Assets.UI
                 PlayerState.InteractingWithUI = !PlayerState.InteractingWithUI;
             }
 
-            if (Input.GetButtonDown("UseItem"))
-            {
-                PlayerState.Inventory.UseItem();
-            }
-
             if (Input.GetButtonDown("DropItem"))
             {
-                PlayerState.Inventory.DropItem();
+                PlayerState.PlayerInventory.DropItem();
             }
         }
 

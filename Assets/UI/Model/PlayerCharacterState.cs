@@ -17,7 +17,7 @@ namespace ContentGeneration.Assets.UI.Model
             set
             {
                 _interactingWithUI = value;
-                Inventory.Active = value;
+                PlayerInventory.Active = value;
                 OnPropertyChanged(this);
             } 
         }
@@ -65,19 +65,11 @@ namespace ContentGeneration.Assets.UI.Model
             set { _targetedEnemy = value; OnPropertyChanged(this); }
         }
 
-#if NOESIS
-        [SerializeField]
-#endif
-        private Inventory _inventory;
-        public Inventory Inventory
-        {
-            get { return _inventory; }
-            set { _inventory = value; OnPropertyChanged(this); }
-        }
+        public PlayerInventory PlayerInventory => (PlayerInventory)Inventory;
 
         public PlayerCharacterState()
         {
-            Inventory = new Inventory();
+            Inventory = new PlayerInventory(this);
 
 #if NOESIS
             InteractingWithUI = false;
@@ -88,7 +80,7 @@ namespace ContentGeneration.Assets.UI.Model
 
         public override bool AddItem(ItemState item)
         {
-            return Inventory.AddItem(item);
+            return PlayerInventory.AddItem(item) != null;
         }
     }
 }

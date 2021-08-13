@@ -88,6 +88,7 @@ public class Agent : MonoBehaviour
 		acting.Act(this);
 
 		movement.MovementUpdate();
+		CharacterState.Update();
 	}
 
 	public void Move(Vector2 direction)

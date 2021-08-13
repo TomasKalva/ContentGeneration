@@ -41,18 +41,31 @@ namespace ContentGeneration.Assets.UI.Model
             private set { _description = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
-        public virtual void Use()
-        {
 #if NOESIS
+        public virtual void OnUse(CharacterState character)
+        {
             Debug.Log($"Using {Name}");
-#endif
         }
 
-        public virtual void Drop()
+        public virtual void OnDrop(CharacterState character)
         {
-#if NOESIS
             Debug.Log($"Dropping {Name}");
-#endif
         }
+
+        public virtual void OnEquip(CharacterState character)
+        {
+            Debug.Log($"Equipping {Name}");
+        }
+
+        public virtual void OnUnequip(CharacterState character)
+        {
+            Debug.Log($"Unequipping {Name}");
+        }
+
+        public virtual void OnUpdate(CharacterState character)
+        {
+            //Debug.Log($"Updating {Name}");
+        }
+#endif
     }
 }

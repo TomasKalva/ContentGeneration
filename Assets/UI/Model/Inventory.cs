@@ -66,7 +66,14 @@ namespace ContentGeneration.Assets.UI.Model
         }
     }
 
-    public class Inventory : INotifyPropertyChanged
+    public interface IInventory
+    {
+        InventorySlot AddItem(ItemState item);
+
+        void Update();
+    }
+
+    public class PlayerInventory : INotifyPropertyChanged, IInventory
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -135,8 +142,12 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
-        public Inventory()
+        CharacterState character;
+
+        public PlayerInventory(CharacterState character)
         {
+            this.character = character;
+
             PassiveSlots = new ObservableCollection<InventorySlot>();
             for(int i=0; i<15; i++)
             {
@@ -169,38 +180,50 @@ namespace ContentGeneration.Assets.UI.Model
             return slots.Where(slot => slot.Item == null).FirstOrDefault();
         }
 
-        public bool AddItem(ItemState item)
+        /// <summary>
+        /// Returns slot the item is put to.
+        /// </summary>
+        public InventorySlot AddItem(ItemState item)
         {
             var slot = AvailableSlot(PassiveSlots);
             if(slot != null)
             {
                 slot.Item = item;
-                return true;
+                return slot;
             }
             else
             {
-                return false;
+                return null;
             }
         }
 
-        void EquipItem(InventorySlot itemSlot)
+        public void EquipItem(InventorySlot itemSlot)
         {
-            MoveFromSlotToSlots(itemSlot, ActiveSlots);
+            var item = itemSlot.Item;
+            if (MoveFromSlotToSlots(itemSlot, ActiveSlots))
+            {
+                item?.OnEquip(character);
+            }
         }
 
-        void UnequipItem(InventorySlot itemSlot)
+        public void UnequipItem(InventorySlot itemSlot)
         {
-            MoveFromSlotToSlots(itemSlot, PassiveSlots);
+            var item = itemSlot.Item;
+            if (MoveFromSlotToSlots(itemSlot, PassiveSlots))
+            {
+                item?.OnUnequip(character);
+            }
         }
 
-        void MoveFromSlotToSlots(InventorySlot from, IEnumerable<InventorySlot> to)
+        bool MoveFromSlotToSlots(InventorySlot from, IEnumerable<InventorySlot> to)
         {
             var newSlot = AvailableSlot(to);
             if (from.Item == null || newSlot == null)
-                return;
+                return false;
 
             newSlot.Item = from.Item;
             from.Item = null;
+            return true;
         }
 
 #if NOESIS
@@ -261,7 +284,10 @@ namespace ContentGeneration.Assets.UI.Model
 
         public void UseItem()
         {
-            SelectedSlot.Item?.Use();
+            if (Active)
+                return;
+
+            SelectedSlot.Item?.OnUse(character);
         }
 
         public void DropItem()
@@ -269,7 +295,8 @@ namespace ContentGeneration.Assets.UI.Model
             if (!Active)
                 return;
 
-            SelectedSlot.Item?.Drop();
+            CursorSlot.Item?.OnDrop(character);
+            CursorSlot.Item = null;
         }
 
         public void ChangeSelected(bool right)
@@ -291,6 +318,69 @@ namespace ContentGeneration.Assets.UI.Model
 
             SelectedSlot = ActiveSlots[pos];
         }
+
+        public void Update()
+        {
+            var activeItems = from slot in ActiveSlots where slot.Item != null select slot.Item;
+            foreach (var item in activeItems)
+            {
+                item.OnUpdate(character);        
+            }
+        }
 #endif
+    }
+
+    public class EnemyInventory : INotifyPropertyChanged, IInventory
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        ObservableCollection<InventorySlot> _activeSlots;
+        public ObservableCollection<InventorySlot> ActiveSlots
+        {
+            get => _activeSlots;
+            private set
+            {
+                _activeSlots = value;
+                PropertyChanged.OnPropertyChanged(this);
+            }
+        }
+
+        InventorySlot EmptySlot => ActiveSlots.Where(slot => slot.Item == null).FirstOrDefault();
+
+        CharacterState character;
+
+        public EnemyInventory(CharacterState character)
+        {
+            this.character = character;
+            ActiveSlots = new ObservableCollection<InventorySlot>();
+            for(int i=0; i<5; i++)
+            {
+                ActiveSlots.Add(new InventorySlot(SlotType.ACTIVE, i));
+            }
+        }
+
+        public InventorySlot AddItem(ItemState item)
+        {
+            var slot = EmptySlot;
+            if(slot != null)
+            {
+                slot.Item = item;
+                item.OnEquip(character);
+                return slot;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public void Update()
+        {
+            var activeItems = from slot in ActiveSlots where slot.Item != null select slot.Item;
+            foreach (var item in activeItems)
+            {
+                item.OnUpdate(character);
+            }
+        }
     }
 }
