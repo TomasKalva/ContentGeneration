@@ -11,6 +11,17 @@ namespace ContentGeneration.Assets.UI.Model
     [Serializable]
     public class PlayerCharacterState : CharacterState {
 
+        private bool _interactingWithUI;
+        public bool InteractingWithUI { 
+            get => _interactingWithUI;
+            set
+            {
+                _interactingWithUI = value;
+                Inventory.Active = value;
+                OnPropertyChanged(this);
+            } 
+        }
+
 #if NOESIS
         [SerializeField]
         private InteractiveObject _currentInteractiveObject;
@@ -67,6 +78,12 @@ namespace ContentGeneration.Assets.UI.Model
         public PlayerCharacterState()
         {
             Inventory = new Inventory();
+
+#if NOESIS
+            InteractingWithUI = false;
+#else
+            InteractingWithUI = true;
+#endif
         }
     }
 }

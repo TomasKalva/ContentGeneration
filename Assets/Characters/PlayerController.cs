@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
 	[SerializeField]
 	Transform playerInputSpace;
 
+
 	Dictionary<string, bool> buttonDown;
 
 	bool respawned;
@@ -72,7 +73,10 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-		AddButtonsDown();
+		if (!PlayerCharacterState.InteractingWithUI)
+		{
+			AddButtonsDown();
+		}
 
 		PlayerCharacterState.CurrentInteractiveObject = world.ObjectsCloseTo(transform.position, 5f).FirstOrDefault();
 

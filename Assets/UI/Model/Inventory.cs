@@ -162,10 +162,6 @@ namespace ContentGeneration.Assets.UI.Model
             CursorSlot = PassiveSlots[0];
             SelectedSlot = ActiveSlots[0];
 
-
-#if !NOESIS
-            Active = true;
-#endif
         }
 
         InventorySlot AvailableSlot(IEnumerable<InventorySlot> slots)
@@ -270,13 +266,31 @@ namespace ContentGeneration.Assets.UI.Model
 
         public void DropItem()
         {
+            if (!Active)
+                return;
+
             SelectedSlot.Item?.Drop();
         }
 
         public void ChangeSelected(bool right)
         {
-            var newSelectedId = Mathf.Clamp(SelectedSlot.SlotId + (right ? 1 : -1), 0, ActiveSlots.Count);
-            SelectedSlot = ActiveSlots[newSelectedId];
+            if (Active)
+                return;
+
+            //var newSelectedId = (SelectedSlot.SlotId + (right ? 1 : -1) + ActiveSlots.Count) % ActiveSlots.Count;
+            int count = 0;
+            int pos = SelectedSlot.SlotId;
+            while(count < ActiveSlots.Count)
+            {
+                pos = (pos + (right ? 1 : -1) + ActiveSlots.Count) % ActiveSlots.Count;
+                if(ActiveSlots[pos].Item != null)
+                {
+                    break;
+                }
+                count++;
+            }
+
+            SelectedSlot = ActiveSlots[pos];
         }
 #endif
     }

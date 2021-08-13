@@ -114,8 +114,16 @@ namespace ContentGeneration.Assets.UI
                 );
             if(input.magnitude >= 0.5 && CanTakeInput())
             {
-                PlayerState.Inventory.MoveCursor(GetInputDirection(input.x), GetInputDirection(-input.y));
-                inputDelay = 0.15f;
+                if (PlayerState.Inventory.Active)
+                {
+                    PlayerState.Inventory.MoveCursor(GetInputDirection(input.x), GetInputDirection(-input.y));
+                    inputDelay = 0.15f;
+                }
+                else
+                {
+                    PlayerState.Inventory.ChangeSelected(input.x > 0f);
+                    inputDelay = 0.3f;
+                }
             }
 
             if (Input.GetButtonDown("Noesis_Accept"))
@@ -125,7 +133,7 @@ namespace ContentGeneration.Assets.UI
 
             if (Input.GetButtonDown("Noesis_Menu"))
             {
-                PlayerState.Inventory.Active = !PlayerState.Inventory.Active;
+                PlayerState.InteractingWithUI = !PlayerState.InteractingWithUI;
             }
 
             if (Input.GetButtonDown("UseItem"))
