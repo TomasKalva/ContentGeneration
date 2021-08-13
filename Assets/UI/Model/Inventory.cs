@@ -149,15 +149,15 @@ namespace ContentGeneration.Assets.UI.Model
                 ActiveSlots.Add(new InventorySlot(SlotType.ACTIVE, i));
             }
 
-            var myItem = new ItemState();
-
+#if !NOESIS
             AddItem(new ItemState());
-            AddItem(myItem);
+            AddItem(new ItemState());
             AddItem(new ItemState());
             AddItem(new ItemState());
 
             EquipItem(PassiveSlots[1]);
             UnequipItem(PassiveSlots[1]);
+#endif
 
             CursorSlot = PassiveSlots[0];
             SelectedSlot = ActiveSlots[0];

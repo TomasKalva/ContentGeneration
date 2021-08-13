@@ -6,11 +6,16 @@ using UnityEngine;
 public class PhysicalItem : InteractiveObject
 {
     [SerializeField]
-    ItemState Item;
+    public ItemState item;
 
     protected override void InteractLogic(Agent agent)
     {
-        var added = agent.CharacterState.AddItem(Item);
+        agent.PickUpItem(this);
+    }
+
+    public void PickUpItem(Agent agent)
+    {
+        var added = agent.CharacterState.AddItem(item);
         if (added)
         {
             Destroy(gameObject);

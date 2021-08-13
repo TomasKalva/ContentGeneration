@@ -11,6 +11,6 @@
              d:DataContext="{d:DesignInstance model:ItemState}">
     <StackPanel>
         <TextBlock Text="{Binding Name}" Background="Beige" FontSize="22" TextAlignment="Center" Margin="0,0,0,3"></TextBlock>
-        <TextBlock Text="{Binding Description}" Background="Beige" Height="100"  TextAlignment="Center"></TextBlock>
+        <TextBlock Text="{Binding Description}" Background="Beige" Height="100"  TextAlignment="Center" TextWrapping="WrapWithOverflow"></TextBlock>
     </StackPanel>
 </UserControl>

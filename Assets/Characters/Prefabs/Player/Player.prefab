@@ -893,6 +893,7 @@ GameObject:
   - component: {fileID: 3756998279321466968}
   - component: {fileID: 3756998279321466975}
   - component: {fileID: 8290063134227405010}
+  - component: {fileID: -3203876921913457098}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -1092,6 +1093,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerInputSpace: {fileID: 0}
+  interactionDistance: 1.5
 --- !u!114 &3756998279321466965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1110,7 +1112,7 @@ MonoBehaviour:
   priority: 0
   animationName: 
   duration: 0
-  ammo: {fileID: 0}
+  projectile: {fileID: 0}
   gun: {fileID: 0}
   speed: 20
 --- !u!95 &3756998279321466960
@@ -1506,6 +1508,33 @@ MonoBehaviour:
     _currentInteractiveObject: {fileID: 0}
     _spawnPoint: {fileID: 0}
     _currentInteractiveObjectState: {fileID: 0}
+    _targetedEnemy:
+      _health:
+        max: 100
+        value: 42
+      _stamina:
+        max: 100
+        value: 42
+      viewCamera: {fileID: 0}
+      agent: {fileID: 0}
+--- !u!114 &-3203876921913457098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3756998279321466972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41abbd75cefadad47ab51049cc899b88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: PickUpItem
+  type: 0
+  priority: 0
+  animationName: Base Layer.LeftSlash
+  duration: 0.7
 --- !u!1 &3816295168689648068
 GameObject:
   m_ObjectHideFlags: 0

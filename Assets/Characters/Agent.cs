@@ -125,4 +125,14 @@ public class Agent : MonoBehaviour
 		Destroy(gameObject, 1f);
 		enabled = false;
     }
+
+	public virtual void PickUpItem(PhysicalItem physicalItem)
+    {
+		Debug.Log("Picking up item");
+		var pickUpItem = acting.SelectAct("PickUpItem") as PickUpItem;
+        if (pickUpItem)
+        {
+			pickUpItem.PhysicalItem = physicalItem;
+        }
+    }
 }

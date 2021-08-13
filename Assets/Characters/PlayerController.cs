@@ -29,6 +29,9 @@ public class PlayerController : MonoBehaviour
 
 	bool respawned;
 
+	[SerializeField]
+	float interactionDistance = 1f;
+
 	// Start is called before the first frame update
 	void Awake()
 	{
@@ -78,7 +81,7 @@ public class PlayerController : MonoBehaviour
 			AddButtonsDown();
 		}
 
-		PlayerCharacterState.CurrentInteractiveObject = world.ObjectsCloseTo(transform.position, 5f).FirstOrDefault();
+		PlayerCharacterState.CurrentInteractiveObject = world.ObjectsCloseTo(transform.position, interactionDistance).FirstOrDefault();
 
 		UpdateLockOn();
 
