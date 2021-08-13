@@ -9,14 +9,13 @@ public class Bonfire : InteractiveObject
     [SerializeField]
     AgentSpawner playerSpawner;
 
-    public override void Interact(Agent agent)
+    protected override void InteractLogic(Agent agent)
     {
         var playerState = agent.CharacterState as PlayerCharacterState;
         if (playerState != null)
         {
             playerState.SpawnPoint = this;
         }
-        GameViewModel.ViewModel.Message = "Spawn point set";
     }
 
     public void SpawnPlayer()

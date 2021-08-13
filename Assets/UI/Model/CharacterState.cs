@@ -54,6 +54,14 @@ namespace ContentGeneration.Assets.UI.Model
             Stamina += Stamina.Maximum;
         }
 
+        public virtual bool AddItem(ItemState item)
+        {
+#if NOESIS
+            Debug.Log($"Adding item: {item}");
+#endif
+            return false;
+        }
+
         /// <summary>
         /// To be able to trigger property change from subclasses.
         /// </summary>
@@ -62,7 +70,7 @@ namespace ContentGeneration.Assets.UI.Model
             PropertyChanged?.Invoke(thisInstance, new PropertyChangedEventArgs(name));
         }
 
- #region Screen position of health bars
+#region Screen position of health bars
 
 #if NOESIS
         private float _uiScreenPosX;
@@ -106,6 +114,6 @@ namespace ContentGeneration.Assets.UI.Model
         public float ScreenPosY => 0f;
 #endif
 
-        #endregion
+#endregion
     }
 }

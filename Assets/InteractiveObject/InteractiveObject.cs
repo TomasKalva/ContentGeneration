@@ -1,4 +1,5 @@
 using ContentGeneration.Assets.UI.Model;
+using ContentGeneration.Assets.UI.Util;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +15,12 @@ public class InteractiveObject : MonoBehaviour
     }
 
     public virtual void Interact(Agent agent)
+    {
+        GameViewModel.ViewModel.Message = state.MessageOnInteract;
+        InteractLogic(agent);
+    }
+
+    protected virtual void InteractLogic(Agent agent)
     {
         Debug.Log("Interacted");
     }

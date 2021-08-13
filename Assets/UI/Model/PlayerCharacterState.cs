@@ -85,5 +85,10 @@ namespace ContentGeneration.Assets.UI.Model
             InteractingWithUI = true;
 #endif
         }
+
+        public override bool AddItem(ItemState item)
+        {
+            return Inventory.AddItem(item);
+        }
     }
 }

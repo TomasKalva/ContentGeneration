@@ -169,7 +169,7 @@ namespace ContentGeneration.Assets.UI.Model
             return slots.Where(slot => slot.Item == null).FirstOrDefault();
         }
 
-        bool AddItem(ItemState item)
+        public bool AddItem(ItemState item)
         {
             var slot = AvailableSlot(PassiveSlots);
             if(slot != null)

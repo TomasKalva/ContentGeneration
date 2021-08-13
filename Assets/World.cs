@@ -10,6 +10,7 @@ public class World : MonoBehaviour
     List<Agent> agents;
 
     public IEnumerable<Agent> Agents => agents.Where(a => a != null && !a.CharacterState.Dead);
+    public IEnumerable<InteractiveObject> InteractiveObjects => interactiveObjects.Where(io => io != null);
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +21,6 @@ public class World : MonoBehaviour
 
     public IEnumerable<InteractiveObject> ObjectsCloseTo(Vector3 point, float dist)
     {
-        return interactiveObjects.Where(o => (o.transform.position - point).sqrMagnitude <= dist * dist);
+        return InteractiveObjects.Where(o => (o.transform.position - point).sqrMagnitude <= dist * dist);
     }
 }

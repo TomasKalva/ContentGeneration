@@ -35,5 +35,15 @@ namespace ContentGeneration.Assets.UI.Model
             get { return _messageOnInteract; }
             set { _messageOnInteract = value; PropertyChanged.OnPropertyChanged(this); }
         }
+
+#if NOESIS
+        [SerializeField]
+#endif
+        private string _interactionDescription;
+        public string InteractionDescription
+        {
+            get { return _interactionDescription; }
+            set { _interactionDescription = value; PropertyChanged.OnPropertyChanged(this); }
+        }
     }
 }

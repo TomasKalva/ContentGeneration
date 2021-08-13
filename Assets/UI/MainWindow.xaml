@@ -77,9 +77,8 @@
                     </Style>
                 </Border.Style>
                 <TextBlock Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="20">
-                    <Run Text ="Press"/> 
-                    <Run Text ="A" FontSize="30"/>
-                    <Run Text="to interact"/>
+                    <Run Text ="A:" FontSize="30"/>
+                    <Run Text="{Binding PlayerState.CurrentInteractiveObjectState.InteractionDescription}"/>
                 </TextBlock>
             </Border>
 

@@ -7,13 +7,39 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
+using ContentGeneration.Assets.UI.Util;
 
 namespace ContentGeneration.Assets.UI.Model
 {
-    public class ItemState
+#if NOESIS
+    [Serializable]
+#endif
+    public class ItemState : INotifyPropertyChanged
     {
-        public string Name { get; private set; } = "Red Ichor Essence";
-        public string Description { get; private set; } = "Red liquid";
+        public event PropertyChangedEventHandler PropertyChanged;
+
+#if NOESIS
+        [SerializeField]
+#endif
+        string _name;
+
+        public string Name 
+        { 
+            get => _name;
+            private set { _name = value; PropertyChanged.OnPropertyChanged(this); }
+        }
+
+#if NOESIS
+        [SerializeField]
+#endif
+        string _description;
+
+        public string Description
+        {
+            get => _description;
+            private set { _description = value; PropertyChanged.OnPropertyChanged(this); }
+        }
 
         public virtual void Use()
         {
