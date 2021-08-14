@@ -22,7 +22,6 @@ C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\bin\Debug\ko\Sy
 C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\bin\Debug\ru\System.Windows.Interactivity.resources.dll
 C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\bin\Debug\zh-Hans\System.Windows.Interactivity.resources.dll
 C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\bin\Debug\zh-Hant\System.Windows.Interactivity.resources.dll
-C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\ContentGeneration-blend.csprojAssemblyReference.cache
 C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\Blend\App.g.cs
 C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\ContentGeneration_MarkupCompile.cache
 C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\ContentGeneration_MarkupCompile.lref
@@ -86,3 +85,4 @@ C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\Asset
 C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\Assets\UI\Components\InventoryView.baml
 C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\Assets\UI\Components\ItemDescriptionView.g.cs
 C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\Assets\UI\Components\ItemDescriptionView.baml
+C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\ContentGeneration-blend.csproj.AssemblyReference.cache

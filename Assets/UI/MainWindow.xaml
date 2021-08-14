@@ -5,6 +5,8 @@
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:local="clr-namespace:ContentGeneration.Assets.UI"
   xmlns:comp="clr-namespace:ContentGeneration.Assets.UI.Components"
+  xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+  xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
   mc:Ignorable="d"
   d:DesignWidth="767.667" d:DesignHeight="416"
   d:DataContext="{d:DesignInstance {x:Type local:ViewModel}, IsDesignTimeCreatable=True}">
@@ -56,7 +58,61 @@
             </StackPanel>
 
             <!-- Bottom left item -->
-            <comp:ItemSlotView DataContext="{Binding PlayerState.Inventory.SelectedSlot}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="70" Height="70" Margin="30"></comp:ItemSlotView>
+            <Border  HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="80" Height="80" Margin="30">
+                <comp:ItemSlotView DataContext="{Binding Path=PlayerState.Inventory.SelectedSlot}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70" Height="70">
+                    <!--
+                    Animating the slot when its content changes
+                    
+                    <comp:ItemSlotView.Triggers>
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimationUsingKeyFrames
+                                            Storyboard.Target="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:ItemSlotView}}}" 
+                                            Storyboard.TargetProperty="Width"
+                                            Duration="0:0:0.5">
+                                        <LinearDoubleKeyFrame Value="80" KeyTime="0:0:0.25" />
+                                        <LinearDoubleKeyFrame Value="70" KeyTime="0:0:0.5" />
+                                    </DoubleAnimationUsingKeyFrames>
+                                    <DoubleAnimationUsingKeyFrames
+                                            Storyboard.Target="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:ItemSlotView}}}" 
+                                            Storyboard.TargetProperty="Height"
+                                            Duration="0:0:0.5">
+                                        <LinearDoubleKeyFrame Value="80" KeyTime="0:0:0.25" />
+                                        <LinearDoubleKeyFrame Value="70" KeyTime="0:0:0.5" />
+                                    </DoubleAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </comp:ItemSlotView.Triggers>
+                    
+                    
+                    <i:Interaction.Triggers>
+                        <ei:DataTrigger Binding="{Binding PlayerState.Inventory.SelectedSlot}" Value="{x:Null}">
+                            <ei:ControlStoryboardAction ControlStoryboardOption="Play">
+                                <ei:ControlStoryboardAction.Storyboard>
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames
+                                                Storyboard.Target="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:ItemSlotView}}}" 
+                                                Storyboard.TargetProperty="Width"
+                                                Duration="0:0:0.5">
+                                            <LinearDoubleKeyFrame Value="80" KeyTime="0:0:0.25" />
+                                            <LinearDoubleKeyFrame Value="70" KeyTime="0:0:0.5" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                        <DoubleAnimationUsingKeyFrames
+                                                Storyboard.Target="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:ItemSlotView}}}" 
+                                                Storyboard.TargetProperty="Height"
+                                                Duration="0:0:0.5">
+                                            <LinearDoubleKeyFrame Value="80" KeyTime="0:0:0.25" />
+                                            <LinearDoubleKeyFrame Value="70" KeyTime="0:0:0.5" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </ei:ControlStoryboardAction.Storyboard>
+                            </ei:ControlStoryboardAction>
+                        </ei:DataTrigger>
+                    </i:Interaction.Triggers>-->
+                </comp:ItemSlotView>
+            </Border>
 
             <!-- Bottom right spirit -->
             <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="Orange" Width="80" Height="20" Margin="30">

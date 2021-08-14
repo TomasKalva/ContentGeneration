@@ -120,8 +120,13 @@ namespace ContentGeneration.Assets.UI.Model
             get => _selectedSlot;
             private set
             {
+
                 if (_selectedSlot != null)
                     _selectedSlot.Selected = false;
+
+                _selectedSlot = null;
+                PropertyChanged.OnPropertyChanged(this);
+
                 _selectedSlot = value;
                 if (_selectedSlot != null)
                     _selectedSlot.Selected = true;
