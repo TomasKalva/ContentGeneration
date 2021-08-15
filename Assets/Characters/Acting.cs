@@ -10,6 +10,10 @@ public interface IActing
     void Act(Agent agent);
 }
 
+/// <summary>
+/// Contains all acts that the agent can perform. Each frame takes requests on which act should
+/// be performed and then chooses the best option. Supports action queueing
+/// </summary>
 public class Acting : MonoBehaviour, IActing
 {
     static Act Idle;
@@ -64,8 +68,10 @@ public class Acting : MonoBehaviour, IActing
             ActiveAct = GetNextAct();
             if (_activeAct != null)
             {
+                // Activate best act and remove the rest from the queue
                 ActiveAct.StartAct(agent);
                 Busy = true;
+                selectedActs.Clear();
             }
         }
 
@@ -77,8 +83,11 @@ public class Acting : MonoBehaviour, IActing
                 ActiveAct = null;
                 Busy = false;
             }
+            // Queue selected acts if currently Busy
+            return;
         }
 
-        selectedActs.Clear();
+        // Clear all unimportant acts
+        selectedActs.RemoveAll(act => act.priority < 0f);
     }
 }

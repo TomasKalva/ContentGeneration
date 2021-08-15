@@ -53,7 +53,6 @@ public class Movement : MonoBehaviour {
 	int stepsSinceLastGrounded, stepsSinceLastJump;
 
 	Vector3 upAxis;
-	bool fixedUpdateHappened;
 
 	public VelocityUpdater VelocityUpdater { get; set; }
 
@@ -72,22 +71,22 @@ public class Movement : MonoBehaviour {
 
 	public void Jump(float speed)
     {
-		PerformInstruction(new ImpulseInstruction(speed * Vector3.up));
+		//PerformInstruction(new ImpulseInstruction(speed * Vector3.up));
 	}
 
 	public void Impulse(Vector3 velocity)
 	{
-		PerformInstruction(new ImpulseInstruction(velocity));
+		//PerformInstruction(new ImpulseInstruction(velocity));
 	}
 
 	public void Dodge(float speed)
 	{
-		PerformInstruction(new ImpulseInstruction(speed * (-AgentForward + 0.1f * Vector3.up)));
+		//PerformInstruction(new ImpulseInstruction(speed * (-AgentForward + 0.1f * Vector3.up)));
 	}
 
 	public void Roll(float speed)
 	{
-		PerformInstruction(new ImpulseInstruction(speed * (AgentForward + 0.1f * Vector3.up)));
+		//PerformInstruction(new ImpulseInstruction(speed * (AgentForward + 0.1f * Vector3.up)));
 	}
 
 	public void Move(Vector2 direction, bool setDirection = true)
@@ -106,66 +105,6 @@ public class Movement : MonoBehaviour {
 
     #endregion
 
-    #region Instructions
-
-    abstract class AgentInstruction
-	{
-		public abstract void Do(Movement movingAgent);
-	}
-
-	class ImpulseInstruction : AgentInstruction
-	{
-		Vector3 dV;
-
-		public ImpulseInstruction(Vector3 dV)
-		{
-			this.dV = dV;
-		}
-
-		public override void Do(Movement player)
-		{
-			player.JumpNoChecks(dV);
-		}
-	}
-
-	class MoveInstruction : AgentInstruction
-	{
-		Vector2 direction;
-
-		public MoveInstruction(Vector2 direction)
-		{
-			this.direction = direction;
-		}
-
-		public override void Do(Movement player)
-		{
-			player.desiredVelocity = new Vector3(direction.x, 0f, direction.y) * player.maxSpeed;
-			if(player.desiredVelocity.sqrMagnitude > 0.1f)
-			{
-				player.desiredDirection = direction;
-			}
-		}
-	}
-
-	class TurnInstruction : AgentInstruction
-	{
-		Vector2 direction;
-
-		public TurnInstruction(Vector2 direction)
-		{
-			this.direction = direction;
-		}
-
-		public override void Do(Movement player)
-		{
-			player.desiredDirection = direction;
-		}
-	}
-
-	#endregion
-
-	private List<AgentInstruction> instructionQueue;
-
 	void OnValidate () {
 		minGroundDotProduct = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad);
 		minStairsDotProduct = Mathf.Cos(maxStairsAngle * Mathf.Deg2Rad);
@@ -174,8 +113,6 @@ public class Movement : MonoBehaviour {
 	void Awake () {
 		body = GetComponent<Rigidbody>();
 		upAxis = Vector3.up;
-		instructionQueue = new List<AgentInstruction>();
-		fixedUpdateHappened = false;
 		OnValidate();
 		direction = Vector2.up;
 		Constraints = new List<MovementConstraint>();
@@ -205,11 +142,6 @@ public class Movement : MonoBehaviour {
 			AdjustVelocity();
 		}
 
-		/*if (desiredJump) {
-			desiredJump = false;
-			Jump(Physics.gravity);
-		}*/
-
 
 		PreventWallCollision();
 
@@ -222,7 +154,6 @@ public class Movement : MonoBehaviour {
 		AdjustDirection();
 		body.velocity = velocity;
 		ClearState();
-		fixedUpdateHappened = true;
 	}
 
 	void ClearState () {
@@ -325,18 +256,8 @@ public class Movement : MonoBehaviour {
 		//body.velocity = velocity;
 	}
 
-	void PerformInstruction(AgentInstruction instruction)
-    {
-		instructionQueue.Add(instruction);
-    }
-
 	public void TryClearInstructions()
     {
-        if (fixedUpdateHappened)
-        {
-			instructionQueue.Clear();
-        }
-		fixedUpdateHappened = false;
 		desiredVelocity = Vector3.zero;
 		desiredDirection = Vector2.zero;
 	}
