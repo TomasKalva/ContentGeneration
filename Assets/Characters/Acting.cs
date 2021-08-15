@@ -14,6 +14,7 @@ public interface IActing
 /// Contains all acts that the agent can perform. Each frame takes requests on which act should
 /// be performed and then chooses the best option. Supports action queueing.
 /// </summary>
+[RequireComponent(typeof(IdleAct))]
 public class Acting : MonoBehaviour, IActing
 {
     Act Idle;
@@ -25,7 +26,7 @@ public class Acting : MonoBehaviour, IActing
     [SerializeField]
     Act _activeAct;
     public Act ActiveAct {
-        get => _activeAct/* ? _activeAct : Idle*/;
+        get => _activeAct;
         private set => _activeAct = value; 
     }
 
