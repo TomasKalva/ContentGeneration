@@ -55,7 +55,7 @@ public class PlayerController : MonoBehaviour
     {
 		var camera = GameObject.Find("Main Camera");
 		playerInputSpace = camera.transform;
-		myAgent.movement.playerInputSpace = playerInputSpace;
+		//myAgent.movement.playerInputSpace = playerInputSpace;
 		orbitCamera = camera.GetComponent<OrbitCamera>();
 		orbitCamera.DefaultCamUpdater = orbitCamera.FocusPlayer(transform);
 		lockOnTarget = null;
@@ -166,7 +166,7 @@ public class PlayerController : MonoBehaviour
 	{
 		return world.Agents.Where(agent => agent != player &&
 									Vector2.Dot(screenDirection, agent.CharacterState.ScreenPos - selected.CharacterState.ScreenPos) > 0f &&
-									ExtensionMethods.PointInDirection(orbitCamera.transform.position, orbitCamera.transform.forward, agent.transform.position))
+									ExtensionMethods.IsPointInDirection(orbitCamera.transform.position, orbitCamera.transform.forward, agent.transform.position))
 					.ArgMin(agent => (selected.CharacterState.ScreenPos - agent.CharacterState.ScreenPos).sqrMagnitude);
 	}
 #endregion
@@ -210,20 +210,29 @@ public class PlayerController : MonoBehaviour
 		playerInput.y = Input.GetAxis("Vertical");
 
 		playerInput = Vector2.ClampMagnitude(playerInput, 1f);
+
+		var worldInputDirection = InputToWorld(playerInput).XZ().normalized;
 		if (playerInputSpace != null)
 		{
-			myAgent.Move(playerInput);
+			myAgent.Move(worldInputDirection);
 		}
 		else
 		{
 			Debug.LogError("Input space is null");
 		}
 
+		if(lockOnTarget != null)
+        {
+			var dirToLockOnTarget = lockOnTarget.transform.position - transform.position;
+
+			//myAgent.Turn()
+        }
+
 		if (buttonDown["Roll"])
 		{
 			if( playerInput.sqrMagnitude > 0.001f)
 			{
-				myAgent.Roll(playerInput);
+				myAgent.Roll(worldInputDirection);
 			}
             else
 			{
@@ -257,5 +266,56 @@ public class PlayerController : MonoBehaviour
 
 		myAgent.UpdateAgent();
 
+	}
+
+	Vector3 InpForward
+	{
+		get
+		{
+			if (playerInputSpace != null)
+			{
+				return playerInputSpace.forward;
+			}
+			else
+			{
+				return Vector3.forward;
+			}
+		}
+	}
+
+	Vector3 InpRight
+	{
+		get
+		{
+			if (playerInputSpace != null)
+			{
+				return playerInputSpace.right;
+			}
+			else
+			{
+				return Vector3.right;
+			}
+		}
+	}
+
+	Vector3 InpForwardHoriz
+	{
+		get
+		{
+			return ExtensionMethods.ProjectDirectionOnPlane(InpForward, Vector3.up);
+		}
+	}
+
+	Vector3 InpRightHoriz
+	{
+		get
+		{
+			return ExtensionMethods.ProjectDirectionOnPlane(InpRight, Vector3.up);
+		}
+	}
+
+	public Vector3 InputToWorld(Vector2 inputVec)
+	{
+		return inputVec.x * InpRightHoriz + inputVec.y * InpForwardHoriz;
 	}
 }

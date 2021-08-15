@@ -34,9 +34,6 @@ public class Movement : MonoBehaviour {
 	[SerializeField]
 	LayerMask probeMask = -1, stairsMask = -1;
 
-	[SerializeField]
-	public Transform playerInputSpace = default;
-
 	public Rigidbody body;
 
 	public Vector3 velocity, desiredVelocity;
@@ -66,66 +63,14 @@ public class Movement : MonoBehaviour {
 
 	public List<MovementConstraint> Constraints { get; private set; }
 
-	Vector3 InpForward
-    {
-        get
-        {
-			if(playerInputSpace != null)
-            {
-				return playerInputSpace.forward;
-            }
-            else
-            {
-				return Vector3.forward;
-            }
-        }
-    }
-
-	Vector3 InpRight
-	{
-		get
-		{
-			if (playerInputSpace != null)
-			{
-				return playerInputSpace.right;
-			}
-			else
-			{
-				return Vector3.right;
-			}
-		}
-	}
-
-	Vector3 InpForwardHoriz
-	{
-		get
-		{
-			return ExtensionMethods.ProjectDirectionOnPlane(InpForward, upAxis);
-		}
-	}
-
-	Vector3 InpRightHoriz
-	{
-		get
-		{
-			return ExtensionMethods.ProjectDirectionOnPlane(InpRight, upAxis);
-		}
-	}
-
 	public Vector3 AgentForward
     {
         get
         {
 			Vector2 normalizedDir = direction.normalized;
-			return new Vector3(normalizedDir.x, 0f, normalizedDir.y);
-			//return normalizedDir.x * InpRightHoriz + normalizedDir.y * InpForwardHoriz;
+			return normalizedDir.X0Z();
 		}
     }
-
-	public Vector3 InputToWorld(Vector2 inputVec)
-    {
-		return inputVec.x * InpRightHoriz + inputVec.y * InpForwardHoriz;
-	}
 
 	#region API
 
@@ -151,8 +96,6 @@ public class Movement : MonoBehaviour {
 
 	public void Move(Vector2 direction)
 	{
-		//PerformInstruction(new MoveInstruction(direction));
-
 		desiredVelocity = new Vector3(direction.x, 0f, direction.y) * maxSpeed;
 		if (desiredVelocity.sqrMagnitude > 0.1f)
 		{
@@ -163,7 +106,6 @@ public class Movement : MonoBehaviour {
 	public void Turn(Vector2 direction)
 	{
 		desiredDirection = direction;
-		//PerformInstruction(new TurnInstruction(direction));
 	}
 
     #endregion
@@ -277,7 +219,7 @@ public class Movement : MonoBehaviour {
 
 		foreach(var constraint in Constraints)
         {
-			constraint.Constrain(this);
+			constraint.Apply(this);
         }
 		Constraints.RemoveAll(constr => constr.Finished);
 
@@ -359,17 +301,7 @@ public class Movement : MonoBehaviour {
 	{
 		if (desiredDirection.sqrMagnitude > 0.01f)
 		{
-			// update direction
-			if (playerInputSpace)
-			{
-				var inpSpaceA = (Mathf.PI / 2f - Mathf.Atan2(playerInputSpace.forward.z, playerInputSpace.forward.x)) * Mathf.Rad2Deg;
-				var globalDesiredDirection = Quaternion.AngleAxis(inpSpaceA, Vector3.up) * new Vector3(desiredDirection.x, 0f, desiredDirection.y);
-				direction = Vector2.Lerp(direction, new Vector2(globalDesiredDirection.x, globalDesiredDirection.z), rotationCoef);
-			}
-            else
-            {
-				direction = Vector2.Lerp(direction, desiredDirection, rotationCoef);
-			}
+			direction = Vector2.MoveTowards(direction, desiredDirection, rotationCoef);
 
 			// update body rotation
 			body.rotation = Quaternion.FromToRotation(Vector3.forward, AgentForward);
@@ -378,23 +310,15 @@ public class Movement : MonoBehaviour {
 
 	void AdjustVelocity ()
 	{
-		Vector3 xAxis = ExtensionMethods.ProjectDirectionOnPlane(InpRightHoriz, contactNormal).normalized;
-		Vector3 zAxis = ExtensionMethods.ProjectDirectionOnPlane(InpForwardHoriz, contactNormal).normalized;
-
 		//when moving up, the y vector shouldn't be projected to the plane
 		var xzVelocity = velocity - velocity.y * Vector3.up;
-		float currentX = Vector3.Dot(xzVelocity, xAxis);
-		float currentZ = Vector3.Dot(xzVelocity, zAxis);
 
 		float acceleration = OnGround ? maxAcceleration : maxAirAcceleration;
 		float maxSpeedChange = acceleration * Time.deltaTime;
 
-		float newX =
-			Mathf.MoveTowards(currentX, desiredVelocity.x, maxSpeedChange);
-		float newZ =
-			Mathf.MoveTowards(currentZ, desiredVelocity.z, maxSpeedChange);
+		var newVel = Vector3.MoveTowards(xzVelocity, desiredVelocity, maxSpeedChange);
 
-		velocity += xAxis * (newX - currentX) + zAxis * (newZ - currentZ);
+		velocity += Vector3.right * (newVel.x - velocity.x) + Vector3.forward * (newVel.z - velocity.z);
 	}
 
 	void Jump (Vector3 gravity) {

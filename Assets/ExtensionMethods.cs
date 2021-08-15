@@ -51,7 +51,17 @@ static class ExtensionMethods
         return (direction - Vector3.Dot(direction, normal) * normal).normalized;
     }
 
-    public static bool PointInDirection(Vector3 start, Vector3 direction, Vector3 point)
+    public static Vector2 XZ(this Vector3 v)
+    {
+        return new Vector2(v.x, v.z);
+    }
+
+    public static Vector3 X0Z(this Vector2 v)
+    {
+        return new Vector3(v.x, 0f, v.y);
+    }
+
+    public static bool IsPointInDirection(Vector3 start, Vector3 direction, Vector3 point)
     {
         return Vector3.Dot(direction, point - start) >= 0f;
     }

@@ -20,11 +20,11 @@ public class Roll : AnimatedAct
         timeElapsed = 0f;
 
         agent.animator.CrossFade(animationName, 0.05f);
-        agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, agent.movement.InputToWorld(Direction));
+        agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, Direction.X0Z());
 
         movementContraints = new List<MovementConstraint>()
         {
-            new VelocityInDirection(agent.movement.InputToWorld(Direction)),
+            new VelocityInDirection(Direction.X0Z()),
             new TurnToDirection(Direction),
         };
 
@@ -40,7 +40,7 @@ public class Roll : AnimatedAct
 public abstract class MovementConstraint
 {
     public bool Finished { get; set; }
-    public abstract void Constrain(Movement movement);
+    public abstract void Apply(Movement movement);
 }
 
 public class VelocityInDirection : MovementConstraint
@@ -52,7 +52,7 @@ public class VelocityInDirection : MovementConstraint
         this.direction = direction;
     }
 
-    public override void Constrain(Movement movement)
+    public override void Apply(Movement movement)
     {
         if(Vector3.Dot(movement.velocity, direction) <= 0)
         {
@@ -70,7 +70,7 @@ public class TurnToDirection : MovementConstraint
         this.direction = direction;
     }
 
-    public override void Constrain(Movement movement)
+    public override void Apply(Movement movement)
     {
         movement.desiredDirection = direction;
     }
