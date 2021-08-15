@@ -103,8 +103,26 @@ public class Agent : MonoBehaviour
 		{
 			var run = acting.SelectAct("Run") as Move;
 			run.Direction = direction;
+			run.SetDirection = true;
 			stepsSinceMoved = 3;
         }
+	}
+
+	public void MoveLockedOn(Vector2 direction)
+	{
+		if (!CanMove)
+		{
+			Debug.LogError("Trying to move when CanMove is false!");
+			return;
+		}
+
+		if (direction.sqrMagnitude > 0.0001f && !acting.Busy)
+		{
+			var run = acting.SelectAct("Run") as Move;
+			run.Direction = direction;
+			run.SetDirection = false;
+			stepsSinceMoved = 3;
+		}
 	}
 
 	public void Turn(Vector2 direction)

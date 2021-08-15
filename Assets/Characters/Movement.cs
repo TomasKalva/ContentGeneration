@@ -40,15 +40,11 @@ public class Movement : MonoBehaviour {
 
 	public Vector2 direction, desiredDirection;
 
-	bool desiredJump;
-
 	Vector3 contactNormal, steepNormal;
 
 	int groundContactCount, steepContactCount;
 
 	bool OnGround => groundContactCount > 0;
-
-	bool OnSteep => steepContactCount > 0;
 
 	int jumpPhase;
 
@@ -56,7 +52,7 @@ public class Movement : MonoBehaviour {
 
 	int stepsSinceLastGrounded, stepsSinceLastJump;
 
-	Vector3 upAxis, rightAxis, forwardAxis;
+	Vector3 upAxis;
 	bool fixedUpdateHappened;
 
 	public VelocityUpdater VelocityUpdater { get; set; }
@@ -94,10 +90,10 @@ public class Movement : MonoBehaviour {
 		PerformInstruction(new ImpulseInstruction(speed * (AgentForward + 0.1f * Vector3.up)));
 	}
 
-	public void Move(Vector2 direction)
+	public void Move(Vector2 direction, bool setDirection = true)
 	{
 		desiredVelocity = new Vector3(direction.x, 0f, direction.y) * maxSpeed;
-		if (desiredVelocity.sqrMagnitude > 0.1f)
+		if (setDirection && desiredVelocity.sqrMagnitude > 0.1f)
 		{
 			desiredDirection = direction;
 		}
@@ -209,10 +205,10 @@ public class Movement : MonoBehaviour {
 			AdjustVelocity();
 		}
 
-		if (desiredJump) {
+		/*if (desiredJump) {
 			desiredJump = false;
 			Jump(Physics.gravity);
-		}
+		}*/
 
 
 		PreventWallCollision();
@@ -319,26 +315,6 @@ public class Movement : MonoBehaviour {
 		var newVel = Vector3.MoveTowards(xzVelocity, desiredVelocity, maxSpeedChange);
 
 		velocity += Vector3.right * (newVel.x - velocity.x) + Vector3.forward * (newVel.z - velocity.z);
-	}
-
-	void Jump (Vector3 gravity) {
-		Vector3 jumpDirection;
-		if (OnGround) {
-			jumpDirection = contactNormal;
-		}
-		else if (maxAirJumps > 0 && jumpPhase <= maxAirJumps) {
-			if (jumpPhase == 0) {
-				jumpPhase = 1;
-			}
-			jumpDirection = contactNormal;
-		}
-		else {
-			Debug.Log("Can't jump because not grounded and too many air jumps.");
-			return;
-		}
-
-		float jumpSpeed = Mathf.Sqrt(2f * gravity.magnitude * jumpHeight);
-		JumpNoChecks(jumpSpeed * Vector3.up);
 	}
 
 	public void JumpNoChecks(Vector3 dV)

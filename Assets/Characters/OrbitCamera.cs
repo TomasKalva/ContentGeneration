@@ -18,7 +18,7 @@ public class OrbitCamera : MonoBehaviour
     {
         get
         {
-			return _camUpdater != null ? _camUpdater : DefaultCamUpdater;
+			return _camUpdater ?? DefaultCamUpdater;
         }
         set
         {
@@ -202,8 +202,6 @@ public class OrbitCamera : MonoBehaviour
 
 		[SerializeField, Range(0f, 90f)]
 		float alignSmoothRange = 45f;
-
-		float lastManualRotationTime;
 
 		public LockOn(Transform from, Transform to)
 		{

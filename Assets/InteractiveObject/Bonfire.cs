@@ -11,8 +11,7 @@ public class Bonfire : InteractiveObject
 
     protected override void InteractLogic(Agent agent)
     {
-        var playerState = agent.CharacterState as PlayerCharacterState;
-        if (playerState != null)
+        if (agent.CharacterState is PlayerCharacterState playerState)
         {
             playerState.SpawnPoint = this;
         }
@@ -21,5 +20,5 @@ public class Bonfire : InteractiveObject
     public void SpawnPlayer()
     {
         playerSpawner.Spawn();
-}
+    }
 }

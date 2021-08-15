@@ -76,6 +76,23 @@ public class TurnToDirection : MovementConstraint
     }
 }
 
+public class TurnToTransform: MovementConstraint
+{
+    Transform target;
+
+    Vector3 TargetPosition => target != null ? target.position : Vector3.zero;
+
+    public TurnToTransform(Transform target)
+    {
+        this.target = target;
+    }
+
+    public override void Apply(Movement movement)
+    {
+        movement.desiredDirection = (TargetPosition - movement.transform.position).XZ().normalized;
+    }
+}
+
 public abstract class VelocityUpdater
 {
     /// <summary>

@@ -11,10 +11,12 @@ public class Move : AnimatedAct
         set => direction = value;
     }
 
+    public bool SetDirection { get; set; } = true;
+
     public override bool UpdateAct(Agent agent)
     {
         agent.animator.SetBool("IsMoving", true);
-        agent.movement.Move(direction);
+        agent.movement.Move(direction, SetDirection);
         return true;
     }
 }

@@ -92,6 +92,8 @@ public class PlayerController : MonoBehaviour
 
 	float switchTargetTimer;
 
+	MovementConstraint turnToTarget;
+
 	bool CanSwitchTarget()
     {
 		return switchTargetTimer <= 0f;
@@ -145,15 +147,24 @@ public class PlayerController : MonoBehaviour
 	{
 		if (selectedAgent != null)
 		{
+			// Lock
 			lockOnTarget = selectedAgent;
-			orbitCamera.CamUpdater = orbitCamera.FocusOnEnemy(myAgent.transform, lockOnTarget?.transform);
-			PlayerCharacterState.TargetedEnemy = lockOnTarget?.CharacterState;
+			orbitCamera.CamUpdater = orbitCamera.FocusOnEnemy(myAgent.transform, lockOnTarget != null ? lockOnTarget.transform : null);
+			PlayerCharacterState.TargetedEnemy = lockOnTarget != null ? lockOnTarget.CharacterState : null;
+			
+			// Remove the constraint in case it wasn't removed properly with unlock
+			myAgent.movement.Constraints.Remove(turnToTarget);
+
+			turnToTarget = new TurnToTransform(lockOnTarget.transform);
+			myAgent.movement.Constraints.Add(turnToTarget);
 		}
 		else
 		{
+			// Unlock
 			orbitCamera.CamUpdater = orbitCamera.FocusPlayer(myAgent.transform);
 			lockOnTarget = null;
 			PlayerCharacterState.TargetedEnemy = null;
+			myAgent.movement.Constraints.Remove(turnToTarget);
 		}
 	}
 
@@ -187,9 +198,6 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
-	int physicsSteps = 0;
-	float time = 0f;
-
     // Update is called once per frame
     void FixedUpdate()
 	{
@@ -214,19 +222,19 @@ public class PlayerController : MonoBehaviour
 		var worldInputDirection = InputToWorld(playerInput).XZ().normalized;
 		if (playerInputSpace != null)
 		{
-			myAgent.Move(worldInputDirection);
+			if (lockOnTarget == null)
+			{
+				myAgent.Move(worldInputDirection);
+			}
+            else
+			{
+				myAgent.MoveLockedOn(worldInputDirection);
+			}
 		}
 		else
 		{
 			Debug.LogError("Input space is null");
 		}
-
-		if(lockOnTarget != null)
-        {
-			var dirToLockOnTarget = lockOnTarget.transform.position - transform.position;
-
-			//myAgent.Turn()
-        }
 
 		if (buttonDown["Roll"])
 		{
