@@ -609,6 +609,14 @@ PrefabInstance:
       propertyPath: animationName
       value: Base Layer.Armature|Idle
       objectReference: {fileID: 0}
+    - target: {fileID: 357853139523478594, guid: f792686f34df50342b2d59ccc74fe6e9, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 357853139523478594, guid: f792686f34df50342b2d59ccc74fe6e9, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1305044139398559202, guid: f792686f34df50342b2d59ccc74fe6e9, type: 3}
       propertyPath: m_RootOrder
       value: 10
@@ -659,7 +667,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1305044139398559207, guid: f792686f34df50342b2d59ccc74fe6e9, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f792686f34df50342b2d59ccc74fe6e9, type: 3}
@@ -1851,6 +1859,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -6366865943102326392, guid: 741cf3263a63d824cbcf909de877b601, type: 3}
+      propertyPath: animationName
+      value: Base Layer.Armature|Idle
+      objectReference: {fileID: 0}
     - target: {fileID: 142231631018039064, guid: 741cf3263a63d824cbcf909de877b601, type: 3}
       propertyPath: m_RootOrder
       value: 11
@@ -1901,7 +1913,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 770852512538807714, guid: 741cf3263a63d824cbcf909de877b601, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 741cf3263a63d824cbcf909de877b601, type: 3}

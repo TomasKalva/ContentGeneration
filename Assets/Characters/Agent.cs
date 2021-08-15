@@ -60,17 +60,11 @@ public class Agent : MonoBehaviour
 		acting = GetComponent<Acting>();
 		animator = GetComponent<Animator>();
 		characterRef = GetComponent<CharacterRef>();
-		stepsSinceMoved = 0;
 	}
 
 	public void StartReceivingControls()
 	{
 		movement.ResetDesiredValues();
-
-		if(stepsSinceMoved-- < 0)
-		{
-			animator.SetBool("IsMoving", false);
-		}
 	}
 
 	public void UpdateAgent()
@@ -104,7 +98,6 @@ public class Agent : MonoBehaviour
 			var run = acting.SelectAct("Run") as Move;
 			run.Direction = direction;
 			run.SetDirection = true;
-			stepsSinceMoved = 3;
         }
 	}
 
@@ -121,7 +114,6 @@ public class Agent : MonoBehaviour
 			var run = acting.SelectAct("Run") as Move;
 			run.Direction = direction;
 			run.SetDirection = false;
-			stepsSinceMoved = 3;
 		}
 	}
 
