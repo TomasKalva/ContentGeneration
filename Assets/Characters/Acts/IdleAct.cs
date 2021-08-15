@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IdleAct : Act
+public class IdleAct : AnimatedAct
 {
     public IdleAct()
     {
@@ -11,6 +11,10 @@ public class IdleAct : Act
         priority = -100;
     }
 
-    public override void StartAct(Agent agent) { }
-    public override void EndAct(Agent agent) { }
+    public override bool UpdateAct(Agent agent)
+    {
+        PlayIfNotActive(agent, 0.1f);
+
+        return true;
+    }
 }

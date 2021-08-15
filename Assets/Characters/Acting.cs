@@ -12,11 +12,11 @@ public interface IActing
 
 /// <summary>
 /// Contains all acts that the agent can perform. Each frame takes requests on which act should
-/// be performed and then chooses the best option. Supports action queueing
+/// be performed and then chooses the best option. Supports action queueing.
 /// </summary>
 public class Acting : MonoBehaviour, IActing
 {
-    static Act Idle;
+    Act Idle;
 
     public List<Act> acts;
 
@@ -25,7 +25,7 @@ public class Acting : MonoBehaviour, IActing
     [SerializeField]
     Act _activeAct;
     public Act ActiveAct {
-        get => _activeAct ? _activeAct : Idle;
+        get => _activeAct/* ? _activeAct : Idle*/;
         private set => _activeAct = value; 
     }
 
@@ -33,7 +33,7 @@ public class Acting : MonoBehaviour, IActing
 
     void Awake()
     {
-        Idle = gameObject.AddComponent<IdleAct>();
+        Idle = GetComponent<IdleAct>();
         acts = GetComponents<Act>().ToList();
     }
 
@@ -71,11 +71,16 @@ public class Acting : MonoBehaviour, IActing
                 // Activate best act and remove the rest from the queue
                 ActiveAct.StartAct(agent);
                 Busy = true;
-                selectedActs.Clear();
             }
+            else
+            {
+                ActiveAct = Idle;
+                Idle.StartAct(agent);
+            }
+            selectedActs.Clear();
         }
 
-        if (Busy)
+        if (ActiveAct != null)
         {
             if (ActiveAct.UpdateAct(agent))
             {

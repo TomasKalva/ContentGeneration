@@ -24,4 +24,22 @@ public class AnimatedAct : Act
         timeElapsed += Time.fixedDeltaTime;
         return timeElapsed >= duration;
     }
+
+    public override void EndAct(Agent agent)
+    {
+            
+    }
+
+    protected void PlayIfNotActive(Agent agent, float normalisedTransitionTime)
+    {
+        var clipInfos = agent.animator.GetCurrentAnimatorClipInfo(0);
+        if (clipInfos.Length != 0)
+        {
+            var clip = clipInfos[0].clip;
+            if (clip.name != animationName)
+            {
+                agent.animator.CrossFade(animationName, normalisedTransitionTime);
+            }
+        }
+    }
 }

@@ -894,6 +894,7 @@ GameObject:
   - component: {fileID: 3756998279321466975}
   - component: {fileID: 8290063134227405010}
   - component: {fileID: -3203876921913457098}
+  - component: {fileID: -8543585117107524720}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -945,7 +946,6 @@ MonoBehaviour:
   stairsMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  playerInputSpace: {fileID: 0}
   body: {fileID: 0}
   velocity: {x: 0, y: 0, z: 0}
   desiredVelocity: {x: 0, y: 0, z: 0}
@@ -1535,6 +1535,24 @@ MonoBehaviour:
   priority: 0
   animationName: Base Layer.LeftSlash
   duration: 0.7
+--- !u!114 &-8543585117107524720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3756998279321466972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9476961ecce9d0344a5f2c4b666f8492, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: Idle
+  type: 0
+  priority: -100
+  animationName: Base Layer.Armature|Idle
+  duration: 0
 --- !u!1 &3816295168689648068
 GameObject:
   m_ObjectHideFlags: 0

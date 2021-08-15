@@ -65,7 +65,7 @@ public class Agent : MonoBehaviour
 
 	public void StartReceivingControls()
 	{
-		movement.TryClearInstructions();
+		movement.ResetDesiredValues();
 
 		if(stepsSinceMoved-- < 0)
 		{

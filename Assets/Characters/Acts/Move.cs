@@ -15,7 +15,8 @@ public class Move : AnimatedAct
 
     public override bool UpdateAct(Agent agent)
     {
-        agent.animator.SetBool("IsMoving", true);
+        PlayIfNotActive(agent, 0.1f);
+
         agent.movement.Move(direction, SetDirection);
         return true;
     }

@@ -35,7 +35,7 @@ public class EnemyController<AgentT> : MonoBehaviour where AgentT : Agent
 	}
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
 	{
 		agent.StartReceivingControls();
 
@@ -51,10 +51,7 @@ public class EnemyController<AgentT> : MonoBehaviour where AgentT : Agent
 			agent.Turn(movementDirection);
 		}
 
-		if (!agent.acting.Busy)
-		{
-			UpdateController(movementDirection);
-		}
+		UpdateController(movementDirection);
 
 		agent.UpdateAgent();
 	}

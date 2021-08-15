@@ -256,7 +256,7 @@ public class Movement : MonoBehaviour {
 		//body.velocity = velocity;
 	}
 
-	public void TryClearInstructions()
+	public void ResetDesiredValues()
     {
 		desiredVelocity = Vector3.zero;
 		desiredDirection = Vector2.zero;
