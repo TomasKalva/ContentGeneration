@@ -86,7 +86,7 @@ public class Acting : MonoBehaviour, IActing
             if (ActiveAct.UpdateAct(agent))
             {
                 ActiveAct.EndAct(agent);
-                ActiveAct = null;
+                ActiveAct = Idle;
                 Busy = false;
             }
             // Queue selected acts if currently Busy

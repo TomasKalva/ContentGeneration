@@ -150,13 +150,14 @@ GameObject:
   - component: {fileID: 1277739329715723913}
   - component: {fileID: 1277739329715723906}
   - component: {fileID: 718569240}
+  - component: {fileID: 127486376}
   m_Layer: 10
   m_Name: Blob
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1277739329715723917
 Transform:
   m_ObjectHideFlags: 0
@@ -219,7 +220,6 @@ MonoBehaviour:
   stairsMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  playerInputSpace: {fileID: 0}
   body: {fileID: 0}
   velocity: {x: 0, y: 0, z: 0}
   desiredVelocity: {x: 0, y: 0, z: 0}
@@ -256,7 +256,7 @@ MonoBehaviour:
   actName: Run
   type: 0
   priority: -10
-  animationName: 
+  animationName: Base Layer.BlobIdle
   duration: 0
 --- !u!95 &1277739329715723910
 Animator:
@@ -438,6 +438,24 @@ MonoBehaviour:
       value: 42
     viewCamera: {fileID: 0}
     agent: {fileID: 0}
+--- !u!114 &127486376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1277739329715723953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9476961ecce9d0344a5f2c4b666f8492, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: Idle
+  type: 0
+  priority: -100
+  animationName: Base Layer.BlobIdle
+  duration: 0
 --- !u!1 &1277739330009185574
 GameObject:
   m_ObjectHideFlags: 0

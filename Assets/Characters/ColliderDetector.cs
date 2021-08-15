@@ -11,7 +11,7 @@ public class ColliderDetector : MonoBehaviour
 
     public Collider other;
 
-    public bool Triggered => other;
+    public bool Triggered => other != null;
 
     private void OnTriggerEnter(Collider other)
     {
