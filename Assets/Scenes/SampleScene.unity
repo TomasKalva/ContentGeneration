@@ -1783,9 +1783,17 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -6366865943102326392, guid: 741cf3263a63d824cbcf909de877b601, type: 3}
+      propertyPath: anim._Clip
+      value: 
+      objectReference: {fileID: -8945691123924629249, guid: 2d0f07cc080af814f87cd3599c0f9b40, type: 3}
+    - target: {fileID: -6366865943102326392, guid: 741cf3263a63d824cbcf909de877b601, type: 3}
       propertyPath: animationName
       value: Base Layer.Armature|Idle
       objectReference: {fileID: 0}
+    - target: {fileID: 1794102860, guid: 741cf3263a63d824cbcf909de877b601, type: 3}
+      propertyPath: anim._Clip
+      value: 
+      objectReference: {fileID: 7322189309641211654, guid: 2d0f07cc080af814f87cd3599c0f9b40, type: 3}
     - target: {fileID: 1794102861, guid: 741cf3263a63d824cbcf909de877b601, type: 3}
       propertyPath: m_Size.y
       value: 0.80901194
@@ -1818,6 +1826,22 @@ PrefabInstance:
       propertyPath: m_Center.y
       value: 0.06884408
       objectReference: {fileID: 0}
+    - target: {fileID: 1794102866, guid: 741cf3263a63d824cbcf909de877b601, type: 3}
+      propertyPath: anim._Clip
+      value: 
+      objectReference: {fileID: 6221135789614451696, guid: 2d0f07cc080af814f87cd3599c0f9b40, type: 3}
+    - target: {fileID: 1794102868, guid: 741cf3263a63d824cbcf909de877b601, type: 3}
+      propertyPath: anim._Clip
+      value: 
+      objectReference: {fileID: -4906852072111188804, guid: 2d0f07cc080af814f87cd3599c0f9b40, type: 3}
+    - target: {fileID: 1794102869, guid: 741cf3263a63d824cbcf909de877b601, type: 3}
+      propertyPath: anim._Clip
+      value: 
+      objectReference: {fileID: -8945691123924629249, guid: 2d0f07cc080af814f87cd3599c0f9b40, type: 3}
+    - target: {fileID: 1794102871, guid: 741cf3263a63d824cbcf909de877b601, type: 3}
+      propertyPath: anim._Clip
+      value: 
+      objectReference: {fileID: -2214792050642955050, guid: 2d0f07cc080af814f87cd3599c0f9b40, type: 3}
     - target: {fileID: 142231631018039064, guid: 741cf3263a63d824cbcf909de877b601, type: 3}
       propertyPath: m_RootOrder
       value: 10
@@ -1868,7 +1892,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 770852512538807714, guid: 741cf3263a63d824cbcf909de877b601, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 741cf3263a63d824cbcf909de877b601, type: 3}
