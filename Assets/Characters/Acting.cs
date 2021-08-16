@@ -36,7 +36,6 @@ public class Acting : MonoBehaviour, IActing
     {
         Idle = GetComponent<IdleAct>();
         acts = GetComponents<Act>().ToList();
-        acts.Add(Idle);
     }
 
     public Act SelectAct(string actName)

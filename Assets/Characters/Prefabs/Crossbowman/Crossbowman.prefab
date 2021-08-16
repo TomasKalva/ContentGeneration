@@ -802,6 +802,15 @@ MonoBehaviour:
   type: 0
   priority: -10
   animationName: 
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 7400000, guid: 511145a765684e9418870d933377dbf1, type: 2}
+    _Speed: 1
+    _NormalizedStartTime: 0
   duration: 0
 --- !u!95 &8807186798528609746
 Animator:
@@ -813,7 +822,7 @@ Animator:
   m_GameObject: {fileID: 8807186798528609765}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 17dc275488a13084aba25de7d6be52ad, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -874,6 +883,15 @@ MonoBehaviour:
   type: 1
   priority: 0
   animationName: 
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 0}
+    _Speed: 1
+    _NormalizedStartTime: 0
   duration: 1.5
   speedF:
     serializedVersion: 2
@@ -932,6 +950,7 @@ MonoBehaviour:
   movement: {fileID: 0}
   acting: {fileID: 0}
   animator: {fileID: 0}
+  animancerAnimator: {fileID: 0}
   characterRef: {fileID: 0}
 --- !u!114 &8807186798528609787
 MonoBehaviour:
@@ -967,6 +986,15 @@ MonoBehaviour:
   type: 2
   priority: 0
   animationName: 
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 7400000, guid: 511145a765684e9418870d933377dbf1, type: 2}
+    _Speed: 1
+    _NormalizedStartTime: 0
   duration: 2.5
   projectile: {fileID: 5601675082474758034}
   gun: {fileID: 5601675080894996818}
@@ -1016,6 +1044,15 @@ MonoBehaviour:
   type: 2
   priority: 0
   animationName: 
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 7400000, guid: 511145a765684e9418870d933377dbf1, type: 2}
+    _Speed: 1
+    _NormalizedStartTime: 0
   duration: 0.05
   projectile: {fileID: 5601675082474758034}
   gun: {fileID: 5601675080894996818}
@@ -1037,6 +1074,15 @@ MonoBehaviour:
   type: 2
   priority: 0
   animationName: 
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 7400000, guid: 511145a765684e9418870d933377dbf1, type: 2}
+    _Speed: 1
+    _NormalizedStartTime: 0
   duration: 0
   angle: -10
 --- !u!114 &8807186798528609789
@@ -1056,6 +1102,15 @@ MonoBehaviour:
   type: 0
   priority: 0
   animationName: 
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 7400000, guid: 511145a765684e9418870d933377dbf1, type: 2}
+    _Speed: 1
+    _NormalizedStartTime: 0
   duration: 1
 --- !u!114 &2046848227
 MonoBehaviour:
@@ -1074,6 +1129,15 @@ MonoBehaviour:
   type: 0
   priority: -100
   animationName: 
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 7400000, guid: 511145a765684e9418870d933377dbf1, type: 2}
+    _Speed: 1
+    _NormalizedStartTime: 0
   duration: 0
 --- !u!1 &8807186799172574834
 GameObject:
