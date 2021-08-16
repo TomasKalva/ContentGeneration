@@ -19,6 +19,14 @@ public class Roll : AnimatedAct
     {
         timeElapsed = 0f;
 
+        /*if (!agent.animator.IsInTransition(0))
+        {
+            agent.animator.CrossFade(animationName, 0.05f);
+        }
+        else
+        {
+            Debug.Log("animator in transition");
+        }*/
         agent.animator.CrossFade(animationName, 0.05f);
         agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, Direction.X0Z());
 
@@ -34,6 +42,8 @@ public class Roll : AnimatedAct
     public override void EndAct(Agent agent)
     {
         movementContraints.ForEach(con => con.Finished = true);
+        //agent.animator.Play(animationName, 0, 0.0f);
+        //agent.animator.CrossFade("Base Layer.Armature|Idle", 0);
     }
 }
 

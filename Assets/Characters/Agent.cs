@@ -62,7 +62,12 @@ public class Agent : MonoBehaviour
 		characterRef = GetComponent<CharacterRef>();
 	}
 
-	public void StartReceivingControls()
+    private void Start()
+    {
+		acting.Initialize(this);
+    }
+
+    public void StartReceivingControls()
 	{
 		movement.ResetDesiredValues();
 	}

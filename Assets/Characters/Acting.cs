@@ -36,6 +36,15 @@ public class Acting : MonoBehaviour, IActing
     {
         Idle = GetComponent<IdleAct>();
         acts = GetComponents<Act>().ToList();
+        acts.Add(Idle);
+    }
+
+    public void Initialize(Agent agent)
+    {
+        foreach(var act in acts)
+        {
+            act.Initialize(agent);
+        }
     }
 
     public Act SelectAct(string actName)

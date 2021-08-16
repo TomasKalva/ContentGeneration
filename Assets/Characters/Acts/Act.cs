@@ -28,6 +28,8 @@ public class Act : MonoBehaviour
         return detector && detector.Triggered;
     }
 
+    public virtual void Initialize(Agent agent) { }
+
     public virtual void StartAct(Agent agent) 
     { 
         //Debug.Log("Started act"); 

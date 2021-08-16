@@ -136,7 +136,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5786553739861778974, guid: 87d8f17bd45a0014b837629d88080235, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5786553739861778978, guid: 87d8f17bd45a0014b837629d88080235, type: 3}
       propertyPath: m_RootOrder
@@ -361,7 +361,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5786553739861778974, guid: 87d8f17bd45a0014b837629d88080235, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5786553739861778978, guid: 87d8f17bd45a0014b837629d88080235, type: 3}
       propertyPath: m_RootOrder
@@ -550,7 +550,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5786553739861778974, guid: 87d8f17bd45a0014b837629d88080235, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5786553739861778978, guid: 87d8f17bd45a0014b837629d88080235, type: 3}
       propertyPath: m_RootOrder
@@ -605,18 +605,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: -8828546885520667264, guid: f792686f34df50342b2d59ccc74fe6e9, type: 3}
-      propertyPath: animationName
-      value: Base Layer.Armature|Idle
-      objectReference: {fileID: 0}
-    - target: {fileID: 357853139523478594, guid: f792686f34df50342b2d59ccc74fe6e9, type: 3}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 357853139523478594, guid: f792686f34df50342b2d59ccc74fe6e9, type: 3}
-      propertyPath: m_IsKinematic
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1305044139398559202, guid: f792686f34df50342b2d59ccc74fe6e9, type: 3}
       propertyPath: m_RootOrder
       value: 10
@@ -664,10 +652,6 @@ PrefabInstance:
     - target: {fileID: 1305044139398559207, guid: f792686f34df50342b2d59ccc74fe6e9, type: 3}
       propertyPath: m_Name
       value: Human
-      objectReference: {fileID: 0}
-    - target: {fileID: 1305044139398559207, guid: f792686f34df50342b2d59ccc74fe6e9, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f792686f34df50342b2d59ccc74fe6e9, type: 3}
@@ -1381,10 +1365,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike
       objectReference: {fileID: 0}
-    - target: {fileID: 6552320830622567424, guid: 0e8b0434339e8d74b87d3816fac54241, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6552320830622567427, guid: 0e8b0434339e8d74b87d3816fac54241, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -1802,10 +1782,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Empty (4)
       objectReference: {fileID: 0}
-    - target: {fileID: 5786553739861778974, guid: 87d8f17bd45a0014b837629d88080235, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5786553739861778978, guid: 87d8f17bd45a0014b837629d88080235, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -1863,6 +1839,38 @@ PrefabInstance:
       propertyPath: animationName
       value: Base Layer.Armature|Idle
       objectReference: {fileID: 0}
+    - target: {fileID: 1794102861, guid: 741cf3263a63d824cbcf909de877b601, type: 3}
+      propertyPath: m_Size.y
+      value: 0.80901194
+      objectReference: {fileID: 0}
+    - target: {fileID: 1794102861, guid: 741cf3263a63d824cbcf909de877b601, type: 3}
+      propertyPath: m_Center.y
+      value: 0.09549403
+      objectReference: {fileID: 0}
+    - target: {fileID: 1794102862, guid: 741cf3263a63d824cbcf909de877b601, type: 3}
+      propertyPath: m_Mass
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1794102863, guid: 741cf3263a63d824cbcf909de877b601, type: 3}
+      propertyPath: minDistance
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1794102864, guid: 741cf3263a63d824cbcf909de877b601, type: 3}
+      propertyPath: m_Size.y
+      value: 0.8081932
+      objectReference: {fileID: 0}
+    - target: {fileID: 1794102864, guid: 741cf3263a63d824cbcf909de877b601, type: 3}
+      propertyPath: m_Center.y
+      value: 0.0959034
+      objectReference: {fileID: 0}
+    - target: {fileID: 1794102865, guid: 741cf3263a63d824cbcf909de877b601, type: 3}
+      propertyPath: m_Size.y
+      value: 0.86231184
+      objectReference: {fileID: 0}
+    - target: {fileID: 1794102865, guid: 741cf3263a63d824cbcf909de877b601, type: 3}
+      propertyPath: m_Center.y
+      value: 0.06884408
+      objectReference: {fileID: 0}
     - target: {fileID: 142231631018039064, guid: 741cf3263a63d824cbcf909de877b601, type: 3}
       propertyPath: m_RootOrder
       value: 11
@@ -1913,7 +1921,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 770852512538807714, guid: 741cf3263a63d824cbcf909de877b601, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 741cf3263a63d824cbcf909de877b601, type: 3}
@@ -1974,7 +1982,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1277739329715723953, guid: 27e6970099e87fe4f9dfbd8ff2d06f76, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 27e6970099e87fe4f9dfbd8ff2d06f76, type: 3}
@@ -2090,10 +2098,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Lurker
       objectReference: {fileID: 0}
-    - target: {fileID: 7890128435323215789, guid: ca5a53281b6adbb468b83f339de2187f, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ca5a53281b6adbb468b83f339de2187f, type: 3}
 --- !u!1001 &5601675081443264330
@@ -2150,10 +2154,6 @@ PrefabInstance:
     - target: {fileID: 8807186798528609765, guid: 92f08995c846f294f8bf78e0ce2d176f, type: 3}
       propertyPath: m_Name
       value: Crossbowman
-      objectReference: {fileID: 0}
-    - target: {fileID: 8807186798528609765, guid: 92f08995c846f294f8bf78e0ce2d176f, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 92f08995c846f294f8bf78e0ce2d176f, type: 3}
