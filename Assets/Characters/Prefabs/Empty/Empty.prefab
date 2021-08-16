@@ -18,6 +18,8 @@ GameObject:
   - component: {fileID: 4753134690817229751}
   - component: {fileID: 5786553739861778968}
   - component: {fileID: 5786553739861778969}
+  - component: {fileID: 4707889400509429090}
+  - component: {fileID: 9147495160149788056}
   m_Layer: 10
   m_Name: Empty
   m_TagString: Untagged
@@ -120,6 +122,15 @@ MonoBehaviour:
   type: 0
   priority: -10
   animationName: 
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 7400000, guid: 64a52e5438aabac4a96a342bfbcee2ba, type: 2}
+    _Speed: 1
+    _NormalizedStartTime: 0
   duration: 0
 --- !u!95 &5786553739861778985
 Animator:
@@ -190,6 +201,7 @@ MonoBehaviour:
   movement: {fileID: 0}
   acting: {fileID: 0}
   animator: {fileID: 0}
+  animancerAnimator: {fileID: 0}
   characterRef: {fileID: 0}
 --- !u!114 &5786553739861778969
 MonoBehaviour:
@@ -205,6 +217,47 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetPoint: {fileID: 0}
   minDistance: 10
+--- !u!114 &4707889400509429090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5786553739861778974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9476961ecce9d0344a5f2c4b666f8492, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: Idle
+  type: 0
+  priority: -100
+  animationName: 
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 7400000, guid: 64a52e5438aabac4a96a342bfbcee2ba, type: 2}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  duration: 1
+--- !u!114 &9147495160149788056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5786553739861778974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ad50f81b1d25c441943c37a89ba23f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Animator: {fileID: 5786553739861778985}
+  _ActionOnDisable: 0
 --- !u!1 &5786553740325880201
 GameObject:
   m_ObjectHideFlags: 0
