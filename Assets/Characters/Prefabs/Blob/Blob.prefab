@@ -152,13 +152,14 @@ GameObject:
   - component: {fileID: 718569240}
   - component: {fileID: 127486376}
   - component: {fileID: 6895923270941502491}
+  - component: {fileID: 3177035824466539532}
   m_Layer: 10
   m_Name: Blob
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1277739329715723917
 Transform:
   m_ObjectHideFlags: 0
@@ -238,6 +239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5737c6fbdf150c54b995f289775066b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Staggered: {fileID: 0}
   acts:
   - {fileID: 1277739329715723912}
   _activeAct: {fileID: 0}
@@ -257,7 +259,6 @@ MonoBehaviour:
   actName: Run
   type: 0
   priority: -10
-  animationName: Base Layer.BlobIdle
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -317,7 +318,6 @@ MonoBehaviour:
   actName: Rush
   type: 2
   priority: 0
-  animationName: Base Layer.Squish
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -428,7 +428,6 @@ MonoBehaviour:
   actName: Explode
   type: 0
   priority: 0
-  animationName: Base Layer.Explosion
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -483,7 +482,6 @@ MonoBehaviour:
   actName: Idle
   type: 0
   priority: -100
-  animationName: Base Layer.BlobIdle
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -508,6 +506,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Animator: {fileID: 1277739329715723910}
   _ActionOnDisable: 0
+--- !u!114 &3177035824466539532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1277739329715723953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f58e840b1ef77ae418f584a865c153eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: Staggered
+  type: 0
+  priority: 0
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 7400000, guid: 91845b228f0fdf94ea627a52efc04b4d, type: 2}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  duration: 1
 --- !u!1 &1277739330009185574
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,9 +8,6 @@ using UnityEngine;
 public class AnimatedAct : Act
 {
     [SerializeField]
-    protected string animationName;
-
-    [SerializeField]
     protected ClipTransition anim;
 
     [SerializeField]

@@ -895,6 +895,7 @@ GameObject:
   - component: {fileID: 8290063134227405010}
   - component: {fileID: -3203876921913457098}
   - component: {fileID: -8543585117107524720}
+  - component: {fileID: 2511784633849721857}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -1110,7 +1111,6 @@ MonoBehaviour:
   actName: Shoot
   type: 0
   priority: 0
-  animationName: 
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -1172,6 +1172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5737c6fbdf150c54b995f289775066b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Staggered: {fileID: 0}
   acts:
   - {fileID: 3756998279321466965}
   - {fileID: 3756998279321466924}
@@ -1196,7 +1197,6 @@ MonoBehaviour:
   actName: Run
   type: 0
   priority: -10
-  animationName: Base Layer.Running
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -1223,7 +1223,6 @@ MonoBehaviour:
   actName: Roll
   type: 1
   priority: 0
-  animationName: Base Layer.Dodge
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -1283,7 +1282,6 @@ MonoBehaviour:
   actName: Backstep
   type: 1
   priority: 0
-  animationName: Base Layer.BackStep
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -1352,7 +1350,6 @@ MonoBehaviour:
   actName: Slash
   type: 2
   priority: 0
-  animationName: Base Layer.Slash
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -1458,7 +1455,6 @@ MonoBehaviour:
   actName: LeftSlash
   type: 2
   priority: 0
-  animationName: Base Layer.LeftSlash
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -1588,7 +1584,6 @@ MonoBehaviour:
   actName: PickUpItem
   type: 0
   priority: 0
-  animationName: Base Layer.LeftSlash
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -1615,7 +1610,6 @@ MonoBehaviour:
   actName: Idle
   type: 0
   priority: -100
-  animationName: Base Layer.Armature|Idle
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -1626,6 +1620,32 @@ MonoBehaviour:
     _Speed: 1
     _NormalizedStartTime: 0
   duration: 2
+--- !u!114 &2511784633849721857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3756998279321466972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f58e840b1ef77ae418f584a865c153eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: Staggered
+  type: 0
+  priority: 0
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: -8945691123924629249, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  duration: 1
 --- !u!1 &3816295168689648068
 GameObject:
   m_ObjectHideFlags: 0

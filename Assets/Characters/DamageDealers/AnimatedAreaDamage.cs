@@ -14,7 +14,7 @@ public class AnimatedAreaDamage : AreaDamage
         animator = GetComponent<Animator>();
     }
 
-    protected override void Damage(Agent agent)
+    protected override void DealDamage(Agent agent)
     {
         if (!Active)
             return;

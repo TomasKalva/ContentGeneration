@@ -1096,13 +1096,14 @@ GameObject:
   - component: {fileID: 7890128435323215784}
   - component: {fileID: 2734676913226682495}
   - component: {fileID: 724893491}
+  - component: {fileID: 2487080277206522413}
   m_Layer: 10
   m_Name: Lurker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7890128435323215761
 Transform:
   m_ObjectHideFlags: 0
@@ -1181,6 +1182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5737c6fbdf150c54b995f289775066b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Staggered: {fileID: 0}
   acts: []
   _activeAct: {fileID: 0}
 --- !u!114 &7890128435323215764
@@ -1199,7 +1201,15 @@ MonoBehaviour:
   actName: Run
   type: 0
   priority: -10
-  animationName: 
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 0}
+    _Speed: 1
+    _NormalizedStartTime: 0
   duration: 0
 --- !u!95 &7890128435323215770
 Animator:
@@ -1271,7 +1281,15 @@ MonoBehaviour:
   actName: Backstep
   type: 1
   priority: 0
-  animationName: 
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 0}
+    _Speed: 1
+    _NormalizedStartTime: 0
   duration: 1.5
   speedF:
     serializedVersion: 2
@@ -1330,6 +1348,7 @@ MonoBehaviour:
   movement: {fileID: 0}
   acting: {fileID: 0}
   animator: {fileID: 0}
+  animancerAnimator: {fileID: 0}
   characterRef: {fileID: 0}
 --- !u!114 &7890128435323215786
 MonoBehaviour:
@@ -1363,7 +1382,15 @@ MonoBehaviour:
   actName: Burrow
   type: 2
   priority: 0
-  animationName: Base Layer.LurkerBurrow
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 0}
+    _Speed: 1
+    _NormalizedStartTime: 0
   duration: 1
   setCanMove: 1
   canMove: 0
@@ -1383,7 +1410,15 @@ MonoBehaviour:
   actName: Unburrow
   type: 1
   priority: 0
-  animationName: Base Layer.LurkerUnburrow
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 0}
+    _Speed: 1
+    _NormalizedStartTime: 0
   duration: 1
   setCanMove: 1
   canMove: 1
@@ -1403,12 +1438,46 @@ MonoBehaviour:
   actName: Shockwave
   type: 0
   priority: 0
-  animationName: 
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 0}
+    _Speed: 1
+    _NormalizedStartTime: 0
   duration: 1
   totalShocks: 8
   distBetween: 1
   start: {fileID: 6555853987303637786}
   shockPrefab: {fileID: 6077429248538318, guid: 0e8b0434339e8d74b87d3816fac54241, type: 3}
+--- !u!114 &2487080277206522413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7890128435323215789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f58e840b1ef77ae418f584a865c153eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: Staggered
+  type: 0
+  priority: 0
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 0}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  duration: 1
 --- !u!1 &7890128435737558074
 GameObject:
   m_ObjectHideFlags: 0

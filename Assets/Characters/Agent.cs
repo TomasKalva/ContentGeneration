@@ -83,7 +83,7 @@ public class Agent : MonoBehaviour
 			return;
         }
 
-		acting.Act(this);
+		acting.Act();
 
 		movement.MovementUpdate();
 		CharacterState.Update();
@@ -150,4 +150,10 @@ public class Agent : MonoBehaviour
 			pickUpItem.PhysicalItem = physicalItem;
         }
     }
+
+	public virtual void Stagger(Vector3 pushForce)
+    {
+		acting.Staggered.PushForce = pushForce;
+		acting.ForceIntoAct(acting.Staggered);
+	}
 }

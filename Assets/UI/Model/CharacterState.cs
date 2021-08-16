@@ -74,6 +74,15 @@ namespace ContentGeneration.Assets.UI.Model
             Inventory.Update();
         }
 
+#if NOESIS
+        public void TakeDamage(DamageDealer damageDealer)
+        {
+            Health -= damageDealer.Damage;
+            var pushForce = 1000 * (agent.transform.position - damageDealer.Owner.transform.position).normalized;
+            agent.Stagger(pushForce);
+        }
+#endif
+
         /// <summary>
         /// To be able to trigger property change from subclasses.
         /// </summary>

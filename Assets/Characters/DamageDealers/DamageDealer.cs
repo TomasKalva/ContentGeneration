@@ -7,6 +7,8 @@ public abstract class DamageDealer : MonoBehaviour
     [SerializeField]
     protected float damage;
 
+    public float Damage => damage;
+
     List<Agent> currentlyHit;
 
     Agent _owner;
@@ -35,7 +37,7 @@ public abstract class DamageDealer : MonoBehaviour
         {
             if (hitAgent != Owner && !currentlyHit.Contains(hitAgent))
             {
-                Damage(hitAgent);
+                DealDamage(hitAgent);
                 currentlyHit.Add(hitAgent);
             }
         }
@@ -49,9 +51,9 @@ public abstract class DamageDealer : MonoBehaviour
 
     protected abstract IEnumerable<Agent> HitAgents();
 
-    protected virtual void Damage(Agent agent)
+    protected virtual void DealDamage(Agent agent)
     {
-        agent.CharacterState.Health -= damage;
+        agent.CharacterState.TakeDamage(this);
     }
 
     protected abstract void Initialize();

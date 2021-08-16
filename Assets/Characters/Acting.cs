@@ -7,7 +7,7 @@ using UnityEngine;
 public interface IActing
 {
     bool Busy { get; set; }
-    void Act(Agent agent);
+    void Act();
 }
 
 /// <summary>
@@ -17,11 +17,17 @@ public interface IActing
 [RequireComponent(typeof(IdleAct))]
 public class Acting : MonoBehaviour, IActing
 {
+    Agent agent;
+
     Act Idle;
+
+    public StaggeredAct Staggered;
 
     public List<Act> acts;
 
     public bool Busy { get; set; }
+
+    bool ActiveActStarted { get; set; }
 
     [SerializeField]
     Act _activeAct;
@@ -35,7 +41,9 @@ public class Acting : MonoBehaviour, IActing
     void Awake()
     {
         Idle = GetComponent<IdleAct>();
+        Staggered = GetComponent<StaggeredAct>();
         acts = GetComponents<Act>().ToList();
+        agent = GetComponent<Agent>();
     }
 
     public Act SelectAct(string actName)
@@ -51,6 +59,18 @@ public class Acting : MonoBehaviour, IActing
         return act;
     }
 
+    /// <summary>
+    /// Force agent to do this act. Should only be used for acts not dependent
+    /// on agents choice (getting staggered, ...).
+    /// </summary>
+    public void ForceIntoAct(Act act)
+    {
+        ActiveAct?.EndAct(agent);
+        ActiveAct = act;
+        ActiveActStarted = false;
+        Busy = true;
+    }
+
     private Act GetNextAct()
     {
         return selectedActs.ArgMax(act => act ? act.priority : -1000_000);
@@ -62,7 +82,7 @@ public class Acting : MonoBehaviour, IActing
     }
 
 
-    public void Act(Agent agent)
+    public void Act()
     {
         if (!Busy)
         {
@@ -70,15 +90,21 @@ public class Acting : MonoBehaviour, IActing
             if (_activeAct != null)
             {
                 // Activate best act and remove the rest from the queue
-                ActiveAct.StartAct(agent);
                 Busy = true;
             }
             else
             {
                 ActiveAct = Idle;
-                Idle.StartAct(agent);
             }
+            ActiveActStarted = false;
             selectedActs.Clear();
+        }
+
+        // Start act if not started yet
+        if (!ActiveActStarted)
+        {
+            ActiveAct.StartAct(agent);
+            ActiveActStarted = true;
         }
 
         if (ActiveAct != null)

@@ -74,9 +74,11 @@ public class Movement : MonoBehaviour {
 		//PerformInstruction(new ImpulseInstruction(speed * Vector3.up));
 	}
 
-	public void Impulse(Vector3 velocity)
+	public void Impulse(Vector3 force)
 	{
-		//PerformInstruction(new ImpulseInstruction(velocity));
+		var projectedForce = ExtensionMethods.ProjectDirectionOnPlane(force.normalized, contactNormal) * force.magnitude;
+		Debug.Log(projectedForce);
+		body.AddForce(projectedForce);
 	}
 
 	public void Dodge(float speed)
@@ -164,7 +166,6 @@ public class Movement : MonoBehaviour {
 	void UpdateState () {
 		stepsSinceLastGrounded += 1;
 		stepsSinceLastJump += 1;
-		velocity = body.velocity;
 		/*desiredVelocity = Vector3.zero;
 		desiredDirection = Vector2.zero;*/
 		if (OnGround || SnapToGround() || CheckSteepContacts()) {
@@ -260,6 +261,8 @@ public class Movement : MonoBehaviour {
     {
 		desiredVelocity = Vector3.zero;
 		desiredDirection = Vector2.zero;
+
+		velocity = body.velocity;
 	}
 
 	void OnCollisionEnter (Collision collision) {

@@ -696,13 +696,14 @@ GameObject:
   - component: {fileID: 8807186798528609788}
   - component: {fileID: 8807186798528609789}
   - component: {fileID: 2046848227}
+  - component: {fileID: 1494295101943249978}
   m_Layer: 10
   m_Name: Crossbowman
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8807186798528609753
 Transform:
   m_ObjectHideFlags: 0
@@ -783,6 +784,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5737c6fbdf150c54b995f289775066b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Staggered: {fileID: 0}
   acts: []
   _activeAct: {fileID: 0}
 --- !u!114 &8807186798528609756
@@ -801,7 +803,6 @@ MonoBehaviour:
   actName: Run
   type: 0
   priority: -10
-  animationName: 
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -882,7 +883,6 @@ MonoBehaviour:
   actName: Backstep
   type: 1
   priority: 0
-  animationName: 
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -985,7 +985,6 @@ MonoBehaviour:
   actName: Shoot
   type: 2
   priority: 0
-  animationName: 
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -1043,7 +1042,6 @@ MonoBehaviour:
   actName: FastShot
   type: 2
   priority: 0
-  animationName: 
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -1073,7 +1071,6 @@ MonoBehaviour:
   actName: TurnBy
   type: 2
   priority: 0
-  animationName: 
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -1101,7 +1098,6 @@ MonoBehaviour:
   actName: Wait
   type: 0
   priority: 0
-  animationName: 
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -1128,7 +1124,6 @@ MonoBehaviour:
   actName: Idle
   type: 0
   priority: -100
-  animationName: 
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -1139,6 +1134,32 @@ MonoBehaviour:
     _Speed: 1
     _NormalizedStartTime: 0
   duration: 0
+--- !u!114 &1494295101943249978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8807186798528609765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f58e840b1ef77ae418f584a865c153eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: Staggered
+  type: 0
+  priority: 0
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 7400000, guid: 511145a765684e9418870d933377dbf1, type: 2}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  duration: 1
 --- !u!1 &8807186799172574834
 GameObject:
   m_ObjectHideFlags: 0
