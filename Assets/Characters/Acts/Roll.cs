@@ -100,6 +100,25 @@ public abstract class VelocityUpdater
     public abstract bool UpdateVelocity(Movement movement, float dt);
 }
 
+public class DontChangeVelocityUpdater : VelocityUpdater
+{
+    float duration;
+    float t;
+
+    public DontChangeVelocityUpdater(float duration)
+    {
+        this.duration = duration;
+        this.t = 0f;
+    }
+
+    public override bool UpdateVelocity(Movement movement, float dt)
+    {
+        t += dt;
+        return t >= duration;
+    }
+
+}
+
 public class CurveVelocityUpdater : VelocityUpdater
 {
     AnimationCurve speedF;

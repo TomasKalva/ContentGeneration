@@ -59,4 +59,6 @@ public abstract class DamageDealer : MonoBehaviour
     protected abstract void Initialize();
 
     protected virtual void OnFixedUpdate() { }
+
+    public virtual Vector3 PushForce(Transform enemy) => Vector3.zero;
 }

@@ -77,7 +77,6 @@ public class Movement : MonoBehaviour {
 	public void Impulse(Vector3 force)
 	{
 		var projectedForce = ExtensionMethods.ProjectDirectionOnPlane(force.normalized, contactNormal) * force.magnitude;
-		Debug.Log(projectedForce);
 		body.AddForce(projectedForce);
 	}
 

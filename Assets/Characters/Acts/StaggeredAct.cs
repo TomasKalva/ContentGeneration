@@ -16,6 +16,8 @@ public class StaggeredAct : AnimatedAct
     public override void OnStart(Agent agent)
     {
         agent.movement.Impulse(PushForce);
+
+        agent.movement.VelocityUpdater = new DontChangeVelocityUpdater(duration);
     }
 
     public override bool UpdateAct(Agent agent)

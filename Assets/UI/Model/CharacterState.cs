@@ -78,8 +78,8 @@ namespace ContentGeneration.Assets.UI.Model
         public void TakeDamage(DamageDealer damageDealer)
         {
             Health -= damageDealer.Damage;
-            var pushForce = 1000 * (agent.transform.position - damageDealer.Owner.transform.position).normalized;
-            agent.Stagger(pushForce);
+            //var pushForce = 1000 * (agent.transform.position - damageDealer.Owner.transform.position).normalized;
+            agent.Stagger(damageDealer.PushForce(agent.transform));
         }
 #endif
 

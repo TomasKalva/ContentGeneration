@@ -8,6 +8,9 @@ public class Projectile : AreaDamage
     [SerializeField]
     float timeUntilDestroyed;
 
+    [SerializeField]
+    float pushForceIntensity = 500f;
+
     protected override void DealDamage(Agent agent)
     {
         if (!Active)
@@ -28,4 +31,9 @@ public class Projectile : AreaDamage
     }
 
     public override bool Active { get; set; }
+
+    public override Vector3 PushForce(Transform enemy)
+    {
+        return pushForceIntensity * transform.forward;
+    }
 }

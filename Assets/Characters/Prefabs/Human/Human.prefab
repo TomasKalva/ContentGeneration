@@ -340,6 +340,7 @@ GameObject:
   - component: {fileID: 1998491415603452535}
   - component: {fileID: 2311092429806331587}
   - component: {fileID: -144588660198513688}
+  - component: {fileID: 2019056096}
   m_Layer: 10
   m_Name: Human
   m_TagString: Untagged
@@ -519,7 +520,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1305044139398559207}
-  m_Material: {fileID: 13400000, guid: 0f84c8e851f140041b0df46a87ab98b0, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.751806
@@ -1013,6 +1014,32 @@ MonoBehaviour:
     _NormalizedStartTime: 0
   duration: 2
 --- !u!114 &-144588660198513688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1305044139398559207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f58e840b1ef77ae418f584a865c153eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: Staggered
+  type: 0
+  priority: 0
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: -8945691123924629249, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  duration: 1
+--- !u!114 &2019056096
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

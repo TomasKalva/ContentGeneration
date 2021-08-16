@@ -7,6 +7,9 @@ public class Weapon : AreaDamage
 {
     bool _active;
 
+    [SerializeField]
+    float pushForceIntensity = 500f;
+
     public override bool Active
     {
         get
@@ -33,5 +36,10 @@ public class Weapon : AreaDamage
         {
             return Enumerable.Empty<Agent>();
         }
+    }
+
+    public override Vector3 PushForce(Transform enemy)
+    {
+        return pushForceIntensity * (enemy.position - Owner.transform.position).normalized;
     }
 }
