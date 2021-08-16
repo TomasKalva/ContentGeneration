@@ -605,14 +605,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 357853139523478594, guid: f792686f34df50342b2d59ccc74fe6e9, type: 3}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 357853139523478594, guid: f792686f34df50342b2d59ccc74fe6e9, type: 3}
-      propertyPath: m_IsKinematic
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1305044139398559202, guid: f792686f34df50342b2d59ccc74fe6e9, type: 3}
       propertyPath: m_RootOrder
       value: 10
@@ -660,6 +652,10 @@ PrefabInstance:
     - target: {fileID: 1305044139398559207, guid: f792686f34df50342b2d59ccc74fe6e9, type: 3}
       propertyPath: m_Name
       value: Human
+      objectReference: {fileID: 0}
+    - target: {fileID: 1305044139398559207, guid: f792686f34df50342b2d59ccc74fe6e9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f792686f34df50342b2d59ccc74fe6e9, type: 3}
@@ -1991,10 +1987,6 @@ PrefabInstance:
     - target: {fileID: 1277739329715723953, guid: 27e6970099e87fe4f9dfbd8ff2d06f76, type: 3}
       propertyPath: m_Name
       value: Blob
-      objectReference: {fileID: 0}
-    - target: {fileID: 1277739329715723953, guid: 27e6970099e87fe4f9dfbd8ff2d06f76, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 27e6970099e87fe4f9dfbd8ff2d06f76, type: 3}
