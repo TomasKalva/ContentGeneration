@@ -338,13 +338,14 @@ GameObject:
   - component: {fileID: 3751830682956774377}
   - component: {fileID: 1570784099}
   - component: {fileID: 1998491415603452535}
+  - component: {fileID: 2311092429806331587}
   m_Layer: 10
   m_Name: Human
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1305044139398559202
 Transform:
   m_ObjectHideFlags: 0
@@ -374,7 +375,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 243349c2def8940438b4bd8f617b82f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 5
+  maxSpeed: 3
   rotationCoef: 0.2
   maxAcceleration: 90
   maxAirAcceleration: 90
@@ -602,10 +603,10 @@ MonoBehaviour:
       _NormalizedTimes: []
       _Callbacks: []
       _Names: []
-    _Clip: {fileID: -7118674957655483468, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
+    _Clip: {fileID: -3828583913261678786, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  duration: 0
+  duration: 0.5
 --- !u!114 &1305044139398559127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -761,7 +762,7 @@ MonoBehaviour:
     _Clip: {fileID: 7509640188325939964, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  duration: 10
+  duration: 1
   speedF:
     serializedVersion: 2
     m_Curve:
@@ -867,7 +868,7 @@ MonoBehaviour:
     _Clip: {fileID: -3434583695020908959, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  duration: 0.5
+  duration: 1
   speedF:
     serializedVersion: 2
     m_Curve:
@@ -988,6 +989,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Animator: {fileID: 1305044139398559211}
   _ActionOnDisable: 0
+--- !u!114 &2311092429806331587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1305044139398559207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9476961ecce9d0344a5f2c4b666f8492, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: Idle
+  type: 0
+  priority: -100
+  animationName: 
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: -8945691123924629249, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  duration: 2
 --- !u!1 &1353838017733917823
 GameObject:
   m_ObjectHideFlags: 0
@@ -1063,6 +1091,7 @@ GameObject:
   - component: {fileID: 1847371265212025175}
   - component: {fileID: 1847371265212026536}
   - component: {fileID: 1847371265212025174}
+  - component: {fileID: 444612618611079957}
   m_Layer: 10
   m_Name: Sword
   m_TagString: Untagged
@@ -1176,6 +1205,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
+--- !u!54 &444612618611079957
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1847371265212026537}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1886724541890155532
 GameObject:
   m_ObjectHideFlags: 0
