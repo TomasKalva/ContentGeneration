@@ -10,11 +10,9 @@ public class ChangeAgentState : AnimatedAct
     [SerializeField]
     bool canMove;
 
-    public override void StartAct(Agent agent)
+    public override void OnStart(Agent agent)
     {
-        timeElapsed = 0f;
-
-        agent.animator.CrossFade(animationName, 0.05f);
+        PlayAnimation(agent);
 
         if (setCanMove)
         {

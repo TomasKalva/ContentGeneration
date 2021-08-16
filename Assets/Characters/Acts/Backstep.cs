@@ -7,11 +7,10 @@ public class Backstep : AnimatedAct
     [SerializeField, Curve(0f, 0f, 1f, 30f, true)]
     AnimationCurve speedF;
 
-    public override void StartAct(Agent agent)
+    public override void OnStart(Agent agent)
     {
-        timeElapsed = 0f;
+        PlayAnimation(agent);
 
-        agent.animator.CrossFade(animationName, 0.05f);
         var direction = -agent.movement.AgentForward;
         agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, direction);
 

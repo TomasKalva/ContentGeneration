@@ -1,4 +1,5 @@
-﻿using ContentGeneration.Assets.UI.Model;
+﻿using Animancer;
+using ContentGeneration.Assets.UI.Model;
 using ContentGeneration.Assets.UI.Util;
 using System.Collections;
 using System.Collections.Generic;
@@ -35,11 +36,13 @@ using UnityEngine;
 
 [RequireComponent(typeof(Movement))]
 [RequireComponent(typeof(Acting))]
+[RequireComponent(typeof(AnimancerComponent))]
 public class Agent : MonoBehaviour
 {
     public Movement movement;
     public Acting acting;
 	public Animator animator;
+	public AnimancerComponent animancerAnimator;
 	public CharacterRef characterRef;
 
 	public CharacterState CharacterState => characterRef.CharacterState;
@@ -59,13 +62,9 @@ public class Agent : MonoBehaviour
 		movement = GetComponent<Movement>();
 		acting = GetComponent<Acting>();
 		animator = GetComponent<Animator>();
+		animancerAnimator = GetComponent<AnimancerComponent>();
 		characterRef = GetComponent<CharacterRef>();
 	}
-
-    private void Start()
-    {
-		acting.Initialize(this);
-    }
 
     public void StartReceivingControls()
 	{

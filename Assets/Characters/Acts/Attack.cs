@@ -17,11 +17,10 @@ public class Attack : AnimatedAct
     [SerializeField]
     Weapon weapon;
 
-    public override void StartAct(Agent agent)
+    public override void OnStart(Agent agent)
     {
-        timeElapsed = 0f;
+        PlayAnimation(agent);
 
-        agent.animator.CrossFade(animationName, 0.05f);
         agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, Direction);
 
         movementContraints = new List<MovementConstraint>()

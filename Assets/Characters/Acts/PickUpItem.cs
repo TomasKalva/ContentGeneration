@@ -6,11 +6,9 @@ public class PickUpItem : AnimatedAct
 {
     public PhysicalItem PhysicalItem { get; set; }
 
-    public override void StartAct(Agent agent)
+    public override void OnStart(Agent agent)
     {
-        timeElapsed = 0f;
-
-        agent.animator.CrossFade(animationName, 0.05f);
+        PlayAnimation(agent);
     }
 
     public override void EndAct(Agent agent)

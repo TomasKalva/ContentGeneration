@@ -9,7 +9,7 @@ public class TurnBy : AnimatedAct
 
     Vector2 desiredDirection;
 
-    public override void StartAct(Agent agent)
+    public override void OnStart(Agent agent)
     {
         var dir = agent.movement.direction;
         var desDir3d = Quaternion.Euler(0, angle, 0) * new Vector3(dir.x, 0f, dir.y);

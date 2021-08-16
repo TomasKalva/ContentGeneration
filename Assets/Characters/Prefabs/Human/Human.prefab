@@ -337,6 +337,7 @@ GameObject:
   - component: {fileID: 1305044139398559204}
   - component: {fileID: 3751830682956774377}
   - component: {fileID: 1570784099}
+  - component: {fileID: 1998491415603452535}
   m_Layer: 10
   m_Name: Human
   m_TagString: Untagged
@@ -557,6 +558,7 @@ MonoBehaviour:
   movement: {fileID: 0}
   acting: {fileID: 0}
   animator: {fileID: 0}
+  animancerAnimator: {fileID: 0}
   characterRef: {fileID: 0}
 --- !u!114 &1305044139398559213
 MonoBehaviour:
@@ -594,6 +596,15 @@ MonoBehaviour:
   type: 0
   priority: -10
   animationName: Base Layer.Running
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: -7118674957655483468, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
+    _Speed: 1
+    _NormalizedStartTime: 0
   duration: 0
 --- !u!114 &1305044139398559127
 MonoBehaviour:
@@ -612,6 +623,15 @@ MonoBehaviour:
   type: 1
   priority: 0
   animationName: Base Layer.Dodge
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 8996587082034170231, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
+    _Speed: 1
+    _NormalizedStartTime: 0
   duration: 0.51
   speedF:
     serializedVersion: 2
@@ -663,6 +683,15 @@ MonoBehaviour:
   type: 1
   priority: 0
   animationName: Base Layer.BackStep
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: -8535775156832171347, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
+    _Speed: 1
+    _NormalizedStartTime: 0
   duration: 0.5
   speedF:
     serializedVersion: 2
@@ -723,7 +752,16 @@ MonoBehaviour:
   type: 2
   priority: 0
   animationName: Base Layer.Slash
-  duration: 0.5
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 7509640188325939964, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  duration: 10
   speedF:
     serializedVersion: 2
     m_Curve:
@@ -820,6 +858,15 @@ MonoBehaviour:
   type: 2
   priority: 0
   animationName: Base Layer.LeftSlash
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: -3434583695020908959, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
+    _Speed: 1
+    _NormalizedStartTime: 0
   duration: 0.5
   speedF:
     serializedVersion: 2
@@ -927,6 +974,20 @@ MonoBehaviour:
       value: 42
     viewCamera: {fileID: 0}
     agent: {fileID: 0}
+--- !u!114 &1998491415603452535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1305044139398559207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ad50f81b1d25c441943c37a89ba23f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Animator: {fileID: 1305044139398559211}
+  _ActionOnDisable: 0
 --- !u!1 &1353838017733917823
 GameObject:
   m_ObjectHideFlags: 0

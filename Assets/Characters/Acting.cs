@@ -39,14 +39,6 @@ public class Acting : MonoBehaviour, IActing
         acts.Add(Idle);
     }
 
-    public void Initialize(Agent agent)
-    {
-        foreach(var act in acts)
-        {
-            act.Initialize(agent);
-        }
-    }
-
     public Act SelectAct(string actName)
     {
         var selected = acts.Where(act => act.actName == actName).FirstOrDefault();

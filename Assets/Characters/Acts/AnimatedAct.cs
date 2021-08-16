@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Animancer;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.Animations;
@@ -10,32 +11,33 @@ public class AnimatedAct : Act
     protected string animationName;
 
     [SerializeField]
-    protected float duration;
+    protected ClipTransition anim;
+
+    [SerializeField]
+    protected float duration = 1f;
+
+    protected float Duration => duration == 0f ? 0.01f : duration;
 
     protected float timeElapsed;
 
     protected List<MovementConstraint> movementContraints;
 
-    public override void Initialize(Agent agent)
+    public void Initialize(Agent agent)
     {
-        // Set duration of the act to length of animation
-        var runtimeAnimatorController = agent.animator.runtimeAnimatorController;
-        var animationClip = runtimeAnimatorController.animationClips.Where(c => c.name == animationName).FirstOrDefault();
-        if(animationClip != null)
-        {
-            duration = animationClip.length + 0.021f;
-        }
+        // Set speed so that the animation takes duration seconds
+        var speed = anim.Clip.length / Duration;
+        anim.Speed = speed;
     }
 
-    public override void StartAct(Agent agent)
+    public sealed override void StartAct(Agent agent)
     {
+        Initialize(agent);
         timeElapsed = 0f;
-        //agent.animator.GetCurrentAnimatorClipInfo(0)[0].clip.
-        
-        /*animator.CrossFade("StateToSetTo", 0);
-        //I think you'll have to yield and set this next frame, unsure
-        animator.speed = 0;*/
+
+        OnStart(agent);
     }
+
+    public virtual void OnStart(Agent agent) { }
 
     public override bool UpdateAct(Agent agent)
     {
@@ -48,16 +50,16 @@ public class AnimatedAct : Act
             
     }
 
-    protected void PlayIfNotActive(Agent agent, float normalisedTransitionTime)
+    protected void PlayAnimation(Agent agent)
     {
-        var clipInfos = agent.animator.GetCurrentAnimatorClipInfo(0);
-        if (clipInfos.Length != 0)
+        agent.animancerAnimator.Play(anim, 0.1f);
+    }
+
+    protected void PlayIfNotActive(Agent agent, float transitionTime)
+    {
+        if (!agent.animancerAnimator.IsPlaying(anim))
         {
-            var clip = clipInfos[0].clip;
-            if (clip.name != animationName)
-            {
-                agent.animator.CrossFade(animationName, normalisedTransitionTime);
-            }
+            agent.animancerAnimator.Play(anim, transitionTime);
         }
     }
 }

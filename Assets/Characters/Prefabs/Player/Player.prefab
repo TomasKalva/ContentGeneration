@@ -1111,6 +1111,15 @@ MonoBehaviour:
   type: 0
   priority: 0
   animationName: 
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 0}
+    _Speed: 1
+    _NormalizedStartTime: 0
   duration: 0
   projectile: {fileID: 0}
   gun: {fileID: 0}
@@ -1125,7 +1134,7 @@ Animator:
   m_GameObject: {fileID: 3756998279321466972}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 9dc9731bc12996a4bbad3ff49ee20a4f, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1149,6 +1158,7 @@ MonoBehaviour:
   movement: {fileID: 0}
   acting: {fileID: 0}
   animator: {fileID: 0}
+  animancerAnimator: {fileID: 0}
   characterRef: {fileID: 0}
 --- !u!114 &3756998279321466966
 MonoBehaviour:
@@ -1187,7 +1197,16 @@ MonoBehaviour:
   type: 0
   priority: -10
   animationName: Base Layer.Running
-  duration: 0
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: -3828583913261678786, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  duration: 0.5
 --- !u!114 &3756998279321466924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1205,6 +1224,15 @@ MonoBehaviour:
   type: 1
   priority: 0
   animationName: Base Layer.Dodge
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 8996587082034170231, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
+    _Speed: 1
+    _NormalizedStartTime: 0
   duration: 0.51
   speedF:
     serializedVersion: 2
@@ -1256,6 +1284,15 @@ MonoBehaviour:
   type: 1
   priority: 0
   animationName: Base Layer.BackStep
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: -8535775156832171347, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
+    _Speed: 1
+    _NormalizedStartTime: 0
   duration: 0.5
   speedF:
     serializedVersion: 2
@@ -1316,6 +1353,15 @@ MonoBehaviour:
   type: 2
   priority: 0
   animationName: Base Layer.Slash
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: -9180895774499272927, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
+    _Speed: 1
+    _NormalizedStartTime: 0
   duration: 0.5
   speedF:
     serializedVersion: 2
@@ -1413,7 +1459,16 @@ MonoBehaviour:
   type: 2
   priority: 0
   animationName: Base Layer.LeftSlash
-  duration: 0.5
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: -5702768490943250727, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  duration: 0.4
   speedF:
     serializedVersion: 2
     m_Curve:
@@ -1534,6 +1589,15 @@ MonoBehaviour:
   type: 0
   priority: 0
   animationName: Base Layer.LeftSlash
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: -5702768490943250727, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
+    _Speed: 1
+    _NormalizedStartTime: 0
   duration: 0.7
 --- !u!114 &-8543585117107524720
 MonoBehaviour:
@@ -1552,7 +1616,16 @@ MonoBehaviour:
   type: 0
   priority: -100
   animationName: Base Layer.Armature|Idle
-  duration: 0
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: -8945691123924629249, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  duration: 2
 --- !u!1 &3816295168689648068
 GameObject:
   m_ObjectHideFlags: 0

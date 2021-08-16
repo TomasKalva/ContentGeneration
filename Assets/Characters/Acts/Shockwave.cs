@@ -20,12 +20,11 @@ public class Shockwave : AnimatedAct
 
     float Delay => duration / totalShocks;
 
-    public override void StartAct(Agent agent)
+    public override void OnStart(Agent agent)
     {
-        timeElapsed = 0f;
         createdShocks = 0;
 
-        agent.animator.CrossFade(animationName, 0.05f);
+        PlayAnimation(agent);
     }
 
     public override bool UpdateAct(Agent agent)
