@@ -14,7 +14,6 @@ public interface IActing
 /// Contains all acts that the agent can perform. Each frame takes requests on which act should
 /// be performed and then chooses the best option. Supports action queueing.
 /// </summary>
-[RequireComponent(typeof(IdleAct))]
 public class Acting : MonoBehaviour, IActing
 {
     Agent agent;
@@ -29,6 +28,12 @@ public class Acting : MonoBehaviour, IActing
 
     bool ActiveActStarted { get; set; }
 
+    /// <summary>
+    /// Object that has the acts monobehaviours attached.
+    /// </summary>
+    [SerializeField]
+    GameObject actContainer;
+
     [SerializeField]
     Act _activeAct;
     public Act ActiveAct {
@@ -40,9 +45,9 @@ public class Acting : MonoBehaviour, IActing
 
     void Awake()
     {
-        Idle = GetComponent<IdleAct>();
-        Staggered = GetComponent<StaggeredAct>();
-        acts = GetComponents<Act>().ToList();
+        Idle = actContainer.GetComponent<IdleAct>();
+        Staggered = actContainer.GetComponent<StaggeredAct>();
+        acts = actContainer.GetComponents<Act>().ToList();
         agent = GetComponent<Agent>();
     }
 
@@ -65,7 +70,10 @@ public class Acting : MonoBehaviour, IActing
     /// </summary>
     public void ForceIntoAct(Act act)
     {
-        ActiveAct?.EndAct(agent);
+        if (ActiveAct != null)
+        {
+            ActiveAct.EndAct(agent);
+        }
         ActiveAct = act;
         ActiveActStarted = false;
         Busy = true;

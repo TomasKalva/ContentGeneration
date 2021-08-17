@@ -1,5 +1,228 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &984806760215086341
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4054268602929962555}
+  - component: {fileID: 6452012569213726961}
+  - component: {fileID: 8219299943092494204}
+  - component: {fileID: 4224914015672856736}
+  - component: {fileID: 1968328403058316691}
+  - component: {fileID: 3455672563305661278}
+  m_Layer: 10
+  m_Name: ActContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4054268602929962555
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 984806760215086341}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1277739329715723917}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6452012569213726961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 984806760215086341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f58e840b1ef77ae418f584a865c153eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: Staggered
+  type: 0
+  priority: 0
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 7400000, guid: 91845b228f0fdf94ea627a52efc04b4d, type: 2}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  duration: 1
+--- !u!114 &8219299943092494204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 984806760215086341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9476961ecce9d0344a5f2c4b666f8492, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: Idle
+  type: 0
+  priority: -100
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 7400000, guid: 91845b228f0fdf94ea627a52efc04b4d, type: 2}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  duration: 2
+--- !u!114 &4224914015672856736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 984806760215086341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 351ea8ce974be344ca968c6609d7764b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: Explode
+  type: 0
+  priority: 0
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 7400000, guid: 119a457ae46c4454fb9431351d02db64, type: 2}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  duration: 1
+  speedF:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  weapon: {fileID: 1277739331109678264}
+--- !u!114 &1968328403058316691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 984806760215086341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89e2db881c3be284a8a0c75bd30d1d54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 1277739330695269100}
+  actName: Rush
+  type: 2
+  priority: 0
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 7400000, guid: 3082a51b0a327a042a2e73870419d844, type: 2}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  duration: 1
+  speedF:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: -0
+      outSlope: -0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.22587088
+    - serializedVersion: 3
+      time: 0.49657425
+      value: 0.723485
+      inSlope: 7.8331256
+      outSlope: 7.8331256
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.12546921
+    - serializedVersion: 3
+      time: 0.6058217
+      value: 28.891903
+      inSlope: 2.0756059
+      outSlope: 2.0756059
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.94402635
+      value: 23.976452
+      inSlope: -79.33221
+      outSlope: -79.33221
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &3455672563305661278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 984806760215086341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45ddd7c4b1fd1dc4fa81ec2e75a01f95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: Run
+  type: 0
+  priority: -10
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 7400000, guid: 91845b228f0fdf94ea627a52efc04b4d, type: 2}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  duration: 2
 --- !u!1 &1277739329626205875
 GameObject:
   m_ObjectHideFlags: 0
@@ -142,17 +365,12 @@ GameObject:
   - component: {fileID: 1277739329715723915}
   - component: {fileID: 1277739329715723914}
   - component: {fileID: 1277739329715723916}
-  - component: {fileID: 1277739329715723912}
   - component: {fileID: 1277739329715723910}
   - component: {fileID: 1277739329715723911}
-  - component: {fileID: 1277739329715723908}
   - component: {fileID: 1277739329715723909}
   - component: {fileID: 1277739329715723913}
-  - component: {fileID: 1277739329715723906}
   - component: {fileID: 718569240}
-  - component: {fileID: 127486376}
   - component: {fileID: 6895923270941502491}
-  - component: {fileID: 3177035824466539532}
   m_Layer: 10
   m_Name: Blob
   m_TagString: Untagged
@@ -175,6 +393,7 @@ Transform:
   - {fileID: 1277739331263386348}
   - {fileID: 1277739330695269096}
   - {fileID: 1277739329626205872}
+  - {fileID: 4054268602929962555}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -241,34 +460,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Staggered: {fileID: 0}
   acts:
-  - {fileID: 1277739329715723912}
+  - {fileID: 0}
+  actContainer: {fileID: 984806760215086341}
   _activeAct: {fileID: 0}
---- !u!114 &1277739329715723912
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1277739329715723953}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45ddd7c4b1fd1dc4fa81ec2e75a01f95, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  detector: {fileID: 0}
-  actName: Run
-  type: 0
-  priority: -10
-  anim:
-    _FadeDuration: 0.25
-    _Events:
-      _NormalizedTimes: []
-      _Callbacks: []
-      _Names: []
-    _Clip: {fileID: 7400000, guid: 91845b228f0fdf94ea627a52efc04b4d, type: 2}
-    _Speed: 1
-    _NormalizedStartTime: 0
-  duration: 2
 --- !u!95 &1277739329715723910
 Animator:
   serializedVersion: 3
@@ -302,83 +496,6 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0.5, z: 0}
---- !u!114 &1277739329715723908
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1277739329715723953}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89e2db881c3be284a8a0c75bd30d1d54, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  detector: {fileID: 1277739330695269100}
-  actName: Rush
-  type: 2
-  priority: 0
-  anim:
-    _FadeDuration: 0.25
-    _Events:
-      _NormalizedTimes: []
-      _Callbacks: []
-      _Names: []
-    _Clip: {fileID: 7400000, guid: 3082a51b0a327a042a2e73870419d844, type: 2}
-    _Speed: 1
-    _NormalizedStartTime: 0
-  duration: 1
-  speedF:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: -0
-      outSlope: -0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.22587088
-    - serializedVersion: 3
-      time: 0.49657425
-      value: 0.723485
-      inSlope: 7.8331256
-      outSlope: 7.8331256
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.12546921
-    - serializedVersion: 3
-      time: 0.6058217
-      value: 28.891903
-      inSlope: 2.0756059
-      outSlope: 2.0756059
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.94402635
-      value: 23.976452
-      inSlope: -79.33221
-      outSlope: -79.33221
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!114 &1277739329715723909
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -412,39 +529,6 @@ MonoBehaviour:
   minDistance: 2
   rushArea: {fileID: 1277739330695269100}
   explosionArea: {fileID: 1277739329626205873}
---- !u!114 &1277739329715723906
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1277739329715723953}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 351ea8ce974be344ca968c6609d7764b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  detector: {fileID: 0}
-  actName: Explode
-  type: 0
-  priority: 0
-  anim:
-    _FadeDuration: 0.25
-    _Events:
-      _NormalizedTimes: []
-      _Callbacks: []
-      _Names: []
-    _Clip: {fileID: 7400000, guid: 119a457ae46c4454fb9431351d02db64, type: 2}
-    _Speed: 1
-    _NormalizedStartTime: 0
-  duration: 1
-  speedF:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  weapon: {fileID: 1277739331109678264}
 --- !u!114 &718569240
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -466,32 +550,6 @@ MonoBehaviour:
       value: 42
     viewCamera: {fileID: 0}
     agent: {fileID: 0}
---- !u!114 &127486376
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1277739329715723953}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9476961ecce9d0344a5f2c4b666f8492, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  detector: {fileID: 0}
-  actName: Idle
-  type: 0
-  priority: -100
-  anim:
-    _FadeDuration: 0.25
-    _Events:
-      _NormalizedTimes: []
-      _Callbacks: []
-      _Names: []
-    _Clip: {fileID: 7400000, guid: 91845b228f0fdf94ea627a52efc04b4d, type: 2}
-    _Speed: 1
-    _NormalizedStartTime: 0
-  duration: 2
 --- !u!114 &6895923270941502491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -506,32 +564,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Animator: {fileID: 1277739329715723910}
   _ActionOnDisable: 0
---- !u!114 &3177035824466539532
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1277739329715723953}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f58e840b1ef77ae418f584a865c153eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  detector: {fileID: 0}
-  actName: Staggered
-  type: 0
-  priority: 0
-  anim:
-    _FadeDuration: 0.25
-    _Events:
-      _NormalizedTimes: []
-      _Callbacks: []
-      _Names: []
-    _Clip: {fileID: 7400000, guid: 91845b228f0fdf94ea627a52efc04b4d, type: 2}
-    _Speed: 1
-    _NormalizedStartTime: 0
-  duration: 1
 --- !u!1 &1277739330009185574
 GameObject:
   m_ObjectHideFlags: 0
@@ -859,6 +891,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 30
+  pushForceIntensity: 500
 --- !u!135 &1277739331109678269
 SphereCollider:
   m_ObjectHideFlags: 0

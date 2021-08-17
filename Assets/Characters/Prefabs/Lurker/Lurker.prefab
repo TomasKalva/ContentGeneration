@@ -678,6 +678,206 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &5677437792901766834
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1446670103880487808}
+  - component: {fileID: 7814444237594544331}
+  - component: {fileID: 6114262638214484941}
+  - component: {fileID: 1742343625420477182}
+  - component: {fileID: 7517576823451977982}
+  - component: {fileID: 649172085582521612}
+  - component: {fileID: 735218463128959457}
+  m_Layer: 10
+  m_Name: ActContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1446670103880487808
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5677437792901766834}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7890128435323215761}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7814444237594544331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5677437792901766834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45ddd7c4b1fd1dc4fa81ec2e75a01f95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: Run
+  type: 0
+  priority: -10
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 7400000, guid: 0a03e85e2f6c25644a32c28a2711373d, type: 2}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  duration: 0
+--- !u!114 &6114262638214484941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5677437792901766834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85f7b0ff5d4e8ba45bb495b4417bad3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: Shockwave
+  type: 0
+  priority: 0
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 7400000, guid: 8e2bdacb6d260464e89d0fe19396fd3b, type: 2}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  duration: 1
+  totalShocks: 8
+  distBetween: 1
+  start: {fileID: 6555853987303637786}
+  shockPrefab: {fileID: 6077429248538318, guid: 0e8b0434339e8d74b87d3816fac54241, type: 3}
+--- !u!114 &1742343625420477182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5677437792901766834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f58e840b1ef77ae418f584a865c153eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: Staggered
+  type: 0
+  priority: 0
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 7400000, guid: 0a03e85e2f6c25644a32c28a2711373d, type: 2}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  duration: 1
+--- !u!114 &7517576823451977982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5677437792901766834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 033f82c2714b77248a75ad6e56e2a07c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: Unburrow
+  type: 1
+  priority: 0
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 7400000, guid: fe48b1968200fc34ca4dec3a1a322cf0, type: 2}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  duration: 1
+  setCanMove: 1
+  canMove: 1
+--- !u!114 &649172085582521612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5677437792901766834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 033f82c2714b77248a75ad6e56e2a07c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: Burrow
+  type: 2
+  priority: 0
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 7400000, guid: 819024dd6ed7bc34d8a3f16a9c12a550, type: 2}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  duration: 1
+  setCanMove: 1
+  canMove: 0
+--- !u!114 &735218463128959457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5677437792901766834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9476961ecce9d0344a5f2c4b666f8492, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: Idle
+  type: 0
+  priority: -100
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 7400000, guid: 0a03e85e2f6c25644a32c28a2711373d, type: 2}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  duration: 1
 --- !u!1 &6555853987066315500
 GameObject:
   m_ObjectHideFlags: 0
@@ -1086,17 +1286,12 @@ GameObject:
   - component: {fileID: 7890128435323215767}
   - component: {fileID: 7890128435323215766}
   - component: {fileID: 7890128435323215760}
-  - component: {fileID: 7890128435323215764}
   - component: {fileID: 7890128435323215770}
   - component: {fileID: 7890128435323215771}
   - component: {fileID: 8990362590994644484}
-  - component: {fileID: 7890128435323215794}
   - component: {fileID: 7890128435323215787}
   - component: {fileID: 7890128435323215786}
-  - component: {fileID: 7890128435323215784}
-  - component: {fileID: 2734676913226682495}
-  - component: {fileID: 724893491}
-  - component: {fileID: 2487080277206522413}
+  - component: {fileID: 4908376100757189916}
   m_Layer: 10
   m_Name: Lurker
   m_TagString: Untagged
@@ -1118,6 +1313,7 @@ Transform:
   - {fileID: 7890128435737558075}
   - {fileID: 6555853987066315501}
   - {fileID: 4268165514171086017}
+  - {fileID: 1446670103880487808}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1184,33 +1380,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Staggered: {fileID: 0}
   acts: []
+  actContainer: {fileID: 5677437792901766834}
   _activeAct: {fileID: 0}
---- !u!114 &7890128435323215764
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7890128435323215789}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45ddd7c4b1fd1dc4fa81ec2e75a01f95, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  detector: {fileID: 0}
-  actName: Run
-  type: 0
-  priority: -10
-  anim:
-    _FadeDuration: 0.25
-    _Events:
-      _NormalizedTimes: []
-      _Callbacks: []
-      _Names: []
-    _Clip: {fileID: 0}
-    _Speed: 1
-    _NormalizedStartTime: 0
-  duration: 0
 --- !u!95 &7890128435323215770
 Animator:
   serializedVersion: 3
@@ -1265,74 +1436,6 @@ MonoBehaviour:
       value: 42
     viewCamera: {fileID: 0}
     agent: {fileID: 0}
---- !u!114 &7890128435323215794
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7890128435323215789}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b7cb04a7e7366147971e1f0aa818476, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  detector: {fileID: 0}
-  actName: Backstep
-  type: 1
-  priority: 0
-  anim:
-    _FadeDuration: 0.25
-    _Events:
-      _NormalizedTimes: []
-      _Callbacks: []
-      _Names: []
-    _Clip: {fileID: 0}
-    _Speed: 1
-    _NormalizedStartTime: 0
-  duration: 1.5
-  speedF:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 134.58583
-      outSlope: 134.58583
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.19583127
-      value: 26.356113
-      inSlope: 25.764408
-      outSlope: 25.764408
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.51315683
-      value: 0
-      inSlope: 0.39346766
-      outSlope: 0.39346766
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.49516475
-      outWeight: 0.23345135
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!114 &7890128435323215787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1366,7 +1469,7 @@ MonoBehaviour:
   minDistance: 3
   unburrowArea: {fileID: 4236074383626822570}
   shockwaveDetector: {fileID: 6555853987303637787}
---- !u!114 &7890128435323215784
+--- !u!114 &4908376100757189916
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1375,109 +1478,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 7890128435323215789}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 033f82c2714b77248a75ad6e56e2a07c, type: 3}
+  m_Script: {fileID: 11500000, guid: 0ad50f81b1d25c441943c37a89ba23f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
-  actName: Burrow
-  type: 2
-  priority: 0
-  anim:
-    _FadeDuration: 0.25
-    _Events:
-      _NormalizedTimes: []
-      _Callbacks: []
-      _Names: []
-    _Clip: {fileID: 0}
-    _Speed: 1
-    _NormalizedStartTime: 0
-  duration: 1
-  setCanMove: 1
-  canMove: 0
---- !u!114 &2734676913226682495
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7890128435323215789}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 033f82c2714b77248a75ad6e56e2a07c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  detector: {fileID: 0}
-  actName: Unburrow
-  type: 1
-  priority: 0
-  anim:
-    _FadeDuration: 0.25
-    _Events:
-      _NormalizedTimes: []
-      _Callbacks: []
-      _Names: []
-    _Clip: {fileID: 0}
-    _Speed: 1
-    _NormalizedStartTime: 0
-  duration: 1
-  setCanMove: 1
-  canMove: 1
---- !u!114 &724893491
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7890128435323215789}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85f7b0ff5d4e8ba45bb495b4417bad3c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  detector: {fileID: 0}
-  actName: Shockwave
-  type: 0
-  priority: 0
-  anim:
-    _FadeDuration: 0.25
-    _Events:
-      _NormalizedTimes: []
-      _Callbacks: []
-      _Names: []
-    _Clip: {fileID: 0}
-    _Speed: 1
-    _NormalizedStartTime: 0
-  duration: 1
-  totalShocks: 8
-  distBetween: 1
-  start: {fileID: 6555853987303637786}
-  shockPrefab: {fileID: 6077429248538318, guid: 0e8b0434339e8d74b87d3816fac54241, type: 3}
---- !u!114 &2487080277206522413
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7890128435323215789}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f58e840b1ef77ae418f584a865c153eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  detector: {fileID: 0}
-  actName: Staggered
-  type: 0
-  priority: 0
-  anim:
-    _FadeDuration: 0.25
-    _Events:
-      _NormalizedTimes: []
-      _Callbacks: []
-      _Names: []
-    _Clip: {fileID: 0}
-    _Speed: 1
-    _NormalizedStartTime: 0
-  duration: 1
+  _Animator: {fileID: 7890128435323215770}
+  _ActionOnDisable: 0
 --- !u!1 &7890128435737558074
 GameObject:
   m_ObjectHideFlags: 0
