@@ -31,5 +31,6 @@ public class AreaDamage : DamageDealer
     protected override void Initialize()
     {
         detector = GetComponentInChildren<ColliderDetector>();
+        detector.Show = true;
     }
 }

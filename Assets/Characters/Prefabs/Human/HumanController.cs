@@ -21,11 +21,11 @@ public class HumanController : EnemyController<HumanAgent>
 			var hitAgent = attackArea.other.GetComponentInParent<Agent>();
 			if (hitAgent != agent)
 			{
-				if (hitAgent.acting.ActiveAct.type == ActType.OFFENSIVE)
+				/*if (hitAgent.acting.ActiveAct.type == ActType.OFFENSIVE)
 				{
 					agent.Backstep();
 				}
-				else
+				else*/
 				{
 					agent.Attack();
 				}

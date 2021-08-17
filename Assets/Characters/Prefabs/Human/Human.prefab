@@ -257,6 +257,10 @@ PrefabInstance:
       propertyPath: damageStartT
       value: 0.4
       objectReference: {fileID: 0}
+    - target: {fileID: 3334858607170646547, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4333364604568888124, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
       propertyPath: duration
       value: 1.2

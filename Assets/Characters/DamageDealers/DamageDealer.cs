@@ -21,6 +21,8 @@ public abstract class DamageDealer : MonoBehaviour
 
     public abstract bool Active { get; set; }
 
+    GameOptions options;
+
     void Awake()
     {
         currentlyHit = new List<Agent>();
@@ -28,6 +30,7 @@ public abstract class DamageDealer : MonoBehaviour
         {
             _owner = GetComponentInParent<Agent>();
         }
+        options = GameObject.Find("GameOptions").GetComponent<GameOptions>();
         Initialize();
     }
 
@@ -37,6 +40,10 @@ public abstract class DamageDealer : MonoBehaviour
         {
             if (hitAgent != Owner && !currentlyHit.Contains(hitAgent))
             {
+                if(!options.friendlyFire && hitAgent.gameObject.layer == Owner.gameObject.layer)
+                {
+                    continue;
+                }
                 DealDamage(hitAgent);
                 currentlyHit.Add(hitAgent);
             }

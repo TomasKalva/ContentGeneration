@@ -13,6 +13,25 @@ public class ColliderDetector : MonoBehaviour
 
     public bool Triggered => other != null;
 
+    public bool Show { get; set; }
+
+    private void Start()
+    {
+        var renderer = GetComponent<Renderer>();
+        if (renderer != null && !Show)
+        {
+            var options = GameObject.Find("GameOptions").GetComponent<GameOptions>();
+            if (!options.showDetectors)
+            {
+                renderer.enabled = false;
+            }
+            else
+            {
+                renderer.enabled = true;
+            }
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         Enter(other);
