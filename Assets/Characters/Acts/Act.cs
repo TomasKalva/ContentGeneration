@@ -32,6 +32,7 @@ public class Act : MonoBehaviour
     { 
         //Debug.Log("Started act"); 
     }
+
     /// <summary>
     /// Returns true if finished.
     /// </summary>

@@ -39,8 +39,11 @@ public class AnimatedAct : Act
     public override bool UpdateAct(Agent agent)
     {
         timeElapsed += Time.fixedDeltaTime;
+        OnUpdate(agent);
         return timeElapsed >= duration;
     }
+
+    public virtual void OnUpdate(Agent agent) { }
 
     public override void EndAct(Agent agent)
     {

@@ -173,13 +173,29 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 533700495570473793, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
+      propertyPath: attackPhaseMaterials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 32c0b0af7587c5d4d937ef5dc39e8bf8, type: 2}
+    - target: {fileID: 533700495570473793, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
+      propertyPath: attackPhaseMaterials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: dfd0babb39f73384086f6bb1b4fcbe5f, type: 2}
+    - target: {fileID: 533700495570473793, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
+      propertyPath: attackPhaseMaterials.Array.data[2]
+      value: 
+      objectReference: {fileID: 2100000, guid: 423c95723a1afbb4093b1462e9dbbfd8, type: 2}
+    - target: {fileID: 533700495570473793, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
+      propertyPath: attackPhaseMaterials.Array.data[3]
+      value: 
+      objectReference: {fileID: 2100000, guid: d75a9a72698060348b2e62d847572eae, type: 2}
     - target: {fileID: 533700495570473802, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
       propertyPath: m_Name
       value: Human
       objectReference: {fileID: 0}
     - target: {fileID: 533700495570473802, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
       propertyPath: m_TagString
-      value: Enemy
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 533700495570473803, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
       propertyPath: maxSpeed
@@ -231,11 +247,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1105709965341750073, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
       propertyPath: duration
-      value: 1
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1105709965341750073, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
+      propertyPath: damageEndT
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1105709965341750073, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
+      propertyPath: damageStartT
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 4333364604568888124, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
       propertyPath: duration
-      value: 1
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4333364604568888124, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
+      propertyPath: damageEndT
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4333364604568888124, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
+      propertyPath: damageStartT
+      value: 0.4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
