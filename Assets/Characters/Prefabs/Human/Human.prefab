@@ -247,7 +247,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1105709965341750073, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
       propertyPath: duration
-      value: 10
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1105709965341750073, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
       propertyPath: damageEndT
@@ -259,7 +259,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4333364604568888124, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
       propertyPath: duration
-      value: 10
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 4333364604568888124, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
       propertyPath: damageEndT
@@ -269,6 +269,10 @@ PrefabInstance:
       propertyPath: damageStartT
       value: 0.4
       objectReference: {fileID: 0}
+    - target: {fileID: 7462862577321291839, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
+      propertyPath: anim._Clip
+      value: 
+      objectReference: {fileID: 3916397189587442618, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
 --- !u!1 &77297701618103358 stripped

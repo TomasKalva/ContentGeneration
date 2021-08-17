@@ -1648,7 +1648,7 @@ MonoBehaviour:
     _Clip: {fileID: -9180895774499272927, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  duration: 0.5
+  duration: 0.8
   speedF:
     serializedVersion: 2
     m_Curve:
@@ -1755,7 +1755,7 @@ MonoBehaviour:
     _Clip: {fileID: -5702768490943250727, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  duration: 0.4
+  duration: 0.6
   speedF:
     serializedVersion: 2
     m_Curve:
@@ -1845,7 +1845,7 @@ MonoBehaviour:
   type: 0
   priority: 0
   anim:
-    _FadeDuration: 0.25
+    _FadeDuration: 0
     _Events:
       _NormalizedTimes: []
       _Callbacks: []
