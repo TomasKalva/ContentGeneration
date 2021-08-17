@@ -58,7 +58,7 @@ public class EnemyController<AgentT> : MonoBehaviour where AgentT : Agent
 
 	protected virtual void UpdateController(Vector2 movementDirection)
 	{
-		foreach (var act in agent.acting.acts)
+		foreach (var act in agent.acting.Acts)
 		{
 			if (act.CanBeUsed())
 			{

@@ -20,9 +20,13 @@ public class Acting : MonoBehaviour, IActing
 
     Act Idle;
 
-    public StaggeredAct Staggered;
+    StaggeredAct staggered;
 
-    public List<Act> acts;
+    public StaggeredAct Staggered => staggered;
+
+    List<Act> acts;
+
+    public IEnumerable<Act> Acts => acts;
 
     public bool Busy { get; set; }
 
@@ -46,7 +50,7 @@ public class Acting : MonoBehaviour, IActing
     void Awake()
     {
         Idle = actContainer.GetComponent<IdleAct>();
-        Staggered = actContainer.GetComponent<StaggeredAct>();
+        staggered = actContainer.GetComponent<StaggeredAct>();
         acts = actContainer.GetComponents<Act>().ToList();
         agent = GetComponent<Agent>();
     }
