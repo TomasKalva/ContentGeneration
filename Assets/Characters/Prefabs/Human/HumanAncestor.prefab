@@ -100,7 +100,6 @@ MonoBehaviour:
     m_Bits: 4294967295
   body: {fileID: 0}
   velocity: {x: 0, y: 0, z: 0}
-  desiredVelocity: {x: 0, y: 0, z: 0}
   direction: {x: 0, y: 0}
   desiredDirection: {x: 0, y: 0}
 --- !u!54 &533700495570473804
@@ -1449,6 +1448,7 @@ GameObject:
   - component: {fileID: 7504423205986604054}
   - component: {fileID: 7462862577321291839}
   - component: {fileID: 4561374984094877503}
+  - component: {fileID: 4297168817459576138}
   m_Layer: 10
   m_Name: ActContainer
   m_TagString: Untagged
@@ -1496,6 +1496,7 @@ MonoBehaviour:
     _Speed: 1
     _NormalizedStartTime: 0
   duration: 0.5
+  speed: 3
 --- !u!114 &8893546541117693315
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1535,8 +1536,8 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.33601785
-      value: 19.103775
+      time: 0.3235209
+      value: 23.844334
       inSlope: -5.9318776
       outSlope: -5.9318776
       tangentMode: 0
@@ -1906,6 +1907,33 @@ MonoBehaviour:
     _Speed: 1
     _NormalizedStartTime: 0
   duration: 2
+--- !u!114 &4297168817459576138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4908475155549395472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45ddd7c4b1fd1dc4fa81ec2e75a01f95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: Walk
+  type: 0
+  priority: 0
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 885944232402757753, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  duration: 1
+  speed: 2
 --- !u!1 &6043195090539670190
 GameObject:
   m_ObjectHideFlags: 0

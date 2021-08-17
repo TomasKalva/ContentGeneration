@@ -224,11 +224,11 @@ public class PlayerController : MonoBehaviour
 		{
 			if (lockOnTarget == null)
 			{
-				myAgent.Move(worldInputDirection);
+				myAgent.Run(worldInputDirection);
 			}
             else
 			{
-				myAgent.MoveLockedOn(worldInputDirection);
+				myAgent.RunLockedOn(worldInputDirection);
 			}
 		}
 		else

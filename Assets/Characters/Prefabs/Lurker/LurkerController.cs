@@ -33,7 +33,7 @@ public class LurkerController : EnemyController<LurkerAgent>
 				// move away from target
 				var toTarget = TargetPoint - agent.transform.position;
 				var toTarget2d = new Vector2(toTarget.x, toTarget.z).normalized;
-				agent.Move(-toTarget2d);
+				agent.Run(-toTarget2d);
             }
         }
         else

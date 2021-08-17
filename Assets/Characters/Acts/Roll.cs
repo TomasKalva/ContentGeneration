@@ -142,7 +142,7 @@ public class CurveVelocityUpdater : VelocityUpdater
         if (firstIteration)
         {
             var currSpeed = movement.velocity.magnitude;
-            movement.velocity = Mathf.Min(currSpeed, movement.maxSpeed) * direction;
+            movement.velocity = Vector3.zero;
             firstIteration = false;
         }
 

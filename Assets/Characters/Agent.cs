@@ -125,7 +125,7 @@ public class Agent : MonoBehaviour
 		CharacterState.Update();
 	}
 
-	public void Move(Vector2 direction)
+	public void Run(Vector2 direction)
     {
         if (!CanMove)
         {
@@ -141,7 +141,23 @@ public class Agent : MonoBehaviour
         }
 	}
 
-	public void MoveLockedOn(Vector2 direction)
+	public void Walk(Vector2 direction)
+	{
+		if (!CanMove)
+		{
+			Debug.LogError("Trying to move when CanMove is false!");
+			return;
+		}
+
+		if (direction.sqrMagnitude > 0.0001f && !acting.Busy)
+		{
+			var walk = acting.SelectAct("Walk") as Move;
+			walk.Direction = direction;
+			walk.SetDirection = true;
+		}
+	}
+
+	public void RunLockedOn(Vector2 direction)
 	{
 		if (!CanMove)
 		{

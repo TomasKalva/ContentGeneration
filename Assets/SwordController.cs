@@ -27,9 +27,9 @@ public class SwordController : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Enemy")
+        /*if (other.CompareTag("Enemy"))
         {
             owner.Jump(15f);// JumpNoChecks(20f);
-        }
+        }*/
     }
 }

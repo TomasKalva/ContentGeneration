@@ -7,26 +7,11 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Movement : MonoBehaviour {
 
-	[SerializeField, Range(0f, 100f)]
-	public float maxSpeed = 10f;
-
 	[SerializeField, Range(0f, 1f)]
-	float rotationCoef = 0.2f;
-
-	[SerializeField, Range(0f, 100f)]
-	float maxAcceleration = 10f, maxAirAcceleration = 1f;
-
-	[SerializeField, Range(0f, 10f)]
-	float jumpHeight = 2f;
-
-	[SerializeField, Range(0, 5)]
-	int maxAirJumps = 0;
+	float rotationSpeed = 0.2f;
 
 	[SerializeField, Range(0, 90)]
 	float maxGroundAngle = 25f, maxStairsAngle = 50f;
-
-	[SerializeField, Range(0f, 100f)]
-	float maxSnapSpeed = 100f;
 
 	[SerializeField, Min(0f)]
 	float probeDistance = 1f;
@@ -36,7 +21,7 @@ public class Movement : MonoBehaviour {
 
 	public Rigidbody body;
 
-	public Vector3 velocity, desiredVelocity;
+	public Vector3 velocity/*, desiredVelocity*/;
 
 	public Vector2 direction, desiredDirection;
 
@@ -46,11 +31,10 @@ public class Movement : MonoBehaviour {
 
 	bool OnGround => groundContactCount > 0;
 
-	int jumpPhase;
 
 	float minGroundDotProduct, minStairsDotProduct;
 
-	int stepsSinceLastGrounded, stepsSinceLastJump;
+	int stepsSinceLastGrounded;
 
 	Vector3 upAxis;
 
@@ -69,31 +53,21 @@ public class Movement : MonoBehaviour {
 
 	#region API
 
-	public void Jump(float speed)
-    {
-		//PerformInstruction(new ImpulseInstruction(speed * Vector3.up));
-	}
-
 	public void Impulse(Vector3 force)
 	{
 		var projectedForce = ExtensionMethods.ProjectDirectionOnPlane(force.normalized, contactNormal) * force.magnitude;
 		body.AddForce(projectedForce);
 	}
 
-	public void Dodge(float speed)
+	public void Move(Vector2 direction, float speed, bool setDirection = true)
 	{
-		//PerformInstruction(new ImpulseInstruction(speed * (-AgentForward + 0.1f * Vector3.up)));
-	}
+        if (!OnGround)
+        {
+			return;
+        }
 
-	public void Roll(float speed)
-	{
-		//PerformInstruction(new ImpulseInstruction(speed * (AgentForward + 0.1f * Vector3.up)));
-	}
-
-	public void Move(Vector2 direction, bool setDirection = true)
-	{
-		desiredVelocity = new Vector3(direction.x, 0f, direction.y) * maxSpeed;
-		if (setDirection && desiredVelocity.sqrMagnitude > 0.1f)
+		velocity = speed * direction.X0Z();
+		if (setDirection && velocity.sqrMagnitude > 0.1f)
 		{
 			desiredDirection = direction;
 		}
@@ -164,50 +138,7 @@ public class Movement : MonoBehaviour {
 
 	void UpdateState () {
 		stepsSinceLastGrounded += 1;
-		stepsSinceLastJump += 1;
-		/*desiredVelocity = Vector3.zero;
-		desiredDirection = Vector2.zero;*/
-		if (OnGround || SnapToGround() || CheckSteepContacts()) {
-			stepsSinceLastGrounded = 0;
-			if (stepsSinceLastJump > 1) {
-				jumpPhase = 0;
-			}
-			if (groundContactCount > 1) {
-				contactNormal.Normalize();
-			}
-		}
-		else {
-			contactNormal = upAxis;
-		}
-	}
-
-	bool SnapToGround () {
-		if (stepsSinceLastGrounded > 1 || stepsSinceLastJump <= 2) {
-			return false;
-		}
-		float speed = velocity.magnitude;
-		if (speed > maxSnapSpeed) {
-			return false;
-		}
-		if (!Physics.Raycast(
-			body.position, -upAxis, out RaycastHit hit,
-			probeDistance, probeMask
-		)) {
-			return false;
-		}
-		float upDot = Vector3.Dot(upAxis, hit.normal);
-		if (upDot < GetMinDot(hit.collider.gameObject.layer)) {
-			return false;
-		}
-
-		groundContactCount = 1;
-		contactNormal = hit.normal;
-		float dot = Vector3.Dot(velocity, hit.normal);
-		if (dot > 0f) {
-			velocity = (velocity - hit.normal * dot).normalized * speed;
-		}
-		//Debug.Log($"Snapped to ground. Steps since last grounded: {stepsSinceLastGrounded}, Steps since last jump: {stepsSinceLastJump}");
-		return true;
+		CheckSteepContacts();
 	}
 
 	bool CheckSteepContacts () {
@@ -228,7 +159,7 @@ public class Movement : MonoBehaviour {
 	{
 		if (desiredDirection.sqrMagnitude > 0.01f)
 		{
-			direction = Vector2.MoveTowards(direction, desiredDirection, rotationCoef);
+			direction = Vector2.MoveTowards(direction, desiredDirection, rotationSpeed);
 
 			// update body rotation
 			body.rotation = Quaternion.FromToRotation(Vector3.forward, AgentForward);
@@ -237,28 +168,25 @@ public class Movement : MonoBehaviour {
 
 	void AdjustVelocity ()
 	{
-		//when moving up, the y vector shouldn't be projected to the plane
-		var xzVelocity = velocity - velocity.y * Vector3.up;
+		/*float acceleration = OnGround ? maxAcceleration : maxAirAcceleration;
+		float maxSpeedChange = acceleration * Time.fixedDeltaTime;
 
-		float acceleration = OnGround ? maxAcceleration : maxAirAcceleration;
-		float maxSpeedChange = acceleration * Time.deltaTime;
-
-		var newVel = Vector3.MoveTowards(xzVelocity, desiredVelocity, maxSpeedChange);
-
-		velocity += Vector3.right * (newVel.x - velocity.x) + Vector3.forward * (newVel.z - velocity.z);
+		velocity = Vector3.MoveTowards(velocity, desiredVelocity, maxSpeedChange);*/
 	}
 
-	public void JumpNoChecks(Vector3 dV)
+	public void MoveTowards(Vector3 velocity)
     {
-		stepsSinceLastJump = 0;
-		jumpPhase += 1;
-		velocity += dV;
-		//body.velocity = velocity;
-	}
+        if (!OnGround)
+        {
+			return;
+        }
+
+		this.velocity = velocity;
+    }
 
 	public void ResetDesiredValues()
     {
-		desiredVelocity = Vector3.zero;
+		//desiredVelocity = Vector3.zero;
 		desiredDirection = Vector2.zero;
 
 		velocity = body.velocity;

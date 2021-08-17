@@ -44,7 +44,7 @@ public class EnemyController<AgentT> : MonoBehaviour where AgentT : Agent
 		movementDirection = Vector2.ClampMagnitude(movementDirection, 1f);
 		if (GoToTarget())
 		{
-			agent.Move(movementDirection);
+			agent.Run(movementDirection);
 		}
 		else
 		{

@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Move : AnimatedAct
-{ 
+{
+    [SerializeField]
+    float speed;
+
     Vector2 direction;
 
     public Vector2 Direction{
@@ -17,7 +20,7 @@ public class Move : AnimatedAct
     {
         PlayIfNotActive(agent, 0.1f);
 
-        agent.movement.Move(direction, SetDirection);
+        agent.movement.Move(direction, speed, SetDirection);
         return true;
     }
 }

@@ -150,6 +150,10 @@ PrefabInstance:
       propertyPath: anim._Events._NormalizedTimes.Array.data[0]
       value: 1.5
       objectReference: {fileID: 0}
+    - target: {fileID: 4640842516065282787, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
+      propertyPath: speed
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 7462862577321291839, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
       propertyPath: anim._Clip
       value: 

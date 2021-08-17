@@ -30,6 +30,9 @@ ModelImporter:
   - first:
       74: 3965541545622155546
     second: Armature|Wallking
+  - first:
+      74: 885944232402757753
+    second: Armature|Action
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -291,11 +294,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Wallking
-      takeName: Armature|Wallking
+      name: Armature|Action
+      takeName: Armature|Action
       internalID: 0
       firstFrame: 0
-      lastFrame: 60
+      lastFrame: 120
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

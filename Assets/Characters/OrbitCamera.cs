@@ -200,9 +200,6 @@ public class OrbitCamera : MonoBehaviour
 		[SerializeField, Range(1f, 360f)]
 		float rotationSpeed = 270f;
 
-		[SerializeField, Range(0f, 90f)]
-		float alignSmoothRange = 45f;
-
 		public LockOn(Transform from, Transform to)
 		{
 			this.from = from;
