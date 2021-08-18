@@ -149,7 +149,7 @@ public class PlayerController : MonoBehaviour
 		{
 			// Lock
 			lockOnTarget = selectedAgent;
-			orbitCamera.CamUpdater = orbitCamera.FocusOnEnemy(myAgent.transform, lockOnTarget != null ? lockOnTarget.transform : null);
+			orbitCamera.CamUpdater = orbitCamera.FocusOnEnemy(myAgent.transform, lockOnTarget);
 			PlayerCharacterState.TargetedEnemy = lockOnTarget != null ? lockOnTarget.CharacterState : null;
 			
 			// Remove the constraint in case it wasn't removed properly with unlock

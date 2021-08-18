@@ -79,7 +79,7 @@ public class OrbitCamera : MonoBehaviour
 		return new FocusPoint(player);
 	}
 
-	public CameraUpdater FocusOnEnemy(Transform player, Transform enemy)
+	public CameraUpdater FocusOnEnemy(Transform player, Agent enemy)
 	{
 		return new LockOn(player, enemy);
 	}
@@ -191,8 +191,7 @@ public class OrbitCamera : MonoBehaviour
 	{
 		Transform from;
 
-		Transform to;
-
+		Agent to;
 
 		[SerializeField, Min(0f)]
 		float alignDelay = 5f;
@@ -200,7 +199,7 @@ public class OrbitCamera : MonoBehaviour
 		[SerializeField, Range(1f, 360f)]
 		float rotationSpeed = 270f;
 
-		public LockOn(Transform from, Transform to)
+		public LockOn(Transform from, Agent to)
 		{
 			this.from = from;
 			this.to = to;
@@ -213,10 +212,10 @@ public class OrbitCamera : MonoBehaviour
 				return false;
 			}
 
-			cam.desiredFocusPoint = Vector3.Lerp(from.transform.position, to.transform.position, 0.1f);
-			var directionFromTo = ExtensionMethods.ProjectDirectionOnPlane(to.position - from.position, Vector3.up);
+			cam.desiredFocusPoint = Vector3.Lerp(from.transform.position, to.transform.position + to.CenterOffset * Vector3.up, 0.1f);
+			var directionFromTo = ExtensionMethods.ProjectDirectionOnPlane(to.transform.position - from.position, Vector3.up);
 			float yaw = GetAngle(new Vector2(directionFromTo.x, directionFromTo.z));
-			float pitch = 30f;
+			float pitch = 20f;
 			Vector2 desiredAngle = new Vector2(pitch, yaw);
 			Vector2 originalAngle = cam.orbitAngles;
 			cam.orbitAngles = MoveTowardsPitchYaw(originalAngle, desiredAngle, rotationSpeed * Time.deltaTime);

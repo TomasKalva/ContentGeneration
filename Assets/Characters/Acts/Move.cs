@@ -5,7 +5,7 @@ using UnityEngine;
 public class Move : AnimatedAct
 {
     [SerializeField]
-    float speed;
+    float speed = 3f;
 
     Vector2 direction;
 

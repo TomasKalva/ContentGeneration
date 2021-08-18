@@ -186,7 +186,6 @@ public class Movement : MonoBehaviour {
 
 	public void ResetDesiredValues()
     {
-		//desiredVelocity = Vector3.zero;
 		desiredDirection = Vector2.zero;
 
 		velocity = body.velocity;

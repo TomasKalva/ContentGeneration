@@ -44,7 +44,7 @@ public class Agent : MonoBehaviour
 	public Animator animator;
 	public AnimancerComponent animancerAnimator;
 	public CharacterRef characterRef;
-	public Renderer renderer;
+	public Renderer myRenderer;
 
 	public CharacterState CharacterState => characterRef.CharacterState;
 
@@ -57,6 +57,15 @@ public class Agent : MonoBehaviour
 
 	bool died;
 
+	[SerializeField]
+	float centerOffset = 0f;
+
+	public float CenterOffset => centerOffset;
+
+	[SerializeField]
+	float uiOffset = 1f;
+
+	public float UIOffset => uiOffset;
 
 	[SerializeField]
 	AgentStateMaterials stateMaterials;
@@ -90,7 +99,7 @@ public class Agent : MonoBehaviour
 
 	public void GoToState(AgentState phase)
     {
-		if(renderer == null)
+		if(myRenderer == null)
 		{
 			Debug.LogError($"Missing renderer");
 			return;
@@ -104,7 +113,7 @@ public class Agent : MonoBehaviour
 		var materialIndex = phase == AgentState.PREPARE ? 1 :
 							phase == AgentState.DAMAGE ? 2 :
 							phase == AgentState.RESTORE ? 3 : 0;
-		renderer.material = stateMaterials.materials[materialIndex];
+		myRenderer.material = stateMaterials.materials[materialIndex];
     }
 
 	public void UpdateAgent()
