@@ -1926,6 +1926,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2312574997445221764, guid: c9ae56c9c05b7ce4db2044c4791e79cb, type: 3}
+      propertyPath: myRenderer
+      value: 
+      objectReference: {fileID: 1763374180857982583}
+    - target: {fileID: 2312574997445221764, guid: c9ae56c9c05b7ce4db2044c4791e79cb, type: 3}
       propertyPath: centerOffset
       value: 2
       objectReference: {fileID: 0}
@@ -2187,6 +2191,11 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 7890128435323215794, guid: ca5a53281b6adbb468b83f339de2187f, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ca5a53281b6adbb468b83f339de2187f, type: 3}
+--- !u!137 &1763374180857982583 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 1673403577137782513, guid: c9ae56c9c05b7ce4db2044c4791e79cb, type: 3}
+  m_PrefabInstance: {fileID: 1099402597833961606}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5601675081443264330
 PrefabInstance:
   m_ObjectHideFlags: 0
