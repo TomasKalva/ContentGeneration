@@ -117,7 +117,7 @@ public class OrbitCamera : MonoBehaviour
 		float alignDelay = 5f;
 
 		//[SerializeField, Range(1f, 360f)]
-		float rotationSpeed = 1800f;
+		float rotationSpeed = 270f;
 
 		[SerializeField, Range(0f, 90f)]
 		float alignSmoothRange = 45f;
@@ -146,7 +146,7 @@ public class OrbitCamera : MonoBehaviour
 
 			cam.desiredFocusPoint = point.transform.position;
 
-			orbitAngles = cam.transform.rotation.eulerAngles;
+			//orbitAngles = cam.transform.rotation.eulerAngles;
 
 			ManualRotation(cam);
 			AutomaticRotation(cam);
