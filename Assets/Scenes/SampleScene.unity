@@ -1978,7 +1978,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5580845156610923543, guid: c9ae56c9c05b7ce4db2044c4791e79cb, type: 3}
       propertyPath: m_Name
-      value: SculptureArmature
+      value: SculptArm
       objectReference: {fileID: 0}
     - target: {fileID: 5694825456342955020, guid: c9ae56c9c05b7ce4db2044c4791e79cb, type: 3}
       propertyPath: m_Name

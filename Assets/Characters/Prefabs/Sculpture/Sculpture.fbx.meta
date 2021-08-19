@@ -22,23 +22,35 @@ ModelImporter:
       74: -7121943263350251238
     second: LeftWideFollowUp
   - first:
-      74: 8129351148525045159
-    second: SculptureArmature|Idle
+      74: -2566428173132984808
+    second: DoubleSwipe
   - first:
-      74: -1613416403331053169
-    second: SculptureArmature|LeftWide
+      74: 6429319719660510949
+    second: GroundSlam
   - first:
-      74: -2191320070089865565
-    second: SculptureArmature|LeftWideFollowUp
+      74: -4912002224695104654
+    second: SculptArm|DoubleSwipe
   - first:
-      74: -2932582531975995061
-    second: SculptureArmature|Overhead
+      74: 758666023608079770
+    second: SculptArm|GroundSlam
   - first:
-      74: 5540878006990586237
-    second: SculptureArmature|Staggered
+      74: 2079914900426857680
+    second: SculptArm|Idle
   - first:
-      74: 6724199512366453353
-    second: SculptureArmature|Walk
+      74: -1385739682093586487
+    second: SculptArm|LeftWide
+  - first:
+      74: 5262018643265097850
+    second: SculptArm|LeftWideFollowUp
+  - first:
+      74: 6177890807702656093
+    second: SculptArm|Overhead
+  - first:
+      74: 8226495801979398101
+    second: SculptArm|Staggered
+  - first:
+      74: -8223209729270488889
+    second: SculptArm|Walk
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -79,7 +91,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -108,7 +120,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -242,8 +254,124 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: SculptureArmature|Idle
-      takeName: SculptureArmature|Idle
+      name: DoubleSwipe
+      takeName: DoubleSwipe
+      internalID: 0
+      firstFrame: 0
+      lastFrame: 85
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: GroundSlam
+      takeName: GroundSlam
+      internalID: 0
+      firstFrame: 0
+      lastFrame: 40
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: SculptArm|DoubleSwipe
+      takeName: SculptArm|DoubleSwipe
+      internalID: 0
+      firstFrame: 0
+      lastFrame: 85
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: SculptArm|GroundSlam
+      takeName: SculptArm|GroundSlam
+      internalID: 0
+      firstFrame: 0
+      lastFrame: 40
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: SculptArm|Idle
+      takeName: SculptArm|Idle
       internalID: 0
       firstFrame: 0
       lastFrame: 60
@@ -271,8 +399,8 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: SculptureArmature|LeftWide
-      takeName: SculptureArmature|LeftWide
+      name: SculptArm|LeftWide
+      takeName: SculptArm|LeftWide
       internalID: 0
       firstFrame: 0
       lastFrame: 30
@@ -300,8 +428,8 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: SculptureArmature|LeftWideFollowUp
-      takeName: SculptureArmature|LeftWideFollowUp
+      name: SculptArm|LeftWideFollowUp
+      takeName: SculptArm|LeftWideFollowUp
       internalID: 0
       firstFrame: 0
       lastFrame: 30
@@ -329,8 +457,8 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: SculptureArmature|Overhead
-      takeName: SculptureArmature|Overhead
+      name: SculptArm|Overhead
+      takeName: SculptArm|Overhead
       internalID: 0
       firstFrame: 0
       lastFrame: 60
@@ -358,8 +486,8 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: SculptureArmature|Staggered
-      takeName: SculptureArmature|Staggered
+      name: SculptArm|Staggered
+      takeName: SculptArm|Staggered
       internalID: 0
       firstFrame: 0
       lastFrame: 35
@@ -387,8 +515,8 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: SculptureArmature|Walk
-      takeName: SculptureArmature|Walk
+      name: SculptArm|Walk
+      takeName: SculptArm|Walk
       internalID: 0
       firstFrame: 0
       lastFrame: 35

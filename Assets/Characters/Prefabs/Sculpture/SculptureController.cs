@@ -21,7 +21,7 @@ public class SculptureController : EnemyController<SculptureAgent>
 			var hitAgent = overheadArea.other.GetComponentInParent<Agent>();
 			if (hitAgent != agent)
 			{
-				agent.WideAttack();
+				agent.DoubleSwipe();
 			}
 		}
 	}

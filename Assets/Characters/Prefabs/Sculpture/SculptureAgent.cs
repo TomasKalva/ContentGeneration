@@ -28,4 +28,16 @@ public class SculptureAgent : Agent
         }
         attack.Direction = movement.AgentForward;
     }
+
+    public void DoubleSwipe()
+    {
+        ResetState();
+        acting.SelectAct("DoubleSwipe");
+    }
+
+    public void GroundSlam()
+    {
+        ResetState();
+        acting.SelectAct("GroundSlam");
+    }
 }

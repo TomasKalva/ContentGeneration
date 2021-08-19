@@ -390,6 +390,8 @@ GameObject:
   - component: {fileID: 2440413549046114974}
   - component: {fileID: 4070446784560274823}
   - component: {fileID: 5096998411466921541}
+  - component: {fileID: 9205817071693383916}
+  - component: {fileID: 5771673128917583251}
   m_Layer: 10
   m_Name: ActContainer
   m_TagString: Untagged
@@ -433,7 +435,7 @@ MonoBehaviour:
       _NormalizedTimes: []
       _Callbacks: []
       _Names: []
-    _Clip: {fileID: 2667949614841947897, guid: 8af553c6f55b52641b5ddf94fbb84e58, type: 3}
+    _Clip: {fileID: -8223209729270488889, guid: 8af553c6f55b52641b5ddf94fbb84e58, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
   duration: 2
@@ -460,7 +462,7 @@ MonoBehaviour:
       _NormalizedTimes: []
       _Callbacks: []
       _Names: []
-    _Clip: {fileID: -1208216723246609324, guid: 8af553c6f55b52641b5ddf94fbb84e58, type: 3}
+    _Clip: {fileID: 8226495801979398101, guid: 8af553c6f55b52641b5ddf94fbb84e58, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
   duration: 1
@@ -486,7 +488,7 @@ MonoBehaviour:
       _NormalizedTimes: []
       _Callbacks: []
       _Names: []
-    _Clip: {fileID: -3100369314251171874, guid: 8af553c6f55b52641b5ddf94fbb84e58, type: 3}
+    _Clip: {fileID: 2079914900426857680, guid: 8af553c6f55b52641b5ddf94fbb84e58, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
   duration: 3
@@ -547,7 +549,7 @@ MonoBehaviour:
       _NormalizedTimes: []
       _Callbacks: []
       _Names: []
-    _Clip: {fileID: 5635223997849413550, guid: 8af553c6f55b52641b5ddf94fbb84e58, type: 3}
+    _Clip: {fileID: -1385739682093586487, guid: 8af553c6f55b52641b5ddf94fbb84e58, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
   duration: 2
@@ -582,7 +584,77 @@ MonoBehaviour:
       _NormalizedTimes: []
       _Callbacks: []
       _Names: []
-    _Clip: {fileID: -7121943263350251238, guid: 8af553c6f55b52641b5ddf94fbb84e58, type: 3}
+    _Clip: {fileID: 5262018643265097850, guid: 8af553c6f55b52641b5ddf94fbb84e58, type: 3}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  duration: 2
+  speedF:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  weapon: {fileID: 8969820305077603566}
+  damageStartT: 0.6
+  damageEndT: 1
+--- !u!114 &9205817071693383916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1099402597807337650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 351ea8ce974be344ca968c6609d7764b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: DoubleSwipe
+  type: 2
+  priority: 0
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: -4912002224695104654, guid: 8af553c6f55b52641b5ddf94fbb84e58, type: 3}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  duration: 2
+  speedF:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  weapon: {fileID: 8969820305077603566}
+  damageStartT: 0.6
+  damageEndT: 1
+--- !u!114 &5771673128917583251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1099402597807337650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 351ea8ce974be344ca968c6609d7764b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: GroundSlam
+  type: 2
+  priority: 0
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 758666023608079770, guid: 8af553c6f55b52641b5ddf94fbb84e58, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
   duration: 2
@@ -1878,7 +1950,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6335701882466965085}
   m_Layer: 10
-  m_Name: Armature
+  m_Name: SculptArm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
