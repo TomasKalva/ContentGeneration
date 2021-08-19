@@ -9,8 +9,9 @@ public class Move : AnimatedAct
 
     Vector2 direction;
 
-    public Vector2 Direction{
-        get => direction;
+    public Vector2 Direction 
+    {
+        get => direction.normalized;
         set => direction = value;
     }
 
@@ -20,7 +21,7 @@ public class Move : AnimatedAct
     {
         PlayIfNotActive(agent, 0.1f);
 
-        agent.movement.Move(direction, speed, SetDirection);
+        agent.movement.Move(Direction, speed, SetDirection);
         return true;
     }
 }

@@ -23,10 +23,13 @@ public class EnemyController<AgentT> : MonoBehaviour where AgentT : Agent
 
 	protected float DistanceToTarget => (TargetPoint - agent.transform.position).magnitude;
 
+	Behaviors behaviors;
+
 	// Start is called before the first frame update
 	void Awake()
 	{
 		agent = GetComponent<AgentT>();
+		behaviors = GetComponent<Behaviors>();
 	}
 
     private void Start()
@@ -39,7 +42,7 @@ public class EnemyController<AgentT> : MonoBehaviour where AgentT : Agent
 	{
 		agent.StartReceivingControls();
 
-		Vector3 direction = TargetPoint - agent.movement.body.position;
+		/*Vector3 direction = TargetPoint - agent.movement.body.position;
 		Vector2 movementDirection = new Vector2(direction.x, direction.z);
 		movementDirection = Vector2.ClampMagnitude(movementDirection, 1f);
 		if (GoToTarget())
@@ -52,6 +55,8 @@ public class EnemyController<AgentT> : MonoBehaviour where AgentT : Agent
 		}
 
 		UpdateController(movementDirection);
+		*/
+		behaviors.UpdateBehavior(agent);
 
 		agent.UpdateAgent();
 	}

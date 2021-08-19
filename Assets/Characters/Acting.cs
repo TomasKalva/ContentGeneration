@@ -30,6 +30,11 @@ public class Acting : MonoBehaviour, IActing
 
     public bool Busy { get; set; }
 
+    /// <summary>
+    /// True if act ended in current update.
+    /// </summary>
+    public bool ActEnded { get; private set; }
+
     bool ActiveActStarted { get; set; }
 
     /// <summary>
@@ -53,6 +58,7 @@ public class Acting : MonoBehaviour, IActing
         staggered = actContainer.GetComponent<StaggeredAct>();
         acts = actContainer.GetComponents<Act>().ToList();
         agent = GetComponent<Agent>();
+        ActEnded = false;
     }
 
     public Act SelectAct(string actName)
@@ -96,6 +102,8 @@ public class Acting : MonoBehaviour, IActing
 
     public void Act()
     {
+        ActEnded = false;
+
         if (!Busy)
         {
             ActiveAct = GetNextAct();
@@ -125,6 +133,7 @@ public class Acting : MonoBehaviour, IActing
             {
                 ActiveAct.EndAct(agent);
                 ActiveAct = Idle;
+                ActEnded = true;
                 Busy = false;
             }
             // Queue selected acts if currently Busy

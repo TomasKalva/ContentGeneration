@@ -144,7 +144,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5786553739861778974, guid: 87d8f17bd45a0014b837629d88080235, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5786553739861778978, guid: 87d8f17bd45a0014b837629d88080235, type: 3}
       propertyPath: m_RootOrder
@@ -198,7 +198,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh161232
+  m_Name: pb_Mesh23440
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1218,7 +1218,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendlyFire: 0
-  showDetectors: 0
+  showDetectors: 1
 --- !u!4 &1169724433
 Transform:
   m_ObjectHideFlags: 0
@@ -1788,7 +1788,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5786553739861778974, guid: 87d8f17bd45a0014b837629d88080235, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5786553739861778978, guid: 87d8f17bd45a0014b837629d88080235, type: 3}
       propertyPath: m_RootOrder
@@ -1920,6 +1920,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sculpture
       objectReference: {fileID: 0}
+    - target: {fileID: 2312574997445221497, guid: c9ae56c9c05b7ce4db2044c4791e79cb, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2312574997445221764, guid: c9ae56c9c05b7ce4db2044c4791e79cb, type: 3}
       propertyPath: uiOffset
       value: 0
@@ -1932,6 +1936,10 @@ PrefabInstance:
       propertyPath: centerOffset
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 2845062594104006639, guid: c9ae56c9c05b7ce4db2044c4791e79cb, type: 3}
+      propertyPath: targetPoint
+      value: 
+      objectReference: {fileID: 1406264071}
     - target: {fileID: 3124436123718010563, guid: c9ae56c9c05b7ce4db2044c4791e79cb, type: 3}
       propertyPath: m_RootOrder
       value: 1

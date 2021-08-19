@@ -8,11 +8,6 @@ public class HumanController : EnemyController<HumanAgent>
 	[SerializeField]
 	ColliderDetector attackArea;
 
-	void Awake()
-	{
-		agent = GetComponent<HumanAgent>();
-	}
-
 	protected override void UpdateController(Vector2 movementDirection)
 	{
 		// check if my attack hits enemy
