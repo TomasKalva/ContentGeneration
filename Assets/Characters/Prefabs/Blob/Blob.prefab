@@ -120,6 +120,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   weapon: {fileID: 1277739331109678264}
+  damageStartT: 0
+  damageEndT: 1
 --- !u!114 &1968328403058316691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,6 +225,7 @@ MonoBehaviour:
     _Speed: 1
     _NormalizedStartTime: 0
   duration: 2
+  speed: 3
 --- !u!1 &1277739329626205875
 GameObject:
   m_ObjectHideFlags: 0
@@ -425,15 +428,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 243349c2def8940438b4bd8f617b82f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 1.5
-  rotationCoef: 0.2
-  maxAcceleration: 100
-  maxAirAcceleration: 1
-  jumpHeight: 2
-  maxAirJumps: 0
+  rotationSpeed: 0.2
   maxGroundAngle: 25
   maxStairsAngle: 50
-  maxSnapSpeed: 100
   probeDistance: 1
   probeMask:
     serializedVersion: 2
@@ -443,7 +440,6 @@ MonoBehaviour:
     m_Bits: 4294967295
   body: {fileID: 0}
   velocity: {x: 0, y: 0, z: 0}
-  desiredVelocity: {x: 0, y: 0, z: 0}
   direction: {x: 0, y: 0}
   desiredDirection: {x: 0, y: 0}
 --- !u!114 &1277739329715723916
@@ -458,9 +454,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5737c6fbdf150c54b995f289775066b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Staggered: {fileID: 0}
-  acts:
-  - {fileID: 0}
   actContainer: {fileID: 984806760215086341}
   _activeAct: {fileID: 0}
 --- !u!95 &1277739329715723910
@@ -513,6 +506,10 @@ MonoBehaviour:
   animator: {fileID: 0}
   animancerAnimator: {fileID: 0}
   characterRef: {fileID: 0}
+  myRenderer: {fileID: 1277739330009185573}
+  centerOffset: 0
+  uiOffset: 1
+  stateMaterials: {fileID: 11400000, guid: bb1b489c7574f324bb16c275ce4cc5de, type: 2}
 --- !u!114 &1277739329715723913
 MonoBehaviour:
   m_ObjectHideFlags: 0

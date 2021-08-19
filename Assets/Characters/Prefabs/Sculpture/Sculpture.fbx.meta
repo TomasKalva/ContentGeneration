@@ -7,35 +7,38 @@ ModelImporter:
       74: -3100369314251171874
     second: Idle
   - first:
-      74: 885944232402757753
-    second: Armature|Action
+      74: 2667949614841947897
+    second: Walk
   - first:
-      74: -8535775156832171347
-    second: Armature|BackStep
+      74: -1208216723246609324
+    second: Staggered
   - first:
-      74: 8996587082034170231
-    second: Armature|Dodge
+      74: -496898873206088132
+    second: Overhead
   - first:
-      74: -8945691123924629249
-    second: Armature|Idle
+      74: 5635223997849413550
+    second: LeftWide
   - first:
-      74: 4106399916549189888
-    second: Armature|Idle.001
+      74: -7121943263350251238
+    second: LeftWideFollowUp
   - first:
-      74: 5356489323871576133
-    second: Armature|Idle.002
+      74: 8129351148525045159
+    second: SculptureArmature|Idle
   - first:
-      74: -5702768490943250727
-    second: Armature|LeftSlash
+      74: -1613416403331053169
+    second: SculptureArmature|LeftWide
   - first:
-      74: -3828583913261678786
-    second: Armature|Running
+      74: -2191320070089865565
+    second: SculptureArmature|LeftWideFollowUp
   - first:
-      74: -9180895774499272927
-    second: Armature|Slash
+      74: -2932582531975995061
+    second: SculptureArmature|Overhead
   - first:
-      74: 3916397189587442618
-    second: Armature|Staggered
+      74: 5540878006990586237
+    second: SculptureArmature|Staggered
+  - first:
+      74: 6724199512366453353
+    second: SculptureArmature|Walk
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -76,7 +79,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -94,11 +97,40 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Action
-      takeName: Armature|Action
+      name: Walk
+      takeName: Walk
       internalID: 0
       firstFrame: 0
-      lastFrame: 120
+      lastFrame: 35
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Staggered
+      takeName: Staggered
+      internalID: 0
+      firstFrame: 0
+      lastFrame: 35
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -123,11 +155,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|BackStep
-      takeName: Armature|BackStep
+      name: Overhead
+      takeName: Overhead
       internalID: 0
       firstFrame: 0
-      lastFrame: 16
+      lastFrame: 60
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -152,11 +184,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Dodge
-      takeName: Armature|Dodge
+      name: LeftWide
+      takeName: LeftWide
       internalID: 0
       firstFrame: 0
-      lastFrame: 15
+      lastFrame: 40
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -181,8 +213,37 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Idle
-      takeName: Armature|Idle
+      name: LeftWideFollowUp
+      takeName: LeftWideFollowUp
+      internalID: 0
+      firstFrame: 0
+      lastFrame: 30
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: SculptureArmature|Idle
+      takeName: SculptureArmature|Idle
       internalID: 0
       firstFrame: 0
       lastFrame: 60
@@ -210,11 +271,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Idle.001
-      takeName: Armature|Idle.001
+      name: SculptureArmature|LeftWide
+      takeName: SculptureArmature|LeftWide
       internalID: 0
       firstFrame: 0
-      lastFrame: 61
+      lastFrame: 30
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -239,11 +300,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Idle.002
-      takeName: Armature|Idle.002
+      name: SculptureArmature|LeftWideFollowUp
+      takeName: SculptureArmature|LeftWideFollowUp
       internalID: 0
       firstFrame: 0
-      lastFrame: 1
+      lastFrame: 30
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -268,11 +329,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|LeftSlash
-      takeName: Armature|LeftSlash
+      name: SculptureArmature|Overhead
+      takeName: SculptureArmature|Overhead
       internalID: 0
       firstFrame: 0
-      lastFrame: 44
+      lastFrame: 60
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -297,11 +358,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Running
-      takeName: Armature|Running
+      name: SculptureArmature|Staggered
+      takeName: SculptureArmature|Staggered
       internalID: 0
       firstFrame: 0
-      lastFrame: 18
+      lastFrame: 35
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -326,47 +387,18 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Slash
-      takeName: Armature|Slash
+      name: SculptureArmature|Walk
+      takeName: SculptureArmature|Walk
       internalID: 0
       firstFrame: 0
-      lastFrame: 44
+      lastFrame: 35
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: Armature|Staggered
-      takeName: Armature|Staggered
-      internalID: 0
-      firstFrame: 0
-      lastFrame: 68
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
