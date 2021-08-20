@@ -1111,7 +1111,7 @@ MonoBehaviour:
   animancerAnimator: {fileID: 0}
   characterRef: {fileID: 0}
   myRenderer: {fileID: 1047911529203458033}
-  centerOffset: 0
+  centerOffset: 1.5
   uiOffset: 1
   stateMaterials: {fileID: 11400000, guid: bb1b489c7574f324bb16c275ce4cc5de, type: 2}
 --- !u!114 &3871141939545492920
