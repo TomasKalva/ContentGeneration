@@ -27,9 +27,14 @@ public class Behaviors: MonoBehaviour
         if(CurrentBehaviour == null)
         {
             CurrentBehaviour = NextBehavior(agent);
+            Debug.Log(CurrentBehaviour);
             if (CurrentBehaviour != null)
             {
                 CurrentBehaviour.Enter(agent);
+            }
+            else
+            {
+                return;
             }
         }
 

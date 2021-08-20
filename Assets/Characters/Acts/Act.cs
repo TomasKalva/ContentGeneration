@@ -23,6 +23,11 @@ public class Act : MonoBehaviour
     [SerializeField]
     public int priority;
 
+    /// <summary>
+    /// True if the act just ended.
+    /// </summary>
+    public bool ActEnded { get; set; }
+
     public bool CanBeUsed()
     {
         return detector && detector.Triggered;

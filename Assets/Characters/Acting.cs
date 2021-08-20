@@ -30,11 +30,6 @@ public class Acting : MonoBehaviour, IActing
 
     public bool Busy { get; set; }
 
-    /// <summary>
-    /// True if act ended in current update.
-    /// </summary>
-    public bool ActEnded { get; private set; }
-
     bool ActiveActStarted { get; set; }
 
     /// <summary>
@@ -58,7 +53,6 @@ public class Acting : MonoBehaviour, IActing
         staggered = actContainer.GetComponent<StaggeredAct>();
         acts = actContainer.GetComponents<Act>().ToList();
         agent = GetComponent<Agent>();
-        ActEnded = false;
     }
 
     public Act SelectAct(string actName)
@@ -83,6 +77,7 @@ public class Acting : MonoBehaviour, IActing
         if (ActiveAct != null)
         {
             ActiveAct.EndAct(agent);
+            ActiveAct.ActEnded = true;
         }
         ActiveAct = act;
         ActiveActStarted = false;
@@ -102,7 +97,10 @@ public class Acting : MonoBehaviour, IActing
 
     public void Act()
     {
-        ActEnded = false;
+        foreach(var act in acts)
+        {
+            act.ActEnded = false;
+        }
 
         if (!Busy)
         {
@@ -120,7 +118,7 @@ public class Acting : MonoBehaviour, IActing
             selectedActs.Clear();
         }
 
-        // Start act if not started yet
+        // Start act if not started yet (also handles starting of forced acts)
         if (!ActiveActStarted)
         {
             ActiveAct.StartAct(agent);
@@ -132,8 +130,8 @@ public class Acting : MonoBehaviour, IActing
             if (ActiveAct.UpdateAct(agent))
             {
                 ActiveAct.EndAct(agent);
+                ActiveAct.ActEnded = true;
                 ActiveAct = Idle;
-                ActEnded = true;
                 Busy = false;
             }
             // Queue selected acts if currently Busy

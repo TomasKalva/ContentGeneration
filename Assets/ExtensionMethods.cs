@@ -57,7 +57,7 @@ static class ExtensionMethods
             }
             i++;
         }
-        throw new NotImplementedException("This line shouldn't be reached!");
+        return default;
     }
 
     public static int PlusMinusOne()

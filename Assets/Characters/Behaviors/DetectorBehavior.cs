@@ -25,6 +25,6 @@ public class DetectorBehavior : Behavior
     }
     public override bool UpdateBehavior(Agent agent)
     {
-        return agent.acting.ActEnded;
+        return act.ActEnded;
     }
 }
