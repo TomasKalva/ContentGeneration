@@ -7,8 +7,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Movement : MonoBehaviour {
 
-	[SerializeField, Range(0f, 1f)]
-	float rotationSpeed = 0.2f;
+	[SerializeField, Range(0f, 720f)]
+	float rotationSpeed = 90f;
 
 	[SerializeField, Range(0, 90)]
 	float maxGroundAngle = 25f, maxStairsAngle = 50f;
@@ -21,7 +21,7 @@ public class Movement : MonoBehaviour {
 
 	public Rigidbody body;
 
-	public Vector3 velocity/*, desiredVelocity*/;
+	public Vector3 velocity;
 
 	public Vector2 direction, desiredDirection;
 
@@ -159,7 +159,12 @@ public class Movement : MonoBehaviour {
 	{
 		if (desiredDirection.sqrMagnitude > 0.01f)
 		{
-			direction = Vector2.MoveTowards(direction, desiredDirection, rotationSpeed);
+			var currentAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+			var desiredAngle = Mathf.Atan2(desiredDirection.y, desiredDirection.x) * Mathf.Rad2Deg;
+
+			var newAngle = Mathf.MoveTowardsAngle(currentAngle, desiredAngle, rotationSpeed * Time.fixedDeltaTime) * Mathf.Deg2Rad;
+
+			direction = new Vector2(Mathf.Cos(newAngle), Mathf.Sin(newAngle));
 
 			// update body rotation
 			body.rotation = Quaternion.FromToRotation(Vector3.forward, AgentForward);
