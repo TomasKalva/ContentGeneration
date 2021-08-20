@@ -5,7 +5,6 @@ using static Movement;
 
 public class WeaponSlot : MonoBehaviour
 {
-    [SerializeField]
     Weapon weapon;
 
     public Weapon Weapon 
@@ -32,5 +31,10 @@ public class WeaponSlot : MonoBehaviour
         var newWeapon = Instantiate(weaponPrefab);
         newWeapon.transform.SetParent(transform);
         weapon = newWeapon;
+    }
+
+    private void Awake()
+    {
+        weapon = GetComponentInChildren<Weapon>();
     }
 }

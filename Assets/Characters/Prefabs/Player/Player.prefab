@@ -57,7 +57,7 @@ PrefabInstance:
     - target: {fileID: 533700495570473793, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
       propertyPath: myRenderer
       value: 
-      objectReference: {fileID: 5493582186423673192}
+      objectReference: {fileID: 233549851543945951}
     - target: {fileID: 533700495570473802, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
       propertyPath: m_Name
       value: Player
@@ -169,8 +169,8 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 533700495570473802, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
   m_PrefabInstance: {fileID: 1194537448326927664}
   m_PrefabAsset: {fileID: 0}
---- !u!137 &5493582186423673192 stripped
+--- !u!137 &233549851543945951 stripped
 SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 6678493681900581976, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
+  m_CorrespondingSourceObject: {fileID: 1418182123817457647, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
   m_PrefabInstance: {fileID: 1194537448326927664}
   m_PrefabAsset: {fileID: 0}
