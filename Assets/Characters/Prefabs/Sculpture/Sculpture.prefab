@@ -636,8 +636,8 @@ MonoBehaviour:
   weaponSlots:
   - {fileID: 5619426529500687684}
   - {fileID: 2814168456001847007}
-  damageStartT: 0.6
-  damageEndT: 1
+  damageStartT: 0.4
+  damageEndT: 0.66
 --- !u!114 &5771673128917583251
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -673,8 +673,8 @@ MonoBehaviour:
   weaponSlots:
   - {fileID: 5619426529500687684}
   - {fileID: 2814168456001847007}
-  damageStartT: 0.6
-  damageEndT: 1
+  damageStartT: 0.5
+  damageEndT: 0.7
 --- !u!1 &1125059305169524587
 GameObject:
   m_ObjectHideFlags: 0
@@ -1236,7 +1236,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
+  m_Radius: 0.6
   m_Height: 4.333912
   m_Direction: 1
   m_Center: {x: 0, y: 0.010571957, z: 0}
