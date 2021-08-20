@@ -23,7 +23,7 @@ public class Attack : AnimatedAct
     }
 
     [SerializeField]
-    Weapon weapon;
+    WeaponSlot[] weaponSlots;
 
     /// <summary>
     /// Normalized to [0,1].
@@ -53,25 +53,33 @@ public class Attack : AnimatedAct
         agent.State = AgentState.PREPARE;
     }
 
+    void SetSlotsActive(bool active)
+    {
+        foreach (var weaponSlot in weaponSlots)
+        {
+            weaponSlot.Weapon.Active = active;
+        }
+    }
+
     public override void OnUpdate(Agent agent)
     {
         var normalizedElapsed = timeElapsed / duration;
         if(agent.State == AgentState.PREPARE && normalizedElapsed >= damageStartT)
         {
             agent.State = AgentState.DAMAGE;
-            weapon.Active = true;
+            SetSlotsActive(true);
         }
 
         if (agent.State == AgentState.DAMAGE && normalizedElapsed >= damageEndT)
         {
             agent.State = AgentState.RESTORE;
-            weapon.Active = false;
+            SetSlotsActive(false);
         }
     }
 
     public override void EndAct(Agent agent)
     {
-        weapon.Active = false;
+        SetSlotsActive(false);
         agent.State = AgentState.NORMAL;
         movementContraints.ForEach(con => con.Finished = true);
     }
