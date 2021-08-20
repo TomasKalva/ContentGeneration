@@ -143,5 +143,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   detectionMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1024
   other: {fileID: 0}
