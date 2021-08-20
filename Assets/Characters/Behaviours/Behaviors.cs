@@ -19,7 +19,7 @@ public class Behaviors: MonoBehaviour
 
     public Behavior NextBehavior(Agent agent)
     {
-        return behaviors.Where(behavior => behavior.CanEnter(agent)).ArgMax(behavior => behavior.Priority(agent));;
+        return behaviors.Where(behavior => behavior.CanEnter(agent)).GetRandom(behavior => behavior.Priority(agent));
     }
 
     public void UpdateBehavior(Agent agent)

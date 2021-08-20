@@ -41,6 +41,25 @@ static class ExtensionMethods
         return enumerable.ArgMax(a => -f(a));
     }
 
+    public static T GetRandom<T>(this IEnumerable<T> enumerable, Func<T, float> weightF)
+    {
+        float total = enumerable.Sum(weightF);
+        float r = UnityEngine.Random.value * total;
+
+        int i = 0;
+        float x = 0f;
+        foreach (var item in enumerable)
+        {
+            x += weightF(item);
+            if (r <= x)
+            {
+                return item;
+            }
+            i++;
+        }
+        throw new NotImplementedException("This line shouldn't be reached!");
+    }
+
     public static int PlusMinusOne()
     {
         return UnityEngine.Random.Range(0, 2) == 0 ? 1 : -1;

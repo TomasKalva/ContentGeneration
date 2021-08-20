@@ -73,6 +73,7 @@ public class PlayerController : MonoBehaviour
 			viewModel.PlayerState = PlayerCharacterState;
 			PlayerCharacterState.SpawnPoint = GameObject.FindGameObjectWithTag("DefaultSpawnPoint").GetComponent<Bonfire>();
 		}
+
 	}
 
     void Update()
