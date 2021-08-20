@@ -22,14 +22,14 @@ public class CompositeAct : Act
         CurrentAct.StartAct(agent);
     }
 
-    public override bool UpdateAct(Agent agent)
+    public override bool UpdateAct(Agent agent, float dt)
     {
         if(acts.Length == 0)
         {
             Debug.LogError("Composite act is empty!");
         }
 
-        if (CurrentAct.UpdateAct(agent))
+        if (CurrentAct.UpdateAct(agent, dt))
         {
             CurrentAct.EndAct(agent);
             currentActIndex++;

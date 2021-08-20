@@ -10,10 +10,6 @@ public class AnimatedAct : Act
     [SerializeField]
     protected ClipTransition anim;
 
-    [SerializeField]
-    protected float duration = 1f;
-
-    protected float Duration => duration == 0f ? 0.01f : duration;
 
     protected float timeElapsed;
 
@@ -36,9 +32,9 @@ public class AnimatedAct : Act
 
     public virtual void OnStart(Agent agent) { }
 
-    public override bool UpdateAct(Agent agent)
+    public override bool UpdateAct(Agent agent, float dt)
     {
-        timeElapsed += Time.fixedDeltaTime;
+        timeElapsed += dt;
         OnUpdate(agent);
         return timeElapsed >= duration;
     }

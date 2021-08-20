@@ -23,6 +23,15 @@ public class Act : MonoBehaviour
     [SerializeField]
     public int priority;
 
+    [SerializeField]
+    protected float duration = 1f;
+
+    public float Duration
+    {
+        get => duration == 0f ? 0.01f : duration;
+        set => duration = value;
+    }
+
     /// <summary>
     /// True if the act just ended.
     /// </summary>
@@ -41,7 +50,7 @@ public class Act : MonoBehaviour
     /// <summary>
     /// Returns true if finished.
     /// </summary>
-    public virtual bool UpdateAct(Agent agent) => true;
+    public virtual bool UpdateAct(Agent agent, float dt) => true;
     public virtual void EndAct(Agent agent) 
     {
         //Debug.Log("Ended act"); 

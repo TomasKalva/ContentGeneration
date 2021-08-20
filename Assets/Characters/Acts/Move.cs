@@ -17,7 +17,7 @@ public class Move : AnimatedAct
 
     public bool SetDirection { get; set; } = true;
 
-    public override bool UpdateAct(Agent agent)
+    public override bool UpdateAct(Agent agent, float dt)
     {
         PlayIfNotActive(agent, 0.1f);
 

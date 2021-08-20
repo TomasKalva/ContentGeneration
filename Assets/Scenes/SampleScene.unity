@@ -1218,7 +1218,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   friendlyFire: 0
-  showDetectors: 1
+  showDetectors: 0
 --- !u!4 &1169724433
 Transform:
   m_ObjectHideFlags: 0
@@ -1923,6 +1923,10 @@ PrefabInstance:
     - target: {fileID: 2312574997445221497, guid: c9ae56c9c05b7ce4db2044c4791e79cb, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2312574997445221762, guid: c9ae56c9c05b7ce4db2044c4791e79cb, type: 3}
+      propertyPath: actingSpeedMultiplier
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2312574997445221764, guid: c9ae56c9c05b7ce4db2044c4791e79cb, type: 3}
       propertyPath: uiOffset

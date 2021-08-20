@@ -21,10 +21,4 @@ public class StaggeredAct : AnimatedAct
 
         agent.movement.VelocityUpdater = new DontChangeVelocityUpdater(duration);
     }
-
-    public override bool UpdateAct(Agent agent)
-    {
-        timeElapsed += Time.fixedDeltaTime;
-        return timeElapsed >= duration;
-    }
 }

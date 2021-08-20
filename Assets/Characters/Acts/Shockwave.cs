@@ -27,7 +27,7 @@ public class Shockwave : AnimatedAct
         PlayAnimation(agent);
     }
 
-    public override bool UpdateAct(Agent agent)
+    public override bool UpdateAct(Agent agent, float dt)
     {
         if(timeElapsed >= createdShocks * Delay)
         {
@@ -38,7 +38,7 @@ public class Shockwave : AnimatedAct
             shock.Active = true;
             createdShocks++;
         }
-        timeElapsed += Time.fixedDeltaTime;
+        timeElapsed += dt;
         return createdShocks >= totalShocks;
     }
 }

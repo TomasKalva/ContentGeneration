@@ -45,6 +45,9 @@ public class Acting : MonoBehaviour, IActing
         private set => _activeAct = value; 
     }
 
+    [SerializeField]
+    public float actingSpeedMultiplier = 1f;
+
     List<Act> selectedActs = new List<Act>();
 
     void Awake()
@@ -53,6 +56,10 @@ public class Acting : MonoBehaviour, IActing
         staggered = actContainer.GetComponent<StaggeredAct>();
         acts = actContainer.GetComponents<Act>().ToList();
         agent = GetComponent<Agent>();
+        foreach(var act in acts)
+        {
+            act.Duration /= actingSpeedMultiplier;
+        }
     }
 
     public Act SelectAct(string actName)
@@ -127,7 +134,7 @@ public class Acting : MonoBehaviour, IActing
 
         if (ActiveAct != null)
         {
-            if (ActiveAct.UpdateAct(agent))
+            if (ActiveAct.UpdateAct(agent, Time.fixedDeltaTime))
             {
                 ActiveAct.EndAct(agent);
                 ActiveAct.ActEnded = true;

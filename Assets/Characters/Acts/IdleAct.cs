@@ -11,7 +11,7 @@ public class IdleAct : AnimatedAct
         priority = -100;
     }
 
-    public override bool UpdateAct(Agent agent)
+    public override bool UpdateAct(Agent agent, float dt)
     {
         PlayIfNotActive(agent, 0.1f);
 

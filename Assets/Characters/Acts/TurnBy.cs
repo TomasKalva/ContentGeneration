@@ -16,7 +16,7 @@ public class TurnBy : AnimatedAct
         desiredDirection = new Vector2(desDir3d.x, desDir3d.z);
     }
 
-    public override bool UpdateAct(Agent agent)
+    public override bool UpdateAct(Agent agent, float dt)
     {
         agent.movement.Turn(desiredDirection);
         var epsilonDegrees = 1f;
