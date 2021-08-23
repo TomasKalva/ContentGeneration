@@ -38,7 +38,6 @@ public class PlayerController : MonoBehaviour
 		myAgent = GetComponent<HumanAgent>();
 		world = GameObject.Find("World").GetComponent<World>();
 
-
 		Application.targetFrameRate = 80;
 
 		buttonDown = new Dictionary<string, bool>()
@@ -53,7 +52,6 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
 	{
-		Debug.Log("player controller start");
 
 		var camera = GameObject.Find("Main Camera");
 		playerInputSpace = camera.transform;

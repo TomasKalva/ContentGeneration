@@ -18,7 +18,12 @@ public class GoToTargetBehavior : Behavior
 		return agent.CanMove && Vector3.Distance(transform.position, TargetPoint) > maxDistance;
 	}
 
-    private void Start()
+    private void Awake()
+    {
+        World.OnCreated += Initialize;
+    }
+
+    void Initialize()
     {
         targetPoint = GameObject.FindGameObjectWithTag("Player").transform;
     }

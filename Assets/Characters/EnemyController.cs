@@ -30,12 +30,13 @@ public class EnemyController<AgentT> : MonoBehaviour where AgentT : Agent
 	{
 		agent = GetComponent<AgentT>();
 		behaviors = GetComponent<Behaviors>();
+		World.OnCreated += Initialize;
 	}
 
-    private void Start()
+	void Initialize()
 	{
 		targetPoint = GameObject.FindGameObjectWithTag("Player").transform;
-	}
+    }
 
     // Update is called once per frame
     void FixedUpdate()

@@ -24,7 +24,6 @@ public class Bonfire : InteractiveObject
     public void SpawnPlayer()
     {
         var playerAgent = playerSpawner.Spawn();
-        Debug.Log("before state set");
-        playerAgent.CharacterState = playerState;
+        playerAgent.CharacterState = reality.PlayerState;
     }
 }

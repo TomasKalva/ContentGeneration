@@ -10,7 +10,7 @@ public abstract class CharacterRef : MonoBehaviour
 
 public class CharacterReference<T> : CharacterRef where T : CharacterState
 {
-    [SerializeField]
+    //[SerializeField]
     protected T characterState;
 
     public override CharacterState CharacterState

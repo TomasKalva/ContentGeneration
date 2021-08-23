@@ -31,7 +31,7 @@ namespace ContentGeneration.Assets.UI.Model
             set { 
                 _currentInteractiveObject = value;
                 CurrentInteractiveObjectState = value ? value.state : null;
-                OnPropertyChanged(this); 
+                OnPropertyChanged(this);
             }
         }
 

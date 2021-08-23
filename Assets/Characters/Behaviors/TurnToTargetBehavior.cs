@@ -20,10 +20,15 @@ public class TurnToTargetBehavior : Behavior
         return Vector2.Dot(agent.movement.direction, (TargetPoint - agent.transform.position).XZ().normalized) < cosMaxAngle;
 	}
 
-    private void Start()
+    private void Awake()
+    {
+        cosMaxAngle = Mathf.Cos(maxAngle * Mathf.Deg2Rad);
+        World.OnCreated += Initialize;
+    }
+
+    void Initialize()
     {
         targetPoint = GameObject.FindGameObjectWithTag("Player").transform;
-        cosMaxAngle = Mathf.Cos(maxAngle * Mathf.Deg2Rad);
     }
 
     public override bool CanEnter(Agent agent)

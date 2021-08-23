@@ -7,6 +7,7 @@ public class CharacterReference : CharacterReference<CharacterState>
 {
     void Start()
     {
+        characterState = new CharacterState();
         characterState.viewCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
         characterState.agent = GetComponent<Agent>();
     }

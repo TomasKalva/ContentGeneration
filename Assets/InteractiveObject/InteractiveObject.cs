@@ -10,11 +10,14 @@ public class InteractiveObject : MonoBehaviour
 
     protected World world;
 
+    protected Reality reality;
+
     // Start is called before the first frame update
     void Awake()
     {
         state = GetComponent<InteractiveObjectState>();
         world = GameObject.Find("World").GetComponent<World>();
+        reality = GameObject.Find("Reality").GetComponent<Reality>();
         Initialize();
     }
 
