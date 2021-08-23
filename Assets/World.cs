@@ -28,9 +28,24 @@ public class World : MonoBehaviour
         return InteractiveObjects.Where(o => (o.transform.position - point).sqrMagnitude <= dist * dist);
     }
 
-    public void AddAgent(Agent agent)
+    public void AddEnemy(Agent enemyPrefab, Vector3 position)
     {
-        agents.Add(agent);
+        var enemy = Instantiate(enemyPrefab);
+        enemy.transform.position = position;
+        agents.Add(enemy);
+    }
+
+    public void AddItem(ItemRef itemPrefab, Vector3 position)
+    {
+        var item = Instantiate(itemPrefab);
+        item.transform.position = position;
+        //agents.Add(enemy);
+    }
+
+    public void AddInteractiveObject(InteractiveObject interactiveObjectPrefab, Vector3 position)
+    {
+        var interactiveObject = Instantiate(interactiveObjectPrefab);
+        interactiveObject.transform.position = position;
     }
 
     public void OnPlayerDeath()
@@ -40,7 +55,7 @@ public class World : MonoBehaviour
 
     public void Created()
     {
-        Bonfire = GameObject.Find("DefaultBonfire").GetComponent<Bonfire>();
+        Bonfire = GameObject.FindGameObjectWithTag("DefaultSpawnPoint").GetComponent<Bonfire>();
 
         if (Bonfire != null)
         {

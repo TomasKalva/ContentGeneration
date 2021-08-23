@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c2f605c2df84e647b9952ade636e010, type: 3}
+  m_Name: Enemies
+  m_EditorClassIdentifier: 
+  human: {fileID: 77297701618103349, guid: f3d0930cba780944aafbac485d75587a, type: 3}
+  sculpture: {fileID: 6671359765029590395, guid: c9ae56c9c05b7ce4db2044c4791e79cb, type: 3}
+  blob: {fileID: 1277739329715723909, guid: 27e6970099e87fe4f9dfbd8ff2d06f76, type: 3}

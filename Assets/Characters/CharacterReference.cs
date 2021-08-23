@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CharacterReference : CharacterReference<CharacterState>
 {
-    void Start()
+    void Awake()
     {
         characterState = new CharacterState();
         characterState.viewCamera = GameObject.Find("Main Camera").GetComponent<Camera>();

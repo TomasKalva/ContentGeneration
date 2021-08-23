@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 222c5448fd11ea84bbfe0c388c3fdbc7, type: 3}
+  m_Name: InteractiveObjects
+  m_EditorClassIdentifier: 
+  bonfire: {fileID: 8348426894195509786, guid: 7df4f3c3374e1784c8b3db1c2527d70b, type: 3}
