@@ -8,10 +8,13 @@ public class InteractiveObject : MonoBehaviour
 {
     public InteractiveObjectState state;
 
+    protected World world;
+
     // Start is called before the first frame update
     void Awake()
     {
         state = GetComponent<InteractiveObjectState>();
+        world = GameObject.Find("World").GetComponent<World>();
         Initialize();
     }
 

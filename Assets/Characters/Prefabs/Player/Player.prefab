@@ -30,7 +30,10 @@ MonoBehaviour:
     _health:
       max: 100
       value: 42
-    _stamina:
+    _will:
+      max: 100
+      value: 42
+    _stability:
       max: 100
       value: 42
     viewCamera: {fileID: 0}
@@ -42,11 +45,32 @@ MonoBehaviour:
       _health:
         max: 100
         value: 42
-      _stamina:
+      _will:
+        max: 100
+        value: 42
+      _stability:
         max: 100
         value: 42
       viewCamera: {fileID: 0}
       agent: {fileID: 0}
+    _properties:
+      _character:
+        _health:
+          max: 100
+          value: 42
+        _will:
+          max: 100
+          value: 42
+        _stability:
+          max: 100
+          value: 42
+        viewCamera: {fileID: 0}
+        agent: {fileID: 0}
+      _health: 50
+      _will: 30
+      _poise: 20
+      _strength: 5
+      _dexterity: 3
 --- !u!54 &5361028783015928387
 Rigidbody:
   m_ObjectHideFlags: 0

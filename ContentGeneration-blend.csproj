@@ -79,6 +79,7 @@
     <Compile Include="Assets\UI\Components\Items.xaml.cs">
       <DependentUpon>Items.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Assets\UI\Model\CharacterProperties.cs" />
     <Compile Include="Assets\UI\Model\InteractiveObjectState.cs" />
     <Compile Include="Assets\UI\Model\CharacterState.cs" />
     <Compile Include="Assets\UI\Components\ProgressBarNum.xaml.cs">

@@ -30,11 +30,21 @@ namespace ContentGeneration.Assets.UI.Model
 #if NOESIS
         [SerializeField]
 #endif
-        private FloatRange _stamina;
-        public FloatRange Stamina
+        private FloatRange _will;
+        public FloatRange Will
         {
-            get { return _stamina; }
-            set { _stamina = value; PropertyChanged.OnPropertyChanged(this); }
+            get { return _will; }
+            set { _will = value; PropertyChanged.OnPropertyChanged(this); }
+        }
+
+#if NOESIS
+        [SerializeField]
+#endif
+        private FloatRange _stability;
+        public FloatRange Stability
+        {
+            get { return _stability; }
+            set { _stability = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
         public bool Dead => Health <= 0f;
@@ -44,7 +54,8 @@ namespace ContentGeneration.Assets.UI.Model
         public CharacterState()
         {
             Health = new FloatRange(100, 42);
-            Stamina = new FloatRange(100, 42);
+            Will = new FloatRange(100, 42);
+            Stability = new FloatRange(100, 42);
             Inventory = new EnemyInventory(this);
         }
 
@@ -54,7 +65,7 @@ namespace ContentGeneration.Assets.UI.Model
         public void Reset()
         {
             Health += Health.Maximum;
-            Stamina += Stamina.Maximum;
+            Will += Will.Maximum;
         }
 
         /// <summary>

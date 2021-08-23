@@ -52,7 +52,9 @@ public class PlayerController : MonoBehaviour
 	}
 
     private void Start()
-    {
+	{
+		Debug.Log("player controller start");
+
 		var camera = GameObject.Find("Main Camera");
 		playerInputSpace = camera.transform;
 		//myAgent.movement.playerInputSpace = playerInputSpace;
@@ -71,7 +73,7 @@ public class PlayerController : MonoBehaviour
 		{
 			// first spawn
 			viewModel.PlayerState = PlayerCharacterState;
-			PlayerCharacterState.SpawnPoint = GameObject.FindGameObjectWithTag("DefaultSpawnPoint").GetComponent<Bonfire>();
+			//PlayerCharacterState.SpawnPoint = GameObject.FindGameObjectWithTag("DefaultSpawnPoint").GetComponent<Bonfire>();
 		}
 
 	}
@@ -203,13 +205,15 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
 	{
 		// Death and respawning
-        if (myAgent.CharacterState.Dead)
+        if (myAgent.CharacterState.Dead && !respawned)
 		{
-			if (PlayerCharacterState.SpawnPoint && !respawned)
+			world.OnPlayerDeath();
+			respawned = true;
+			/*if (PlayerCharacterState.SpawnPoint && !respawned)
 			{
 				PlayerCharacterState.SpawnPoint.SpawnPlayer();
 				respawned = true;
-			}
+			}*/
 		}
 
 		myAgent.StartReceivingControls();

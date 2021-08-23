@@ -54,7 +54,7 @@
             <!-- Top left bars -->
             <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30">
                 <comp:ProgressBarNum DataContext="{Binding PlayerState.Health}" NoNumbers="False" Color="Red" Width="300" Height="15" Margin="5"/>
-                <comp:ProgressBarNum DataContext="{Binding PlayerState.Stamina}" Color="Green" Width="300" Height="15" Margin="5"/>
+                <comp:ProgressBarNum DataContext="{Binding PlayerState.Will}" Color="Green" Width="300" Height="15" Margin="5"/>
             </StackPanel>
 
             <!-- Bottom left item -->

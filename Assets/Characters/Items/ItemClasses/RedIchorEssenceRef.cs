@@ -12,6 +12,6 @@ public class RedIchorEssence : ItemState
 {
     public override void OnUpdate(CharacterState character)
     {
-        character.Stamina += ExtensionMethods.PerFixedSecond(2f);
+        character.Will += ExtensionMethods.PerFixedSecond(2f);
     }
 }

@@ -18,10 +18,11 @@ public class AgentSpawner : MonoBehaviour
         }
     }
 
-    public void Spawn()
+    public Agent Spawn()
     {
         var spawnedAgent = Instantiate(agentPrefab);
         spawnedAgent.transform.position = transform.position;
         spawnedAgent.transform.rotation = transform.rotation;
+        return spawnedAgent;
     }
 }

@@ -35,14 +35,6 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
-        [SerializeField]
-        private Bonfire _spawnPoint;
-        public Bonfire SpawnPoint
-        {
-            get { return _spawnPoint; }
-            set { _spawnPoint = value; OnPropertyChanged(this); }
-        }
-
 #endif
 
 #if NOESIS
@@ -65,6 +57,16 @@ namespace ContentGeneration.Assets.UI.Model
             set { _targetedEnemy = value; OnPropertyChanged(this); }
         }
 
+#if NOESIS
+        [SerializeField]
+#endif
+        private CharacterProperties _properties;
+        public CharacterProperties Properties
+        {
+            get { return _properties; }
+            set { _properties = value; OnPropertyChanged(this); }
+        }
+
         public PlayerInventory PlayerInventory => (PlayerInventory)Inventory;
 
         public PlayerCharacterState()
@@ -73,6 +75,7 @@ namespace ContentGeneration.Assets.UI.Model
 
 #if NOESIS
             InteractingWithUI = false;
+            //Properties.Character = this;
 #else
             InteractingWithUI = true;
 #endif
