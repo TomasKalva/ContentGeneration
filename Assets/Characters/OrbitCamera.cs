@@ -89,15 +89,22 @@ public class OrbitCamera : MonoBehaviour
 
 	public class CameraUpdater
 	{
-		/// <summary>
-		/// Returns false after these parameters can no longer be used.
-		/// </summary>
-		public virtual bool Update(OrbitCamera cam)
+		public virtual void PreUpdate(OrbitCamera cam)
         {
 			cam.desiredCameraPosition = Vector3.one;
 			cam.desiredFocusPoint = Vector3.zero;
-			return true;
 		}
+
+		public virtual void PostUpdate(OrbitCamera cam)
+		{
+			cam.desiredCameraPosition = Vector3.one;
+			cam.desiredFocusPoint = Vector3.zero;
+		}
+
+		/// <summary>
+		/// Returns false after these parameters can no longer be used.
+		/// </summary>
+		public virtual bool Finished() => false;
 
 		public virtual void Start(OrbitCamera cam)
 		{
@@ -137,13 +144,10 @@ public class OrbitCamera : MonoBehaviour
 			orbitAngles = cam.transform.eulerAngles;
 		}
 
-		public override bool Update(OrbitCamera cam)
-		{
-			if (!point)
-			{
-				return false;
-			}
+		public override bool Finished() => !point;
 
+		public override void PreUpdate(OrbitCamera cam)
+		{
 			cam.desiredFocusPoint = point.transform.position;
 
 			//orbitAngles = cam.transform.rotation.eulerAngles;
@@ -158,13 +162,13 @@ public class OrbitCamera : MonoBehaviour
 
 			var focusPoint = point != null ? point.position : Vector3.zero;
 			cam.desiredFocusPoint = focusPoint;
+		}
 
+		public override void PostUpdate(OrbitCamera cam)
+		{
 			Vector3 lookDirection = orbitRotation * Vector3.forward;
 			var cameraPosition = cam.focusPoint - lookDirection * distance;
-			cam.desiredCameraPosition = cameraPosition;
-
-
-			return true;
+			cam.cameraPosition = cameraPosition;
 		}
 
 		bool ManualRotation(OrbitCamera cam)
@@ -238,13 +242,10 @@ public class OrbitCamera : MonoBehaviour
 
         }
 
-		public override bool Update(OrbitCamera cam)
-		{
-			if (!from || !to)
-			{
-				return false;
-			}
+		public override bool Finished() => !from || !to;
 
+		public override void PreUpdate(OrbitCamera cam)
+		{
 			//
 			//  c         
 			//   \       f
@@ -257,8 +258,6 @@ public class OrbitCamera : MonoBehaviour
 			float yaw = GetAngle(new Vector2(directionFromTo.x, directionFromTo.z));
 			var cameraPosition = from.position - 3f * (Quaternion.Euler(new Vector3(20f, yaw)) * Vector3.forward);
 			cam.desiredCameraPosition = cameraPosition;
-
-			return true;
 		}
 
 		/// <summary>
@@ -289,12 +288,23 @@ public class OrbitCamera : MonoBehaviour
 
     void LateUpdate()
 	{
-        if (!CamUpdater.Update(this))
+        if (CamUpdater.Finished())
         {
 			CamUpdater = null;
         }
+
+        if (CamUpdater != null)
+        {
+			CamUpdater.PreUpdate(this);
+        }
+
 		UpdateFocusPoint();
 		UpdateCameraPosition();
+
+		if (CamUpdater != null)
+		{
+			CamUpdater.PostUpdate(this);
+		}
 
 		transform.position = cameraPosition;
 		transform.LookAt(focusPoint);
@@ -323,6 +333,8 @@ public class OrbitCamera : MonoBehaviour
 
 		var constrainedOrbitAngles = ConstrainAngles(transform.rotation.eulerAngles);
 		transform.rotation = Quaternion.Euler(constrainedOrbitAngles);
+
+
 	}
 
 	void UpdateFocusPoint()
@@ -352,7 +364,7 @@ public class OrbitCamera : MonoBehaviour
 	void UpdateCameraPosition()
     {
 		var targetPoint = desiredCameraPosition;
-		float t = Mathf.Pow(1f - 0.99999f, Time.unscaledDeltaTime);
+		float t = 0.3f;// Mathf.Pow(1f - 0.99999f, Time.unscaledDeltaTime);
 		cameraPosition = Vector3.Lerp(targetPoint, cameraPosition, t);
 	}
 

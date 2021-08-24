@@ -141,8 +141,6 @@ public class Acting : MonoBehaviour, IActing
                 ActiveAct = Idle;
                 Busy = false;
             }
-            // Queue selected acts if currently Busy
-            return;
         }
 
         // Clear all unimportant acts

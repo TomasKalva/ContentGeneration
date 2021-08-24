@@ -150,6 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actContainer: {fileID: 4908475155549395472}
   _activeAct: {fileID: 0}
+  actingSpeedMultiplier: 1
 --- !u!114 &466696293718255033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -434,6 +435,7 @@ MonoBehaviour:
   actName: Run
   type: 0
   priority: -10
+  duration: 0.5
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -443,7 +445,6 @@ MonoBehaviour:
     _Clip: {fileID: -3828583913261678786, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  duration: 0.5
   speed: 3
 --- !u!114 &8893546541117693315
 MonoBehaviour:
@@ -461,6 +462,7 @@ MonoBehaviour:
   actName: Roll
   type: 1
   priority: 0
+  duration: 0.51
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -470,7 +472,6 @@ MonoBehaviour:
     _Clip: {fileID: 8996587082034170231, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  duration: 0.51
   speedF:
     serializedVersion: 2
     m_Curve:
@@ -484,8 +485,8 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.3235209
-      value: 23.844334
+      time: 0.27769113
+      value: 13.372639
       inSlope: -5.9318776
       outSlope: -5.9318776
       tangentMode: 0
@@ -520,6 +521,7 @@ MonoBehaviour:
   actName: Backstep
   type: 1
   priority: 0
+  duration: 0.5
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -529,7 +531,6 @@ MonoBehaviour:
     _Clip: {fileID: -8535775156832171347, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  duration: 0.5
   speedF:
     serializedVersion: 2
     m_Curve:
@@ -588,6 +589,7 @@ MonoBehaviour:
   actName: Slash
   type: 2
   priority: 0
+  duration: 0.8
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -597,7 +599,6 @@ MonoBehaviour:
     _Clip: {fileID: -9180895774499272927, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  duration: 0.8
   speedF:
     serializedVersion: 2
     m_Curve:
@@ -620,8 +621,8 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0.6584363
     - serializedVersion: 3
-      time: 0.15002209
-      value: 6.0408535
+      time: 0.13752463
+      value: 2.0432134
       inSlope: -0.058566354
       outSlope: -0.058566354
       tangentMode: 0
@@ -647,8 +648,8 @@ MonoBehaviour:
       inWeight: 0.14238322
       outWeight: 1
     - serializedVersion: 3
-      time: 0.48737627
-      value: 9.978894
+      time: 0.42071468
+      value: 4.247774
       inSlope: -0.08210614
       outSlope: -0.08210614
       tangentMode: 0
@@ -696,6 +697,7 @@ MonoBehaviour:
   actName: LeftSlash
   type: 2
   priority: 0
+  duration: 0.6
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -705,7 +707,6 @@ MonoBehaviour:
     _Clip: {fileID: -5702768490943250727, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  duration: 0.6
   speedF:
     serializedVersion: 2
     m_Curve:
@@ -746,8 +747,8 @@ MonoBehaviour:
       inWeight: 0.14238322
       outWeight: 1
     - serializedVersion: 3
-      time: 0.48737627
-      value: 9.978894
+      time: 0.47071368
+      value: 4.1770144
       inSlope: -0.08210614
       outSlope: -0.08210614
       tangentMode: 0
@@ -795,6 +796,7 @@ MonoBehaviour:
   actName: PickUpItem
   type: 0
   priority: 0
+  duration: 0.7
   anim:
     _FadeDuration: 0
     _Events:
@@ -804,7 +806,6 @@ MonoBehaviour:
     _Clip: {fileID: -5702768490943250727, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  duration: 0.7
 --- !u!114 &7462862577321291839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -821,6 +822,7 @@ MonoBehaviour:
   actName: Staggered
   type: 0
   priority: 0
+  duration: 1
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -830,7 +832,6 @@ MonoBehaviour:
     _Clip: {fileID: -8945691123924629249, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  duration: 1
 --- !u!114 &4561374984094877503
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -847,6 +848,7 @@ MonoBehaviour:
   actName: Idle
   type: 0
   priority: -100
+  duration: 2
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -856,7 +858,6 @@ MonoBehaviour:
     _Clip: {fileID: -8945691123924629249, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  duration: 2
 --- !u!114 &4297168817459576138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -873,6 +874,7 @@ MonoBehaviour:
   actName: Walk
   type: 0
   priority: 0
+  duration: 1
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -882,7 +884,6 @@ MonoBehaviour:
     _Clip: {fileID: 885944232402757753, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  duration: 1
   speed: 2
 --- !u!1 &4973950295901722356
 GameObject:

@@ -148,13 +148,14 @@ public class Movement : MonoBehaviour {
 			body.useGravity = false;
 			if (applyFriction)
 			{
-				body.velocity *= 0.8f;
+				body.velocity *= 0.7f;
 			}
         }
         else
         {
 			body.useGravity = true;
         }
+
 		ClearState();
 	}
 
