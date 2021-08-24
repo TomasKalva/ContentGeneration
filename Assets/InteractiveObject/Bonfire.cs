@@ -9,16 +9,9 @@ public class Bonfire : InteractiveObject
     [SerializeField]
     AgentSpawner playerSpawner;
 
-    [SerializeField]
-    PlayerCharacterState playerState;
-
     protected override void InteractLogic(Agent agent)
     {
-        //if (agent.CharacterState is PlayerCharacterState playerState)
-        {
-            world.Bonfire = this;
-            //playerState.SpawnPoint = this;
-        }
+        world.Bonfire = this;
     }
 
     public void SpawnPlayer()

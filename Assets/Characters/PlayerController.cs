@@ -52,6 +52,8 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
 	{
+		// lock the cursor
+		Cursor.lockState = CursorLockMode.Locked;
 
 		var camera = GameObject.Find("Main Camera");
 		playerInputSpace = camera.transform;
@@ -123,7 +125,7 @@ public class PlayerController : MonoBehaviour
 					Input.GetAxis("Horizontal Camera"),
 					-Input.GetAxis("Vertical Camera")
 				);
-			if (cameraInput.magnitude > 0.1f)
+			if (cameraInput.magnitude > 0.5f)
 			{
 				var newLockOnTarget = SwitchLockOnTarget(myAgent, lockOnTarget, cameraInput);
 				if (newLockOnTarget != null)

@@ -198,7 +198,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh23480
+  m_Name: pb_Mesh23466
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -858,6 +858,7 @@ MonoBehaviour:
   enemies: {fileID: 11400000, guid: 1b0b7286e21a6ed4ba0a066c27e7b2e9, type: 2}
   items: {fileID: 11400000, guid: 20423688f3eb91143a3abffe5cbd7d83, type: 2}
   interactiveObjects: {fileID: 11400000, guid: eb4b228fdb6e5ca46a32f8cfbea7e253, type: 2}
+  objects: {fileID: 11400000, guid: e10829c8911eb364e88ff5b2a21bd9b0, type: 2}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1311,50 +1312,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   state: {fileID: 0}
   playerSpawner: {fileID: 1644841409}
-  playerState:
-    _health:
-      max: 100
-      value: 42
-    _will:
-      max: 100
-      value: 42
-    _stability:
-      max: 100
-      value: 42
-    viewCamera: {fileID: 0}
-    agent: {fileID: 0}
-    _currentInteractiveObject: {fileID: 0}
-    _currentInteractiveObjectState: {fileID: 0}
-    _targetedEnemy:
-      _health:
-        max: 100
-        value: 42
-      _will:
-        max: 100
-        value: 42
-      _stability:
-        max: 100
-        value: 42
-      viewCamera: {fileID: 0}
-      agent: {fileID: 0}
-    _properties:
-      _character:
-        _health:
-          max: 100
-          value: 42
-        _will:
-          max: 100
-          value: 42
-        _stability:
-          max: 100
-          value: 42
-        viewCamera: {fileID: 0}
-        agent: {fileID: 0}
-      _health: 0
-      _will: 0
-      _poise: 0
-      _strength: 0
-      _dexterity: 0
 --- !u!114 &1406264073
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1965,7 +1922,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2312574997445221497, guid: c9ae56c9c05b7ce4db2044c4791e79cb, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2312574997445221762, guid: c9ae56c9c05b7ce4db2044c4791e79cb, type: 3}
       propertyPath: actingSpeedMultiplier
@@ -1997,15 +1954,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3124436123718010563, guid: c9ae56c9c05b7ce4db2044c4791e79cb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.4734621
+      value: 6.61
       objectReference: {fileID: 0}
     - target: {fileID: 3124436123718010563, guid: c9ae56c9c05b7ce4db2044c4791e79cb, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -6.86
+      value: 1.03
       objectReference: {fileID: 0}
     - target: {fileID: 3124436123718010563, guid: c9ae56c9c05b7ce4db2044c4791e79cb, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -54.84076
+      value: -54.57
       objectReference: {fileID: 0}
     - target: {fileID: 3124436123718010563, guid: c9ae56c9c05b7ce4db2044c4791e79cb, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2327,15 +2284,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8348426894195509797, guid: 7df4f3c3374e1784c8b3db1c2527d70b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.87
+      value: -36.7
       objectReference: {fileID: 0}
     - target: {fileID: 8348426894195509797, guid: 7df4f3c3374e1784c8b3db1c2527d70b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -8.65
+      value: -0.54
       objectReference: {fileID: 0}
     - target: {fileID: 8348426894195509797, guid: 7df4f3c3374e1784c8b3db1c2527d70b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -63.61
+      value: -52.51
       objectReference: {fileID: 0}
     - target: {fileID: 8348426894195509797, guid: 7df4f3c3374e1784c8b3db1c2527d70b, type: 3}
       propertyPath: m_LocalRotation.w

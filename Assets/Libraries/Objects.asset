@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 033e94d6160965042a78bd27acdd445a, type: 3}
   m_Name: Objects
   m_EditorClassIdentifier: 
-  wall: {fileID: 0}
+  wall: {fileID: 2977920982464840196, guid: 2af978988b1f2a74bbd2fb251ceb5f5d, type: 3}
