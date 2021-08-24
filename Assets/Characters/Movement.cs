@@ -36,6 +36,8 @@ public class Movement : MonoBehaviour {
 
 	int stepsSinceLastGrounded;
 
+	bool applyFriction;
+
 	Vector3 upAxis;
 
 	public VelocityUpdater VelocityUpdater { get; set; }
@@ -66,11 +68,22 @@ public class Movement : MonoBehaviour {
 			return;
         }
 
-		velocity = speed * direction.X0Z();
+		var projectedDir = ExtensionMethods.ProjectDirectionOnPlane(direction.X0Z(), contactNormal); ;
+
+		velocity = speed * projectedDir;
+		applyFriction = false;
 		if (setDirection && velocity.sqrMagnitude > 0.1f)
 		{
 			desiredDirection = direction;
 		}
+	}
+
+	public void Accelerate(Vector2 dV, float speed)
+	{
+		var projectedDir = ExtensionMethods.ProjectDirectionOnPlane(dV.X0Z(), contactNormal); ;
+
+		velocity += speed * projectedDir;
+		applyFriction = false;
 	}
 
 	public void Turn(Vector2 direction)
@@ -128,6 +141,20 @@ public class Movement : MonoBehaviour {
 
 		AdjustDirection();
 		body.velocity = velocity;
+
+		// gravity
+        if (OnGround)
+        {
+			body.useGravity = false;
+			if (applyFriction)
+			{
+				body.velocity *= 0.8f;
+			}
+        }
+        else
+        {
+			body.useGravity = true;
+        }
 		ClearState();
 	}
 
@@ -194,6 +221,8 @@ public class Movement : MonoBehaviour {
 		desiredDirection = Vector2.zero;
 
 		velocity = body.velocity;
+
+		applyFriction = true;
 	}
 
 	void OnCollisionEnter (Collision collision) {

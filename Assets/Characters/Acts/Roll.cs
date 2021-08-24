@@ -151,7 +151,8 @@ public class CurveVelocityUpdater : VelocityUpdater
         var speed0 = speedF.Evaluate((t - dt) / duration);
         var speed1 = speedF.Evaluate(t / duration);
         var dS = speed1 - speed0;
-        movement.velocity += dS * direction;
+        movement.Accelerate(direction.XZ().normalized, dS);
+        //movement.velocity += dS * direction;
 
         return t >= duration;
     }
