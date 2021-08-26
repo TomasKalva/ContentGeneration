@@ -44,6 +44,11 @@ public class GridWorldGenerator : WorldGenerator
         AddBuildings(buildingsCount);
 
         AddBridges(bridgesCount);
+
+        foreach(var module in moduleGrid)
+        {
+            module.AfterGenerated(moduleGrid);
+        }
     }
 
     void AddBuildings(int n)
@@ -63,8 +68,8 @@ public class GridWorldGenerator : WorldGenerator
 
     void AddBuilding()
     {
-        GetExtents(moduleGrid.Width, 4, out var minX, out var maxX);
-        GetExtents(moduleGrid.Depth, 6, out var minZ, out var maxZ);
+        GetExtents(moduleGrid.Width, 6, out var minX, out var maxX);
+        GetExtents(moduleGrid.Depth, 4, out var minZ, out var maxZ);
         int minY = 0;
         int maxY = UnityEngine.Random.Range(1, 5);
         for(int i=minX; i < maxX; i++)
@@ -189,14 +194,14 @@ public class GridWorldGenerator : WorldGenerator
 
     public void DestroyAllChildren()
     {
-        if (moduleGrid != null)
+        for (int i = parent.childCount; i > 0; --i)
         {
-            moduleGrid.DestroyAllChildren();
+            GameObject.DestroyImmediate(parent.GetChild(0).gameObject);
         }
     }
 }
 
-public class ModuleGrid
+public class ModuleGrid : IEnumerable<Module>
 {
     Transform parent;
 
@@ -284,12 +289,17 @@ public class ModuleGrid
         return module.empty;
     }
 
-    public void DestroyAllChildren()
+    public IEnumerator<Module> GetEnumerator()
     {
-        for (int i = parent.childCount; i > 0; --i)
+        foreach(var module in moduleGrid)
         {
-            GameObject.DestroyImmediate(parent.GetChild(0).gameObject);
+            yield return module;
         }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }
 

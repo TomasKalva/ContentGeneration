@@ -83,6 +83,11 @@ static class ExtensionMethods
         yield return -Vector3Int.right;
     }
 
+    public static Vector3Int ComponentWise(this Vector3Int v, Func<int, int> f)
+    {
+        return new Vector3Int(f(v.x), f(v.y), f(v.z));
+    }
+
     public static int PlusMinusOne()
     {
         return UnityEngine.Random.Range(0, 2) == 0 ? 1 : -1;
