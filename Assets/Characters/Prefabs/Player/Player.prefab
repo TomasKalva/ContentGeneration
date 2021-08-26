@@ -26,51 +26,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54b0dcc6a06dbc541b2d0c515ac31d0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterState:
-    _health:
-      max: 100
-      value: 42
-    _will:
-      max: 100
-      value: 42
-    _stability:
-      max: 100
-      value: 42
-    viewCamera: {fileID: 0}
-    agent: {fileID: 0}
-    _currentInteractiveObject: {fileID: 0}
-    _spawnPoint: {fileID: 0}
-    _currentInteractiveObjectState: {fileID: 0}
-    _targetedEnemy:
-      _health:
-        max: 100
-        value: 42
-      _will:
-        max: 100
-        value: 42
-      _stability:
-        max: 100
-        value: 42
-      viewCamera: {fileID: 0}
-      agent: {fileID: 0}
-    _properties:
-      _character:
-        _health:
-          max: 100
-          value: 42
-        _will:
-          max: 100
-          value: 42
-        _stability:
-          max: 100
-          value: 42
-        viewCamera: {fileID: 0}
-        agent: {fileID: 0}
-      _health: 50
-      _will: 30
-      _poise: 20
-      _strength: 5
-      _dexterity: 3
 --- !u!54 &5361028783015928387
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -216,6 +171,10 @@ PrefabInstance:
       propertyPath: anim._Clip
       value: 
       objectReference: {fileID: 3916397189587442618, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
+    - target: {fileID: 8178095939921671359, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
+      propertyPath: damage
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
 --- !u!1 &1728200003014362746 stripped

@@ -20,13 +20,13 @@ public class GridWorldGenerator : WorldGenerator
     Module room;
 
     [SerializeField]
+    Module empty;
+
+    [SerializeField]
     int depth;
 
     [SerializeField]
-    int height;
-    
-    [SerializeField]
-    int width;
+    Vector3Int sizes;
 
     [SerializeField]
     Vector3 extents;
@@ -35,6 +35,28 @@ public class GridWorldGenerator : WorldGenerator
     int buildingsCount;
 
     Module[,,] moduleGrid;
+
+    int Width => sizes.x;
+    int Height => sizes.y;
+    int Depth => sizes.z;
+
+    bool ValidCoords(Vector3Int coords) => !coords.Less(Vector3Int.zero) && coords.Less(sizes);
+
+    Module GetModule(Vector3Int coords)
+    {
+        return ValidCoords(coords) ? moduleGrid[coords.x, coords.y, coords.z] : null;
+    }
+
+    void SetModule(Vector3Int coords, Module module)
+    {
+        if (ValidCoords(coords))
+        {
+            module.transform.SetParent(parent);
+            module.transform.position = Vector3.Scale(coords, extents);
+            module.Init(coords);
+            moduleGrid[coords.x, coords.y, coords.z] = module;
+        }
+    }
 
     public override void Generate(World world)
     {
@@ -47,28 +69,32 @@ public class GridWorldGenerator : WorldGenerator
             }
         };*/
 
-        moduleGrid = new Module[width, height, depth];
+        moduleGrid = new Module[sizes.x, sizes.y, sizes.z];
         Debug.Log("Generating grid world");
 
 
+        InitGrid();
+
         AddBuildings(buildingsCount);
 
-        /*for (int i = 0; i < width; i++)
+        AddBridges();
+    }
+
+    void InitGrid()
+    {
+        for (int i = 0; i < Width; i++)
         {
-            for (int j = 0; j < height; j++)
+            for (int j = 0; j < Height; j++)
             {
-                for (int k = 0; k < depth; k++)
+                for (int k = 0; k < Depth; k++)
                 {
-                    var module = Instantiate(room);
+                    var module = Instantiate(empty);
+                    SetModule(new Vector3Int(i, j, k), module);
                     module.transform.SetParent(parent);
                     module.transform.position = Vector3.Scale(new Vector3(i, j, k), extents);
                 }
             }
-        }*/
-        //world.AddItem(items.blueIchorEssence, new Vector3(0, 0, -54));
-
-
-        //world.AddInteractiveObject(interactiveObjects.bonfire, new Vector3(0, 0, -54));
+        }
     }
 
     void AddBuildings(int n)
@@ -88,8 +114,8 @@ public class GridWorldGenerator : WorldGenerator
 
     void AddBuilding()
     {
-        GetExtents(width, 4, out var minX, out var maxX);
-        GetExtents(depth, 6, out var minZ, out var maxZ);
+        GetExtents(sizes.x, 4, out var minX, out var maxX);
+        GetExtents(sizes.z, 6, out var minZ, out var maxZ);
         int minY = 0;
         int maxY = Random.Range(1, 5);
         for(int i=minX; i < maxX; i++)
@@ -98,17 +124,98 @@ public class GridWorldGenerator : WorldGenerator
             {
                 for(int k = minZ; k < maxZ; k++)
                 {
+                    if(!IsEmpty(moduleGrid[i, j, k]))
+                    {
+                        continue;
+                    }
+
                     var module = Instantiate(room);
-                    module.transform.SetParent(parent);
-                    module.transform.position = Vector3.Scale(new Vector3(i, j, k), extents);
+                    SetModule(new Vector3Int(i, j, k), module);
                 }
             }
         }
     }
 
+    Module RandomModule()
+    {
+        int x = Random.Range(0, Width);
+        int y = Random.Range(0, Height);
+        int z = Random.Range(0, Depth);
+        return moduleGrid[x, y, z];
+    }
+
+    Module SatisfyingModule(System.Func<Module, bool> condition)
+    {
+        for(int i=0; i < 10; i++)
+        {
+            var randModule = RandomModule();
+            if (condition(randModule))
+            {
+                return randModule;
+            }
+        }
+        return null;
+    }
+
+
+
     void AddBridges()
     {
+        for (int i = 0; i < 10; i++)
+        {
+            AddBridge();
+        }
+    }
 
+    bool HasHorizontalNeighbor(Module module)
+    {
+        return GetModule(module.coords + Vector3Int.right) != null ||
+                GetModule(module.coords - Vector3Int.right) != null ||
+                GetModule(module.coords + Vector3Int.forward) != null ||
+                GetModule(module.coords - Vector3Int.forward) != null;
+    }
+
+    bool IsEmpty(Module module)
+    {
+        return module.empty;
+    }
+
+    void AddBridge()
+    {
+        var startModule = SatisfyingModule(module => IsEmpty(module) && HasHorizontalNeighbor(module));
+        if(startModule == null)
+        {
+            return;
+        }
+
+        int dist = 0;
+        var coords = startModule.coords;
+        foreach (var direction in ExtensionMethods.HorizontalDirections())
+        {
+            var module = GetModule(coords);
+            while (module != null && IsEmpty(module))
+            {
+                coords += direction;
+                dist += 1;
+                module = GetModule(coords);
+            }
+
+            if (dist <= 1)
+            {
+                // no bridge would be placed
+                continue;
+            }
+            else
+            {
+                for (int i = 0; i < dist; i++)
+                {
+                    var bridgeCoords = startModule.coords + i * direction;
+                    var newBridge = Instantiate(bridge);
+                    SetModule(bridgeCoords, newBridge);
+                }
+                return;
+            }
+        }
     }
 
     public void DestroyAllChildren()
@@ -132,6 +239,12 @@ public class GridWorldGeneratorOnInspector : Editor
 
             generator.DestroyAllChildren();
             generator.Generate(null);
+        }
+        if (GUILayout.Button("Delete", GUILayout.Width(60), GUILayout.Height(30)))
+        {
+            var generator = (GridWorldGenerator)target;
+
+            generator.DestroyAllChildren();
         }
         GUILayout.Label("generate");
     }

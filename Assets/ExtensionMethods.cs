@@ -60,6 +60,14 @@ static class ExtensionMethods
         return default;
     }
 
+    public static IEnumerable<Vector3Int> HorizontalDirections()
+    {
+        yield return Vector3Int.forward;
+        yield return -Vector3Int.forward;
+        yield return Vector3Int.right;
+        yield return -Vector3Int.right;
+    }
+
     public static int PlusMinusOne()
     {
         return UnityEngine.Random.Range(0, 2) == 0 ? 1 : -1;
@@ -78,6 +86,16 @@ static class ExtensionMethods
     public static Vector3 X0Z(this Vector2 v)
     {
         return new Vector3(v.x, 0f, v.y);
+    }
+
+    public static bool Less(this Vector3Int u, Vector3Int v)
+    {
+        return u.x < v.x && u.y < v.y && u.z < v.z;
+    }
+
+    public static bool More(this Vector3Int u, Vector3Int v)
+    {
+        return u.x > v.x && u.y > v.y && u.z > v.z;
     }
 
     public static bool IsPointInDirection(Vector3 start, Vector3 direction, Vector3 point)
