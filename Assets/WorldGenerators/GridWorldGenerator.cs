@@ -1,4 +1,5 @@
 using ContentGeneration.Assets.UI.Model;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,6 @@ using UnityEngine;
 
 public class GridWorldGenerator : WorldGenerator
 {
-    [SerializeField]
-    Transform parent;
-
     [SerializeField]
     Module bridge;
 
@@ -23,7 +21,7 @@ public class GridWorldGenerator : WorldGenerator
     Module empty;
 
     [SerializeField]
-    int depth;
+    Transform parent;
 
     [SerializeField]
     Vector3Int sizes;
@@ -37,67 +35,15 @@ public class GridWorldGenerator : WorldGenerator
     [SerializeField]
     int bridgesCount;
 
-    Module[,,] moduleGrid;
-
-    int Width => sizes.x;
-    int Height => sizes.y;
-    int Depth => sizes.z;
-
-    bool ValidCoords(Vector3Int coords) => coords.AtLeast(Vector3Int.zero) && coords.Less(sizes);
-
-    Module GetModule(Vector3Int coords)
-    {
-        return ValidCoords(coords) ? moduleGrid[coords.x, coords.y, coords.z] : null;
-    }
-
-    void SetModule(Vector3Int coords, Module module)
-    {
-        if (ValidCoords(coords))
-        {
-            module.transform.SetParent(parent);
-            module.transform.position = Vector3.Scale(coords, extents);
-            module.Init(coords);
-            moduleGrid[coords.x, coords.y, coords.z] = module;
-        }
-    }
+    ModuleGrid moduleGrid;
 
     public override void Generate(World world)
     {
-        // Destroy old grid
-        /*UnityEditor.EditorApplication.delayCall += () =>
-        {
-            foreach (Transform child in parent)
-            {
-                DestroyImmediate(child.gameObject);
-            }
-        };*/
-
-        moduleGrid = new Module[sizes.x, sizes.y, sizes.z];
-        Debug.Log("Generating grid world");
-
-
-        InitGrid();
+        moduleGrid = new ModuleGrid(empty, sizes, extents, parent);
 
         AddBuildings(buildingsCount);
 
         AddBridges(bridgesCount);
-    }
-
-    void InitGrid()
-    {
-        for (int i = 0; i < Width; i++)
-        {
-            for (int j = 0; j < Height; j++)
-            {
-                for (int k = 0; k < Depth; k++)
-                {
-                    var module = Instantiate(empty);
-                    SetModule(new Vector3Int(i, j, k), module);
-                    module.transform.SetParent(parent);
-                    module.transform.position = Vector3.Scale(new Vector3(i, j, k), extents);
-                }
-            }
-        }
     }
 
     void AddBuildings(int n)
@@ -110,30 +56,31 @@ public class GridWorldGenerator : WorldGenerator
 
     void GetExtents(int M, int m, out int a, out int b)
     {
-        int size = Random.Range(1, m + 1);
-        a = Random.Range(0, M - m);
+        int size = UnityEngine.Random.Range(1, m + 1);
+        a = UnityEngine.Random.Range(0, M - m);
         b = a + size;
     }
 
     void AddBuilding()
     {
-        GetExtents(sizes.x, 4, out var minX, out var maxX);
-        GetExtents(sizes.z, 6, out var minZ, out var maxZ);
+        GetExtents(moduleGrid.Width, 4, out var minX, out var maxX);
+        GetExtents(moduleGrid.Depth, 6, out var minZ, out var maxZ);
         int minY = 0;
-        int maxY = Random.Range(1, 5);
+        int maxY = UnityEngine.Random.Range(1, 5);
         for(int i=minX; i < maxX; i++)
         {
             for(int j = minY; j < maxY; j++)
             {
                 for(int k = minZ; k < maxZ; k++)
                 {
-                    if(!IsEmpty(moduleGrid[i, j, k]))
+                    var coords = new Vector3Int(i, j, k);
+                    if (!moduleGrid.IsEmpty(moduleGrid[coords]))
                     {
                         continue;
                     }
 
                     var module = Instantiate(room);
-                    SetModule(new Vector3Int(i, j, k), module);
+                    moduleGrid[i, j, k] = module;
                 }
             }
         }
@@ -141,9 +88,9 @@ public class GridWorldGenerator : WorldGenerator
 
     Module RandomModule()
     {
-        int x = Random.Range(0, Width);
-        int y = Random.Range(0, Height);
-        int z = Random.Range(0, Depth);
+        int x = UnityEngine.Random.Range(0, moduleGrid.Width);
+        int y = UnityEngine.Random.Range(0, moduleGrid.Height);
+        int z = UnityEngine.Random.Range(0, moduleGrid.Depth);
         return moduleGrid[x, y, z];
     }
 
@@ -159,8 +106,6 @@ public class GridWorldGenerator : WorldGenerator
         }
         return null;
     }
-
-
 
     void AddBridges(int n)
     {
@@ -178,10 +123,10 @@ public class GridWorldGenerator : WorldGenerator
 
     bool HasHorizontalNeighbor(Module module)
     {
-        return ContainsBuilding(GetModule(module.coords + Vector3Int.right)) ||
-                ContainsBuilding(GetModule(module.coords - Vector3Int.right)) ||
-                ContainsBuilding(GetModule(module.coords + Vector3Int.forward)) ||
-                ContainsBuilding(GetModule(module.coords - Vector3Int.forward));
+        return ContainsBuilding(moduleGrid[module.coords + Vector3Int.right]) ||
+                ContainsBuilding(moduleGrid[module.coords - Vector3Int.right]) ||
+                ContainsBuilding(moduleGrid[module.coords + Vector3Int.forward]) ||
+                ContainsBuilding(moduleGrid[module.coords - Vector3Int.forward]);
     }
 
     bool IsEmpty(Module module)
@@ -202,14 +147,25 @@ public class GridWorldGenerator : WorldGenerator
 
         int dist = 0;
         var coords = startModule.coords;
-        foreach (var direction in ExtensionMethods.HorizontalDirections().Shuffle())
+        var possibleDirections = ExtensionMethods.HorizontalDirections()
+            .Where(
+            dir =>
+            {
+                var neighborModule = moduleGrid[coords - dir];
+                return neighborModule != null && !neighborModule.empty;
+            }).Shuffle();
+        foreach (var direction in possibleDirections)
         {
-            var module = GetModule(coords);
+            var module = moduleGrid[coords];
             while (module != null && IsEmpty(module))
             {
                 coords += direction;
                 dist += 1;
-                module = GetModule(coords);
+                module = moduleGrid[coords];
+            }
+            if(module == null)
+            {
+                return false;
             }
 
             if (dist <= 1)
@@ -223,7 +179,7 @@ public class GridWorldGenerator : WorldGenerator
                 {
                     var bridgeCoords = startModule.coords + i * direction;
                     var newBridge = Instantiate(bridge);
-                    SetModule(bridgeCoords, newBridge);
+                    moduleGrid[bridgeCoords] = newBridge;
                 }
                 return true;
             }
@@ -233,9 +189,106 @@ public class GridWorldGenerator : WorldGenerator
 
     public void DestroyAllChildren()
     {
+        if (moduleGrid != null)
+        {
+            moduleGrid.DestroyAllChildren();
+        }
+    }
+}
+
+public class ModuleGrid
+{
+    Transform parent;
+
+    Vector3Int sizes;
+
+    Vector3 extents;
+
+    Module[,,] moduleGrid;
+
+    public int Width => sizes.x;
+    public int Height => sizes.y;
+    public int Depth => sizes.z;
+
+    public bool ValidCoords(Vector3Int coords) => coords.AtLeast(Vector3Int.zero) && coords.Less(sizes);
+
+    public Module this[int x, int y, int z]
+    {
+        get => GetModule(new Vector3Int(x, y, z));
+        set => SetModule(new Vector3Int(x, y, z), value);
+    }
+
+    public Module this[Vector3Int coords]
+    {
+        get => GetModule(coords);
+        set => SetModule(coords, value);
+    }
+
+    Module GetModule(Vector3Int coords)
+    {
+        return ValidCoords(coords) ? moduleGrid[coords.x, coords.y, coords.z] : null;
+    }
+
+    void SetModule(Vector3Int coords, Module module)
+    {
+        if (ValidCoords(coords))
+        {
+            module.transform.SetParent(parent);
+            module.transform.position = Vector3.Scale(coords, extents);
+            module.Init(coords);
+            moduleGrid[coords.x, coords.y, coords.z] = module;
+        }
+    }
+
+    public ModuleGrid(Module empty, Vector3Int sizes, Vector3 extents, Transform parent)
+    {
+        moduleGrid = new Module[sizes.x, sizes.y, sizes.z];
+        this.sizes = sizes;
+        this.extents = extents;
+        this.parent = parent;
+        InitGrid(empty);
+    }
+
+    public void InitGrid(Module empty)
+    {
+        for (int i = 0; i < Width; i++)
+        {
+            for (int j = 0; j < Height; j++)
+            {
+                for (int k = 0; k < Depth; k++)
+                {
+                    var module = GameObject.Instantiate(empty);
+                    SetModule(new Vector3Int(i, j, k), module);
+                    module.transform.SetParent(parent);
+                    module.transform.position = Vector3.Scale(new Vector3(i, j, k), extents);
+                }
+            }
+        }
+    }
+
+    public bool ContainsBuilding(Module module)
+    {
+        return module != null && !module.empty;
+    }
+
+    public bool HasHorizontalNeighbor(Module module)
+    {
+        return ContainsBuilding(GetModule(module.coords + Vector3Int.right)) ||
+                ContainsBuilding(GetModule(module.coords - Vector3Int.right)) ||
+                ContainsBuilding(GetModule(module.coords + Vector3Int.forward)) ||
+                ContainsBuilding(GetModule(module.coords - Vector3Int.forward));
+    }
+
+    public bool IsEmpty(Module module)
+    {
+        return module.empty;
+    }
+
+    public void DestroyAllChildren()
+    {
         for (int i = parent.childCount; i > 0; --i)
         {
-            DestroyImmediate(parent.GetChild(0).gameObject);
+            GameObject.DestroyImmediate(parent.GetChild(0).gameObject);
         }
     }
 }

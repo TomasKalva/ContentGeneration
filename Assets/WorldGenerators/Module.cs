@@ -12,4 +12,9 @@ public class Module : MonoBehaviour
     {
         this.coords = coords;
     }
+
+    public virtual void AfterGenerated(ModuleGrid grid)
+    {
+
+    }
 }
