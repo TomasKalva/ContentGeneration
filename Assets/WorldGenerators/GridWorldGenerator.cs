@@ -34,13 +34,16 @@ public class GridWorldGenerator : WorldGenerator
     [SerializeField]
     int buildingsCount;
 
+    [SerializeField]
+    int bridgesCount;
+
     Module[,,] moduleGrid;
 
     int Width => sizes.x;
     int Height => sizes.y;
     int Depth => sizes.z;
 
-    bool ValidCoords(Vector3Int coords) => !coords.Less(Vector3Int.zero) && coords.Less(sizes);
+    bool ValidCoords(Vector3Int coords) => coords.AtLeast(Vector3Int.zero) && coords.Less(sizes);
 
     Module GetModule(Vector3Int coords)
     {
@@ -77,7 +80,7 @@ public class GridWorldGenerator : WorldGenerator
 
         AddBuildings(buildingsCount);
 
-        AddBridges();
+        AddBridges(bridgesCount);
     }
 
     void InitGrid()
@@ -159,20 +162,26 @@ public class GridWorldGenerator : WorldGenerator
 
 
 
-    void AddBridges()
+    void AddBridges(int n)
     {
-        for (int i = 0; i < 10; i++)
+        int bridgesCount = 0;
+        while(bridgesCount < n)
         {
-            AddBridge();
+            bridgesCount += AddBridge() ? 1 : 0;
         }
+    }
+
+    bool ContainsBuilding(Module module)
+    {
+        return module != null && !module.empty;
     }
 
     bool HasHorizontalNeighbor(Module module)
     {
-        return GetModule(module.coords + Vector3Int.right) != null ||
-                GetModule(module.coords - Vector3Int.right) != null ||
-                GetModule(module.coords + Vector3Int.forward) != null ||
-                GetModule(module.coords - Vector3Int.forward) != null;
+        return ContainsBuilding(GetModule(module.coords + Vector3Int.right)) ||
+                ContainsBuilding(GetModule(module.coords - Vector3Int.right)) ||
+                ContainsBuilding(GetModule(module.coords + Vector3Int.forward)) ||
+                ContainsBuilding(GetModule(module.coords - Vector3Int.forward));
     }
 
     bool IsEmpty(Module module)
@@ -180,17 +189,20 @@ public class GridWorldGenerator : WorldGenerator
         return module.empty;
     }
 
-    void AddBridge()
+    /// <summary>
+    /// Returns true if adding bridge was successfull.
+    /// </summary>
+    bool AddBridge()
     {
         var startModule = SatisfyingModule(module => IsEmpty(module) && HasHorizontalNeighbor(module));
         if(startModule == null)
         {
-            return;
+            return false;
         }
 
         int dist = 0;
         var coords = startModule.coords;
-        foreach (var direction in ExtensionMethods.HorizontalDirections())
+        foreach (var direction in ExtensionMethods.HorizontalDirections().Shuffle())
         {
             var module = GetModule(coords);
             while (module != null && IsEmpty(module))
@@ -213,9 +225,10 @@ public class GridWorldGenerator : WorldGenerator
                     var newBridge = Instantiate(bridge);
                     SetModule(bridgeCoords, newBridge);
                 }
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     public void DestroyAllChildren()

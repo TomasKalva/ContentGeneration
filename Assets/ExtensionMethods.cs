@@ -60,6 +60,21 @@ static class ExtensionMethods
         return default;
     }
 
+    /// <summary>
+    /// Using Fisher–Yates shuffle.
+    /// </summary>
+    public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> enumerable)
+    {
+        var buffer = enumerable.ToList();
+        for (int i = 0; i < buffer.Count; i++)
+        {
+            int j = UnityEngine.Random.Range(i, buffer.Count);
+            yield return buffer[j];
+
+            buffer[j] = buffer[i];
+        }
+    }
+
     public static IEnumerable<Vector3Int> HorizontalDirections()
     {
         yield return Vector3Int.forward;
@@ -93,9 +108,9 @@ static class ExtensionMethods
         return u.x < v.x && u.y < v.y && u.z < v.z;
     }
 
-    public static bool More(this Vector3Int u, Vector3Int v)
+    public static bool AtLeast(this Vector3Int u, Vector3Int v)
     {
-        return u.x > v.x && u.y > v.y && u.z > v.z;
+        return u.x >= v.x && u.y >= v.y && u.z >= v.z;
     }
 
     public static bool IsPointInDirection(Vector3 start, Vector3 direction, Vector3 point)
