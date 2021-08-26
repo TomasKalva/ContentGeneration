@@ -39,13 +39,18 @@ public class World : MonoBehaviour
     {
         var item = Instantiate(itemPrefab);
         item.transform.position = position;
-        //agents.Add(enemy);
     }
 
     public void AddInteractiveObject(InteractiveObject interactiveObjectPrefab, Vector3 position)
     {
         var interactiveObject = Instantiate(interactiveObjectPrefab);
         interactiveObject.transform.position = position;
+    }
+
+    public void AddObject(GameObject objectPrefab, Vector3 position)
+    {
+        var obj = Instantiate(objectPrefab);
+        obj.transform.position = position;
     }
 
     public void OnPlayerDeath()

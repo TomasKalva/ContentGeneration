@@ -4,23 +4,25 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class WorldGenerator : MonoBehaviour
+public abstract class WorldGenerator : MonoBehaviour
 {
     [SerializeField]
-    Enemies enemies;
+    protected Enemies enemies;
 
     [SerializeField]
-    Items items;
+    protected Items items;
 
     [SerializeField]
-    InteractiveObjects interactiveObjects;
+    protected InteractiveObjects interactiveObjects;
 
     [SerializeField]
-    Objects objects;
+    protected Objects objects;
 
-    public void Generate(World world)
+    public virtual void Generate(World world)
     {
         //world.AddEnemy(enemies.sculpture, new Vector3(0, 0, -54));
+
+        Debug.Log("Generating world");
 
         world.AddItem(items.blueIchorEssence, new Vector3(0, 0, -54));
 
