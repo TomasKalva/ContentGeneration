@@ -148,7 +148,7 @@ class TerrainMap
     public Point RandomPoint => new Point(Random.Range(0, Width), Random.Range(0, Height));
 }
 
-abstract class Area
+abstract class TerrainArea
 {
     /// <summary>
     /// Returns points relative to the area origin (0,0).
@@ -166,7 +166,7 @@ abstract class Area
     }
 }
 
-class Rectangle : Area
+class Rectangle : TerrainArea
 {
     private int left;
     private int bottom;
@@ -198,7 +198,7 @@ class Rectangle : Area
     }
 }
 
-class Circle : Area
+class Circle : TerrainArea
 {
     float radius;
     Rectangle rect;

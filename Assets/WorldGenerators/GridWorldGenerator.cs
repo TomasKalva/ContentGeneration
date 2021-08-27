@@ -1,3 +1,4 @@
+using Assets;
 using ContentGeneration.Assets.UI.Model;
 using System;
 using System.Collections;
@@ -72,23 +73,8 @@ public class GridWorldGenerator : WorldGenerator
         GetExtents(moduleGrid.Depth, 4, out var minZ, out var maxZ);
         int minY = 0;
         int maxY = UnityEngine.Random.Range(1, 5);
-        for(int i=minX; i < maxX; i++)
-        {
-            for(int j = minY; j < maxY; j++)
-            {
-                for(int k = minZ; k < maxZ; k++)
-                {
-                    var coords = new Vector3Int(i, j, k);
-                    if (!moduleGrid.IsEmpty(moduleGrid[coords]))
-                    {
-                        continue;
-                    }
-
-                    var module = Instantiate(room);
-                    moduleGrid[i, j, k] = module;
-                }
-            }
-        }
+        var building = new Building(new Vector3Int(minX, minY, minZ), new Vector3Int(maxX, maxY, maxZ), room);
+        building.Generate(moduleGrid);
     }
 
     Module RandomModule()
@@ -192,12 +178,78 @@ public class GridWorldGenerator : WorldGenerator
         return false;
     }
 
+
+
     public void DestroyAllChildren()
     {
         for (int i = parent.childCount; i > 0; --i)
         {
             GameObject.DestroyImmediate(parent.GetChild(0).gameObject);
         }
+    }
+}
+
+public abstract class Area
+{
+    public abstract void Generate(ModuleGrid moduleGrid);
+}
+
+public class Building : Area
+{
+    Vector3Int bottomLeftFront;
+    Vector3Int topRightBack;
+    Module room;
+
+    public Building(Vector3Int bottomLeftFront, Vector3Int topRightBack, Module room)
+    {
+        this.bottomLeftFront = bottomLeftFront;
+        this.topRightBack = topRightBack;
+        this.room = room;
+    }
+
+    public override void Generate(ModuleGrid moduleGrid)
+    {
+        for (int i = bottomLeftFront.x; i < topRightBack.x; i++)
+        {
+            for (int j = bottomLeftFront.y; j < topRightBack.y; j++)
+            {
+                for (int k = bottomLeftFront.z; k < topRightBack.z; k++)
+                {
+                    var coords = new Vector3Int(i, j, k);
+                    if (!moduleGrid.IsEmpty(moduleGrid[coords]))
+                    {
+                        continue;
+                    }
+
+                    var module = GameObject.Instantiate(room);
+                    moduleGrid[i, j, k] = module;
+                }
+            }
+        }
+    }
+}
+
+public class Room : Area
+{
+    public override void Generate(ModuleGrid moduleGrid)
+    {
+        /*for (int i = bottomLeftFront.x; i < topRightBack.x; i++)
+        {
+            for (int j = bottomLeftFront.y; j < topRightBack.y; j++)
+            {
+                for (int k = bottomLeftFront.z; k < topRightBack.z; k++)
+                {
+                    var coords = new Vector3Int(i, j, k);
+                    if (!moduleGrid.IsEmpty(moduleGrid[coords]))
+                    {
+                        continue;
+                    }
+
+                    var module = GameObject.Instantiate(room);
+                    moduleGrid[i, j, k] = module;
+                }
+            }
+        }*/
     }
 }
 

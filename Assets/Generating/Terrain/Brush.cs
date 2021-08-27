@@ -25,10 +25,10 @@ namespace Assets
 
     class AreaChangerBrush : Brush
     {
-        private Area area;
+        private TerrainArea area;
         private Function function;
 
-        public AreaChangerBrush(Area area, Function function)
+        public AreaChangerBrush(TerrainArea area, Function function)
         {
             this.area = area;
             this.function = function;
@@ -45,11 +45,11 @@ namespace Assets
 
     class AveragerBrush : Brush
     {
-        Area area;
+        TerrainArea area;
         Function function;
         float averagingSpeed;
 
-        public AveragerBrush(Area area, Function function, float averagingSpeed)
+        public AveragerBrush(TerrainArea area, Function function, float averagingSpeed)
         {
             this.area = area;
             this.function = function;

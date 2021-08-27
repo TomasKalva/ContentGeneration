@@ -124,7 +124,7 @@ namespace Assets
 
         protected override IEnumerator Spawn(Agents agents, TerrainMap map)
         {
-            Area spawnArea = new Circle(8);
+            TerrainArea spawnArea = new Circle(8);
             int count = raisingPhaseCount;
             while (count-- > 0)
             {
