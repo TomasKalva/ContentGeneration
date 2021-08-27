@@ -28,4 +28,51 @@ public class Module : MonoBehaviour
     {
         return ExtensionMethods.HorizontalDirections().Select(dir => grid[coords + dir]).Where(m => m != null);
     }
+
+    public virtual bool ReachableFrom(GridDirection dir)
+    {
+        return true;
+    }
+}
+
+public struct GridDirection
+{
+    Vector3Int _direction;
+
+    GridDirection(Vector3Int direction)
+    {
+        this._direction = direction;
+    }
+
+    public static GridDirection Forward { get; }
+    public static GridDirection Right { get; }
+    public static GridDirection Up { get; }
+    public static GridDirection ForwardUp { get; }
+    public static GridDirection ForwardDown { get; }
+    public static GridDirection RightUp { get; }
+    public static GridDirection RightDown { get; }
+    public static GridDirection ForwardRight { get; }
+    public static GridDirection ForwardLeft { get; }
+
+    static GridDirection()
+    {
+        Forward = new GridDirection(Vector3Int.forward);
+        Right = new GridDirection(Vector3Int.right);
+        Up = new GridDirection(Vector3Int.up);
+        ForwardUp = new GridDirection(Vector3Int.forward + Vector3Int.up);
+        ForwardDown = new GridDirection(Vector3Int.forward - Vector3Int.up);
+        RightUp = new GridDirection(Vector3Int.right + Vector3Int.up);
+        RightDown = new GridDirection(Vector3Int.right - Vector3Int.up);
+        ForwardRight = new GridDirection(Vector3Int.forward + Vector3Int.right);
+        ForwardLeft = new GridDirection(Vector3Int.forward - Vector3Int.right);
+    }
+
+    public static GridDirection operator -(GridDirection d) => new GridDirection(-d._direction);
+
+    public static implicit operator Vector3Int(GridDirection d) => d._direction;
+}
+
+interface IModuleGeometry
+{
+
 }
