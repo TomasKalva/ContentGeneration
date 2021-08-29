@@ -78,8 +78,8 @@ static class ExtensionMethods
     public static IEnumerable<Vector3Int> HorizontalDirections()
     {
         yield return Vector3Int.forward;
-        yield return -Vector3Int.forward;
         yield return Vector3Int.right;
+        yield return -Vector3Int.forward;
         yield return -Vector3Int.right;
     }
 
@@ -107,6 +107,18 @@ static class ExtensionMethods
     {
         return new Vector3(v.x, 0f, v.y);
     }
+    public static Vector2Int XZ(this Vector3Int v)
+    {
+        return new Vector2Int(v.x, v.z);
+    }
+
+    public static Vector3Int X0Z(this Vector2Int v)
+    {
+        return new Vector3Int(v.x, 0, v.y);
+    }
+
+    public static bool InRect(this Vector3Int v, Vector3Int leftBottomBack, Vector3Int rightTopFront) => v.AtLeast(leftBottomBack) && v.Less(rightTopFront);
+    public static bool InRect(this Vector2Int v, Vector2Int leftBottom, Vector2Int rightTop) => v.AtLeast(leftBottom) && v.Less(rightTop);
 
     public static bool Less(this Vector3Int u, Vector3Int v)
     {
@@ -117,6 +129,17 @@ static class ExtensionMethods
     {
         return u.x >= v.x && u.y >= v.y && u.z >= v.z;
     }
+
+    public static bool Less(this Vector2Int u, Vector2Int v)
+    {
+        return u.x < v.x && u.y < v.y;
+    }
+
+    public static bool AtLeast(this Vector2Int u, Vector2Int v)
+    {
+        return u.x >= v.x && u.y >= v.y;
+    }
+
 
     public static bool IsPointInDirection(Vector3 start, Vector3 direction, Vector3 point)
     {

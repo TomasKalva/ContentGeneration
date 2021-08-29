@@ -9,8 +9,21 @@ public class Module : MonoBehaviour
 
     public bool empty;
 
+    List<IModuleProperty> properties;
+
+    public PropertyT GetProperty<PropertyT>() where PropertyT : class
+    {
+        return properties.FirstOrDefault(prop => prop.GetType() == typeof(PropertyT)) as PropertyT;
+    }
+
+    public void AddProperty<PropertyT>(PropertyT property) where PropertyT : IModuleProperty
+    {
+        properties.Add(property);
+    }
+
     public void Init(Vector3Int coords)
     {
+        properties = new List<IModuleProperty>();
         this.coords = coords;
     }
 
@@ -72,7 +85,22 @@ public struct GridDirection
     public static implicit operator Vector3Int(GridDirection d) => d._direction;
 }
 
-interface IModuleGeometry
+interface IModuleGeometry : IModuleProperty
 {
 
+}
+
+public interface IModuleProperty
+{
+
+}
+
+public class AreaModuleProperty : IModuleProperty
+{
+    public Area Area { get; }
+
+    public AreaModuleProperty(Area area)
+    {
+        Area = area;
+    }
 }

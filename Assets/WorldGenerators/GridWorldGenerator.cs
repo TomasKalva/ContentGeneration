@@ -191,65 +191,76 @@ public class GridWorldGenerator : WorldGenerator
 
 public abstract class Area
 {
+    public abstract bool ContainsCoords(Vector3Int coords);
+
     public abstract void Generate(ModuleGrid moduleGrid);
 }
 
 public class Building : Area
 {
-    Vector3Int bottomLeftFront;
-    Vector3Int topRightBack;
-    Module room;
+    Vector3Int leftBottomBack;
+    Vector3Int rightTopFront;
+    Module roomModule;
 
-    public Building(Vector3Int bottomLeftFront, Vector3Int topRightBack, Module room)
+    public Building(Vector3Int leftBottomBack, Vector3Int rightTopFront, Module roomModule)
     {
-        this.bottomLeftFront = bottomLeftFront;
-        this.topRightBack = topRightBack;
-        this.room = room;
+        this.leftBottomBack = leftBottomBack;
+        this.rightTopFront = rightTopFront;
+        this.roomModule = roomModule;
+    }
+
+    public override bool ContainsCoords(Vector3Int coords)
+    {
+        return coords.InRect(leftBottomBack, rightTopFront);
     }
 
     public override void Generate(ModuleGrid moduleGrid)
     {
-        for (int i = bottomLeftFront.x; i < topRightBack.x; i++)
+        for (int j = leftBottomBack.y; j < rightTopFront.y; j++)
         {
-            for (int j = bottomLeftFront.y; j < topRightBack.y; j++)
-            {
-                for (int k = bottomLeftFront.z; k < topRightBack.z; k++)
-                {
-                    var coords = new Vector3Int(i, j, k);
-                    if (!moduleGrid.IsEmpty(moduleGrid[coords]))
-                    {
-                        continue;
-                    }
-
-                    var module = GameObject.Instantiate(room);
-                    moduleGrid[i, j, k] = module;
-                }
-            }
+            var room = new Room(leftBottomBack.XZ(), rightTopFront.XZ(), j, roomModule);
+            room.Generate(moduleGrid);
         }
     }
 }
 
 public class Room : Area
 {
+    Vector2Int leftFront;
+    Vector2Int rightBack;
+    int height;
+    Module roomModule;
+
+    public Room(Vector2Int leftFront, Vector2Int rightBack, int height, Module roomModule)
+    {
+        this.leftFront = leftFront;
+        this.rightBack = rightBack;
+        this.height = height;
+        this.roomModule = roomModule;
+    }
+
+    public override bool ContainsCoords(Vector3Int coords)
+    {
+        return coords.XZ().InRect(leftFront, rightBack);
+    }
+
     public override void Generate(ModuleGrid moduleGrid)
     {
-        /*for (int i = bottomLeftFront.x; i < topRightBack.x; i++)
+        for (int i = leftFront.x; i < rightBack.x; i++)
         {
-            for (int j = bottomLeftFront.y; j < topRightBack.y; j++)
+            for (int k = leftFront.y; k < rightBack.y; k++)
             {
-                for (int k = bottomLeftFront.z; k < topRightBack.z; k++)
+                var coords = new Vector3Int(i, height, k);
+                if (!moduleGrid.IsEmpty(moduleGrid[coords]))
                 {
-                    var coords = new Vector3Int(i, j, k);
-                    if (!moduleGrid.IsEmpty(moduleGrid[coords]))
-                    {
-                        continue;
-                    }
-
-                    var module = GameObject.Instantiate(room);
-                    moduleGrid[i, j, k] = module;
+                    continue;
                 }
+
+                var module = GameObject.Instantiate(roomModule);
+                moduleGrid[coords] = module;
+                module.AddProperty(new AreaModuleProperty(this));
             }
-        }*/
+        }
     }
 }
 
