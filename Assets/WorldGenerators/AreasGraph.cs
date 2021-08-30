@@ -78,5 +78,18 @@ public interface IGraph<VertexT, EdgeT> where VertexT : class where EdgeT : Edge
     /*public IEnumerable<VertexT> Vertices { get; }
     public IEnumerable<EdgeT> Edges { get; }*/
     bool AreConnected(VertexT from, VertexT to);
-
 }
+/*
+public class ConnectedComponents<VertexT, EdgeT, IGraph> where VertexT : class where EdgeT : Edge<VertexT>
+{
+    IGraph graph;
+    List<VertexT> vertices;
+
+    public ConnectedComponents(IGraph graph)
+    {
+        this.graph = graph;
+        this.vertices = new List<VertexT>();
+    }
+
+
+}*/
