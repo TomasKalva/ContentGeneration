@@ -25,14 +25,14 @@ public class RoomModule : Module
                 continue;
             }
 
+            var otherArea = otherModule.GetProperty<AreaModuleProperty>().Area;
+            if(otherArea.Name == "Outside")
+            {
+                continue;
+            }
+
             // Try to connect the areas if possible
             var myArea = GetProperty<AreaModuleProperty>().Area;
-            var modProp = otherModule.GetProperty<AreaModuleProperty>();
-            if(modProp == null)
-            {
-                Debug.Log(otherModule.name);
-            }
-            var otherArea = otherModule.GetProperty<AreaModuleProperty>().Area;
             if (!areasGraph.AreConnected(myArea, otherArea))
             {
                 if (otherModule.ReachableFrom(dirObj.direction))

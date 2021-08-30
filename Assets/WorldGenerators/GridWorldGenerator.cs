@@ -52,6 +52,7 @@ public class GridWorldGenerator : WorldGenerator
     {
         var openArea = new OpenArea(new Box3Int(Vector3Int.zero, sizes), modules);
         openArea.Generate(moduleGrid);
+        openArea.Name = "Outside";
     }
 
     void AddBuildings(int n)
@@ -75,7 +76,7 @@ public class GridWorldGenerator : WorldGenerator
         GetExtents(moduleGrid.Depth, 4, out var minZ, out var maxZ);
         int minY = 0;
         int maxY = UnityEngine.Random.Range(1, 5);
-        var building = new Building(new Vector3Int(minX, minY, minZ), new Vector3Int(maxX, maxY, maxZ), modules);
+        var building = new BuildingArea(new Vector3Int(minX, minY, minZ), new Vector3Int(maxX, maxY, maxZ), modules);
         building.Generate(moduleGrid);
     }
 
@@ -85,6 +86,11 @@ public class GridWorldGenerator : WorldGenerator
         int y = UnityEngine.Random.Range(0, moduleGrid.Height);
         int z = UnityEngine.Random.Range(0, moduleGrid.Depth);
         return moduleGrid[x, y, z];
+    }
+
+    void AddRooftops()
+    {
+
     }
 
     public Module SatisfyingModule(System.Func<Module, bool> condition)
