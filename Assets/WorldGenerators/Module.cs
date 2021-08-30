@@ -23,8 +23,15 @@ public class Module : MonoBehaviour
 
     public void Init(Vector3Int coords)
     {
-        properties = new List<IModuleProperty>();
         this.coords = coords;
+
+        properties = new List<IModuleProperty>();
+
+        var boundingBox = transform.Cast<Transform>().FirstOrDefault(child => child.tag == "BuildingBoundingBox");
+        if (boundingBox != null)
+        {
+            DestroyImmediate(boundingBox.gameObject);
+        }
     }
 
     public virtual void AfterGenerated(ModuleGrid grid)

@@ -555,7 +555,7 @@ GameObject:
   - component: {fileID: 8723758820950799750}
   m_Layer: 0
   m_Name: BoundingBox
-  m_TagString: Untagged
+  m_TagString: BuildingBoundingBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

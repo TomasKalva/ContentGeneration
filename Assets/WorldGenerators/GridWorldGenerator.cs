@@ -10,16 +10,7 @@ using UnityEngine;
 public class GridWorldGenerator : WorldGenerator
 {
     [SerializeField]
-    Module bridge;
-
-    [SerializeField]
-    Module stairs;
-
-    [SerializeField]
-    Module room;
-
-    [SerializeField]
-    Module empty;
+    Modules modules;
 
     [SerializeField]
     Transform parent;
@@ -40,7 +31,7 @@ public class GridWorldGenerator : WorldGenerator
 
     public override void Generate(World world)
     {
-        moduleGrid = new ModuleGrid(empty, sizes, extents, parent);
+        moduleGrid = new ModuleGrid(modules.EmptyModule(), sizes, extents, parent);
 
         AddBuildings(buildingsCount);
 
@@ -73,7 +64,7 @@ public class GridWorldGenerator : WorldGenerator
         GetExtents(moduleGrid.Depth, 4, out var minZ, out var maxZ);
         int minY = 0;
         int maxY = UnityEngine.Random.Range(1, 5);
-        var building = new Building(new Vector3Int(minX, minY, minZ), new Vector3Int(maxX, maxY, maxZ), room);
+        var building = new Building(new Vector3Int(minX, minY, minZ), new Vector3Int(maxX, maxY, maxZ), modules);
         building.Generate(moduleGrid);
     }
 
@@ -169,7 +160,7 @@ public class GridWorldGenerator : WorldGenerator
                 for (int i = 0; i < dist; i++)
                 {
                     var bridgeCoords = startModule.coords + i * direction;
-                    var newBridge = Instantiate(bridge);
+                    var newBridge = modules.BridgeModule();
                     moduleGrid[bridgeCoords] = newBridge;
                 }
                 return true;
@@ -191,6 +182,13 @@ public class GridWorldGenerator : WorldGenerator
 
 public abstract class Area
 {
+    protected Modules modules;
+
+    protected Area(Modules modules)
+    {
+        this.modules = modules;
+    }
+
     public abstract bool ContainsCoords(Vector3Int coords);
 
     public abstract void Generate(ModuleGrid moduleGrid);
@@ -200,13 +198,11 @@ public class Building : Area
 {
     Vector3Int leftBottomBack;
     Vector3Int rightTopFront;
-    Module roomModule;
 
-    public Building(Vector3Int leftBottomBack, Vector3Int rightTopFront, Module roomModule)
+    public Building(Vector3Int leftBottomBack, Vector3Int rightTopFront, Modules modules) : base(modules)
     {
         this.leftBottomBack = leftBottomBack;
         this.rightTopFront = rightTopFront;
-        this.roomModule = roomModule;
     }
 
     public override bool ContainsCoords(Vector3Int coords)
@@ -218,7 +214,7 @@ public class Building : Area
     {
         for (int j = leftBottomBack.y; j < rightTopFront.y; j++)
         {
-            var room = new Room(leftBottomBack.XZ(), rightTopFront.XZ(), j, roomModule);
+            var room = new Room(leftBottomBack.XZ(), rightTopFront.XZ(), j, modules);
             room.Generate(moduleGrid);
         }
     }
@@ -229,14 +225,12 @@ public class Room : Area
     Vector2Int leftFront;
     Vector2Int rightBack;
     int height;
-    Module roomModule;
 
-    public Room(Vector2Int leftFront, Vector2Int rightBack, int height, Module roomModule)
+    public Room(Vector2Int leftFront, Vector2Int rightBack, int height, Modules modules) : base(modules)
     {
         this.leftFront = leftFront;
         this.rightBack = rightBack;
         this.height = height;
-        this.roomModule = roomModule;
     }
 
     public override bool ContainsCoords(Vector3Int coords)
@@ -256,11 +250,18 @@ public class Room : Area
                     continue;
                 }
 
-                var module = GameObject.Instantiate(roomModule);
+                var module = modules.RoomModule();
                 moduleGrid[coords] = module;
                 module.AddProperty(new AreaModuleProperty(this));
             }
         }
+        var stairsPos = ExtensionMethods.RandomVector2Int(leftFront, rightBack);
+        var stairsCoords = new Vector3Int(stairsPos.x, height, stairsPos.y);
+        GameObject.DestroyImmediate(moduleGrid[stairsCoords].gameObject);
+
+        var stModule = modules.StairsModule();
+        moduleGrid[stairsCoords] = stModule;
+        stModule.AddProperty(new AreaModuleProperty(this));
     }
 }
 

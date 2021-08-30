@@ -20,6 +20,13 @@ static class ExtensionMethods
         return enumerable.ElementAt(i);
     }
 
+    public static Vector2Int RandomVector2Int(Vector2Int leftBottom, Vector2Int rightTop)
+    {
+        var x = UnityEngine.Random.Range(leftBottom.x, rightTop.x);
+        var y = UnityEngine.Random.Range(leftBottom.y, rightTop.y);
+        return new Vector2Int(x, y);
+    }
+
     public static T ArgMax<T>(this IEnumerable<T> enumerable, Func<T, float> f)
     {
         var best = enumerable.FirstOrDefault();
