@@ -115,7 +115,7 @@ public interface IModuleProperty
 
 public class AreaModuleProperty : IModuleProperty
 {
-    public Area Area { get; }
+    public Area Area { get; set; }
 
     public AreaModuleProperty(Area area)
     {

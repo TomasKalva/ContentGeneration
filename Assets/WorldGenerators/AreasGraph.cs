@@ -29,6 +29,11 @@ public class AreasGraph : IGraph<Area, AreasConnection>
     {
         return Edges.Any(edge => edge.Connects(from, to));
     }
+
+    public IEnumerable<Area> Neighbors(Area vert)
+    {
+        return Edges.Where(edge => edge.Contains(vert)).Select(edge => edge.Other(vert));
+    }
 }
 
 public struct AreasConnection : Edge<Area>
@@ -46,22 +51,49 @@ public struct AreasConnection : Edge<Area>
     {
         return (From == from && To == to) || (From == to && To == from);
     }
+
+    public bool Contains(Area vert)
+    {
+        return vert == From || vert == To;
+    }
+
+    public Area Other(Area vert)
+    {
+        return vert == From ? To : From;
+    }
 }
 
-public delegate bool EdgeRelation<VertexT>(VertexT u, VertexT v) where VertexT : class;
-
-public class ImplicitGraph<VertexT, EdgeT> : IGraph<VertexT, EdgeT> where VertexT : class where EdgeT : Edge<VertexT>
+public class NoEdge<VertexT> : Edge<VertexT> where VertexT : class
 {
-    EdgeRelation<VertexT> edgeRel;
+    public VertexT From => throw new NotImplementedException();
 
-    public ImplicitGraph(EdgeRelation<VertexT> edgeRel)
+    public VertexT To => throw new NotImplementedException();
+
+    public bool Connects(Area from, Area to)
     {
-        this.edgeRel = edgeRel;
+        throw new NotImplementedException();
+    }
+}
+
+public delegate IEnumerable<VertexT> Neighbors<VertexT>(VertexT v) where VertexT : class;
+
+public class ImplicitGraph<VertexT> : IGraph<VertexT, NoEdge<VertexT>> where VertexT : class
+{
+    Neighbors<VertexT> neighbors;
+
+    public ImplicitGraph(Neighbors<VertexT> neighbors)
+    {
+        this.neighbors = neighbors;
     }
 
     public bool AreConnected(VertexT from, VertexT to)
     {
-        return edgeRel(from, to);
+        return neighbors(from).Contains(to);
+    }
+
+    public IEnumerable<VertexT> Neighbors(VertexT vert)
+    {
+        return neighbors(vert);
     }
 }
 
@@ -78,18 +110,55 @@ public interface IGraph<VertexT, EdgeT> where VertexT : class where EdgeT : Edge
     /*public IEnumerable<VertexT> Vertices { get; }
     public IEnumerable<EdgeT> Edges { get; }*/
     bool AreConnected(VertexT from, VertexT to);
+    IEnumerable<VertexT> Neighbors(VertexT vert);
 }
-/*
-public class ConnectedComponents<VertexT, EdgeT, IGraph> where VertexT : class where EdgeT : Edge<VertexT>
-{
-    IGraph graph;
-    List<VertexT> vertices;
 
-    public ConnectedComponents(IGraph graph)
+public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where EdgeT : Edge<VertexT> where GraphT : IGraph<VertexT, EdgeT>
+{
+    IGraph<VertexT, EdgeT> graph;
+
+    public GraphAlgorithms(IGraph<VertexT, EdgeT> graph)
     {
         this.graph = graph;
-        this.vertices = new List<VertexT>();
     }
 
+    /// <summary>
+    /// Only for symmetrical graphs!
+    /// </summary>
+    public IEnumerable<IEnumerable<VertexT>> ConnectedComponentsSymm(IEnumerable<VertexT> rootVertices)
+    {
+        var components = new List<IEnumerable<VertexT>>();
+        var found = new List<VertexT>();
 
-}*/
+        foreach (var root in rootVertices)
+        {
+            var fringe = new Stack<VertexT>();
+            var current = new List<VertexT>();
+            fringe.Push(root);
+            if (found.Contains(root))
+            {
+                continue;
+            }
+
+            while (fringe.Any())
+            {
+                var v = fringe.Pop();
+                if (found.Contains(v))
+                {
+                    continue;
+                }
+
+                found.Add(v);
+                current.Add(v);
+                foreach (var neighbor in graph.Neighbors(v))
+                {
+                    fringe.Push(neighbor);
+                }
+            }
+
+            components.Add(current);
+        }
+
+        return components;
+    }
+}

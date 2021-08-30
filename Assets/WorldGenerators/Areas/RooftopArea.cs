@@ -13,13 +13,15 @@ public class Rooftops : Area
 
     public override bool Generate(ModuleGrid moduleGrid)
     {
-        foreach (var coords in moduleGrid.Bottom())
+        var heightGraph = new ImplicitGraph<Module>(
+                module => module.HorizontalNeighbors(moduleGrid)
+                            .Where(neighbor => IsRoof(moduleGrid, neighbor)));
+        var heightGraphAlg = new GraphAlgorithms<Module, NoEdge<Module>, ImplicitGraph<Module>>(heightGraph);
+        var roofComponents = heightGraphAlg.ConnectedComponentsSymm(moduleGrid.Where(module => IsRoof(moduleGrid, module)));
+        foreach(var component in roofComponents)
         {
-            var rooftopHeight = RooftopHeight(moduleGrid, coords);
-            if(rooftopHeight > 0 && rooftopHeight < moduleGrid.Height)
-            {
-                
-            }
+            var area = new RooftopArea(component, moduleLibrary);
+            area.Generate(moduleGrid);
         }
 
         return true;
@@ -36,26 +38,38 @@ public class Rooftops : Area
         }
         return moduleGrid.Height;
     }
+
+    bool IsRoof(ModuleGrid moduleGrid, Module maybeRoof)
+    {
+        if (maybeRoof.empty)
+        {
+            var oneDown = maybeRoof.coords - Vector3Int.up;
+            return moduleGrid.ValidCoords(oneDown) && !moduleGrid[oneDown].empty;
+        }
+        return false;
+    }
 }
 
 public class RooftopArea : Area
 {
-    Box3Int box;
+    List<Module> modules;
 
-    public RooftopArea(Box3Int box, Modules moduleLibrary) : base(moduleLibrary)
+    public RooftopArea(IEnumerable<Module> modules, Modules moduleLibrary) : base(moduleLibrary)
     {
-        this.box = box;
+        this.modules = modules.ToList();
     }
 
     public override bool Generate(ModuleGrid moduleGrid)
     {
-        foreach (var coords in box)
+        foreach (var module in modules)
         {
-            var emptyModule = moduleLibrary.EmptyModule();
-            moduleGrid[coords] = emptyModule;
-            emptyModule.AddProperty(new AreaModuleProperty(this));
+            var areaProp = module.GetProperty<AreaModuleProperty>();
+            areaProp.Area = this;
+            /*
+            var m = moduleLibrary.BridgeModule();
+            moduleGrid[module.coords] = m;
+            m.AddProperty(new AreaModuleProperty(this));*/
         }
-
         return true;
     }
 }

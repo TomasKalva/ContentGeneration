@@ -42,6 +42,8 @@ public class GridWorldGenerator : WorldGenerator
 
         AddBridges(bridgesCount);
 
+        AddRooftops();
+
         foreach(var module in moduleGrid)
         {
             module.AfterGenerated(moduleGrid, areasGraph);
@@ -90,7 +92,8 @@ public class GridWorldGenerator : WorldGenerator
 
     void AddRooftops()
     {
-
+        var rooftops = new Rooftops(modules);
+        rooftops.Generate(moduleGrid);
     }
 
     public Module SatisfyingModule(System.Func<Module, bool> condition)
