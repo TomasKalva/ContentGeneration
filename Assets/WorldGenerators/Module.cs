@@ -43,7 +43,7 @@ public class Module : MonoBehaviour
         }
     }
 
-    public virtual void AfterGenerated(ModuleGrid grid)
+    public virtual void AfterGenerated(ModuleGrid grid, AreasGraph areasGraph)
     {
 
     }
@@ -58,7 +58,7 @@ public class Module : MonoBehaviour
         return ExtensionMethods.HorizontalDirections().Select(dir => grid[coords + dir]).Where(m => m != null);
     }
 
-    public virtual bool ReachableFrom(GridDirection dir)
+    public virtual bool ReachableFrom(Vector3Int dir)
     {
         return true;
     }

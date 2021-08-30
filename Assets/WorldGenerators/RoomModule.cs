@@ -9,19 +9,42 @@ public class RoomModule : Module
     [SerializeField]
     DirectionObject[] walls;
 
-    public override void AfterGenerated(ModuleGrid grid)
+    public override void AfterGenerated(ModuleGrid grid, AreasGraph areasGraph)
     {
         var area = GetProperty<AreaModuleProperty>().Area;
         foreach(var dirObj in walls)
         {
-            if (area.ContainsCoords(coords + dirObj.direction)) 
+            var otherModule = grid[coords + dirObj.direction];
+            if (area.ContainsModule(otherModule)) 
             {
                 GameObject.DestroyImmediate(dirObj.obj);
+            }
+
+            if(otherModule == null)
+            {
+                continue;
+            }
+
+            // Try to connect the areas if possible
+            var myArea = GetProperty<AreaModuleProperty>().Area;
+            var modProp = otherModule.GetProperty<AreaModuleProperty>();
+            if(modProp == null)
+            {
+                Debug.Log(otherModule.name);
+            }
+            var otherArea = otherModule.GetProperty<AreaModuleProperty>().Area;
+            if (!areasGraph.AreConnected(myArea, otherArea))
+            {
+                if (otherModule.ReachableFrom(dirObj.direction))
+                {
+                    GameObject.DestroyImmediate(dirObj.obj);
+                    areasGraph.Connect(myArea, otherArea);
+                }
             }
         }
     }
 
-    public override bool ReachableFrom(GridDirection dir)
+    public override bool ReachableFrom(Vector3Int dir)
     {
         return true;
     }

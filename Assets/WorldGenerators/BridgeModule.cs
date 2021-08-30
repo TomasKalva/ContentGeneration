@@ -7,7 +7,7 @@ public class BridgeModule : Module
     [SerializeField]
     Transform bridge;
 
-    public override void AfterGenerated(ModuleGrid grid)
+    public override void AfterGenerated(ModuleGrid grid, AreasGraph areasGraph)
     {
         foreach (var neighbor in HorizontalNeighbors(grid))
         {

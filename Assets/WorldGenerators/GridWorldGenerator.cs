@@ -29,9 +29,14 @@ public class GridWorldGenerator : WorldGenerator
 
     ModuleGrid moduleGrid;
 
+    AreasGraph areasGraph;
+
     public override void Generate(World world)
     {
-        moduleGrid = new ModuleGrid(modules.EmptyModule(), sizes, extents, parent);
+        moduleGrid = new ModuleGrid(sizes, extents, parent);
+        areasGraph = new AreasGraph();
+
+        InitGrid();
 
         AddBuildings(buildingsCount);
 
@@ -39,8 +44,14 @@ public class GridWorldGenerator : WorldGenerator
 
         foreach(var module in moduleGrid)
         {
-            module.AfterGenerated(moduleGrid);
+            module.AfterGenerated(moduleGrid, areasGraph);
         }
+    }
+
+    void InitGrid()
+    {
+        var openArea = new OpenArea(new Box3Int(Vector3Int.zero, sizes), modules);
+        openArea.Generate(moduleGrid);
     }
 
     void AddBuildings(int n)
@@ -76,7 +87,7 @@ public class GridWorldGenerator : WorldGenerator
         return moduleGrid[x, y, z];
     }
 
-    Module SatisfyingModule(System.Func<Module, bool> condition)
+    public Module SatisfyingModule(System.Func<Module, bool> condition)
     {
         for(int i=0; i < 10; i++)
         {
@@ -103,7 +114,7 @@ public class GridWorldGenerator : WorldGenerator
         return module != null && !module.empty;
     }
 
-    bool HasHorizontalNeighbor(Module module)
+    public bool HasHorizontalNeighbor(Module module)
     {
         return ContainsBuilding(moduleGrid[module.coords + Vector3Int.right]) ||
                 ContainsBuilding(moduleGrid[module.coords - Vector3Int.right]) ||
@@ -121,6 +132,10 @@ public class GridWorldGenerator : WorldGenerator
     /// </summary>
     bool AddBridge()
     {
+        var startModule = SatisfyingModule(module => module.empty && HasHorizontalNeighbor(module));
+        var bridge = new BridgeArea(startModule, modules);
+        return bridge.Generate(moduleGrid);
+        /*
         var startModule = SatisfyingModule(module => IsEmpty(module) && HasHorizontalNeighbor(module));
         if(startModule == null)
         {
@@ -165,8 +180,7 @@ public class GridWorldGenerator : WorldGenerator
                 }
                 return true;
             }
-        }
-        return false;
+        }*/
     }
 
 
@@ -177,115 +191,6 @@ public class GridWorldGenerator : WorldGenerator
         {
             GameObject.DestroyImmediate(parent.GetChild(0).gameObject);
         }
-    }
-}
-
-public class ModuleGrid : IEnumerable<Module>
-{
-    Transform parent;
-
-    Vector3Int sizes;
-
-    Vector3 extents;
-
-    Module[,,] moduleGrid;
-
-    public int Width => sizes.x;
-    public int Height => sizes.y;
-    public int Depth => sizes.z;
-
-    public bool ValidCoords(Vector3Int coords) => coords.AtLeast(Vector3Int.zero) && coords.Less(sizes);
-
-    public Module this[int x, int y, int z]
-    {
-        get => GetModule(new Vector3Int(x, y, z));
-        set => SetModule(new Vector3Int(x, y, z), value);
-    }
-
-    public Module this[Vector3Int coords]
-    {
-        get => GetModule(coords);
-        set => SetModule(coords, value);
-    }
-
-    Module GetModule(Vector3Int coords)
-    {
-        return ValidCoords(coords) ? moduleGrid[coords.x, coords.y, coords.z] : null;
-    }
-
-    void SetModule(Vector3Int coords, Module module)
-    {
-        if (ValidCoords(coords))
-        {
-            var originalModule = this[coords];
-            if (originalModule != null)
-            {
-                originalModule.OnDestroyed();
-                GameObject.DestroyImmediate(originalModule.gameObject);
-            }
-
-            module.transform.SetParent(parent);
-            module.transform.position = Vector3.Scale(coords, extents);
-            module.Init(coords);
-            moduleGrid[coords.x, coords.y, coords.z] = module;
-        }
-    }
-
-    public ModuleGrid(Module empty, Vector3Int sizes, Vector3 extents, Transform parent)
-    {
-        moduleGrid = new Module[sizes.x, sizes.y, sizes.z];
-        this.sizes = sizes;
-        this.extents = extents;
-        this.parent = parent;
-        InitGrid(empty);
-    }
-
-    public void InitGrid(Module empty)
-    {
-        for (int i = 0; i < Width; i++)
-        {
-            for (int j = 0; j < Height; j++)
-            {
-                for (int k = 0; k < Depth; k++)
-                {
-                    var module = GameObject.Instantiate(empty);
-                    SetModule(new Vector3Int(i, j, k), module);
-                    module.transform.SetParent(parent);
-                    module.transform.position = Vector3.Scale(new Vector3(i, j, k), extents);
-                }
-            }
-        }
-    }
-
-    public bool ContainsBuilding(Module module)
-    {
-        return module != null && !module.empty;
-    }
-
-    public bool HasHorizontalNeighbor(Module module)
-    {
-        return ContainsBuilding(GetModule(module.coords + Vector3Int.right)) ||
-                ContainsBuilding(GetModule(module.coords - Vector3Int.right)) ||
-                ContainsBuilding(GetModule(module.coords + Vector3Int.forward)) ||
-                ContainsBuilding(GetModule(module.coords - Vector3Int.forward));
-    }
-
-    public bool IsEmpty(Module module)
-    {
-        return module.empty;
-    }
-
-    public IEnumerator<Module> GetEnumerator()
-    {
-        foreach(var module in moduleGrid)
-        {
-            yield return module;
-        }
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
     }
 }
 
