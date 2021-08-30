@@ -27,6 +27,35 @@ static class ExtensionMethods
         return new Vector2Int(x, y);
     }
 
+    public static Vector3Int RandomVector3Int(Vector3Int leftBottomBack, Vector3Int rightTopFront)
+    {
+        var x = UnityEngine.Random.Range(leftBottomBack.x, rightTopFront.x);
+        var y = UnityEngine.Random.Range(leftBottomBack.y, rightTopFront.y);
+        var z = UnityEngine.Random.Range(leftBottomBack.z, rightTopFront.z);
+        return new Vector3Int(x, y, z);
+    }
+
+    public static void GetRandomExtents(int M, int m, out int a, out int b)
+    {
+        int size = UnityEngine.Random.Range(1, m + 1);
+        a = UnityEngine.Random.Range(0, M - m);
+        b = a + size;
+    }
+
+    public static Box3Int RandomBox(Box3Int boundingBox)
+    {
+        var M = boundingBox.rightTopFront - boundingBox.leftBottomBack;
+        var m = M / 2;
+        Debug.Log(m);
+        GetRandomExtents(M.x, m.x, out var x, out var X);
+        GetRandomExtents(M.y, m.y, out var y, out var Y);
+        GetRandomExtents(M.z, m.z, out var z, out var Z);
+
+        var b = boundingBox.rightTopFront;
+        return new Box3Int(b + new Vector3Int(x, y, z), b + new Vector3Int(X, Y, Z));
+    }
+
+
     public static T ArgMax<T>(this IEnumerable<T> enumerable, Func<T, float> f)
     {
         var best = enumerable.FirstOrDefault();

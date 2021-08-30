@@ -180,91 +180,6 @@ public class GridWorldGenerator : WorldGenerator
     }
 }
 
-public abstract class Area
-{
-    protected Modules modules;
-
-    protected Area(Modules modules)
-    {
-        this.modules = modules;
-    }
-
-    public abstract bool ContainsCoords(Vector3Int coords);
-
-    public abstract void Generate(ModuleGrid moduleGrid);
-}
-
-public class Building : Area
-{
-    Vector3Int leftBottomBack;
-    Vector3Int rightTopFront;
-
-    public Building(Vector3Int leftBottomBack, Vector3Int rightTopFront, Modules modules) : base(modules)
-    {
-        this.leftBottomBack = leftBottomBack;
-        this.rightTopFront = rightTopFront;
-    }
-
-    public override bool ContainsCoords(Vector3Int coords)
-    {
-        return coords.InRect(leftBottomBack, rightTopFront);
-    }
-
-    public override void Generate(ModuleGrid moduleGrid)
-    {
-        for (int j = leftBottomBack.y; j < rightTopFront.y; j++)
-        {
-            var room = new Room(leftBottomBack.XZ(), rightTopFront.XZ(), j, modules);
-            room.Generate(moduleGrid);
-        }
-    }
-}
-
-public class Room : Area
-{
-    Vector2Int leftFront;
-    Vector2Int rightBack;
-    int height;
-
-    public Room(Vector2Int leftFront, Vector2Int rightBack, int height, Modules modules) : base(modules)
-    {
-        this.leftFront = leftFront;
-        this.rightBack = rightBack;
-        this.height = height;
-    }
-
-    public override bool ContainsCoords(Vector3Int coords)
-    {
-        return coords.XZ().InRect(leftFront, rightBack);
-    }
-
-    public override void Generate(ModuleGrid moduleGrid)
-    {
-        for (int i = leftFront.x; i < rightBack.x; i++)
-        {
-            for (int k = leftFront.y; k < rightBack.y; k++)
-            {
-                var coords = new Vector3Int(i, height, k);
-                if (!moduleGrid.IsEmpty(moduleGrid[coords]))
-                {
-                    continue;
-                }
-
-                var module = modules.RoomModule();
-                moduleGrid[coords] = module;
-                module.AddProperty(new AreaModuleProperty(this));
-            }
-        }
-        var stairsPos = ExtensionMethods.RandomVector2Int(leftFront, rightBack);
-        var stairsCoords = new Vector3Int(stairsPos.x, height, stairsPos.y);
-        GameObject.DestroyImmediate(moduleGrid[stairsCoords].gameObject);
-
-        var stModule = modules.StairsModule();
-        moduleGrid[stairsCoords] = stModule;
-        stModule.AddProperty(new AreaModuleProperty(this));
-    }
-}
-
 public class ModuleGrid : IEnumerable<Module>
 {
     Transform parent;
@@ -302,6 +217,13 @@ public class ModuleGrid : IEnumerable<Module>
     {
         if (ValidCoords(coords))
         {
+            var originalModule = this[coords];
+            if (originalModule != null)
+            {
+                originalModule.OnDestroyed();
+                GameObject.DestroyImmediate(originalModule.gameObject);
+            }
+
             module.transform.SetParent(parent);
             module.transform.position = Vector3.Scale(coords, extents);
             module.Init(coords);

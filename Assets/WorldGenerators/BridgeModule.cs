@@ -9,14 +9,14 @@ public class BridgeModule : Module
 
     public override void AfterGenerated(ModuleGrid grid)
     {
-        foreach(var neighbor in HorizontalNeighbors(grid))
+        foreach (var neighbor in HorizontalNeighbors(grid))
         {
-            if(neighbor is BridgeModule)
+            if (neighbor is BridgeModule)
             {
                 var dir = DirectionTo(neighbor);
                 var angle = Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg;
                 bridge.transform.rotation = Quaternion.Euler(0f, angle, 0f);
             }
-        } 
+        }
     }
 }

@@ -19,6 +19,15 @@ public class Module : MonoBehaviour
     public void AddProperty<PropertyT>(PropertyT property) where PropertyT : IModuleProperty
     {
         properties.Add(property);
+        property.OnAdded(this);
+    }
+
+    public void OnDestroyed()
+    {
+        foreach(var property in properties)
+        {
+            property.OnModuleDestroyed(this);
+        }
     }
 
     public void Init(Vector3Int coords)
@@ -99,6 +108,8 @@ interface IModuleGeometry : IModuleProperty
 
 public interface IModuleProperty
 {
+    void OnAdded(Module module);
+    void OnModuleDestroyed(Module module);
 
 }
 
@@ -109,5 +120,15 @@ public class AreaModuleProperty : IModuleProperty
     public AreaModuleProperty(Area area)
     {
         Area = area;
+    }
+
+    public void OnAdded(Module module)
+    {
+        Area.AddModule(module);
+    }
+
+    public void OnModuleDestroyed(Module module)
+    {
+        Area.RemoveModule(module);
     }
 }
