@@ -41,3 +41,36 @@ public struct Box3Int : IEnumerable<Vector3Int>
         return GetEnumerator();
     }
 }
+
+public struct Box2Int : IEnumerable<Vector2Int>
+{
+    public Vector2Int leftBottom;
+    public Vector2Int rightTop;
+
+    public Box2Int(Vector2Int leftBottom, Vector2Int rightTop)
+    {
+        this.leftBottom = leftBottom;
+        this.rightTop = rightTop;
+    }
+
+    public Box2Int Padding(Vector2Int border)
+    {
+        return new Box2Int(leftBottom + border, rightTop - border);
+    }
+
+    public IEnumerator<Vector2Int> GetEnumerator()
+    {
+        for (int x = leftBottom.x; x < rightTop.x; x++)
+        {
+            for (int y = leftBottom.y; y < rightTop.y; y++)
+            {
+                yield return new Vector2Int(x, y);
+            }
+        }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+}

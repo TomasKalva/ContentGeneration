@@ -66,6 +66,11 @@ public class ModuleGrid : IEnumerable<Module>
         //InitGrid();
     }
 
+    public Box2Int Bottom()
+    {
+        return new Box2Int(Vector2Int.zero, sizes.XZ());
+    }
+
     /*public void InitGrid(Module empty)
     {
         for (int i = 0; i < Width; i++)

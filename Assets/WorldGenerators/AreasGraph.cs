@@ -48,13 +48,24 @@ public struct AreasConnection : Edge<Area>
     }
 }
 
+public delegate bool EdgeRelation<VertexT>(VertexT u, VertexT v) where VertexT : class;
 
-public interface Vertex
+public class ImplicitGraph<VertexT, EdgeT> : IGraph<VertexT, EdgeT> where VertexT : class where EdgeT : Edge<VertexT>
 {
+    EdgeRelation<VertexT> edgeRel;
 
+    public ImplicitGraph(EdgeRelation<VertexT> edgeRel)
+    {
+        this.edgeRel = edgeRel;
+    }
+
+    public bool AreConnected(VertexT from, VertexT to)
+    {
+        return edgeRel(from, to);
+    }
 }
 
-public interface Edge<VertexT> where VertexT : Vertex
+public interface Edge<VertexT>
 {
     public VertexT From { get; }
     public VertexT To { get; }
@@ -62,9 +73,10 @@ public interface Edge<VertexT> where VertexT : Vertex
     bool Connects(Area from, Area to);
 }
 
-public interface IGraph<VertexT, EdgeT> where VertexT : Vertex where EdgeT : Edge<VertexT>
+public interface IGraph<VertexT, EdgeT> where VertexT : class where EdgeT : Edge<VertexT>
 {
     /*public IEnumerable<VertexT> Vertices { get; }
     public IEnumerable<EdgeT> Edges { get; }*/
-    bool AreConnected(Area from, Area to);
+    bool AreConnected(VertexT from, VertexT to);
+
 }

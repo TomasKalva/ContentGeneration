@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public abstract class Area : Vertex
+public abstract class Area
 {
     protected Modules moduleLibrary;
 
