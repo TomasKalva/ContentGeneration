@@ -132,3 +132,4 @@ public class AreaModuleProperty : IModuleProperty
         Area.RemoveModule(module);
     }
 }
+

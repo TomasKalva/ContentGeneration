@@ -52,9 +52,12 @@ public class GridWorldGenerator : WorldGenerator
 
     void InitGrid()
     {
-        var openArea = new OpenArea(new Box3Int(Vector3Int.zero, sizes), modules);
+        var openArea = new Outdoor(new Box3Int(Vector3Int.zero, sizes), modules);
         openArea.Generate(moduleGrid);
-        openArea.Name = "Outside";
+        foreach(var module in moduleGrid)
+        {
+            module.GetProperty<AreaModuleProperty>().Area.Name = "Outside";
+        }
     }
 
     void AddBuildings(int n)
@@ -78,7 +81,7 @@ public class GridWorldGenerator : WorldGenerator
         GetExtents(moduleGrid.Depth, 4, out var minZ, out var maxZ);
         int minY = 0;
         int maxY = UnityEngine.Random.Range(1, 5);
-        var building = new BuildingArea(new Vector3Int(minX, minY, minZ), new Vector3Int(maxX, maxY, maxZ), modules);
+        var building = new Building(new Vector3Int(minX, minY, minZ), new Vector3Int(maxX, maxY, maxZ), modules);
         building.Generate(moduleGrid);
     }
 
@@ -142,57 +145,9 @@ public class GridWorldGenerator : WorldGenerator
     bool AddBridge()
     {
         var startModule = SatisfyingModule(module => module.empty && HasHorizontalNeighbor(module));
-        var bridge = new BridgeArea(startModule, modules);
+        var bridge = new Bridge(startModule, modules);
         return bridge.Generate(moduleGrid);
-        /*
-        var startModule = SatisfyingModule(module => IsEmpty(module) && HasHorizontalNeighbor(module));
-        if(startModule == null)
-        {
-            return false;
-        }
-
-        int dist = 0;
-        var coords = startModule.coords;
-        var possibleDirections = ExtensionMethods.HorizontalDirections()
-            .Where(
-            dir =>
-            {
-                var neighborModule = moduleGrid[coords - dir];
-                return neighborModule != null && !neighborModule.empty;
-            }).Shuffle();
-        foreach (var direction in possibleDirections)
-        {
-            var module = moduleGrid[coords];
-            while (module != null && IsEmpty(module))
-            {
-                coords += direction;
-                dist += 1;
-                module = moduleGrid[coords];
-            }
-            if(module == null)
-            {
-                return false;
-            }
-
-            if (dist <= 1)
-            {
-                // no bridge would be placed
-                continue;
-            }
-            else
-            {
-                for (int i = 0; i < dist; i++)
-                {
-                    var bridgeCoords = startModule.coords + i * direction;
-                    var newBridge = modules.BridgeModule();
-                    moduleGrid[bridgeCoords] = newBridge;
-                }
-                return true;
-            }
-        }*/
     }
-
-
 
     public void DestroyAllChildren()
     {
