@@ -222,6 +222,15 @@ MonoBehaviour:
   coords: {x: 0, y: 0, z: 0}
   empty: 0
   attachmentPoints: []
+  directionBlockers:
+  - direction: {x: 0, y: 0, z: 1}
+    obj: {fileID: 6313876513409423041}
+  - direction: {x: 1, y: 0, z: 0}
+    obj: {fileID: 4669990382690995774}
+  - direction: {x: 0, y: 0, z: -1}
+    obj: {fileID: 7418757507928660298}
+  - direction: {x: -1, y: 0, z: 0}
+    obj: {fileID: 5753171901114638999}
 --- !u!1 &4631351188921139273
 GameObject:
   m_ObjectHideFlags: 0

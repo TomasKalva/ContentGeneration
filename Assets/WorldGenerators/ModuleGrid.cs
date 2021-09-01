@@ -71,23 +71,6 @@ public class ModuleGrid : IEnumerable<Module>
         return new Box2Int(Vector2Int.zero, sizes.XZ());
     }
 
-    /*public void InitGrid(Module empty)
-    {
-        for (int i = 0; i < Width; i++)
-        {
-            for (int j = 0; j < Height; j++)
-            {
-                for (int k = 0; k < Depth; k++)
-                {
-                    var module = GameObject.Instantiate(empty);
-                    SetModule(new Vector3Int(i, j, k), module);
-                    module.transform.SetParent(parent);
-                    module.transform.position = Vector3.Scale(new Vector3(i, j, k), extents);
-                }
-            }
-        }
-    }*/
-
     public bool ContainsBuilding(Module module)
     {
         return module != null && !module.empty;

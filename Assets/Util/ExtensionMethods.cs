@@ -124,6 +124,11 @@ static class ExtensionMethods
         return new Vector3Int(f(v.x), f(v.y), f(v.z));
     }
 
+    public static int Sum(this Vector3Int v, Func<int, int> f)
+    {
+        return f(v.x) + f(v.y) + f(v.z);
+    }
+
     public static Vector3 ComponentWise(this Vector3 v, Func<float, float> f)
     {
         return new Vector3(f(v.x), f(v.y), f(v.z));

@@ -11,20 +11,22 @@ public class RoomModule : Module
 
     public override void AfterGenerated(ModuleGrid grid, AreasGraph areasGraph)
     {
-        var area = GetProperty<AreaModuleProperty>().Area;
+        /*var area = GetProperty<AreaModuleProperty>().Area;
         foreach(var dirObj in walls)
         {
             var otherModule = grid[coords + dirObj.direction];
+            if (otherModule == null)
+            {
+                continue;
+            }
+
+            // Connect to the same area
             if (area.ContainsModule(otherModule)) 
             {
                 GameObject.DestroyImmediate(dirObj.obj);
             }
 
-            if(otherModule == null)
-            {
-                continue;
-            }
-
+            // Don't connect to outside
             var otherArea = otherModule.GetProperty<AreaModuleProperty>().Area;
             if(otherArea.Name == "Outside")
             {
@@ -41,7 +43,7 @@ public class RoomModule : Module
                     areasGraph.Connect(myArea, otherArea);
                 }
             }
-        }
+        }*/
     }
 
     public override bool ReachableFrom(Vector3Int dir)
@@ -55,5 +57,5 @@ public class DirectionObject
 {
     public Vector3Int direction;
 
-    public GameObject obj;
+    public AttachmentPoint obj;
 }

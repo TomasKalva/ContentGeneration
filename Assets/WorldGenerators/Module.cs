@@ -14,6 +14,9 @@ public class Module : MonoBehaviour
     [SerializeField]
     AttachmentPoint[] attachmentPoints;
 
+    [SerializeField]
+    public DirectionObject[] directionBlockers;
+
     public PropertyT GetProperty<PropertyT>() where PropertyT : class
     {
         return properties.FirstOrDefault(prop => prop.GetType() == typeof(PropertyT)) as PropertyT;
@@ -67,6 +70,15 @@ public class Module : MonoBehaviour
         return ExtensionMethods.HorizontalDirections().Select(dir => grid[coords + dir]).Where(m => m != null);
     }
 
+    public void SetDirection(Vector3Int direction, ObjectType objectType)
+    {
+        var dirObj = directionBlockers.FirstOrDefault(dirObj => dirObj.direction == direction);
+        if (dirObj != null)
+        {
+            dirObj.obj.objectType = objectType;
+        }
+    }
+
     public virtual bool ReachableFrom(Vector3Int dir)
     {
         return true;
@@ -82,7 +94,8 @@ public enum ObjectType
     Ceiling,
     Bridge,
     Roof,
-    Stairs
+    Stairs,
+    Empty
 }
 
 

@@ -47,7 +47,15 @@ public class GridWorldGenerator : WorldGenerator
 
         AddRooftops();
 
-        foreach(var module in moduleGrid)
+
+        foreach (var module in moduleGrid)
+        {
+            var designer = module.GetProperty<AreaModuleProperty>().Area.Designer;
+            designer.Design(moduleGrid, areasGraph, module);
+        }
+
+
+        foreach (var module in moduleGrid)
         {
             module.AfterGenerated(moduleGrid, areasGraph);
         }

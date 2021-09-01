@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 3127833952034774385}
   - component: {fileID: 6392849968180502147}
   m_Layer: 0
-  m_Name: Pillars
+  m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -59,8 +59,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2857856918977048563}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 4, z: 0}
-  m_LocalScale: {x: 601.088, y: 100.907135, z: 14.29138}
+  m_LocalPosition: {x: 0, y: 4, z: -1}
+  m_LocalScale: {x: 596.079, y: 99.645805, z: 13.862638}
   m_Children: []
   m_Father: {fileID: 185689004492645392}
   m_RootOrder: 0
@@ -140,4 +140,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de35d4173aea75244b53998dc1410b62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  newSize: {x: 12, y: 8, z: 1}
+  newSize: {x: 11.9, y: 7.9, z: 0.97}
