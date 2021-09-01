@@ -11,6 +11,9 @@ public class Module : MonoBehaviour
 
     List<IModuleProperty> properties;
 
+    [SerializeField]
+    AttachmentPoint[] attachmentPoints;
+
     public PropertyT GetProperty<PropertyT>() where PropertyT : class
     {
         return properties.FirstOrDefault(prop => prop.GetType() == typeof(PropertyT)) as PropertyT;

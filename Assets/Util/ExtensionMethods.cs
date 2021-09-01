@@ -124,6 +124,21 @@ static class ExtensionMethods
         return new Vector3Int(f(v.x), f(v.y), f(v.z));
     }
 
+    public static Vector3 ComponentWise(this Vector3 v, Func<float, float> f)
+    {
+        return new Vector3(f(v.x), f(v.y), f(v.z));
+    }
+
+    public static Vector3 ComponentWise(this Vector3 u, Vector3 v, Func<float, float, float> f)
+    {
+        return new Vector3(f(u.x, v.x), f(u.y, v.y), f(u.z, v.z));
+    }
+
+    public static bool Any(this Vector3 v, Func<float, bool> p)
+    {
+        return p(v.x) || p(v.y) || p(v.z);
+    }
+
     public static int PlusMinusOne()
     {
         return UnityEngine.Random.Range(0, 2) == 0 ? 1 : -1;
