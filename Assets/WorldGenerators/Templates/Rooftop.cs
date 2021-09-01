@@ -61,7 +61,7 @@ public class Rooftop : Template
 
     public override bool Generate(ModuleGrid moduleGrid)
     {
-        var rooftopArea = new Area(styles.gothic);
+        var rooftopArea = new Area(new Designer(), styles.gothic);
         foreach (var module in modules)
         {
             var areaProp = module.GetProperty<AreaModuleProperty>();

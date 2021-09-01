@@ -20,6 +20,12 @@ public class AttachmentPoint: MonoBehaviour
         obj.SetPositionAndRotation(transform.position, transform.rotation);
     }
 
+    public void RotateTowards(Vector3Int direction)
+    {
+        var angle = Mathf.Atan2(direction.z, direction.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, angle, 0f);
+    }
+
     void OnDrawGizmos()
     {
         // Draw a yellow plane at the transform's position

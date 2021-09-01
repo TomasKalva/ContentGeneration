@@ -15,7 +15,9 @@ public class Module : MonoBehaviour
     AttachmentPoint[] attachmentPoints;
 
     [SerializeField]
-    public DirectionObject[] directionBlockers;
+    public DirectionObject[] directionObjects;
+
+    public IEnumerable<DirectionObject> HorizontalDirectionObjects() => directionObjects.Where(dirObj => dirObj.direction.y == 0);
 
     public PropertyT GetProperty<PropertyT>() where PropertyT : class
     {
@@ -72,11 +74,39 @@ public class Module : MonoBehaviour
 
     public void SetDirection(Vector3Int direction, ObjectType objectType)
     {
-        var dirObj = directionBlockers.FirstOrDefault(dirObj => dirObj.direction == direction);
+        var dirObj = directionObjects.FirstOrDefault(dirObj => dirObj.direction == direction);
         if (dirObj != null)
         {
             dirObj.obj.objectType = objectType;
         }
+    }
+
+    public AttachmentPoint GetAttachmentPoint(Vector3Int direction)
+    {
+        var dirObj = directionObjects.FirstOrDefault(dirObj => dirObj.direction == direction);
+        if (dirObj != null)
+        {
+            return dirObj.obj;
+        }
+        return null;
+    }
+
+    public void ClearAttachmentPoints()
+    {
+        foreach(var att in attachmentPoints)
+        {
+            att.objectType = ObjectType.Empty;
+        }
+    }
+
+    public void SetObject(ObjectType objectType)
+    {
+        SetDirection(Vector3Int.up, objectType);
+    }
+
+    public AttachmentPoint GetObject()
+    {
+        return GetAttachmentPoint(Vector3Int.up);
     }
 
     public virtual bool ReachableFrom(Vector3Int dir)

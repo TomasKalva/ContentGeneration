@@ -47,11 +47,11 @@ public class Area
 
     public Designer Designer { get; }
 
-    public Area(Style style)
+    public Area(Designer designer, Style style)
     {
         modules = new List<Module>();
         Style = style;
-        Designer = new Designer();
+        Designer = designer;
     }
 
     public void AddModule(Module module)
@@ -91,53 +91,5 @@ public struct AreasConnection : Edge<Area>
     public Area Other(Area vert)
     {
         return vert == From ? To : From;
-    }
-}
-
-public class Designer
-{
-    public void Design(ModuleGrid grid, AreasGraph areasGraph, Module module)
-    {
-        var area = module.GetProperty<AreaModuleProperty>().Area;
-        foreach (var dirObj in module.directionBlockers)
-        {
-            var direction = dirObj.direction;
-            var otherModule = grid[module.coords + direction];
-            if (otherModule == null)
-            {
-                continue;
-            }
-
-            // Connect to the same area
-            if (area.ContainsModule(otherModule))
-            {
-                module.SetDirection(direction, ObjectType.Empty);
-            }
-
-            // Don't connect to outside
-            var otherArea = otherModule.GetProperty<AreaModuleProperty>().Area;
-            if (otherArea.Name == "Outside")
-            {
-                module.SetDirection(direction, GetObjectType(module));
-                continue;
-            }
-
-            // Try to connect the areas if possible
-            var myArea = module.GetProperty<AreaModuleProperty>().Area;
-            if (!areasGraph.AreConnected(myArea, otherArea))
-            {
-                if (otherModule.ReachableFrom(direction))
-                {
-                    module.SetDirection(direction, ObjectType.Empty);
-                    module.SetDirection(-direction, ObjectType.Empty);
-                    areasGraph.Connect(myArea, otherArea);
-                }
-            }
-        }
-    }
-
-    public ObjectType GetObjectType(Module module)
-    {
-        return module.coords.Sum(t => t) % 2 == 0 ? ObjectType.Wall : ObjectType.Window;
     }
 }

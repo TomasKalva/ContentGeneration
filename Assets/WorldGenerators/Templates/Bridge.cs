@@ -52,12 +52,14 @@ public class Bridge : Template
             }
             else
             {
-                var underBridgeArea = new Area(styles.gothic);
+                var underBridgeArea = new Area(new BridgeDesigner(), styles.gothic);
                 for (int i = 0; i < dist; i++)
                 {
                     var bridgeCoords = startModule.coords + i * direction;
-                    var newBridge = moduleLibrary.BridgeModule();
+                    var newBridge = moduleLibrary.RoomModule();
                     moduleGrid[bridgeCoords] = newBridge;
+                    newBridge.ClearAttachmentPoints();
+                    newBridge.SetObject(ObjectType.Bridge);
                     newBridge.AddProperty(new AreaModuleProperty(underBridgeArea));
                 }
                 return true;
