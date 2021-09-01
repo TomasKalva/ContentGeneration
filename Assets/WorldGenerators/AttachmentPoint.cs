@@ -4,17 +4,28 @@ using UnityEngine;
 
 public class AttachmentPoint: MonoBehaviour
 {
-    public ObjectType ObjectType { get; }
+    public ObjectType objectType;
 
-    public Transform Obj { get; private set; }
+    Transform obj;
 
     public AttachmentPoint(ObjectType objectType)
     {
-        ObjectType = objectType;
+        this.objectType = objectType;
     }
 
     public void SetObject(Style style)
     {
-        Obj = style.GetObject(ObjectType);
+        obj = style.GetObject(objectType);
+        obj.SetParent(transform);
+        obj.SetPositionAndRotation(transform.position, transform.rotation);
+    }
+
+    void OnDrawGizmos()
+    {
+        // Draw a yellow plane at the transform's position
+        Gizmos.color = Color.yellow;
+        Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
+        Gizmos.DrawSphere(Vector3.zero, 0.5f);
+        Gizmos.DrawRay(Vector3.zero, Vector3.forward);
     }
 }

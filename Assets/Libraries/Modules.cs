@@ -20,7 +20,7 @@ public class Modules : ScriptableObject
     }
 
     [SerializeField]
-    RoomModule room;
+    Module room;
 
     [SerializeField]
     Module bridge;
@@ -31,7 +31,7 @@ public class Modules : ScriptableObject
     [SerializeField]
     Module empty;
 
-    public RoomModule RoomModule()
+    public Module RoomModule()
     {
         return Instantiate(room);
     }

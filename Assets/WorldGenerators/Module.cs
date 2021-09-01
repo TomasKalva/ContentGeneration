@@ -37,6 +37,8 @@ public class Module : MonoBehaviour
     {
         this.coords = coords;
 
+        attachmentPoints = GetComponentsInChildren<AttachmentPoint>();
+
         properties = new List<IModuleProperty>();
 
         var boundingBox = transform.Cast<Transform>().FirstOrDefault(child => child.tag == "BuildingBoundingBox");
@@ -48,7 +50,11 @@ public class Module : MonoBehaviour
 
     public virtual void AfterGenerated(ModuleGrid grid, AreasGraph areasGraph)
     {
-
+        var style = GetProperty<AreaModuleProperty>().Area.Style;
+        foreach(var ap in attachmentPoints)
+        {
+            ap.SetObject(style);
+        }
     }
 
     public Vector3Int DirectionTo(Module module)

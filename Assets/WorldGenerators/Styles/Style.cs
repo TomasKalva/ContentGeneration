@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -20,10 +21,15 @@ public class Style : ScriptableObject
     }
 
     [SerializeField]
-    Transform wall;
+    Transform notExistingObj;
+
+    [SerializeField]
+    ObjectStyle[] objectStyles;
 
     public Transform GetObject(ObjectType objectType)
     {
-        return wall;
+        var objStyle = objectStyles.Where(objSt => objSt.objectType == objectType).FirstOrDefault();
+        var obj = objStyle != null ? objStyle.obj : notExistingObj;
+        return Instantiate(obj);
     }
 }

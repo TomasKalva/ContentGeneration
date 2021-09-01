@@ -47,6 +47,7 @@ public class Area
     public Area(Style style)
     {
         modules = new List<Module>();
+        Style = style;
     }
 
     public void AddModule(Module module)

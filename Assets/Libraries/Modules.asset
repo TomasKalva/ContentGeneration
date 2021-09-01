@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78f4265644918554bbd907cf44312c3f, type: 3}
   m_Name: Modules
   m_EditorClassIdentifier: 
-  room: {fileID: 473193601849692865, guid: 55e55c4cfa4aaa947b7d40f82fd85390, type: 3}
+  room: {fileID: 6265889178920079610, guid: af87f3b96788703449aaf8b24e395ce6, type: 3}
   bridge: {fileID: 3675731233223513715, guid: 0dbd75e85d1ede142bcc0f68c0c04790, type: 3}
   stairs: {fileID: 5796255011759090801, guid: 4bc5dd2127a59b14f92c4408956aa04b, type: 3}
   empty: {fileID: 8594859122993566304, guid: bd7da799e6f6955498a2d5333059ca3e, type: 3}
