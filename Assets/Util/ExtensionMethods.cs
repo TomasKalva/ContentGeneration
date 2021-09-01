@@ -42,6 +42,17 @@ static class ExtensionMethods
         b = a + size;
     }
 
+    public static Box2Int RandomBox(Box2Int boundingBox)
+    {
+        var M = boundingBox.rightTop - boundingBox.leftBottom;
+        var m = M / 2;
+        GetRandomExtents(M.x, m.x, out var x, out var X);
+        GetRandomExtents(M.y, m.y, out var y, out var Y);
+
+        var b = boundingBox.leftBottom;
+        return new Box2Int(b + new Vector2Int(x, y), b + new Vector2Int(X, Y));
+    }
+
     public static Box3Int RandomBox(Box3Int boundingBox)
     {
         var M = boundingBox.rightTopFront - boundingBox.leftBottomBack;
@@ -54,7 +65,6 @@ static class ExtensionMethods
         var b = boundingBox.rightTopFront;
         return new Box3Int(b + new Vector3Int(x, y, z), b + new Vector3Int(X, Y, Z));
     }
-
 
     public static T ArgMax<T>(this IEnumerable<T> enumerable, Func<T, float> f)
     {
@@ -122,6 +132,16 @@ static class ExtensionMethods
     public static Vector3Int ComponentWise(this Vector3Int v, Func<int, int> f)
     {
         return new Vector3Int(f(v.x), f(v.y), f(v.z));
+    }
+
+    public static Vector3Int ComponentWise(this Vector3Int u, Vector3Int v, Func<int, int, int> f)
+    {
+        return new Vector3Int(f(u.x, v.x), f(u.y, v.y), f(u.z, v.z));
+    }
+
+    public static Vector2Int ComponentWise(this Vector2Int u, Vector2Int v, Func<int, int, int> f)
+    {
+        return new Vector2Int(f(u.x, v.x), f(u.y, v.y));
     }
 
     public static int Sum(this Vector3Int v, Func<int, int> f)

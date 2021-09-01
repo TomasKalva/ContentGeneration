@@ -22,6 +22,8 @@ public class ModuleGrid : IEnumerable<Module>
 
     public bool ValidCoords(Vector3Int coords) => coords.AtLeast(Vector3Int.zero) && coords.Less(sizes);
 
+    public Vector3Int Sizes => sizes;
+
     public Module this[int x, int y, int z]
     {
         get => GetModule(new Vector3Int(x, y, z));
@@ -63,7 +65,6 @@ public class ModuleGrid : IEnumerable<Module>
         this.sizes = sizes;
         this.extents = extents;
         this.parent = parent;
-        //InitGrid();
     }
 
     public Box2Int Bottom()

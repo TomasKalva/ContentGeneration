@@ -26,3 +26,5 @@ MonoBehaviour:
     obj: {fileID: 5347436116398180564, guid: c5983a5d8a5fc03468a3bdac4b9fa456, type: 3}
   - objectType: 7
     obj: {fileID: 4793483817539790073, guid: cda49d1484f99a3459e78f9db4ceaafb, type: 3}
+  - objectType: 6
+    obj: {fileID: 4945558105232219472, guid: 884d34b31d210a0419390ef343e7973d, type: 3}

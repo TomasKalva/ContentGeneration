@@ -40,6 +40,8 @@ public struct Box3Int : IEnumerable<Vector3Int>
     {
         return GetEnumerator();
     }
+
+    public Box2Int FlattenY() => new Box2Int(leftBottomBack.XZ(), rightTopFront.XZ());
 }
 
 public struct Box2Int : IEnumerable<Vector2Int>
@@ -72,5 +74,25 @@ public struct Box2Int : IEnumerable<Vector2Int>
     IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();
+    }
+
+    public Vector2Int Extents()
+    {
+        return rightTop - leftBottom;
+    }
+
+    public IEnumerable<Box2Int> GetSubboxes(Vector2Int subboxExtents)
+    {
+        Vector2Int boxesCount = Extents().ComponentWise(subboxExtents, (a, b) => a / b);
+        foreach(var boxIndex in new Box2Int(Vector2Int.zero, boxesCount))
+        {
+            var pos = boxIndex.ComponentWise(subboxExtents, (a, b) => a * b);
+            yield return new Box2Int(pos, pos + subboxExtents);
+        }
+    }
+
+    public Box3Int InflateY(int y, int Y)
+    {
+        return new Box3Int(new Vector3Int(leftBottom.x, y, leftBottom.y), new Vector3Int(rightTop.x, Y, rightTop.y));
     }
 }

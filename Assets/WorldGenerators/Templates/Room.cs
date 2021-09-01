@@ -18,6 +18,13 @@ public class Room : Template
         this.height = height;
     }
 
+    public Room(Box2Int box, int height, Modules moduleLibrary, Styles styles) : base(moduleLibrary, styles)
+    {
+        this.leftFront = box.leftBottom;
+        this.rightBack = box.rightTop;
+        this.height = height;
+    }
+
     public override bool Generate(ModuleGrid moduleGrid)
     {
         var roomArea = new Area(new RoomDesigner(), styles.gothic);

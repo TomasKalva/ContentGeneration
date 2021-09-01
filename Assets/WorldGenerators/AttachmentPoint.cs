@@ -22,7 +22,7 @@ public class AttachmentPoint: MonoBehaviour
 
     public void RotateTowards(Vector3Int direction)
     {
-        var angle = Mathf.Atan2(direction.z, direction.x) * Mathf.Rad2Deg;
+        var angle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, angle, 0f);
     }
 
