@@ -64,6 +64,19 @@ public class Module : MonoBehaviour
     }
 }
 
+public enum ObjectType
+{
+    Wall,
+    Fence,
+    Window,
+    Door,
+    Ceiling,
+    Bridge,
+    Roof,
+    Stairs
+}
+
+
 public struct GridDirection
 {
     Vector3Int _direction;

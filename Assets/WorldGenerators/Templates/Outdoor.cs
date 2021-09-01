@@ -8,14 +8,14 @@ public class Outdoor : Template
 {
     Box3Int box;
 
-    public Outdoor(Box3Int box, Modules moduleLibrary) : base(moduleLibrary)
+    public Outdoor(Box3Int box, Modules moduleLibrary, Styles styles) : base(moduleLibrary, styles)
     {
         this.box = box;
     }
 
     public override bool Generate(ModuleGrid moduleGrid)
     {
-        var outdoorArea = new Area();
+        var outdoorArea = new Area(styles.gothic);
         foreach (var coords in box)
         {
             var emptyModule = moduleLibrary.EmptyModule();

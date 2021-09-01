@@ -10,9 +10,12 @@ public abstract class Template
 {
     protected Modules moduleLibrary;
 
-    protected Template(Modules moduleLibrary)
+    protected Styles styles;
+
+    protected Template(Modules moduleLibrary, Styles styles)
     {
         this.moduleLibrary = moduleLibrary;
+        this.styles = styles;
     }
 
     public abstract bool Generate(ModuleGrid moduleGrid);

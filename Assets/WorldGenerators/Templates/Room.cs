@@ -11,7 +11,7 @@ public class Room : Template
     Vector2Int rightBack;
     int height;
 
-    public Room(Vector2Int leftFront, Vector2Int rightBack, int height, Modules moduleLibrary) : base(moduleLibrary)
+    public Room(Vector2Int leftFront, Vector2Int rightBack, int height, Modules moduleLibrary, Styles styles) : base(moduleLibrary, styles)
     {
         this.leftFront = leftFront;
         this.rightBack = rightBack;
@@ -20,7 +20,7 @@ public class Room : Template
 
     public override bool Generate(ModuleGrid moduleGrid)
     {
-        var roomArea = new Area();
+        var roomArea = new Area(styles.gothic);
         for (int i = leftFront.x; i < rightBack.x; i++)
         {
             for (int k = leftFront.y; k < rightBack.y; k++)

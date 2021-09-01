@@ -42,7 +42,9 @@ public class Area
 
     List<Module> modules;
 
-    public Area()
+    public Style Style { get; }
+
+    public Area(Style style)
     {
         modules = new List<Module>();
     }

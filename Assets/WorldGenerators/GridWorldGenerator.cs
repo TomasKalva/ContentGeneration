@@ -13,6 +13,9 @@ public class GridWorldGenerator : WorldGenerator
     Modules modules;
 
     [SerializeField]
+    Styles styles;
+
+    [SerializeField]
     Transform parent;
 
     [SerializeField]
@@ -52,7 +55,7 @@ public class GridWorldGenerator : WorldGenerator
 
     void InitGrid()
     {
-        var openArea = new Outdoor(new Box3Int(Vector3Int.zero, sizes), modules);
+        var openArea = new Outdoor(new Box3Int(Vector3Int.zero, sizes), modules, styles);
         openArea.Generate(moduleGrid);
         foreach(var module in moduleGrid)
         {
@@ -81,7 +84,7 @@ public class GridWorldGenerator : WorldGenerator
         GetExtents(moduleGrid.Depth, 4, out var minZ, out var maxZ);
         int minY = 0;
         int maxY = UnityEngine.Random.Range(1, 5);
-        var building = new Building(new Vector3Int(minX, minY, minZ), new Vector3Int(maxX, maxY, maxZ), modules);
+        var building = new Building(new Vector3Int(minX, minY, minZ), new Vector3Int(maxX, maxY, maxZ), modules, styles);
         building.Generate(moduleGrid);
     }
 
@@ -95,7 +98,7 @@ public class GridWorldGenerator : WorldGenerator
 
     void AddRooftops()
     {
-        var rooftops = new Rooftops(modules);
+        var rooftops = new Rooftops(modules, styles);
         rooftops.Generate(moduleGrid);
     }
 
@@ -145,7 +148,7 @@ public class GridWorldGenerator : WorldGenerator
     bool AddBridge()
     {
         var startModule = SatisfyingModule(module => module.empty && HasHorizontalNeighbor(module));
-        var bridge = new Bridge(startModule, modules);
+        var bridge = new Bridge(startModule, modules, styles);
         return bridge.Generate(moduleGrid);
     }
 

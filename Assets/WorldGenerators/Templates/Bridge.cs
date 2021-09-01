@@ -9,7 +9,7 @@ public class Bridge : Template
 {
     Module startModule;
 
-    public Bridge(Module startModule, Modules moduleLibrary) : base(moduleLibrary)
+    public Bridge(Module startModule, Modules moduleLibrary, Styles styles) : base(moduleLibrary, styles)
     {
         this.startModule = startModule;
     }
@@ -52,7 +52,7 @@ public class Bridge : Template
             }
             else
             {
-                var underBridgeArea = new Area();
+                var underBridgeArea = new Area(styles.gothic);
                 for (int i = 0; i < dist; i++)
                 {
                     var bridgeCoords = startModule.coords + i * direction;

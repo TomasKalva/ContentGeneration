@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class Rooftops : Template
 {
-    public Rooftops(Modules moduleLibrary) : base(moduleLibrary)
+    public Rooftops(Modules moduleLibrary, Styles styles) : base(moduleLibrary, styles)
     {
     }
 
@@ -20,7 +20,7 @@ public class Rooftops : Template
         var roofComponents = heightGraphAlg.ConnectedComponentsSymm(moduleGrid.Where(module => IsRoof(moduleGrid, module)));
         foreach(var component in roofComponents)
         {
-            var area = new Rooftop(component, moduleLibrary);
+            var area = new Rooftop(component, moduleLibrary, styles);
             area.Generate(moduleGrid);
         }
 
@@ -54,14 +54,14 @@ public class Rooftop : Template
 {
     List<Module> modules;
 
-    public Rooftop(IEnumerable<Module> modules, Modules moduleLibrary) : base(moduleLibrary)
+    public Rooftop(IEnumerable<Module> modules, Modules moduleLibrary, Styles styles) : base(moduleLibrary, styles)
     {
         this.modules = modules.ToList();
     }
 
     public override bool Generate(ModuleGrid moduleGrid)
     {
-        var rooftopArea = new Area();
+        var rooftopArea = new Area(styles.gothic);
         foreach (var module in modules)
         {
             var areaProp = module.GetProperty<AreaModuleProperty>();
