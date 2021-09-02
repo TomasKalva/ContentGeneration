@@ -44,7 +44,7 @@ public class RoomDesigner : Designer
             {
                 if (otherModule.ReachableFrom(direction))
                 {
-                    module.SetDirection(direction, ObjectType.Empty);
+                    module.SetDirection(direction, ObjectType.Door);
                     module.SetDirection(-direction, ObjectType.Empty);
                     areasGraph.Connect(myArea, otherArea);
                 }

@@ -19,7 +19,7 @@ MonoBehaviour:
   - objectType: 4
     obj: {fileID: 4684077202782396183, guid: ee3c1026f06c8e24f9687a7bb02fcaf2, type: 3}
   - objectType: 2
-    obj: {fileID: 1009974161336733098, guid: 0d1b54136eccd924ea5abfac1ffbdae8, type: 3}
+    obj: {fileID: 1941029193071969265, guid: 15f5d7c28baae3e4e85b037e414c48ea, type: 3}
   - objectType: 5
     obj: {fileID: 239481118084994385, guid: 200d75dcd8d0b104e9df91fe5f3e4605, type: 3}
   - objectType: 8
@@ -28,3 +28,5 @@ MonoBehaviour:
     obj: {fileID: 4793483817539790073, guid: cda49d1484f99a3459e78f9db4ceaafb, type: 3}
   - objectType: 6
     obj: {fileID: 4945558105232219472, guid: 884d34b31d210a0419390ef343e7973d, type: 3}
+  - objectType: 3
+    obj: {fileID: 6810099170241836715, guid: 178e085dd15eebc41871edef13d0e9c7, type: 3}

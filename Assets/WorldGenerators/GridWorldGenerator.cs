@@ -43,9 +43,9 @@ public class GridWorldGenerator : WorldGenerator
 
         AddBuildings(buildingsCount);
 
-        /*AddBridges(bridgesCount);
+        AddBridges(bridgesCount);
 
-        AddRooftops();*/
+        AddRooftops();
 
 
         foreach (var module in moduleGrid)
@@ -73,15 +73,15 @@ public class GridWorldGenerator : WorldGenerator
 
     void AddBuildings(int n)
     {
-        var town = new UniformTown(new Box3Int(Vector3Int.zero, moduleGrid.Sizes).FlattenY(), new Vector2Int(5, 5), modules, styles);
+        /*var town = new UniformTown(new Box3Int(Vector3Int.zero, moduleGrid.Sizes).FlattenY(), new Vector2Int(5, 5), modules, styles);
         town.Generate(moduleGrid);
-
+        */
         /*var modernBuilding = new ModernBuilding(new Box3Int(Vector3Int.zero, 5 * Vector3Int.one), modules, styles);
         modernBuilding.Generate(moduleGrid);*/
-        /*for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++)
         {
             AddBuilding();
-        }*/
+        }
     }
 
     void GetExtents(int M, int m, out int a, out int b)
