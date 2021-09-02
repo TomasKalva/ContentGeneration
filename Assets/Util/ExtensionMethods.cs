@@ -10,13 +10,17 @@ static class ExtensionMethods
 {
     public static T GetRandom<T>(this List<T> list)
     {
+        var count = list.Count;
+        if (count == 0) return default;
         var i = UnityEngine.Random.Range(0, list.Count);
         return list[i];
     }
 
     public static T GetRandom<T>(this IEnumerable<T> enumerable)
     {
-        var i = UnityEngine.Random.Range(0, enumerable.Count());
+        var count = enumerable.Count();
+        if (count == 0) return default;
+        var i = UnityEngine.Random.Range(0, count);
         return enumerable.ElementAt(i);
     }
 

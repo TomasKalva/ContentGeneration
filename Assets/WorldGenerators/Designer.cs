@@ -8,47 +8,62 @@ using UnityEngine;
 public class Designer
 {
     public virtual void Design(ModuleGrid grid, AreasGraph areasGraph, Module module) { }
+
+    public virtual bool Satisfied() => true;
 }
 
 public class RoomDesigner : Designer
 {
+    Func<Module, AreasGraph, Dictionary<DirectionObject, List<Rule>>> moduleRules;
+
+    public RoomDesigner(ModuleGrid grid)
+    {
+        moduleRules = (module, areasGraph) =>
+        {
+            var rules = new Dictionary<DirectionObject, List<Rule>>();
+            foreach (var dirObj in module.HorizontalDirectionObjects())
+            {
+                var direction = dirObj.direction;
+                var otherModule = grid[module.coords + direction];
+                var otherArea = otherModule?.GetProperty<AreaModuleProperty>().Area;
+                var area = module.GetProperty<AreaModuleProperty>().Area;
+
+                // Connect to the same area
+                var connectSame = new Rule(
+                    () => area.ContainsModule(otherModule),
+                    () => module.SetDirection(direction, ObjectType.Empty)
+                    );
+
+                // Don't connect to outside
+                var dontConnectOutside = new Rule(
+                    () => otherArea == null || otherArea.Name == "Outside",
+                    () => module.SetDirection(direction, GetObjectType(module))
+                    );
+
+                // Try to connect the areas if possible
+                var connectAreas = new Rule(
+                    () => !areasGraph.AreConnected(area, otherArea) && otherModule != null && otherModule.ReachableFrom(direction),
+                    () =>
+                    {
+                        module.SetDirection(direction, ObjectType.Door);
+                        otherModule.SetDirection(-direction, ObjectType.Empty);
+                        areasGraph.Connect(area, otherArea);
+                    }
+                    );
+
+                rules.Add(dirObj, new List<Rule>() { connectSame, dontConnectOutside, connectAreas });
+            }
+            return rules;
+        };
+    }
+
     public override void Design(ModuleGrid grid, AreasGraph areasGraph, Module module)
     {
-        var area = module.GetProperty<AreaModuleProperty>().Area;
         foreach (var dirObj in module.HorizontalDirectionObjects())
         {
-            var direction = dirObj.direction;
-            var otherModule = grid[module.coords + direction];
-            if (otherModule == null)
-            {
-                continue;
-            }
-
-            // Connect to the same area
-            if (area.ContainsModule(otherModule))
-            {
-                module.SetDirection(direction, ObjectType.Empty);
-            }
-
-            // Don't connect to outside
-            var otherArea = otherModule.GetProperty<AreaModuleProperty>().Area;
-            if (otherArea.Name == "Outside")
-            {
-                module.SetDirection(direction, GetObjectType(module));
-                continue;
-            }
-
-            // Try to connect the areas if possible
-            var myArea = module.GetProperty<AreaModuleProperty>().Area;
-            if (!areasGraph.AreConnected(myArea, otherArea))
-            {
-                if (otherModule.ReachableFrom(direction))
-                {
-                    module.SetDirection(direction, ObjectType.Door);
-                    module.SetDirection(-direction, ObjectType.Empty);
-                    areasGraph.Connect(myArea, otherArea);
-                }
-            }
+            var directionRules = moduleRules(module, areasGraph)[dirObj];
+            var bestRule = directionRules.Where(rule => rule.Condition()).GetRandom();
+            bestRule?.Effect();
         }
     }
 
@@ -72,4 +87,23 @@ public class BridgeDesigner : Designer
             }
         }
     }
+}
+
+public delegate bool RuleCondition();
+public delegate void RuleEffect();
+
+public class Rule
+{
+    RuleCondition condition;
+    RuleEffect effect;
+
+    public Rule(RuleCondition condition, RuleEffect effect)
+    {
+        this.condition = condition;
+        this.effect = effect;
+    }
+
+    public bool Condition() => condition();
+    public void Effect() => effect();
+
 }

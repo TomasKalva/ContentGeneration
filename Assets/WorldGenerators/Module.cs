@@ -17,6 +17,8 @@ public class Module : MonoBehaviour
     [SerializeField]
     public DirectionObject[] directionObjects;
 
+    public List<Rule> UsedRules { get; private set; }
+
     public IEnumerable<DirectionObject> HorizontalDirectionObjects() => directionObjects.Where(dirObj => dirObj.direction.y == 0);
 
     public PropertyT GetProperty<PropertyT>() where PropertyT : class
@@ -45,6 +47,8 @@ public class Module : MonoBehaviour
         attachmentPoints = GetComponentsInChildren<AttachmentPoint>();
 
         properties = new List<IModuleProperty>();
+
+        UsedRules = new List<Rule>();
 
         var boundingBox = transform.Cast<Transform>().FirstOrDefault(child => child.tag == "BuildingBoundingBox");
         if (boundingBox != null)
