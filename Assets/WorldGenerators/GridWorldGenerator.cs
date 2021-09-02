@@ -34,10 +34,13 @@ public class GridWorldGenerator : WorldGenerator
 
     AreasGraph areasGraph;
 
+    DesignerSatisfier satisfier;
+
     public override void Generate(World world)
     {
         moduleGrid = new ModuleGrid(sizes, extents, parent);
         areasGraph = new AreasGraph();
+        satisfier = new DesignerSatisfier();
 
         InitGrid();
 
@@ -48,16 +51,16 @@ public class GridWorldGenerator : WorldGenerator
         AddRooftops();
 
 
-        foreach (var module in moduleGrid)
+        satisfier.SatisfyDesigners(moduleGrid, areasGraph);
+        /*foreach (var module in moduleGrid)
         {
             var designer = module.GetProperty<AreaModuleProperty>().Area.Designer;
             designer.Design(moduleGrid, areasGraph, module);
-        }
-
+        }*/
 
         foreach (var module in moduleGrid)
         {
-            module.AfterGenerated(moduleGrid, areasGraph);
+            module.PlaceObjects(moduleGrid);
         }
     }
 

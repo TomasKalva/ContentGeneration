@@ -57,7 +57,7 @@ public class Module : MonoBehaviour
         }
     }
 
-    public virtual void AfterGenerated(ModuleGrid grid, AreasGraph areasGraph)
+    public void PlaceObjects(ModuleGrid grid)
     {
         var style = GetProperty<AreaModuleProperty>().Area.Style;
         foreach(var ap in attachmentPoints)

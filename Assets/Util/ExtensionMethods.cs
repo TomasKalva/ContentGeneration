@@ -91,6 +91,18 @@ static class ExtensionMethods
         return enumerable.ArgMax(a => -f(a));
     }
 
+    public static void TryAdd<K, V>(this Dictionary<K,V> dict, K key, V value)
+    {
+        if (dict.ContainsKey(key))
+        {
+            dict[key] = value;
+        }
+        else
+        {
+            dict.Add(key, value);
+        }
+    }
+
     public static T GetRandom<T>(this IEnumerable<T> enumerable, Func<T, float> weightF)
     {
         float total = enumerable.Sum(weightF);
