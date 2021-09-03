@@ -30,3 +30,5 @@ MonoBehaviour:
     obj: {fileID: 4945558105232219472, guid: 884d34b31d210a0419390ef343e7973d, type: 3}
   - objectType: 3
     obj: {fileID: 6810099170241836715, guid: 178e085dd15eebc41871edef13d0e9c7, type: 3}
+  - objectType: 1
+    obj: {fileID: 250649801900895716, guid: dbb0a013c8ebbd547bcbf4a023723edb, type: 3}

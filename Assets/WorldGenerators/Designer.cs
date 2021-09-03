@@ -27,6 +27,16 @@ public class Designer
                 bestRule.Effect();
                 usedRules[module].Add(bestRule);
             }
+            else
+            {
+                // No rule applicable => potentially try again later
+                var defaultRule = new Rule(
+                    () => false,
+                    () => { }
+                    );
+
+                usedRules[module].Add(defaultRule);
+            }
         }
     }
 
@@ -57,6 +67,12 @@ public class RoomDesigner : Designer
                     () => module.SetDirection(direction, ObjectType.Empty)
                     );
 
+                // Place railing
+                var placeRailing = new Rule(
+                    () => area == otherArea && module.HasFloor(grid) && !otherModule.HasFloor(grid),
+                    () => module.SetDirection(direction, ObjectType.Railing)
+                    );
+
                 // Don't connect to outside
                 var dontConnectOutside = new Rule(
                     () => otherArea == null || otherArea.Name == "Outside",
@@ -74,32 +90,11 @@ public class RoomDesigner : Designer
                     }
                     );
 
-                ruleClasses.Add(new List<Rule>() { connectSame, dontConnectOutside, connectAreas });
+                ruleClasses.Add(new List<Rule>() { connectSame, dontConnectOutside, connectAreas, placeRailing });
             }
             return ruleClasses;
         };
     }
-
-    /*public override void Design(ModuleGrid grid, AreasGraph areasGraph, Module module)
-    {
-        usedRules.TryAdd(module, new List<Rule>());
-        foreach (var dirObj in module.HorizontalDirectionObjects())
-        {
-            var directionRules = moduleRules(module, areasGraph)[dirObj];
-            var bestRule = directionRules.Where(rule => rule.Condition()).GetRandom();
-            if (bestRule != null)
-            {
-                bestRule.Effect();
-                usedRules[module].Add(bestRule);
-            }
-        }
-    }
-
-    public override bool Satisfied(Module module)
-    {
-        usedRules.TryGetValue(module, out var moduleRules);
-        return moduleRules == null ? false : moduleRules.All(rule => rule.Condition());
-    }*/
 
     public ObjectType GetObjectType(Module module)
     {
@@ -130,19 +125,6 @@ public class BridgeDesigner : Designer
             return ruleClasses;
         };
     }
-
-    /*public override void Design(ModuleGrid grid, AreasGraph areasGraph, Module module)
-    {
-        foreach (var neighbor in module.HorizontalNeighbors(grid))
-        {
-            var neighborObject = neighbor.GetObject();
-            if (neighborObject != null && neighborObject.objectType == ObjectType.Bridge)
-            {
-                var dir = module.DirectionTo(neighbor);
-                module.GetAttachmentPoint(Vector3Int.up).RotateTowards(dir);
-            }
-        }
-    }*/
 }
 
 public delegate bool RuleCondition();

@@ -117,12 +117,29 @@ public class Module : MonoBehaviour
     {
         return true;
     }
+
+    public bool HasCeiling()
+    {
+        var obj = GetObject();
+        return obj != null && (obj.objectType == ObjectType.Ceiling || obj.objectType == ObjectType.Stairs);
+    }
+
+    public bool HasFloor(ModuleGrid grid)
+    {
+        var bottomCoords = coords - Vector3Int.up;
+        if (grid.ValidCoords(bottomCoords))
+        {
+            var bottomModule = grid[bottomCoords];
+            return bottomModule.HasCeiling();
+        }
+        return false;
+    }
 }
 
 public enum ObjectType
 {
     Wall,
-    Fence,
+    Railing,
     Window,
     Door,
     Ceiling,
