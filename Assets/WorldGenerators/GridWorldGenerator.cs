@@ -46,7 +46,7 @@ public class GridWorldGenerator : WorldGenerator
 
         AddBuildings(buildingsCount);
 
-        AddBridges(bridgesCount);
+        //AddBridges(bridgesCount);
 
         AddRooftops();
 

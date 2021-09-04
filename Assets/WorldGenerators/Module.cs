@@ -77,6 +77,14 @@ public class Module : MonoBehaviour
         return ExtensionMethods.HorizontalDirections().Select(dir => grid[coords + dir]).Where(m => m != null);
     }
 
+    public IEnumerable<Module> AllAbove(ModuleGrid moduleGrid)
+    {
+        for(int y = coords.y; y < moduleGrid.Height; y++)
+        {
+            yield return moduleGrid[new Vector3Int(coords.x, y, coords.y)];
+        }
+    }
+
     public void SetDirection(Vector3Int direction, ObjectType objectType)
     {
         var dirObj = directionObjects.FirstOrDefault(dirObj => dirObj.direction == direction);

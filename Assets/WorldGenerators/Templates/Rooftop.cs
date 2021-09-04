@@ -43,8 +43,8 @@ public class Rooftops : Template
     {
         if (maybeRoof.empty)
         {
-            var oneDown = maybeRoof.coords - Vector3Int.up;
-            return moduleGrid.ValidCoords(oneDown) && !moduleGrid[oneDown].empty;
+            //var oneDown = maybeRoof.coords - Vector3Int.up;
+            return maybeRoof.HasFloor(moduleGrid) && maybeRoof.AllAbove(moduleGrid).All(module => module == null || module.empty);// moduleGrid.ValidCoords(oneDown) && moduleGrid[oneDown].Has;
         }
         return false;
     }
@@ -61,15 +61,15 @@ public class Rooftop : Template
 
     public override bool Generate(ModuleGrid moduleGrid)
     {
-        var rooftopArea = new Area(new Designer(), styles.gothic);
+        var rooftopArea = new Area(new RoofDesigner(moduleGrid), styles.gothic);
         foreach (var module in modules)
         {
-            var areaProp = module.GetProperty<AreaModuleProperty>();
-            areaProp.Area = rooftopArea;
-            /*
-            var m = moduleLibrary.BridgeModule();
+            //var areaProp = module.GetProperty<AreaModuleProperty>();
+            //areaProp.Area = rooftopArea;
+
+            var m = moduleLibrary.RoomModule();
             moduleGrid[module.coords] = m;
-            m.AddProperty(new AreaModuleProperty(this));*/
+            m.AddProperty(new AreaModuleProperty(rooftopArea));
         }
         return true;
     }

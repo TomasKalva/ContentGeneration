@@ -131,6 +131,19 @@ public class RoomDesigner : Designer
 
                 ruleClasses.Add(rules);
             }
+
+            // Remove ceiling
+            var ceiling = new Rule(
+                "No ceiling",
+                () => true,
+                () => module.SetObject(ObjectType.Ceiling)
+                );
+
+            var ceilingRules = new RulesClass("Ceiling");
+            ceilingRules.AddRule(ceiling);
+
+            ruleClasses.Add(ceilingRules);
+
             return ruleClasses;
         };
     }
@@ -139,6 +152,75 @@ public class RoomDesigner : Designer
     {
         return module.coords.Sum(t => t) % 2 == 0 ? ObjectType.Wall : ObjectType.Window;
     }
+}
+
+public class RoofDesigner : Designer
+{
+    public RoofDesigner(ModuleGrid grid)
+    {
+        moduleRuleClasses = (module, areasGraph) =>
+        {
+            var ruleClasses = new List<RulesClass>();
+            foreach (var dirObj in module.HorizontalDirectionObjects())
+            {
+                var direction = dirObj.direction;
+                var otherModule = grid[module.coords + direction];
+                var otherArea = otherModule?.GetProperty<AreaModuleProperty>().Area;
+                var area = module.GetProperty<AreaModuleProperty>().Area;
+
+                // Connect to the same area
+                var connectSame = new Rule(
+                    "Connect same area",
+                    () => area.ContainsModule(otherModule) && otherModule != null && otherModule.HasFloor(grid),
+                    () => module.SetDirection(direction, ObjectType.Empty)
+                    );
+
+                // Place railing
+                var placeRailing = new Rule(
+                    "Place railing",
+                    () => otherModule != null && module.HasFloor(grid) && !otherModule.HasFloor(grid, -direction),
+                    () => module.SetDirection(direction, ObjectType.Railing)
+                    );
+
+                // Try to connect the areas if possible
+                var connectAreas = new Rule(
+                    "Connect areas",
+                    () => !areasGraph.AreConnected(area, otherArea) && otherModule != null && otherModule.ReachableFrom(direction),
+                    () =>
+                    {
+                        module.SetDirection(direction, ObjectType.Empty);
+                        areasGraph.Connect(area, otherArea);
+                    }
+                    );
+
+                var rules = new RulesClass(dirObj.direction.Name());
+                rules.AddRule(connectAreas);
+                rules.AddRule(connectSame);
+                rules.AddRule(placeRailing);
+
+                ruleClasses.Add(rules);
+            }
+
+            // Remove ceiling
+            var noCeiling = new Rule(
+                "No ceiling",
+                () => true,
+                () => module.SetObject(ObjectType.Empty)
+                );
+
+            var noCeilingRules = new RulesClass("No ceiling");
+            noCeilingRules.AddRule(noCeiling);
+
+            ruleClasses.Add(noCeilingRules);
+
+            return ruleClasses;
+        };
+    }
+
+    /*public ObjectType GetObjectType(Module module)
+    {
+        return module.coords.Sum(t => t) % 2 == 0 ? ObjectType.Wall : ObjectType.Window;
+    }*/
 }
 
 public class BridgeDesigner : Designer
