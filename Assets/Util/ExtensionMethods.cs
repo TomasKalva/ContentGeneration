@@ -155,6 +155,31 @@ static class ExtensionMethods
         return new Vector3Int(f(u.x, v.x), f(u.y, v.y), f(u.z, v.z));
     }
 
+    static Dictionary<Vector3Int, string> directionNames;
+
+    public static string Name(this Vector3Int direction)
+    {
+        if(directionNames == null)
+        {
+            directionNames = new Dictionary<Vector3Int, string>();
+            directionNames.Add(Vector3Int.forward, "Forward");
+            directionNames.Add(-Vector3Int.forward, "Back");
+            directionNames.Add(Vector3Int.right, "Right");
+            directionNames.Add(-Vector3Int.right, "Left");
+            directionNames.Add(Vector3Int.up, "Up");
+            directionNames.Add(-Vector3Int.up, "Down");
+        }
+
+        if(directionNames.TryGetValue(direction, out var name))
+        {
+            return name;
+        }
+        else
+        {
+            return "Unnamed";
+        }
+    }
+
     public static Vector2Int ComponentWise(this Vector2Int u, Vector2Int v, Func<int, int, int> f)
     {
         return new Vector2Int(f(u.x, v.x), f(u.y, v.y));
