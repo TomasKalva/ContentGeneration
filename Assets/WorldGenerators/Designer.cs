@@ -36,19 +36,9 @@ public class Designer
             var bestRule = ruleClass.BestSatisfyingRule();
             if (bestRule != null)
             {
-                bestRule.Effect();
+                //bestRule.Effect();
                 usedRules[module].Add(bestRule);
             }
-            /*else
-            {
-                // No rule applicable => potentially try again later
-                var defaultRule = new Rule(
-                    () => false,
-                    () => { }
-                    );
-
-                usedRules[module].Add(defaultRule);
-            }*/
         }
     }
 
@@ -67,7 +57,6 @@ public class Designer
             }
         }
         return true;
-        //return moduleRules == null ? false : moduleRules.All(currentBest => currentBest.RulesClass.BestSatisfyingRule().Priority <= currentBest.Priority);
     }
 }
 
@@ -88,14 +77,14 @@ public class RoomDesigner : Designer
                 // Connect to the same area
                 var connectSame = new Rule(
                     "Connect same area",
-                    () => area.ContainsModule(otherModule),
+                    () => area.ContainsModule(otherModule) && otherModule != null && otherModule.HasFloor(grid),
                     () => module.SetDirection(direction, ObjectType.Empty)
                     );
 
                 // Place railing
                 var placeRailing = new Rule(
                     "Place railing",
-                    () => area == otherArea && module.HasFloor(grid) && !otherModule.HasFloor(grid),
+                    () => /*area == otherArea &&*/ otherModule != null && module.HasFloor(grid) && !otherModule.HasFloor(grid),
                     () => module.SetDirection(direction, ObjectType.Railing)
                     );
 
@@ -118,7 +107,23 @@ public class RoomDesigner : Designer
                     }
                     );
 
+                // Remove objects in all horiznotal directions when no floor
+                var noFloor = new Rule(
+                    "Remove objects when no floor",
+                    () => !module.HasFloor(grid),
+                    () => module.HorizontalDirectionObjects().ForEach(dirObj => module.SetDirection(dirObj.direction, ObjectType.Empty))
+                    );
+
+                // Add walls when on the very bottom
+                var wallOnBottom = new Rule(
+                    "Add walls on bottom",
+                    () => grid[module.coords - Vector3Int.up] == null,
+                    () => module.HorizontalDirectionObjects().ForEach(dirObj => module.SetDirection(dirObj.direction, ObjectType.Wall))
+                    );
+
                 var rules = new RulesClass(dirObj.direction.Name());
+                rules.AddRule(wallOnBottom);
+                rules.AddRule(noFloor);
                 rules.AddRule(connectSame);
                 rules.AddRule(dontConnectOutside);
                 rules.AddRule(placeRailing);
@@ -142,6 +147,7 @@ public class BridgeDesigner : Designer
     {
         moduleRuleClasses = (module, areasGraph) =>
         {
+            // direction of bridge
             var ruleClasses = new List<RulesClass>();
             var bridgeDirectionRules = new RulesClass("Bridge direction");
             foreach (var neighbor in module.HorizontalNeighbors(grid))
@@ -150,13 +156,24 @@ public class BridgeDesigner : Designer
                 var dir = module.DirectionTo(neighbor);
 
                 var rule = new Rule(
-                    dir.ToString(),
+                    dir.Name(),
                     () => neighborObject != null && neighborObject.objectType == ObjectType.Bridge,
                     () => module.GetAttachmentPoint(Vector3Int.up).RotateTowards(dir)
                     );
                 bridgeDirectionRules.AddRule(rule);
             }
             ruleClasses.Add(bridgeDirectionRules);
+
+            // no obstacle at the end of the bridge
+            /*var noObstacleRules = new RulesClass("No obstacles");
+
+            var noObstacleRule = new Rule(
+                "No obstacles rule",
+                () => true,
+                () => module.GetAttachmentPoint(Vector3Int.up).RotateTowards(dir)
+                );
+            bridgeDirectionRules.AddRule(noObstacleRule);*/
+
             return ruleClasses;
         };
     }
@@ -233,7 +250,7 @@ public class DesignerSatisfier
     public void SatisfyDesigners(ModuleGrid moduleGrid, AreasGraph areasGraph)
     {
         var toSatisfy = new Queue<Module>(moduleGrid);
-        var maxIteration = toSatisfy.Count() * 8;
+        var maxIteration = toSatisfy.Count() * 2;
         var i = 0;
         while (toSatisfy.Any() && i++ < maxIteration)
         {
@@ -248,5 +265,26 @@ public class DesignerSatisfier
                 }
             }
         }
+
+        foreach(var module in moduleGrid)
+        {
+            var designer = module.GetProperty<AreaModuleProperty>().Area.Designer;
+            foreach (var usedRule in designer.UsedRules(module))
+            {
+                usedRule.Effect();
+            }
+        }
     }
 }
+
+/*public class RulesLibrary
+{
+    public static RulesLibrary RulesLib { get; }
+
+    static RulesLibrary()
+    {
+        RulesLib = new RulesLibrary();
+    }
+
+
+}*/
