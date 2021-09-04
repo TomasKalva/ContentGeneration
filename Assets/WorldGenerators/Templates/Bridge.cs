@@ -53,6 +53,8 @@ public class Bridge : Template
             else
             {
                 var underBridgeArea = new Area(new BridgeDesigner(moduleGrid), styles.gothic);
+                underBridgeArea.Name = "Outside";
+                var onBridgeArea = new Area(new Designer(), styles.gothic);
                 for (int i = 0; i < dist; i++)
                 {
                     var bridgeCoords = startModule.coords + i * direction;
@@ -61,6 +63,11 @@ public class Bridge : Template
                     newBridge.ClearAttachmentPoints();
                     newBridge.SetObject(ObjectType.Bridge);
                     newBridge.AddProperty(new AreaModuleProperty(underBridgeArea));
+
+                    var onBridge = moduleLibrary.RoomModule();
+                    moduleGrid[bridgeCoords + UnityEngine.Vector3Int.up] = onBridge;
+                    onBridge.ClearAttachmentPoints();
+                    onBridge.AddProperty(new AreaModuleProperty(onBridgeArea));
                 }
                 return true;
             }

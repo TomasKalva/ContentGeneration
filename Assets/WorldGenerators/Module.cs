@@ -135,6 +135,23 @@ public class Module : MonoBehaviour
         }
         return false;
     }
+
+    public bool HasCeiling(Vector3Int direction)
+    {
+        var obj = GetObject();
+        return HasCeiling() || (obj != null && (obj.objectType == ObjectType.Bridge && (obj.PointingDirection == direction || obj.PointingDirection == -direction)));
+    }
+
+    public bool HasFloor(ModuleGrid grid, Vector3Int direction)
+    {
+        var bottomCoords = coords - Vector3Int.up;
+        if (grid.ValidCoords(bottomCoords))
+        {
+            var bottomModule = grid[bottomCoords];
+            return bottomModule.HasCeiling(direction);
+        }
+        return false;
+    }
 }
 
 public enum ObjectType

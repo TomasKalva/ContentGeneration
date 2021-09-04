@@ -36,7 +36,7 @@ public class Designer
             var bestRule = ruleClass.BestSatisfyingRule();
             if (bestRule != null)
             {
-                //bestRule.Effect();
+                bestRule.Effect();
                 usedRules[module].Add(bestRule);
             }
         }
@@ -84,7 +84,7 @@ public class RoomDesigner : Designer
                 // Place railing
                 var placeRailing = new Rule(
                     "Place railing",
-                    () => /*area == otherArea &&*/ otherModule != null && module.HasFloor(grid) && !otherModule.HasFloor(grid),
+                    () => otherModule != null && module.HasFloor(grid) && !otherModule.HasFloor(grid, -direction),
                     () => module.SetDirection(direction, ObjectType.Railing)
                     );
 
@@ -266,14 +266,14 @@ public class DesignerSatisfier
             }
         }
 
-        foreach(var module in moduleGrid)
+        /*foreach(var module in moduleGrid)
         {
             var designer = module.GetProperty<AreaModuleProperty>().Area.Designer;
             foreach (var usedRule in designer.UsedRules(module))
             {
                 usedRule.Effect();
             }
-        }
+        }*/
     }
 }
 

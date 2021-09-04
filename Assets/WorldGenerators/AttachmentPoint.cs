@@ -6,6 +6,8 @@ public class AttachmentPoint: MonoBehaviour
 {
     public ObjectType objectType;
 
+    public Vector3Int PointingDirection { get; private set; }
+
     Transform obj;
 
     public AttachmentPoint(ObjectType objectType)
@@ -24,6 +26,7 @@ public class AttachmentPoint: MonoBehaviour
     {
         var angle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, angle, 0f);
+        PointingDirection = direction;
     }
 
     void OnDrawGizmos()
