@@ -163,7 +163,7 @@ public class GridWorldGenerator : WorldGenerator
     /// </summary>
     bool AddBridge()
     {
-        var startModule = SatisfyingModule(module => module.empty && HasHorizontalNeighbor(module));
+        var startModule = SatisfyingModule(module => module.empty && HasHorizontalNeighbor(module) && module.GetProperty<AreaModuleProperty>().Area.Name == "Outside");
         var bridge = new Bridge(startModule, modules, styles);
         return bridge.Generate(moduleGrid);
     }

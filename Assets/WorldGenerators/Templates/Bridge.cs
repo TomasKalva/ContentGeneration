@@ -26,7 +26,7 @@ public class Bridge : Template
             dir =>
             {
                 var neighborModule = moduleGrid[startModule.coords - dir];
-                return neighborModule != null && !neighborModule.empty;
+                return neighborModule != null && !neighborModule.empty && neighborModule.HasCeiling(dir);
             }).Shuffle();
         foreach (var direction in possibleDirections)
         {
@@ -34,13 +34,13 @@ public class Bridge : Template
             var coords = startModule.coords;
 
             var module = moduleGrid[coords];
-            while (module != null && module.empty)
+            while (module != null && module.empty && !module.HorizontalNeighbors(moduleGrid).Any(neighbor => neighbor.GetObject() != null && neighbor.GetObject().objectType == ObjectType.Bridge))
             {
                 coords += direction;
                 dist += 1;
                 module = moduleGrid[coords];
             }
-            if (module == null)
+            if (module == null || !module.HasCeiling(-direction))
             {
                 return false;
             }
