@@ -46,9 +46,9 @@ public class GridWorldGenerator : WorldGenerator
 
         AddBuildings(buildingsCount);
 
-        //AddBridges(bridgesCount);
+        AddBridges(bridgesCount);
 
-        //AddRooftops();
+        AddRooftops();
 
         var areas = moduleGrid.Select(module => module.GetProperty<AreaModuleProperty>().Area).Distinct();
         areas.ForEach(area => area.Finish(moduleGrid));
@@ -135,9 +135,14 @@ public class GridWorldGenerator : WorldGenerator
     void AddBridges(int n)
     {
         int bridgesCount = 0;
+        int i = 0;
         while(bridgesCount < n)
         {
             bridgesCount += AddBridge() ? 1 : 0;
+            if(i++ > 100)
+            {
+                return;
+            }
         }
     }
 

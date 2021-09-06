@@ -79,7 +79,7 @@ public class Module : MonoBehaviour
     {
         for(int y = coords.y; y < moduleGrid.Height; y++)
         {
-            yield return moduleGrid[new Vector3Int(coords.x, y, coords.y)];
+            yield return moduleGrid[new Vector3Int(coords.x, y, coords.z)];
         }
     }
 
@@ -125,7 +125,7 @@ public class Module : MonoBehaviour
         return true;
     }
 
-    public bool HasCeiling()
+    /*public bool HasCeiling()
     {
         var obj = GetObject();
         return obj != null && (obj.objectType == ObjectType.Ceiling || obj.objectType == ObjectType.Stairs);
@@ -157,7 +157,7 @@ public class Module : MonoBehaviour
             return bottomModule.HasCeiling(direction);
         }
         return false;
-    }
+    }*/
 }
 
 public enum ObjectType
@@ -271,6 +271,15 @@ public class TopologyProperty : IModuleTopology
     {
     }
 
+    public void SetAllReachable()
+    {
+        foreach(var dir in ExtensionMethods.HorizontalDirections())
+        {
+            ReachableDirections.Add(dir);
+        }
+        ReachableDirections.Add(Vector3Int.up);
+    }
+
     public void SetReachable(Vector3Int dir)
     {
         ReachableDirections.Add(dir);
@@ -311,8 +320,8 @@ public class TopologyProperty : IModuleTopology
         var bottomCoords = module.coords - Vector3Int.up;
         if (grid.ValidCoords(bottomCoords))
         {
-            var bottomModule = grid[bottomCoords];
-            return bottomModule.HasCeiling(direction);
+            var bottomModuleTopology = grid[bottomCoords].GetProperty<TopologyProperty>();
+            return bottomModuleTopology.HasCeiling(direction);
         }
         return false;
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using UnityEngine;
 
 public class Bridge : Template
 {
@@ -26,7 +26,7 @@ public class Bridge : Template
             dir =>
             {
                 var neighborModule = moduleGrid[startModule.coords - dir];
-                return neighborModule != null && !neighborModule.empty && neighborModule.HasCeiling(dir);
+                return neighborModule != null && !neighborModule.empty && neighborModule.GetProperty<TopologyProperty>().HasCeiling(dir);
             }).Shuffle();
         foreach (var direction in possibleDirections)
         {
@@ -40,7 +40,7 @@ public class Bridge : Template
                 dist += 1;
                 module = moduleGrid[coords];
             }
-            if (module == null || !module.HasCeiling(-direction))
+            if (module == null || !module.GetProperty<TopologyProperty>().HasCeiling(-direction))
             {
                 return false;
             }
@@ -61,9 +61,10 @@ public class Bridge : Template
                     var newBridge = moduleLibrary.RoomModule(underBridgeArea);
                     moduleGrid[bridgeCoords] = newBridge;
                     newBridge.ClearAttachmentPoints();
+                    newBridge.GetProperty<TopologyProperty>().SetReachable(Vector3Int.up);
                     newBridge.SetObject(ObjectType.Bridge);
 
-                    var onBridge = moduleLibrary.RoomModule(onBridgeArea);
+                    var onBridge = moduleLibrary.EmptyModule(onBridgeArea);
                     moduleGrid[bridgeCoords + UnityEngine.Vector3Int.up] = onBridge;
                     onBridge.ClearAttachmentPoints();
                 }

@@ -194,7 +194,7 @@ public class RoofDesigner : Designer
                 // Place railing
                 var placeRailing = new Rule(
                     "Place railing",
-                    () => otherTopology != null && topology.HasFloor(grid) && !otherTopology.HasFloor(grid, -direction),
+                    () => otherArea == null || (otherArea.Name == "Outside" || (topology.HasFloor(grid) && !otherTopology.HasFloor(grid, -direction))),
                     () => module.SetDirection(direction, ObjectType.Railing)
                     );
 

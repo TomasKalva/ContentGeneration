@@ -46,7 +46,9 @@ public class Modules : ScriptableObject
         var emptyModule = EmptyModule();
         emptyModule.Init();
         emptyModule.AddProperty(new AreaModuleProperty(area));
-        emptyModule.AddProperty(new TopologyProperty());
+        var topologyProp = new TopologyProperty();
+        topologyProp.SetAllReachable();
+        emptyModule.AddProperty(topologyProp);
         return emptyModule;
     }
 

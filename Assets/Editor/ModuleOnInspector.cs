@@ -21,8 +21,11 @@ public class ModuleOnInspector : Editor
         }
         var designer = areaProp.Area.Designer;
 
+
         var style = new GUIStyle();
         style.fontSize = 20;
+
+        GUILayout.Label($"Area: {module.GetProperty<AreaModuleProperty>().Area.Name}");
         GUILayout.Label("Rules", style);
         foreach (var rule in designer.UsedRules(module))
         {

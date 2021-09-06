@@ -27,7 +27,7 @@ public class Rooftops : Template
         return true;
     }
 
-    int RooftopHeight(ModuleGrid moduleGrid, Vector2Int coords)
+    /*int RooftopHeight(ModuleGrid moduleGrid, Vector2Int coords)
     {
         for(int y = 0; y < moduleGrid.Height; y++)
         {
@@ -37,14 +37,15 @@ public class Rooftops : Template
             }
         }
         return moduleGrid.Height;
-    }
+    }*/
 
     bool IsRoof(ModuleGrid moduleGrid, Module maybeRoof)
     {
         if (maybeRoof.empty)
         {
+            var topology = maybeRoof.GetProperty<TopologyProperty>();
             //var oneDown = maybeRoof.coords - Vector3Int.up;
-            return maybeRoof.HasFloor(moduleGrid) && maybeRoof.AllAbove(moduleGrid).All(module => module == null || module.empty);// moduleGrid.ValidCoords(oneDown) && moduleGrid[oneDown].Has;
+            return topology.HasFloor(moduleGrid) && maybeRoof.AllAbove(moduleGrid).All(module => module == null || module.empty);// moduleGrid.ValidCoords(oneDown) && moduleGrid[oneDown].Has;
         }
         return false;
     }
@@ -61,7 +62,8 @@ public class Rooftop : Template
 
     public override bool Generate(ModuleGrid moduleGrid)
     {
-        var rooftopArea = new Area(new RoofDesigner(moduleGrid), styles.gothic);
+        var rooftopArea = new DisconnectedArea(new RoofDesigner(moduleGrid), styles.gothic);
+        rooftopArea.Name = "Rooftop";
         foreach (var module in modules)
         {
             var m = moduleLibrary.RoomModule(rooftopArea);
