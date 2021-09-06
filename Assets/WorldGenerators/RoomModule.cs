@@ -8,11 +8,6 @@ public class RoomModule : Module
 {
     [SerializeField]
     DirectionObject[] walls;
-
-    public override bool ReachableFrom(Vector3Int dir)
-    {
-        return true;
-    }
 }
 
 [Serializable]

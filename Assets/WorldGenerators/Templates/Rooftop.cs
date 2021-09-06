@@ -16,7 +16,7 @@ public class Rooftops : Template
         var heightGraph = new ImplicitGraph<Module>(
                 module => module.HorizontalNeighbors(moduleGrid)
                             .Where(neighbor => IsRoof(moduleGrid, neighbor)));
-        var heightGraphAlg = new GraphAlgorithms<Module, NoEdge<Module>, ImplicitGraph<Module>>(heightGraph);
+        var heightGraphAlg = new GraphAlgorithms<Module, Edge<Module>, ImplicitGraph<Module>>(heightGraph);
         var roofComponents = heightGraphAlg.ConnectedComponentsSymm(moduleGrid.Where(module => IsRoof(moduleGrid, module)));
         foreach(var component in roofComponents)
         {

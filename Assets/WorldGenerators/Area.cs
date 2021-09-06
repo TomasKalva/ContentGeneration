@@ -14,6 +14,8 @@ public class Area
 
     public Designer Designer { get; }
 
+    public IEnumerable<Module> Modules => modules;
+
     public Area(Designer designer, Style style)
     {
         modules = new List<Module>();

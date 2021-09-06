@@ -61,8 +61,12 @@ public class Bridge : Template
                     var newBridge = moduleLibrary.RoomModule(underBridgeArea);
                     moduleGrid[bridgeCoords] = newBridge;
                     newBridge.ClearAttachmentPoints();
-                    newBridge.GetProperty<TopologyProperty>().SetReachable(Vector3Int.up);
+                    var bridgeTopology = newBridge.GetProperty<TopologyProperty>();
+                    bridgeTopology.SetAllDisconnected();
+                    bridgeTopology.SetConnected(direction);
+                    bridgeTopology.SetConnected(-direction);
                     newBridge.SetObject(ObjectType.Bridge);
+
 
                     var onBridge = moduleLibrary.EmptyModule(onBridgeArea);
                     moduleGrid[bridgeCoords + UnityEngine.Vector3Int.up] = onBridge;

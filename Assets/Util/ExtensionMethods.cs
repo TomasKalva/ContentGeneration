@@ -153,6 +153,16 @@ static class ExtensionMethods
         yield return -Vector3Int.right;
     }
 
+    public static IEnumerable<Vector3Int> Directions()
+    {
+        yield return Vector3Int.forward;
+        yield return Vector3Int.right;
+        yield return Vector3Int.up;
+        yield return -Vector3Int.forward;
+        yield return -Vector3Int.right;
+        yield return -Vector3Int.up;
+    }
+
     public static Vector3Int ComponentWise(this Vector3Int v, Func<int, int> f)
     {
         return new Vector3Int(f(v.x), f(v.y), f(v.z));

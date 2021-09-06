@@ -32,15 +32,15 @@ public class GridWorldGenerator : WorldGenerator
 
     ModuleGrid moduleGrid;
 
-    AreasGraph areasGraph;
+    Graph<Area> areasGraph;
 
-    DesignerSatisfier satisfier;
+    WorldTraversingAgent agent;
 
     public override void Generate(World world)
     {
         moduleGrid = new ModuleGrid(sizes, extents, parent);
-        areasGraph = new AreasGraph();
-        satisfier = new DesignerSatisfier();
+        areasGraph = new Graph<Area>();
+        agent = new WorldTraversingAgent();
 
         InitGrid();
 
@@ -58,6 +58,8 @@ public class GridWorldGenerator : WorldGenerator
             var designer = module.GetProperty<AreaModuleProperty>().Area.Designer;
             designer.Design(moduleGrid, areasGraph, module);
         }
+
+        agent.Traverse(moduleGrid);
 
         foreach (var module in moduleGrid)
         {

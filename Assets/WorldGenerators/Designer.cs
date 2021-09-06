@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class Designer
 {
-    protected Func<Module, AreasGraph, List<RulesClass>> moduleRuleClasses;
+    protected Func<Module, Graph<Area>, List<RulesClass>> moduleRuleClasses;
     protected Dictionary<Module, List<Rule>> usedRules;
 
     public IEnumerable<Rule> UsedRules(Module module)
@@ -28,7 +28,7 @@ public class Designer
         moduleRuleClasses = (module, areasGraph) => new List<RulesClass>();
     }
 
-    public void Design(ModuleGrid grid, AreasGraph areasGraph, Module module)
+    public void Design(ModuleGrid grid, Graph<Area> areasGraph, Module module)
     {
         usedRules.TryAdd(module, new List<Rule>());
         foreach(var ruleClass in moduleRuleClasses(module, areasGraph))
@@ -342,47 +342,3 @@ public class RulesClass
         return bestRule != null ? bestRule : DefaultRule;
     }
 }
-
-public class DesignerSatisfier
-{
-    public void SatisfyDesigners(ModuleGrid moduleGrid, AreasGraph areasGraph)
-    {
-        var toSatisfy = new Queue<Module>(moduleGrid);
-        var maxIteration = toSatisfy.Count() * 2;
-        var i = 0;
-        while (toSatisfy.Any() && i++ < maxIteration)
-        {
-            var currModule = toSatisfy.Dequeue();
-            var designer = currModule.GetProperty<AreaModuleProperty>().Area.Designer;
-            if (!designer.Satisfied(currModule))
-            {
-                designer.Design(moduleGrid, areasGraph, currModule);
-                foreach(var neighbor in currModule.HorizontalNeighbors(moduleGrid))
-                {
-                    toSatisfy.Enqueue(neighbor);
-                }
-            }
-        }
-
-        /*foreach(var module in moduleGrid)
-        {
-            var designer = module.GetProperty<AreaModuleProperty>().Area.Designer;
-            foreach (var usedRule in designer.UsedRules(module))
-            {
-                usedRule.Effect();
-            }
-        }*/
-    }
-}
-
-/*public class RulesLibrary
-{
-    public static RulesLibrary RulesLib { get; }
-
-    static RulesLibrary()
-    {
-        RulesLib = new RulesLibrary();
-    }
-
-
-}*/
