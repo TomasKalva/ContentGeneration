@@ -253,13 +253,24 @@ public class AreaModuleProperty : IModuleProperty
 
 public class TopologyProperty : IModuleTopology
 {
+    /// <summary>
+    /// Directions not blocked by walls.
+    /// </summary>
     public List<Vector3Int> ReachableDirections { get; }
+    /// <summary>
+    /// Directions connected by the ceiling.
+    /// </summary>
+    public List<Vector3Int> ConnectedDirections { get; }
+
+    public bool ConnectsUp { get; set; }
 
     Module module;
 
     public TopologyProperty()
     {
         ReachableDirections = new List<Vector3Int>();
+        ConnectedDirections = new List<Vector3Int>();
+        ConnectsUp = false;
     }
 
     public void OnAdded(Module module)
@@ -277,7 +288,19 @@ public class TopologyProperty : IModuleTopology
         {
             ReachableDirections.Add(dir);
         }
-        ReachableDirections.Add(Vector3Int.up);
+    }
+
+    public void SetAllConnected()
+    {
+        foreach (var dir in ExtensionMethods.HorizontalDirections())
+        {
+            ConnectedDirections.Add(dir);
+        }
+    }
+
+    public void SetAllDisconnected()
+    {
+        ConnectedDirections.Clear();
     }
 
     public void SetReachable(Vector3Int dir)
@@ -290,6 +313,16 @@ public class TopologyProperty : IModuleTopology
         ReachableDirections.Remove(dir);
     }
 
+    public void SetConnected(Vector3Int dir)
+    {
+        ConnectedDirections.Add(dir);
+    }
+
+    public void SetDisconnected(Vector3Int dir)
+    {
+        ConnectedDirections.Remove(dir);
+    }
+
     public bool ReachableFrom(Vector3Int dir)
     {
         return ReachableDirections.Contains(-dir);
@@ -300,19 +333,31 @@ public class TopologyProperty : IModuleTopology
         return ReachableDirections.Contains(dir);
     }
 
+    public bool Connected(Vector3Int dir)
+    {
+        return ConnectedDirections.Contains(dir);
+    }
+
     public bool HasCeiling()
     {
-        return !ReachableDirections.Contains(Vector3Int.up);
+        return ExtensionMethods.HorizontalDirections().All(dir => ConnectedDirections.Contains(dir));
+
     }
 
     public bool HasFloor(ModuleGrid grid)
     {
-        return HasFloor(grid, Vector3Int.zero);
+        var bottomCoords = module.coords - Vector3Int.up;
+        if (grid.ValidCoords(bottomCoords))
+        {
+            var bottomModuleTopology = grid[bottomCoords].GetProperty<TopologyProperty>();
+            return bottomModuleTopology.HasCeiling();
+        }
+        return false;
     }
 
     public bool HasCeiling(Vector3Int direction)
     {
-        return !ReachableDirections.Contains(Vector3Int.up + direction);
+        return ConnectedDirections.Contains(direction);
     }
 
     public bool HasFloor(ModuleGrid grid, Vector3Int direction)

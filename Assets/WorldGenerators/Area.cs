@@ -54,6 +54,10 @@ public class DisconnectedArea : Area
                 {
                     topology.SetReachable(dir);
                 }
+                else
+                {
+                    topology.SetUnreachable(dir);
+                }
             }
         }
     }

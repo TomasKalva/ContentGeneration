@@ -148,7 +148,7 @@ public class RoomDesigner : Designer
             // Add ceiling
             var ceiling = new Rule(
                 "Add ceiling",
-                () => topology.HasCeiling(),
+                () => true/* topology.HasCeiling()*/,
                 () => module.SetObject(ObjectType.Ceiling)
                 );
 

@@ -48,6 +48,7 @@ public class Modules : ScriptableObject
         emptyModule.AddProperty(new AreaModuleProperty(area));
         var topologyProp = new TopologyProperty();
         topologyProp.SetAllReachable();
+        topologyProp.SetAllDisconnected();
         emptyModule.AddProperty(topologyProp);
         return emptyModule;
     }
@@ -57,7 +58,10 @@ public class Modules : ScriptableObject
         var roomModule = RoomModule();
         roomModule.Init();
         roomModule.AddProperty(new AreaModuleProperty(area));
-        roomModule.AddProperty(new TopologyProperty());
+        var topologyProp = new TopologyProperty();
+        topologyProp.SetAllReachable();
+        topologyProp.SetAllConnected();
+        roomModule.AddProperty(topologyProp);
         return roomModule;
     }
 }
