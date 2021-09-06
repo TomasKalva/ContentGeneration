@@ -66,37 +66,47 @@ public class RoomDesigner : Designer
     {
         moduleRuleClasses = (module, areasGraph) =>
         {
+            var area = module.GetProperty<AreaModuleProperty>().Area;
+            var topology = module.GetProperty<TopologyProperty>();
+
             var ruleClasses = new List<RulesClass>();
             foreach (var dirObj in module.HorizontalDirectionObjects())
             {
                 var direction = dirObj.direction;
                 var otherModule = grid[module.coords + direction];
                 var otherArea = otherModule?.GetProperty<AreaModuleProperty>().Area;
-                var area = module.GetProperty<AreaModuleProperty>().Area;
+                var otherTopology = otherModule?.GetProperty<TopologyProperty>();
 
                 // Connect to the same area
                 var connectSame = new Rule(
                     "Connect same area",
-                    () => area.ContainsModule(otherModule) && otherModule != null && otherModule.HasFloor(grid),
+                    () => topology.Reachable(direction) && otherTopology != null && otherTopology.HasFloor(grid),
                     () => module.SetDirection(direction, ObjectType.Empty)
                     );
 
                 // Place railing
                 var placeRailing = new Rule(
                     "Place railing",
-                    () => otherModule != null && module.HasFloor(grid) && !otherModule.HasFloor(grid, -direction),
+                    () => otherTopology != null && topology.HasFloor(grid) && !otherTopology.HasFloor(grid, -direction),
                     () => module.SetDirection(direction, ObjectType.Railing)
                     );
 
                 // Don't connect to outside
                 var dontConnectOutside = new Rule(
                     "Don't connect outside",
-                    () => otherArea == null || otherArea.Name == "Outside",
+                    () => otherArea != null && otherArea.Name == "Outside",
+                    () => module.SetDirection(direction, GetObjectType(module))
+                    );
+
+                // Disconnect from unreachable
+                var disconnectUnreachable = new Rule(
+                    "Don't connect outside",
+                    () => !topology.Reachable(direction),
                     () => module.SetDirection(direction, GetObjectType(module))
                     );
 
                 // Try to connect the areas if possible
-                var connectAreas = new Rule(
+                /*var connectAreas = new Rule(
                     "Connect areas",
                     () => !areasGraph.AreConnected(area, otherArea) && otherModule != null && otherModule.ReachableFrom(direction),
                     () =>
@@ -105,12 +115,12 @@ public class RoomDesigner : Designer
                         otherModule.SetDirection(-direction, ObjectType.Empty);
                         areasGraph.Connect(area, otherArea);
                     }
-                    );
+                    );*/
 
                 // Remove objects in all horiznotal directions when no floor
                 var noFloor = new Rule(
                     "Remove objects when no floor",
-                    () => !module.HasFloor(grid),
+                    () => !topology.HasFloor(grid),
                     () => module.HorizontalDirectionObjects().ForEach(dirObj => module.SetDirection(dirObj.direction, ObjectType.Empty))
                     );
 
@@ -127,15 +137,18 @@ public class RoomDesigner : Designer
                 rules.AddRule(connectSame);
                 rules.AddRule(dontConnectOutside);
                 rules.AddRule(placeRailing);
-                rules.AddRule(connectAreas);
+                rules.AddRule(disconnectUnreachable);
+
+
+                //rules.AddRule(connectAreas);
 
                 ruleClasses.Add(rules);
             }
 
-            // Remove ceiling
+            // Add ceiling
             var ceiling = new Rule(
-                "No ceiling",
-                () => true,
+                "Add ceiling",
+                () => topology.HasCeiling(),
                 () => module.SetObject(ObjectType.Ceiling)
                 );
 
@@ -160,6 +173,8 @@ public class RoofDesigner : Designer
     {
         moduleRuleClasses = (module, areasGraph) =>
         {
+            var topology = module.GetProperty<TopologyProperty>();
+
             var ruleClasses = new List<RulesClass>();
             foreach (var dirObj in module.HorizontalDirectionObjects())
             {
@@ -167,23 +182,24 @@ public class RoofDesigner : Designer
                 var otherModule = grid[module.coords + direction];
                 var otherArea = otherModule?.GetProperty<AreaModuleProperty>().Area;
                 var area = module.GetProperty<AreaModuleProperty>().Area;
+                var otherTopology = otherModule?.GetProperty<TopologyProperty>();
 
                 // Connect to the same area
                 var connectSame = new Rule(
                     "Connect same area",
-                    () => area.ContainsModule(otherModule) && otherModule != null && otherModule.HasFloor(grid),
+                    () => topology.Reachable(direction) && otherTopology != null && otherTopology.HasFloor(grid),
                     () => module.SetDirection(direction, ObjectType.Empty)
                     );
 
                 // Place railing
                 var placeRailing = new Rule(
                     "Place railing",
-                    () => otherModule != null && module.HasFloor(grid) && !otherModule.HasFloor(grid, -direction),
+                    () => otherTopology != null && topology.HasFloor(grid) && !otherTopology.HasFloor(grid, -direction),
                     () => module.SetDirection(direction, ObjectType.Railing)
                     );
 
                 // Try to connect the areas if possible
-                var connectAreas = new Rule(
+                /*var connectAreas = new Rule(
                     "Connect areas",
                     () => !areasGraph.AreConnected(area, otherArea) && otherModule != null && otherModule.ReachableFrom(direction),
                     () =>
@@ -191,10 +207,10 @@ public class RoofDesigner : Designer
                         module.SetDirection(direction, ObjectType.Empty);
                         areasGraph.Connect(area, otherArea);
                     }
-                    );
+                    );*/
 
                 var rules = new RulesClass(dirObj.direction.Name());
-                rules.AddRule(connectAreas);
+                //rules.AddRule(connectAreas);
                 rules.AddRule(connectSame);
                 rules.AddRule(placeRailing);
 

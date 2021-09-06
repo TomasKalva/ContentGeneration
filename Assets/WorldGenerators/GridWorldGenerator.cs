@@ -50,8 +50,9 @@ public class GridWorldGenerator : WorldGenerator
 
         //AddRooftops();
 
+        var areas = moduleGrid.Select(module => module.GetProperty<AreaModuleProperty>().Area).Distinct();
+        areas.ForEach(area => area.Finish(moduleGrid));
 
-        //satisfier.SatisfyDesigners(moduleGrid, areasGraph);
         foreach (var module in moduleGrid)
         {
             var designer = module.GetProperty<AreaModuleProperty>().Area.Designer;

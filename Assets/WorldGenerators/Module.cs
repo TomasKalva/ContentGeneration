@@ -286,6 +286,11 @@ public class TopologyProperty : IModuleTopology
         return ReachableDirections.Contains(-dir);
     }
 
+    public bool Reachable(Vector3Int dir)
+    {
+        return ReachableDirections.Contains(dir);
+    }
+
     public bool HasCeiling()
     {
         return !ReachableDirections.Contains(Vector3Int.up);
