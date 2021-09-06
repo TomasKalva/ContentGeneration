@@ -54,7 +54,7 @@ public class ModuleGrid : IEnumerable<Module>
 
             module.transform.SetParent(parent);
             module.transform.position = Vector3.Scale(coords, extents);
-            module.Init(coords);
+            module.coords = coords;
             moduleGrid[coords.x, coords.y, coords.z] = module;
         }
     }

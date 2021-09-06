@@ -33,18 +33,16 @@ public class Room : Template
             for (int k = leftFront.y; k < rightBack.y; k++)
             {
                 var coords = new Vector3Int(i, height, k);
-                var module = moduleLibrary.RoomModule();
+                var module = moduleLibrary.RoomModule(roomArea);
                 moduleGrid[coords] = module;
-                module.AddProperty(new AreaModuleProperty(roomArea));
             }
         }
         var stairsPos = ExtensionMethods.RandomVector2Int(leftFront, rightBack);
         var stairsCoords = new Vector3Int(stairsPos.x, height, stairsPos.y);
 
-        var stModule = moduleLibrary.RoomModule();
+        var stModule = moduleLibrary.RoomModule(roomArea);
         moduleGrid[stairsCoords] = stModule;
         stModule.SetObject(ObjectType.Stairs);
-        stModule.AddProperty(new AreaModuleProperty(roomArea));
 
         return true;
     }

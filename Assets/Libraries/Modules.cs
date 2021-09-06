@@ -31,23 +31,31 @@ public class Modules : ScriptableObject
     [SerializeField]
     Module empty;
 
-    public Module RoomModule()
+    Module RoomModule()
     {
         return Instantiate(room);
     }
 
-    public Module BridgeModule()
-    {
-        return Instantiate(bridge);
-    }
-
-    public Module StairsModule()
-    {
-        return Instantiate(stairs);
-    }
-
-    public Module EmptyModule()
+    Module EmptyModule()
     {
         return Instantiate(empty);
+    }
+
+    public Module EmptyModule(Area area)
+    {
+        var emptyModule = EmptyModule();
+        emptyModule.Init();
+        emptyModule.AddProperty(new AreaModuleProperty(area));
+        emptyModule.AddProperty(new TopologyProperty());
+        return emptyModule;
+    }
+
+    public Module RoomModule(Area area)
+    {
+        var roomModule = RoomModule();
+        roomModule.Init();
+        roomModule.AddProperty(new AreaModuleProperty(area));
+        roomModule.AddProperty(new TopologyProperty());
+        return roomModule;
     }
 }

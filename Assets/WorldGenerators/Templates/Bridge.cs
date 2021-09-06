@@ -58,16 +58,14 @@ public class Bridge : Template
                 for (int i = 0; i < dist; i++)
                 {
                     var bridgeCoords = startModule.coords + i * direction;
-                    var newBridge = moduleLibrary.RoomModule();
+                    var newBridge = moduleLibrary.RoomModule(underBridgeArea);
                     moduleGrid[bridgeCoords] = newBridge;
                     newBridge.ClearAttachmentPoints();
                     newBridge.SetObject(ObjectType.Bridge);
-                    newBridge.AddProperty(new AreaModuleProperty(underBridgeArea));
 
-                    var onBridge = moduleLibrary.RoomModule();
+                    var onBridge = moduleLibrary.RoomModule(onBridgeArea);
                     moduleGrid[bridgeCoords + UnityEngine.Vector3Int.up] = onBridge;
                     onBridge.ClearAttachmentPoints();
-                    onBridge.AddProperty(new AreaModuleProperty(onBridgeArea));
                 }
                 return true;
             }

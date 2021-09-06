@@ -41,10 +41,8 @@ public class Module : MonoBehaviour
         }
     }
 
-    public void Init(Vector3Int coords)
+    public void Init()
     {
-        this.coords = coords;
-
         attachmentPoints = GetComponentsInChildren<AttachmentPoint>();
 
         properties = new List<IModuleProperty>();
@@ -213,9 +211,17 @@ public struct GridDirection
     public static implicit operator Vector3Int(GridDirection d) => d._direction;
 }
 
-interface IModuleGeometry : IModuleProperty
+interface IModuleTopology : IModuleProperty
 {
+    bool ReachableFrom(Vector3Int dir);
 
+    bool HasCeiling();
+
+    bool HasFloor(ModuleGrid grid);
+
+    bool HasCeiling(Vector3Int direction);
+
+    bool HasFloor(ModuleGrid grid, Vector3Int direction);
 }
 
 public interface IModuleProperty
@@ -242,6 +248,58 @@ public class AreaModuleProperty : IModuleProperty
     public void OnModuleDestroyed(Module module)
     {
         Area.RemoveModule(module);
+    }
+}
+
+public class TopologyProperty : IModuleTopology
+{
+    public List<Vector3Int> ReachableDirections { get; }
+
+    Module module;
+
+    public TopologyProperty()
+    {
+        ReachableDirections = new List<Vector3Int>();
+    }
+
+    public void OnAdded(Module module)
+    {
+        this.module = module;
+    }
+
+    public void OnModuleDestroyed(Module module)
+    {
+    }
+
+    public bool ReachableFrom(Vector3Int dir)
+    {
+        return ReachableDirections.Contains(-dir);
+    }
+
+    public bool HasCeiling()
+    {
+        return !ReachableDirections.Contains(Vector3Int.up);
+    }
+
+    public bool HasFloor(ModuleGrid grid)
+    {
+        return HasFloor(grid, Vector3Int.zero);
+    }
+
+    public bool HasCeiling(Vector3Int direction)
+    {
+        return !ReachableDirections.Contains(Vector3Int.up + direction);
+    }
+
+    public bool HasFloor(ModuleGrid grid, Vector3Int direction)
+    {
+        var bottomCoords = module.coords - Vector3Int.up;
+        if (grid.ValidCoords(bottomCoords))
+        {
+            var bottomModule = grid[bottomCoords];
+            return bottomModule.HasCeiling(direction);
+        }
+        return false;
     }
 }
 

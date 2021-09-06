@@ -64,12 +64,8 @@ public class Rooftop : Template
         var rooftopArea = new Area(new RoofDesigner(moduleGrid), styles.gothic);
         foreach (var module in modules)
         {
-            //var areaProp = module.GetProperty<AreaModuleProperty>();
-            //areaProp.Area = rooftopArea;
-
-            var m = moduleLibrary.RoomModule();
+            var m = moduleLibrary.RoomModule(rooftopArea);
             moduleGrid[module.coords] = m;
-            m.AddProperty(new AreaModuleProperty(rooftopArea));
         }
         return true;
     }

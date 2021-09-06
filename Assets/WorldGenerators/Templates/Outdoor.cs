@@ -18,9 +18,9 @@ public class Outdoor : Template
         var outdoorArea = new Area(new Designer(), styles.gothic);
         foreach (var coords in box)
         {
-            var emptyModule = moduleLibrary.EmptyModule();
-            moduleGrid[coords] = emptyModule;
-            emptyModule.AddProperty(new AreaModuleProperty(outdoorArea));
+            //var emptyModule = moduleLibrary.EmptyModule();
+            moduleGrid[coords] = moduleLibrary.EmptyModule(outdoorArea);
+            //emptyModule.AddProperty(new AreaModuleProperty(outdoorArea));
         }
 
         return true;

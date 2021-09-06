@@ -48,15 +48,15 @@ public class GridWorldGenerator : WorldGenerator
 
         //AddBridges(bridgesCount);
 
-        AddRooftops();
+        //AddRooftops();
 
 
-        satisfier.SatisfyDesigners(moduleGrid, areasGraph);
-        /*foreach (var module in moduleGrid)
+        //satisfier.SatisfyDesigners(moduleGrid, areasGraph);
+        foreach (var module in moduleGrid)
         {
             var designer = module.GetProperty<AreaModuleProperty>().Area.Designer;
             designer.Design(moduleGrid, areasGraph, module);
-        }*/
+        }
 
         foreach (var module in moduleGrid)
         {
