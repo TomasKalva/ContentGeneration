@@ -37,36 +37,6 @@ public class AreasGraph : IGraph<Area, AreasConnection>
     }
 }
 
-public class Area
-{
-    public string Name { get; set; }
-
-    List<Module> modules;
-
-    public Style Style { get; }
-
-    public Designer Designer { get; }
-
-    public Area(Designer designer, Style style)
-    {
-        modules = new List<Module>();
-        Style = style;
-        Designer = designer;
-    }
-
-    public void AddModule(Module module)
-    {
-        modules.Add(module);
-    }
-
-    public void RemoveModule(Module module)
-    {
-        modules.Remove(module);
-    }
-
-    public bool ContainsModule(Module module) => modules.Where(m => m == module).Any();
-}
-
 public struct AreasConnection : Edge<Area>
 {
     public Area From { get; }

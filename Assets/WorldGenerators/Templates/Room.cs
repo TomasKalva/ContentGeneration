@@ -27,7 +27,7 @@ public class Room : Template
 
     public override bool Generate(ModuleGrid moduleGrid)
     {
-        var roomArea = new Area(new RoomDesigner(moduleGrid), styles.gothic);
+        var roomArea = new DisconnectedArea(new RoomDesigner(moduleGrid), styles.gothic);
         for (int i = leftFront.x; i < rightBack.x; i++)
         {
             for (int k = leftFront.y; k < rightBack.y; k++)
