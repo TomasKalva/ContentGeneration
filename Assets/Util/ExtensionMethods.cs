@@ -103,6 +103,18 @@ static class ExtensionMethods
         }
     }
 
+    public static V Get<K, V>(this Dictionary<K, V> dict, K key, V defaultValue)
+    {
+        if (dict.TryGetValue(key, out var val))
+        {
+            return val;
+        }
+        else
+        {
+            return defaultValue;
+        }
+    }
+
     public static T GetRandom<T>(this IEnumerable<T> enumerable, Func<T, float> weightF)
     {
         float total = enumerable.Sum(weightF);

@@ -159,25 +159,55 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
 
     public IEnumerable<EdgeT> EdgeDFS(VertexT start)
     {
-        var found = new List<VertexT>();
-        var fringe = new Stack<VertexT>();
-        fringe.Push(start);
+        var found = new List<EdgeT>();
+        var fringe = new Stack<EdgeT>();
+
+        foreach (var edge in graph.EdgesFrom(start))
+        {
+            fringe.Push(edge);
+        }
         while (fringe.Any())
         {
-            var v = fringe.Pop();
-            if (found.Contains(v))
+            var edge = fringe.Pop();
+            yield return edge;
+            if (found.Any(e => e.Connects(edge.From, edge.To)))
             {
                 continue;
             }
 
-            found.Add(v);
-            foreach (var edge in graph.EdgesFrom(v))
+            found.Add(edge);
+            foreach (var neighborEdge in graph.EdgesFrom(edge.To))
             {
-                yield return edge;
-                fringe.Push(edge.Other(v));
+                fringe.Push(neighborEdge);
             }
         }
     }
+
+    /*public int Distance(VertexT from, VertexT to)
+    {
+        var found = new List<VertexT>();
+        var distance = new Dictionary<VertexT, int>();
+        var fringe = new Set<VertexT>();
+        fringe.Add(from);
+        while (fringe.Any())
+        {
+            var v = fringe.ArgMin(u => distance.Get(u, int.MaxValue));
+            fringe.Remove(v);
+            if(v == to)
+            {
+                return distance[v];
+            }
+            else
+            {
+                foreach (var neighbor in graph.Neighbors(v))
+                {
+                    var bestDist = Math.Min(distance.Get(neighbor), distance[v] + 1);
+                    fringe.Add(neighbor);
+                }
+            }
+        }
+        return int.MaxValue;
+    }*/
 
     public bool Path(VertexT from, VertexT to)
     {

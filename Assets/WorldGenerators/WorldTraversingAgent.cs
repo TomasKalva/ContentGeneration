@@ -33,9 +33,31 @@ public class WorldTraversingAgent
         // choose a starting location
         var startingArea = areas.GetRandom();
 
+
+        /*var found = new List<Edge<Area>>();
+        var fringe = new Stack<Area>();
+        fringe.Push(start);
+        while (fringe.Any())
+        {
+            var v = fringe.Pop();
+            if (found.Contains(v))
+            {
+                continue;
+            }
+
+            found.Add(v);
+            foreach (var edge in graph.EdgesFrom(v))
+            {
+                yield return edge;
+                fringe.Push(edge.Other(v));
+            }
+        }*/
         // navigate through the area graph
-        int connnectionCount = 0;
-        foreach(var areasConnection in areasClosenessAlg.EdgeDFS(startingArea))
+
+        // find add interesting points to the area
+
+        // remember all the connections to other areas
+        foreach (var areasConnection in areasClosenessAlg.EdgeDFS(startingArea))
         {
             if(areasConnnectionsAlg.Path(areasConnection.From, areasConnection.To))
             {
@@ -50,12 +72,14 @@ public class WorldTraversingAgent
 
             if(connectFrom == null)
             {
+                Debug.Log("fail");
                 continue;
             }
             var connectTo = connectFrom.AllNeighbors(grid).Where(neighbor => CanConnectToArea(grid, connectFrom, neighbor, areasConnection.To)).GetRandom();
 
             if (connectTo == null)
             {
+                Debug.Log("fail");
                 continue;
             }
             var dirFromTo = connectFrom.DirectionTo(connectTo);
@@ -78,19 +102,6 @@ public class WorldTraversingAgent
             }
             areasConnnections.AddEdge(areasConnection);
 
-
-            /*Debug.Log($"Area from: {connectFrom.GetProperty<AreaModuleProperty>().Area.Name}");
-            Debug.Log($"Area to: {connectTo.GetProperty<AreaModuleProperty>().Area.Name}");
-
-            Debug.Log($"Areas connection from: {areasConnection.From.Name}");
-            Debug.Log($"Areas connection to: {areasConnection.To.Name}");*/
-
-            /*connectFrom.GetAttachmentPoint(dirFromTo).objectType = ObjectType.Door;
-            connectTo.GetAttachmentPoint(-dirFromTo).objectType = ObjectType.Empty;
-
-            areasConnnections.AddEdge(areasConnection);
-            //Debug.Log("Connection");
-            connnectionCount++;*/
         }
     }
 
