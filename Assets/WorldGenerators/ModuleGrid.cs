@@ -74,7 +74,7 @@ public class ModuleGrid : IEnumerable<Module>
 
     public bool ContainsBuilding(Module module)
     {
-        return module != null && !module.empty;
+        return module != null && !module.Empty;
     }
 
     public bool HasHorizontalNeighbor(Module module)
@@ -87,7 +87,7 @@ public class ModuleGrid : IEnumerable<Module>
 
     public bool IsEmpty(Module module)
     {
-        return module.empty;
+        return module.Empty;
     }
 
     public IEnumerator<Module> GetEnumerator()

@@ -94,7 +94,7 @@ public class RoomDesigner : Designer
                 // Don't connect to outside
                 var dontConnectOutside = new Rule(
                     "Don't connect outside",
-                    () => otherArea != null && otherArea.Name == "Outside",
+                    () => otherArea != null && otherArea.AreaType == "Outside",
                     () => module.SetDirection(direction, GetObjectType(module))
                     );
 

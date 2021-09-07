@@ -73,7 +73,7 @@ public class GridWorldGenerator : WorldGenerator
         openArea.Generate(moduleGrid);
         foreach(var module in moduleGrid)
         {
-            module.GetProperty<AreaModuleProperty>().Area.Name = "Outside";
+            module.GetProperty<AreaModuleProperty>().Area.AreaType = "Outside";
         }
     }
 
@@ -84,6 +84,11 @@ public class GridWorldGenerator : WorldGenerator
         */
         /*var modernBuilding = new ModernBuilding(new Box3Int(Vector3Int.zero, 5 * Vector3Int.one), modules, styles);
         modernBuilding.Generate(moduleGrid);*/
+        /*
+        var rectangles = new UniformRectangles(new Box3Int(Vector3Int.zero, moduleGrid.Sizes).FlattenY(), new Vector2Int(5, 5), modules, styles);
+        rectangles.Generate(moduleGrid);
+        */
+        
         for (int i = 0; i < n; i++)
         {
             AddBuilding();
@@ -150,7 +155,7 @@ public class GridWorldGenerator : WorldGenerator
 
     bool ContainsBuilding(Module module)
     {
-        return module != null && !module.empty;
+        return module != null && !module.Empty;
     }
 
     public bool HasHorizontalNeighbor(Module module)
@@ -163,7 +168,7 @@ public class GridWorldGenerator : WorldGenerator
 
     bool IsEmpty(Module module)
     {
-        return module.empty;
+        return module.Empty;
     }
 
     /// <summary>
@@ -171,7 +176,7 @@ public class GridWorldGenerator : WorldGenerator
     /// </summary>
     bool AddBridge()
     {
-        var startModule = SatisfyingModule(module => module.empty && HasHorizontalNeighbor(module) && module.GetProperty<AreaModuleProperty>().Area.Name == "Outside");
+        var startModule = SatisfyingModule(module => module.Empty && HasHorizontalNeighbor(module) && module.GetProperty<AreaModuleProperty>().Area.AreaType == "Outside");
         var bridge = new Bridge(startModule, modules, styles);
         return bridge.Generate(moduleGrid);
     }

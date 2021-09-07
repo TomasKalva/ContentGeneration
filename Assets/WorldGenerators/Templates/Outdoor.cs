@@ -16,6 +16,7 @@ public class Outdoor : Template
     public override bool Generate(ModuleGrid moduleGrid)
     {
         var outdoorArea = new Area(new Designer(), styles.gothic);
+        outdoorArea.AreaType = "Empty";
         foreach (var coords in box)
         {
             moduleGrid[coords] = moduleLibrary.EmptyModule(outdoorArea);

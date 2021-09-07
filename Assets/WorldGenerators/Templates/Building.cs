@@ -22,8 +22,8 @@ public class Building : Template
             room.Generate(moduleGrid);
         }
 
-        var openArea = new Outdoor(new Box3Int(boundingBox.leftBottomBack, boundingBox.rightTopFront).Padding(Vector3Int.one), moduleLibrary, styles);
-        openArea.Generate(moduleGrid);
+        var outdoor = new Outdoor(new Box3Int(boundingBox.leftBottomBack, boundingBox.rightTopFront).Padding(Vector3Int.one), moduleLibrary, styles);
+        outdoor.Generate(moduleGrid);
 
         return true;
     }
@@ -52,7 +52,30 @@ public class UniformTown : Template
     }
 }
 
-public class ModernBuilding : Template
+public class UniformRectangles : Template
+{
+    Box2Int boundingBox;
+    Vector2Int buildingExtents;
+
+    public UniformRectangles(Box2Int boundingBox, Vector2Int buildingExtents, Modules moduleLibrary, Styles styles) : base(moduleLibrary, styles)
+    {
+        this.boundingBox = boundingBox;
+        this.buildingExtents = buildingExtents;
+    }
+
+    public override bool Generate(ModuleGrid moduleGrid)
+    {
+        foreach (var subbox in boundingBox.GetSubboxes(buildingExtents))
+        {
+            var buildilng = new Building(subbox.InflateY(0, moduleGrid.Height), moduleLibrary, styles);
+            buildilng.Generate(moduleGrid);
+        }
+
+        return true;
+    }
+}
+
+    public class ModernBuilding : Template
 {
     Box3Int boundingBox;
 

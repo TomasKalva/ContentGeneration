@@ -6,7 +6,21 @@ using System.Threading.Tasks;
 
 public class Area
 {
-    public string Name { get; set; }
+    static int areaId = 0;
+
+    string _name;
+    public string Name => _name;
+
+    string _areaType;
+    public string AreaType
+    {
+        get => _areaType;
+        set
+        {
+            _name = $"{value}{areaId++}";
+            _areaType = value;
+        }
+    }
 
     protected List<Module> modules;
 

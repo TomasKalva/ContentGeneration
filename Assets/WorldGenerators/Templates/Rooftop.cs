@@ -18,6 +18,7 @@ public class Rooftops : Template
                             .Where(neighbor => IsRoof(moduleGrid, neighbor)));
         var heightGraphAlg = new GraphAlgorithms<Module, Edge<Module>, ImplicitGraph<Module>>(heightGraph);
         var roofComponents = heightGraphAlg.ConnectedComponentsSymm(moduleGrid.Where(module => IsRoof(moduleGrid, module)));
+        Debug.Log($"roof compo: {moduleGrid.Where(module => IsRoof(moduleGrid, module)).Count()}");
         foreach(var component in roofComponents)
         {
             var area = new Rooftop(component, moduleLibrary, styles);
@@ -41,11 +42,11 @@ public class Rooftops : Template
 
     bool IsRoof(ModuleGrid moduleGrid, Module maybeRoof)
     {
-        if (maybeRoof.empty)
+        if (maybeRoof.Outside)
         {
             var topology = maybeRoof.GetProperty<TopologyProperty>();
             //var oneDown = maybeRoof.coords - Vector3Int.up;
-            return topology.HasFloor(moduleGrid) && maybeRoof.AllAbove(moduleGrid).All(module => module == null || module.empty);// moduleGrid.ValidCoords(oneDown) && moduleGrid[oneDown].Has;
+            return topology.HasFloor(moduleGrid) && maybeRoof.AllAbove(moduleGrid).All(module => module == null || module.GetProperty<AreaModuleProperty>().Area.AreaType == "Outside");// moduleGrid.ValidCoords(oneDown) && moduleGrid[oneDown].Has;
         }
         return false;
     }
@@ -63,7 +64,7 @@ public class Rooftop : Template
     public override bool Generate(ModuleGrid moduleGrid)
     {
         var rooftopArea = new DisconnectedArea(new RoofDesigner(moduleGrid), styles.gothic);
-        rooftopArea.Name = "Rooftop";
+        rooftopArea.AreaType = "Rooftop";
         foreach (var module in modules)
         {
             var m = moduleLibrary.RoomModule(rooftopArea);

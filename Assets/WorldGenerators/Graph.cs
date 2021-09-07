@@ -22,9 +22,14 @@ public class Graph<VertexT> : IGraph<VertexT, Edge<VertexT>> where VertexT : cla
         Edges = edges;
     }
 
-    public void AddArea(VertexT area)
+    public void AddVertex(VertexT area)
     {
         Vertices.Add(area);
+    }
+
+    public void AddEdge(Edge<VertexT> edge)
+    {
+        Edges.Add(edge);
     }
 
     public void Connect(VertexT from, VertexT to)
