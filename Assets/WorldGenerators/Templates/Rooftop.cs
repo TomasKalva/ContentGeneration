@@ -46,7 +46,7 @@ public class Rooftops : Template
         {
             var topology = maybeRoof.GetProperty<TopologyProperty>();
             //var oneDown = maybeRoof.coords - Vector3Int.up;
-            return topology.HasFloor(moduleGrid) && maybeRoof.AllAbove(moduleGrid).All(module => module == null || module.GetProperty<AreaModuleProperty>().Area.AreaType == "Outside");// moduleGrid.ValidCoords(oneDown) && moduleGrid[oneDown].Has;
+            return topology.HasFloor(moduleGrid) && maybeRoof.AllAbove(moduleGrid).All(module => module == null || (module.Outside && module.Empty));// moduleGrid.ValidCoords(oneDown) && moduleGrid[oneDown].Has;
         }
         return false;
     }
@@ -67,8 +67,9 @@ public class Rooftop : Template
         rooftopArea.AreaType = "Rooftop";
         foreach (var module in modules)
         {
-            var m = moduleLibrary.RoomModule(rooftopArea);
+            var m = moduleLibrary.EmptyModule(rooftopArea);
             moduleGrid[module.coords] = m;
+            m.GetProperty<TopologyProperty>().SetAllDisconnected();
         }
         return true;
     }

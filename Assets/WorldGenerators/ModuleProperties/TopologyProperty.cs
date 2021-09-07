@@ -117,7 +117,7 @@ public class TopologyProperty : IModuleTopology
         if (grid.ValidCoords(bottomCoords))
         {
             var bottomModuleTopology = grid[bottomCoords].GetProperty<TopologyProperty>();
-            return bottomModuleTopology.HasCeiling();
+            return bottomModuleTopology.HasFloor();
         }
         return false;
     }
@@ -137,4 +137,6 @@ public class TopologyProperty : IModuleTopology
         }
         return false;
     }
+
+    public bool Empty => !ConnectsUp && !HasCeiling() && ReachableDirections.Count() == 4;
 }

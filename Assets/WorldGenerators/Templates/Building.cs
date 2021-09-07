@@ -22,8 +22,14 @@ public class Building : Template
             room.Generate(moduleGrid);
         }
 
-        var outdoor = new Outdoor(new Box3Int(boundingBox.leftBottomBack, boundingBox.rightTopFront).Padding(Vector3Int.one), moduleLibrary, styles);
+        var outdoorExtents = new Box3Int(boundingBox.leftBottomBack, boundingBox.rightTopFront).Padding(Vector3Int.one);
+        var outdoor = new Outdoor(outdoorExtents, moduleLibrary, styles);
         outdoor.Generate(moduleGrid);
+
+        foreach(var module in outdoorExtents.Select(coords => moduleGrid[coords]))
+        {
+            module.GetProperty<AreaModuleProperty>().Area.Inside = true;
+        }
 
         return true;
     }

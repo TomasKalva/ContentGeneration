@@ -26,7 +26,7 @@ public class Bridge : Template
             dir =>
             {
                 var neighborModule = moduleGrid[startModule.coords - dir];
-                return neighborModule != null && !neighborModule.Empty && neighborModule.GetProperty<TopologyProperty>().HasCeiling(dir);
+                return neighborModule != null && neighborModule.GetProperty<TopologyProperty>().HasCeiling(dir);
             }).Shuffle();
         foreach (var direction in possibleDirections)
         {
@@ -34,7 +34,7 @@ public class Bridge : Template
             var coords = startModule.coords;
 
             var module = moduleGrid[coords];
-            while (module != null && module.Empty && !module.HorizontalNeighbors(moduleGrid).Any(neighbor => neighbor.GetObject() != null && neighbor.GetObject().objectType == ObjectType.Bridge))
+            while (module != null && module.Outside && !module.GetProperty<TopologyProperty>().HasCeiling() && !module.HorizontalNeighbors(moduleGrid).Any(neighbor => neighbor.GetObject().objectType == ObjectType.Bridge))
             {
                 coords += direction;
                 dist += 1;
@@ -53,7 +53,7 @@ public class Bridge : Template
             else
             {
                 var underBridgeArea = new Area(new BridgeDesigner(moduleGrid), styles.gothic);
-                underBridgeArea.AreaType = "Outside";
+                underBridgeArea.Inside = false;
                 var onBridgeArea = new Area(new Designer(), styles.gothic);
                 for (int i = 0; i < dist; i++)
                 {

@@ -13,13 +13,14 @@ public class WorldTraversingAgent
             area => area.Modules.SelectMany(
                 module => module.AllNeighbors(grid)
                         .Where(neighbor =>
+                            neighbor.GetProperty<TopologyProperty>().HasFloor(grid, neighbor.DirectionTo(module)) &&
                             neighbor.GetProperty<AreaModuleProperty>().Area != module.GetProperty<AreaModuleProperty>().Area)
                         .Select(neighbor => neighbor.GetProperty<AreaModuleProperty>().Area))
                     .Distinct()
-                    .Where(otherArea => otherArea.AreaType != "Empty" && otherArea.AreaType != "Outside" && otherArea != area)
+                    .Where(otherArea => /*!otherArea.module.Empty &&*//* otherArea.Inside &&*/ otherArea != area)
             );
-        var areas = grid.Select(module => module.GetProperty<AreaModuleProperty>().Area).Distinct()
-                    .Where(area => area.AreaType != "Empty" && area.AreaType != "Outside").ToList();
+        var areas = grid/*.Where(module => !module.Empty)*/.Where(module => module.GetProperty<TopologyProperty>().HasFloor(grid)).Select(module => module.GetProperty<AreaModuleProperty>().Area).Distinct()
+                    /*.Where(area => area.Inside)*/.ToList();
         //var areasCloseness = areasClosenessImpl.ToGraph(areas);
         var areasClosenessAlg = new GraphAlgorithms<Area, Edge<Area>, IGraph<Area, Edge<Area>>>(areasClosenessImpl);
 

@@ -22,6 +22,9 @@ public class Area
         }
     }
 
+    public bool Inside { get; set; }
+    public bool Outside => !Inside;
+
     protected List<Module> modules;
 
     public Style Style { get; }
@@ -35,6 +38,7 @@ public class Area
         modules = new List<Module>();
         Style = style;
         Designer = designer;
+        Inside = false;
     }
 
     public void AddModule(Module module)

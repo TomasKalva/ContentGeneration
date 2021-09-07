@@ -8,8 +8,8 @@ public class Module : MonoBehaviour
 {
     public Vector3Int coords;
 
-    public bool Empty => GetProperty<AreaModuleProperty>().Area.AreaType == "Empty";
-    public bool Outside => GetProperty<AreaModuleProperty>().Area.AreaType == "Outside";
+    public bool Empty => GetProperty<TopologyProperty>().Empty;
+    public bool Outside => GetProperty<AreaModuleProperty>().Area.Outside;
 
     List<IModuleProperty> properties;
 

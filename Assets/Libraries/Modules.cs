@@ -43,7 +43,7 @@ public class Modules : ScriptableObject
 
     public Module EmptyModule(Area area)
     {
-        var emptyModule = EmptyModule();
+        var emptyModule = RoomModule();
         emptyModule.Init();
         emptyModule.AddProperty(new AreaModuleProperty(area));
         var topologyProp = new TopologyProperty();

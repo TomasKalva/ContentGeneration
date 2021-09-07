@@ -74,6 +74,7 @@ public class GridWorldGenerator : WorldGenerator
         foreach(var module in moduleGrid)
         {
             module.GetProperty<AreaModuleProperty>().Area.AreaType = "Outside";
+            module.GetProperty<AreaModuleProperty>().Area.Inside = false;
         }
     }
 
@@ -84,15 +85,15 @@ public class GridWorldGenerator : WorldGenerator
         */
         /*var modernBuilding = new ModernBuilding(new Box3Int(Vector3Int.zero, 5 * Vector3Int.one), modules, styles);
         modernBuilding.Generate(moduleGrid);*/
-        /*
+        
         var rectangles = new UniformRectangles(new Box3Int(Vector3Int.zero, moduleGrid.Sizes).FlattenY(), new Vector2Int(5, 5), modules, styles);
         rectangles.Generate(moduleGrid);
-        */
         
-        for (int i = 0; i < n; i++)
+        
+        /*for (int i = 0; i < n; i++)
         {
             AddBuilding();
-        }
+        }*/
     }
 
     void GetExtents(int M, int m, out int a, out int b)
@@ -155,7 +156,7 @@ public class GridWorldGenerator : WorldGenerator
 
     bool ContainsBuilding(Module module)
     {
-        return module != null && !module.Empty;
+        return module != null && module.GetProperty<TopologyProperty>().HasCeiling();
     }
 
     public bool HasHorizontalNeighbor(Module module)
@@ -166,17 +167,12 @@ public class GridWorldGenerator : WorldGenerator
                 ContainsBuilding(moduleGrid[module.coords - Vector3Int.forward]);
     }
 
-    bool IsEmpty(Module module)
-    {
-        return module.Empty;
-    }
-
     /// <summary>
     /// Returns true if adding bridge was successfull.
     /// </summary>
     bool AddBridge()
     {
-        var startModule = SatisfyingModule(module => module.Empty && HasHorizontalNeighbor(module) && module.GetProperty<AreaModuleProperty>().Area.AreaType == "Outside");
+        var startModule = SatisfyingModule(module => HasHorizontalNeighbor(module) && module.Outside);
         var bridge = new Bridge(startModule, modules, styles);
         return bridge.Generate(moduleGrid);
     }

@@ -29,6 +29,7 @@ public class Room : Template
     {
         var roomArea = new DisconnectedArea(new RoomDesigner(moduleGrid), styles.gothic);
         roomArea.AreaType = "Room area";
+        roomArea.Inside = true;
         for (int i = leftFront.x; i < rightBack.x; i++)
         {
             for (int k = leftFront.y; k < rightBack.y; k++)

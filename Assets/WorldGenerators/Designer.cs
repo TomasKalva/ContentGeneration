@@ -94,7 +94,7 @@ public class RoomDesigner : Designer
                 // Don't connect to outside
                 var dontConnectOutside = new Rule(
                     "Don't connect outside",
-                    () => otherArea != null && otherArea.AreaType == "Outside",
+                    () => otherArea != null && otherArea.Outside,
                     () => module.SetDirection(direction, GetObjectType(module))
                     );
 
@@ -194,7 +194,7 @@ public class RoofDesigner : Designer
                 // Place railing
                 var placeRailing = new Rule(
                     "Place railing",
-                    () => otherArea == null || (otherArea.Name == "Outside" || (topology.HasFloor(grid) && !otherTopology.HasFloor(grid, -direction))),
+                    () => otherArea == null || (otherArea.Outside || (topology.HasFloor(grid) && !otherTopology.HasFloor(grid, -direction))),
                     () => module.SetDirection(direction, ObjectType.Railing)
                     );
 
