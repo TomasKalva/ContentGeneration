@@ -117,7 +117,7 @@ public class TopologyProperty : IModuleTopology
         if (grid.ValidCoords(bottomCoords))
         {
             var bottomModuleTopology = grid[bottomCoords].GetProperty<TopologyProperty>();
-            return bottomModuleTopology.HasFloor();
+            return bottomModuleTopology.HasCeiling();
         }
         return false;
     }

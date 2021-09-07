@@ -153,6 +153,12 @@ static class ExtensionMethods
         yield return -Vector3Int.right;
     }
 
+    public static IEnumerable<Vector3Int> VerticalDirections()
+    {
+        yield return Vector3Int.up;
+        yield return -Vector3Int.up;
+    }
+
     public static IEnumerable<Vector3Int> Directions()
     {
         yield return Vector3Int.forward;

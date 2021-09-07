@@ -218,7 +218,7 @@ public class RoofDesigner : Designer
             }
 
             // Remove ceiling
-            var noCeiling = new Rule(
+            /*var noCeiling = new Rule(
                 "No ceiling",
                 () => true,
                 () => module.SetObject(ObjectType.Empty)
@@ -227,7 +227,7 @@ public class RoofDesigner : Designer
             var noCeilingRules = new RulesClass("No ceiling");
             noCeilingRules.AddRule(noCeiling);
 
-            ruleClasses.Add(noCeilingRules);
+            ruleClasses.Add(noCeilingRules);*/
 
             return ruleClasses;
         };

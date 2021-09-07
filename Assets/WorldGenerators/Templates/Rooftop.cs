@@ -18,7 +18,6 @@ public class Rooftops : Template
                             .Where(neighbor => IsRoof(moduleGrid, neighbor)));
         var heightGraphAlg = new GraphAlgorithms<Module, Edge<Module>, ImplicitGraph<Module>>(heightGraph);
         var roofComponents = heightGraphAlg.ConnectedComponentsSymm(moduleGrid.Where(module => IsRoof(moduleGrid, module)));
-        Debug.Log($"roof compo: {moduleGrid.Where(module => IsRoof(moduleGrid, module)).Count()}");
         foreach(var component in roofComponents)
         {
             var area = new Rooftop(component, moduleLibrary, styles);
@@ -46,7 +45,7 @@ public class Rooftops : Template
         {
             var topology = maybeRoof.GetProperty<TopologyProperty>();
             //var oneDown = maybeRoof.coords - Vector3Int.up;
-            return topology.HasFloor(moduleGrid) && maybeRoof.AllAbove(moduleGrid).All(module => module == null || (module.Outside && module.Empty));// moduleGrid.ValidCoords(oneDown) && moduleGrid[oneDown].Has;
+            return topology.HasFloor(moduleGrid) && maybeRoof.AllAbove(moduleGrid).All(module => module == null || (module.Outside && !topology.HasCeiling()));// moduleGrid.ValidCoords(oneDown) && moduleGrid[oneDown].Has;
         }
         return false;
     }
@@ -67,9 +66,13 @@ public class Rooftop : Template
         rooftopArea.AreaType = "Rooftop";
         foreach (var module in modules)
         {
-            var m = moduleLibrary.EmptyModule(rooftopArea);
-            moduleGrid[module.coords] = m;
-            m.GetProperty<TopologyProperty>().SetAllDisconnected();
+            var m = moduleGrid[module.coords];// moduleLibrary.EmptyModule(rooftopArea);
+            var areaProperty = m.GetProperty<AreaModuleProperty>();
+            areaProperty.Area.RemoveModule(m);
+            areaProperty.Area = rooftopArea;
+            rooftopArea.AddModule(m);
+            //moduleGrid[module.coords] = m;
+            //m.GetProperty<TopologyProperty>().SetAllDisconnected();
         }
         return true;
     }

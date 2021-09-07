@@ -11,20 +11,24 @@ public class WorldTraversingAgent
     {
         var areasClosenessImpl = new ImplicitGraph<Area>(
             area => area.Modules.SelectMany(
-                module => module.AllNeighbors(grid)
-                        .Where(neighbor =>
-                            neighbor.GetProperty<TopologyProperty>().HasFloor(grid, neighbor.DirectionTo(module)) &&
-                            neighbor.GetProperty<AreaModuleProperty>().Area != module.GetProperty<AreaModuleProperty>().Area)
-                        .Select(neighbor => neighbor.GetProperty<AreaModuleProperty>().Area))
+                module => module.HorizontalNeighbors(grid)
+                            .Where(neighbor => neighbor.GetProperty<TopologyProperty>().HasFloor(grid, neighbor.DirectionTo(module)))
+                        .Concat(
+                            module.VerticalNeighbors(grid).Where(neighbor => neighbor.GetProperty<TopologyProperty>().HasFloor(grid))
+                        ))
+                        .Select(neighbor => neighbor.GetProperty<AreaModuleProperty>().Area)
                     .Distinct()
-                    .Where(otherArea => /*!otherArea.module.Empty &&*//* otherArea.Inside &&*/ otherArea != area)
+                    .Where(otherArea => otherArea != area)
             );
-        var areas = grid/*.Where(module => !module.Empty)*/.Where(module => module.GetProperty<TopologyProperty>().HasFloor(grid)).Select(module => module.GetProperty<AreaModuleProperty>().Area).Distinct()
-                    /*.Where(area => area.Inside)*/.ToList();
+        var areas = grid.Where(module => module.GetProperty<TopologyProperty>().HasFloor(grid))
+                    .Select(module => module.GetProperty<AreaModuleProperty>().Area).Distinct()
+                    .ToList();
+
         //var areasCloseness = areasClosenessImpl.ToGraph(areas);
         var areasClosenessAlg = new GraphAlgorithms<Area, Edge<Area>, IGraph<Area, Edge<Area>>>(areasClosenessImpl);
 
         var areasConnnections = new Graph<Area>(areas, new List<Edge<Area>>());
+        var areasConnnectionsAlg = new GraphAlgorithms<Area, Edge<Area>, IGraph<Area, Edge<Area>>>(areasConnnections);
 
         // choose a starting location
         var startingArea = areas.GetRandom();
@@ -33,15 +37,14 @@ public class WorldTraversingAgent
         int connnectionCount = 0;
         foreach(var areasConnection in areasClosenessAlg.EdgeDFS(startingArea))
         {
-            if(areasConnnections.AreConnected(areasConnection.From, areasConnection.To))
+            if(areasConnnectionsAlg.Path(areasConnection.From, areasConnection.To))
             {
                 continue;
             }
 
-            var borderModules = areasConnection.From.Modules.Where(module => !module.Empty).Where(
+            var borderModules = areasConnection.From.Modules.Where(
                      border => border.AllNeighbors(grid)
-                         .Where(module => !module.Empty)
-                         .Where(neighbor => neighbor.GetProperty<AreaModuleProperty>().Area == areasConnection.To).Any())
+                         .Where(neighbor => CanConnectToArea(grid, border, neighbor, areasConnection.To)).Any())
                     .Distinct();
             var connectFrom = borderModules.GetRandom();
 
@@ -49,7 +52,7 @@ public class WorldTraversingAgent
             {
                 continue;
             }
-            var connectTo = connectFrom.HorizontalNeighbors(grid).Where(module => !module.Empty).Where(module => module.GetProperty<AreaModuleProperty>().Area == areasConnection.To).GetRandom();
+            var connectTo = connectFrom.AllNeighbors(grid).Where(neighbor => CanConnectToArea(grid, connectFrom, neighbor, areasConnection.To)).GetRandom();
 
             if (connectTo == null)
             {
@@ -57,10 +60,24 @@ public class WorldTraversingAgent
             }
             var dirFromTo = connectFrom.DirectionTo(connectTo);
 
-            if(dirFromTo == Vector3Int.up || dirFromTo == Vector3Int.down)
+            if(dirFromTo.y == 0)
             {
-                continue;
+                // horizontal
+                connectFrom.GetAttachmentPoint(dirFromTo).objectType = ObjectType.Door;
+                connectTo.GetAttachmentPoint(-dirFromTo).objectType = ObjectType.Empty;
             }
+            else if(dirFromTo.y > 0)
+            {
+                // up
+                connectFrom.GetObject().objectType = ObjectType.Stairs;
+            }
+            else
+            {
+                // down
+                connectTo.GetObject().objectType = ObjectType.Stairs;
+            }
+            areasConnnections.AddEdge(areasConnection);
+
 
             /*Debug.Log($"Area from: {connectFrom.GetProperty<AreaModuleProperty>().Area.Name}");
             Debug.Log($"Area to: {connectTo.GetProperty<AreaModuleProperty>().Area.Name}");
@@ -68,12 +85,30 @@ public class WorldTraversingAgent
             Debug.Log($"Areas connection from: {areasConnection.From.Name}");
             Debug.Log($"Areas connection to: {areasConnection.To.Name}");*/
 
-            connectFrom.GetAttachmentPoint(dirFromTo).objectType = ObjectType.Door;
+            /*connectFrom.GetAttachmentPoint(dirFromTo).objectType = ObjectType.Door;
             connectTo.GetAttachmentPoint(-dirFromTo).objectType = ObjectType.Empty;
 
             areasConnnections.AddEdge(areasConnection);
             //Debug.Log("Connection");
-            connnectionCount++;
+            connnectionCount++;*/
+        }
+    }
+
+    bool CanConnectToArea(ModuleGrid grid, Module from, Module to, Area toArea)
+    {
+        if (to.GetProperty<AreaModuleProperty>().Area != toArea)
+            return false;
+
+        var dirFromTo = from.DirectionTo(to);
+        if(dirFromTo.y == 0)
+        {
+            // horizontal connection
+            return from.GetProperty<TopologyProperty>().HasFloor(grid, dirFromTo) && to.GetProperty<TopologyProperty>().HasFloor(grid, -dirFromTo);
+        }
+        else
+        {
+            // vertical connection
+            return from.GetProperty<TopologyProperty>().HasFloor(grid) && to.GetProperty<TopologyProperty>().HasFloor(grid);
         }
     }
 }

@@ -65,7 +65,10 @@ public class Bridge : Template
                     bridgeTopology.SetAllDisconnected();
                     bridgeTopology.SetConnected(direction);
                     bridgeTopology.SetConnected(-direction);
+                    bridgeTopology.SetUnreachable(direction);
+                    bridgeTopology.SetUnreachable(-direction);
                     newBridge.SetObject(ObjectType.Bridge);
+                    newBridge.GetObject().RotateTowards(direction);
 
 
                     var onBridge = moduleLibrary.EmptyModule(onBridgeArea);

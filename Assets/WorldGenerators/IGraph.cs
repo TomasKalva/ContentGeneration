@@ -135,6 +135,28 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
         return components;
     }
 
+    public IEnumerable<VertexT> DFS(VertexT start)
+    {
+        var found = new List<VertexT>();
+        var fringe = new Stack<VertexT>();
+        fringe.Push(start);
+        while (fringe.Any())
+        {
+            var v = fringe.Pop();
+            if (found.Contains(v))
+            {
+                continue;
+            }
+
+            yield return v;
+            found.Add(v);
+            foreach (var neighbor in graph.Neighbors(v))
+            {
+                fringe.Push(neighbor);
+            }
+        }
+    }
+
     public IEnumerable<EdgeT> EdgeDFS(VertexT start)
     {
         var found = new List<VertexT>();
@@ -155,5 +177,10 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
                 fringe.Push(edge.Other(v));
             }
         }
+    }
+
+    public bool Path(VertexT from, VertexT to)
+    {
+        return DFS(from).Contains(to);
     }
 }

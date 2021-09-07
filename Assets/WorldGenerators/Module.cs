@@ -76,6 +76,11 @@ public class Module : MonoBehaviour
         return ExtensionMethods.HorizontalDirections().Select(dir => grid[coords + dir]).Where(m => m != null);
     }
 
+    public IEnumerable<Module> VerticalNeighbors(ModuleGrid grid)
+    {
+        return ExtensionMethods.VerticalDirections().Select(dir => grid[coords + dir]).Where(m => m != null);
+    }
+
     public IEnumerable<Module> AllNeighbors(ModuleGrid grid)
     {
         return ExtensionMethods.Directions().Select(dir => grid[coords + dir]).Where(m => m != null);
