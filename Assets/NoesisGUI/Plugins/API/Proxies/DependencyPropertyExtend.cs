@@ -146,7 +146,7 @@ namespace Noesis
             }
             if (type.IsValueType)
             {
-                return Activator.CreateInstance(type);
+                return System.Activator.CreateInstance(type);
             }
             return null;
         }

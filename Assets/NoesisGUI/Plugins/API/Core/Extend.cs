@@ -1429,7 +1429,7 @@ namespace Noesis
             else
 #endif
             {
-                return () => Activator.CreateInstance(type);
+                return () => System.Activator.CreateInstance(type);
             }
         }
 
