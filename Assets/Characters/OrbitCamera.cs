@@ -97,8 +97,8 @@ public class OrbitCamera : MonoBehaviour
 
 		public virtual void PostUpdate(OrbitCamera cam)
 		{
-			cam.desiredCameraPosition = Vector3.one;
-			cam.desiredFocusPoint = Vector3.zero;
+			//cam.desiredCameraPosition = Vector3.one;
+			//cam.desiredFocusPoint = Vector3.zero;
 		}
 
 		/// <summary>
@@ -110,6 +110,8 @@ public class OrbitCamera : MonoBehaviour
 		{
 
 		}
+
+		public virtual void UpdateCameraPosition(OrbitCamera cam) { }
 	}
 
 	public class FocusPoint : CameraUpdater
@@ -220,6 +222,13 @@ public class OrbitCamera : MonoBehaviour
 				Mathf.MoveTowardsAngle(orbitAngles.y, headingAngle, rotationChange);
 			return true;
 		}
+
+		public override void UpdateCameraPosition(OrbitCamera cam)
+		{
+			//var targetPoint = cam.desiredCameraPosition;
+			//float t = 1f;// Mathf.Pow(1f - 0.99999f, Time.unscaledDeltaTime);
+			//cam.cameraPosition = Vector3.Lerp(targetPoint, cam.cameraPosition, t);
+		}
 	}
 
 	public class LockOn : CameraUpdater
@@ -267,6 +276,13 @@ public class OrbitCamera : MonoBehaviour
         {
 			return new Vector2(Mathf.MoveTowardsAngle(from.x, to.x, speed), Mathf.MoveTowardsAngle(from.y, to.y, speed));
 		}
+
+		public override void UpdateCameraPosition(OrbitCamera cam)
+		{
+			var targetPoint = cam.desiredCameraPosition;
+			float t = 0.3f;// Mathf.Pow(1f - 0.99999f, Time.unscaledDeltaTime);
+			cam.cameraPosition = Vector3.Lerp(targetPoint, cam.cameraPosition, t);
+		}
 	}
 
 	void OnValidate()
@@ -299,7 +315,10 @@ public class OrbitCamera : MonoBehaviour
         }
 
 		UpdateFocusPoint();
-		UpdateCameraPosition();
+		if(CamUpdater != null)
+		{
+			CamUpdater.UpdateCameraPosition(this);
+		}
 
 		if (CamUpdater != null)
 		{
@@ -364,7 +383,7 @@ public class OrbitCamera : MonoBehaviour
 	void UpdateCameraPosition()
     {
 		var targetPoint = desiredCameraPosition;
-		float t = 0.3f;// Mathf.Pow(1f - 0.99999f, Time.unscaledDeltaTime);
+		float t = 1f;// Mathf.Pow(1f - 0.99999f, Time.unscaledDeltaTime);
 		cameraPosition = Vector3.Lerp(targetPoint, cameraPosition, t);
 	}
 
