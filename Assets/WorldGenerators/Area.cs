@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ContentGeneration.Assets.UI.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,14 +33,14 @@ public class Area
 
     public Designer Designer { get; }
 
-    List<CharacterWorldObject> characters;
+    List<WorldObject> objectsToPlace;
 
     public IEnumerable<Module> Modules => modules;
 
     public Area(Designer designer, Style style)
     {
         modules = new List<Module>();
-        characters = new List<CharacterWorldObject>();
+        objectsToPlace = new List<WorldObject>();
         Style = style;
         Designer = designer;
         Inside = false;
@@ -57,14 +58,19 @@ public class Area
 
     public void AddCharacter(CharacterWorldObject character)
     {
-        characters.Add(character);
+        objectsToPlace.Add(character);
+    }
+
+    public void AddItem(ItemWorldObject item)
+    {
+        objectsToPlace.Add(item);
     }
 
     public bool ContainsModule(Module module) => modules.Where(m => m == module).Any();
 
     public void PlaceObjects(ModuleGrid grid)
     {
-        foreach(var character in characters)
+        foreach(var character in objectsToPlace)
         {
             var dest = modules.GetRandom();
             character.SetObject(Style, dest.transform);
@@ -103,7 +109,7 @@ public class DisconnectedArea : Area
 
 public enum CharacterType
 {
-    Sculpture
+    Tall
 }
 
 public abstract class WorldObject
@@ -125,5 +131,22 @@ public class CharacterWorldObject : WorldObject
         var character = style.GetCharacter(characterType);
         character.SetParent(parent);
         character.SetPositionAndRotation(parent.position, parent.rotation);
+    }
+}
+
+public class ItemWorldObject : WorldObject
+{
+    public ItemRef itemPrefab { get; }
+
+    public ItemWorldObject(ItemRef itemPrefab)
+    {
+        this.itemPrefab = itemPrefab;
+    }
+
+    public override void SetObject(Style style, Transform parent)
+    {
+        var item = GameObject.Instantiate(itemPrefab);
+        item.transform.SetParent(parent);
+        item.transform.SetPositionAndRotation(parent.position, parent.rotation);
     }
 }
