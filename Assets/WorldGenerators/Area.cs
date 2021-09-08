@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 public class Area
 {
@@ -31,11 +32,14 @@ public class Area
 
     public Designer Designer { get; }
 
+    List<CharacterWorldObject> characters;
+
     public IEnumerable<Module> Modules => modules;
 
     public Area(Designer designer, Style style)
     {
         modules = new List<Module>();
+        characters = new List<CharacterWorldObject>();
         Style = style;
         Designer = designer;
         Inside = false;
@@ -51,7 +55,21 @@ public class Area
         modules.Remove(module);
     }
 
+    public void AddCharacter(CharacterWorldObject character)
+    {
+        characters.Add(character);
+    }
+
     public bool ContainsModule(Module module) => modules.Where(m => m == module).Any();
+
+    public void PlaceObjects(ModuleGrid grid)
+    {
+        foreach(var character in characters)
+        {
+            var dest = modules.GetRandom();
+            character.SetObject(Style, dest.transform);
+        }
+    }
 
     public virtual void Finish(ModuleGrid grid) { }
 }
@@ -80,5 +98,32 @@ public class DisconnectedArea : Area
                 }
             }
         }
+    }
+}
+
+public enum CharacterType
+{
+    Sculpture
+}
+
+public abstract class WorldObject
+{
+    public abstract void SetObject(Style style, Transform parent);
+}
+
+public class CharacterWorldObject : WorldObject
+{
+    public CharacterType characterType { get; }
+
+    public CharacterWorldObject(CharacterType characterType)
+    {
+        this.characterType = characterType;
+    }
+
+    public override void SetObject(Style style, Transform parent)
+    {
+        var character = style.GetCharacter(characterType);
+        character.SetParent(parent);
+        character.SetPositionAndRotation(parent.position, parent.rotation);
     }
 }

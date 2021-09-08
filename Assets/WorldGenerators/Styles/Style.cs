@@ -24,12 +24,30 @@ public class Style : ScriptableObject
     Transform notExistingObj;
 
     [SerializeField]
-    ObjectStyle[] objectStyles;
+    ObjectStyle<ObjectType>[] objectStyles;
+
+    [SerializeField]
+    ObjectStyle<CharacterType>[] characterStyles;
+
+    public Transform GetObject<T>(ObjectStyle<T>[] objectStyles, Transform defaultT, T objectType)
+    {
+        var objStyle = objectStyles.Where(objSt => objSt.objectType.Equals(objectType)).FirstOrDefault();
+        var obj = objStyle != null ? objStyle.obj : defaultT;
+        return obj;
+    }
 
     public Transform GetObject(ObjectType objectType)
     {
+        /*
         var objStyle = objectStyles.Where(objSt => objSt.objectType == objectType).FirstOrDefault();
-        var obj = objStyle != null ? objStyle.obj : notExistingObj;
+        var obj = objStyle != null ? objStyle.obj : notExistingObj;*/
+        var obj = GetObject<ObjectType>(objectStyles, notExistingObj, objectType);
+        return Instantiate(obj);
+    }
+
+    public Transform GetCharacter(CharacterType characterType)
+    {
+        var obj = GetObject<CharacterType>(characterStyles, notExistingObj, characterType);
         return Instantiate(obj);
     }
 }

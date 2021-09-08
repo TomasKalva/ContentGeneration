@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class ObjectStyle
+public class ObjectStyle<ObjectTypeT>
 {
     [SerializeField]
-    public ObjectType objectType;
+    public ObjectTypeT objectType;
 
     [SerializeField]
     public Transform obj;

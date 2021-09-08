@@ -65,6 +65,12 @@ public class GridWorldGenerator : WorldGenerator
         {
             module.PlaceObjects(moduleGrid);
         }
+
+        foreach (var area in areas)
+        {
+            area.AddCharacter(new CharacterWorldObject(CharacterType.Sculpture));
+            area.PlaceObjects(moduleGrid);
+        }
     }
 
     void InitGrid()
