@@ -52,6 +52,14 @@ public class WorldTraversingAgent
                 fringe.Push(edge.Other(v));
             }
         }*/
+        
+        /*var graph = new Graph<string>(new List<string>() { "0", "1", "2", "3" }, new List<Edge<string>>() { new Edge<string>("0", "1"), new Edge<string>("1", "2"), new Edge<string>("2", "3") });
+        var graphAlg = new GraphAlgorithms<string, Edge<string>, Graph<string>>(graph);
+
+        var dist = graphAlg.Distance("0", "1");
+        Debug.Log($"test distance: {dist}");
+        */
+
         // navigate through the area graph
 
         // find add interesting points to the area
@@ -64,6 +72,9 @@ public class WorldTraversingAgent
                 continue;
             }
 
+            var distFromStart = areasClosenessAlg.Distance(startingArea, areasConnection.To);
+            Debug.Log($"dist from start: {distFromStart}");
+
             var borderModules = areasConnection.From.Modules.Where(
                      border => border.AllNeighbors(grid)
                          .Where(neighbor => CanConnectToArea(grid, border, neighbor, areasConnection.To)).Any())
@@ -72,14 +83,14 @@ public class WorldTraversingAgent
 
             if(connectFrom == null)
             {
-                Debug.Log("fail");
+                //Debug.Log("fail");
                 continue;
             }
             var connectTo = connectFrom.AllNeighbors(grid).Where(neighbor => CanConnectToArea(grid, connectFrom, neighbor, areasConnection.To)).GetRandom();
 
             if (connectTo == null)
             {
-                Debug.Log("fail");
+                //Debug.Log("fail");
                 continue;
             }
             var dirFromTo = connectFrom.DirectionTo(connectTo);

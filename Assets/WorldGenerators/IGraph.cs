@@ -1,8 +1,10 @@
-﻿using System;
+﻿using SD.Tools.Algorithmia.PriorityQueues;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 public class Edge<VertexT> : IEdge<VertexT> where VertexT : class
 {
@@ -101,7 +103,7 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
     public IEnumerable<IEnumerable<VertexT>> ConnectedComponentsSymm(IEnumerable<VertexT> rootVertices)
     {
         var components = new List<IEnumerable<VertexT>>();
-        var found = new List<VertexT>();
+        var found = new HashSet<VertexT>();
 
         foreach (var root in rootVertices)
         {
@@ -137,7 +139,7 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
 
     public IEnumerable<VertexT> DFS(VertexT start)
     {
-        var found = new List<VertexT>();
+        var found = new HashSet<VertexT>();
         var fringe = new Stack<VertexT>();
         fringe.Push(start);
         while (fringe.Any())
@@ -159,7 +161,7 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
 
     public IEnumerable<EdgeT> EdgeDFS(VertexT start)
     {
-        var found = new List<EdgeT>();
+        var found = new HashSet<EdgeT>();
         var fringe = new Stack<EdgeT>();
 
         foreach (var edge in graph.EdgesFrom(start))
@@ -183,31 +185,42 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
         }
     }
 
-    /*public int Distance(VertexT from, VertexT to)
+    /// <summary>
+    /// Has O(|V|^2) complpexity.
+    /// </summary>
+    public int Distance(VertexT from, VertexT to)
     {
-        var found = new List<VertexT>();
+        var closed = new HashSet<VertexT>();
         var distance = new Dictionary<VertexT, int>();
-        var fringe = new Set<VertexT>();
+        var fringe = new HashSet<VertexT>();
         fringe.Add(from);
+        distance.Add(from, 0);
+
         while (fringe.Any())
         {
             var v = fringe.ArgMin(u => distance.Get(u, int.MaxValue));
             fringe.Remove(v);
+
             if(v == to)
             {
                 return distance[v];
             }
-            else
+
+            if (closed.Contains(v))
             {
-                foreach (var neighbor in graph.Neighbors(v))
-                {
-                    var bestDist = Math.Min(distance.Get(neighbor), distance[v] + 1);
-                    fringe.Add(neighbor);
-                }
+                continue;
+            }
+            closed.Add(v);
+
+            foreach (var neighbor in graph.Neighbors(v))
+            {
+                var bestDist = Math.Min(distance.Get(neighbor, int.MaxValue), distance[v] + 1);
+                distance.TryAdd(neighbor, bestDist);
+                fringe.Add(neighbor);
             }
         }
         return int.MaxValue;
-    }*/
+    }
 
     public bool Path(VertexT from, VertexT to)
     {
