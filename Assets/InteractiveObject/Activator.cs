@@ -47,7 +47,7 @@ public class ActionObject
 
     public void Use()
     {
-        if(action != null && condition != null)
+        if (action != null && condition != null)
         {
             if (condition())
             {

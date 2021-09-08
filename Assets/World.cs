@@ -19,6 +19,11 @@ public class World : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        Initialize();
+    }
+
+    public void Initialize()
+    {
         interactiveObjects = new List<InteractiveObject>(FindObjectsOfType<InteractiveObject>());
         agents = new List<Agent>(FindObjectsOfType<Agent>());
     }
@@ -60,6 +65,7 @@ public class World : MonoBehaviour
 
     public void Created()
     {
+        Initialize();
         Bonfire = GameObject.FindGameObjectWithTag("DefaultSpawnPoint").GetComponent<Bonfire>();
 
         if (Bonfire != null)

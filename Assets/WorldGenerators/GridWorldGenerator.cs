@@ -177,7 +177,7 @@ public class GridWorldGenerator : WorldGenerator
         return bridge.Generate(moduleGrid);
     }
 
-    public void DestroyAllChildren()
+    public override void DestroyWorld()
     {
         for (int i = parent.childCount; i > 0; --i)
         {
@@ -196,14 +196,14 @@ public class GridWorldGeneratorOnInspector : Editor
         {
             var generator = (GridWorldGenerator)target;
 
-            generator.DestroyAllChildren();
+            generator.DestroyWorld();
             generator.Generate(null);
         }
         if (GUILayout.Button("Delete", GUILayout.Width(60), GUILayout.Height(30)))
         {
             var generator = (GridWorldGenerator)target;
 
-            generator.DestroyAllChildren();
+            generator.DestroyWorld();
         }
         GUILayout.Label("generate");
     }

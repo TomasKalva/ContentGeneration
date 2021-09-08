@@ -29,4 +29,6 @@ public abstract class WorldGenerator : MonoBehaviour
 
         world.AddInteractiveObject(interactiveObjects.bonfire, new Vector3(0, 0, -54));
     }
+
+    public abstract void DestroyWorld();
 }

@@ -8,6 +8,10 @@ public class AttachmentPoint: MonoBehaviour
 
     public Vector3Int PointingDirection { get; private set; }
 
+    ActionObject activatorObject;
+
+    ActionObject almondObject;
+
     Transform obj;
 
     public AttachmentPoint(ObjectType objectType)
@@ -20,6 +24,28 @@ public class AttachmentPoint: MonoBehaviour
         obj = style.GetObject(objectType);
         obj.SetParent(transform);
         obj.SetPositionAndRotation(transform.position, transform.rotation);
+
+        var activator = obj.GetComponent<Activator>();
+        if(activator != null)
+        {
+            activator.SetActionObject(activatorObject);
+        }
+
+        var almond = obj.GetComponent<Almond>();
+        if (almond != null)
+        {
+            almond.SetActionObject(almondObject);
+        }
+    }
+
+    public void SetActivator(ActionObject activator)
+    {
+        this.activatorObject = activator;
+    }
+
+    public void SetAlmond(ActionObject almond)
+    {
+        this.almondObject = almond;
     }
 
     public void RotateTowards(Vector3Int direction)

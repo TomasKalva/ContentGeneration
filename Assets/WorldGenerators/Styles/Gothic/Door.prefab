@@ -265,14 +265,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5465433405185674916}
-  m_LocalRotation: {x: 0, y: -0.86602545, z: 0, w: 0.49999994}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.68, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8436130211150566977}
   m_Father: {fileID: 1617922934800275205}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -120, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6810099170241836708
 GameObject:
   m_ObjectHideFlags: 0
@@ -285,6 +285,8 @@ GameObject:
   - component: {fileID: 1625204146561437034}
   - component: {fileID: 1517387445455425049}
   - component: {fileID: 8192997409678865240}
+  - component: {fileID: 374502831469550565}
+  - component: {fileID: 3842687780451405398}
   m_Layer: 0
   m_Name: Door
   m_TagString: Untagged
@@ -339,24 +341,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animancerAnimator: {fileID: 8192997409678865240}
-  openDoor:
-    _FadeDuration: 0.25
-    _Events:
-      _NormalizedTimes: []
-      _Callbacks: []
-      _Names: []
-    _Clip: {fileID: 7400000, guid: 086710b6ea8af434ab2cfaf41e4852a0, type: 2}
-    _Speed: 1
-    _NormalizedStartTime: 0
-  closeDoor:
-    _FadeDuration: 0.25
-    _Events:
-      _NormalizedTimes: []
-      _Callbacks: []
-      _Names: []
-    _Clip: {fileID: 7400000, guid: b99cc155e9b760547b2d1b238929369a, type: 2}
-    _Speed: 1
-    _NormalizedStartTime: 0
+  openDoor: {fileID: 7400000, guid: 086710b6ea8af434ab2cfaf41e4852a0, type: 2}
+  closeDoor: {fileID: 7400000, guid: b99cc155e9b760547b2d1b238929369a, type: 2}
+  idleDoor: {fileID: 7400000, guid: 9ad4fc6ba9abdf4448a6e3911bb7090c, type: 2}
 --- !u!114 &8192997409678865240
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -371,3 +358,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Animator: {fileID: 1625204146561437034}
   _ActionOnDisable: 0
+--- !u!114 &374502831469550565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6810099170241836708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db8022a4b196030448eba32410a43406, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: {fileID: 0}
+--- !u!114 &3842687780451405398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6810099170241836708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a23eeda63e2d7b4ebfc69b1ec3a4333, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _name: Door
+  _messageOnInteract: You've opened the door
+  _interactionDescription: Open door

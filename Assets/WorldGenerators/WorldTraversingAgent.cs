@@ -63,14 +63,6 @@ public class WorldTraversingAgent
         // remember all the connections to other areas
         foreach (var areasConnection in areasClosenessAlg.EdgeDFS(startingArea))
         {
-            /*if(areasConnnectionsAlg.Path(areasConnection.From, areasConnection.To))
-            {
-                continue;
-            }*/
-
-
-
-
             var infinity = 1000_000;
             var distStartFrom = areasConnnectionsAlg.Distance(startingArea, areasConnection.From, infinity);
             var distStartTo = areasConnnectionsAlg.Distance(startingArea, areasConnection.To, infinity);
@@ -98,25 +90,20 @@ public class WorldTraversingAgent
                     .Distinct();
             var connectFrom = borderModules.GetRandom();
 
-            if (connectFrom == null)
-            {
-                Debug.Log("fail");
-                continue;
-            }
             var connectTo = connectFrom.AllNeighbors(grid).Where(neighbor => CanConnectToArea(grid, connectFrom, neighbor, areasConnection.To)).GetRandom();
 
-            if (connectTo == null)
-            {
-                Debug.Log("fail");
-                continue;
-            }
 
             var dirFromTo = connectFrom.DirectionTo(connectTo);
 
             if(dirFromTo.y == 0)
             {
                 // horizontal
-                connectFrom.GetAttachmentPoint(dirFromTo).objectType = ObjectType.Door;
+                var doorPoint = connectFrom.GetAttachmentPoint(dirFromTo);
+                var actionObject = new ActionObject(() => true, "You shouldn't see this :O");
+                doorPoint.objectType = ObjectType.Door;
+                doorPoint.SetActivator(actionObject);
+                doorPoint.SetAlmond(actionObject);
+
                 connectTo.GetAttachmentPoint(-dirFromTo).objectType = ObjectType.Empty;
             }
             else if(dirFromTo.y > 0)
