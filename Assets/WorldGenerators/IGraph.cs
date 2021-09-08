@@ -188,8 +188,9 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
     /// <summary>
     /// Has O(|V|^2) complpexity.
     /// </summary>
-    public int Distance(VertexT from, VertexT to)
+    public int Distance(VertexT from, VertexT to, int infinity)
     {
+
         var closed = new HashSet<VertexT>();
         var distance = new Dictionary<VertexT, int>();
         var fringe = new HashSet<VertexT>();
@@ -198,7 +199,7 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
 
         while (fringe.Any())
         {
-            var v = fringe.ArgMin(u => distance.Get(u, int.MaxValue));
+            var v = fringe.ArgMin(u => distance.Get(u, infinity));
             fringe.Remove(v);
 
             if(v == to)
@@ -214,12 +215,12 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
 
             foreach (var neighbor in graph.Neighbors(v))
             {
-                var bestDist = Math.Min(distance.Get(neighbor, int.MaxValue), distance[v] + 1);
+                var bestDist = Math.Min(distance.Get(neighbor, infinity), distance[v] + 1);
                 distance.TryAdd(neighbor, bestDist);
                 fringe.Add(neighbor);
             }
         }
-        return int.MaxValue;
+        return infinity;
     }
 
     public bool Path(VertexT from, VertexT to)

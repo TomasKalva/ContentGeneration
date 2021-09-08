@@ -142,5 +142,6 @@ public enum ObjectType
     Bridge,
     Roof,
     Stairs,
-    Empty
+    Empty,
+    DebugMarker
 }

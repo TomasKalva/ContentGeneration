@@ -11,11 +11,7 @@ public class WorldTraversingAgent
     {
         var areasClosenessImpl = new ImplicitGraph<Area>(
             area => area.Modules.SelectMany(
-                module => module.HorizontalNeighbors(grid)
-                            .Where(neighbor => neighbor.GetProperty<TopologyProperty>().HasFloor(grid, neighbor.DirectionTo(module)))
-                        .Concat(
-                            module.VerticalNeighbors(grid).Where(neighbor => neighbor.GetProperty<TopologyProperty>().HasFloor(grid))
-                        ))
+                module => module.AllNeighbors(grid).Where(neighbor => CanConnectToModule(grid, module, neighbor)))
                         .Select(neighbor => neighbor.GetProperty<AreaModuleProperty>().Area)
                     .Distinct()
                     .Where(otherArea => otherArea != area)
@@ -67,13 +63,34 @@ public class WorldTraversingAgent
         // remember all the connections to other areas
         foreach (var areasConnection in areasClosenessAlg.EdgeDFS(startingArea))
         {
-            if(areasConnnectionsAlg.Path(areasConnection.From, areasConnection.To))
+            /*if(areasConnnectionsAlg.Path(areasConnection.From, areasConnection.To))
             {
+                continue;
+            }*/
+
+
+
+
+            var infinity = 1000_000;
+            var distStartFrom = areasConnnectionsAlg.Distance(startingArea, areasConnection.From, infinity);
+            var distStartTo = areasConnnectionsAlg.Distance(startingArea, areasConnection.To, infinity);
+            //Debug.Log($"dist from: {distStartFrom}, dist to: {distStartTo}");
+
+            ObjectType? objectType = null;
+
+            int shortcutLength = distStartFrom - distStartTo;
+            if (shortcutLength >= 7)
+            {
+                Debug.Log($"Placing shortcut of length: {shortcutLength}");
+                //objectType = ObjectType.DebugMarker;
+            }
+            else if(distStartTo < infinity)
+            {
+                // don't put connections to already visited rooms
                 continue;
             }
 
-            var distFromStart = areasClosenessAlg.Distance(startingArea, areasConnection.To);
-            Debug.Log($"dist from start: {distFromStart}");
+            areasConnnections.AddEdge(areasConnection);
 
             var borderModules = areasConnection.From.Modules.Where(
                      border => border.AllNeighbors(grid)
@@ -81,18 +98,19 @@ public class WorldTraversingAgent
                     .Distinct();
             var connectFrom = borderModules.GetRandom();
 
-            if(connectFrom == null)
+            if (connectFrom == null)
             {
-                //Debug.Log("fail");
+                Debug.Log("fail");
                 continue;
             }
             var connectTo = connectFrom.AllNeighbors(grid).Where(neighbor => CanConnectToArea(grid, connectFrom, neighbor, areasConnection.To)).GetRandom();
 
             if (connectTo == null)
             {
-                //Debug.Log("fail");
+                Debug.Log("fail");
                 continue;
             }
+
             var dirFromTo = connectFrom.DirectionTo(connectTo);
 
             if(dirFromTo.y == 0)
@@ -111,18 +129,19 @@ public class WorldTraversingAgent
                 // down
                 connectTo.GetObject().objectType = ObjectType.Stairs;
             }
-            areasConnnections.AddEdge(areasConnection);
 
+
+            if (objectType.HasValue)
+            {
+                connectTo.GetObject().objectType = objectType.Value;
+            }
         }
     }
 
-    bool CanConnectToArea(ModuleGrid grid, Module from, Module to, Area toArea)
+    bool CanConnectToModule(ModuleGrid grid, Module from, Module to)
     {
-        if (to.GetProperty<AreaModuleProperty>().Area != toArea)
-            return false;
-
         var dirFromTo = from.DirectionTo(to);
-        if(dirFromTo.y == 0)
+        if (dirFromTo.y == 0)
         {
             // horizontal connection
             return from.GetProperty<TopologyProperty>().HasFloor(grid, dirFromTo) && to.GetProperty<TopologyProperty>().HasFloor(grid, -dirFromTo);
@@ -132,5 +151,45 @@ public class WorldTraversingAgent
             // vertical connection
             return from.GetProperty<TopologyProperty>().HasFloor(grid) && to.GetProperty<TopologyProperty>().HasFloor(grid);
         }
+    }
+
+    bool CanConnectToArea(ModuleGrid grid, Module from, Module to, Area toArea)
+    {
+        return to.GetProperty<AreaModuleProperty>().Area == toArea && CanConnectToModule(grid, from, to); 
+        /*var dirFromTo = from.DirectionTo(to);
+        if(dirFromTo.y == 0)
+        {
+            // horizontal connection
+            return from.GetProperty<TopologyProperty>().HasFloor(grid, dirFromTo) && to.GetProperty<TopologyProperty>().HasFloor(grid, -dirFromTo);
+        }
+        else
+        {
+            // vertical connection
+            return from.GetProperty<TopologyProperty>().HasFloor(grid) && to.GetProperty<TopologyProperty>().HasFloor(grid);
+        }*/
+    }
+
+    bool AreasCanBeConnected(ModuleGrid grid, Area from, Area to)
+    {
+        var borderModules = from.Modules.Where(
+                 border => border.AllNeighbors(grid)
+                     .Where(neighbor => CanConnectToArea(grid, border, neighbor, to)).Any())
+                .Distinct();
+        var connectFrom = borderModules.GetRandom();
+
+        if (connectFrom == null)
+        {
+            //Debug.Log("fail");
+            return false;
+        }
+        var connectTo = connectFrom.AllNeighbors(grid).Where(neighbor => CanConnectToArea(grid, connectFrom, neighbor, to)).GetRandom();
+
+        if (connectTo == null)
+        {
+            //Debug.Log("fail");
+            return false;
+        }
+
+        return true;
     }
 }
