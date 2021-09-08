@@ -13,6 +13,8 @@ public class Reality : MonoBehaviour
         get => playerState;
     }
 
+    public ModuleGrid ModuleGrid { get; set; }
+
     private void Start()
     {
         var worldGenrator = GetComponent<WorldGenerator>();
@@ -20,6 +22,7 @@ public class Reality : MonoBehaviour
 
         worldGenrator.DestroyWorld();
         worldGenrator.Generate(world);
+        ModuleGrid = (worldGenrator as GridWorldGenerator).moduleGrid;
 
         world.Created();
     }

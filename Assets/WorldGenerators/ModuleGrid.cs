@@ -102,4 +102,10 @@ public class ModuleGrid : IEnumerable<Module>
     {
         return GetEnumerator();
     }
+
+    public Vector3Int WorldToGrid(Vector3 coords)
+    {
+        Vector3 localCoords = (parent.worldToLocalMatrix * coords);
+        return (localCoords + 0.5f * extents).Divide(extents).ToVector3Int();
+    }
 }

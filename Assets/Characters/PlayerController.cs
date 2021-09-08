@@ -19,11 +19,12 @@ public class PlayerController : MonoBehaviour
 
 	World world;
 
+	Reality reality;
+
 	Agent lockOnTarget;
 
 	[SerializeField]
 	Transform playerInputSpace;
-
 
 	Dictionary<string, bool> buttonDown;
 
@@ -32,11 +33,15 @@ public class PlayerController : MonoBehaviour
 	[SerializeField]
 	float interactionDistance = 1f;
 
+	Module previousModule;
+	Module currentModule;
+
 	// Start is called before the first frame update
 	void Awake()
 	{
 		myAgent = GetComponent<HumanAgent>();
 		world = GameObject.Find("World").GetComponent<World>();
+		reality = GameObject.Find("Reality").GetComponent<Reality>();
 
 		Application.targetFrameRate = 80;
 
@@ -216,6 +221,8 @@ public class PlayerController : MonoBehaviour
 			}*/
 		}
 
+		UpdateCurrentModule();
+
 		myAgent.StartReceivingControls();
 
 		Vector2 playerInput;
@@ -280,6 +287,20 @@ public class PlayerController : MonoBehaviour
 		myAgent.UpdateAgent();
 
 	}
+
+	void UpdateCurrentModule()
+    {
+		var grid = reality.ModuleGrid;
+		var gridPos = grid.WorldToGrid(transform.position);
+
+		previousModule = currentModule;
+		currentModule = grid[gridPos];
+		/*if (currentModule != null)
+		{
+			Debug.Log(gridPos);
+			Debug.Log(currentModule.GetProperty<AreaModuleProperty>().Area.Name);
+		}*/
+    }
 
 	Vector3 InpForward
 	{

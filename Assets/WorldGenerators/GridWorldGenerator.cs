@@ -30,7 +30,7 @@ public class GridWorldGenerator : WorldGenerator
     [SerializeField]
     int bridgesCount;
 
-    ModuleGrid moduleGrid;
+    public ModuleGrid moduleGrid;
 
     Graph<Area> areasGraph;
 

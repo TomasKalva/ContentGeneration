@@ -39,6 +39,11 @@ static class ExtensionMethods
         return new Vector3Int(x, y, z);
     }
 
+    public static Vector3Int ToVector3Int(this Vector3 v)
+    {
+        return new Vector3Int((int)v.x, (int)v.y, (int)v.z);
+    }
+
     public static void GetRandomExtents(int M, int m, out int a, out int b)
     {
         int size = UnityEngine.Random.Range(1, m + 1);
@@ -234,6 +239,11 @@ static class ExtensionMethods
     public static Vector3 ComponentWise(this Vector3 u, Vector3 v, Func<float, float, float> f)
     {
         return new Vector3(f(u.x, v.x), f(u.y, v.y), f(u.z, v.z));
+    }
+
+    public static Vector3 Divide(this Vector3 u, Vector3 v)
+    {
+        return u.ComponentWise(v, (a, b) => a / b);
     }
 
     public static bool Any(this Vector3 v, Func<float, bool> p)
