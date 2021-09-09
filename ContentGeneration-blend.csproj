@@ -79,6 +79,9 @@
     <Compile Include="Assets\UI\Components\Items.xaml.cs">
       <DependentUpon>Items.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Assets\UI\Components\FloatingHealthBar.xaml.cs">
+      <DependentUpon>FloatingHealthBar.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Assets\UI\Model\CharacterProperties.cs" />
     <Compile Include="Assets\UI\Model\InteractiveObjectState.cs" />
     <Compile Include="Assets\UI\Model\CharacterState.cs" />
@@ -107,6 +110,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Assets\UI\Components\Items.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Assets\UI\Components\FloatingHealthBar.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

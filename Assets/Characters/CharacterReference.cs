@@ -14,13 +14,17 @@ public class CharacterReference : CharacterReference<CharacterState>
 
     void Update()
     {
-        var agentUiPos = characterState.viewCamera.WorldToScreenPoint(transform.position + characterState.agent.UIOffset * Vector3.up);
+        var camera = characterState.viewCamera;
+
+        var agentUiPos = camera.WorldToScreenPoint(transform.position + characterState.agent.UIOffset * Vector3.up);
         characterState.UIScreenPosX = agentUiPos.x;
         characterState.UIScreenPosY = agentUiPos.y;
 
-        var agentCenterPos = characterState.viewCamera.WorldToScreenPoint(transform.position + characterState.agent.CenterOffset * Vector3.up);
+        var agentCenterPos = camera.WorldToScreenPoint(transform.position + characterState.agent.CenterOffset * Vector3.up);
         characterState.ScreenPosX = agentCenterPos.x;
         characterState.ScreenPosY = agentCenterPos.y;
 
+        characterState.VisibleOnCamera = ExtensionMethods.IsPointInDirection(camera.transform.position, camera.transform.forward, characterState.agent.transform.position);
+        Debug.Log(characterState.VisibleOnCamera);
     }
 }

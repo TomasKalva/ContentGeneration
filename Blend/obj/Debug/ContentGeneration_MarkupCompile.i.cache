@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\App.xaml
-7706028265
+8-1534110415
 
-19-2123694282
+20-2070902109
 161930068657
-Assets\UI\Components\InventoryView.xaml;Assets\UI\Components\ItemDescriptionView.xaml;Assets\UI\Components\ItemSlotView.xaml;Assets\UI\Components\Items.xaml;Assets\UI\MainWindow.xaml;Assets\UI\Components\ProgressBarNum.xaml;Assets\UI\Theme.xaml;
+Assets\UI\Components\InventoryView.xaml;Assets\UI\Components\ItemDescriptionView.xaml;Assets\UI\Components\ItemSlotView.xaml;Assets\UI\Components\Items.xaml;Assets\UI\Components\FloatingHealthBar.xaml;Assets\UI\MainWindow.xaml;Assets\UI\Components\ProgressBarNum.xaml;Assets\UI\Theme.xaml;
 
 True
 

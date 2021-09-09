@@ -136,6 +136,13 @@ namespace ContentGeneration.Assets.UI.Model
 
         public Vector2 ScreenPos => new Vector2(ScreenPosX, ScreenPosY);
 
+        private bool _visibleOnCamera;
+        public bool VisibleOnCamera
+        {
+            get { return _visibleOnCamera; }
+            set { _visibleOnCamera = value; OnPropertyChanged(this); }
+        }
+
         public Camera viewCamera;
 
         public Agent agent;

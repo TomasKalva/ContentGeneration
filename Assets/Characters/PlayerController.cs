@@ -375,9 +375,6 @@ public class PlayerController : MonoBehaviour
 			var newActive = currActive.Except(activeAreas);
 			newActive.ForEach(area => area.Enable());
 			newActive.ForEach(area => activeAreas.Add(area));
-
-
-			//currActive.ForEach(area => area.Enable());
 		}
     }
 
