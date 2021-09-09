@@ -85,6 +85,7 @@ public class PlayerController : MonoBehaviour
 			//PlayerCharacterState.SpawnPoint = GameObject.FindGameObjectWithTag("DefaultSpawnPoint").GetComponent<Bonfire>();
 		}
 
+		cameraInputs = new Queue<Vector2>();
 	}
 
     void Update()
@@ -104,7 +105,11 @@ public class PlayerController : MonoBehaviour
 
 	float switchTargetTimer;
 
+	Queue<Vector2> cameraInputs;
+
 	MovementConstraint turnToTarget;
+
+	float maxDistance = 15f;
 
 	bool CanSwitchTarget()
     {
@@ -134,8 +139,15 @@ public class PlayerController : MonoBehaviour
 					Input.GetAxis("Horizontal Camera"),
 					-Input.GetAxis("Vertical Camera")
 				);
-			if (cameraInput.magnitude > 0.5f)
+			cameraInputs.Enqueue(cameraInput);
+			if(cameraInputs.Count >= 30)
+            {
+				cameraInputs.Dequeue();
+			}
+
+			if (cameraInputs.Average(x => x.magnitude) > 35.0f)
 			{
+				cameraInputs.Clear();
 				var newLockOnTarget = SwitchLockOnTarget(myAgent, lockOnTarget, cameraInput);
 				if (newLockOnTarget != null)
 				{
@@ -146,7 +158,7 @@ public class PlayerController : MonoBehaviour
 		}
 
 		// Remove dead target from ui
-		if (PlayerCharacterState.TargetedEnemy != null && PlayerCharacterState.TargetedEnemy.agent == null)
+		if (PlayerCharacterState.TargetedEnemy != null && PlayerCharacterState.TargetedEnemy.agent == null || !(orbitCamera.CamUpdater is OrbitCamera.LockOn))
 		{
 			LockOn(null);
 		}
@@ -161,7 +173,7 @@ public class PlayerController : MonoBehaviour
 		{
 			// Lock
 			lockOnTarget = selectedAgent;
-			orbitCamera.CamUpdater = orbitCamera.FocusOnEnemy(myAgent.transform, lockOnTarget);
+			orbitCamera.CamUpdater = orbitCamera.FocusOnEnemy(myAgent.transform, lockOnTarget, maxDistance);
 			PlayerCharacterState.TargetedEnemy = lockOnTarget != null ? lockOnTarget.CharacterState : null;
 			
 			// Remove the constraint in case it wasn't removed properly with unlock
@@ -180,14 +192,21 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
+	IEnumerable<Agent> LockableTargets(Agent player)
+    {
+		return world.Agents.Where(agent => agent != player && (agent.transform.position - player.transform.position).sqrMagnitude < maxDistance * maxDistance);
+
+	}
+
 	Agent LockOnTarget(Agent player, Transform cam)
 	{
-		return world.Agents.Where(agent => agent != player).ArgMax(agent => Vector3.Dot((agent.transform.position - cam.position).normalized, cam.forward));
+		return LockableTargets(player)
+							.ArgMax(agent => Vector3.Dot((agent.transform.position - cam.position).normalized, cam.forward));
 	}
 
 	Agent SwitchLockOnTarget(Agent player, Agent selected, Vector2 screenDirection)
 	{
-		return world.Agents.Where(agent => agent != player &&
+		return LockableTargets(player).Where(agent => 
 									Vector2.Dot(screenDirection, agent.CharacterState.ScreenPos - selected.CharacterState.ScreenPos) > 0f &&
 									ExtensionMethods.IsPointInDirection(orbitCamera.transform.position, orbitCamera.transform.forward, agent.transform.position))
 					.ArgMin(agent => (selected.CharacterState.ScreenPos - agent.CharacterState.ScreenPos).sqrMagnitude);

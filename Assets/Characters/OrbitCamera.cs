@@ -80,9 +80,9 @@ public class OrbitCamera : MonoBehaviour
 		return new FocusPoint(player);
 	}
 
-	public CameraUpdater FocusOnEnemy(Transform player, Agent enemy)
+	public CameraUpdater FocusOnEnemy(Transform player, Agent enemy, float maxDistance)
 	{
-		return new LockOn(player, enemy);
+		return new LockOn(player, enemy, maxDistance);
 	}
 
 
@@ -240,10 +240,13 @@ public class OrbitCamera : MonoBehaviour
 		[SerializeField, Min(0f)]
 		float alignDelay = 5f;
 
-		public LockOn(Transform from, Agent to)
+		float maxDistance;
+
+		public LockOn(Transform from, Agent to, float maxDistance)
 		{
 			this.from = from;
 			this.to = to;
+			this.maxDistance = maxDistance;
 		}
 
 		public override void Start(OrbitCamera cam)
@@ -251,7 +254,19 @@ public class OrbitCamera : MonoBehaviour
 
         }
 
-		public override bool Finished() => !from || !to;
+		public override bool Finished() => !from || !to || (from.position - to.transform.position).sqrMagnitude > maxDistance * maxDistance /*|| !FromToVisible()*/;
+		
+		bool FromToVisible()
+        {
+			if(Physics.Raycast(from.position, to.transform.position, out RaycastHit hitInfo))
+            {
+				if(!hitInfo.transform.IsChildOf(to.transform) && hitInfo.distance < maxDistance)
+                {
+					return false;
+                }
+            }
+			return true;
+        }
 
 		public override void PreUpdate(OrbitCamera cam)
 		{
