@@ -35,12 +35,15 @@ public class Area
 
     List<WorldObject> objectsToPlace;
 
+    List<Transform> placedObjects;
+
     public IEnumerable<Module> Modules => modules;
 
     public Area(Designer designer, Style style)
     {
         modules = new List<Module>();
         objectsToPlace = new List<WorldObject>();
+        placedObjects = new List<Transform>();
         Style = style;
         Designer = designer;
         Inside = false;
@@ -73,11 +76,34 @@ public class Area
         foreach(var character in objectsToPlace)
         {
             var dest = modules.GetRandom();
-            character.SetObject(Style, dest.transform);
+            var placedObj = character.SetObject(Style, dest.transform);
+            placedObjects.Add(placedObj);
         }
     }
 
     public virtual void Finish(ModuleGrid grid) { }
+
+    public void Disable()
+    {
+        foreach(var obj in placedObjects)
+        {
+            if (obj != null)
+            {
+                obj.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    public void Enable()
+    {
+        foreach (var obj in placedObjects)
+        {
+            if (obj != null)
+            {
+                obj.gameObject.SetActive(true);
+            }
+        }
+    }
 }
 
 public class DisconnectedArea : Area
@@ -114,7 +140,7 @@ public enum CharacterType
 
 public abstract class WorldObject
 {
-    public abstract void SetObject(Style style, Transform parent);
+    public abstract Transform SetObject(Style style, Transform parent);
 }
 
 public class CharacterWorldObject : WorldObject
@@ -126,11 +152,12 @@ public class CharacterWorldObject : WorldObject
         this.characterType = characterType;
     }
 
-    public override void SetObject(Style style, Transform parent)
+    public override Transform SetObject(Style style, Transform parent)
     {
         var character = style.GetCharacter(characterType);
         character.SetParent(parent);
         character.SetPositionAndRotation(parent.position, parent.rotation);
+        return character;
     }
 }
 
@@ -143,10 +170,11 @@ public class ItemWorldObject : WorldObject
         this.itemPrefab = itemPrefab;
     }
 
-    public override void SetObject(Style style, Transform parent)
+    public override Transform SetObject(Style style, Transform parent)
     {
         var item = GameObject.Instantiate(itemPrefab);
         item.transform.SetParent(parent);
         item.transform.SetPositionAndRotation(parent.position, parent.rotation);
+        return item.transform;
     }
 }

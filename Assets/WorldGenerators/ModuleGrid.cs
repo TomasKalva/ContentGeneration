@@ -24,6 +24,8 @@ public class ModuleGrid : IEnumerable<Module>
 
     public Vector3Int Sizes => sizes;
 
+    public Graph<Area> AreasConnections { get; set; }
+
     public Module this[int x, int y, int z]
     {
         get => GetModule(new Vector3Int(x, y, z));

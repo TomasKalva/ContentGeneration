@@ -117,12 +117,13 @@ public class WorldTraversingAgent
                 connectTo.GetObject().objectType = ObjectType.Stairs;
             }
 
-
             if (objectType.HasValue)
             {
                 connectTo.GetObject().objectType = objectType.Value;
             }
         }
+
+        grid.AreasConnections = areasConnnections; 
     }
 
     bool CanConnectToModule(ModuleGrid grid, Module from, Module to)
