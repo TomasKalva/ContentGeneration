@@ -24,6 +24,8 @@ public class Rotator : MonoBehaviour
             var localPos = transform.worldToLocalMatrix.MultiplyPoint(obj.position);
             var newPos = Quaternion.Euler(angle) * localPos;
             obj.position = transform.localToWorldMatrix.MultiplyPoint(newPos);
+
+            obj.Rotate(angle);
             //obj.Rotate(new Vector3(angle, 0f), );
         }
     }

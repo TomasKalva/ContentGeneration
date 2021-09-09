@@ -54,8 +54,8 @@ namespace ContentGeneration.Assets.UI.Util
         public static FloatRange operator *(FloatRange r1, float d) => new FloatRange(r1.Maximum, r1.Value * d);
         public static bool operator >=(FloatRange r1, float d) => r1.Value >= d;
         public static bool operator <=(FloatRange r1, float d) => r1.Value <= d;
-        public static implicit operator FloatRange(float d) => new FloatRange(MAX_VALUE, d);
-        public static implicit operator float(FloatRange r) => new FloatRange(r.Maximum, r.Value);
+        public static implicit operator FloatRange(float d) => new FloatRange(d, d);
+        public static implicit operator float(FloatRange r) => r.Value;
 
     }
 }

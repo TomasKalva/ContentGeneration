@@ -47,7 +47,12 @@ public class Style : ScriptableObject
 
     public Transform GetCharacter(CharacterType characterType)
     {
-        var obj = GetObject<CharacterType>(characterStyles, notExistingObj, characterType);
-        return Instantiate(obj);
+        var objPrefab = GetObject<CharacterType>(characterStyles, notExistingObj, characterType);
+        var obj = Instantiate(objPrefab);
+
+        var agent = obj.GetComponent<Agent>();
+        agent.CharacterState.Health = 100f;
+
+        return obj;
     }
 }
