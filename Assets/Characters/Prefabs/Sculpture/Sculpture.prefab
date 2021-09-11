@@ -377,6 +377,7 @@ MonoBehaviour:
   actName: Run
   type: 0
   priority: -10
+  duration: 2
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -386,7 +387,6 @@ MonoBehaviour:
     _Clip: {fileID: -8223209729270488889, guid: 8af553c6f55b52641b5ddf94fbb84e58, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  duration: 2
   speed: 3
 --- !u!114 &1099402597807337649
 MonoBehaviour:
@@ -404,6 +404,7 @@ MonoBehaviour:
   actName: Staggered
   type: 0
   priority: 0
+  duration: 1
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -413,7 +414,6 @@ MonoBehaviour:
     _Clip: {fileID: 8226495801979398101, guid: 8af553c6f55b52641b5ddf94fbb84e58, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  duration: 1
 --- !u!114 &1099402597807337648
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -430,6 +430,7 @@ MonoBehaviour:
   actName: Idle
   type: 0
   priority: -100
+  duration: 3
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -439,7 +440,6 @@ MonoBehaviour:
     _Clip: {fileID: 2079914900426857680, guid: 8af553c6f55b52641b5ddf94fbb84e58, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  duration: 3
 --- !u!114 &2440413549046114974
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -456,6 +456,7 @@ MonoBehaviour:
   actName: Overhead
   type: 2
   priority: 0
+  duration: 3
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -465,7 +466,6 @@ MonoBehaviour:
     _Clip: {fileID: -496898873206088132, guid: 8af553c6f55b52641b5ddf94fbb84e58, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  duration: 3
   speedF:
     serializedVersion: 2
     m_Curve: []
@@ -493,6 +493,7 @@ MonoBehaviour:
   actName: LeftWide
   type: 2
   priority: 0
+  duration: 1.5
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -502,7 +503,6 @@ MonoBehaviour:
     _Clip: {fileID: -1385739682093586487, guid: 8af553c6f55b52641b5ddf94fbb84e58, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  duration: 1.5
   speedF:
     serializedVersion: 2
     m_Curve: []
@@ -529,6 +529,7 @@ MonoBehaviour:
   actName: RightWideDown
   type: 2
   priority: 0
+  duration: 1.2
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -538,7 +539,6 @@ MonoBehaviour:
     _Clip: {fileID: 5262018643265097850, guid: 8af553c6f55b52641b5ddf94fbb84e58, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  duration: 1.2
   speedF:
     serializedVersion: 2
     m_Curve: []
@@ -565,6 +565,7 @@ MonoBehaviour:
   actName: DoubleSwipe
   type: 2
   priority: 0
+  duration: 3
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -574,7 +575,6 @@ MonoBehaviour:
     _Clip: {fileID: -4912002224695104654, guid: 8af553c6f55b52641b5ddf94fbb84e58, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  duration: 3
   speedF:
     serializedVersion: 2
     m_Curve: []
@@ -602,6 +602,7 @@ MonoBehaviour:
   actName: GroundSlam
   type: 2
   priority: 0
+  duration: 2
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -611,7 +612,6 @@ MonoBehaviour:
     _Clip: {fileID: 758666023608079770, guid: 8af553c6f55b52641b5ddf94fbb84e58, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  duration: 2
   speedF:
     serializedVersion: 2
     m_Curve: []
@@ -1010,6 +1010,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actContainer: {fileID: 1099402597807337650}
   _activeAct: {fileID: 0}
+  actingSpeedMultiplier: 1.5
 --- !u!114 &2312574997445221765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1070,15 +1071,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c1ca6a87ecf97d43bed157c7760b7c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterState:
-    _health:
-      max: 100
-      value: 42
-    _stamina:
-      max: 100
-      value: 42
-    viewCamera: {fileID: 0}
-    agent: {fileID: 0}
 --- !u!136 &2312574997445221774
 CapsuleCollider:
   m_ObjectHideFlags: 0
