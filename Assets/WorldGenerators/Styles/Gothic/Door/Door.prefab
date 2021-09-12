@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d280d89c65c0f93459a9529902a33c3e, type: 2}
+  - {fileID: 2100000, guid: ee2c7f73f2a966948aa45236054136f8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -192,7 +192,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 32c0b0af7587c5d4d937ef5dc39e8bf8, type: 2}
-  - {fileID: 2100000, guid: 48242178b6f30be4c8621d0a7707049d, type: 2}
+  - {fileID: 0}
   - {fileID: 2100000, guid: 8443dd43055769044bde8eb38225bfb0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -343,7 +343,6 @@ MonoBehaviour:
   animancerAnimator: {fileID: 8192997409678865240}
   openDoor: {fileID: 7400000, guid: 086710b6ea8af434ab2cfaf41e4852a0, type: 2}
   closeDoor: {fileID: 7400000, guid: b99cc155e9b760547b2d1b238929369a, type: 2}
-  idleDoor: {fileID: 7400000, guid: 9ad4fc6ba9abdf4448a6e3911bb7090c, type: 2}
 --- !u!114 &8192997409678865240
 MonoBehaviour:
   m_ObjectHideFlags: 0
