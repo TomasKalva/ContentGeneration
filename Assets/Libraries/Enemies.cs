@@ -22,5 +22,6 @@ public class Enemies : ScriptableObject
     public HumanAgent human;
     public SculptureAgent sculpture;
     public BlobAgent blob;
+    public MayanAgent mayan;
 
 }
