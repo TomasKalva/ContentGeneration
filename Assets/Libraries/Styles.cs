@@ -24,4 +24,10 @@ public class Styles : ScriptableObject
 
     [SerializeField]
     public Style greek;
+
+    [SerializeField]
+    public Style mayan;
+
+    [SerializeField]
+    public Style garden;
 }

@@ -52,7 +52,7 @@ public class Bridge : Template
             }
             else
             {
-                var underBridgeArea = new Area(new BridgeDesigner(moduleGrid), styles.gothic);
+                var underBridgeArea = new Area(new BridgeDesigner(moduleGrid), Style);
                 underBridgeArea.Inside = false;
                 var onBridgeArea = new Area(new Designer(), styles.gothic);
                 for (int i = 0; i < dist; i++)

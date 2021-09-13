@@ -21,23 +21,12 @@ public class Rooftops : Template
         foreach(var component in roofComponents)
         {
             var area = new Rooftop(component, moduleLibrary, styles);
+            area.Style = styles.garden;
             area.Generate(moduleGrid);
         }
 
         return true;
     }
-
-    /*int RooftopHeight(ModuleGrid moduleGrid, Vector2Int coords)
-    {
-        for(int y = 0; y < moduleGrid.Height; y++)
-        {
-            if(moduleGrid[new Vector3Int(coords.x, y, coords.y)].empty)
-            {
-                return y;
-            }
-        }
-        return moduleGrid.Height;
-    }*/
 
     bool IsRoof(ModuleGrid moduleGrid, Module maybeRoof)
     {
@@ -62,7 +51,7 @@ public class Rooftop : Template
 
     public override bool Generate(ModuleGrid moduleGrid)
     {
-        var rooftopArea = new DisconnectedArea(new RoofDesigner(moduleGrid), styles.gothic);
+        var rooftopArea = new DisconnectedArea(new RoofDesigner(moduleGrid), Style);
         rooftopArea.AreaType = "Rooftop";
         foreach (var module in modules)
         {

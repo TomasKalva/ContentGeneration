@@ -12,10 +12,13 @@ public abstract class Template
 
     protected Styles styles;
 
+    public Style Style { get; set; }
+
     protected Template(Modules moduleLibrary, Styles styles)
     {
         this.moduleLibrary = moduleLibrary;
         this.styles = styles;
+        Style = styles.gothic;
     }
 
     public abstract bool Generate(ModuleGrid moduleGrid);

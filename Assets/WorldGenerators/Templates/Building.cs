@@ -16,9 +16,11 @@ public class Building : Template
 
     public override bool Generate(ModuleGrid moduleGrid)
     {
+        Style = new List<Style>() { styles.gothic, styles.mayan, styles.garden }.GetRandom();
         for (int j = boundingBox.leftBottomBack.y; j < boundingBox.rightTopFront.y; j++)
         {
             var room = new Room(boundingBox.FlattenY(), j, moduleLibrary, styles);
+            room.Style = Style;
             room.Generate(moduleGrid);
         }
 
