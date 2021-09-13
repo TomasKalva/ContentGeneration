@@ -27,7 +27,7 @@ namespace ContentGeneration.Assets.UI.Model
         public string Name 
         { 
             get => _name;
-            private set { _name = value; PropertyChanged.OnPropertyChanged(this); }
+            protected set { _name = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
 #if NOESIS
@@ -38,7 +38,7 @@ namespace ContentGeneration.Assets.UI.Model
         public string Description
         {
             get => _description;
-            private set { _description = value; PropertyChanged.OnPropertyChanged(this); }
+            protected set { _description = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
         public virtual void OnUse(CharacterState character)

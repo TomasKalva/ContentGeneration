@@ -24,7 +24,7 @@ public abstract class WorldGenerator : MonoBehaviour
 
         Debug.Log("Generating world");
 
-        world.AddItem(items.blueIchorEssence, new Vector3(0, 0, -54));
+        //world.AddItem(items.BlueIchorEssence, new Vector3(0, 0, -54));
 
 
         world.AddInteractiveObject(interactiveObjects.bonfire, new Vector3(0, 0, -54));

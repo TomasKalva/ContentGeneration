@@ -5,11 +5,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class FreeWillRef : ItemRef<FreeWill> { }
-
 [Serializable]
 public class FreeWill : ItemState
 {
+    public FreeWill()
+    {
+        Name = "Free Will";
+        Description = "Costs nothing";
+    }
+
     public override void OnUpdate(CharacterState character)
     {
         character.Will += ExtensionMethods.PerFixedSecond(2f);

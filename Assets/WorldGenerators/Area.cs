@@ -168,16 +168,15 @@ public class CharacterWorldObject : WorldObject
 
 public class ItemWorldObject : WorldObject
 {
-    public ItemRef itemPrefab { get; }
+    public PhysicalItem item { get; }
 
-    public ItemWorldObject(ItemRef itemPrefab)
+    public ItemWorldObject(PhysicalItem itemPrefab)
     {
-        this.itemPrefab = itemPrefab;
+        this.item = itemPrefab;
     }
 
     public override Transform SetObject(Style style, Transform parent)
     {
-        var item = GameObject.Instantiate(itemPrefab);
         item.transform.SetParent(parent);
         item.transform.SetPositionAndRotation(parent.position, parent.rotation);
         return item.transform;

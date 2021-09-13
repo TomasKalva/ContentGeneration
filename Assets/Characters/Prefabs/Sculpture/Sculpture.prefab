@@ -2410,7 +2410,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetPoint: {fileID: 0}
-  maxDistance: 15
+  maxDistance: 10
 --- !u!1 &8654692453826493498
 GameObject:
   m_ObjectHideFlags: 0

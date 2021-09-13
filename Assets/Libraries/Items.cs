@@ -1,3 +1,4 @@
+using ContentGeneration.Assets.UI.Model;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -19,8 +20,17 @@ public class Items : ScriptableObject
         Selection.activeObject = asset;
     }
 
-    public BlueIchorEssenceRef blueIchorEssence;
-    public FreeWillRef freeWill;
-    public RedIchorEssenceRef redIchorEssence;
+    [SerializeField]
+    PhysicalItem physicalItemPrefab;
 
+    PhysicalItem CreateItem(ItemState itemState)
+    {
+        var newPhysicalItem = Instantiate(physicalItemPrefab);
+        newPhysicalItem.Item = itemState;
+        return newPhysicalItem;
+    }
+
+    public PhysicalItem BlueIchorEssence() => CreateItem(new BlueIchorEssence());
+    public PhysicalItem RedIchorEssence() => CreateItem(new RedIchorEssence());
+    public PhysicalItem FreeWill() => CreateItem(new FreeWill());
 }

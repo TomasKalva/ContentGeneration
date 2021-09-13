@@ -208,7 +208,7 @@ public class Agent : MonoBehaviour
 
 	public virtual void PickUpItem(PhysicalItem physicalItem)
     {
-		Debug.Log("Picking up item");
+		Debug.Log($"Picking up item {physicalItem.Item.Name}");
 		var pickUpItem = acting.SelectAct("PickUpItem") as PickUpItem;
         if (pickUpItem)
         {

@@ -5,11 +5,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class BlueIchorEssenceRef : ItemRef<BlueIchorEssence> { }
-
 [Serializable]
 public class BlueIchorEssence : ItemState
 {
+    public BlueIchorEssence()
+    {
+        Name = "Blue Ichor Essence";
+        Description = "Very blue";
+    }
+
     public override void OnUpdate(CharacterState character)
     {
         character.Will += ExtensionMethods.PerFixedSecond(2f);
