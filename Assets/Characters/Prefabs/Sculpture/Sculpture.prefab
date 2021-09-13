@@ -2271,6 +2271,7 @@ GameObject:
   - component: {fileID: 71336490099209547}
   - component: {fileID: 4164161034817523091}
   - component: {fileID: 5903328682588942143}
+  - component: {fileID: 4277390570148384228}
   m_Layer: 10
   m_Name: Behaviors
   m_TagString: Untagged
@@ -2396,6 +2397,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetPoint: {fileID: 0}
   maxAngle: 10
+--- !u!114 &4277390570148384228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8498103932869699353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5da1fd6e09ad47340929a42d0c3ce45a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetPoint: {fileID: 0}
+  maxDistance: 15
 --- !u!1 &8654692453826493498
 GameObject:
   m_ObjectHideFlags: 0

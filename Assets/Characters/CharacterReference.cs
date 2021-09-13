@@ -26,6 +26,5 @@ public class CharacterReference : CharacterReference<CharacterState>
 
         characterState.VisibleOnCamera = ExtensionMethods.IsPointInDirection(camera.transform.position, camera.transform.forward, characterState.agent.transform.position) &&
                                         (camera.transform.position - characterState.agent.transform.position).magnitude < 25f;
-        Debug.Log(characterState.VisibleOnCamera);
     }
 }
