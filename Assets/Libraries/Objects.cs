@@ -19,6 +19,6 @@ public class Objects : ScriptableObject
         Selection.activeObject = asset;
     }
 
-    public GameObject wall;
+    //public Transform spawnPoint;
 
 }

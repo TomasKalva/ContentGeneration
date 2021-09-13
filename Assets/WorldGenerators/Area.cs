@@ -69,6 +69,11 @@ public class Area
         objectsToPlace.Add(item);
     }
 
+    public void AddObject(WorldObjectObject obj)
+    {
+        objectsToPlace.Add(obj);
+    }
+
     public bool ContainsModule(Module module) => modules.Where(m => m == module).Any();
 
     public void PlaceObjects(ModuleGrid grid)
@@ -176,5 +181,23 @@ public class ItemWorldObject : WorldObject
         item.transform.SetParent(parent);
         item.transform.SetPositionAndRotation(parent.position, parent.rotation);
         return item.transform;
+    }
+}
+
+public class WorldObjectObject : WorldObject
+{
+    public Transform objectPrefab { get; }
+
+    public WorldObjectObject(Transform objectPrefab)
+    {
+        this.objectPrefab = objectPrefab;
+    }
+
+    public override Transform SetObject(Style style, Transform parent)
+    {
+        var obj = GameObject.Instantiate(objectPrefab);
+        obj.transform.SetParent(parent);
+        obj.transform.SetPositionAndRotation(parent.position, parent.rotation);
+        return obj.transform;
     }
 }
