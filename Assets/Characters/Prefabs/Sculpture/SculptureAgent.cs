@@ -5,15 +5,14 @@ using UnityEngine;
 
 public class SculptureAgent : Agent
 {
-    public void OverheadAttack()
+    public Act OverheadAttack()
     {
-        ResetState();
-        acting.SelectAct("Overhead");
+        var attack = acting.SelectAct("Overhead") as Attack;
+        return attack;
     }
 
-    public void WideAttack()
+    public Act WideAttack()
     {
-        ResetState();
         var currentAct = acting.ActiveAct;
 
         // do a combo if slash is currently active
@@ -27,17 +26,18 @@ public class SculptureAgent : Agent
             attack = acting.SelectAct("LeftWide") as Attack;
         }
         attack.Direction = movement.AgentForward;
+        return attack;
     }
 
-    public void DoubleSwipe()
+    public Act DoubleSwipe()
     {
-        ResetState();
-        acting.SelectAct("DoubleSwipe");
+        var attack = acting.SelectAct("DoubleSwipe") as Attack;
+        return attack;
     }
 
-    public void GroundSlam()
+    public Act GroundSlam()
     {
-        ResetState();
-        acting.SelectAct("GroundSlam");
+        var attack = acting.SelectAct("GroundSlam") as Attack;
+        return attack;
     }
 }

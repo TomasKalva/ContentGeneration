@@ -9,14 +9,12 @@ public class LurkerAgent : Agent
 
     public void Burrow()
     {
-        ResetState();
         acting.SelectAct("Burrow");
         Burrowed = true;
     }
 
     public void Unburrow()
     {
-        ResetState();
         acting.SelectAct("Unburrow");
         Burrowed = false;
     }
@@ -29,7 +27,6 @@ public class LurkerAgent : Agent
             return;
         }*/
 
-        ResetState();
         acting.SelectAct("Shockwave");
     }
 }

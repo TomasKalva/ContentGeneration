@@ -4,7 +4,7 @@ using UnityEngine;
 using static Movement;
 
 [RequireComponent(typeof(Agent))]
-public class EnemyController<AgentT> : MonoBehaviour where AgentT : Agent
+public abstract class EnemyController<AgentT> : MonoBehaviour where AgentT : Agent
 {
 	protected AgentT agent;
 
@@ -23,17 +23,20 @@ public class EnemyController<AgentT> : MonoBehaviour where AgentT : Agent
 
 	protected float DistanceToTarget => (TargetPoint - agent.transform.position).magnitude;
 
-	Behaviors behaviors;
+	protected Behaviors Behaviors { get; set; }
 
 	// Start is called before the first frame update
 	void Awake()
 	{
 		agent = GetComponent<AgentT>();
-		behaviors = GetComponent<Behaviors>();
-		World.OnCreated += Initialize;
+		Behaviors = new Behaviors();
+		Initialize();
+		World.OnCreated += OnWorldCreated;
 	}
 
-	void Initialize()
+	protected virtual void Initialize() { }
+
+	void OnWorldCreated()
 	{
 		targetPoint = GameObject.FindGameObjectWithTag("Player").transform;
     }
@@ -57,7 +60,7 @@ public class EnemyController<AgentT> : MonoBehaviour where AgentT : Agent
 
 		UpdateController(movementDirection);
 		*/
-		behaviors.UpdateBehavior(agent);
+		Behaviors.UpdateBehavior(agent);
 
 		agent.UpdateAgent();
 	}

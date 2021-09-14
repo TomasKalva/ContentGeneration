@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Behavior : MonoBehaviour
+public abstract class Behavior
 {
     public abstract bool CanEnter(Agent agent);
     /// <summary>

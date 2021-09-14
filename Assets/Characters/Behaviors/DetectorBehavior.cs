@@ -5,11 +5,18 @@ using UnityEngine;
 
 public class DetectorBehavior : Behavior
 {
-    [SerializeField]
     ColliderDetector[] detectors;
 
-    [SerializeField]
-    Act act;
+    ActFactory actFactory;
+
+    Act currentAct;
+
+    public DetectorBehavior(ActFactory actFactory, params ColliderDetector[] detectors)
+    {
+        this.detectors = detectors;
+        this.actFactory = actFactory;
+        this.currentAct = null;
+    }
 
     public override bool CanEnter(Agent agent)
     {
@@ -21,10 +28,13 @@ public class DetectorBehavior : Behavior
     public override int Priority(Agent agent) => 5;
     public override void Enter(Agent agent)
     {
-        agent.acting.SelectAct(act);
+        this.currentAct = actFactory();
+        agent.acting.SelectAct(currentAct);
     }
     public override bool UpdateBehavior(Agent agent)
     {
-        return act.ActEnded;
+        return currentAct.ActEnded;
     }
 }
+
+public delegate Act ActFactory();

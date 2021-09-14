@@ -5,35 +5,38 @@ using UnityEngine;
 
 public class TurnToTargetBehavior : Behavior
 {
-	[SerializeField]
 	Transform targetPoint;
 
 	protected Vector3 TargetPoint => targetPoint != null ? targetPoint.position : Vector3.zero;
 
-	[SerializeField]
 	float maxAngle;
 
     float cosMaxAngle;
 
-	bool ShouldTurnToTarget(Agent agent)
-	{
-        return Vector2.Dot(agent.movement.direction, (TargetPoint - agent.transform.position).XZ().normalized) < cosMaxAngle;
-	}
-
-    private void Awake()
+    public TurnToTargetBehavior(float maxAngle)
     {
+        this.maxAngle = maxAngle;
         cosMaxAngle = Mathf.Cos(maxAngle * Mathf.Deg2Rad);
         World.OnCreated += Initialize;
     }
 
+    bool ShouldTurnToTarget(Agent agent)
+	{
+        return Vector2.Dot(agent.movement.direction, (TargetPoint - agent.transform.position).XZ().normalized) < cosMaxAngle;
+	}
+
     void Initialize()
     {
-        targetPoint = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     public override bool CanEnter(Agent agent)
     {
         return ShouldTurnToTarget(agent);
+    }
+
+    public override void Enter(Agent agent)
+    {
+        targetPoint = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     public override int Priority(Agent agent) => 1;

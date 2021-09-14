@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Behaviors: MonoBehaviour
+public class Behaviors
 {
-    [SerializeField]
-    GameObject behaviorsObject;
-
-    Behavior[] behaviors;
+    List<Behavior> behaviors;
 
     public Behavior CurrentBehaviour;
 
-    private void Awake()
+    public Behaviors()
     {
-        behaviors = behaviorsObject.GetComponents<Behavior>();
+        behaviors = new List<Behavior>();
+    }
+
+    public void AddBehavior(Behavior behavior)
+    {
+        behaviors.Add(behavior);
     }
 
     public Behavior NextBehavior(Agent agent)

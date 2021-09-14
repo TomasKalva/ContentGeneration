@@ -5,27 +5,25 @@ using UnityEngine;
 
 public class GoToTargetBehavior : Behavior
 {
-	[SerializeField]
 	Transform targetPoint;
 
 	protected Vector3 TargetPoint => targetPoint ? targetPoint.position : Vector3.zero;
 
-	[SerializeField]
 	float maxDistance;
 
-	bool ShouldGoToTarget(Agent agent)
-	{
-		return agent.CanMove && Vector3.Distance(transform.position, TargetPoint) > maxDistance;
-	}
-
-    private void Awake()
+    public GoToTargetBehavior(float maxDistance)
     {
+        this.maxDistance = maxDistance;
         World.OnCreated += Initialize;
     }
 
+    bool ShouldGoToTarget(Agent agent)
+	{
+		return agent.CanMove && Vector3.Distance(agent.transform.position, TargetPoint) > maxDistance;
+	}
+
     void Initialize()
     {
-        targetPoint = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     public override bool CanEnter(Agent agent)
@@ -37,10 +35,14 @@ public class GoToTargetBehavior : Behavior
 
     public override void Enter(Agent agent)
     {
+        targetPoint = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     public override bool UpdateBehavior(Agent agent)
     {
+
+        Debug.Log(targetPoint.name);
+
         Vector3 direction = TargetPoint - agent.movement.body.position;
         var moveDirection = new Vector2(direction.x, direction.z);
         agent.Run(moveDirection); 

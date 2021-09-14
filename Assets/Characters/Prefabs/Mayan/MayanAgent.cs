@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class MayanAgent : Agent
 {
-    public void OverheadAttack()
+    public Act OverheadAttack()
     {
-        ResetState();
         var attack = acting.SelectAct("Overhead") as Attack;
         attack.Direction = movement.AgentForward;
+        return attack;
     }
 }

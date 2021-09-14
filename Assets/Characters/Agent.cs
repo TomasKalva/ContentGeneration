@@ -194,11 +194,6 @@ public class Agent : MonoBehaviour
 		}
 	}
 
-	protected void ResetState()
-	{
-		animator.SetBool("IsMoving", false);
-	}
-
 	public virtual void Die()
     {
 		GameViewModel.ViewModel.Enemies.Remove(CharacterState);

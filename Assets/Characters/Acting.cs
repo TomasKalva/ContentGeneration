@@ -75,6 +75,11 @@ public class Acting : MonoBehaviour, IActing
         return act;
     }
 
+    public Act GetAct(string actName)
+    {
+        return acts.Where(act => act.actName == actName).FirstOrDefault();
+    }
+
     /// <summary>
     /// Force agent to do this act. Should only be used for acts not dependent
     /// on agents choice (getting staggered, ...).

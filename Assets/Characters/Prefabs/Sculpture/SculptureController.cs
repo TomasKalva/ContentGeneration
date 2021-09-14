@@ -6,18 +6,36 @@ using UnityEngine;
 public class SculptureController : EnemyController<SculptureAgent>
 {
 	[SerializeField]
-	ColliderDetector overheadArea;
+	ColliderDetector leftWideDetector;
+	
+	[SerializeField]
+	ColliderDetector rightWideDownDetector;
 
-	protected override void UpdateController(Vector2 movementDirection)
+	[SerializeField]
+	ColliderDetector doubleSwipeLeftDetector;
+
+	[SerializeField]
+	ColliderDetector doubleSwipeRightDetector;
+
+	[SerializeField]
+	ColliderDetector overheadDetector;
+
+	[SerializeField]
+	ColliderDetector groundSlamDetector;
+
+    private void Start()
 	{
-		// check if my attack hits enemy
-		if (overheadArea.Triggered)
-		{
-			var hitAgent = overheadArea.other.GetComponentInParent<Agent>();
-			if (hitAgent != agent)
-			{
-				agent.DoubleSwipe();
-			}
-		}
+		Behaviors.AddBehavior(new TurnToTargetBehavior(10));
+		Behaviors.AddBehavior(new GoToTargetBehavior(5));
+		Behaviors.AddBehavior(new WaitForPlayer(10));
+
+		Behaviors.AddBehavior(new DetectorBehavior(agent.WideAttack, leftWideDetector, rightWideDownDetector));
+		Behaviors.AddBehavior(new DetectorBehavior(agent.OverheadAttack, overheadDetector));
+		Behaviors.AddBehavior(new DetectorBehavior(agent.DoubleSwipe, doubleSwipeLeftDetector, doubleSwipeRightDetector));
+		Behaviors.AddBehavior(new DetectorBehavior(agent.GroundSlam, groundSlamDetector));
+	}
+
+    protected override void UpdateController(Vector2 movementDirection)
+	{
 	}
 }

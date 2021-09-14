@@ -7,20 +7,17 @@ public class HumanAgent : Agent
 {
     public void Backstep()
     {
-        ResetState();
         acting.SelectAct("Backstep");
     }
 
     public void Roll(Vector2 direction)
     {
-        ResetState();
         var roll = acting.SelectAct("Roll") as Roll;
         roll.Direction = direction;
     }
 
     public void Attack()
     {
-        ResetState();
         var currentAct = acting.ActiveAct;
 
         // do a combo if slash is currently active
