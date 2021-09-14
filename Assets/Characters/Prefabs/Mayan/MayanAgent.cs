@@ -8,6 +8,7 @@ public class MayanAgent : Agent
     public void OverheadAttack()
     {
         ResetState();
-        acting.SelectAct("Overhead");
+        var attack = acting.SelectAct("Overhead") as Attack;
+        attack.Direction = movement.AgentForward;
     }
 }

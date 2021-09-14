@@ -16,7 +16,7 @@ public class Building : Template
 
     public override bool Generate(ModuleGrid moduleGrid)
     {
-        Style = new List<Style>() { styles.gothic, styles.mayan, styles.garden }.GetRandom();
+        //Style = new List<Style>() { styles.gothic, styles.mayan, styles.garden }.GetRandom();
         for (int j = boundingBox.leftBottomBack.y; j < boundingBox.rightTopFront.y; j++)
         {
             var room = new Room(boundingBox.FlattenY(), j, moduleLibrary, styles);
@@ -52,8 +52,11 @@ public class UniformTown : Template
     {
         foreach(var subbox in boundingBox.GetSubboxes(buildingExtents))
         {
-            var buildilng = new ModernBuilding(subbox.InflateY(0, moduleGrid.Height), moduleLibrary, styles);
-            buildilng.Generate(moduleGrid);
+            Style = styles.gothic;
+
+            var building = new ModernBuilding(subbox.InflateY(0, moduleGrid.Height), moduleLibrary, styles);
+            building.Style = Style;
+            building.Generate(moduleGrid);
         }
 
         return true;
@@ -75,8 +78,10 @@ public class UniformRectangles : Template
     {
         foreach (var subbox in boundingBox.GetSubboxes(buildingExtents))
         {
-            var buildilng = new Building(subbox.InflateY(0, moduleGrid.Height), moduleLibrary, styles);
-            buildilng.Generate(moduleGrid);
+            Style = styles.gothic;
+            var building = new Building(subbox.InflateY(0, moduleGrid.Height), moduleLibrary, styles);
+            building.Style = Style;
+            building.Generate(moduleGrid);
         }
 
         return true;
