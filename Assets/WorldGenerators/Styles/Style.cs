@@ -31,7 +31,7 @@ public class Style : ScriptableObject
 
     public Transform GetObject<T>(ObjectStyle<T>[] objectStyles, Transform defaultT, T objectType)
     {
-        var objStyle = objectStyles.Where(objSt => objSt.objectType.Equals(objectType)).FirstOrDefault();
+        var objStyle = objectStyles.Where(objSt => objSt.objectType.Equals(objectType)).GetRandom();
         var obj = objStyle != null ? objStyle.obj : defaultT;
         return obj;
     }

@@ -73,6 +73,8 @@ public class GridWorldGenerator : WorldGenerator
             if(!area.Modules.Any(module => module.coords.y == 0 || module.Outside))
             {
                 area.AddCharacter(new CharacterWorldObject(CharacterType.Tall));
+                area.AddCharacter(new CharacterWorldObject(CharacterType.Tall));
+                area.AddCharacter(new CharacterWorldObject(CharacterType.Tall));
                 area.AddItem(new ItemWorldObject(items.BlueIchorEssence()));
             }
             area.PlaceObjects(moduleGrid);
