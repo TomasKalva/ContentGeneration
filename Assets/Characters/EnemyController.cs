@@ -9,9 +9,9 @@ public abstract class EnemyController<AgentT> : MonoBehaviour where AgentT : Age
 	protected AgentT agent;
 
 	[SerializeField]
-	Transform targetPoint;
+	public Transform targetEnemy;
 
-	protected Vector3 TargetPoint => targetPoint ? targetPoint.position : Vector3.zero;
+	protected Vector3 TargetPoint => targetEnemy ? targetEnemy.position : Vector3.zero;
 
 	[SerializeField]
 	float minDistance;
@@ -38,7 +38,7 @@ public abstract class EnemyController<AgentT> : MonoBehaviour where AgentT : Age
 
 	void OnWorldCreated()
 	{
-		targetPoint = GameObject.FindGameObjectWithTag("Player").transform;
+		targetEnemy = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     // Update is called once per frame

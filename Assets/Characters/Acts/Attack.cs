@@ -15,6 +15,7 @@ public class Attack : AnimatedAct
     [SerializeField, Curve(0f, 0f, 1f, 15f, true)]
     AnimationCurve speedF;
 
+
     Vector3 direction;
     public Vector3 Direction
     {
@@ -37,15 +38,22 @@ public class Attack : AnimatedAct
     [SerializeField]
     float damageEndT;
 
+    [SerializeField]
+    MovementConstraint lockOnTarget;
+
     public override void OnStart(Agent agent)
     {
         PlayAnimation(agent);
 
-        agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, Direction);
+        Direction3F directionF = () => TargetPosition == null ? Direction : TargetPosition.DirectionTo(agent.transform.position);
 
+        agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, directionF);
+
+        lockOnTarget = new TurnToDirection(() => directionF().XZ().normalized);
         movementContraints = new List<MovementConstraint>()
         {
-            new VelocityInDirection(Direction),
+            new VelocityInDirection(directionF),
+            lockOnTarget,
         };
 
         movementContraints.ForEach(con => agent.movement.Constraints.Add(con));
@@ -66,6 +74,7 @@ public class Attack : AnimatedAct
         var normalizedElapsed = timeElapsed / duration;
         if(agent.State == AgentState.PREPARE && normalizedElapsed >= damageStartT)
         {
+            lockOnTarget.Finished = true;
             agent.State = AgentState.DAMAGE;
             SetSlotsActive(true);
         }
@@ -75,6 +84,8 @@ public class Attack : AnimatedAct
             agent.State = AgentState.RESTORE;
             SetSlotsActive(false);
         }
+
+        agent.Turn(Direction.XZ().normalized);
     }
 
     public override void EndAct(Agent agent)
@@ -82,5 +93,21 @@ public class Attack : AnimatedAct
         SetSlotsActive(false);
         agent.State = AgentState.NORMAL;
         movementContraints.ForEach(con => con.Finished = true);
+    }
+}
+
+public class TargetPosition
+{
+    Transform target;
+
+    Vector3 defaultPosition;
+
+    public Vector3 Position => target != null ? target.position : defaultPosition;
+    public Vector3 DirectionTo(Vector3 from) => (Position - from).normalized;
+
+    public TargetPosition(Transform target, Vector3 defaultPosition)
+    {
+        this.target = target;
+        this.defaultPosition = defaultPosition;
     }
 }

@@ -26,6 +26,8 @@ public class Act : MonoBehaviour
     [SerializeField]
     protected float duration = 1f;
 
+    public TargetPosition TargetPosition { get; set; }
+
     public float Duration
     {
         get => duration == 0f ? 0.01f : duration;

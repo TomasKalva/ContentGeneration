@@ -188,7 +188,7 @@ public class Agent : MonoBehaviour
 
 	public void Turn(Vector2 direction)
 	{
-		if (direction.sqrMagnitude > 0.0001f && !acting.Busy)
+		if (direction.sqrMagnitude > 0.0001f/* && !acting.Busy*/)
 		{
 			movement.Turn(direction);
 		}

@@ -11,7 +11,7 @@ public class Backstep : AnimatedAct
     {
         PlayAnimation(agent);
 
-        var direction = -agent.movement.AgentForward;
+        Direction3F direction = () => -agent.movement.AgentForward;
         agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, direction);
 
         movementContraints = new List<MovementConstraint>()

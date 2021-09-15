@@ -18,6 +18,11 @@ public class DetectorBehavior : Behavior
         this.currentAct = null;
     }
 
+    public Transform DetectedTarget()
+    {
+        return detectors.Select(detector => detector.other).FirstOrDefault()?.transform;
+    }
+
     public override bool CanEnter(Agent agent)
     {
         return detectors.Any(detector => detector.Triggered && agent != detector.other.GetComponentInParent<Agent>());
@@ -29,8 +34,10 @@ public class DetectorBehavior : Behavior
     public override void Enter(Agent agent)
     {
         this.currentAct = actFactory();
+        this.currentAct.TargetPosition = new TargetPosition(DetectedTarget(), Vector3.zero);
         agent.acting.SelectAct(currentAct);
     }
+
     public override bool UpdateBehavior(Agent agent)
     {
         return currentAct.ActEnded;

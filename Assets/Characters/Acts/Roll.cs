@@ -19,12 +19,12 @@ public class Roll : AnimatedAct
     {
         PlayAnimation(agent);
 
-        agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, Direction.X0Z());
+        agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, () => Direction.X0Z());
 
         movementContraints = new List<MovementConstraint>()
         {
-            new VelocityInDirection(Direction.X0Z()),
-            new TurnToDirection(Direction),
+            new VelocityInDirection(() => Direction.X0Z()),
+            new TurnToDirection(() => Direction),
         };
 
         movementContraints.ForEach(con => agent.movement.Constraints.Add(con));
@@ -44,16 +44,16 @@ public abstract class MovementConstraint
 
 public class VelocityInDirection : MovementConstraint
 {
-    Vector3 direction;
+    Direction3F directionF;
 
-    public VelocityInDirection(Vector3 direction)
+    public VelocityInDirection(Direction3F directionF)
     {
-        this.direction = direction;
+        this.directionF = directionF;
     }
 
     public override void Apply(Movement movement)
     {
-        if(Vector3.Dot(movement.velocity, direction) <= 0)
+        if(Vector3.Dot(movement.velocity, directionF()) <= 0)
         {
             movement.velocity = Vector3.zero;
         }
@@ -62,16 +62,16 @@ public class VelocityInDirection : MovementConstraint
 
 public class TurnToDirection : MovementConstraint
 {
-    Vector2 direction;
+    Direction2F directionF;
 
-    public TurnToDirection(Vector2 direction)
+    public TurnToDirection(Direction2F directionF)
     {
-        this.direction = direction;
+        this.directionF = directionF;
     }
 
     public override void Apply(Movement movement)
     {
-        movement.desiredDirection = direction;
+        movement.desiredDirection = directionF();
     }
 }
 
@@ -119,20 +119,23 @@ public class DontChangeVelocityUpdater : VelocityUpdater
 
 }
 
+public delegate Vector3 Direction3F();
+public delegate Vector2 Direction2F();
+
 public class CurveVelocityUpdater : VelocityUpdater
 {
     AnimationCurve speedF;
     float duration;
     float t;
-    Vector3 direction;
+    Direction3F directionF;
 
     bool firstIteration;
 
-    public CurveVelocityUpdater(AnimationCurve speedF, float duration, Vector3 direction)
+    public CurveVelocityUpdater(AnimationCurve speedF, float duration, Direction3F directionF)
     {
         this.speedF = speedF;
         this.duration = duration;
-        this.direction = direction;
+        this.directionF = directionF;
         this.t = 0f;
         firstIteration = true;
     }
@@ -151,7 +154,7 @@ public class CurveVelocityUpdater : VelocityUpdater
         var speed0 = speedF.Evaluate((t - dt) / duration);
         var speed1 = speedF.Evaluate(t / duration);
         var dS = speed1 - speed0;
-        movement.Accelerate(direction.XZ().normalized, dS);
+        movement.Accelerate(directionF().XZ().normalized, dS);
         //movement.velocity += dS * direction;
 
         return t >= duration;
