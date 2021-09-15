@@ -1096,7 +1096,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 243349c2def8940438b4bd8f617b82f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 90
+  rotationSpeed: 360
   maxGroundAngle: 25
   maxStairsAngle: 50
   probeDistance: 1

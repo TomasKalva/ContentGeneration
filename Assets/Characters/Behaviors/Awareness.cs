@@ -13,10 +13,13 @@ public class Awareness : Behavior
 
 	float maxDistance;
 
+    bool moveForward;
+
     public Awareness(float maxDistance, Vector2 optimalDistance)
     {
         this.maxDistance = maxDistance;
         this.optimalDistance = optimalDistance;
+        this.moveForward = false;
     }
 
     bool BreakAwareness(Agent agent)
@@ -41,12 +44,23 @@ public class Awareness : Behavior
         Vector3 direction = TargetPoint - agent.movement.body.position;
         var toTargetDir = new Vector2(direction.x, direction.z);
 
+        // decide where to go
         var distToTarget = direction.magnitude;
-        if(distToTarget > optimalDistance.y)
+        if (distToTarget > optimalDistance.y)
+        {
+            moveForward = true;
+        }
+        else if (distToTarget < optimalDistance.x)
+        {
+            moveForward = false;
+        }
+
+        // go
+        if (moveForward)
         {
             agent.Run(toTargetDir);
         }
-        else if (distToTarget < optimalDistance.x)
+        else
         {
             agent.WalkBack(-toTargetDir);
         }
