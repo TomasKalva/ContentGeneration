@@ -84,8 +84,6 @@ public class Attack : AnimatedAct
             agent.State = AgentState.RESTORE;
             SetSlotsActive(false);
         }
-
-        agent.Turn(Direction.XZ().normalized);
     }
 
     public override void EndAct(Agent agent)

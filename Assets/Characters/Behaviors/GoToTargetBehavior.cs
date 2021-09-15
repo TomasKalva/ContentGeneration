@@ -40,9 +40,6 @@ public class GoToTargetBehavior : Behavior
 
     public override bool UpdateBehavior(Agent agent)
     {
-
-        Debug.Log(targetPoint.name);
-
         Vector3 direction = TargetPoint - agent.movement.body.position;
         var moveDirection = new Vector2(direction.x, direction.z);
         agent.Run(moveDirection); 

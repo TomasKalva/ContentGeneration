@@ -10,10 +10,13 @@ public class MayanController : EnemyController<MayanAgent>
 
 	private void Start()
 	{
-		Behaviors.AddBehavior(new TurnToTargetBehavior(10));
-		Behaviors.AddBehavior(new GoToTargetBehavior(5));
-		Behaviors.AddBehavior(new WaitForPlayer(10));
+		var behaviors = agent.Behaviors;
 
-		Behaviors.AddBehavior(new DetectorBehavior(agent.OverheadAttack, overheadDetector));
+		behaviors.AddBehavior(new TurnToTargetBehavior(10));
+		behaviors.AddBehavior(new GoToTargetBehavior(5));
+		behaviors.AddBehavior(new WaitForPlayer(10));
+		behaviors.AddBehavior(new Awareness(10, new Vector2(3.0f, 5.0f)));
+
+		behaviors.AddBehavior(new DetectorBehavior(agent.OverheadAttack, overheadDetector));
 	}
 }

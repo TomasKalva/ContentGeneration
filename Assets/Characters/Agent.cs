@@ -45,6 +45,7 @@ public class Agent : MonoBehaviour
 	public AnimancerComponent animancerAnimator;
 	public CharacterRef characterRef;
 	public Renderer myRenderer;
+	public Behaviors Behaviors { get; set; }
 
 	public CharacterState CharacterState
 	{
@@ -152,6 +153,22 @@ public class Agent : MonoBehaviour
 			run.Direction = direction;
 			run.SetDirection = true;
         }
+	}
+
+	public void WalkBack(Vector2 direction)
+	{
+		if (!CanMove)
+		{
+			Debug.LogError("Trying to move when CanMove is false!");
+			return;
+		}
+
+		if (direction.sqrMagnitude > 0.0001f && !acting.Busy)
+		{
+			var walkBack = acting.SelectAct("WalkBack") as MoveBack;
+			walkBack.Direction = direction;
+			walkBack.SetDirection = true;
+		}
 	}
 
 	public void Walk(Vector2 direction)

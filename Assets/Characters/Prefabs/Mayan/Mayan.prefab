@@ -682,6 +682,7 @@ GameObject:
   - component: {fileID: 5245136111020689032}
   - component: {fileID: 5245136111020689033}
   - component: {fileID: 7374007119138610343}
+  - component: {fileID: 6408259666256583763}
   m_Layer: 10
   m_Name: ActContainer
   m_TagString: Untagged
@@ -864,6 +865,33 @@ MonoBehaviour:
   - {fileID: 5151155491971333745}
   damageStartT: 0.5
   damageEndT: 0.75
+--- !u!114 &6408259666256583763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5245136111020689035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48e0f7dd1a03e43438f4773964e0b979, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: WalkBack
+  type: 0
+  priority: 0
+  duration: 1
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 3673892349042286343, guid: 9f1dedf80f06d0c4bb5b4c68d4840de4, type: 3}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  speed: 3
 --- !u!1 &5592726371195089901
 GameObject:
   m_ObjectHideFlags: 0
@@ -1170,7 +1198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1652c51156fae54587aa196082bebf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetPoint: {fileID: 0}
+  targetEnemy: {fileID: 0}
   minDistance: 5
   overheadDetector: {fileID: 4093943555014982308}
 --- !u!1001 &682937702639646940

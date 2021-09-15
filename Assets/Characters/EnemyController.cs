@@ -23,13 +23,12 @@ public abstract class EnemyController<AgentT> : MonoBehaviour where AgentT : Age
 
 	protected float DistanceToTarget => (TargetPoint - agent.transform.position).magnitude;
 
-	protected Behaviors Behaviors { get; set; }
 
 	// Start is called before the first frame update
 	void Awake()
 	{
 		agent = GetComponent<AgentT>();
-		Behaviors = new Behaviors();
+		agent.Behaviors = new Behaviors();
 		Initialize();
 		World.OnCreated += OnWorldCreated;
 	}
@@ -60,7 +59,7 @@ public abstract class EnemyController<AgentT> : MonoBehaviour where AgentT : Age
 
 		UpdateController(movementDirection);
 		*/
-		Behaviors.UpdateBehavior(agent);
+		agent.Behaviors.UpdateBehavior(agent);
 
 		agent.UpdateAgent();
 	}

@@ -19,6 +19,11 @@ public class Behaviors
         behaviors.Add(behavior);
     }
 
+    public bool BehaviorPossible(Agent agent, int minPriority)
+    {
+        return behaviors.Where(behavior => behavior.CanEnter(agent) && behavior.Priority(agent) > minPriority).Any();
+    }
+
     public Behavior NextBehavior(Agent agent)
     {
         return behaviors.Where(behavior => behavior.CanEnter(agent)).GetRandom(behavior => behavior.Priority(agent));
