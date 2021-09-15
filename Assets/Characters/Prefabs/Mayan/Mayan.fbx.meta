@@ -7,20 +7,8 @@ ModelImporter:
       74: -3100369314251171874
     second: Idle
   - first:
-      74: 3164865384473382700
-    second: SculptArm|Cast
-  - first:
-      74: 2079914900426857680
-    second: SculptArm|Idle
-  - first:
-      74: -2731025816774238163
-    second: SculptArm|Idle.001
-  - first:
-      74: -6742974744433440141
-    second: SculptArm|OverheadSlam
-  - first:
-      74: -8223209729270488889
-    second: SculptArm|Walk
+      74: -6185155371445809522
+    second: Throw
   - first:
       74: 7419766856727880187
     second: MayanArm|Cast
@@ -28,17 +16,14 @@ ModelImporter:
       74: -8893125627987797799
     second: MayanArm|Idle
   - first:
-      74: -4320668748641166749
-    second: MayanArm|Idle.001
-  - first:
       74: 3188368880832793275
     second: MayanArm|OverheadSlam
   - first:
+      74: -7872577040935964913
+    second: MayanArm|Throw
+  - first:
       74: 3673892349042286343
     second: MayanArm|Walk
-  - first:
-      74: 5752100558664692938
-    second: MayanArm|OverheadSlam (1)
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -67,6 +52,64 @@ ModelImporter:
     extraExposedTransformPaths: []
     extraUserProperties: []
     clipAnimations:
+    - serializedVersion: 16
+      name: Idle
+      takeName: Idle
+      internalID: 0
+      firstFrame: 0
+      lastFrame: 80
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Throw
+      takeName: Throw
+      internalID: 0
+      firstFrame: 0
+      lastFrame: 30
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: MayanArm|Cast
       takeName: MayanArm|Cast
@@ -131,6 +174,35 @@ ModelImporter:
       internalID: 0
       firstFrame: 0
       lastFrame: 49
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: MayanArm|Throw
+      takeName: MayanArm|Throw
+      internalID: 0
+      firstFrame: 0
+      lastFrame: 40
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

@@ -15,7 +15,6 @@ public class Attack : AnimatedAct
     [SerializeField, Curve(0f, 0f, 1f, 15f, true)]
     AnimationCurve speedF;
 
-
     Vector3 direction;
     public Vector3 Direction
     {
@@ -38,7 +37,6 @@ public class Attack : AnimatedAct
     [SerializeField]
     float damageEndT;
 
-    [SerializeField]
     MovementConstraint lockOnTarget;
 
     public override void OnStart(Agent agent)
@@ -65,7 +63,11 @@ public class Attack : AnimatedAct
     {
         foreach (var weaponSlot in weaponSlots)
         {
-            weaponSlot.Weapon.Active = active;
+            var weapon = weaponSlot.Weapon;
+            if (weapon != null)
+            {
+                weaponSlot.Weapon.Active = active;
+            }
         }
     }
 

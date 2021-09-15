@@ -16,7 +16,7 @@ public class Projectile : AreaDamage
         if (!Active)
             return;
 
-        agent.CharacterState.Health -= damage;
+        agent.CharacterState.TakeDamage(this);
         Destroy(gameObject);
     }
 
@@ -25,7 +25,8 @@ public class Projectile : AreaDamage
         if (!Active)
             return;
 
-        if((timeUntilDestroyed -= Time.fixedDeltaTime) <= 0f){
+        if((timeUntilDestroyed -= Time.fixedDeltaTime) <= 0f)
+        {
             Destroy(gameObject);
         }
     }
