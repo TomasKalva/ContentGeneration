@@ -162,6 +162,7 @@ public class CharacterWorldObject : WorldObject
         var character = style.GetCharacter(characterType);
         character.SetParent(parent);
         character.SetPositionAndRotation(parent.position, parent.rotation);
+        character.GetComponent<Agent>().CharacterState.Inventory.AddItem(new FreeWill());
         return character;
     }
 }

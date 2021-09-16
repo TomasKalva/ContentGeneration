@@ -21,7 +21,7 @@ public class MayanController : EnemyController<MayanAgent>
 		behaviors.AddBehavior(new TurnToTargetBehavior(10));
 		behaviors.AddBehavior(new GoToTargetBehavior(10));
 		behaviors.AddBehavior(new WaitForPlayer(10));
-		behaviors.AddBehavior(new Awareness(10, new Vector2(3.0f, 5.0f), 15f));
+		behaviors.AddBehavior(new Awareness(10, new Vector2(3.0f, 5.0f), 5f, 15f));
 
 		behaviors.AddBehavior(new DetectorBehavior(agent.OverheadAttack, overheadDetector));
 		behaviors.AddBehavior(new DetectorBehavior(agent.Throw, throwDetector));

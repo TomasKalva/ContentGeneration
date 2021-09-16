@@ -17,17 +17,24 @@ public class Awareness : Behavior
 
     float MinWill { get; }
 
-    public Awareness(float maxDistance, Vector2 optimalDistance, float minWill)
+    float RequiredWill { get; }
+
+    bool LowWill { get; set; }
+
+
+    public Awareness(float maxDistance, Vector2 optimalDistance, float minWill, float requiredWill)
     {
         this.maxDistance = maxDistance;
         this.optimalDistance = optimalDistance;
         this.moveForward = false;
         this.MinWill = minWill;
+        this.RequiredWill = requiredWill;
+        this.LowWill = false;
     }
 
     bool BreakAwareness(Agent agent)
 	{
-        return agent.CharacterState.Will > MinWill && (agent.Behaviors.BehaviorPossible(agent, 4) || Vector3.Distance(agent.transform.position, TargetPoint) > maxDistance);
+        return (!LowWill || agent.CharacterState.Will > RequiredWill) && (agent.Behaviors.BehaviorPossible(agent, 4) || Vector3.Distance(agent.transform.position, TargetPoint) > maxDistance);
 	}
 
     public override bool CanEnter(Agent agent)
@@ -45,7 +52,7 @@ public class Awareness : Behavior
     public override bool UpdateBehavior(Agent agent)
     {
         Vector3 direction = TargetPoint - agent.movement.body.position;
-        var toTargetDir = new Vector2(direction.x, direction.z);
+        var toTargetDir = direction.XZ();
 
         // decide where to go
         var distToTarget = direction.magnitude;
@@ -66,6 +73,15 @@ public class Awareness : Behavior
         else
         {
             agent.WalkBack(-toTargetDir);
+        }
+
+        if(agent.CharacterState.Will < MinWill)
+        {
+            LowWill = true;
+        }
+        if (agent.CharacterState.Will > RequiredWill)
+        {
+            LowWill = false;
         }
 
         return BreakAwareness(agent);
