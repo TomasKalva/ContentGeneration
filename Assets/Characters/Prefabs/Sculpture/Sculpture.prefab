@@ -1117,6 +1117,8 @@ MonoBehaviour:
   centerOffset: 1.5
   uiOffset: 1
   stateMaterials: {fileID: 11400000, guid: bb1b489c7574f324bb16c275ce4cc5de, type: 2}
+  leftWeaponSlot: {fileID: 6568517939341452783}
+  rightWeaponSlot: {fileID: 1489448645953422288}
 --- !u!1 &2336334424676546886
 GameObject:
   m_ObjectHideFlags: 0

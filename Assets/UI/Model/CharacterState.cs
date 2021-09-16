@@ -49,7 +49,7 @@ namespace ContentGeneration.Assets.UI.Model
 
         public bool Dead => Health <= 0f;
 
-        public IInventory Inventory { get; set; }
+        public Inventory Inventory { get; set; }
 
         public CharacterState()
         {
@@ -76,8 +76,7 @@ namespace ContentGeneration.Assets.UI.Model
 #if NOESIS
             Debug.Log($"Adding item: {item}");
 #endif
-            Inventory.AddItem(SlotType.Passive, item);
-            return false;
+            return SetItemToSlot(SlotType.Passive, item);
         }
 
         public void Update()
@@ -90,13 +89,18 @@ namespace ContentGeneration.Assets.UI.Model
         {
             Health -= damageDealer.Damage;
             //var pushForce = 1000 * (agent.transform.position - damageDealer.Owner.transform.position).normalized;
-            agent.Stagger(damageDealer.PushForce(agent.transform));
+            Agent.Stagger(damageDealer.PushForce(Agent.transform));
         }
 #endif
 
-        public void SetItemToSlot(SlotType slotType, ItemState item)
+        public bool SetItemToSlot(SlotType slotType, ItemState item)
         {
-
+            var slot = Inventory.AddItem(slotType, item);
+            if(Agent != null)
+            {
+                Agent.SynchronizeWithState(this);
+            }
+            return slot != null;
         }
 
         /// <summary>
@@ -150,7 +154,21 @@ namespace ContentGeneration.Assets.UI.Model
 
         public Camera viewCamera;
 
-        public Agent agent;
+        Agent _agent;
+
+        public Agent Agent 
+        { 
+            get => _agent; 
+            set
+            {
+                _agent = value;
+                if(_agent != null)
+                {
+                    _agent.SynchronizeWithState(this);
+                }
+                
+            }
+        }
 
 #else
         public float ScreenPosX => 0f;

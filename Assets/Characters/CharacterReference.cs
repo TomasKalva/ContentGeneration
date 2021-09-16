@@ -9,22 +9,22 @@ public class CharacterReference : CharacterReference<CharacterState>
     {
         characterState = new CharacterState();
         characterState.viewCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
-        characterState.agent = GetComponent<Agent>();
+        characterState.Agent = GetComponent<Agent>();
     }
 
     void Update()
     {
         var camera = characterState.viewCamera;
 
-        var agentUiPos = camera.WorldToScreenPoint(transform.position + characterState.agent.UIOffset * Vector3.up);
+        var agentUiPos = camera.WorldToScreenPoint(transform.position + characterState.Agent.UIOffset * Vector3.up);
         characterState.UIScreenPosX = agentUiPos.x;
         characterState.UIScreenPosY = agentUiPos.y;
 
-        var agentCenterPos = camera.WorldToScreenPoint(transform.position + characterState.agent.CenterOffset * Vector3.up);
+        var agentCenterPos = camera.WorldToScreenPoint(transform.position + characterState.Agent.CenterOffset * Vector3.up);
         characterState.ScreenPosX = agentCenterPos.x;
         characterState.ScreenPosY = agentCenterPos.y;
 
-        characterState.VisibleOnCamera = ExtensionMethods.IsPointInDirection(camera.transform.position, camera.transform.forward, characterState.agent.transform.position) &&
-                                        (camera.transform.position - characterState.agent.transform.position).magnitude < 25f;
+        characterState.VisibleOnCamera = ExtensionMethods.IsPointInDirection(camera.transform.position, camera.transform.forward, characterState.Agent.transform.position) &&
+                                        (camera.transform.position - characterState.Agent.transform.position).magnitude < 25f;
     }
 }

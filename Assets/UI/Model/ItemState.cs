@@ -27,7 +27,7 @@ namespace ContentGeneration.Assets.UI.Model
         public string Name 
         { 
             get => _name;
-            protected set { _name = value; PropertyChanged.OnPropertyChanged(this); }
+            set { _name = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
 #if NOESIS
@@ -38,7 +38,7 @@ namespace ContentGeneration.Assets.UI.Model
         public string Description
         {
             get => _description;
-            protected set { _description = value; PropertyChanged.OnPropertyChanged(this); }
+            set { _description = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
 #if NOESIS
@@ -48,7 +48,7 @@ namespace ContentGeneration.Assets.UI.Model
         public Transform RealObject
         {
             get => realObject;
-            protected set { realObject = value; PropertyChanged.OnPropertyChanged(this); }
+            set { realObject = value; PropertyChanged.OnPropertyChanged(this); }
         }
 #endif
 

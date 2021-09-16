@@ -158,7 +158,7 @@ public class PlayerController : MonoBehaviour
 		}
 
 		// Remove dead target from ui
-		if (PlayerCharacterState.TargetedEnemy != null && (PlayerCharacterState.TargetedEnemy.agent == null || !(orbitCamera.CamUpdater is OrbitCamera.LockOn)))
+		if (PlayerCharacterState.TargetedEnemy != null && (PlayerCharacterState.TargetedEnemy.Agent == null || !(orbitCamera.CamUpdater is OrbitCamera.LockOn)))
 		{
 			LockOn(null);
 		}

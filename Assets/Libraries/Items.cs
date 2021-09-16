@@ -11,7 +11,7 @@ public class Items : ScriptableObject
     {
         Items asset = ScriptableObject.CreateInstance<Items>();
 
-        string name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath("Assets/NewScripableObject.asset");
+        string name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath("Assets/Items.asset");
         AssetDatabase.CreateAsset(asset, name);
         AssetDatabase.SaveAssets();
 
@@ -20,17 +20,7 @@ public class Items : ScriptableObject
         Selection.activeObject = asset;
     }
 
-    [SerializeField]
-    PhysicalItem physicalItemPrefab;
-
-    PhysicalItem CreateItem(ItemState itemState)
-    {
-        var newPhysicalItem = Instantiate(physicalItemPrefab);
-        newPhysicalItem.Item = itemState;
-        return newPhysicalItem;
-    }
-
-    public PhysicalItem BlueIchorEssence() => CreateItem(new BlueIchorEssence());
-    public PhysicalItem RedIchorEssence() => CreateItem(new RedIchorEssence());
-    public PhysicalItem FreeWill() => CreateItem(new FreeWill());
+    public ItemState BlueIchorEssence() => new BlueIchorEssence();
+    public ItemState RedIchorEssence() => new RedIchorEssence();
+    public ItemState FreeWill() => new FreeWill();
 }

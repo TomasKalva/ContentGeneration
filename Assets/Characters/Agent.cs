@@ -55,11 +55,6 @@ public class Agent : MonoBehaviour
 
 	public bool CanMove { get; set; } = true;
 
-	/// <summary>
-	/// Used for reseting animation back to idle.
-	/// </summary>
-	int stepsSinceMoved;
-
 	bool died;
 
 	[SerializeField]
@@ -83,9 +78,14 @@ public class Agent : MonoBehaviour
         {
 			_state = value;
 			GoToState(value);
-
 		}
     }
+
+	[SerializeField]
+	WeaponSlot leftWeaponSlot;
+
+	[SerializeField]
+	WeaponSlot rightWeaponSlot;
 
 	// Start is called before the first frame update
 	void Awake()
@@ -187,6 +187,9 @@ public class Agent : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// Todo: turn this into movement constraint.
+	/// </summary>
 	public void RunLockedOn(Vector2 direction)
 	{
 		if (!CanMove)
@@ -201,6 +204,17 @@ public class Agent : MonoBehaviour
 			run.Direction = direction;
 			run.SetDirection = false;
 		}
+	}
+
+	public void SynchronizeWithState(CharacterState state)
+    {
+		var inventory = state.Inventory;
+
+		var leftWeaponItem = inventory.LeftWeaponSlot.Item;
+		leftWeaponSlot.Weapon = leftWeaponItem?.RealObject.GetComponent<Weapon>();
+
+		var rightWeaponItem = inventory.RightWeaponSlot.Item;
+		rightWeaponSlot.Weapon = rightWeaponItem?.RealObject.GetComponent<Weapon>();
 	}
 
 	public void Turn(Vector2 direction)

@@ -153,6 +153,9 @@ namespace ContentGeneration.Assets.UI.Model
             {
                 ActiveSlots.Add(new InventorySlot(SlotType.Active, i));
             }
+
+            LeftWeaponSlot = new InventorySlot(SlotType.LeftWeapon, 0);
+            RightWeaponSlot = new InventorySlot(SlotType.RightWeapon, 0);
         }
 
         InventorySlot AvailableSlot(IEnumerable<InventorySlot> slots)
@@ -160,17 +163,31 @@ namespace ContentGeneration.Assets.UI.Model
             return slots.Where(slot => slot.Item == null).FirstOrDefault();
         }
 
+        IEnumerable<InventorySlot> AllSlots()
+        {
+            return PassiveSlots.Concat(
+                        ActiveSlots.Concat(
+                            new InventorySlot[2] { LeftWeaponSlot, RightWeaponSlot }));
+        }
 
+        IEnumerable<InventorySlot> GetSlots(SlotType slotType)
+        {
+            return AllSlots().Where(slot => slot.SlotType == slotType);
+        }
 
         /// <summary>
         /// Returns slot the item is put to.
         /// </summary>
-        public virtual InventorySlot AddItem(SlotType slotType, ItemState item)
+        public InventorySlot AddItem(SlotType slotType, ItemState item)
         {
-            var slot = AvailableSlot(PassiveSlots);
+            var slot = AvailableSlot(GetSlots(slotType));
             if (slot != null)
             {
                 slot.Item = item;
+                if (slot.SlotType != SlotType.Passive)
+                {
+                    item.OnEquip(character);
+                }
                 return slot;
             }
             else
@@ -267,8 +284,6 @@ namespace ContentGeneration.Assets.UI.Model
                 OnPropertyChanged(this);
             }
         }
-
-        CharacterState character;
 
         public PlayerInventory(CharacterState character) : base(character)
         {
@@ -389,21 +404,6 @@ namespace ContentGeneration.Assets.UI.Model
 
         public EnemyInventory(CharacterState character) : base(character)
         {
-        }
-
-        public override InventorySlot AddItem(SlotType slotType, ItemState item)
-        {
-            var slot = EmptySlot;
-            if(slot != null)
-            {
-                slot.Item = item;
-                item.OnEquip(character);
-                return slot;
-            }
-            else
-            {
-                return null;
-            }
         }
     }
 }

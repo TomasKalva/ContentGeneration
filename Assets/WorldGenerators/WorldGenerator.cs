@@ -10,7 +10,7 @@ public abstract class WorldGenerator : MonoBehaviour
     protected Enemies enemies;
 
     [SerializeField]
-    protected Items items;
+    protected PhysicalItems items;
 
     [SerializeField]
     protected InteractiveObjects interactiveObjects;

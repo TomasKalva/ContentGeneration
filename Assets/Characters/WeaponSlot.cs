@@ -21,12 +21,16 @@ public class WeaponSlot : MonoBehaviour
     {
         if (weapon == null) return;
 
-        Destroy(weapon);
+        Destroy(weapon.gameObject);
     }
 
     void CreateWeapon(Weapon weaponPrefab)
     {
-        if (weaponPrefab == null) return;
+        if (weaponPrefab == null)
+        {
+            weapon = null;
+            return;
+        }
 
         var newWeapon = Instantiate(weaponPrefab);
         newWeapon.transform.SetParent(transform);
