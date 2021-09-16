@@ -76,12 +76,12 @@ public class Area
 
     public bool ContainsModule(Module module) => modules.Where(m => m == module).Any();
 
-    public void PlaceObjects(ModuleGrid grid)
+    public void PlaceObjects(ModuleGrid grid, Libraries libraries)
     {
         foreach(var character in objectsToPlace)
         {
             var dest = modules.GetRandom();
-            var placedObj = character.SetObject(Style, dest.transform);
+            var placedObj = character.SetObject(libraries, Style, dest.transform);
             placedObjects.Add(placedObj);
         }
     }
@@ -145,7 +145,7 @@ public enum CharacterType
 
 public abstract class WorldObject
 {
-    public abstract Transform SetObject(Style style, Transform parent);
+    public abstract Transform SetObject(Libraries libraries, Style style, Transform parent);
 }
 
 public class CharacterWorldObject : WorldObject
@@ -157,12 +157,14 @@ public class CharacterWorldObject : WorldObject
         this.characterType = characterType;
     }
 
-    public override Transform SetObject(Style style, Transform parent)
+    public override Transform SetObject(Libraries libraries, Style style, Transform parent)
     {
         var character = style.GetCharacter(characterType);
         character.SetParent(parent);
         character.SetPositionAndRotation(parent.position, parent.rotation);
-        character.GetComponent<Agent>().CharacterState.Inventory.AddItem(SlotType.Active, new FreeWill());
+        character.GetComponent<Agent>().CharacterState.SetItemToSlot(SlotType.Active, new FreeWill());
+        character.GetComponent<Agent>().CharacterState.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanSword());
+        character.GetComponent<Agent>().CharacterState.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanKnife());
         return character;
     }
 }
@@ -176,7 +178,7 @@ public class ItemWorldObject : WorldObject
         this.item = itemPrefab;
     }
 
-    public override Transform SetObject(Style style, Transform parent)
+    public override Transform SetObject(Libraries libraries, Style style, Transform parent)
     {
         item.transform.SetParent(parent);
         item.transform.SetPositionAndRotation(parent.position, parent.rotation);
@@ -193,7 +195,7 @@ public class WorldObjectObject : WorldObject
         this.objectPrefab = objectPrefab;
     }
 
-    public override Transform SetObject(Style style, Transform parent)
+    public override Transform SetObject(Libraries libraries, Style style, Transform parent)
     {
         var obj = GameObject.Instantiate(objectPrefab);
         obj.transform.SetParent(parent);

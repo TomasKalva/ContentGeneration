@@ -76,6 +76,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerInputSpace: {fileID: 0}
   interactionDistance: 1.5
+  libraries: {fileID: 11400000, guid: e6d383d7b852e69439d0877d7ed97ca5, type: 2}
 --- !u!114 &-2672352175194269786
 MonoBehaviour:
   m_ObjectHideFlags: 0

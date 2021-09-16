@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class PhysicalItems : ScriptableObject
 {
-    [MenuItem("Assets/Create/Items")]
+    [MenuItem("Assets/Create/PhysicalItems")]
     public static void CreateMyAsset()
     {
         PhysicalItems asset = ScriptableObject.CreateInstance<PhysicalItems>();

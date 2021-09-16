@@ -10,13 +10,19 @@ public abstract class WorldGenerator : MonoBehaviour
     protected Enemies enemies;
 
     [SerializeField]
-    protected PhysicalItems items;
+    protected PhysicalItems physicalItems;
+
+    [SerializeField]
+    protected Items items;
 
     [SerializeField]
     protected InteractiveObjects interactiveObjects;
 
     [SerializeField]
     protected Objects objects;
+
+    [SerializeField]
+    protected Libraries libraries;
 
     public virtual void Generate(World world)
     {

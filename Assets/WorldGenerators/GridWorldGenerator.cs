@@ -75,9 +75,9 @@ public class GridWorldGenerator : WorldGenerator
                 area.AddCharacter(new CharacterWorldObject(CharacterType.Tall));
                 area.AddCharacter(new CharacterWorldObject(CharacterType.Tall));
                 area.AddCharacter(new CharacterWorldObject(CharacterType.Tall));
-                area.AddItem(new ItemWorldObject(items.BlueIchorEssence()));
+                area.AddItem(new ItemWorldObject(physicalItems.BlueIchorEssence()));
             }
-            area.PlaceObjects(moduleGrid);
+            area.PlaceObjects(moduleGrid, libraries);
         }
     }
 

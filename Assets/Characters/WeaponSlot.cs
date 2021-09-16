@@ -32,8 +32,13 @@ public class WeaponSlot : MonoBehaviour
             return;
         }
 
-        var newWeapon = Instantiate(weaponPrefab);
-        newWeapon.transform.SetParent(transform);
+        var newWeapon = Instantiate(weaponPrefab, transform);
+        //newWeapon.transform.SetParent(transform);
+
+        newWeapon.transform.localPosition = Vector3.zero;
+        newWeapon.transform.localRotation = Quaternion.identity;
+        newWeapon.transform.localScale = Vector3.one;
+
         weapon = newWeapon;
     }
 

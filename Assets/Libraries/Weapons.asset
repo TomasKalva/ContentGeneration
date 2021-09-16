@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02f5080d6ca5df541a0fa6683d653ecc, type: 3}
+  m_Name: Weapons
+  m_EditorClassIdentifier: 
+  sculptureClub: {fileID: 4133879677656881596, guid: 2fe51648b597b2444934605ab64ee5b8, type: 3}
+  mayanKnife: {fileID: 4133879677656881596, guid: 6c042c00cd821074db51e59537b4182a, type: 3}
+  mayanSword: {fileID: 4133879677656881596, guid: e3b3ac1a04916a64d978248eee3617b8, type: 3}

@@ -20,7 +20,14 @@ public class Items : ScriptableObject
         Selection.activeObject = asset;
     }
 
+    [SerializeField]
+    Weapons weapons;
+
     public ItemState BlueIchorEssence() => new BlueIchorEssence();
     public ItemState RedIchorEssence() => new RedIchorEssence();
     public ItemState FreeWill() => new FreeWill();
+
+    public ItemState SculptureClub() => new WeaponItem("Sculpture Club", "Made of idk stone", weapons.sculptureClub.transform);
+    public ItemState MayanKnife() => new WeaponItem("Mayan Knife", "Every Mayan has one", weapons.mayanKnife.transform);
+    public ItemState MayanSword() => new WeaponItem("Mayan Sword", "Like a knife but bigger", weapons.mayanSword.transform);
 }

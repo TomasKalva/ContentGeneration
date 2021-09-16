@@ -35,6 +35,9 @@ public class PlayerController : MonoBehaviour
 	[SerializeField]
 	float interactionDistance = 1f;
 
+	[SerializeField]
+	Libraries libraries;
+
 	Module previousModule;
 	Module currentModule;
 
@@ -86,6 +89,9 @@ public class PlayerController : MonoBehaviour
 		}
 
 		cameraInputs = new Queue<Vector2>();
+
+		myAgent.CharacterState.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanKnife());
+		myAgent.CharacterState.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanSword());
 	}
 
     void Update()
