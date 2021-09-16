@@ -19,5 +19,8 @@
             </Style.Triggers>
         </Style>
     </UserControl.Style>
-    <comp:ProgressBarNum DataContext="{Binding Health}" Color="Red"/>
+    <StackPanel>
+        <comp:ProgressBarNum DataContext="{Binding Health}" Color="Red"/>
+        <comp:ProgressBarNum DataContext="{Binding Will}" Color="Green"/>
+    </StackPanel>
 </UserControl>

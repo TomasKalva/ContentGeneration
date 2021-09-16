@@ -53,9 +53,9 @@ namespace ContentGeneration.Assets.UI.Model
 
         public CharacterState()
         {
-            Health = new FloatRange(100, 42);
-            Will = new FloatRange(100, 42);
-            Stability = new FloatRange(100, 42);
+            Health = new FloatRange(100, 100);
+            Will = new FloatRange(20, 20);
+            Stability = new FloatRange(35, 35);
             Inventory = new EnemyInventory(this);
         }
 

@@ -12,6 +12,13 @@ public class MayanAgent : Agent
         return attack;
     }
 
+    public Act LeftSwing()
+    {
+        var attack = acting.SelectAct("LeftSwing") as Attack;
+        attack.Direction = movement.AgentForward;
+        return attack;
+    }
+
     public Act Throw()
     {
         var thr = acting.SelectAct("Throw") as Shoot;

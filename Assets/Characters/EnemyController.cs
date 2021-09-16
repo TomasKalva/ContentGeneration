@@ -29,11 +29,8 @@ public abstract class EnemyController<AgentT> : MonoBehaviour where AgentT : Age
 	{
 		agent = GetComponent<AgentT>();
 		agent.Behaviors = new Behaviors();
-		Initialize();
 		World.OnCreated += OnWorldCreated;
 	}
-
-	protected virtual void Initialize() { }
 
 	void OnWorldCreated()
 	{
@@ -66,12 +63,12 @@ public abstract class EnemyController<AgentT> : MonoBehaviour where AgentT : Age
 
 	protected virtual void UpdateController(Vector2 movementDirection)
 	{
-		foreach (var act in agent.acting.Acts)
+		/*foreach (var act in agent.acting.Acts)
 		{
 			if (act.CanBeUsed())
 			{
 				agent.acting.SelectAct(act);
 			}
-		}
+		}*/
 	}
 }

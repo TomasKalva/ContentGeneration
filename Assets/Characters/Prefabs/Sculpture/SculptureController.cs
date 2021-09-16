@@ -35,5 +35,7 @@ public class SculptureController : EnemyController<SculptureAgent>
 		behaviors.AddBehavior(new DetectorBehavior(agent.OverheadAttack, overheadDetector));
 		behaviors.AddBehavior(new DetectorBehavior(agent.DoubleSwipe, doubleSwipeLeftDetector, doubleSwipeRightDetector));
 		behaviors.AddBehavior(new DetectorBehavior(agent.GroundSlam, groundSlamDetector));
+
+		agent.acting.MyReset();
 	}
 }

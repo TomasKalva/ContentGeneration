@@ -15,16 +15,19 @@ public class Awareness : Behavior
 
     bool moveForward;
 
-    public Awareness(float maxDistance, Vector2 optimalDistance)
+    float MinWill { get; }
+
+    public Awareness(float maxDistance, Vector2 optimalDistance, float minWill)
     {
         this.maxDistance = maxDistance;
         this.optimalDistance = optimalDistance;
         this.moveForward = false;
+        this.MinWill = minWill;
     }
 
     bool BreakAwareness(Agent agent)
 	{
-        return agent.Behaviors.BehaviorPossible(agent, 4) || Vector3.Distance(agent.transform.position, TargetPoint) > maxDistance;
+        return agent.CharacterState.Will > MinWill && (agent.Behaviors.BehaviorPossible(agent, 4) || Vector3.Distance(agent.transform.position, TargetPoint) > maxDistance);
 	}
 
     public override bool CanEnter(Agent agent)

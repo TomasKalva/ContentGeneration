@@ -26,6 +26,9 @@ public class Act : MonoBehaviour
     [SerializeField]
     protected float duration = 1f;
 
+    [SerializeField]
+    protected float cost = 0f;
+
     public TargetPosition TargetPosition { get; set; }
 
     public float Duration
@@ -39,9 +42,9 @@ public class Act : MonoBehaviour
     /// </summary>
     public bool ActEnded { get; set; }
 
-    public bool CanBeUsed()
+    public bool CanBeUsed(Agent agent)
     {
-        return detector && detector.Triggered;
+        return agent.CharacterState.Will >= cost;// detector && detector.Triggered;
     }
 
     public virtual void StartAct(Agent agent) 

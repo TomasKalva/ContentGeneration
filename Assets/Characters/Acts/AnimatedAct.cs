@@ -26,6 +26,7 @@ public class AnimatedAct : Act
     {
         Initialize(agent);
         timeElapsed = 0f;
+        agent.CharacterState.Will -= cost;
 
         OnStart(agent);
     }

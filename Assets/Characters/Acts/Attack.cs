@@ -41,6 +41,7 @@ public class Attack : AnimatedAct
 
     public override void OnStart(Agent agent)
     {
+
         PlayAnimation(agent);
 
         Direction3F directionF = () => TargetPosition == null ? Direction : TargetPosition.DirectionTo(agent.transform.position);

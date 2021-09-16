@@ -98,7 +98,7 @@ public class Acting : MonoBehaviour, IActing
 
     private Act GetNextAct()
     {
-        return selectedActs.ArgMax(act => act ? act.priority : -1000_000);
+        return selectedActs.Where(act => act.CanBeUsed(agent)).ArgMax(act => act ? act.priority : -1000_000);
     }
 
     public bool CanAct()
@@ -106,6 +106,11 @@ public class Acting : MonoBehaviour, IActing
         return GetNextAct() != null;
     }
 
+    public void MyReset()
+    {
+        ActiveActStarted = false;
+        selectedActs.Clear();
+    }
 
     public void Act()
     {
