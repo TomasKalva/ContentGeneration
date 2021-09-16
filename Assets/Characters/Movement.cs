@@ -57,7 +57,7 @@ public class Movement : MonoBehaviour {
 
 	public void Impulse(Vector3 force)
 	{
-		var projectedForce = ExtensionMethods.ProjectDirectionOnPlane(force.normalized, contactNormal) * force.magnitude;
+		var projectedForce = ExtensionMethods.ProjectDirectionOnPlane(force.normalized, contactNormal.normalized) * force.magnitude;
 		body.AddForce(projectedForce);
 	}
 
@@ -68,7 +68,7 @@ public class Movement : MonoBehaviour {
 			return;
         }
 
-		var projectedDir = ExtensionMethods.ProjectDirectionOnPlane(direction.X0Z(), contactNormal); ;
+		var projectedDir = ExtensionMethods.ProjectDirectionOnPlane(direction.X0Z(), contactNormal.normalized);
 
 		velocity = speed * projectedDir;
 		applyFriction = false;
@@ -80,7 +80,7 @@ public class Movement : MonoBehaviour {
 
 	public void Accelerate(Vector2 dV, float speed)
 	{
-		var projectedDir = ExtensionMethods.ProjectDirectionOnPlane(dV.X0Z(), contactNormal); ;
+		var projectedDir = ExtensionMethods.ProjectDirectionOnPlane(dV.X0Z(), contactNormal.normalized);
 
 		velocity += speed * projectedDir;
 		applyFriction = false;
@@ -195,7 +195,7 @@ public class Movement : MonoBehaviour {
 			direction = new Vector2(Mathf.Cos(newAngle), Mathf.Sin(newAngle));
 
 			// update body rotation
-			body.rotation = Quaternion.FromToRotation(Vector3.forward, AgentForward);
+			body.rotation = Quaternion.LookRotation(AgentForward, Vector3.up);//.FromToRotation(Vector3.forward, AgentForward);
 		}
 	}
 
@@ -251,7 +251,8 @@ public class Movement : MonoBehaviour {
 	}
 
 	float GetMinDot (int layer) {
-	return (stairsMask & (1 << layer)) == 0 ?
-		minGroundDotProduct : minStairsDotProduct;
+		return minGroundDotProduct;
+	/*return (stairsMask & (1 << layer)) == 0 ?
+		minGroundDotProduct : minStairsDotProduct;*/
 	}
 }

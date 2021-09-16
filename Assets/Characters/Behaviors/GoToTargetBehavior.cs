@@ -40,7 +40,7 @@ public class GoToTargetBehavior : Behavior
 
     public override bool UpdateBehavior(Agent agent)
     {
-        Vector3 direction = TargetPoint - agent.movement.body.position;
+        Vector3 direction = TargetPoint - agent.movement.transform.position;
         var moveDirection = new Vector2(direction.x, direction.z);
         agent.Run(moveDirection); 
 

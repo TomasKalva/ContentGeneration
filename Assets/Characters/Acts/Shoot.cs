@@ -64,7 +64,6 @@ public class Shoot : AnimatedAct
         bullet.transform.position = gun.position + gun.forward * 0.5f;
         bullet.transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
         bullet.GetComponent<Rigidbody>().velocity = direction * speed;
-        Debug.Log(bullet.GetComponent<Rigidbody>().velocity);
         bullet.Active = true;
         bullet.Owner = agent;
     }

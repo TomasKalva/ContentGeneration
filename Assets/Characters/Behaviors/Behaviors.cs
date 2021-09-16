@@ -34,7 +34,7 @@ public class Behaviors
         if(CurrentBehaviour == null)
         {
             CurrentBehaviour = NextBehavior(agent);
-            Debug.Log(CurrentBehaviour);
+            //Debug.Log(CurrentBehaviour);
             if (CurrentBehaviour != null)
             {
                 CurrentBehaviour.Enter(agent);
