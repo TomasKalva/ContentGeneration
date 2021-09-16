@@ -41,6 +41,17 @@ namespace ContentGeneration.Assets.UI.Model
             protected set { _description = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
+#if NOESIS
+        [SerializeField]
+        Transform realObject;
+
+        public Transform RealObject
+        {
+            get => realObject;
+            protected set { realObject = value; PropertyChanged.OnPropertyChanged(this); }
+        }
+#endif
+
         public virtual void OnUse(CharacterState character)
         {
             //Debug.Log($"Using {Name}");

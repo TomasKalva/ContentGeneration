@@ -76,7 +76,7 @@ namespace ContentGeneration.Assets.UI.Model
 #if NOESIS
             Debug.Log($"Adding item: {item}");
 #endif
-            Inventory.AddItem(item);
+            Inventory.AddItem(SlotType.Passive, item);
             return false;
         }
 
@@ -93,6 +93,11 @@ namespace ContentGeneration.Assets.UI.Model
             agent.Stagger(damageDealer.PushForce(agent.transform));
         }
 #endif
+
+        public void SetItemToSlot(SlotType slotType, ItemState item)
+        {
+
+        }
 
         /// <summary>
         /// To be able to trigger property change from subclasses.

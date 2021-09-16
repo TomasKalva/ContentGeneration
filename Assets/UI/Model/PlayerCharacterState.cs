@@ -83,7 +83,7 @@ namespace ContentGeneration.Assets.UI.Model
 
         public override bool AddItem(ItemState item)
         {
-            return PlayerInventory.AddItem(item) != null;
+            return PlayerInventory.AddItem(SlotType.Passive, item) != null;
         }
     }
 }

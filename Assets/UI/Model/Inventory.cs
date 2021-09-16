@@ -10,13 +10,18 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
+
 namespace ContentGeneration.Assets.UI.Model
 {
     public enum SlotType
     {
-        ACTIVE,
-        PASSIVE
+        Active,
+        Passive,
+        LeftWeapon,
+        RightWeapon,
     }
+
 
     public class InventorySlot : INotifyPropertyChanged
     {
@@ -68,14 +73,22 @@ namespace ContentGeneration.Assets.UI.Model
 
     public interface IInventory
     {
-        InventorySlot AddItem(ItemState item);
+        InventorySlot AddItem(SlotType slotType, ItemState item);
 
         void Update();
     }
 
-    public class PlayerInventory : INotifyPropertyChanged, IInventory
+    public class Inventory : INotifyPropertyChanged, IInventory
     {
         public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// To be able to trigger property change from subclasses.
+        /// </summary>
+        protected void OnPropertyChanged(INotifyPropertyChanged thisInstance, [CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(thisInstance, new PropertyChangedEventArgs(name));
+        }
 
         ObservableCollection<InventorySlot> _passiveSlots;
         public ObservableCollection<InventorySlot> PassiveSlots
@@ -99,85 +112,47 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
-        InventorySlot _cursorSlot;
-        public InventorySlot CursorSlot
+        InventorySlot _leftWeaponSlot;
+        public InventorySlot LeftWeaponSlot
         {
-            get => _cursorSlot;
+            get => _leftWeaponSlot;
             private set
             {
-                if(_cursorSlot != null)
-                    _cursorSlot.Cursor = false;
-                _cursorSlot = value;
-                if (_cursorSlot != null)
-                    _cursorSlot.Cursor = true;
+                _leftWeaponSlot = value;
                 PropertyChanged.OnPropertyChanged(this);
             }
         }
 
-        InventorySlot _selectedSlot;
-        public InventorySlot SelectedSlot
+        InventorySlot _rightWeaponSlot;
+        public InventorySlot RightWeaponSlot
         {
-            get => _selectedSlot;
+            get => _rightWeaponSlot;
             private set
             {
-
-                if (_selectedSlot != null)
-                    _selectedSlot.Selected = false;
-
-                _selectedSlot = null;
-                PropertyChanged.OnPropertyChanged(this);
-
-                _selectedSlot = value;
-                if (_selectedSlot != null)
-                    _selectedSlot.Selected = true;
+                _rightWeaponSlot = value;
                 PropertyChanged.OnPropertyChanged(this);
             }
         }
 
         int ColumnsCount = 5;
 
-        bool _active;
-        public bool Active
-        {
-            get => _active;
-            set
-            {
-                _active = value;
-                PropertyChanged.OnPropertyChanged(this);
-            }
-        }
+        protected CharacterState character;
 
-        CharacterState character;
-
-        public PlayerInventory(CharacterState character)
+        public Inventory(CharacterState character)
         {
             this.character = character;
 
             PassiveSlots = new ObservableCollection<InventorySlot>();
-            for(int i=0; i<15; i++)
+            for (int i = 0; i < 15; i++)
             {
-                PassiveSlots.Add(new InventorySlot(SlotType.PASSIVE, i));
+                PassiveSlots.Add(new InventorySlot(SlotType.Passive, i));
             }
 
             ActiveSlots = new ObservableCollection<InventorySlot>();
             for (int i = 0; i < 5; i++)
             {
-                ActiveSlots.Add(new InventorySlot(SlotType.ACTIVE, i));
+                ActiveSlots.Add(new InventorySlot(SlotType.Active, i));
             }
-
-#if !NOESIS
-            AddItem(new ItemState());
-            AddItem(new ItemState());
-            AddItem(new ItemState());
-            AddItem(new ItemState());
-
-            EquipItem(PassiveSlots[1]);
-            UnequipItem(PassiveSlots[1]);
-#endif
-
-            CursorSlot = PassiveSlots[0];
-            SelectedSlot = ActiveSlots[0];
-
         }
 
         InventorySlot AvailableSlot(IEnumerable<InventorySlot> slots)
@@ -185,13 +160,15 @@ namespace ContentGeneration.Assets.UI.Model
             return slots.Where(slot => slot.Item == null).FirstOrDefault();
         }
 
+
+
         /// <summary>
         /// Returns slot the item is put to.
         /// </summary>
-        public InventorySlot AddItem(ItemState item)
+        public virtual InventorySlot AddItem(SlotType slotType, ItemState item)
         {
             var slot = AvailableSlot(PassiveSlots);
-            if(slot != null)
+            if (slot != null)
             {
                 slot.Item = item;
                 return slot;
@@ -231,6 +208,86 @@ namespace ContentGeneration.Assets.UI.Model
             return true;
         }
 
+        public void Update()
+        {
+            var activeItems = from slot in ActiveSlots where slot.Item != null select slot.Item;
+            foreach (var item in activeItems)
+            {
+                item.OnUpdate(character);
+            }
+        }
+    }
+
+    public class PlayerInventory : Inventory
+    {
+        InventorySlot _cursorSlot;
+        public InventorySlot CursorSlot
+        {
+            get => _cursorSlot;
+            private set
+            {
+                if(_cursorSlot != null)
+                    _cursorSlot.Cursor = false;
+                _cursorSlot = value;
+                if (_cursorSlot != null)
+                    _cursorSlot.Cursor = true;
+                OnPropertyChanged(this);
+            }
+        }
+
+        InventorySlot _selectedSlot;
+        public InventorySlot SelectedSlot
+        {
+            get => _selectedSlot;
+            private set
+            {
+
+                if (_selectedSlot != null)
+                    _selectedSlot.Selected = false;
+
+                _selectedSlot = null;
+                OnPropertyChanged(this);
+
+                _selectedSlot = value;
+                if (_selectedSlot != null)
+                    _selectedSlot.Selected = true;
+                OnPropertyChanged(this);
+            }
+        }
+
+        int ColumnsCount = 5;
+
+        bool _active;
+        public bool Active
+        {
+            get => _active;
+            set
+            {
+                _active = value;
+                OnPropertyChanged(this);
+            }
+        }
+
+        CharacterState character;
+
+        public PlayerInventory(CharacterState character) : base(character)
+        {
+
+#if !NOESIS
+            AddItem(new ItemState());
+            AddItem(new ItemState());
+            AddItem(new ItemState());
+            AddItem(new ItemState());
+
+            EquipItem(PassiveSlots[1]);
+            UnequipItem(PassiveSlots[1]);
+#endif
+
+            CursorSlot = PassiveSlots[0];
+            SelectedSlot = ActiveSlots[0];
+
+        }
+
 #if NOESIS
 
         /// <summary>
@@ -241,7 +298,7 @@ namespace ContentGeneration.Assets.UI.Model
             if(!Active)
                 return;
 
-            if (CursorSlot.SlotType == SlotType.PASSIVE)
+            if (CursorSlot.SlotType == SlotType.Passive)
             {
                 int newId = CursorSlot.SlotId + x + y * ColumnsCount;
                 if(newId >= 0)
@@ -277,7 +334,7 @@ namespace ContentGeneration.Assets.UI.Model
             if(!Active)
                 return;
 
-            if(CursorSlot.SlotType == SlotType.PASSIVE)
+            if(CursorSlot.SlotType == SlotType.Passive)
             {
                 EquipItem(CursorSlot);
             }
@@ -324,47 +381,17 @@ namespace ContentGeneration.Assets.UI.Model
             SelectedSlot = ActiveSlots[pos];
         }
 #endif
-
-        public void Update()
-        {
-            var activeItems = from slot in ActiveSlots where slot.Item != null select slot.Item;
-            foreach (var item in activeItems)
-            {
-                item.OnUpdate(character);
-            }
-        }
     }
 
-    public class EnemyInventory : INotifyPropertyChanged, IInventory
+    public class EnemyInventory : Inventory
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        ObservableCollection<InventorySlot> _activeSlots;
-        public ObservableCollection<InventorySlot> ActiveSlots
-        {
-            get => _activeSlots;
-            private set
-            {
-                _activeSlots = value;
-                PropertyChanged.OnPropertyChanged(this);
-            }
-        }
-
         InventorySlot EmptySlot => ActiveSlots.Where(slot => slot.Item == null).FirstOrDefault();
 
-        CharacterState character;
-
-        public EnemyInventory(CharacterState character)
+        public EnemyInventory(CharacterState character) : base(character)
         {
-            this.character = character;
-            ActiveSlots = new ObservableCollection<InventorySlot>();
-            for(int i=0; i<5; i++)
-            {
-                ActiveSlots.Add(new InventorySlot(SlotType.ACTIVE, i));
-            }
         }
 
-        public InventorySlot AddItem(ItemState item)
+        public override InventorySlot AddItem(SlotType slotType, ItemState item)
         {
             var slot = EmptySlot;
             if(slot != null)
@@ -376,15 +403,6 @@ namespace ContentGeneration.Assets.UI.Model
             else
             {
                 return null;
-            }
-        }
-
-        public void Update()
-        {
-            var activeItems = from slot in ActiveSlots where slot.Item != null select slot.Item;
-            foreach (var item in activeItems)
-            {
-                item.OnUpdate(character);
             }
         }
     }
