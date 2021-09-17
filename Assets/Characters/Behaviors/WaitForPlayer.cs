@@ -51,6 +51,11 @@ public class WaitForPlayer : Behavior
 
     public override bool UpdateBehavior(Agent agent)
     {
+        if(targetPoint == null)
+        {
+            targetPoint = GameObject.FindGameObjectWithTag("Player").transform;
+        }
+
         PlayerFound = CloseToTarget(agent) && TargetPointVisible(agent);
         return PlayerFound;
     }

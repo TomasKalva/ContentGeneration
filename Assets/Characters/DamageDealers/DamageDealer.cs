@@ -4,7 +4,13 @@ using UnityEngine;
 
 public abstract class DamageDealer : MonoBehaviour
 {
-    public float Damage { get; set; }
+    [SerializeField]
+    float _damage;
+    public float Damage 
+    { 
+        get => _damage; 
+        set => _damage = value; 
+    }
 
     List<Agent> currentlyHit;
 

@@ -92,6 +92,7 @@ public class PlayerController : MonoBehaviour
 
 		myAgent.CharacterState.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanKnife());
 		myAgent.CharacterState.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanSword());
+		myAgent.CharacterState.SetItemToSlot(SlotType.Active, libraries.Items.FreeWill());
 	}
 
     void Update()

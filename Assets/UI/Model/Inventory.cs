@@ -295,7 +295,7 @@ namespace ContentGeneration.Assets.UI.Model
             EquipItem(PassiveSlots[1]);
             UnequipItem(PassiveSlots[1]);
 #endif
-
+            
             CursorSlot = PassiveSlots[0];
             SelectedSlot = ActiveSlots[0];
 

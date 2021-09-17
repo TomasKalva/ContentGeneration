@@ -251,7 +251,7 @@ public class Movement : MonoBehaviour {
 	}
 
 	float GetMinDot (int layer) {
-		return minGroundDotProduct;
+		return minStairsDotProduct;
 	/*return (stairsMask & (1 << layer)) == 0 ?
 		minGroundDotProduct : minStairsDotProduct;*/
 	}

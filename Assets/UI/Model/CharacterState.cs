@@ -88,7 +88,7 @@ namespace ContentGeneration.Assets.UI.Model
 
             if (PostureBroken)
             {
-                Posture += ExtensionMethods.PerFixedSecond(2f);
+                Posture += ExtensionMethods.PerFixedSecond(5f * Posture.Maximum);
             }
 
             if (Posture.Full())
