@@ -10,6 +10,9 @@
   mc:Ignorable="d"
   d:DesignWidth="767.667" d:DesignHeight="416"
   d:DataContext="{d:DesignInstance {x:Type local:ViewModel}, IsDesignTimeCreatable=True}">
+    <UserControl.Resources>
+        <comp:BarLengthConverter x:Key="BarLengthConverter" />
+    </UserControl.Resources>
     <Grid  VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <Canvas>
             <!-- Enemy health bars -->
@@ -19,7 +22,7 @@
                         <!-- Margin="-100000" to center the control... explanation here:
                             https://stackoverflow.com/questions/13219321/positioning-an-element-inside-the-canvas-by-its-center-instead-of-the-top-left
                         -->
-                        <comp:FloatingHealthBar DataContext="{Binding}" Width="100" Height="25" Margin="-100000"/>
+                        <comp:FloatingHealthBar DataContext="{Binding}" Width="100" Height="40" Margin="-100000"/>
                         <!--<comp:ProgressBarNum DataContext="{Binding Health}" Color="Red" Width="100" Height="10" Margin="-100000"/>-->
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
@@ -54,8 +57,9 @@
         <Grid Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <!-- Top left bars -->
             <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30">
-                <comp:ProgressBarNum DataContext="{Binding PlayerState.Health}" NoNumbers="False" Color="Red" Width="300" Height="15" Margin="5"/>
-                <comp:ProgressBarNum DataContext="{Binding PlayerState.Will}" Color="Green" Width="300" Height="15" Margin="5"/>
+                <comp:ProgressBarNum DataContext="{Binding PlayerState.Health}" HorizontalAlignment="Left" NoNumbers="False" Color="Red" Width="{Binding Maximum, Converter={StaticResource BarLengthConverter}}" Height="15" Margin="5"/>
+                <comp:ProgressBarNum DataContext="{Binding PlayerState.Will}" HorizontalAlignment="Left" Color="Green" Width="{Binding Maximum, Converter={StaticResource BarLengthConverter}}" Height="15" Margin="5"/>
+                <comp:ProgressBarNum DataContext="{Binding PlayerState.Posture}" HorizontalAlignment="Left" Color="Yellow" Width="{Binding Maximum, Converter={StaticResource BarLengthConverter}}" Height="15" Margin="5"/>
             </StackPanel>
 
             <!-- Bottom left item -->

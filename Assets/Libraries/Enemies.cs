@@ -42,7 +42,9 @@ public class Enemies : ScriptableObject
         var character = mayan.CharacterState;
 
         // properties
-        character.Health = 100f;
+        character.Health = 40f;
+        character.Will = 20f;
+        character.Posture = 10f;
 
         // inventory
         character.SetItemToSlot(SlotType.Active, new FreeWill());
@@ -70,7 +72,9 @@ public class Enemies : ScriptableObject
         var character = mayan.CharacterState;
 
         // properties
-        character.Health = 100f;
+        character.Health = 50f;
+        character.Will = 20f;
+        character.Posture = 10f;
 
         // inventory
         character.SetItemToSlot(SlotType.Active, new FreeWill());

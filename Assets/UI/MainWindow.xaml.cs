@@ -26,11 +26,6 @@ namespace ContentGeneration.Assets.UI
 #endif
         }
 
-        private void ProgressBarNum_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
-
 #if NOESIS
         private void InitializeComponent()
         {

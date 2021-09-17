@@ -40,12 +40,14 @@ namespace ContentGeneration.Assets.UI.Model
 #if NOESIS
         [SerializeField]
 #endif
-        private FloatRange _stability;
-        public FloatRange Stability
+        private FloatRange _posture;
+        public FloatRange Posture
         {
-            get { return _stability; }
-            set { _stability = value; PropertyChanged.OnPropertyChanged(this); }
+            get { return _posture; }
+            set { _posture = value; PropertyChanged.OnPropertyChanged(this); }
         }
+
+        public bool PostureBroken { get; set; }
 
         public bool Dead => Health <= 0f;
 
@@ -55,7 +57,7 @@ namespace ContentGeneration.Assets.UI.Model
         {
             Health = new FloatRange(100, 100);
             Will = new FloatRange(20, 20);
-            Stability = new FloatRange(35, 35);
+            Posture = 10f;
             Inventory = new EnemyInventory(this);
         }
 
@@ -79,27 +81,49 @@ namespace ContentGeneration.Assets.UI.Model
             return SetItemToSlot(SlotType.Passive, item);
         }
 
+#if NOESIS
         public void Update()
         {
             Inventory.Update();
+
+            if (PostureBroken)
+            {
+                Posture += ExtensionMethods.PerFixedSecond(2f);
+            }
+
+            if (Posture.Full())
+            {
+                PostureBroken = false;
+            }
         }
+#endif
 
 #if NOESIS
         public void TakeDamage(DamageDealer damageDealer)
         {
             Health -= damageDealer.Damage;
-            //var pushForce = 1000 * (agent.transform.position - damageDealer.Owner.transform.position).normalized;
-            Agent.Stagger(damageDealer.PushForce(Agent.transform));
+
+            if (!PostureBroken)
+            {
+                Posture -= damageDealer.Damage;
+            }
+            if (Posture.Empty())
+            {
+                Agent.Stagger(damageDealer.PushForce(Agent.transform));
+                PostureBroken = true;
+            }
         }
 #endif
 
         public bool SetItemToSlot(SlotType slotType, ItemState item)
         {
             var slot = Inventory.AddItem(slotType, item);
+#if NOESIS
             if(Agent != null)
             {
                 Agent.SynchronizeWithState(this);
             }
+#endif
             return slot != null;
         }
 

@@ -22,5 +22,6 @@
     <StackPanel>
         <comp:ProgressBarNum DataContext="{Binding Health}" Color="Red"/>
         <comp:ProgressBarNum DataContext="{Binding Will}" Color="Green"/>
+        <comp:ProgressBarNum DataContext="{Binding Posture}" Color="Yellow"/>
     </StackPanel>
 </UserControl>

@@ -134,7 +134,25 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
-        int ColumnsCount = 5;
+        InventorySlot _selectedSlot;
+        public InventorySlot SelectedSlot
+        {
+            get => _selectedSlot;
+            protected set
+            {
+
+                if (_selectedSlot != null)
+                    _selectedSlot.Selected = false;
+
+                _selectedSlot = null;
+                OnPropertyChanged(this);
+
+                _selectedSlot = value;
+                if (_selectedSlot != null)
+                    _selectedSlot.Selected = true;
+                OnPropertyChanged(this);
+            }
+        }
 
         protected CharacterState character;
 
@@ -252,26 +270,6 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
-        InventorySlot _selectedSlot;
-        public InventorySlot SelectedSlot
-        {
-            get => _selectedSlot;
-            private set
-            {
-
-                if (_selectedSlot != null)
-                    _selectedSlot.Selected = false;
-
-                _selectedSlot = null;
-                OnPropertyChanged(this);
-
-                _selectedSlot = value;
-                if (_selectedSlot != null)
-                    _selectedSlot.Selected = true;
-                OnPropertyChanged(this);
-            }
-        }
-
         int ColumnsCount = 5;
 
         bool _active;
@@ -289,10 +287,10 @@ namespace ContentGeneration.Assets.UI.Model
         {
 
 #if !NOESIS
-            AddItem(new ItemState());
-            AddItem(new ItemState());
-            AddItem(new ItemState());
-            AddItem(new ItemState());
+            AddItem(SlotType.Passive, new ItemState());
+            AddItem(SlotType.Passive, new ItemState());
+            AddItem(SlotType.Passive, new ItemState());
+            AddItem(SlotType.Passive, new ItemState());
 
             EquipItem(PassiveSlots[1]);
             UnequipItem(PassiveSlots[1]);

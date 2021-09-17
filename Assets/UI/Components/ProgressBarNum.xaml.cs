@@ -1,10 +1,13 @@
 ﻿#if UNITY_5_3_OR_NEWER
 #define NOESIS
 using Noesis;
+using System;
+using System.Globalization;
 #else
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media;
 
 #endif
@@ -48,4 +51,18 @@ namespace ContentGeneration.Assets.UI.Components
         public static readonly DependencyProperty NoNumbersProperty =
             DependencyProperty.Register("NoNumbers", typeof(bool), typeof(ProgressBarNum), new UIPropertyMetadata(true));
     }
+
+    public class BarLengthConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            return 5f * (float)value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            return 0.2f * (float)value;
+        }
+    }
 }
+

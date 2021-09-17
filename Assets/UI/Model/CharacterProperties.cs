@@ -87,7 +87,7 @@ namespace ContentGeneration.Assets.UI.Model
                 _poise = value;
                 if (Character != null)
                 {
-                    Character.Stability.Maximum = _poise;
+                    Character.Posture.Maximum = _poise;
                 }
                 PropertyChanged.OnPropertyChanged(this); 
             }

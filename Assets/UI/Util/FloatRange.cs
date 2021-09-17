@@ -35,6 +35,7 @@ namespace ContentGeneration.Assets.UI.Util
         public float Value { get => value; set { this.value = Math.Max(0f, Math.Min(value, Maximum)); } }
         public bool Unbound => Maximum == MAX_VALUE;
         public bool Full() => Value == Maximum;
+        public bool Empty() => Value == 0f;
 
         public FloatRange(float maximum, float value)
         {
