@@ -15,3 +15,6 @@ MonoBehaviour:
   sculptureClub: {fileID: 4133879677656881596, guid: 2fe51648b597b2444934605ab64ee5b8, type: 3}
   mayanKnife: {fileID: 4133879677656881596, guid: 6c042c00cd821074db51e59537b4182a, type: 3}
   mayanSword: {fileID: 4133879677656881596, guid: e3b3ac1a04916a64d978248eee3617b8, type: 3}
+  scythe: {fileID: 3097573828825190701, guid: 1ac7bb6754fb6ae42b9e8bf28bcb8be3, type: 3}
+  mace: {fileID: 4133879677656881596, guid: 052d3d586d478524dba74f2db92d1b48, type: 3}
+  katana: {fileID: 3012890681912307712, guid: c8833c50b278b31458e318cf6ca39b68, type: 3}

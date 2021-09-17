@@ -29,6 +29,15 @@ public class Weapons : ScriptableObject
     [SerializeField]
     Weapon mayanSword;
 
+    [SerializeField]
+    Weapon scythe;
+
+    [SerializeField]
+    Weapon mace;
+
+    [SerializeField]
+    Weapon katana;
+
     public Weapon MayanSword()
     {
         var sword = Instantiate(mayanSword);
@@ -48,5 +57,25 @@ public class Weapons : ScriptableObject
         var club = Instantiate(sculptureClub);
         club.Damage = 22f;
         return club;
+    }
+    public Weapon Scythe()
+    {
+        var scythe = Instantiate(this.scythe);
+        scythe.Damage = 19f;
+        return scythe;
+    }
+
+    public Weapon Mace()
+    {
+        var mace = Instantiate(this.mace);
+        mace.Damage = 19f;
+        return mace;
+    }
+
+    public Weapon Katana()
+    {
+        var katana = Instantiate(this.katana);
+        katana.Damage = 10f;
+        return katana;
     }
 }

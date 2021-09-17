@@ -33,10 +33,6 @@ public abstract class DamageDealer : MonoBehaviour
         {
             FindOwner();
         }
-        /*if (_owner == null)
-        {
-            _owner = GetComponentInParent<Agent>();
-        }*/
         options = GameObject.Find("GameOptions").GetComponent<GameOptions>();
         Initialize();
     }
