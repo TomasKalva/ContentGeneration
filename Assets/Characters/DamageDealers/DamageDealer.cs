@@ -4,10 +4,7 @@ using UnityEngine;
 
 public abstract class DamageDealer : MonoBehaviour
 {
-    [SerializeField]
-    protected float damage;
-
-    public float Damage => damage;
+    public float Damage { get; set; }
 
     List<Agent> currentlyHit;
 
@@ -28,10 +25,19 @@ public abstract class DamageDealer : MonoBehaviour
         currentlyHit = new List<Agent>();
         if (_owner == null)
         {
-            _owner = GetComponentInParent<Agent>();
+            FindOwner();
         }
+        /*if (_owner == null)
+        {
+            _owner = GetComponentInParent<Agent>();
+        }*/
         options = GameObject.Find("GameOptions").GetComponent<GameOptions>();
         Initialize();
+    }
+
+    public void FindOwner()
+    {
+        _owner = GetComponentInParent<Agent>();
     }
 
     void FixedUpdate()

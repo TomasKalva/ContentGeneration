@@ -150,22 +150,21 @@ public abstract class WorldObject
 
 public class CharacterWorldObject : WorldObject
 {
-    public CharacterType characterType { get; }
+    public Agent agent { get; }
 
-    public CharacterWorldObject(CharacterType characterType)
+    public CharacterWorldObject(Agent agent)
     {
-        this.characterType = characterType;
+        this.agent = agent;
     }
 
     public override Transform SetObject(Libraries libraries, Style style, Transform parent)
     {
-        var character = style.GetCharacter(characterType);
-        character.SetParent(parent);
-        character.SetPositionAndRotation(parent.position, parent.rotation);
-        character.GetComponent<Agent>().CharacterState.SetItemToSlot(SlotType.Active, new FreeWill());
-        character.GetComponent<Agent>().CharacterState.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanSword());
-        character.GetComponent<Agent>().CharacterState.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanKnife());
-        return character;
+        var character = agent;
+        var charTrans = character.transform;
+        charTrans.SetParent(parent);
+        charTrans.SetPositionAndRotation(parent.position, parent.rotation);
+
+        return charTrans;
     }
 }
 

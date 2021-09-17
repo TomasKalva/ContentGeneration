@@ -72,9 +72,9 @@ public class GridWorldGenerator : WorldGenerator
         {
             if(!area.Modules.Any(module => module.coords.y == 0 || module.Outside))
             {
-                area.AddCharacter(new CharacterWorldObject(CharacterType.Tall));
-                area.AddCharacter(new CharacterWorldObject(CharacterType.Tall));
-                area.AddCharacter(new CharacterWorldObject(CharacterType.Tall));
+                area.AddCharacter(new CharacterWorldObject(libraries.Enemies.MayanThrower()));
+                area.AddCharacter(new CharacterWorldObject(libraries.Enemies.MayanSwordsman()));
+                area.AddCharacter(new CharacterWorldObject(libraries.Enemies.MayanSwordsman()));
                 area.AddItem(new ItemWorldObject(physicalItems.BlueIchorEssence()));
             }
             area.PlaceObjects(moduleGrid, libraries);

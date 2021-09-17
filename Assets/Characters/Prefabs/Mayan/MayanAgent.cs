@@ -12,9 +12,23 @@ public class MayanAgent : Agent
         return attack;
     }
 
+    public Act LongOverheadAttack()
+    {
+        var attack = acting.SelectAct("LongOverhead") as Attack;
+        attack.Direction = movement.AgentForward;
+        return attack;
+    }
+
     public Act LeftSwing()
     {
         var attack = acting.SelectAct("LeftSwing") as Attack;
+        attack.Direction = movement.AgentForward;
+        return attack;
+    }
+
+    public Act RightSwing()
+    {
+        var attack = acting.SelectAct("RightSwing") as Attack;
         attack.Direction = movement.AgentForward;
         return attack;
     }

@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c2f605c2df84e647b9952ade636e010, type: 3}
   m_Name: Enemies
   m_EditorClassIdentifier: 
+  libraries: {fileID: 11400000, guid: e6d383d7b852e69439d0877d7ed97ca5, type: 2}
   human: {fileID: 77297701618103349, guid: f3d0930cba780944aafbac485d75587a, type: 3}
   sculpture: {fileID: 6671359765029590395, guid: c9ae56c9c05b7ce4db2044c4791e79cb, type: 3}
   blob: {fileID: 1277739329715723909, guid: 27e6970099e87fe4f9dfbd8ff2d06f76, type: 3}
-  mayan: {fileID: 7465914728098359874, guid: 81f4580f812f8874c9b288f597380772, type: 3}
+  mayanPrefab: {fileID: 7465914728098359874, guid: 81f4580f812f8874c9b288f597380772, type: 3}

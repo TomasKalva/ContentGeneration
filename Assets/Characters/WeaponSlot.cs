@@ -12,34 +12,38 @@ public class WeaponSlot : MonoBehaviour
         get => weapon;
         set
         {
-            DestroyWeapon();
-            CreateWeapon(value);
+            RemoveWeapon();
+            AddWeapon(value);
         }
     }
 
-    void DestroyWeapon()
+    void RemoveWeapon()
     {
         if (weapon == null) return;
 
-        Destroy(weapon.gameObject);
+        weapon.transform.SetParent(null);
+        weapon.Active = false;
+        //Destroy(weapon.gameObject);
     }
 
-    void CreateWeapon(Weapon weaponPrefab)
+    void AddWeapon(Weapon newWeapon)
     {
-        if (weaponPrefab == null)
+        if (newWeapon == null)
         {
-            weapon = null;
+            this.weapon = null;
             return;
         }
 
-        var newWeapon = Instantiate(weaponPrefab, transform);
-        //newWeapon.transform.SetParent(transform);
+        //var weapon = Instantiate(weapon, transform);
+        newWeapon.transform.SetParent(transform);
+        newWeapon.FindOwner();
+        newWeapon.Active = true;
 
         newWeapon.transform.localPosition = Vector3.zero;
         newWeapon.transform.localRotation = Quaternion.identity;
         newWeapon.transform.localScale = Vector3.one;
 
-        weapon = newWeapon;
+        this.weapon = newWeapon;
     }
 
     private void Awake()

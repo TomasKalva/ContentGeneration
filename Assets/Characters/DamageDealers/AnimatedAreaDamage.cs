@@ -19,7 +19,7 @@ public class AnimatedAreaDamage : AreaDamage
         if (!Active)
             return;
 
-        agent.CharacterState.Health -= damage;
+        agent.CharacterState.Health -= Damage;
     }
 
     protected override void OnFixedUpdate()

@@ -165,6 +165,8 @@ GameObject:
   - component: {fileID: 6408259666256583763}
   - component: {fileID: 4846465345814563317}
   - component: {fileID: 1608244499992161290}
+  - component: {fileID: 6158737007284265538}
+  - component: {fileID: 4467630507473043128}
   m_Layer: 10
   m_Name: ActContainer
   m_TagString: Untagged
@@ -398,7 +400,7 @@ MonoBehaviour:
   type: 2
   priority: 2
   duration: 1.5
-  cost: 10
+  cost: 3
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -410,7 +412,7 @@ MonoBehaviour:
     _NormalizedStartTime: 0
   projectile: {fileID: 1623888701323414183, guid: bb55490b50c69f94080887c45fc43b99, type: 3}
   gun: {fileID: 5151155491971333750}
-  speed: 3
+  speed: 5
   shootT: 0.75
 --- !u!114 &1608244499992161290
 MonoBehaviour:
@@ -493,6 +495,180 @@ MonoBehaviour:
   weaponSlots:
   - {fileID: 3700916034506211958}
   damageStartT: 0.3
+  damageEndT: 0.6
+--- !u!114 &6158737007284265538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5245136111020689035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 351ea8ce974be344ca968c6609d7764b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: RightSwing
+  type: 2
+  priority: 0
+  duration: 2
+  cost: 4
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 3375160186488330389, guid: 9f1dedf80f06d0c4bb5b4c68d4840de4, type: 3}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  speedF:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.020833313
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.30415547
+      value: 0
+      inSlope: 0.1886792
+      outSlope: 0.1886792
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.32608697
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.41249996
+      value: 1.5919895
+      inSlope: -16.981234
+      outSlope: -16.981234
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.37925482
+    - serializedVersion: 3
+      time: 0.6102563
+      value: 0.045469403
+      inSlope: -1.8123833
+      outSlope: -1.8123833
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.59966934
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -0.8490567
+      outSlope: -0.8490567
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.5555464
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  weaponSlots:
+  - {fileID: 3700916034506211958}
+  damageStartT: 0.3
+  damageEndT: 0.6
+--- !u!114 &4467630507473043128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5245136111020689035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 351ea8ce974be344ca968c6609d7764b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: LongOverhead
+  type: 2
+  priority: 0
+  duration: 3
+  cost: 6
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 3188368880832793275, guid: 9f1dedf80f06d0c4bb5b4c68d4840de4, type: 3}
+    _Speed: 1
+    _NormalizedStartTime: 0
+  speedF:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.020833313
+      value: 0
+      inSlope: 0.15585206
+      outSlope: 0.15585206
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.47499287
+      value: 0.07078171
+      inSlope: 0.1886792
+      outSlope: 0.1886792
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.32608697
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.48333126
+      value: 14.540102
+      inSlope: -1.476645
+      outSlope: -1.476645
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.5576188
+      value: 11.328984
+      inSlope: -149.17831
+      outSlope: -149.17831
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.6102563
+      value: 0.045469403
+      inSlope: -1.8123833
+      outSlope: -1.8123833
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.59966934
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -0.8490567
+      outSlope: -0.8490567
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.5555464
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  weaponSlots:
+  - {fileID: 3700916034506211958}
+  - {fileID: 5151155491971333745}
+  damageStartT: 0.5
   damageEndT: 0.6
 --- !u!1 &5592726371195089901
 GameObject:
@@ -803,7 +979,7 @@ MonoBehaviour:
   minDistance: 5
   overheadDetector: {fileID: 4093943555014982308}
   throwDetector: {fileID: 6968318311868321479}
-  leftSwingDetector: {fileID: 5919561997481874419}
+  swingDetector: {fileID: 5919561997481874419}
 --- !u!1 &8988790298336969575
 GameObject:
   m_ObjectHideFlags: 0

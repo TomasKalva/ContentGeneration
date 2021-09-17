@@ -20,9 +20,33 @@ public class Weapons : ScriptableObject
         Selection.activeObject = asset;
     }
 
-    public Weapon sculptureClub;
+    [SerializeField]
+    Weapon sculptureClub;
 
-    public Weapon mayanKnife;
+    [SerializeField]
+    Weapon mayanKnife;
 
-    public Weapon mayanSword;
+    [SerializeField]
+    Weapon mayanSword;
+
+    public Weapon MayanSword()
+    {
+        var sword = Instantiate(mayanSword);
+        sword.Damage = 12f;
+        return sword;
+    }
+
+    public Weapon MayanKnife()
+    {
+        var knife = Instantiate(mayanKnife);
+        knife.Damage = 5f;
+        return knife;
+    }
+
+    public Weapon SculptureClub()
+    {
+        var club = Instantiate(sculptureClub);
+        club.Damage = 22f;
+        return club;
+    }
 }

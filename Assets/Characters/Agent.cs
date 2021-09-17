@@ -97,6 +97,11 @@ public class Agent : MonoBehaviour
 		characterRef = GetComponent<CharacterRef>();
 	}
 
+    private void Start()
+    {
+		SynchronizeWithState(CharacterState);
+	}
+
     public void StartReceivingControls()
 	{
 		movement.ResetDesiredValues();
