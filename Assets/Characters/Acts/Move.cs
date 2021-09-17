@@ -7,6 +7,9 @@ public class Move : AnimatedAct
     [SerializeField]
     protected float speed = 3f;
 
+    [SerializeField]
+    protected float animMetersPerSecond = 1f;
+
     protected Vector2 direction;
 
     public Vector2 Direction 
@@ -16,6 +19,11 @@ public class Move : AnimatedAct
     }
 
     public bool SetDirection { get; set; } = true;
+
+    private void Awake()
+    {
+        Duration = animMetersPerSecond / speed;
+    }
 
     public override bool UpdateAct(Agent agent, float dt)
     {

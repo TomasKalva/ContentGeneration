@@ -56,6 +56,10 @@ public class Acting : MonoBehaviour, IActing
         staggered = actContainer.GetComponent<StaggeredAct>();
         acts = actContainer.GetComponents<Act>().ToList();
         agent = GetComponent<Agent>();
+    }
+
+    void Start() 
+    { 
         foreach(var act in acts)
         {
             act.Duration /= actingSpeedMultiplier;

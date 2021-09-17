@@ -214,6 +214,7 @@ MonoBehaviour:
     _Speed: 1
     _NormalizedStartTime: 0
   speed: 2.2
+  animMetersPerSecond: 3.2
 --- !u!114 &5245136111020689032
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -378,7 +379,8 @@ MonoBehaviour:
     _Clip: {fileID: 3673892349042286343, guid: 9f1dedf80f06d0c4bb5b4c68d4840de4, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  speed: 2.2
+  speed: 1.5
+  animMetersPerSecond: 3.2
 --- !u!114 &4846465345814563317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -396,7 +398,7 @@ MonoBehaviour:
   type: 2
   priority: 2
   duration: 1.5
-  cost: 3
+  cost: 10
   anim:
     _FadeDuration: 0.25
     _Events:

@@ -238,6 +238,10 @@ PrefabInstance:
       propertyPath: speed
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 4640842516065282787, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
+      propertyPath: animMetersPerSecond
+      value: 2.5
+      objectReference: {fileID: 0}
     - target: {fileID: 7462862577321291839, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
       propertyPath: anim._Clip
       value: 
