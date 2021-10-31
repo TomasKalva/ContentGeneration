@@ -42,6 +42,8 @@ public struct Box3Int : IEnumerable<Vector3Int>
     }
 
     public Box2Int FlattenY() => new Box2Int(leftBottomBack.XZ(), rightTopFront.XZ());
+
+    public bool Contains(Vector3Int v) => v.AtLeast(leftBottomBack) && v.Less(rightTopFront);
 }
 
 public struct Box2Int : IEnumerable<Vector2Int>
