@@ -38,12 +38,15 @@ namespace ShapeGrammarGenerator
 
             var shapeTypes = new List<ShapeType>() 
             {
-                ShapeType.Rectangle(new Vector3Int(2, 2, 1)),
-                ShapeType.Rectangle(new Vector3Int(2, 1, 3)),
+                //ShapeType.Rectangle(new Vector3Int(2, 2, 1)),
                 ShapeType.Rectangle(new Vector3Int(2, 2, 1))
+                    .Layer(0, square => square.SetConnection(Vector3Int.back, Connection.Both))
+                    .Layer(1, square => square.SetConnection(Vector3Int.forward, Connection.Both)),
+                /*ShapeType.Rectangle(new Vector3Int(2, 2, 1))
                     .Layer(1, square => square.SetHorizontalConnections(Connection.Both)),
                 ShapeType.Rectangle(new Vector3Int(1, 2, 1))
                     .Layer(1, square => square.SetHorizontalConnections(Connection.Both)),
+                */
             };
             var evAlg = new EvolutionaryAlgorithm<Grid>(
                 () => GridOperations.Initialize(new Vector3Int(5, 5, 5), 10, shapeTypes),
