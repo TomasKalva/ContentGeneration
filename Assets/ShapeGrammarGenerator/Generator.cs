@@ -37,14 +37,16 @@ namespace ShapeGrammarGenerator
             //grid.Visualize(gridParent, squareCubePref);
 
             var shapeTypes = new List<ShapeType>() 
-            { 
+            {
                 ShapeType.Rectangle(new Vector3Int(2, 2, 1)),
                 ShapeType.Rectangle(new Vector3Int(2, 1, 3)),
-                ShapeType.Rectangle(new Vector3Int(2, 1, 1)),
-                ShapeType.Rectangle(new Vector3Int(1, 4, 1)),
+                ShapeType.Rectangle(new Vector3Int(2, 2, 1))
+                    .Layer(1, square => square.SetHorizontalConnections(Connection.Both)),
+                ShapeType.Rectangle(new Vector3Int(1, 2, 1))
+                    .Layer(1, square => square.SetHorizontalConnections(Connection.Both)),
             };
             var evAlg = new EvolutionaryAlgorithm<Grid>(
-                () => GridOperations.Initialize(new Vector3Int(10, 5, 5), 20, shapeTypes),
+                () => GridOperations.Initialize(new Vector3Int(5, 5, 5), 10, shapeTypes),
                 grid => GridOperations.ChangeShapePos(grid, 0.1f),
                 GridOperations.ExchangeShapes,
                 GridOperations.GridFitness
@@ -66,10 +68,10 @@ namespace ShapeGrammarGenerator
         }
     }
 
-    enum Direction
+    /*enum Direction
     {
         Up, Down, Left, Right, Forward, Back
-    }
+    }*/
 
     enum Connection
     {
@@ -78,12 +80,74 @@ namespace ShapeGrammarGenerator
 
     class Square
     {
+        #region Visualisation
+        static Dictionary<Vector3Int, int> DirectionToMaterialIndex { get; }
+        static Dictionary<Connection, Color> ConnectionTypeToColor { get; }
+
+        static Square()
+        {
+            DirectionToMaterialIndex = new Dictionary<Vector3Int, int>();
+            DirectionToMaterialIndex.Add(Vector3Int.up, 0);
+            DirectionToMaterialIndex.Add(Vector3Int.back, 1);
+            DirectionToMaterialIndex.Add(Vector3Int.left, 2);
+            DirectionToMaterialIndex.Add(Vector3Int.down, 3);
+            DirectionToMaterialIndex.Add(Vector3Int.right, 4);
+            DirectionToMaterialIndex.Add(Vector3Int.forward, 5);
+
+            ConnectionTypeToColor = new Dictionary<Connection, Color>();
+            ConnectionTypeToColor.Add(Connection.Both, new Color(0.3f, 0.3f, 1f));
+            ConnectionTypeToColor.Add(Connection.No, new Color(0f, 0f, 0f));
+        }
+
+        public void Visualize(MeshRenderer meshRenderer, Color shapeColor)
+        {
+            meshRenderer.materials[6].color = shapeColor;
+            // Constraints on faces
+            foreach (var kvp in DirectionToMaterialIndex)
+            {
+                var connection = Connections[kvp.Key];
+                var connectionColor = ConnectionTypeToColor[connection];
+                int faceIndex = kvp.Value;
+                meshRenderer.materials[faceIndex].color = connectionColor;
+            }
+        }
+
+        #endregion
+
         public Vector3Int Position { get; }
-        Dictionary<Direction, Connection> connections;
+        public Dictionary<Vector3Int, Connection> Connections { get; }
+
 
         public Square(Vector3Int position)
         {
             Position = position;
+            Connections = new Dictionary<Vector3Int, Connection>();
+            SetAllConnections(Connection.No);
+        }
+
+        void SetAllConnections(Connection connection)
+        {
+            Connections.Add(Vector3Int.up, connection);
+            Connections.Add(Vector3Int.back, connection);
+            Connections.Add(Vector3Int.left, connection);
+            Connections.Add(Vector3Int.down, connection);
+            Connections.Add(Vector3Int.right, connection);
+            Connections.Add(Vector3Int.forward, connection);
+        }
+
+        public Square SetConnection(Vector3Int dir, Connection con)
+        {
+            Connections[dir] = con;
+            return this;
+        }
+
+        public Square SetHorizontalConnections(Connection con)
+        {
+            SetConnection(Vector3Int.left, con);
+            SetConnection(Vector3Int.right, con);
+            SetConnection(Vector3Int.forward, con);
+            SetConnection(Vector3Int.back, con);
+            return this;
         }
     }
 
@@ -117,6 +181,12 @@ namespace ShapeGrammarGenerator
             return rectangle;
         }
 
+        public ShapeType Layer(int y, Action<Square> manipulator)
+        {
+            var layer = this.Squares.Where(sq => sq.Position.y == y);
+            layer.ForEach(manipulator);
+            return this;
+        }
     }
 
     class Shape
@@ -159,6 +229,7 @@ namespace ShapeGrammarGenerator
             }
 
             int inconsistentCount = 0;
+            // multiple shapes at same location
             foreach (var shape in Shapes)
             {
                 foreach (var square in shape.ShapeType.Squares)
@@ -174,6 +245,15 @@ namespace ShapeGrammarGenerator
                     }
                 }
             }
+
+            // inconsistent connections
+            foreach (var shape in Shapes)
+            {
+                foreach (var square in shape.ShapeType.Squares)
+                {
+                    inconsistentCount += InconsistentConnectionsCount(shape, square);
+                }
+            }
             return inconsistentCount;
         }
 
@@ -181,6 +261,28 @@ namespace ShapeGrammarGenerator
         {
             var pos = square.Position + shape.Position;
             return BoundingBox.Contains(pos) && squares[pos.x, pos.y, pos.z] == null;
+        }
+
+        int InconsistentConnectionsCount(Shape shape, Square square)
+        {
+            var pos = square.Position + shape.Position;
+            int inconsistentCount = 0;
+            foreach (var dir in ExtensionMethods.Directions())
+            {
+                var neighborPos = pos + dir;
+                if (BoundingBox.Contains(neighborPos))
+                {
+                    var connection = square.Connections[dir];
+                    var neighborConnection = squares[neighborPos.x, neighborPos.y, neighborPos.z]?.Connections[-dir];
+                    inconsistentCount += ConsistentConnection(connection, neighborConnection) ? 0 : 1;
+                }
+            }
+            return inconsistentCount;
+        }
+
+        bool ConsistentConnection(Connection? c1, Connection? c2)
+        {
+            return !c1.HasValue || !c2.HasValue || (c1.Value == c2.Value);
         }
 
         public void Visualize(Transform parent, Transform squareCubePref)
@@ -200,7 +302,7 @@ namespace ShapeGrammarGenerator
                 {
                     var squareCube = GameObject.Instantiate(squareCubePref, parent);
                     var meshRenderer = squareCube.GetComponent<MeshRenderer>();
-                    meshRenderer.material.color = shapeColors[shapeColorI];
+                    square.Visualize(meshRenderer, shapeColors[shapeColorI]);
 
                     squareCube.localPosition = shape.Position + square.Position;
                 }
@@ -274,7 +376,7 @@ namespace ShapeGrammarGenerator
     class EvolutionaryAlgorithm<IndT>
     {
         int popSize = 50;
-        int genCount = 200;
+        int genCount = 50;
         float mutationProb = 0.05f;
         float crossoverProb = 0.4f;
         List<IndT> population;
