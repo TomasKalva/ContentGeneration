@@ -17,6 +17,9 @@ namespace ShapeGrammarGenerator
         Transform gridParent;
         [SerializeField]
         Transform squareCubePref;
+        
+        [SerializeField]
+        Transform quadPref;
 
         private void OnGUI()
         {
@@ -36,6 +39,8 @@ namespace ShapeGrammarGenerator
             var grid = new Grid(new Vector3Int(10, 10, 10), shapes);
             //grid.Visualize(gridParent, squareCubePref);
 
+            InitSquare();
+
             var shapeTypes = new List<ShapeType>() 
             {
                 //ShapeType.Rectangle(new Vector3Int(2, 2, 1)),
@@ -48,6 +53,7 @@ namespace ShapeGrammarGenerator
                     .Layer(1, square => square.SetHorizontalConnections(Connection.Both)),
                 */
             };
+            /*
             var evAlg = new EvolutionaryAlgorithm<Grid>(
                 () => GridOperations.Initialize(new Vector3Int(5, 5, 5), 10, shapeTypes),
                 grid => GridOperations.ChangeShapePos(grid, 0.1f),
@@ -61,7 +67,35 @@ namespace ShapeGrammarGenerator
                 var bestGrid = evAlg.Best;
                 Debug.Log($"Generation {genN++}, inconsistencies: {bestGrid.InconsistentCount()}");
                 bestGrid.Visualize(gridParent, squareCubePref);
-            }
+            }*/
+
+            QuadPlane.InitQuad(quadPref);
+
+            var plane = new GameObject().AddComponent<QuadPlane>();
+            plane.Init(new Vector2Int(10, 10));
+            var block = new GameObject().AddComponent<QuadBlock>();
+            block.Init(new Vector3Int(10, 10, 10));
+
+            /*for(int i= 0; i<10_000; i++)
+            {
+                var newObj = Instantiate(squareCubePref, gridParent);
+                newObj.position = new Vector3(0, i / 100, i % 100);
+            }*/
+        }
+
+        [SerializeField]
+        Material inOut;
+        [SerializeField]
+        Material no;
+
+        void InitSquare()
+        {
+
+            var ConnectionTypeToMaterial = new Dictionary<Connection, Material>();
+            ConnectionTypeToMaterial.Add(Connection.Both, inOut);
+            ConnectionTypeToMaterial.Add(Connection.No, no);
+
+            Square.SetMaterials(ConnectionTypeToMaterial);
         }
 
         // Update is called once per frame
@@ -86,6 +120,7 @@ namespace ShapeGrammarGenerator
         #region Visualisation
         static Dictionary<Vector3Int, int> DirectionToMaterialIndex { get; }
         static Dictionary<Connection, Color> ConnectionTypeToColor { get; }
+        static Dictionary<Connection, Material> ConnectionTypeToMaterial { get; set;  }
 
         static Square()
         {
@@ -102,6 +137,11 @@ namespace ShapeGrammarGenerator
             ConnectionTypeToColor.Add(Connection.No, new Color(0f, 0f, 0f));
         }
 
+        public static void SetMaterials(Dictionary<Connection, Material> materials)
+        {
+            ConnectionTypeToMaterial = materials;
+        }
+
         public void Visualize(MeshRenderer meshRenderer, Color shapeColor)
         {
             meshRenderer.materials[6].color = shapeColor;
@@ -109,9 +149,9 @@ namespace ShapeGrammarGenerator
             foreach (var kvp in DirectionToMaterialIndex)
             {
                 var connection = Connections[kvp.Key];
-                var connectionColor = ConnectionTypeToColor[connection];
+                var connectionMaterial = ConnectionTypeToMaterial[connection];
                 int faceIndex = kvp.Value;
-                meshRenderer.materials[faceIndex].color = connectionColor;
+                meshRenderer.materials[faceIndex] = connectionMaterial;
             }
         }
 

@@ -221,6 +221,23 @@ static class ExtensionMethods
         }
     }
 
+    public static Vector2Int Deflate(this Vector3Int v, Vector3Int direction)
+    {
+        if (direction == Vector3Int.forward || direction == Vector3Int.back)
+        {
+            return v.XY();
+        }
+        if (direction == Vector3Int.left || direction == Vector3Int.right)
+        {
+            return v.YZ();
+        }
+        if (direction == Vector3Int.up || direction == Vector3Int.down)
+        {
+            return v.XZ();
+        }
+        throw new InvalidOperationException("This vector is not canonical");
+    }
+
     public static Vector2Int ComponentWise(this Vector2Int u, Vector2Int v, Func<int, int, int> f)
     {
         return new Vector2Int(f(u.x, v.x), f(u.y, v.y));
@@ -244,6 +261,16 @@ static class ExtensionMethods
     public static Vector3 Divide(this Vector3 u, Vector3 v)
     {
         return u.ComponentWise(v, (a, b) => a / b);
+    }
+
+    public static Vector3Int Mult(this Vector3Int u, Vector3Int v)
+    {
+        return u.ComponentWise(v, (a, b) => a * b);
+    }
+
+    public static Vector3Int Invert(this Vector3Int v)
+    {
+        return v.ComponentWise(a => a == 0 ? 1 : 0);
     }
 
     public static bool Any(this Vector3 v, Func<float, bool> p)
@@ -270,15 +297,15 @@ static class ExtensionMethods
     {
         return new Vector3(v.x, 0f, v.y);
     }
-    public static Vector2Int XZ(this Vector3Int v)
-    {
-        return new Vector2Int(v.x, v.z);
-    }
+    public static Vector2Int XZ(this Vector3Int v) => new Vector2Int(v.x, v.z);
+    public static Vector2Int XY(this Vector3Int v) => new Vector2Int(v.x, v.y);
+    public static Vector2Int YZ(this Vector3Int v) => new Vector2Int(v.y, v.z);
 
     public static Vector3Int X0Z(this Vector2Int v)
     {
         return new Vector3Int(v.x, 0, v.y);
     }
+
 
     public static bool InRect(this Vector3Int v, Vector3Int leftBottomBack, Vector3Int rightTopFront) => v.AtLeast(leftBottomBack) && v.Less(rightTopFront);
     public static bool InRect(this Vector2Int v, Vector2Int leftBottom, Vector2Int rightTop) => v.AtLeast(leftBottom) && v.Less(rightTop);
