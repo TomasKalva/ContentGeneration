@@ -40,6 +40,7 @@ namespace ShapeGrammarGenerator
             //grid.Visualize(gridParent, squareCubePref);
 
             InitSquare();
+            QuadPlane.InitQuad(quadPref);
 
             var shapeTypes = new List<ShapeType>() 
             {
@@ -53,7 +54,7 @@ namespace ShapeGrammarGenerator
                     .Layer(1, square => square.SetHorizontalConnections(Connection.Both)),
                 */
             };
-            /*
+            
             var evAlg = new EvolutionaryAlgorithm<Grid>(
                 () => GridOperations.Initialize(new Vector3Int(5, 5, 5), 10, shapeTypes),
                 grid => GridOperations.ChangeShapePos(grid, 0.1f),
@@ -67,15 +68,15 @@ namespace ShapeGrammarGenerator
                 var bestGrid = evAlg.Best;
                 Debug.Log($"Generation {genN++}, inconsistencies: {bestGrid.InconsistentCount()}");
                 bestGrid.Visualize(gridParent, squareCubePref);
-            }*/
+            }
 
-            QuadPlane.InitQuad(quadPref);
+            /*QuadPlane.InitQuad(quadPref);
 
             var plane = new GameObject().AddComponent<QuadPlane>();
             plane.Init(new Vector2Int(10, 10));
             var block = new GameObject().AddComponent<QuadBlock>();
             block.Init(new Vector3Int(10, 10, 10));
-
+            */
             /*for(int i= 0; i<10_000; i++)
             {
                 var newObj = Instantiate(squareCubePref, gridParent);
@@ -330,12 +331,19 @@ namespace ShapeGrammarGenerator
 
         public void Visualize(Transform parent, Transform squareCubePref)
         {
-            //destroy all objects in parent
+            // destroy all objects in parent
             for (int i = 0; i < parent.childCount; i++)
             {
                 GameObject.Destroy(parent.GetChild(i).gameObject);
             }
 
+            // visualize boundary constraints
+            QuadBlock gridQuadBlock = new GameObject().AddComponent<QuadBlock>();
+            gridQuadBlock.transform.SetParent(parent);
+            gridQuadBlock.transform.localPosition = (BoundingBox.rightTopFront - Vector3.one) / 2f;
+            gridQuadBlock.Init(BoundingBox.rightTopFront);
+
+            // visualize objects
             Func<int, float> intens = i => i / 10f;
             var shapeColors = Enumerable.Range(0, 10).Select(i => new Color(intens(i), intens(i), intens(i))).ToList();
             int shapeColorI = 0;

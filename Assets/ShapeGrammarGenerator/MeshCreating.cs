@@ -12,7 +12,8 @@ class QuadBlock : MonoBehaviour
         foreach (var dir in ExtensionMethods.Directions())
         {
             var plane = new GameObject().AddComponent<QuadPlane>();
-            plane.transform.position += (dir * extents) / 2;
+            plane.transform.SetParent(transform);
+            plane.transform.localPosition = (Vector3)(dir * extents) / 2f;
             plane.transform.rotation = Quaternion.LookRotation(-dir);
             plane.Init(extents.Deflate(dir));
 
@@ -38,7 +39,7 @@ class QuadPlane : MonoBehaviour
         foreach(var pos in new Box2Int(Vector2Int.zero, extents))
         {
             var newQuad = Instantiate(quad, transform);
-            newQuad.localPosition = new Vector3(pos.x - extents.x / 2 + 0.5f, pos.y - extents.y / 2 + 0.5f, 0f);
+            newQuad.localPosition = new Vector3(pos.x - extents.x / 2f + 0.5f, pos.y - extents.y / 2f + 0.5f, 0f);
         }
     }
 }
