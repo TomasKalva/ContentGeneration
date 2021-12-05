@@ -76,7 +76,7 @@ namespace ShapeGrammarGenerator
             plane.Init(new Vector2Int(10, 10));
             var block = new GameObject().AddComponent<QuadBlock>();
             block.Init(new Vector3Int(10, 10, 10));
-            */
+            
             /*for(int i= 0; i<10_000; i++)
             {
                 var newObj = Instantiate(squareCubePref, gridParent);

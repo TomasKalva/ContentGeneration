@@ -74,7 +74,7 @@ public class GridWorldGenerator : WorldGenerator
             {
                 area.AddCharacter(new CharacterWorldObject(libraries.Enemies.MayanThrower()));
                 area.AddCharacter(new CharacterWorldObject(libraries.Enemies.MayanSwordsman()));
-                area.AddCharacter(new CharacterWorldObject(libraries.Enemies.MayanSwordsman()));
+                //area.AddCharacter(new CharacterWorldObject(libraries.Enemies.MayanSwordsman()));
                 area.AddItem(new ItemWorldObject(physicalItems.BlueIchorEssence()));
             }
             area.PlaceObjects(moduleGrid, libraries);
@@ -99,15 +99,15 @@ public class GridWorldGenerator : WorldGenerator
         */
         /*var modernBuilding = new ModernBuilding(new Box3Int(Vector3Int.zero, 5 * Vector3Int.one), modules, styles);
         modernBuilding.Generate(moduleGrid);*/
-        
-        var rectangles = new UniformRectangles(new Box3Int(Vector3Int.zero, moduleGrid.Sizes).FlattenY(), new Vector2Int(5, 5), modules, styles);
-        rectangles.Generate(moduleGrid);
-        
         /*
+        var rectangles = new UniformRectangles(new Box3Int(Vector3Int.zero, moduleGrid.Sizes).FlattenY(), new Vector2Int(5, 5), modules, styles);
+        rectangles.Generate(moduleGrid);*/
+        
+        
         for (int i = 0; i < n; i++)
         {
             AddBuilding();
-        }*/
+        }
     }
 
     void GetExtents(int M, int m, out int a, out int b)
