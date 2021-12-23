@@ -251,7 +251,7 @@ public class PlayerController : MonoBehaviour
 			}*/
 		}
 
-		UpdateCurrentModule();
+		//UpdateCurrentModule();
 
 		myAgent.StartReceivingControls();
 

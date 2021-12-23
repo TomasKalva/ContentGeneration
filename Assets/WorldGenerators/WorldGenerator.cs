@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public abstract class WorldGenerator : MonoBehaviour
+public class WorldGenerator : MonoBehaviour
 {
     [SerializeField]
     protected Enemies enemies;
@@ -33,8 +33,8 @@ public abstract class WorldGenerator : MonoBehaviour
         //world.AddItem(items.BlueIchorEssence, new Vector3(0, 0, -54));
 
 
-        world.AddInteractiveObject(interactiveObjects.bonfire, new Vector3(0, 0, -54));
+        world.AddInteractiveObject(interactiveObjects.bonfire, new Vector3(0, 0, 0));
     }
 
-    public abstract void DestroyWorld();
+    public virtual void DestroyWorld() { }
 }

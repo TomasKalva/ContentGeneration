@@ -17,12 +17,13 @@ public class Reality : MonoBehaviour
 
     private void Start()
     {
-        var worldGenrator = GetComponent<WorldGenerator>();
+        var worldGenerator = GetComponent<WorldGenerator>();
         var world = GameObject.Find("World").GetComponent<World>();
 
-        worldGenrator.DestroyWorld();
-        worldGenrator.Generate(world);
-        ModuleGrid = (worldGenrator as GridWorldGenerator).moduleGrid;
+        worldGenerator.DestroyWorld();
+        worldGenerator.Generate(world);
+        if(worldGenerator is GridWorldGenerator gridWorldGenerator)
+            ModuleGrid = gridWorldGenerator.moduleGrid;
 
         world.Created();
     }
