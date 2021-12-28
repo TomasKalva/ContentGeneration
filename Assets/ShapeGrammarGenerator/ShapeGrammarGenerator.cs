@@ -10,6 +10,9 @@ namespace ShapeGrammar
         [SerializeField]
         Transform parent;
 
+        [SerializeField]
+        ShapeGrammarStyle Style;
+
         public override void Generate(World world)
         {
             //world.AddEnemy(enemies.sculpture, new Vector3(0, 0, -54));
@@ -17,6 +20,14 @@ namespace ShapeGrammar
             Debug.Log("Generating world");
 
             var grid = new Grid(new Vector3Int(10, 10, 10));
+
+            var cube = grid[1, 1, 1];
+            var face = cube.FacesHor[Vector3Int.forward];
+            face.FaceType = FACE_HOR.Wall;
+            face.Style = Style;
+            grid[1, 1, 1].FacesHor[Vector3Int.forward] = face;
+            cube.Changed = true;
+
             grid.Generate(2f, parent);
             //world.AddItem(items.BlueIchorEssence, new Vector3(0, 0, -54));
 
@@ -75,12 +86,12 @@ namespace ShapeGrammar
 
         public Grid(Vector3Int sizes)
         {
+            this.sizes = sizes;
             grid = new Cube[sizes.x, sizes.y, sizes.z];
             foreach(var coords in new Box3Int(Vector3Int.zero, sizes))
             {
                 this[coords] = new Cube(coords);
             }
-            this.sizes = sizes;
         }
 
         public Box2Int Bottom()
@@ -237,6 +248,8 @@ namespace ShapeGrammar
 
             obj.SetParent(parent);
             obj.localPosition = cubePosition + offset;
+
+            Debug.Log("Added horizontal face");
         }
     }
 

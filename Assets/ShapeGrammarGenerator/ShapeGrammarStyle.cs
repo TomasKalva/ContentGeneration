@@ -10,9 +10,9 @@ public class ShapeGrammarStyle : ScriptableObject
     [MenuItem("Assets/Create/ShapeGrammarStyle")]
     public static void CreateMyAsset()
     {
-        Style asset = ScriptableObject.CreateInstance<Style>();
+        ShapeGrammarStyle asset = ScriptableObject.CreateInstance<ShapeGrammarStyle>();
 
-        string name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath("Assets/Style.asset");
+        string name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath("Assets/ShapeGrammarStyle.asset");
         AssetDatabase.CreateAsset(asset, name);
         AssetDatabase.SaveAssets();
 

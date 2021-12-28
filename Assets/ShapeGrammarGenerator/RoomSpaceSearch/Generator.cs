@@ -31,8 +31,7 @@ namespace ShapeGrammar
             GUI.Label(new Rect(20, 80, 800, 200), commandOutput);
         }
 
-        // Start is called before the first frame update
-        void Start()
+        public void Run()
         {
             //solver = new MinizincSolver(@"C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Assets\ShapeGrammarGenerator\Minizinc\TopologySolver1D.mzn", "");
             var shapes = new List<Shape>() { Shape.Rectangle(new Vector3Int(2, 1, 3), new Vector3Int(1, 1, 1)), Shape.Rectangle(new Vector3Int(2, 1, 3), new Vector3Int(1, 3, 1)) };
