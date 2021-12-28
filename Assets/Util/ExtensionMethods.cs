@@ -108,6 +108,32 @@ static class ExtensionMethods
         }
     }
 
+    public static void TryAddEx<K, V>(this Dictionary<K, V> dict, K key, V value, string exceptionMsg)
+    {
+        if (dict.ContainsKey(key))
+        {
+            dict[key] = value;
+        }
+        else
+        {
+            throw new InvalidOperationException(exceptionMsg);
+        }
+    }
+
+    /// <summary>
+    /// Foreach that works only on non-null items.
+    /// </summary>
+    public static void ForEachNN<T>(this T[,,] array, Action<T> action)
+    {
+        foreach(var item in array)
+        {
+            if(item != null)
+            {
+                action(item);
+            }
+        }
+    }
+
     public static V Get<K, V>(this Dictionary<K, V> dict, K key, V defaultValue)
     {
         if (dict.TryGetValue(key, out var val))
@@ -174,6 +200,14 @@ static class ExtensionMethods
     {
         yield return Vector3Int.up;
         yield return -Vector3Int.up;
+    }
+
+    public static IEnumerable<Vector3Int> VerticalDiagonals()
+    {
+        yield return Vector3Int.left + Vector3Int.back;
+        yield return Vector3Int.left + Vector3Int.forward;
+        yield return Vector3Int.right + Vector3Int.back;
+        yield return Vector3Int.right + Vector3Int.forward;
     }
 
     public static IEnumerable<Vector3Int> Directions()
