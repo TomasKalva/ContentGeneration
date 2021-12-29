@@ -31,10 +31,12 @@ namespace ShapeGrammar
             cube.Changed = true;
             */
             var qc = new QueryContext(grid);
-           
-            var house = qc.GetBox(new Box3Int(new Vector3Int(1,1,1), new Vector3Int(3,3,4)));
-            house.BoundaryFacesH(ExtensionMethods.HorizontalDirections().ToArray()).SetStyle(Style).Fill(FACE_HOR.Wall);
-            house.BoundaryCorners(ExtensionMethods.HorizontalDirections().ToArray()).SetStyle(Style).Fill(CORNER.Pillar);
+
+            var shapeGrammar = new ShapeGrammarGen(grid, qc);
+
+            shapeGrammar.Room(new Box3Int(new Vector3Int(1, 0, 1), new Vector3Int(3, 3, 4)), Style);
+            shapeGrammar.Room(new Box3Int(new Vector3Int(3, 1, 1), new Vector3Int(6, 5, 4)), Style);
+
 
             grid.Generate(2f, parent);
             //world.AddItem(items.BlueIchorEssence, new Vector3(0, 0, -54));
@@ -48,6 +50,23 @@ namespace ShapeGrammar
 
     public class ShapeGrammarGen
     {
+        Grid Grid { get; }
+        QueryContext QC { get; }
+
+        public ShapeGrammarGen(Grid grid, QueryContext qC)
+        {
+            Grid = grid;
+            QC = qC;
+        }
+
+        public CubeGroup Room(Box3Int area, ShapeGrammarStyle style)
+        {
+            var room = QC.GetBox(area);
+            room.BoundaryFacesH(ExtensionMethods.HorizontalDirections().ToArray()).SetStyle(style).Fill(FACE_HOR.Wall);
+            room.BoundaryFacesV(Vector3Int.down).SetStyle(style).Fill(FACE_VER.Floor);
+            room.BoundaryCorners(ExtensionMethods.HorizontalDirections().ToArray()).SetStyle(style).Fill(CORNER.Pillar);
+            return room;
+        }
     }
 
     public class CubeGroup
@@ -94,9 +113,9 @@ namespace ShapeGrammar
             return new FaceVerGroup(faces.ToList());
         }
 
-        public FaceHorGroup BoundaryFacesV(params Vector3Int[] verDirs)
+        public FaceVerGroup BoundaryFacesV(params Vector3Int[] verDirs)
         {
-            return new FaceHorGroup(verDirs.Select(verDir => CubesLayer(verDir).FacesH(verDir)).SelectMany(i => i.Faces).ToList());
+            return new FaceVerGroup(verDirs.Select(verDir => CubesLayer(verDir).FacesV(verDir)).SelectMany(i => i.Faces).ToList());
         }
         #endregion
 
@@ -430,7 +449,7 @@ namespace ShapeGrammar
             if (Style == null)
                 return;
 
-            var offset = (Vector3)Direction * 0.5f;
+            var offset = Vector3.up * Math.Max(0, Direction.y);
             var obj = Style.GetFaceVer(FaceType);
 
             obj.SetParent(parent);
