@@ -60,79 +60,63 @@ namespace ShapeGrammar
             Grid = grid;
             Cubes = cubes;
         }
-        /*
+        
         public CubeGroup CubesLayer(Vector3Int dir)
         {
-
-        }*/
-
-        #region FacesH
-        public FaceHorGroup FacesH(params Vector3Int[] horDirs)
-        {
-            return FacesH((_0, _1) => true, horDirs);
+            return new CubeGroup(Grid, Cubes.Where(cube => !Cubes.Contains(Grid[cube.Position + dir])).ToList());
         }
 
-        public FaceHorGroup FacesH(Func<Cube, Vector3Int, bool> pred, params Vector3Int[] horDirs)
+        #region FacesH
+
+        public FaceHorGroup FacesH(params Vector3Int[] horDirs)
         {
             var faces =
                 from horDir in horDirs
                 from cube in Cubes
-                where pred(cube, horDir) 
                 select cube.FacesHor[horDir];
             return new FaceHorGroup(faces.ToList());
         }
 
         public FaceHorGroup BoundaryFacesH(params Vector3Int[] horDirs)
         {
-            return FacesH((cube, horDir) => !Cubes.Contains(Grid[cube.Position + horDir]), horDirs);
+            return new FaceHorGroup(horDirs.Select(horDir => CubesLayer(horDir).FacesH(horDir)).SelectMany(i=>i.Faces).ToList());
         }
         #endregion
 
         #region FacesV
-        public FaceHorGroup FacesV(params Vector3Int[] horDirs)
-        {
-            return FacesV((_0, _1) => true, horDirs);
-        }
 
-        public FaceHorGroup FacesV(Func<Cube, Vector3Int, bool> pred, params Vector3Int[] verDirs)
+        public FaceVerGroup FacesV( params Vector3Int[] verDirs)
         {
             var faces =
                 from horDir in verDirs
                 from cube in Cubes
-                where pred(cube, horDir)
-                select cube.FacesHor[horDir];
-            return new FaceHorGroup(faces.ToList());
+                select cube.FacesVer[horDir];
+            return new FaceVerGroup(faces.ToList());
         }
 
         public FaceHorGroup BoundaryFacesV(params Vector3Int[] verDirs)
         {
-            return FacesH((cube, verDir) => !Cubes.Contains(Grid[cube.Position + verDir]), verDirs);
+            return new FaceHorGroup(verDirs.Select(verDir => CubesLayer(verDir).FacesH(verDir)).SelectMany(i => i.Faces).ToList());
         }
         #endregion
 
         #region Corners
 
-        public CornerGroup Corners(Func<Cube, Vector3Int, bool> pred, params Vector3Int[] horDirs)
+        public CornerGroup Corners(params Vector3Int[] horDirs)
         {
 
             var cornerPairs =
                 from horDir in horDirs
                 let orthDir = ExtensionMethods.OrthogonalHorizontalDir(horDir)
                 from cube in Cubes
-                where pred(cube, horDir)
                 select new { i0 = cube.Corners[horDir + orthDir], i1 = cube.Corners[horDir - orthDir] };
             var corners = cornerPairs.Select(twoCorners => twoCorners.i0).Concat(cornerPairs.Select(twoCorners => twoCorners.i1)).Distinct();
             return new CornerGroup(corners.ToList());
         }
 
-        public CornerGroup Corners(params Vector3Int[] horDirs)
-        {
-            return Corners((_0, _1) => true, horDirs);
-        }
-
         public CornerGroup BoundaryCorners(params Vector3Int[] horDirs)
         {
-            return Corners((cube, horDir) => !Cubes.Contains(Grid[cube.Position + horDir]), horDirs);
+            return new CornerGroup(horDirs.Select(verDir => CubesLayer(verDir).Corners(verDir)).SelectMany(i => i.Corners).ToList());
         }
 
         #endregion
