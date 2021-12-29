@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static ShapeGrammar.Grid;
+using System.Linq;
 
 namespace ShapeGrammar
 {
@@ -30,17 +31,18 @@ namespace ShapeGrammar
             cube.Changed = true;
             */
             var qc = new QueryContext(grid);
+           
             var house = qc.GetBox(new Box3Int(new Vector3Int(1,1,1), new Vector3Int(3,3,4)));
-
-            foreach(var cube in house.Cubes)
+            
+            /*foreach(var cube in house.Cubes)
             {
                 var face = cube.FacesHor[Vector3Int.forward];
                 face.FaceType = FACE_HOR.Wall;
                 face.Style = Style;
                 cube.FacesHor[Vector3Int.forward] = face;
                 cube.Changed = true;
-            }
-            //house.Face(Vector3Int.left).Fill(FACE_HOR.Wall);
+            }*/
+            house.FacesH(Vector3Int.left).SetStyle(Style).Fill(FACE_HOR.Wall);
 
             grid.Generate(2f, parent);
             //world.AddItem(items.BlueIchorEssence, new Vector3(0, 0, -54));
@@ -65,13 +67,34 @@ namespace ShapeGrammar
         {
             Cubes = cubes;
         }
-        
+
+        public FaceHorGroup FacesH(Vector3Int horDir)
+        {
+            var faces = from cube in Cubes select cube.FacesHor[horDir];
+            return new FaceHorGroup(faces.ToList());
+        }
     }
 
     public class FaceHorGroup
     {
-        public List<FaceHor> Faces{ get; }
+        public List<FaceHor> Faces { get; }
 
+        public FaceHorGroup(List<FaceHor> faces)
+        {
+            Faces = faces;
+        }
+
+        public FaceHorGroup Fill(FACE_HOR faceType)
+        {
+            Faces.ForEach(face => face.FaceType = faceType);
+            return this;
+        }
+
+        public FaceHorGroup SetStyle(ShapeGrammarStyle style)
+        {
+            Faces.ForEach(face => face.Style = style);
+            return this;
+        }
     }
 
 
@@ -206,9 +229,9 @@ namespace ShapeGrammar
             FacesHor = new Dictionary<Vector3Int, FaceHor>();
             FacesVer = new Dictionary<Vector3Int, FaceVer>();
             Corners = new Dictionary<Vector3Int, Corner>();
-            SetHorizontalFaces(new FaceHor());
-            SetVerticalFaces(new FaceVer());
-            SetCorners(new Corner());
+            SetHorizontalFaces(() => new FaceHor());
+            SetVerticalFaces(() => new FaceVer());
+            SetCorners(() => new Corner());
             Changed = true;
         }
 
@@ -230,30 +253,33 @@ namespace ShapeGrammar
             return this;
         }
 
-        public Cube SetHorizontalFaces(FaceHor face)
+        public Cube SetHorizontalFaces(Func<FaceHor> faceFac)
         {
             ExtensionMethods.HorizontalDirections().ForEach(dir =>
                 {
+                    var face = faceFac();
                     FacesHor.TryAdd(dir, face);
                     face.Direction = dir;
                 });
             return this;
         }
 
-        public Cube SetVerticalFaces(FaceVer face)
+        public Cube SetVerticalFaces(Func<FaceVer> faceFac)
         {
             ExtensionMethods.VerticalDirections().ForEach(dir =>
             {
+                var face = faceFac();
                 FacesVer.TryAdd(dir, face);
                 face.Direction = dir;
             });
             return this;
         }
 
-        public Cube SetCorners(Corner corner)
+        public Cube SetCorners(Func<Corner> cornerFac)
         {
             ExtensionMethods.VerticalDiagonals().ForEach(dir =>
             {
+                var corner = cornerFac();
                 Corners.TryAdd(dir, corner);
                 corner.Direction = dir;
             });
@@ -280,7 +306,7 @@ namespace ShapeGrammar
         }
     }
 
-    public struct FaceHor
+    public class FaceHor
     {
         public FACE_HOR FaceType { get; set; }
         public Vector3Int Direction { get; set; }
@@ -301,7 +327,7 @@ namespace ShapeGrammar
         }
     }
 
-    public struct FaceVer
+    public class FaceVer
     {
         public FACE_VER FaceType { get; set; }
         public Vector3Int Direction { get; set; }
@@ -320,7 +346,7 @@ namespace ShapeGrammar
         }
     }
 
-    public struct Corner
+    public class Corner
     {
         public CORNER CornerType { get; set; }
         public Vector3Int Direction { get; set; }
