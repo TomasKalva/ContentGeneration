@@ -33,16 +33,8 @@ namespace ShapeGrammar
             var qc = new QueryContext(grid);
            
             var house = qc.GetBox(new Box3Int(new Vector3Int(1,1,1), new Vector3Int(3,3,4)));
-            
-            /*foreach(var cube in house.Cubes)
-            {
-                var face = cube.FacesHor[Vector3Int.forward];
-                face.FaceType = FACE_HOR.Wall;
-                face.Style = Style;
-                cube.FacesHor[Vector3Int.forward] = face;
-                cube.Changed = true;
-            }*/
-            house.FacesH(Vector3Int.left).SetStyle(Style).Fill(FACE_HOR.Wall);
+            house.BoundaryFacesH(ExtensionMethods.HorizontalDirections().ToArray()).SetStyle(Style).Fill(FACE_HOR.Wall);
+            house.BoundaryCorners(ExtensionMethods.HorizontalDirections().ToArray()).SetStyle(Style).Fill(CORNER.Pillar);
 
             grid.Generate(2f, parent);
             //world.AddItem(items.BlueIchorEssence, new Vector3(0, 0, -54));
@@ -56,23 +48,94 @@ namespace ShapeGrammar
 
     public class ShapeGrammarGen
     {
-
     }
 
     public class CubeGroup
     {
+        public Grid Grid { get; }
         public List<Cube> Cubes { get; }
 
-        public CubeGroup(List<Cube> cubes)
+        public CubeGroup(Grid grid, List<Cube> cubes)
         {
+            Grid = grid;
             Cubes = cubes;
         }
-
-        public FaceHorGroup FacesH(Vector3Int horDir)
+        /*
+        public CubeGroup CubesLayer(Vector3Int dir)
         {
-            var faces = from cube in Cubes select cube.FacesHor[horDir];
+
+        }*/
+
+        #region FacesH
+        public FaceHorGroup FacesH(params Vector3Int[] horDirs)
+        {
+            return FacesH((_0, _1) => true, horDirs);
+        }
+
+        public FaceHorGroup FacesH(Func<Cube, Vector3Int, bool> pred, params Vector3Int[] horDirs)
+        {
+            var faces =
+                from horDir in horDirs
+                from cube in Cubes
+                where pred(cube, horDir) 
+                select cube.FacesHor[horDir];
             return new FaceHorGroup(faces.ToList());
         }
+
+        public FaceHorGroup BoundaryFacesH(params Vector3Int[] horDirs)
+        {
+            return FacesH((cube, horDir) => !Cubes.Contains(Grid[cube.Position + horDir]), horDirs);
+        }
+        #endregion
+
+        #region FacesV
+        public FaceHorGroup FacesV(params Vector3Int[] horDirs)
+        {
+            return FacesV((_0, _1) => true, horDirs);
+        }
+
+        public FaceHorGroup FacesV(Func<Cube, Vector3Int, bool> pred, params Vector3Int[] verDirs)
+        {
+            var faces =
+                from horDir in verDirs
+                from cube in Cubes
+                where pred(cube, horDir)
+                select cube.FacesHor[horDir];
+            return new FaceHorGroup(faces.ToList());
+        }
+
+        public FaceHorGroup BoundaryFacesV(params Vector3Int[] verDirs)
+        {
+            return FacesH((cube, verDir) => !Cubes.Contains(Grid[cube.Position + verDir]), verDirs);
+        }
+        #endregion
+
+        #region Corners
+
+        public CornerGroup Corners(Func<Cube, Vector3Int, bool> pred, params Vector3Int[] horDirs)
+        {
+
+            var cornerPairs =
+                from horDir in horDirs
+                let orthDir = ExtensionMethods.OrthogonalHorizontalDir(horDir)
+                from cube in Cubes
+                where pred(cube, horDir)
+                select new { i0 = cube.Corners[horDir + orthDir], i1 = cube.Corners[horDir - orthDir] };
+            var corners = cornerPairs.Select(twoCorners => twoCorners.i0).Concat(cornerPairs.Select(twoCorners => twoCorners.i1)).Distinct();
+            return new CornerGroup(corners.ToList());
+        }
+
+        public CornerGroup Corners(params Vector3Int[] horDirs)
+        {
+            return Corners((_0, _1) => true, horDirs);
+        }
+
+        public CornerGroup BoundaryCorners(params Vector3Int[] horDirs)
+        {
+            return Corners((cube, horDir) => !Cubes.Contains(Grid[cube.Position + horDir]), horDirs);
+        }
+
+        #endregion
     }
 
     public class FaceHorGroup
@@ -97,6 +160,50 @@ namespace ShapeGrammar
         }
     }
 
+    public class FaceVerGroup
+    {
+        public List<FaceVer> Faces { get; }
+
+        public FaceVerGroup(List<FaceVer> faces)
+        {
+            Faces = faces;
+        }
+
+        public FaceVerGroup Fill(FACE_VER faceType)
+        {
+            Faces.ForEach(face => face.FaceType = faceType);
+            return this;
+        }
+
+        public FaceVerGroup SetStyle(ShapeGrammarStyle style)
+        {
+            Faces.ForEach(face => face.Style = style);
+            return this;
+        }
+    }
+
+    public class CornerGroup
+    {
+        public List<Corner> Corners { get; }
+
+        public CornerGroup(List<Corner> corners)
+        {
+            Corners = corners;
+        }
+
+        public CornerGroup Fill(CORNER cornerType)
+        {
+            Corners.ForEach(corner => corner.CornerType = cornerType);
+            return this;
+        }
+
+        public CornerGroup SetStyle(ShapeGrammarStyle style)
+        {
+            Corners.ForEach(corner => corner.Style = style);
+            return this;
+        }
+    }
+
 
     public class Grid : IEnumerable<Cube>
     {
@@ -112,7 +219,7 @@ namespace ShapeGrammar
             public CubeGroup GetBox(Box3Int box)
             {
                 var cubes = QueriedGrid.grid.GetBoxItems(box);
-                return new CubeGroup(cubes);
+                return new CubeGroup(QueriedGrid, cubes);
             }
         }
 
@@ -317,11 +424,12 @@ namespace ShapeGrammar
             if (Style == null)
                 return;
 
-            var offset = (Vector3)Direction * cubeSide / 2f;
+            var offset = (Vector3)Direction * 0.5f;
             var obj = Style.GetFaceHor(FaceType);
 
             obj.SetParent(parent);
-            obj.localPosition = cubePosition + offset;
+            obj.localPosition = (cubePosition + offset) * cubeSide;
+            obj.rotation = Quaternion.LookRotation(Direction, Vector3.up);
 
             Debug.Log("Added horizontal face");
         }
@@ -338,11 +446,11 @@ namespace ShapeGrammar
             if (Style == null)
                 return;
 
-            var offset = (Vector3)Direction * cubeSide / 2f;
+            var offset = (Vector3)Direction * 0.5f;
             var obj = Style.GetFaceVer(FaceType);
 
             obj.SetParent(parent);
-            obj.localPosition = cubePosition + offset;
+            obj.localPosition = (cubePosition + offset) * cubeSide;
         }
     }
 
@@ -357,11 +465,11 @@ namespace ShapeGrammar
             if (Style == null)
                 return;
 
-            var offset = (Vector3)Direction * cubeSide / 2f;
+            var offset = (Vector3)Direction * 0.5f;
             var obj = Style.GetCorner(CornerType);
 
             obj.SetParent(parent);
-            obj.localPosition = cubePosition + offset;
+            obj.localPosition = (cubePosition + offset) * cubeSide;
         }
     }
 

@@ -44,6 +44,11 @@ static class ExtensionMethods
         return new Vector3Int((int)v.x, (int)v.y, (int)v.z);
     }
 
+    public static Vector3Int OrthogonalHorizontalDir(this Vector3Int v)
+    {
+        return new Vector3Int(-v.z, v.y, v.x);
+    }
+
     public static void GetRandomExtents(int M, int m, out int a, out int b)
     {
         int size = UnityEngine.Random.Range(1, m + 1);
