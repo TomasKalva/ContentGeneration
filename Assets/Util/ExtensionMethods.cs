@@ -134,6 +134,36 @@ static class ExtensionMethods
         }
     }
 
+    public static Box3Int BoundingBox<T>(this T[,,] array)
+    {
+        var arraySize = new Vector3Int(array.GetLength(0), array.GetLength(1), array.GetLength(2));
+        return new Box3Int(Vector3Int.zero, arraySize);
+    }
+
+    public static Vector3Int Zip(this Vector3Int u, Vector3Int v, Func<int,int,int> zipF)
+    {
+        return new Vector3Int(zipF(u.x, v.x), zipF(u.y, v.y), zipF(u.z, v.z));
+    }
+
+    public static Box3Int IntersectBoxes(this Box3Int a, Box3Int b)
+    {
+        var lower = a.leftBottomBack.Zip(b.leftBottomBack, Math.Max);
+        var upper = a.rightTopFront.Zip(b.rightTopFront, Math.Min);
+        return new Box3Int(lower, upper);
+    }
+
+    public static List<T> GetBoxItems<T>(this T[,,] array, Box3Int box)
+    {
+        var list = new List<T>();
+        var arrayBox = array.BoundingBox();
+        var intersBox = box.IntersectBoxes(arrayBox);
+        foreach(var i in intersBox)
+        {
+            list.Add(array[i.x, i.y, i.z]);
+        }
+        return list;
+    }
+
     public static V Get<K, V>(this Dictionary<K, V> dict, K key, V defaultValue)
     {
         if (dict.TryGetValue(key, out var val))

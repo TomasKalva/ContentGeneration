@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static ShapeGrammar.Grid;
 
 namespace ShapeGrammar
 {
@@ -21,12 +22,25 @@ namespace ShapeGrammar
 
             var grid = new Grid(new Vector3Int(10, 10, 10));
 
-            var cube = grid[1, 1, 1];
+            /*var cube = grid[1, 1, 1];
             var face = cube.FacesHor[Vector3Int.forward];
             face.FaceType = FACE_HOR.Wall;
             face.Style = Style;
-            grid[1, 1, 1].FacesHor[Vector3Int.forward] = face;
+            cube.FacesHor[Vector3Int.forward] = face;
             cube.Changed = true;
+            */
+            var qc = new QueryContext(grid);
+            var house = qc.GetBox(new Box3Int(new Vector3Int(1,1,1), new Vector3Int(3,3,4)));
+
+            foreach(var cube in house.Cubes)
+            {
+                var face = cube.FacesHor[Vector3Int.forward];
+                face.FaceType = FACE_HOR.Wall;
+                face.Style = Style;
+                cube.FacesHor[Vector3Int.forward] = face;
+                cube.Changed = true;
+            }
+            //house.Face(Vector3Int.left).Fill(FACE_HOR.Wall);
 
             grid.Generate(2f, parent);
             //world.AddItem(items.BlueIchorEssence, new Vector3(0, 0, -54));
@@ -43,9 +57,42 @@ namespace ShapeGrammar
 
     }
 
+    public class CubeGroup
+    {
+        public List<Cube> Cubes { get; }
+
+        public CubeGroup(List<Cube> cubes)
+        {
+            Cubes = cubes;
+        }
+        
+    }
+
+    public class FaceHorGroup
+    {
+        public List<FaceHor> Faces{ get; }
+
+    }
+
 
     public class Grid : IEnumerable<Cube>
     {
+        public class QueryContext
+        {
+            Grid QueriedGrid { get; }
+
+            public QueryContext(Grid queriedGrid)
+            {
+                QueriedGrid = queriedGrid;
+            }
+
+            public CubeGroup GetBox(Box3Int box)
+            {
+                var cubes = QueriedGrid.grid.GetBoxItems(box);
+                return new CubeGroup(cubes);
+            }
+        }
+
         Vector3Int sizes;
 
 
@@ -73,7 +120,8 @@ namespace ShapeGrammar
 
         Cube GetCube(Vector3Int coords)
         {
-            return ValidCoords(coords) ? grid[coords.x, coords.y, coords.z] : null;
+            var cube = ValidCoords(coords) ? grid[coords.x, coords.y, coords.z] : null;
+            return cube;
         }
         
         void SetCube(Vector3Int coords, Cube cube)
@@ -161,7 +209,7 @@ namespace ShapeGrammar
             SetHorizontalFaces(new FaceHor());
             SetVerticalFaces(new FaceVer());
             SetCorners(new Corner());
-            Changed = false;
+            Changed = true;
         }
 
         public Cube SetFaceHor(Vector3Int dir, FaceHor face)
