@@ -22,7 +22,7 @@ namespace ShapeGrammar
 
             Debug.Log("Generating world");
 
-            var grid = new Grid(new Vector3Int(10, 10, 10));
+            var grid = new Grid(new Vector3Int(20, 10, 20));
 
             /*var cube = grid[1, 1, 1];
             var face = cube.FacesHor[Vector3Int.forward];
@@ -39,8 +39,12 @@ namespace ShapeGrammar
             //shapeGrammar.Room(new Box3Int(new Vector3Int(3, 1, 1), new Vector3Int(6, 5, 4)), Style);
             //shapeGrammar.Platform(new Box2Int(new Vector2Int(6, 5), new Vector2Int(8, 9)), 5, Style);
 
-            var room = shapeGrammar.House(new Box2Int(new Vector2Int(5, 2), new Vector2Int(8, 5)), 5, Style);
-            shapeGrammar.Balcony(room, Style);
+            //var room = shapeGrammar.House(new Box2Int(new Vector2Int(5, 2), new Vector2Int(8, 5)), 5, Style);
+            //shapeGrammar.Balcony(room, Style);
+            //shapeGrammar.BalconyWide(room, Style);
+
+            var room = qc.GetRandomHorConnected(new Vector3Int(10, 0, 10), 30);
+            shapeGrammar.Room(room, Style);
 
             /*room.AllBoundaryFacesH().Extrude(3).AllBoundaryFacesH().SetStyle(Style).Fill(FACE_HOR.Wall);
             room.BoundaryFacesV(Vector3Int.up).Extrude(2).BoundaryFacesV(Vector3Int.down).SetStyle(Style).Fill(FACE_VER.Floor);
@@ -77,9 +81,28 @@ namespace ShapeGrammar
             return room;
         }
 
+        public CubeGroup Room(CubeGroup roomArea, ShapeGrammarStyle style)
+        {
+            roomArea.AllBoundaryFacesH().SetStyle(style).Fill(FACE_HOR.Wall);
+            roomArea.BoundaryFacesV(Vector3Int.down).SetStyle(style).Fill(FACE_VER.Floor);
+            roomArea.AllBoundaryCorners().SetStyle(style).Fill(CORNER.Pillar);
+            return roomArea;
+        }
+
+        public CubeGroup FlatRoof(Box2Int areaXZ, int posY, ShapeGrammarStyle style)
+        {
+            var box = areaXZ.InflateY(posY, posY + 1);
+            var room = QC.GetBox(box);
+            room.AllBoundaryFacesH().SetStyle(style).Fill(FACE_HOR.Railing);
+            room.BoundaryFacesV(Vector3Int.down).SetStyle(style).Fill(FACE_VER.Floor);
+            room.AllBoundaryCorners().SetStyle(style).Fill(CORNER.Pillar);
+            return room;
+        }
+
         public CubeGroup House(Box2Int areaXZ, int posY, ShapeGrammarStyle style)
         {
             var room = Room(areaXZ.InflateY(posY, posY + 2), style);
+            var roof = FlatRoof(areaXZ, posY + 2, style);
             var cubesBelowRoom = room.BoundaryFacesV(Vector3Int.down).Cubes().MoveBy(Vector3Int.down);
             var foundation = Foundation(cubesBelowRoom, style);
             return room;
@@ -136,6 +159,38 @@ namespace ShapeGrammar
                .Facets.GetRandom().Group()
                .Fill(FACE_HOR.Door);
             
+            return balcony;
+        }
+
+        public CubeGroup BalconyWide(CubeGroup house, ShapeGrammarStyle style)
+        {
+            // Find a cube for the balcony
+            var balcony = house.Where(cube => cube.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor)
+               .BoundaryFacesH(Vector3Int.left)
+               .Where(face => !face.OtherCube.Changed && !face.OtherCube.In(house))
+               .Extrude(1);
+
+            // Floor
+            balcony.BoundaryFacesV(Vector3Int.down).SetStyle(style).Fill(FACE_VER.Floor);
+
+            // Add railing to the balcony
+            var facesNearHouse = balcony.AllBoundaryFacesH()
+               .Neighboring(house);
+            var railingFaces = balcony.AllBoundaryFacesH()
+               .Minus(facesNearHouse);
+
+            railingFaces
+               .SetStyle(style)
+               .Fill(FACE_HOR.Railing);
+            railingFaces
+               .Corners()
+               .SetStyle(style)
+               .Fill(CORNER.Pillar);
+            // Door to house
+            facesNearHouse
+               .Facets.GetRandom().Group()
+               .Fill(FACE_HOR.Door);
+
             return balcony;
         }
     }
@@ -398,6 +453,22 @@ namespace ShapeGrammar
             {
                 var cubes = QueriedGrid.grid.GetBoxItems(box);
                 return new CubeGroup(QueriedGrid, cubes);
+            }
+
+            public CubeGroup GetRandomHorConnected(Vector3Int start, int n)
+            {
+                var grp = new CubeGroup(QueriedGrid, new List<Cube>() { QueriedGrid[start] });
+                while(n > 0)
+                {
+                    var newCube = grp.AllBoundaryFacesH().Facets.GetRandom().OtherCube;
+                    // todo: remove null check after implementing infinite grid
+                    if (newCube != null)
+                    {
+                        grp = new CubeGroup(QueriedGrid, grp.Cubes.Append(newCube).ToList());
+                        n--;
+                    }
+                }
+                return grp;
             }
         }
 
