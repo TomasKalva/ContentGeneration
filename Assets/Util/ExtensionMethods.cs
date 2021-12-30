@@ -208,6 +208,11 @@ static class ExtensionMethods
         }
     }
 
+    public static IEnumerable<U> SelectNN<T, U>(this IEnumerable<T> enumerable, Func<T, U> selector)
+    {
+        return enumerable.Select(selector).OfType<U>();
+    }
+
     /// <summary>
     /// Using Fisher–Yates shuffle.
     /// </summary>
