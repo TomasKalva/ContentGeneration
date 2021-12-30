@@ -39,10 +39,13 @@ namespace ShapeGrammar
             //shapeGrammar.Room(new Box3Int(new Vector3Int(3, 1, 1), new Vector3Int(6, 5, 4)), Style);
             //shapeGrammar.Platform(new Box2Int(new Vector2Int(6, 5), new Vector2Int(8, 9)), 5, Style);
 
-            var room = shapeGrammar.House(new Box2Int(new Vector2Int(5, 0), new Vector2Int(8, 5)), 5, Style);
-            room.AllBoundaryFacesH().Extrude(3).AllBoundaryFacesH().SetStyle(Style).Fill(FACE_HOR.Wall);
+            var room = shapeGrammar.House(new Box2Int(new Vector2Int(5, 2), new Vector2Int(8, 5)), 5, Style);
+            shapeGrammar.Balcony(room, Style);
+
+            /*room.AllBoundaryFacesH().Extrude(3).AllBoundaryFacesH().SetStyle(Style).Fill(FACE_HOR.Wall);
             room.BoundaryFacesV(Vector3Int.up).Extrude(2).BoundaryFacesV(Vector3Int.down).SetStyle(Style).Fill(FACE_VER.Floor);
             room.AllBoundaryCorners().Extrude(1).AllBoundaryFacesH().SetStyle(Style).Fill(FACE_HOR.Wall);
+            */
 
             grid.Generate(2f, parent);
             //world.AddItem(items.BlueIchorEssence, new Vector3(0, 0, -54));
@@ -76,13 +79,9 @@ namespace ShapeGrammar
 
         public CubeGroup House(Box2Int areaXZ, int posY, ShapeGrammarStyle style)
         {
-
             var room = Room(areaXZ.InflateY(posY, posY + 2), style);
             var cubesBelowRoom = room.BoundaryFacesV(Vector3Int.down).Cubes().MoveBy(Vector3Int.down);
             var foundation = Foundation(cubesBelowRoom, style);
-            /*room.AllBoundaryFacesH().SetStyle(style).Fill(FACE_HOR.Wall);
-            room.BoundaryFacesV(Vector3Int.down).SetStyle(style).Fill(FACE_VER.Floor);
-            room.AllBoundaryCorners().SetStyle(style).Fill(CORNER.Pillar);*/
             return room;
         }
 
@@ -105,6 +104,25 @@ namespace ShapeGrammar
                 .SetStyle(style).Fill(CORNER.Pillar);
 
             return platform;
+        }
+
+        public CubeGroup Balcony(CubeGroup house, ShapeGrammarStyle style)
+        {
+            // Find a cube for the balcony
+            var balcony = house.Where(cube => cube.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor)
+               .AllBoundaryFacesH()
+               .Where(face => !face.OtherCube.Changed && !face.OtherCube.In(house))
+               .Facets.GetRandom()
+               .OtherCube.Group();
+            // Add railing to the balcony
+            balcony.AllBoundaryFacesH()
+               .SetStyle(style)
+               .Fill(FACE_HOR.Railing);
+            // Door to house
+            balcony.AllBoundaryFacesH()
+               .Neighboring(house)
+               .Fill(FACE_HOR.Door);
+            return balcony;
         }
     }
 
@@ -143,6 +161,8 @@ namespace ShapeGrammar
             var validCubes = Cubes.SelectMany(corner => corner.MoveInDirUntil(dir, stopPred));
             return new CubeGroup(Grid, validCubes.ToList());
         }
+
+        public CubeGroup Where(Func<Cube, bool> pred) => new CubeGroup(Grid, Cubes.Where(pred).ToList());
 
         #region FacesH
 
@@ -239,6 +259,11 @@ namespace ShapeGrammar
             return new CubeGroup(Grid, Facets.SelectManyNN(face => face.OtherCube?.MoveInDirUntil(face.Direction, countdownMaker()))
                 .ToList());
         }
+
+        protected IEnumerable<FacetT> NeighboringIE(CubeGroup cubeGroup)
+        {
+            return Facets.Where(facet => facet.OtherCube.In(cubeGroup));
+        }
     }
 
     public class FaceHorGroup : FacetGroup<FaceHor>
@@ -258,6 +283,9 @@ namespace ShapeGrammar
             Facets.ForEach(face => face.Style = style);
             return this;
         }
+
+        public FaceHorGroup Where(Func<FaceHor, bool> pred) => new FaceHorGroup(Grid, Facets.Where(pred).ToList());
+        public FaceHorGroup Neighboring(CubeGroup cubeGroup) => new FaceHorGroup(Grid, NeighboringIE(cubeGroup).ToList());
     }
 
     class Countdown
@@ -294,6 +322,8 @@ namespace ShapeGrammar
             Facets.ForEach(face => face.Style = style);
             return this;
         }
+        public FaceVerGroup Where(Func<FaceVer, bool> pred) => new FaceVerGroup(Grid, Facets.Where(pred).ToList());
+        public FaceVerGroup Neighboring(CubeGroup cubeGroup) => new FaceVerGroup(Grid, NeighboringIE(cubeGroup).ToList());
     }
 
     public class CornerGroup : FacetGroup<Corner>
@@ -325,6 +355,9 @@ namespace ShapeGrammar
             var validCorners = Facets.SelectMany(corner => corner.MoveInDirUntil(dir, stopPred));
             return new CornerGroup(Grid, validCorners.ToList());
         }
+
+        public CornerGroup Where(Func<Corner, bool> pred) => new CornerGroup(Grid, Facets.Where(pred).ToList());
+        public CornerGroup Neighboring(CubeGroup cubeGroup) => new CornerGroup(Grid, NeighboringIE(cubeGroup).ToList());
     }
 
 
@@ -436,7 +469,7 @@ namespace ShapeGrammar
             SetHorizontalFaces(() => new FaceHor());
             SetVerticalFaces(() => new FaceVer());
             SetCorners(() => new Corner());
-            Changed = true;
+            Changed = false;
         }
 
         public Cube SetHorizontalFaces(Func<FaceHor> faceFac)
@@ -497,6 +530,10 @@ namespace ShapeGrammar
             var validCubes = ray.TakeWhile(v => Grid[v] != null && !stopPred(Grid[v])).Select(v => Grid[v]);
             return validCubes;
         }
+
+        public bool In(CubeGroup cubeGroup) => cubeGroup.Cubes.Contains(this);
+
+        public CubeGroup Group() => new CubeGroup(Grid, new List<Cube>() { this });
     }
 
     public abstract class Facet
@@ -523,7 +560,17 @@ namespace ShapeGrammar
 
     public class FaceHor : Facet
     {
-        public FACE_HOR FaceType { get; set; }
+        private FACE_HOR faceType;
+
+        public FACE_HOR FaceType 
+        { 
+            get => faceType; 
+            set  
+            {
+                faceType = value;
+                MyCube.Changed = true;
+            }
+        }
 
         public override void Generate(float cubeSide, Transform parent, Vector3Int cubePosition)
         {
@@ -544,7 +591,17 @@ namespace ShapeGrammar
 
     public class FaceVer : Facet
     {
-        public FACE_VER FaceType { get; set; }
+        private FACE_VER faceType;
+
+        public FACE_VER FaceType
+        {
+            get => faceType;
+            set
+            {
+                faceType = value;
+                MyCube.Changed = true;
+            }
+        }
 
         public override void Generate(float cubeSide, Transform parent, Vector3Int cubePosition)
         {
@@ -564,7 +621,17 @@ namespace ShapeGrammar
 
     public class Corner : Facet
     {
-        public CORNER CornerType { get; set; }
+        private CORNER cornerType;
+
+        public CORNER CornerType
+        {
+            get => cornerType;
+            set
+            {
+                cornerType = value;
+                MyCube.Changed = true;
+            }
+        }
 
         public override void Generate(float cubeSide, Transform parent, Vector3Int cubePosition)
         {
