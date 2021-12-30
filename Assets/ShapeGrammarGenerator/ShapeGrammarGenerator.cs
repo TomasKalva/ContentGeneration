@@ -425,6 +425,29 @@ namespace ShapeGrammar
             {
                 this[coords] = new Cube(this, coords);
             }
+            /*
+            // Merge the same faces
+            foreach (var coords in new Box3Int(Vector3Int.zero, sizes - Vector3Int.one))
+            {
+                var cube = this[coords];
+                Action<Vector3Int> mergeFaces = v => cube.Facets[v] = this[coords + v].Facets[-v];
+                mergeFaces(Vector3Int.forward);
+                mergeFaces(Vector3Int.up);
+                mergeFaces(Vector3Int.right);
+            }
+            // Merge the same corners
+            foreach (var coords in new Box3Int(Vector3Int.zero, sizes - Vector3Int.one))
+            {
+                var cube = this[coords];
+                Action<Vector3Int> mergeFaces = v => {
+                    cube.Facets[v] = this[coords + v].Facets[-v]
+                    };
+                var corner = cube.C
+                this.coor
+                mergeFaces(Vector3Int.forward);
+                mergeFaces(Vector3Int.up);
+                mergeFaces(Vector3Int.right);
+            }*/
         }
 
         public Box2Int Bottom()
@@ -460,7 +483,7 @@ namespace ShapeGrammar
         public FaceVer FacesVer(Vector3Int dir) => Facets[dir] as FaceVer;
         public Corner Corners(Vector3Int dir) => Facets[dir] as Corner;
         public bool Changed { get; set; }
-
+        
         public Cube(Grid grid, Vector3Int position)
         {
             Grid = grid;
@@ -498,7 +521,7 @@ namespace ShapeGrammar
 
         public Cube SetCorners(Func<Corner> cornerFac)
         {
-            ExtensionMethods.VerticalDiagonals().ForEach(dir =>
+            ExtensionMethods.HorizontalDiagonals().ForEach(dir =>
             {
                 var corner = cornerFac();
                 Facets.TryAdd(dir, corner);
@@ -577,6 +600,10 @@ namespace ShapeGrammar
             if (Style == null)
                 return;
 
+            var otherFaceType = OtherCube.FacesHor(-Direction).FaceType;
+            if(FaceType < otherFaceType) 
+                return;
+
             var offset = (Vector3)Direction * 0.5f;
             var obj = Style.GetFaceHor(FaceType);
 
@@ -652,10 +679,10 @@ namespace ShapeGrammar
     public enum FACE_HOR
     {
         Nothing,
-        Wall,
-        Window,
-        Fence,
         Railing,
+        Fence,
+        Window,
+        Wall,
         Door,
         Special
     }

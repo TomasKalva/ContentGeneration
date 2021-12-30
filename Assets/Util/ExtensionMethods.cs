@@ -247,7 +247,7 @@ static class ExtensionMethods
         yield return -Vector3Int.up;
     }
 
-    public static IEnumerable<Vector3Int> VerticalDiagonals()
+    public static IEnumerable<Vector3Int> HorizontalDiagonals()
     {
         yield return Vector3Int.left + Vector3Int.back;
         yield return Vector3Int.left + Vector3Int.forward;
