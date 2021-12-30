@@ -35,12 +35,12 @@ namespace ShapeGrammar
 
             var shapeGrammar = new ShapeGrammarGen(grid, qc);
 
-            shapeGrammar.Room(new Box3Int(new Vector3Int(1, 0, 1), new Vector3Int(3, 3, 4)), Style);
-            shapeGrammar.Room(new Box3Int(new Vector3Int(3, 1, 1), new Vector3Int(6, 5, 4)), Style);
-            shapeGrammar.Platform(new Box2Int(new Vector2Int(6, 5), new Vector2Int(8, 9)), 5, Style);
+            //shapeGrammar.Room(new Box3Int(new Vector3Int(1, 0, 1), new Vector3Int(3, 3, 4)), Style);
+            //shapeGrammar.Room(new Box3Int(new Vector3Int(3, 1, 1), new Vector3Int(6, 5, 4)), Style);
+            //shapeGrammar.Platform(new Box2Int(new Vector2Int(6, 5), new Vector2Int(8, 9)), 5, Style);
 
-            shapeGrammar.House(new Box2Int(new Vector2Int(5, 0), new Vector2Int(8, 5)), 5, Style);
-
+            var room = shapeGrammar.House(new Box2Int(new Vector2Int(5, 2), new Vector2Int(8, 5)), 5, Style);
+            room.AllBoundaryFacesH().Extrude(2).AllBoundaryFacesH().SetStyle(Style).Fill(FACE_HOR.Wall);
 
             grid.Generate(2f, parent);
             //world.AddItem(items.BlueIchorEssence, new Vector3(0, 0, -54));
@@ -241,7 +241,30 @@ namespace ShapeGrammar
 
         public CubeGroup Extrude(int dist)
         {
-            return new CubeGroup(Grid, Faces.Select(face => face.MyCube).ToList());
+            Func<Func<Cube, bool>> countdownMaker = () =>
+            {
+                var countdown = new Countdown(dist);
+                return cube => countdown.Tick();
+            };
+            return new CubeGroup(Grid, Faces.SelectMany(face => face.OtherCube.MoveInDirUntil(face.Direction, countdownMaker()))
+                .ToList());
+        }
+    }
+
+    class Countdown
+    {
+        public int Elapsed { get; private set; }
+        public Countdown(int elapsed)
+        {
+            Elapsed = elapsed;
+        }
+        /// <summary>
+        /// Returns true after finished.
+        /// </summary>
+        public bool Tick()
+        {
+            Elapsed--;
+            return Elapsed < 0;
         }
     }
 
@@ -384,25 +407,6 @@ namespace ShapeGrammar
             return new Box2Int(Vector2Int.zero, sizes.XZ());
         }
 
-        /*
-        public bool ContainsBuilding(Module module)
-        {
-            return module != null && !module.Empty;
-        }
-
-        public bool HasHorizontalNeighbor(Module module)
-        {
-            return ContainsBuilding(GetCube(module.coords + Vector3Int.right)) ||
-                    ContainsBuilding(GetCube(module.coords - Vector3Int.right)) ||
-                    ContainsBuilding(GetCube(module.coords + Vector3Int.forward)) ||
-                    ContainsBuilding(GetCube(module.coords - Vector3Int.forward));
-        }
-
-        public bool IsEmpty(Module module)
-        {
-            return module.Empty;
-        }
-        */
         public IEnumerator<Cube> GetEnumerator()
         {
             foreach (var cube in grid)
@@ -415,12 +419,6 @@ namespace ShapeGrammar
         {
             return GetEnumerator();
         }
-        /*
-        public Vector3Int WorldToGrid(Vector3 coords)
-        {
-            Vector3 localCoords = (parent.worldToLocalMatrix * coords);
-            return (localCoords + 0.5f * extents).Divide(extents).ToVector3Int();
-        }*/
 
         public void Generate(float cubeSide, Transform parent)
         {
@@ -433,7 +431,6 @@ namespace ShapeGrammar
         public Grid Grid { get; }
         public Vector3Int Position { get; }
         public Dictionary<Vector3Int, Facet> Facets { get; }
-        //public IEnumerable<FaceHor> AllFacesHor => ExtensionMethods.HorizontalDirections().Select(dir => Facets[dir]).OfType<FaceHor>();
         public FaceHor FacesHor(Vector3Int dir) => Facets[dir] as FaceHor;
         public FaceVer FacesVer(Vector3Int dir) => Facets[dir] as FaceVer;
         public Corner Corners(Vector3Int dir) => Facets[dir] as Corner;
@@ -443,37 +440,12 @@ namespace ShapeGrammar
         {
             Grid = grid;
             Position = position;
-            //FacesHor = new Dictionary<Vector3Int, FaceHor>();
-            //FacesVer = new Dictionary<Vector3Int, FaceVer>();
-            //Corners = new Dictionary<Vector3Int, Corner>();
             Facets = new Dictionary<Vector3Int, Facet>();
             SetHorizontalFaces(() => new FaceHor());
             SetVerticalFaces(() => new FaceVer());
             SetCorners(() => new Corner());
             Changed = true;
         }
-
-        /*
-        public Cube SetFaceHor(Vector3Int dir, FaceHor face)
-        {
-            if (dir.y != 0)
-                throw new InvalidOperationException("Invalid horizontal direction");
-
-            Facets.TryAdd(dir, face);
-            return this;
-        }
-
-        public Cube SetFaceVer(Vector3Int dir, FaceVer face)
-        {
-            FacesVer.TryAddEx(dir, face, "Invalid vertical direction");
-            return this;
-        }
-
-        public Cube SetCorner(Vector3Int dir, Corner corner)
-        {
-            Corners.TryAddEx(dir, corner, "Invalid corner direction");
-            return this;
-        }*/
 
         public Cube SetHorizontalFaces(Func<FaceHor> faceFac)
         {
@@ -520,19 +492,6 @@ namespace ShapeGrammar
             {
                 facet.Generate(cubeSide, parent, Position);
             }
-
-            /*foreach (var face in FacesHor.Values)
-            {
-                face.Generate(cubeSide, parent, Position);
-            }
-            foreach (var face in FacesVer.Values)
-            {
-                face.Generate(cubeSide, parent, Position);
-            }
-            foreach (var corner in Corners.Values)
-            {
-                corner.Generate(cubeSide, parent, Position);
-            }*/
         }
 
         public Cube MoveBy(Vector3Int offset)
@@ -553,8 +512,21 @@ namespace ShapeGrammar
         public Vector3Int Direction { get; set; }
         public ShapeGrammarStyle Style { get; set; }
         public Cube MyCube { get; set; }
+        public Cube OtherCube => MyCube.Grid[MyCube.Position + Direction];
 
         public abstract void Generate(float cubeSide, Transform parent, Vector3Int cubePosition);
+
+        public FacetT MoveBy<FacetT>(Vector3Int offset) where FacetT : Facet
+        {
+            var offsetCube = MyCube.MoveBy(offset);
+            return (FacetT)offsetCube?.Facets[Direction];
+        }
+
+        public IEnumerable<FacetT> MoveInDirUntil<FacetT>(Vector3Int dir, Func<FacetT, bool> stopPred) where FacetT : Facet
+        {
+            var validFacets = MyCube.MoveInDirUntil(dir, cube => stopPred((FacetT)cube.Facets[Direction])).Select(cube => (FacetT)cube.Facets[Direction]);
+            return validFacets;
+        }
     }
 
     public class FaceHor : Facet
@@ -572,15 +544,10 @@ namespace ShapeGrammar
             obj.SetParent(parent);
             obj.localPosition = (cubePosition + offset) * cubeSide;
             obj.rotation = Quaternion.LookRotation(Direction, Vector3.up);
-
-            Debug.Log("Added horizontal face");
         }
 
-        public IEnumerable<FaceVer> MoveInDirUntil(Vector3Int dir, Func<FaceVer, bool> stopPred)
-        {
-            var validCorners = MyCube.MoveInDirUntil(dir, cube => stopPred(cube.FacesVer(Direction))).Select(cube => cube.FacesVer(Direction));
-            return validCorners;
-        }
+        public FaceHor MoveBy(Vector3Int offset) => MoveBy<FaceHor>(offset);
+        public IEnumerable<FaceHor> MoveInDirUntil(Vector3Int dir, Func<FaceHor, bool> stopPred) => MoveInDirUntil<FaceHor>(dir, stopPred);
     }
 
     public class FaceVer : Facet
@@ -599,11 +566,8 @@ namespace ShapeGrammar
             obj.localPosition = (cubePosition + offset) * cubeSide;
         }
 
-        public IEnumerable<FaceVer> MoveInDirUntil(Vector3Int dir, Func<FaceVer, bool> stopPred)
-        {
-            var validCorners = MyCube.MoveInDirUntil(dir, cube => stopPred(cube.FacesVer(Direction))).Select(cube => cube.FacesVer(Direction));
-            return validCorners;
-        }
+        public FaceVer MoveBy(Vector3Int offset) => MoveBy<FaceVer>(offset);
+        public IEnumerable<FaceVer> MoveInDirUntil(Vector3Int dir, Func<FaceVer, bool> stopPred) => MoveInDirUntil<FaceVer>(dir, stopPred);
     }
 
     public class Corner : Facet
@@ -622,17 +586,8 @@ namespace ShapeGrammar
             obj.localPosition = (cubePosition + offset) * cubeSide;
         }
 
-        public Corner MoveBy(Vector3Int offset)
-        {
-            var offsetCube = MyCube.MoveBy(offset);
-            return offsetCube?.Corners(Direction);
-        }
-
-        public IEnumerable<Corner> MoveInDirUntil(Vector3Int dir, Func<Corner, bool> stopPred)
-        {
-            var validCorners = MyCube.MoveInDirUntil(dir, cube => stopPred(cube.Corners(Direction))).Select(cube => cube.Corners(Direction));
-            return validCorners;
-        }
+        public Corner MoveBy(Vector3Int offset) => MoveBy<Corner>(offset);
+        public IEnumerable<Corner> MoveInDirUntil(Vector3Int dir, Func<Corner, bool> stopPred) => MoveInDirUntil<Corner>(dir, stopPred);
     }
 
     public enum FACE_HOR
