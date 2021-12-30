@@ -149,7 +149,7 @@ namespace ShapeGrammar
             var faces =
                 from horDir in horDirs
                 from cube in Cubes
-                select cube.FacesHor[horDir];
+                select cube.FacesHor(horDir);
             return new FaceHorGroup(Grid, faces.ToList());
         }
 
@@ -171,7 +171,7 @@ namespace ShapeGrammar
             var faces =
                 from horDir in verDirs
                 from cube in Cubes
-                select cube.FacesVer[horDir];
+                select cube.FacesVer(horDir);
             return new FaceVerGroup(Grid, faces.ToList());
         }
 
@@ -195,7 +195,7 @@ namespace ShapeGrammar
                 from horDir in horDirs
                 let orthDir = ExtensionMethods.OrthogonalHorizontalDir(horDir)
                 from cube in Cubes
-                select new { i0 = cube.Corners[horDir + orthDir], i1 = cube.Corners[horDir - orthDir] };
+                select new { i0 = cube.Corners(horDir + orthDir), i1 = cube.Corners(horDir - orthDir) };
             var corners = cornerPairs.Select(twoCorners => twoCorners.i0).Concat(cornerPairs.Select(twoCorners => twoCorners.i1)).Distinct();
             return new CornerGroup(Grid, corners.ToList());
         }
@@ -235,6 +235,11 @@ namespace ShapeGrammar
         }
 
         public CubeGroup Cubes()
+        {
+            return new CubeGroup(Grid, Faces.Select(face => face.MyCube).ToList());
+        }
+
+        public CubeGroup Extrude(int dist)
         {
             return new CubeGroup(Grid, Faces.Select(face => face.MyCube).ToList());
         }
@@ -427,27 +432,34 @@ namespace ShapeGrammar
     {
         public Grid Grid { get; }
         public Vector3Int Position { get; }
-        public Dictionary<Vector3Int, FaceHor> FacesHor{ get; }
-        public Dictionary<Vector3Int, FaceVer> FacesVer { get; }
-        public Dictionary<Vector3Int, Corner> Corners { get; }
+        public Dictionary<Vector3Int, Facet> Facets { get; }
+        //public IEnumerable<FaceHor> AllFacesHor => ExtensionMethods.HorizontalDirections().Select(dir => Facets[dir]).OfType<FaceHor>();
+        public FaceHor FacesHor(Vector3Int dir) => Facets[dir] as FaceHor;
+        public FaceVer FacesVer(Vector3Int dir) => Facets[dir] as FaceVer;
+        public Corner Corners(Vector3Int dir) => Facets[dir] as Corner;
         public bool Changed { get; set; }
 
         public Cube(Grid grid, Vector3Int position)
         {
             Grid = grid;
             Position = position;
-            FacesHor = new Dictionary<Vector3Int, FaceHor>();
-            FacesVer = new Dictionary<Vector3Int, FaceVer>();
-            Corners = new Dictionary<Vector3Int, Corner>();
+            //FacesHor = new Dictionary<Vector3Int, FaceHor>();
+            //FacesVer = new Dictionary<Vector3Int, FaceVer>();
+            //Corners = new Dictionary<Vector3Int, Corner>();
+            Facets = new Dictionary<Vector3Int, Facet>();
             SetHorizontalFaces(() => new FaceHor());
             SetVerticalFaces(() => new FaceVer());
             SetCorners(() => new Corner());
             Changed = true;
         }
 
+        /*
         public Cube SetFaceHor(Vector3Int dir, FaceHor face)
         {
-            FacesHor.TryAddEx(dir, face, "Invalid horizontal direction");
+            if (dir.y != 0)
+                throw new InvalidOperationException("Invalid horizontal direction");
+
+            Facets.TryAdd(dir, face);
             return this;
         }
 
@@ -461,14 +473,14 @@ namespace ShapeGrammar
         {
             Corners.TryAddEx(dir, corner, "Invalid corner direction");
             return this;
-        }
+        }*/
 
         public Cube SetHorizontalFaces(Func<FaceHor> faceFac)
         {
             ExtensionMethods.HorizontalDirections().ForEach(dir =>
             {
                 var face = faceFac();
-                FacesHor.TryAdd(dir, face);
+                Facets.TryAdd(dir, face);
                 face.Direction = dir;
                 face.MyCube = this;
             });
@@ -480,7 +492,7 @@ namespace ShapeGrammar
             ExtensionMethods.VerticalDirections().ForEach(dir =>
             {
                 var face = faceFac();
-                FacesVer.TryAdd(dir, face);
+                Facets.TryAdd(dir, face);
                 face.Direction = dir;
                 face.MyCube = this;
             });
@@ -492,7 +504,7 @@ namespace ShapeGrammar
             ExtensionMethods.VerticalDiagonals().ForEach(dir =>
             {
                 var corner = cornerFac();
-                Corners.TryAdd(dir, corner);
+                Facets.TryAdd(dir, corner);
                 corner.Direction = dir;
                 corner.MyCube = this;
             });
@@ -504,7 +516,12 @@ namespace ShapeGrammar
             if (!Changed)
                 return;
 
-            foreach(var face in FacesHor.Values)
+            foreach (var facet in Facets.Values)
+            {
+                facet.Generate(cubeSide, parent, Position);
+            }
+
+            /*foreach (var face in FacesHor.Values)
             {
                 face.Generate(cubeSide, parent, Position);
             }
@@ -515,7 +532,7 @@ namespace ShapeGrammar
             foreach (var corner in Corners.Values)
             {
                 corner.Generate(cubeSide, parent, Position);
-            }
+            }*/
         }
 
         public Cube MoveBy(Vector3Int offset)
@@ -531,18 +548,20 @@ namespace ShapeGrammar
         }
     }
 
-    public class Facet
+    public abstract class Facet
     {
         public Vector3Int Direction { get; set; }
         public ShapeGrammarStyle Style { get; set; }
         public Cube MyCube { get; set; }
+
+        public abstract void Generate(float cubeSide, Transform parent, Vector3Int cubePosition);
     }
 
     public class FaceHor : Facet
     {
         public FACE_HOR FaceType { get; set; }
 
-        public void Generate(float cubeSide, Transform parent, Vector3Int cubePosition)
+        public override void Generate(float cubeSide, Transform parent, Vector3Int cubePosition)
         {
             if (Style == null)
                 return;
@@ -556,13 +575,19 @@ namespace ShapeGrammar
 
             Debug.Log("Added horizontal face");
         }
+
+        public IEnumerable<FaceVer> MoveInDirUntil(Vector3Int dir, Func<FaceVer, bool> stopPred)
+        {
+            var validCorners = MyCube.MoveInDirUntil(dir, cube => stopPred(cube.FacesVer(Direction))).Select(cube => cube.FacesVer(Direction));
+            return validCorners;
+        }
     }
 
     public class FaceVer : Facet
     {
         public FACE_VER FaceType { get; set; }
 
-        public void Generate(float cubeSide, Transform parent, Vector3Int cubePosition)
+        public override void Generate(float cubeSide, Transform parent, Vector3Int cubePosition)
         {
             if (Style == null)
                 return;
@@ -573,13 +598,19 @@ namespace ShapeGrammar
             obj.SetParent(parent);
             obj.localPosition = (cubePosition + offset) * cubeSide;
         }
+
+        public IEnumerable<FaceVer> MoveInDirUntil(Vector3Int dir, Func<FaceVer, bool> stopPred)
+        {
+            var validCorners = MyCube.MoveInDirUntil(dir, cube => stopPred(cube.FacesVer(Direction))).Select(cube => cube.FacesVer(Direction));
+            return validCorners;
+        }
     }
 
     public class Corner : Facet
     {
         public CORNER CornerType { get; set; }
 
-        public void Generate(float cubeSide, Transform parent, Vector3Int cubePosition)
+        public override void Generate(float cubeSide, Transform parent, Vector3Int cubePosition)
         {
             if (Style == null)
                 return;
@@ -594,12 +625,12 @@ namespace ShapeGrammar
         public Corner MoveBy(Vector3Int offset)
         {
             var offsetCube = MyCube.MoveBy(offset);
-            return offsetCube?.Corners[Direction];
+            return offsetCube?.Corners(Direction);
         }
 
         public IEnumerable<Corner> MoveInDirUntil(Vector3Int dir, Func<Corner, bool> stopPred)
         {
-            var validCorners = MyCube.MoveInDirUntil(dir, cube => stopPred(cube.Corners[Direction])).Select(cube => cube.Corners[Direction]);
+            var validCorners = MyCube.MoveInDirUntil(dir, cube => stopPred(cube.Corners(Direction))).Select(cube => cube.Corners(Direction));
             return validCorners;
         }
     }
