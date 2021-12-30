@@ -213,6 +213,11 @@ static class ExtensionMethods
         return enumerable.Select(selector).OfType<U>();
     }
 
+    public static IEnumerable<U> SelectManyNN<T, U>(this IEnumerable<T> enumerable, Func<T, IEnumerable<U>> selector)
+    {
+        return enumerable.SelectNN(selector).SelectMany(ie => ie).OfType<U>();
+    }
+
     /// <summary>
     /// Using Fisher–Yates shuffle.
     /// </summary>

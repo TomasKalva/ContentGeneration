@@ -39,8 +39,8 @@ namespace ShapeGrammar
             //shapeGrammar.Room(new Box3Int(new Vector3Int(3, 1, 1), new Vector3Int(6, 5, 4)), Style);
             //shapeGrammar.Platform(new Box2Int(new Vector2Int(6, 5), new Vector2Int(8, 9)), 5, Style);
 
-            var room = shapeGrammar.House(new Box2Int(new Vector2Int(5, 2), new Vector2Int(8, 5)), 5, Style);
-            room.AllBoundaryFacesH().Extrude(2).AllBoundaryFacesH().SetStyle(Style).Fill(FACE_HOR.Wall);
+            var room = shapeGrammar.House(new Box2Int(new Vector2Int(5, 0), new Vector2Int(8, 5)), 5, Style);
+            room.AllBoundaryFacesH().Extrude(3).AllBoundaryFacesH().SetStyle(Style).Fill(FACE_HOR.Wall);
             room.BoundaryFacesV(Vector3Int.up).Extrude(2).BoundaryFacesV(Vector3Int.down).SetStyle(Style).Fill(FACE_VER.Floor);
             room.AllBoundaryCorners().Extrude(1).AllBoundaryFacesH().SetStyle(Style).Fill(FACE_HOR.Wall);
 
@@ -236,7 +236,7 @@ namespace ShapeGrammar
                 var countdown = new Countdown(dist);
                 return cube => countdown.Tick();
             };
-            return new CubeGroup(Grid, Facets.SelectMany(face => face.OtherCube.MoveInDirUntil(face.Direction, countdownMaker()))
+            return new CubeGroup(Grid, Facets.SelectManyNN(face => face.OtherCube?.MoveInDirUntil(face.Direction, countdownMaker()))
                 .ToList());
         }
     }
