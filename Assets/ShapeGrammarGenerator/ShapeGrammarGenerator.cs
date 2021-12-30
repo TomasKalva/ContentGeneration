@@ -39,6 +39,8 @@ namespace ShapeGrammar
             shapeGrammar.Room(new Box3Int(new Vector3Int(3, 1, 1), new Vector3Int(6, 5, 4)), Style);
             shapeGrammar.Platform(new Box2Int(new Vector2Int(6, 5), new Vector2Int(8, 9)), 5, Style);
 
+            shapeGrammar.House(new Box2Int(new Vector2Int(5, 0), new Vector2Int(8, 5)), 5, Style);
+
 
             grid.Generate(2f, parent);
             //world.AddItem(items.BlueIchorEssence, new Vector3(0, 0, -54));
@@ -64,15 +66,35 @@ namespace ShapeGrammar
         public CubeGroup Room(Box3Int area, ShapeGrammarStyle style)
         {
             var room = QC.GetBox(area);
-            room.BoundaryFacesH(ExtensionMethods.HorizontalDirections().ToArray()).SetStyle(style).Fill(FACE_HOR.Wall);
+            room.AllBoundaryFacesH().SetStyle(style).Fill(FACE_HOR.Wall);
             room.BoundaryFacesV(Vector3Int.down).SetStyle(style).Fill(FACE_VER.Floor);
-            room.BoundaryCorners(ExtensionMethods.HorizontalDirections().ToArray()).SetStyle(style).Fill(CORNER.Pillar);
+            room.AllBoundaryCorners().SetStyle(style).Fill(CORNER.Pillar);
             return room;
         }
 
-        public CubeGroup Platform(Box2Int areaXZ, int height, ShapeGrammarStyle style)
+        public CubeGroup House(Box2Int areaXZ, int posY, ShapeGrammarStyle style)
         {
-            var box = areaXZ.InflateY(height, height + 1);
+
+            var room = Room(areaXZ.InflateY(posY, posY + 2), style);
+            var cubesBelowRoom = room.BoundaryFacesV(Vector3Int.down).Cubes().MoveBy(Vector3Int.down);
+            var foundation = Foundation(cubesBelowRoom, style);
+            /*room.AllBoundaryFacesH().SetStyle(style).Fill(FACE_HOR.Wall);
+            room.BoundaryFacesV(Vector3Int.down).SetStyle(style).Fill(FACE_VER.Floor);
+            room.AllBoundaryCorners().SetStyle(style).Fill(CORNER.Pillar);*/
+            return room;
+        }
+
+        public CubeGroup Foundation(CubeGroup topLayer, ShapeGrammarStyle style)
+        {
+            var foundationCubes = topLayer.MoveInDirUntil(Vector3Int.down, cube => cube == null);
+            foundationCubes.AllBoundaryFacesH().SetStyle(style).Fill(FACE_HOR.Wall);
+            foundationCubes.AllBoundaryCorners().SetStyle(style).Fill(CORNER.Pillar);
+            return foundationCubes;
+        }
+
+        public CubeGroup Platform(Box2Int areaXZ, int posY, ShapeGrammarStyle style)
+        {
+            var box = areaXZ.InflateY(posY, posY + 1);
             var platform = QC.GetBox(box);
             platform.BoundaryFacesV(Vector3Int.down).SetStyle(style).Fill(FACE_VER.Floor);
             platform.BoundaryCorners(ExtensionMethods.HorizontalDirections().ToArray())
@@ -84,20 +106,40 @@ namespace ShapeGrammar
         }
     }
 
-    public class CubeGroup
+    public class Group
     {
         public Grid Grid { get; }
-        public List<Cube> Cubes { get; }
 
-        public CubeGroup(Grid grid, List<Cube> cubes)
+        public Group(Grid grid)
         {
             Grid = grid;
+        }
+    }
+
+    public class CubeGroup : Group
+    {
+        public List<Cube> Cubes { get; }
+
+        public CubeGroup(Grid grid, List<Cube> cubes) : base(grid)
+        {
             Cubes = cubes;
         }
         
         public CubeGroup CubesLayer(Vector3Int dir)
         {
             return new CubeGroup(Grid, Cubes.Where(cube => !Cubes.Contains(Grid[cube.Position + dir])).ToList());
+        }
+
+        public CubeGroup MoveBy(Vector3Int offset)
+        {
+            var movedCubes = Cubes.SelectNN(cube => cube.MoveBy(offset));
+            return new CubeGroup(Grid, movedCubes.ToList());
+        }
+
+        public CubeGroup MoveInDirUntil(Vector3Int dir, Func<Cube, bool> stopPred)
+        {
+            var validCubes = Cubes.SelectMany(corner => corner.MoveInDirUntil(dir, stopPred));
+            return new CubeGroup(Grid, validCubes.ToList());
         }
 
         #region FacesH
@@ -108,12 +150,17 @@ namespace ShapeGrammar
                 from horDir in horDirs
                 from cube in Cubes
                 select cube.FacesHor[horDir];
-            return new FaceHorGroup(faces.ToList());
+            return new FaceHorGroup(Grid, faces.ToList());
         }
 
         public FaceHorGroup BoundaryFacesH(params Vector3Int[] horDirs)
         {
-            return new FaceHorGroup(horDirs.Select(horDir => CubesLayer(horDir).FacesH(horDir)).SelectMany(i=>i.Faces).ToList());
+            return new FaceHorGroup(Grid, horDirs.Select(horDir => CubesLayer(horDir).FacesH(horDir)).SelectMany(i=>i.Faces).ToList());
+        }
+
+        public FaceHorGroup AllBoundaryFacesH()
+        {
+            return BoundaryFacesH(ExtensionMethods.HorizontalDirections().ToArray());
         }
         #endregion
 
@@ -125,12 +172,17 @@ namespace ShapeGrammar
                 from horDir in verDirs
                 from cube in Cubes
                 select cube.FacesVer[horDir];
-            return new FaceVerGroup(faces.ToList());
+            return new FaceVerGroup(Grid, faces.ToList());
         }
 
         public FaceVerGroup BoundaryFacesV(params Vector3Int[] verDirs)
         {
-            return new FaceVerGroup(verDirs.Select(verDir => CubesLayer(verDir).FacesV(verDir)).SelectMany(i => i.Faces).ToList());
+            return new FaceVerGroup(Grid, verDirs.Select(verDir => CubesLayer(verDir).FacesV(verDir)).SelectMany(i => i.Faces).ToList());
+        }
+
+        public FaceVerGroup AllBoundaryFacesV()
+        {
+            return BoundaryFacesV(ExtensionMethods.VerticalDirections().ToArray());
         }
         #endregion
 
@@ -145,22 +197,27 @@ namespace ShapeGrammar
                 from cube in Cubes
                 select new { i0 = cube.Corners[horDir + orthDir], i1 = cube.Corners[horDir - orthDir] };
             var corners = cornerPairs.Select(twoCorners => twoCorners.i0).Concat(cornerPairs.Select(twoCorners => twoCorners.i1)).Distinct();
-            return new CornerGroup(corners.ToList());
+            return new CornerGroup(Grid, corners.ToList());
         }
 
         public CornerGroup BoundaryCorners(params Vector3Int[] horDirs)
         {
-            return new CornerGroup(horDirs.Select(verDir => CubesLayer(verDir).Corners(verDir)).SelectMany(i => i.Corners).ToList());
+            return new CornerGroup(Grid, horDirs.Select(verDir => CubesLayer(verDir).Corners(verDir)).SelectMany(i => i.Corners).ToList());
+        }
+
+        public CornerGroup AllBoundaryCorners()
+        {
+            return BoundaryCorners(ExtensionMethods.HorizontalDirections().ToArray());
         }
 
         #endregion
     }
 
-    public class FaceHorGroup
+    public class FaceHorGroup : Group
     {
         public List<FaceHor> Faces { get; }
 
-        public FaceHorGroup(List<FaceHor> faces)
+        public FaceHorGroup(Grid grid, List<FaceHor> faces) : base(grid)
         {
             Faces = faces;
         }
@@ -176,13 +233,18 @@ namespace ShapeGrammar
             Faces.ForEach(face => face.Style = style);
             return this;
         }
+
+        public CubeGroup Cubes()
+        {
+            return new CubeGroup(Grid, Faces.Select(face => face.MyCube).ToList());
+        }
     }
 
-    public class FaceVerGroup
+    public class FaceVerGroup : Group
     {
         public List<FaceVer> Faces { get; }
 
-        public FaceVerGroup(List<FaceVer> faces)
+        public FaceVerGroup(Grid grid, List<FaceVer> faces) : base(grid)
         {
             Faces = faces;
         }
@@ -198,13 +260,18 @@ namespace ShapeGrammar
             Faces.ForEach(face => face.Style = style);
             return this;
         }
+
+        public CubeGroup Cubes()
+        {
+            return new CubeGroup(Grid, Faces.Select(face => face.MyCube).ToList());
+        }
     }
 
-    public class CornerGroup
+    public class CornerGroup : Group
     {
         public List<Corner> Corners { get; }
 
-        public CornerGroup(List<Corner> corners)
+        public CornerGroup(Grid grid, List<Corner> corners) : base(grid)
         {
             Corners = corners;
         }
@@ -224,13 +291,18 @@ namespace ShapeGrammar
         public CornerGroup MoveBy(Vector3Int offset)
         {
             var movedCorners = Corners.SelectNN(corner => corner.MoveBy(offset));
-            return new CornerGroup(movedCorners.ToList());
+            return new CornerGroup(Grid, movedCorners.ToList());
         }
 
         public CornerGroup MoveInDirUntil(Vector3Int dir, Func<Corner, bool> stopPred)
         {
             var validCorners = Corners.SelectMany(corner => corner.MoveInDirUntil(dir, stopPred));
-            return new CornerGroup(validCorners.ToList());
+            return new CornerGroup(Grid, validCorners.ToList());
+        }
+
+        public CubeGroup Cubes()
+        {
+            return new CubeGroup(Grid, Corners.Select(face => face.MyCube).ToList());
         }
     }
 
@@ -445,6 +517,18 @@ namespace ShapeGrammar
                 corner.Generate(cubeSide, parent, Position);
             }
         }
+
+        public Cube MoveBy(Vector3Int offset)
+        {
+            return Grid[Position + offset];
+        }
+
+        public IEnumerable<Cube> MoveInDirUntil(Vector3Int dir, Func<Cube, bool> stopPred)
+        {
+            var ray = new Ray3Int(Position, dir);
+            var validCubes = ray.TakeWhile(v => Grid[v] != null && !stopPred(Grid[v])).Select(v => Grid[v]);
+            return validCubes;
+        }
     }
 
     public class Facet
@@ -509,15 +593,13 @@ namespace ShapeGrammar
 
         public Corner MoveBy(Vector3Int offset)
         {
-            var offsetCube = MyCube.Grid[MyCube.Position + offset];
+            var offsetCube = MyCube.MoveBy(offset);
             return offsetCube?.Corners[Direction];
         }
 
         public IEnumerable<Corner> MoveInDirUntil(Vector3Int dir, Func<Corner, bool> stopPred)
         {
-            var grid = MyCube.Grid;
-            var ray = new Ray3Int(MyCube.Position, dir);
-            var validCorners = ray.TakeWhile(v => grid[v] != null && !stopPred(grid[v].Corners[Direction])).Select(v=>grid[v].Corners[Direction]);
+            var validCorners = MyCube.MoveInDirUntil(dir, cube => stopPred(cube.Corners[Direction])).Select(cube => cube.Corners[Direction]);
             return validCorners;
         }
     }
