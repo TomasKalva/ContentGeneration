@@ -47,6 +47,14 @@ namespace ShapeGrammar
         }
 
         public CubeGroup Where(Func<Cube, bool> pred) => new CubeGroup(Grid, Cubes.Where(pred).ToList());
+        public CubeGroup Minus(CubeGroup group) => new CubeGroup(Grid, Cubes.Except(group.Cubes).ToList());
+
+        public CubeGroup ExtrudeHor()
+        {
+            var faceCubes = AllBoundaryFacesH().Extrude(1).Cubes;
+            var cornerCubes = AllBoundaryCorners().Extrude(1).Cubes;
+            return new CubeGroup(Grid, faceCubes.Concat(cornerCubes).ToList());
+        }
 
         #region FacesH
 

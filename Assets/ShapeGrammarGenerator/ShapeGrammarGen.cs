@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using static ShapeGrammar.Grid;
-using Grid = ShapeGrammar.Grid;
 
 namespace ShapeGrammar
 {

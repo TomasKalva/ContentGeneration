@@ -43,8 +43,13 @@ namespace ShapeGrammar
             //shapeGrammar.Balcony(room, Style);
             //shapeGrammar.BalconyWide(room, Style);
 
-            var room = qc.GetRandomHorConnected(new Vector3Int(10, 0, 10), 30);
-            shapeGrammar.Room(room, Style);
+            var boundingBox = new Box2Int(new Vector2Int(5, 5), new Vector2Int(15, 15)).InflateY(0, 1);
+            var boundingCubes = qc.GetBox(boundingBox);
+            //var room = qc.GetRandomHorConnected(new Vector3Int(10, 0, 10), boundingCubes, 50);
+            //shapeGrammar.Room(room, Style);
+            var rooms = qc.Partition(qc.GetRandomHorConnected1, boundingCubes, 4);
+            rooms.ForEach(room => shapeGrammar.Room(room, Style));
+
 
             /*room.AllBoundaryFacesH().Extrude(3).AllBoundaryFacesH().SetStyle(Style).Fill(FACE_HOR.Wall);
             room.BoundaryFacesV(Vector3Int.up).Extrude(2).BoundaryFacesV(Vector3Int.down).SetStyle(Style).Fill(FACE_VER.Floor);
@@ -80,6 +85,7 @@ namespace ShapeGrammar
                 return new CubeGroup(QueriedGrid, cubes);
             }
 
+            /*
             public CubeGroup GetRandomHorConnected(Vector3Int start, int n)
             {
                 var grp = new CubeGroup(QueriedGrid, new List<Cube>() { QueriedGrid[start] });
@@ -94,6 +100,58 @@ namespace ShapeGrammar
                     }
                 }
                 return grp;
+            }*/
+
+            public CubeGroup GetRandomHorConnected(Vector3Int start, CubeGroup boundingGroup, int n)
+            {
+                var grp = new CubeGroup(QueriedGrid, new List<Cube>() { QueriedGrid[start] });
+                while (n > 0)
+                {
+                    var newGrp = GetRandomHorConnected1(grp, boundingGroup);
+                    if (newGrp.Cubes.Count == grp.Cubes.Count)
+                        return grp;
+
+                    grp = newGrp;
+                    n--;
+                }
+                return grp;
+            }
+
+            public CubeGroup GetRandomHorConnected1(CubeGroup start, CubeGroup boundingGroup)
+            {
+                var possibleCubes = start.AllBoundaryFacesH().Extrude(1).Cubes.Intersect(boundingGroup.Cubes);
+                if (possibleCubes.Count() == 0)
+                    return start;
+                var newCube = possibleCubes.GetRandom();
+                // todo: remove null check after implementing infinite grid
+                if (newCube == null)
+                    return start;
+                return new CubeGroup(QueriedGrid, start.Cubes.Append(newCube).ToList());
+            }
+
+            public List<CubeGroup> Partition(Func<CubeGroup, CubeGroup, CubeGroup> groupGrower, CubeGroup boundingGroup, int groupN)
+            {
+                var groups = boundingGroup.Cubes
+                    .Select(cube => cube.Position)
+                    .Shuffle()
+                    .Take(groupN)
+                    .Select(pos => new CubeGroup(QueriedGrid, QueriedGrid[pos].Group().Cubes))
+                    .ToList();
+                var totalSize = 0;
+                boundingGroup = boundingGroup.Minus(new CubeGroup(QueriedGrid, groups.SelectManyNN(grp => grp.Cubes).ToList()));
+                while (groups.Select(grp => grp.Cubes.Count).Sum() > totalSize)
+                {
+                    totalSize = groups.Select(grp => grp.Cubes.Count).Sum();
+                    var newGroups = new List<CubeGroup>();
+                    foreach(var grp in groups)
+                    {
+                        var newGrp = groupGrower(grp, boundingGroup);
+                        boundingGroup = boundingGroup.Minus(newGrp);
+                        newGroups.Add(newGrp);
+                    }
+                    groups = newGroups;
+                }
+                return groups;
             }
         }
 
