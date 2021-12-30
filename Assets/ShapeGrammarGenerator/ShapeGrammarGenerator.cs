@@ -114,14 +114,28 @@ namespace ShapeGrammar
                .Where(face => !face.OtherCube.Changed && !face.OtherCube.In(house))
                .Facets.GetRandom()
                .OtherCube.Group();
+
+            // Floor
+            balcony.BoundaryFacesV(Vector3Int.down).SetStyle(style).Fill(FACE_VER.Floor);
+
             // Add railing to the balcony
-            balcony.AllBoundaryFacesH()
+            var facesNearHouse = balcony.AllBoundaryFacesH()
+               .Neighboring(house);
+            var railingFaces = balcony.AllBoundaryFacesH()
+               .Minus(facesNearHouse);
+
+            railingFaces
                .SetStyle(style)
                .Fill(FACE_HOR.Railing);
+            railingFaces
+               .Corners()
+               .SetStyle(style)
+               .Fill(CORNER.Pillar);
             // Door to house
-            balcony.AllBoundaryFacesH()
-               .Neighboring(house)
+            facesNearHouse
+               .Facets.GetRandom().Group()
                .Fill(FACE_HOR.Door);
+            
             return balcony;
         }
     }
@@ -284,8 +298,14 @@ namespace ShapeGrammar
             return this;
         }
 
+        public CornerGroup Corners()
+        {
+            return new CornerGroup(Grid, Facets.SelectManyNN(faceHor => faceHor.Corners()).Distinct().ToList());
+        }
+
         public FaceHorGroup Where(Func<FaceHor, bool> pred) => new FaceHorGroup(Grid, Facets.Where(pred).ToList());
         public FaceHorGroup Neighboring(CubeGroup cubeGroup) => new FaceHorGroup(Grid, NeighboringIE(cubeGroup).ToList());
+        public FaceHorGroup Minus(FaceHorGroup faceHorGroup) => new FaceHorGroup(Grid, Facets.Except(faceHorGroup.Facets).ToList());
     }
 
     class Countdown
@@ -324,6 +344,7 @@ namespace ShapeGrammar
         }
         public FaceVerGroup Where(Func<FaceVer, bool> pred) => new FaceVerGroup(Grid, Facets.Where(pred).ToList());
         public FaceVerGroup Neighboring(CubeGroup cubeGroup) => new FaceVerGroup(Grid, NeighboringIE(cubeGroup).ToList());
+        public FaceVerGroup Minus(FaceVerGroup faceVerGroup) => new FaceVerGroup(Grid, Facets.Except(faceVerGroup.Facets).ToList());
     }
 
     public class CornerGroup : FacetGroup<Corner>
@@ -358,6 +379,7 @@ namespace ShapeGrammar
 
         public CornerGroup Where(Func<Corner, bool> pred) => new CornerGroup(Grid, Facets.Where(pred).ToList());
         public CornerGroup Neighboring(CubeGroup cubeGroup) => new CornerGroup(Grid, NeighboringIE(cubeGroup).ToList());
+        public CornerGroup Minus(CornerGroup cornerGroup) => new CornerGroup(Grid, Facets.Except(cornerGroup.Facets).ToList());
     }
 
 
@@ -612,8 +634,16 @@ namespace ShapeGrammar
             obj.rotation = Quaternion.LookRotation(Direction, Vector3.up);
         }
 
+        public IEnumerable<Corner> Corners()
+        {
+            var ortDir = ExtensionMethods.OrthogonalHorizontalDir(Direction);
+            yield return MyCube.Corners(Direction + ortDir);
+            yield return MyCube.Corners(Direction - ortDir);
+        }
+
         public FaceHor MoveBy(Vector3Int offset) => MoveBy<FaceHor>(offset);
         public IEnumerable<FaceHor> MoveInDirUntil(Vector3Int dir, Func<FaceHor, bool> stopPred) => MoveInDirUntil<FaceHor>(dir, stopPred);
+        public FaceHorGroup Group() => new FaceHorGroup(MyCube.Grid, new List<FaceHor>() { this });
     }
 
     public class FaceVer : Facet
@@ -644,6 +674,7 @@ namespace ShapeGrammar
 
         public FaceVer MoveBy(Vector3Int offset) => MoveBy<FaceVer>(offset);
         public IEnumerable<FaceVer> MoveInDirUntil(Vector3Int dir, Func<FaceVer, bool> stopPred) => MoveInDirUntil<FaceVer>(dir, stopPred);
+        public FaceVerGroup Group() => new FaceVerGroup(MyCube.Grid, new List<FaceVer>() { this });
     }
 
     public class Corner : Facet
@@ -674,6 +705,7 @@ namespace ShapeGrammar
 
         public Corner MoveBy(Vector3Int offset) => MoveBy<Corner>(offset);
         public IEnumerable<Corner> MoveInDirUntil(Vector3Int dir, Func<Corner, bool> stopPred) => MoveInDirUntil<Corner>(dir, stopPred);
+        public CornerGroup Group() => new CornerGroup(MyCube.Grid, new List<Corner>() { this });
     }
 
     public enum FACE_HOR
