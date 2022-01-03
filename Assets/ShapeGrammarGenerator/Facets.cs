@@ -12,7 +12,7 @@ namespace ShapeGrammar
     public abstract class Facet
     {
         public Vector3Int Direction { get; set; }
-        public ShapeGrammarStyle Style { get; set; }
+        public ShapeGrammarObjectStyle Style { get; set; }
         public Cube MyCube { get; set; }
         public Cube OtherCube => MyCube.Grid[MyCube.Position + Direction];
 

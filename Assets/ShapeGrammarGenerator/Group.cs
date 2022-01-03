@@ -56,6 +56,14 @@ namespace ShapeGrammar
             return new CubeGroup(Grid, faceCubes.Concat(cornerCubes).ToList());
         }
 
+        public CubeGroup WithFloor() => Where(cube => cube.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor);
+
+        public CubeGroup SetGrammarStyle(StyleSetter styleSetter)
+        {
+            styleSetter(this);
+            return this;
+        }
+
         #region FacesH
 
         public FaceHorGroup FacesH(params Vector3Int[] horDirs)
@@ -170,7 +178,7 @@ namespace ShapeGrammar
             return this;
         }
 
-        public FaceHorGroup SetStyle(ShapeGrammarStyle style)
+        public FaceHorGroup SetStyle(ShapeGrammarObjectStyle style)
         {
             Facets.ForEach(face => face.Style = style);
             return this;
@@ -215,7 +223,7 @@ namespace ShapeGrammar
             return this;
         }
 
-        public FaceVerGroup SetStyle(ShapeGrammarStyle style)
+        public FaceVerGroup SetStyle(ShapeGrammarObjectStyle style)
         {
             Facets.ForEach(face => face.Style = style);
             return this;
@@ -237,7 +245,7 @@ namespace ShapeGrammar
             return this;
         }
 
-        public CornerGroup SetStyle(ShapeGrammarStyle style)
+        public CornerGroup SetStyle(ShapeGrammarObjectStyle style)
         {
             Facets.ForEach(corner => corner.Style = style);
             return this;

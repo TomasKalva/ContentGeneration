@@ -5,12 +5,12 @@ using UnityEditor;
 using UnityEngine;
 using ShapeGrammar;
 
-public class ShapeGrammarStyle : ScriptableObject
+public class ShapeGrammarObjectStyle : ScriptableObject
 {
     [MenuItem("Assets/Create/ShapeGrammarStyle")]
     public static void CreateMyAsset()
     {
-        ShapeGrammarStyle asset = ScriptableObject.CreateInstance<ShapeGrammarStyle>();
+        ShapeGrammarObjectStyle asset = ScriptableObject.CreateInstance<ShapeGrammarObjectStyle>();
 
         string name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath("Assets/ShapeGrammarStyle.asset");
         AssetDatabase.CreateAsset(asset, name);
