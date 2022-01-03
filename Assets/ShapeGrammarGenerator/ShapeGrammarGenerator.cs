@@ -16,6 +16,54 @@ namespace ShapeGrammar
         [SerializeField]
         ShapeGrammarStyle Style;
 
+        private void Start()
+        {
+            // Keep scene view
+            if (Application.isEditor)
+            {
+                UnityEditor.SceneView.FocusWindowIfItsOpen(typeof(UnityEditor.SceneView));
+            }
+
+
+            Debug.Log("Generating world");
+
+            var grid = new Grid(new Vector3Int(20, 10, 20));
+
+            /*var cube = grid[1, 1, 1];
+            var face = cube.FacesHor[Vector3Int.forward];
+            face.FaceType = FACE_HOR.Wall;
+            face.Style = Style;
+            cube.FacesHor[Vector3Int.forward] = face;
+            cube.Changed = true;
+            */
+            var qc = new QueryContext(grid);
+
+            var shapeGrammar = new ShapeGrammarGen(grid, qc);
+
+            //shapeGrammar.Room(new Box3Int(new Vector3Int(1, 0, 1), new Vector3Int(3, 3, 4)), Style);
+            //shapeGrammar.Room(new Box3Int(new Vector3Int(3, 1, 1), new Vector3Int(6, 5, 4)), Style);
+            //shapeGrammar.Platform(new Box2Int(new Vector2Int(6, 5), new Vector2Int(8, 9)), 5, Style);
+
+            var room = shapeGrammar.House(new Box2Int(new Vector2Int(-11, 2), new Vector2Int(8, 5)), 5, Style);
+            shapeGrammar.Balcony(room, Style);
+            shapeGrammar.BalconyWide(room, Style);
+
+            //var boundingBox = new Box2Int(new Vector2Int(5, 5), new Vector2Int(15, 15)).InflateY(0, 1);
+            //var boundingCubes = qc.GetBox(boundingBox);
+            //var room = qc.GetRandomHorConnected(new Vector3Int(10, 0, 10), boundingCubes, 50);
+            //shapeGrammar.Room(room, Style);
+            //var rooms = qc.Partition(qc.GetRandomHorConnected1, boundingCubes, 4);
+            //rooms.ForEach(room => shapeGrammar.Room(room, Style));
+
+
+            /*room.AllBoundaryFacesH().Extrude(3).AllBoundaryFacesH().SetStyle(Style).Fill(FACE_HOR.Wall);
+            room.BoundaryFacesV(Vector3Int.up).Extrude(2).BoundaryFacesV(Vector3Int.down).SetStyle(Style).Fill(FACE_VER.Floor);
+            room.AllBoundaryCorners().Extrude(1).AllBoundaryFacesH().SetStyle(Style).Fill(FACE_HOR.Wall);
+            */
+
+            grid.Generate(2f, parent);
+        }
+
         public override void Generate(World world)
         {
             //world.AddEnemy(enemies.sculpture, new Vector3(0, 0, -54));
@@ -39,16 +87,16 @@ namespace ShapeGrammar
             //shapeGrammar.Room(new Box3Int(new Vector3Int(3, 1, 1), new Vector3Int(6, 5, 4)), Style);
             //shapeGrammar.Platform(new Box2Int(new Vector2Int(6, 5), new Vector2Int(8, 9)), 5, Style);
 
-            //var room = shapeGrammar.House(new Box2Int(new Vector2Int(5, 2), new Vector2Int(8, 5)), 5, Style);
-            //shapeGrammar.Balcony(room, Style);
+            var room = shapeGrammar.House(new Box2Int(new Vector2Int(5, 2), new Vector2Int(8, 5)), 5, Style);
+            shapeGrammar.Balcony(room, Style);
             //shapeGrammar.BalconyWide(room, Style);
 
-            var boundingBox = new Box2Int(new Vector2Int(5, 5), new Vector2Int(15, 15)).InflateY(0, 1);
-            var boundingCubes = qc.GetBox(boundingBox);
+            //var boundingBox = new Box2Int(new Vector2Int(5, 5), new Vector2Int(15, 15)).InflateY(0, 1);
+            //var boundingCubes = qc.GetBox(boundingBox);
             //var room = qc.GetRandomHorConnected(new Vector3Int(10, 0, 10), boundingCubes, 50);
             //shapeGrammar.Room(room, Style);
-            var rooms = qc.Partition(qc.GetRandomHorConnected1, boundingCubes, 4);
-            rooms.ForEach(room => shapeGrammar.Room(room, Style));
+            //var rooms = qc.Partition(qc.GetRandomHorConnected1, boundingCubes, 4);
+            //rooms.ForEach(room => shapeGrammar.Room(room, Style));
 
 
             /*room.AllBoundaryFacesH().Extrude(3).AllBoundaryFacesH().SetStyle(Style).Fill(FACE_HOR.Wall);
@@ -81,26 +129,16 @@ namespace ShapeGrammar
 
             public CubeGroup GetBox(Box3Int box)
             {
-                var cubes = QueriedGrid.grid.GetBoxItems(box);
+                var cubes = box.Select(i => QueriedGrid[i]).ToList();
                 return new CubeGroup(QueriedGrid, cubes);
             }
 
-            /*
-            public CubeGroup GetRandomHorConnected(Vector3Int start, int n)
+            public CubeGroup GetPlatform(Box2Int areaXZ, int posY)
             {
-                var grp = new CubeGroup(QueriedGrid, new List<Cube>() { QueriedGrid[start] });
-                while(n > 0)
-                {
-                    var newCube = grp.AllBoundaryFacesH().Facets.GetRandom().OtherCube;
-                    // todo: remove null check after implementing infinite grid
-                    if (newCube != null)
-                    {
-                        grp = new CubeGroup(QueriedGrid, grp.Cubes.Append(newCube).ToList());
-                        n--;
-                    }
-                }
-                return grp;
-            }*/
+                var box = areaXZ.InflateY(posY, posY + 1);
+                return GetBox(box);
+            }
+
 
             public CubeGroup GetRandomHorConnected(Vector3Int start, CubeGroup boundingGroup, int n)
             {
@@ -123,9 +161,6 @@ namespace ShapeGrammar
                 if (possibleCubes.Count() == 0)
                     return start;
                 var newCube = possibleCubes.GetRandom();
-                // todo: remove null check after implementing infinite grid
-                if (newCube == null)
-                    return start;
                 return new CubeGroup(QueriedGrid, start.Cubes.Append(newCube).ToList());
             }
 
@@ -139,10 +174,12 @@ namespace ShapeGrammar
                     .ToList();
                 var totalSize = 0;
                 boundingGroup = boundingGroup.Minus(new CubeGroup(QueriedGrid, groups.SelectManyNN(grp => grp.Cubes).ToList()));
+                // Iterate until no group can be grown
                 while (groups.Select(grp => grp.Cubes.Count).Sum() > totalSize)
                 {
                     totalSize = groups.Select(grp => grp.Cubes.Count).Sum();
                     var newGroups = new List<CubeGroup>();
+                    // Update each group and remove newly added cube from bounding box
                     foreach(var grp in groups)
                     {
                         var newGrp = groupGrower(grp, boundingGroup);
@@ -157,13 +194,15 @@ namespace ShapeGrammar
 
         Vector3Int sizes;
 
-        Cube[,,] grid;
+        //Cube[,,] grid;
+
+        Dictionary<Vector3Int, Cube[,,]> chunks;
 
         public int Width => sizes.x;
         public int Height => sizes.y;
         public int Depth => sizes.z;
 
-        public bool ValidCoords(Vector3Int coords) => coords.AtLeast(Vector3Int.zero) && coords.Less(sizes);
+        public bool ValidCoords(Vector3Int coords) => chunks.ContainsKey(GetChunkCoords(coords));
 
         public Vector3Int Sizes => sizes;
 
@@ -179,28 +218,54 @@ namespace ShapeGrammar
             set => SetCube(coords, value);
         }
 
+        Vector3Int TryCreateChunk(Vector3Int coords)
+        {
+            var chunkCoords = GetChunkCoords(coords);
+            if (!ValidCoords(coords))
+            {
+                CreateChunk(chunkCoords);
+            }
+            return chunkCoords;
+        }
+
         Cube GetCube(Vector3Int coords)
         {
-            var cube = ValidCoords(coords) ? grid[coords.x, coords.y, coords.z] : null;
+            var chunkCoords = TryCreateChunk(coords);
+            var localCoords = coords.Mod(sizes);
+            var cube = chunks[chunkCoords][localCoords.x, localCoords.y, localCoords.z];
+            Debug.Assert(cube != null, $"chunks[{chunkCoords}][{localCoords}] is null");
             return cube;
         }
         
         void SetCube(Vector3Int coords, Cube cube)
         {
-            if (ValidCoords(coords))
+            var chunkCoords = TryCreateChunk(coords);
+            var localCoords = coords.Mod(sizes);
+            chunks[chunkCoords][localCoords.x, localCoords.y, localCoords.z] = cube;
+        }
+
+        Vector3Int GetChunkCoords(Vector3Int coords) => coords.Div(sizes);
+
+        void CreateChunk(Vector3Int chunkCoords)
+        {
+            var chunk = new Cube[sizes.x, sizes.y, sizes.z];
+            var lbb = chunkCoords * sizes;
+            foreach (var c in new Box3Int(Vector3Int.zero, sizes))
             {
-                grid[coords.x, coords.y, coords.z] = cube;
+                chunk[c.x, c.y, c.z] = new Cube(this, lbb + c);
             }
+            chunks.Add(chunkCoords, chunk);
         }
 
         public Grid(Vector3Int sizes)
         {
             this.sizes = sizes;
-            grid = new Cube[sizes.x, sizes.y, sizes.z];
+            chunks = new Dictionary<Vector3Int, Cube[,,]>();
+            /*grid = new Cube[sizes.x, sizes.y, sizes.z];
             foreach(var coords in new Box3Int(Vector3Int.zero, sizes))
             {
                 this[coords] = new Cube(this, coords);
-            }
+            }*/
             /*
             // Merge the same faces
             foreach (var coords in new Box3Int(Vector3Int.zero, sizes - Vector3Int.one))
@@ -233,9 +298,12 @@ namespace ShapeGrammar
 
         public IEnumerator<Cube> GetEnumerator()
         {
-            foreach (var cube in grid)
+            foreach (var chunk in chunks.Values)
             {
-                yield return cube;
+                foreach (var cube in chunk)
+                {
+                    yield return cube;
+                }
             }
         }
 
@@ -246,7 +314,7 @@ namespace ShapeGrammar
 
         public void Generate(float cubeSide, Transform parent)
         {
-            grid.ForEachNN(cube => cube.Generate(cubeSide, parent));
+            ((IEnumerable<Cube>)this).ForEach(cube => cube.Generate(cubeSide, parent));
         }
     }
 

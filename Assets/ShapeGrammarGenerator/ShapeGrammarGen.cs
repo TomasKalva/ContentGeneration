@@ -30,7 +30,7 @@ namespace ShapeGrammar
             return room;
         }
 
-        public CubeGroup Room(CubeGroup roomArea, ShapeGrammarStyle style)
+        public CubeGroup RoomStyle(CubeGroup roomArea, ShapeGrammarStyle style)
         {
             roomArea.AllBoundaryFacesH().SetStyle(style).Fill(FACE_HOR.Wall);
             roomArea.BoundaryFacesV(Vector3Int.down).SetStyle(style).Fill(FACE_VER.Floor);
@@ -38,20 +38,18 @@ namespace ShapeGrammar
             return roomArea;
         }
 
-        public CubeGroup FlatRoof(Box2Int areaXZ, int posY, ShapeGrammarStyle style)
+        public CubeGroup FlatRoofStyle(CubeGroup roofArea, ShapeGrammarStyle style)
         {
-            var box = areaXZ.InflateY(posY, posY + 1);
-            var room = QC.GetBox(box);
-            room.AllBoundaryFacesH().SetStyle(style).Fill(FACE_HOR.Railing);
-            room.BoundaryFacesV(Vector3Int.down).SetStyle(style).Fill(FACE_VER.Floor);
-            room.AllBoundaryCorners().SetStyle(style).Fill(CORNER.Pillar);
-            return room;
+            roofArea.AllBoundaryFacesH().SetStyle(style).Fill(FACE_HOR.Railing);
+            roofArea.BoundaryFacesV(Vector3Int.down).SetStyle(style).Fill(FACE_VER.Floor);
+            roofArea.AllBoundaryCorners().SetStyle(style).Fill(CORNER.Pillar);
+            return roofArea;
         }
 
         public CubeGroup House(Box2Int areaXZ, int posY, ShapeGrammarStyle style)
         {
             var room = Room(areaXZ.InflateY(posY, posY + 2), style);
-            var roof = FlatRoof(areaXZ, posY + 2, style);
+            var roof = FlatRoofStyle(QC.GetPlatform(areaXZ, posY + 2), style);
             var cubesBelowRoom = room.BoundaryFacesV(Vector3Int.down).Cubes().MoveBy(Vector3Int.down);
             var foundation = Foundation(cubesBelowRoom, style);
             return room;
@@ -59,7 +57,7 @@ namespace ShapeGrammar
 
         public CubeGroup Foundation(CubeGroup topLayer, ShapeGrammarStyle style)
         {
-            var foundationCubes = topLayer.MoveInDirUntil(Vector3Int.down, cube => cube == null);
+            var foundationCubes = topLayer.MoveInDirUntil(Vector3Int.down, cube => cube.Position.y < 0);
             foundationCubes.AllBoundaryFacesH().SetStyle(style).Fill(FACE_HOR.Wall);
             foundationCubes.AllBoundaryCorners().SetStyle(style).Fill(CORNER.Pillar);
             return foundationCubes;

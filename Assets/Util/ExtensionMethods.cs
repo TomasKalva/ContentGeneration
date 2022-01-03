@@ -275,6 +275,16 @@ static class ExtensionMethods
         return new Vector3Int(f(u.x, v.x), f(u.y, v.y), f(u.z, v.z));
     }
 
+    public static Vector3Int Div(this Vector3Int u, Vector3Int v)
+    {
+        return u.ComponentWise(v, (a, b) => a < 0 ? a / b - 1 : a / b);
+    }
+
+    public static Vector3Int Mod(this Vector3Int u, Vector3Int v)
+    {
+        return u.ComponentWise(v, (a, b) => a < 0 ? (a % b + b ) % b : a % b);
+    }
+
     static Dictionary<Vector3Int, string> directionNames;
 
     public static string Name(this Vector3Int direction)
