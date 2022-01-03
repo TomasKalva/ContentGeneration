@@ -14,7 +14,7 @@ namespace ShapeGrammar
         Transform parent;
 
         [SerializeField]
-        ShapeGrammarObjectStyle Style;
+        ShapeGrammarObjectStyle FountainheadStyle;
 
         private void Start()
         {
@@ -29,39 +29,25 @@ namespace ShapeGrammar
 
             var grid = new Grid(new Vector3Int(20, 10, 20));
 
-            /*var cube = grid[1, 1, 1];
-            var face = cube.FacesHor[Vector3Int.forward];
-            face.FaceType = FACE_HOR.Wall;
-            face.Style = Style;
-            cube.FacesHor[Vector3Int.forward] = face;
-            cube.Changed = true;
-            */
             var qc = new QueryContext(grid);
 
-            var sgStyles = new ShapeGrammarStyles(grid, qc, Style);
+            var sgStyles = new ShapeGrammarStyles(grid, qc, FountainheadStyle);
             var sgShapes = new ShapeGrammarShapes(grid, qc);
 
-            //shapeGrammar.Room(new Box3Int(new Vector3Int(1, 0, 1), new Vector3Int(3, 3, 4)), Style);
-            //shapeGrammar.Room(new Box3Int(new Vector3Int(3, 1, 1), new Vector3Int(6, 5, 4)), Style);
-            //shapeGrammar.Platform(new Box2Int(new Vector2Int(6, 5), new Vector2Int(8, 9)), 5, Style);
 
-            var (foundation, room, roof) = sgShapes.House(new Box2Int(new Vector2Int(-11, 2), new Vector2Int(8, 5)), 5);
+            //var island = sgShapes.IslandIrregular(Box2Int.AtWithSize(new Vector2Int(0, 0), new Vector2Int(20, 20)));
+            var island = ExtensionMethods.ApplyNTimes(cg => qc.ExtrudeRandomly(cg, 0.5f), grid[0, 0, 0].Group(), 10);
+            island.SetGrammarStyle(sgStyles.PlatformStyle);
+            //island.ExtrudeHor().BoundaryFacesV(Vector3Int.up).Extrude(2).SetGrammarStyle(sgStyles.RoomStyle);
+            var wallTop = island.ExtrudeHor().MoveBy(3 * Vector3Int.up).SetGrammarStyle(sgStyles.FlatRoofStyle);
+            sgShapes.Foundation(wallTop.MoveBy(Vector3Int.down)).SetGrammarStyle(sgStyles.FoundationStyle);
+            
+
+            /*var (foundation, room, roof) = sgShapes.House(new Box2Int(new Vector2Int(-11, 2), new Vector2Int(8, 5)), 5);
             foundation.SetGrammarStyle(sgStyles.FoundationStyle);
             room.SetGrammarStyle(sgStyles.RoomStyle);
             roof.SetGrammarStyle(sgStyles.FlatRoofStyle);
             sgShapes.BalconyWide(room).SetGrammarStyle(cg => sgStyles.BalconyStyle(cg, room));
-
-            //var boundingBox = new Box2Int(new Vector2Int(5, 5), new Vector2Int(15, 15)).InflateY(0, 1);
-            //var boundingCubes = qc.GetBox(boundingBox);
-            //var room = qc.GetRandomHorConnected(new Vector3Int(10, 0, 10), boundingCubes, 50);
-            //shapeGrammar.Room(room, Style);
-            //var rooms = qc.Partition(qc.GetRandomHorConnected1, boundingCubes, 4);
-            //rooms.ForEach(room => shapeGrammar.Room(room, Style));
-
-
-            /*room.AllBoundaryFacesH().Extrude(3).AllBoundaryFacesH().SetStyle(Style).Fill(FACE_HOR.Wall);
-            room.BoundaryFacesV(Vector3Int.up).Extrude(2).BoundaryFacesV(Vector3Int.down).SetStyle(Style).Fill(FACE_VER.Floor);
-            room.AllBoundaryCorners().Extrude(1).AllBoundaryFacesH().SetStyle(Style).Fill(FACE_HOR.Wall);
             */
 
             grid.Generate(2f, parent);
@@ -135,6 +121,15 @@ namespace ShapeGrammar
                 return new CubeGroup(QueriedGrid, start.Cubes.Append(newCube).ToList());
             }
 
+            public CubeGroup ExtrudeRandomly(CubeGroup start, float droppedRatio)
+            {
+                var possibleCubes = start.AllBoundaryFacesH().Extrude(1).Cubes;
+                if (possibleCubes.Count() == 0)
+                    return start;
+                var newCubes = possibleCubes.Shuffle().Take((int)(droppedRatio * possibleCubes.Count()));
+                return new CubeGroup(QueriedGrid, start.Cubes.Concat(newCubes).ToList());
+            }
+
             public List<CubeGroup> Partition(Func<CubeGroup, CubeGroup, CubeGroup> groupGrower, CubeGroup boundingGroup, int groupN)
             {
                 var groups = boundingGroup.Cubes
@@ -164,8 +159,6 @@ namespace ShapeGrammar
         }
 
         Vector3Int sizes;
-
-        //Cube[,,] grid;
 
         Dictionary<Vector3Int, Cube[,,]> chunks;
 

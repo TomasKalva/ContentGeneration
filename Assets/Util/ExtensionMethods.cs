@@ -285,6 +285,8 @@ static class ExtensionMethods
         return u.ComponentWise(v, (a, b) => a < 0 ? (a % b + b ) % b : a % b);
     }
 
+    public static T ApplyNTimes<T>(Func<T, T> f, T t, int n) => n == 0 ? t : ApplyNTimes(f, f(t), n - 1); 
+
     static Dictionary<Vector3Int, string> directionNames;
 
     public static string Name(this Vector3Int direction)

@@ -44,10 +44,19 @@ public struct Box3Int : IEnumerable<Vector3Int>
     public Box2Int FlattenY() => new Box2Int(leftBottomBack.XZ(), rightTopFront.XZ());
 
     public bool Contains(Vector3Int v) => v.AtLeast(leftBottomBack) && v.Less(rightTopFront);
+
+    public Vector3Int Center() => (leftBottomBack + rightTopFront) / 2;
 }
 
 public struct Box2Int : IEnumerable<Vector2Int>
 {
+    public static Box2Int AtWithSize(Vector2Int center, Vector2Int size)
+    {
+        var sizeHalf = size / 2;
+        var leftBottom = center - sizeHalf;
+        return new Box2Int(leftBottom, leftBottom + size);
+    }
+
     public Vector2Int leftBottom;
     public Vector2Int rightTop;
 
@@ -96,5 +105,12 @@ public struct Box2Int : IEnumerable<Vector2Int>
     public Box3Int InflateY(int y, int Y)
     {
         return new Box3Int(new Vector3Int(leftBottom.x, y, leftBottom.y), new Vector3Int(rightTop.x, Y, rightTop.y));
+    }
+
+    public Vector2Int Center() => (leftBottom + rightTop) / 2;
+    public int Volume()
+    {
+        var extents = Extents();
+        return extents.x * extents.y;
     }
 }

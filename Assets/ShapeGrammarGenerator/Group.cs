@@ -53,7 +53,7 @@ namespace ShapeGrammar
         {
             var faceCubes = AllBoundaryFacesH().Extrude(1).Cubes;
             var cornerCubes = AllBoundaryCorners().Extrude(1).Cubes;
-            return new CubeGroup(Grid, faceCubes.Concat(cornerCubes).ToList());
+            return new CubeGroup(Grid, faceCubes.Concat(cornerCubes).Except(Cubes).ToList());
         }
 
         public CubeGroup WithFloor() => Where(cube => cube.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor);
@@ -149,14 +149,18 @@ namespace ShapeGrammar
             return new CubeGroup(Grid, Facets.Select(face => face.MyCube).ToList());
         }
 
+        /// <summary>
+        /// Finishes after time invocations.
+        /// </summary>
+        Func<Cube, bool> CountdownMaker(int time)
+        {
+            var countdown = new Countdown(time);
+            return cube => countdown.Tick();
+        }
+
         public CubeGroup Extrude(int dist)
         {
-            Func<Func<Cube, bool>> countdownMaker = () =>
-            {
-                var countdown = new Countdown(dist);
-                return cube => countdown.Tick();
-            };
-            return new CubeGroup(Grid, Facets.SelectManyNN(face => face.OtherCube?.MoveInDirUntil(face.Direction, countdownMaker()))
+            return new CubeGroup(Grid, Facets.SelectManyNN(face => face.OtherCube?.MoveInDirUntil(face.Direction, CountdownMaker(dist)))
                 .ToList());
         }
 

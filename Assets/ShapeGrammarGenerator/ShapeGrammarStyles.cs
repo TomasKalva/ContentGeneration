@@ -53,7 +53,7 @@ namespace ShapeGrammar
             platformTop.BoundaryFacesV(Vector3Int.down).SetStyle(ObjectStyle).Fill(FACE_VER.Floor);
             platformTop.BoundaryCorners(ExtensionMethods.HorizontalDirections().ToArray())
                 .MoveBy(-Vector3Int.up)
-                .MoveInDirUntil(Vector3Int.down, corner => corner == null)
+                .MoveInDirUntil(Vector3Int.down, corner => corner.MyCube.Position.y < 0)
                 .SetStyle(ObjectStyle).Fill(CORNER.Pillar);
 
             return platformTop;

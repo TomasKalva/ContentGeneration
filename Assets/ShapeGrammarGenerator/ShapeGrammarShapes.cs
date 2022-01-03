@@ -59,5 +59,13 @@ namespace ShapeGrammar
 ;
             return balcony;
         }
+
+        public CubeGroup IslandIrregular(Box2Int boundingArea)
+        {
+            int cubesCount = boundingArea.Volume() / 2;
+            var boundingBox = boundingArea.InflateY(0, 1);
+            var cubeGroup = new CubeGroup(Grid, boundingBox.Select(coords => Grid[coords]).ToList());
+            return QC.GetRandomHorConnected(boundingBox.Center(), cubeGroup, cubesCount);
+        }
     }
 }
