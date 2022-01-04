@@ -37,7 +37,7 @@ namespace ShapeGrammar
 
         public CubeGroup Platform(Box2Int areaXZ, int posY) => QC.GetPlatform(areaXZ, posY);
 
-        public CubeGroup BalconyStyle(CubeGroup house)
+        public CubeGroup BalconyOne(CubeGroup house)
         {
             // Find a cube for the balcony
             var balcony = house.WithFloor()
@@ -66,6 +66,11 @@ namespace ShapeGrammar
             var boundingBox = boundingArea.InflateY(0, 1);
             var cubeGroup = new CubeGroup(Grid, boundingBox.Select(coords => Grid[coords]).ToList());
             return QC.GetRandomHorConnected(boundingBox.Center(), cubeGroup, cubesCount);
+        }
+
+        public CubeGroup IslandExtrudeIter(CubeGroup cubeGroup, int iterCount, float extrudeKeptRatio)
+        {
+            return ExtensionMethods.ApplyNTimes(cg => QC.ExtrudeRandomly(cg, extrudeKeptRatio), cubeGroup, iterCount);
         }
     }
 }

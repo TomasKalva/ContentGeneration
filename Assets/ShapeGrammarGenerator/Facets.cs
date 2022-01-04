@@ -156,6 +156,7 @@ namespace ShapeGrammar
     public enum CORNER
     {
         Nothing,
-        Pillar
+        Pillar,
+        RailingPillar
     }
 }

@@ -49,6 +49,11 @@ namespace ShapeGrammar
         public CubeGroup Where(Func<Cube, bool> pred) => new CubeGroup(Grid, Cubes.Where(pred).ToList());
         public CubeGroup Minus(CubeGroup group) => new CubeGroup(Grid, Cubes.Except(group.Cubes).ToList());
 
+        public IEnumerable<Vector3Int> MinkowskiMinus(CubeGroup grp) => 
+            from cube1 in Cubes 
+            from cube2 in grp.Cubes 
+            select Grid[cube1.Position - cube2.Position].Position;
+
         public CubeGroup ExtrudeHor()
         {
             var faceCubes = AllBoundaryFacesH().Extrude(1).Cubes;

@@ -37,7 +37,7 @@ namespace ShapeGrammar
         {
             roofArea.AllBoundaryFacesH().SetStyle(ObjectStyle).Fill(FACE_HOR.Railing);
             roofArea.BoundaryFacesV(Vector3Int.down).SetStyle(ObjectStyle).Fill(FACE_VER.Floor);
-            roofArea.AllBoundaryCorners().SetStyle(ObjectStyle).Fill(CORNER.Pillar);
+            roofArea.AllBoundaryCorners().SetStyle(ObjectStyle).Fill(CORNER.RailingPillar);
             return roofArea;
         }
 
@@ -76,11 +76,11 @@ namespace ShapeGrammar
             railingFaces
                .Corners()
                .SetStyle(ObjectStyle)
-               .Fill(CORNER.Pillar);
+               .Fill(CORNER.RailingPillar);
 
             // Door to house
             facesNearHouse
-               .Facets.GetRandom().Group()
+               .Facets.GetRandom()?.Group()
                .Fill(FACE_HOR.Door);
 
             return balcony;

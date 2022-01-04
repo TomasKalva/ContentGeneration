@@ -36,19 +36,28 @@ namespace ShapeGrammar
 
 
             //var island = sgShapes.IslandIrregular(Box2Int.AtWithSize(new Vector2Int(0, 0), new Vector2Int(20, 20)));
-            var island = ExtensionMethods.ApplyNTimes(cg => qc.ExtrudeRandomly(cg, 0.5f), grid[0, 0, 0].Group(), 10);
+            var island = sgShapes.IslandExtrudeIter(grid[0,0,0].Group(), 13, 0.3f);
             island.SetGrammarStyle(sgStyles.PlatformStyle);
-            //island.ExtrudeHor().BoundaryFacesV(Vector3Int.up).Extrude(2).SetGrammarStyle(sgStyles.RoomStyle);
-            var wallTop = island.ExtrudeHor().MoveBy(3 * Vector3Int.up).SetGrammarStyle(sgStyles.FlatRoofStyle);
-            sgShapes.Foundation(wallTop.MoveBy(Vector3Int.down)).SetGrammarStyle(sgStyles.FoundationStyle);
+            
+            
             
 
-            /*var (foundation, room, roof) = sgShapes.House(new Box2Int(new Vector2Int(-11, 2), new Vector2Int(8, 5)), 5);
+            var (foundation, room, roof) = sgShapes.House(new Box2Int(new Vector2Int(2, 2), new Vector2Int(8, 5)), 5);
+            var balcony = sgShapes.BalconyWide(room);
+
+            var houseBottom = foundation.CubesLayer(Vector3Int.down);
+            var houseToIslandDir = island.MinkowskiMinus(houseBottom).GetRandom();
+            foundation = foundation.MoveBy(houseToIslandDir);
+            room = room.MoveBy(houseToIslandDir);
+            roof = roof.MoveBy(houseToIslandDir);
+
+            var wallTop = island.ExtrudeHor().MoveBy(Vector3Int.up).SetGrammarStyle(sgStyles.FlatRoofStyle);
+            sgShapes.Foundation(wallTop.MoveBy(Vector3Int.down)).SetGrammarStyle(sgStyles.FoundationStyle);
+
             foundation.SetGrammarStyle(sgStyles.FoundationStyle);
             room.SetGrammarStyle(sgStyles.RoomStyle);
             roof.SetGrammarStyle(sgStyles.FlatRoofStyle);
-            sgShapes.BalconyWide(room).SetGrammarStyle(cg => sgStyles.BalconyStyle(cg, room));
-            */
+            balcony.SetGrammarStyle(cg => sgStyles.BalconyStyle(cg, room));
 
             grid.Generate(2f, parent);
         }
@@ -96,6 +105,13 @@ namespace ShapeGrammar
                 return foundationCubes;
             }
 
+            /*
+            public CubeGroup MoveNear(CubeGroup what, CubeGroup where)
+            {
+                var offset = where.MinkowskiMinus(what).Cubes.GetRandom().Position;
+                var movedWhat = what.MoveBy(offset);
+                return movedWhat;
+            }*/
 
             public CubeGroup GetRandomHorConnected(Vector3Int start, CubeGroup boundingGroup, int n)
             {
@@ -121,12 +137,12 @@ namespace ShapeGrammar
                 return new CubeGroup(QueriedGrid, start.Cubes.Append(newCube).ToList());
             }
 
-            public CubeGroup ExtrudeRandomly(CubeGroup start, float droppedRatio)
+            public CubeGroup ExtrudeRandomly(CubeGroup start, float keptRatio)
             {
                 var possibleCubes = start.AllBoundaryFacesH().Extrude(1).Cubes;
                 if (possibleCubes.Count() == 0)
                     return start;
-                var newCubes = possibleCubes.Shuffle().Take((int)(droppedRatio * possibleCubes.Count()));
+                var newCubes = possibleCubes.Shuffle().Take((int)(keptRatio * possibleCubes.Count()));
                 return new CubeGroup(QueriedGrid, start.Cubes.Concat(newCubes).ToList());
             }
 
