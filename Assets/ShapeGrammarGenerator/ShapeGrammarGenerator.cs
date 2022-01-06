@@ -16,7 +16,7 @@ namespace ShapeGrammar
         [SerializeField]
         ShapeGrammarObjectStyle FountainheadStyle;
 
-        private void Start()
+        /*private void Start()
         {
             // Keep scene view
             if (Application.isEditor)
@@ -60,11 +60,12 @@ namespace ShapeGrammar
             balcony.SetGrammarStyle(cg => sgStyles.BalconyStyle(cg, room));
 
             grid.Generate(2f, parent);
-        }
+        }*/
 
         public override void Generate(World world)
         {
-            //world.AddEnemy(enemies.sculpture, new Vector3(0, 0, -54));
+            //world.AddEnemy(libraries.Enemies.MayanSwordsman(), new Vector3(0, 1, 0));
+            world.AddEnemy(libraries.Enemies.SkinnyWoman(), new Vector3(0, 1, 0));
 
             Debug.Log("Generating world");
 

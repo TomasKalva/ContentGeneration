@@ -17,3 +17,4 @@ MonoBehaviour:
   sculpture: {fileID: 6671359765029590395, guid: c9ae56c9c05b7ce4db2044c4791e79cb, type: 3}
   blob: {fileID: 1277739329715723909, guid: 27e6970099e87fe4f9dfbd8ff2d06f76, type: 3}
   mayanPrefab: {fileID: 7465914728098359874, guid: 81f4580f812f8874c9b288f597380772, type: 3}
+  skinnyWomanPrefab: {fileID: 3008176056970571526, guid: 5091b19b86ceb4644984bab256948dce, type: 3}

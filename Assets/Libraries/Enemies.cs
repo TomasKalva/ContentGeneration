@@ -27,6 +27,7 @@ public class Enemies : ScriptableObject
     public SculptureAgent sculpture;
     public BlobAgent blob;
     public MayanAgent mayanPrefab;
+    public SkinnyWomanAgent skinnyWomanPrefab;
 
     void AddDefaultBehaviors(Behaviors behaviors)
     {
@@ -94,5 +95,33 @@ public class Enemies : ScriptableObject
         mayan.acting.MyReset();
 
         return mayan;
+    }
+
+    public Agent SkinnyWoman()
+    {
+        var skinnyWoman = Instantiate(skinnyWomanPrefab);
+        var character = skinnyWoman.CharacterState;
+
+        // properties
+        character.Health = 50f;
+        character.Will = 20f;
+        character.Posture = 10f;
+
+        // inventory
+        character.SetItemToSlot(SlotType.Active, new FreeWill());
+        character.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanSword());
+        character.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanSword());
+
+        // behaviors
+        var behaviors = skinnyWoman.Behaviors;
+        var controller = skinnyWoman.GetComponent<SkinnyWomanController>();
+
+        AddDefaultBehaviors(behaviors);
+
+        behaviors.AddBehavior(new DetectorBehavior(skinnyWoman.RushForward, controller.rushForwardDetector));
+
+        skinnyWoman.acting.MyReset();
+
+        return skinnyWoman;
     }
 }
