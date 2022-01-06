@@ -81,8 +81,8 @@ MonoBehaviour:
     _Clip: {fileID: -7722610376445220068, guid: 7beb9fa765a5ad34ca8650a306ad6d20, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  speed: 2.2
-  animMetersPerSecond: 3.2
+  speed: 1
+  animMetersPerSecond: 1.5
 --- !u!114 &5245136111020689032
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,7 +126,7 @@ MonoBehaviour:
   actName: Idle
   type: 0
   priority: -100
-  duration: 3
+  duration: 4
   cost: 0
   anim:
     _FadeDuration: 0.25
@@ -153,7 +153,7 @@ MonoBehaviour:
   actName: RushForward
   type: 2
   priority: 0
-  duration: 3
+  duration: 4
   cost: 5
   anim:
     _FadeDuration: 0.25
@@ -170,15 +170,15 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0.020833313
       value: 0
-      inSlope: 0.15585206
-      outSlope: 0.15585206
+      inSlope: 0
+      outSlope: 0
       tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.47499287
-      value: 0.07078171
+      time: 0.22082722
+      value: 0
       inSlope: 0.1886792
       outSlope: 0.1886792
       tangentMode: 0
@@ -186,8 +186,8 @@ MonoBehaviour:
       inWeight: 0.32608697
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.4958282
-      value: 14.186327
+      time: 0.24166256
+      value: 14.2924595
       inSlope: -38.590973
       outSlope: -38.590973
       tangentMode: 0
@@ -195,8 +195,8 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.41939268
     - serializedVersion: 3
-      time: 0.6102563
-      value: 0.045469403
+      time: 0.34775937
+      value: 0
       inSlope: -1.8123833
       outSlope: -1.8123833
       tangentMode: 0
@@ -218,8 +218,8 @@ MonoBehaviour:
   weaponSlots:
   - {fileID: 3700916034506211958}
   - {fileID: 5151155491971333745}
-  damageStartT: 0.5
-  damageEndT: 0.6
+  damageStartT: 0.22
+  damageEndT: 0.35
 --- !u!114 &6408259666256583763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -247,8 +247,8 @@ MonoBehaviour:
     _Clip: {fileID: -7722610376445220068, guid: 7beb9fa765a5ad34ca8650a306ad6d20, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  speed: 1.5
-  animMetersPerSecond: 3.2
+  speed: 1
+  animMetersPerSecond: 1
 --- !u!1 &5592726371195089901
 GameObject:
   m_ObjectHideFlags: 0
