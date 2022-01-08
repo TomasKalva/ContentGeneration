@@ -163,7 +163,7 @@ GameObject:
   - component: {fileID: 5245136111020689033}
   - component: {fileID: 7374007119138610343}
   - component: {fileID: 6408259666256583763}
-  - component: {fileID: 2569357736006574493}
+  - component: {fileID: 5988140770622481007}
   m_Layer: 10
   m_Name: ActContainer
   m_TagString: Untagged
@@ -380,7 +380,7 @@ MonoBehaviour:
     _NormalizedStartTime: 0
   speed: 1
   animMetersPerSecond: 1
---- !u!114 &2569357736006574493
+--- !u!114 &5988140770622481007
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -389,15 +389,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 5245136111020689035}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 351ea8ce974be344ca968c6609d7764b, type: 3}
+  m_Script: {fileID: 11500000, guid: 51e435f1173d00c48b031e42cf4e2807, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   detector: {fileID: 0}
-  actName: Cast
+  actName: CastFireball
   type: 2
-  priority: 0
+  priority: 1
   duration: 2.5
-  cost: 5
+  cost: 1
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -407,35 +407,10 @@ MonoBehaviour:
     _Clip: {fileID: 7623476096177806632, guid: 7beb9fa765a5ad34ca8650a306ad6d20, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  speedF:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  weaponSlots:
-  - {fileID: 3700916034506211958}
-  - {fileID: 5151155491971333745}
-  damageStartT: 0.43
-  damageEndT: 0.71
+  projectile: {fileID: 1623888701323414183, guid: 2ab9cf753a845844cada17e0a18afbe7, type: 3}
+  gun: {fileID: 3700916034506211953}
+  speed: 10
+  shootT: 0.6
 --- !u!1 &5592726371195089901
 GameObject:
   m_ObjectHideFlags: 0

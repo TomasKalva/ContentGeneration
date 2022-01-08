@@ -119,7 +119,7 @@ public class Enemies : ScriptableObject
         AddDefaultBehaviors(behaviors);
 
         behaviors.AddBehavior(new DetectorBehavior(skinnyWoman.RushForward, controller.rushForwardDetector));
-        behaviors.AddBehavior(new DetectorBehavior(skinnyWoman.Cast, controller.castDetector));
+        behaviors.AddBehavior(new DetectorBehavior(skinnyWoman.CastFireball, controller.castDetector));
 
         skinnyWoman.acting.MyReset();
 

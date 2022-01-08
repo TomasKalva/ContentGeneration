@@ -29,6 +29,7 @@ public class Items : ScriptableObject
 
     public ItemState SculptureClub() => new WeaponItem("Sculpture Club", "Made of idk stone", weapons.SculptureClub().transform);
     public ItemState MayanKnife() => new WeaponItem("Mayan Knife", "Every Mayan has one", weapons.MayanKnife().transform);
+    public ItemState Fireball() => new WeaponItem("Fireball", "It's a fireball", weapons.Fireball().transform);
     public ItemState MayanSword() => new WeaponItem("Mayan Sword", "Like a knife but bigger", weapons.MayanSword().transform);
     public ItemState Scythe() => new WeaponItem("Scythe", "Harvesting tool", weapons.Scythe().transform);
     public ItemState Mace() => new WeaponItem("Mace", "Mace", weapons.Mace().transform);

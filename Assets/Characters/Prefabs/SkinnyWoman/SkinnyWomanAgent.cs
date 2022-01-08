@@ -12,10 +12,9 @@ public class SkinnyWomanAgent : Agent
         return attack;
     }
 
-    public Act Cast()
+    public Act CastFireball()
     {
-        var attack = acting.SelectAct("Cast") as Attack;
-        attack.Direction = movement.AgentForward;
+        var attack = acting.SelectAct("CastFireball") as Shoot;
         return attack;
     }
 
