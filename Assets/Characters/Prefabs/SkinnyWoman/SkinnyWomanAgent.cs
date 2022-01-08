@@ -12,6 +12,13 @@ public class SkinnyWomanAgent : Agent
         return attack;
     }
 
+    public Act Cast()
+    {
+        var attack = acting.SelectAct("Cast") as Attack;
+        attack.Direction = movement.AgentForward;
+        return attack;
+    }
+
     public Act Enchant()
     {
         var attack = acting.SelectAct("Enchant") as Attack;
