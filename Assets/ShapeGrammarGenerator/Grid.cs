@@ -10,102 +10,6 @@ namespace ShapeGrammar
 {
     public class Grid : IEnumerable<Cube>
     {
-        public class QueryContext
-        {
-            Grid QueriedGrid { get; }
-
-            public QueryContext(Grid queriedGrid)
-            {
-                QueriedGrid = queriedGrid;
-            }
-
-            public CubeGroup GetBox(Box3Int box)
-            {
-                var cubes = box.Select(i => QueriedGrid[i]).ToList();
-                return new CubeGroup(QueriedGrid, AreaType.None, cubes);
-            }
-
-            public CubeGroup GetPlatform(Box2Int areaXZ, int posY)
-            {
-                var box = areaXZ.InflateY(posY, posY + 1);
-                return GetBox(box);
-            }
-
-            public CubeGroup MoveDownUntilGround(CubeGroup topLayer)
-            {
-                var foundationCubes = topLayer.MoveInDirUntil(Vector3Int.down, cube => cube.Position.y < 0);
-                return foundationCubes;
-            }
-
-            /*
-            public CubeGroup MoveNear(CubeGroup what, CubeGroup where)
-            {
-                var offset = where.MinkowskiMinus(what).Cubes.GetRandom().Position;
-                var movedWhat = what.MoveBy(offset);
-                return movedWhat;
-            }*/
-
-            public CubeGroup GetRandomHorConnected(Vector3Int start, CubeGroup boundingGroup, int n)
-            {
-                var grp = new CubeGroup(QueriedGrid, AreaType.None, new List<Cube>() { QueriedGrid[start] });
-                while (n > 0)
-                {
-                    var newGrp = GetRandomHorConnected1(grp, boundingGroup);
-                    if (newGrp.Cubes.Count == grp.Cubes.Count)
-                        return grp;
-
-                    grp = newGrp;
-                    n--;
-                }
-                return grp;
-            }
-
-            public CubeGroup GetRandomHorConnected1(CubeGroup start, CubeGroup boundingGroup)
-            {
-                var possibleCubes = start.AllBoundaryFacesH().Extrude(1).Cubes.Intersect(boundingGroup.Cubes);
-                if (possibleCubes.Count() == 0)
-                    return start;
-                var newCube = possibleCubes.GetRandom();
-                return new CubeGroup(QueriedGrid, AreaType.None, start.Cubes.Append(newCube).ToList());
-            }
-
-            public CubeGroup ExtrudeRandomly(CubeGroup start, float keptRatio)
-            {
-                var possibleCubes = start.AllBoundaryFacesH().Extrude(1).Cubes;
-                if (possibleCubes.Count() == 0)
-                    return start;
-                var newCubes = possibleCubes.Shuffle().Take((int)(keptRatio * possibleCubes.Count()));
-                return new CubeGroup(QueriedGrid, start.AreaType, start.Cubes.Concat(newCubes).ToList());
-            }
-
-            public List<CubeGroup> Partition(Func<CubeGroup, CubeGroup, CubeGroup> groupGrower, CubeGroup boundingGroup, int groupN)
-            {
-                var groups = boundingGroup.Cubes
-                    .Select(cube => cube.Position)
-                    .Shuffle()
-                    .Take(groupN)
-                    .Select(pos => new CubeGroup(QueriedGrid, AreaType.None, QueriedGrid[pos].Group(boundingGroup.AreaType).Cubes))
-                    .ToList();
-                var totalSize = 0;
-                boundingGroup = boundingGroup.Minus(new CubeGroup(QueriedGrid, AreaType.None, groups.SelectManyNN(grp => grp.Cubes).ToList()));
-                // Iterate until no group can be grown
-                while (groups.Select(grp => grp.Cubes.Count).Sum() > totalSize)
-                {
-                    totalSize = groups.Select(grp => grp.Cubes.Count).Sum();
-                    var newGroups = new List<CubeGroup>();
-                    // Update each group and remove newly added cube from bounding box
-                    foreach (var grp in groups)
-                    {
-                        var newGrp = groupGrower(grp, boundingGroup);
-                        boundingGroup = boundingGroup.Minus(newGrp);
-                        newGroups.Add(newGrp);
-                    }
-                    groups = newGroups;
-                }
-                return groups;
-            }
-        }
-
         Vector3Int sizes;
 
         Dictionary<Vector3Int, Cube[,,]> chunks;
@@ -175,6 +79,8 @@ namespace ShapeGrammar
             chunks = new Dictionary<Vector3Int, Cube[,,]>();
         }
 
+        public GridView View() => new GridView(this);
+
         public Box2Int Bottom()
         {
             return new Box2Int(Vector2Int.zero, sizes.XZ());
@@ -201,4 +107,132 @@ namespace ShapeGrammar
             ((IEnumerable<Cube>)this).ForEach(cube => cube.Generate(cubeSide, parent));
         }
     }
+
+    public class GridView
+    {
+        public Grid Grid { get; }
+        public bool CanSelectChanged { get; }
+
+        public GridView(Grid grid, bool canSelectChanged = true)
+        {
+            Grid = grid;
+            CanSelectChanged = canSelectChanged;
+        }
+
+        public Cube this[int x, int y, int z]
+        {
+            get => GetCube(new Vector3Int(x, y, z));
+        }
+
+        public Cube this[Vector3Int coords]
+        {
+            get => GetCube(coords);
+        }
+
+        Cube GetCube(Vector3Int coords)
+        {
+            var cube = Grid[coords];
+            if (cube.Changed && !CanSelectChanged)
+                return null;
+            else
+                return cube;
+        }
+    }
+
+    public class QueryContext
+    {
+        GridView QueriedGrid { get; }
+
+        public QueryContext(GridView queriedGrid)
+        {
+            QueriedGrid = queriedGrid;
+        }
+
+        public CubeGroup GetBox(Box3Int box)
+        {
+            var cubes = box.Select(i => QueriedGrid[i]).ToList();
+            return new CubeGroup(QueriedGrid, AreaType.None, cubes);
+        }
+
+        public CubeGroup GetPlatform(Box2Int areaXZ, int posY)
+        {
+            var box = areaXZ.InflateY(posY, posY + 1);
+            return GetBox(box);
+        }
+
+        public CubeGroup MoveDownUntilGround(CubeGroup topLayer)
+        {
+            var foundationCubes = topLayer.MoveInDirUntil(Vector3Int.down, cube => cube.Position.y < 0);
+            return foundationCubes;
+        }
+
+        /*
+        public CubeGroup MoveNear(CubeGroup what, CubeGroup where)
+        {
+            var offset = where.MinkowskiMinus(what).Cubes.GetRandom().Position;
+            var movedWhat = what.MoveBy(offset);
+            return movedWhat;
+        }*/
+
+        public CubeGroup GetRandomHorConnected(Vector3Int start, CubeGroup boundingGroup, int n)
+        {
+            var grp = new CubeGroup(QueriedGrid, AreaType.None, new List<Cube>() { QueriedGrid[start] });
+            while (n > 0)
+            {
+                var newGrp = GetRandomHorConnected1(grp, boundingGroup);
+                if (newGrp.Cubes.Count == grp.Cubes.Count)
+                    return grp;
+
+                grp = newGrp;
+                n--;
+            }
+            return grp;
+        }
+
+        public CubeGroup GetRandomHorConnected1(CubeGroup start, CubeGroup boundingGroup)
+        {
+            var possibleCubes = start.AllBoundaryFacesH().Extrude(1).Cubes.Intersect(boundingGroup.Cubes);
+            if (possibleCubes.Count() == 0)
+                return start;
+            var newCube = possibleCubes.GetRandom();
+            return new CubeGroup(QueriedGrid, AreaType.None, start.Cubes.Append(newCube).ToList());
+        }
+
+        public CubeGroup ExtrudeRandomly(CubeGroup start, float keptRatio)
+        {
+            var possibleCubes = start.AllBoundaryFacesH().Extrude(1).Cubes;
+            if (possibleCubes.Count() == 0)
+                return start;
+            var newCubes = possibleCubes.Shuffle().Take((int)(keptRatio * possibleCubes.Count()));
+            return new CubeGroup(QueriedGrid, start.AreaType, start.Cubes.Concat(newCubes).ToList());
+        }
+
+        public List<CubeGroup> Partition(Func<CubeGroup, CubeGroup, CubeGroup> groupGrower, CubeGroup boundingGroup, int groupN)
+        {
+            var groups = boundingGroup.Cubes
+                .Select(cube => cube.Position)
+                .Shuffle()
+                .Take(groupN)
+                .Select(pos => new CubeGroup(QueriedGrid, AreaType.None, QueriedGrid[pos].Group(boundingGroup.AreaType).Cubes))
+                .ToList();
+            var totalSize = 0;
+            boundingGroup = boundingGroup.Minus(new CubeGroup(QueriedGrid, AreaType.None, groups.SelectManyNN(grp => grp.Cubes).ToList()));
+            // Iterate until no group can be grown
+            while (groups.Select(grp => grp.Cubes.Count).Sum() > totalSize)
+            {
+                totalSize = groups.Select(grp => grp.Cubes.Count).Sum();
+                var newGroups = new List<CubeGroup>();
+                // Update each group and remove newly added cube from bounding box
+                foreach (var grp in groups)
+                {
+                    var newGrp = groupGrower(grp, boundingGroup);
+                    boundingGroup = boundingGroup.Minus(newGrp);
+                    newGroups.Add(newGrp);
+                }
+                groups = newGroups;
+            }
+            return groups;
+        }
+    }
+
 }

@@ -12,12 +12,12 @@ namespace ShapeGrammar
 
     public class Group
     {
-        public Grid Grid { get; }
+        public GridView GridView { get; }
         public AreaType AreaType { get; set; }
 
-        public Group(Grid grid, AreaType areaType)
+        public Group(GridView grid, AreaType areaType)
         {
-            Grid = grid;
+            GridView = grid;
             AreaType = areaType;
         }
     }
@@ -31,25 +31,24 @@ namespace ShapeGrammar
 
         public List<Cube> Cubes => Groups.SelectMany(g => g.Cubes).ToList();
 
-        public CubeGroupGroup(Grid grid, AreaType areaType, params CubeGroup[] groups) : base(grid, areaType)
+        public CubeGroupGroup(GridView grid, AreaType areaType, params CubeGroup[] groups) : base(grid, areaType)
         {
             Groups = groups.ToList();
         }
 
-        public CubeGroupGroup(Grid grid, AreaType areaType, List<CubeGroup> groups) : base(grid, areaType)
+        public CubeGroupGroup(GridView grid, AreaType areaType, List<CubeGroup> groups) : base(grid, areaType)
         {
             Groups = groups;
         }
 
+        public CubeGroupGroup WithAreaType(AreaType areaType) => new CubeGroupGroup(GridView, areaType, Groups.Where(g => g.AreaType == areaType).ToList());
 
-        public CubeGroupGroup WithAreaType(AreaType areaType) => new CubeGroupGroup(Grid, areaType, Groups.Where(g => g.AreaType == areaType).ToList());
-
-        public CubeGroupGroup Add(CubeGroup group) => new CubeGroupGroup(Grid, AreaType, Groups.Append(group).ToList());
+        public CubeGroupGroup Add(CubeGroup group) => new CubeGroupGroup(GridView, AreaType, Groups.Append(group).ToList());
 
         public CubeGroupGroup MoveBy(Vector3Int offset)
         {
             var movedGroups = Groups.Select(g => g.MoveBy(offset)).ToList();
-            return new CubeGroupGroup(Grid, AreaType, movedGroups);
+            return new CubeGroupGroup(GridView, AreaType, movedGroups);
         }
 
         public CubeGroupGroup SetAreaType(AreaType areaType)
@@ -70,7 +69,7 @@ namespace ShapeGrammar
             return this;
         }
 
-        public CubeGroup CubeGroup() => new CubeGroup(Grid, AreaType, Groups.SelectMany(g => g.Cubes).ToList());
+        public CubeGroup CubeGroup() => new CubeGroup(GridView, AreaType, Groups.SelectMany(g => g.Cubes).ToList());
     }
 
 
@@ -79,7 +78,7 @@ namespace ShapeGrammar
     {
         public virtual List<Cube> Cubes { get; }
 
-        public CubeGroup(Grid grid, AreaType areaType, List<Cube> cubes) : base(grid, areaType)
+        public CubeGroup(GridView grid, AreaType areaType, List<Cube> cubes) : base(grid, areaType)
         {
             Cubes = cubes;
         }
@@ -92,34 +91,34 @@ namespace ShapeGrammar
 
         public CubeGroup CubesLayer(Vector3Int dir)
         {
-            return new CubeGroup(Grid, AreaType, Cubes.Where(cube => !Cubes.Contains(Grid[cube.Position + dir])).ToList());
+            return new CubeGroup(GridView, AreaType, Cubes.Where(cube => !Cubes.Contains(GridView[cube.Position + dir])).ToList());
         }
 
         public CubeGroup MoveBy(Vector3Int offset)
         {
             var movedCubes = Cubes.SelectNN(cube => cube.MoveBy(offset));
-            return new CubeGroup(Grid, AreaType, movedCubes.ToList());
+            return new CubeGroup(GridView, AreaType, movedCubes.ToList());
         }
 
         public CubeGroup MoveInDirUntil(Vector3Int dir, Func<Cube, bool> stopPred)
         {
             var validCubes = Cubes.SelectMany(corner => corner.MoveInDirUntil(dir, stopPred));
-            return new CubeGroup(Grid, AreaType, validCubes.ToList());
+            return new CubeGroup(GridView, AreaType, validCubes.ToList());
         }
 
-        public CubeGroup Where(Func<Cube, bool> pred) => new CubeGroup(Grid, AreaType, Cubes.Where(pred).ToList());
-        public CubeGroup Minus(CubeGroup group) => new CubeGroup(Grid, AreaType, Cubes.Except(group.Cubes).ToList());
+        public CubeGroup Where(Func<Cube, bool> pred) => new CubeGroup(GridView, AreaType, Cubes.Where(pred).ToList());
+        public CubeGroup Minus(CubeGroup group) => new CubeGroup(GridView, AreaType, Cubes.Except(group.Cubes).ToList());
 
         public IEnumerable<Vector3Int> MinkowskiMinus(CubeGroup grp) => 
             (from cube1 in Cubes 
-            from cube2 in grp.Cubes 
-            select Grid[cube1.Position - cube2.Position].Position).Distinct();
+            from cube2 in grp.Cubes
+            select cube1.Position - cube2.Position).Distinct();
 
         public CubeGroup ExtrudeHor()
         {
             var faceCubes = AllBoundaryFacesH().Extrude(1).Cubes;
             var cornerCubes = AllBoundaryCorners().Extrude(1).Cubes;
-            return new CubeGroup(Grid, AreaType, faceCubes.Concat(cornerCubes).Except(Cubes).ToList());
+            return new CubeGroup(GridView, AreaType, faceCubes.Concat(cornerCubes).Except(Cubes).ToList());
         }
 
         public CubeGroup WithFloor() => Where(cube => cube.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor);
@@ -139,12 +138,12 @@ namespace ShapeGrammar
                 from horDir in horDirs
                 from cube in Cubes
                 select cube.FacesHor(horDir);
-            return new FaceHorGroup(Grid, faces.ToList());
+            return new FaceHorGroup(GridView, faces.ToList());
         }
 
         public FaceHorGroup BoundaryFacesH(params Vector3Int[] horDirs)
         {
-            return new FaceHorGroup(Grid, horDirs.Select(horDir => CubesLayer(horDir).FacesH(horDir)).SelectMany(i => i.Facets).ToList());
+            return new FaceHorGroup(GridView, horDirs.Select(horDir => CubesLayer(horDir).FacesH(horDir)).SelectMany(i => i.Facets).ToList());
         }
 
         public FaceHorGroup AllBoundaryFacesH()
@@ -161,12 +160,12 @@ namespace ShapeGrammar
                 from horDir in verDirs
                 from cube in Cubes
                 select cube.FacesVer(horDir);
-            return new FaceVerGroup(Grid, faces.ToList());
+            return new FaceVerGroup(GridView, faces.ToList());
         }
 
         public FaceVerGroup BoundaryFacesV(params Vector3Int[] verDirs)
         {
-            return new FaceVerGroup(Grid, verDirs.Select(verDir => CubesLayer(verDir).FacesV(verDir)).SelectMany(i => i.Facets).ToList());
+            return new FaceVerGroup(GridView, verDirs.Select(verDir => CubesLayer(verDir).FacesV(verDir)).SelectMany(i => i.Facets).ToList());
         }
 
         public FaceVerGroup AllBoundaryFacesV()
@@ -186,12 +185,12 @@ namespace ShapeGrammar
                 from cube in Cubes
                 select new { i0 = cube.Corners(horDir + orthDir), i1 = cube.Corners(horDir - orthDir) };
             var corners = cornerPairs.Select(twoCorners => twoCorners.i0).Concat(cornerPairs.Select(twoCorners => twoCorners.i1)).Distinct();
-            return new CornerGroup(Grid, corners.ToList());
+            return new CornerGroup(GridView, corners.ToList());
         }
 
         public CornerGroup BoundaryCorners(params Vector3Int[] horDirs)
         {
-            return new CornerGroup(Grid, horDirs.Select(verDir => CubesLayer(verDir).Corners(verDir)).SelectMany(i => i.Facets).ToList());
+            return new CornerGroup(GridView, horDirs.Select(verDir => CubesLayer(verDir).Corners(verDir)).SelectMany(i => i.Facets).ToList());
         }
 
         public CornerGroup AllBoundaryCorners()
@@ -206,14 +205,14 @@ namespace ShapeGrammar
     {
         public List<FacetT> Facets { get; }
 
-        public FacetGroup(Grid grid, List<FacetT> facets) : base(grid, AreaType.None)
+        public FacetGroup(GridView grid, List<FacetT> facets) : base(grid, AreaType.None)
         {
             Facets = facets;
         }
 
         public CubeGroup Cubes()
         {
-            return new CubeGroup(Grid, AreaType.None, Facets.Select(face => face.MyCube).ToList());
+            return new CubeGroup(GridView, AreaType.None, Facets.Select(face => face.MyCube).ToList());
         }
 
         /// <summary>
@@ -227,7 +226,7 @@ namespace ShapeGrammar
 
         public CubeGroup Extrude(int dist)
         {
-            return new CubeGroup(Grid, AreaType, Facets.SelectManyNN(face => face.OtherCube.MoveInDirUntil(face.Direction, CountdownMaker(dist)))
+            return new CubeGroup(GridView, AreaType, Facets.SelectManyNN(face => face.OtherCube?.MoveInDirUntil(face.Direction, CountdownMaker(dist)))
                 .ToList());
         }
 
@@ -239,7 +238,7 @@ namespace ShapeGrammar
 
     public class FaceHorGroup : FacetGroup<FaceHor>
     {
-        public FaceHorGroup(Grid grid, List<FaceHor> faces) : base(grid, faces)
+        public FaceHorGroup(GridView grid, List<FaceHor> faces) : base(grid, faces)
         {
         }
 
@@ -257,12 +256,12 @@ namespace ShapeGrammar
 
         public CornerGroup Corners()
         {
-            return new CornerGroup(Grid, Facets.SelectManyNN(faceHor => faceHor.Corners()).Distinct().ToList());
+            return new CornerGroup(GridView, Facets.SelectManyNN(faceHor => faceHor.Corners()).Distinct().ToList());
         }
 
-        public FaceHorGroup Where(Func<FaceHor, bool> pred) => new FaceHorGroup(Grid, Facets.Where(pred).ToList());
-        public FaceHorGroup Neighboring(CubeGroup cubeGroup) => new FaceHorGroup(Grid, NeighboringIE(cubeGroup).ToList());
-        public FaceHorGroup Minus(FaceHorGroup faceHorGroup) => new FaceHorGroup(Grid, Facets.Except(faceHorGroup.Facets).ToList());
+        public FaceHorGroup Where(Func<FaceHor, bool> pred) => new FaceHorGroup(GridView, Facets.Where(pred).ToList());
+        public FaceHorGroup Neighboring(CubeGroup cubeGroup) => new FaceHorGroup(GridView, NeighboringIE(cubeGroup).ToList());
+        public FaceHorGroup Minus(FaceHorGroup faceHorGroup) => new FaceHorGroup(GridView, Facets.Except(faceHorGroup.Facets).ToList());
     }
 
     class Countdown
@@ -284,7 +283,7 @@ namespace ShapeGrammar
 
     public class FaceVerGroup : FacetGroup<FaceVer>
     {
-        public FaceVerGroup(Grid grid, List<FaceVer> faces) : base(grid, faces)
+        public FaceVerGroup(GridView grid, List<FaceVer> faces) : base(grid, faces)
         {
         }
 
@@ -299,14 +298,14 @@ namespace ShapeGrammar
             Facets.ForEach(face => face.Style = style);
             return this;
         }
-        public FaceVerGroup Where(Func<FaceVer, bool> pred) => new FaceVerGroup(Grid, Facets.Where(pred).ToList());
-        public FaceVerGroup Neighboring(CubeGroup cubeGroup) => new FaceVerGroup(Grid, NeighboringIE(cubeGroup).ToList());
-        public FaceVerGroup Minus(FaceVerGroup faceVerGroup) => new FaceVerGroup(Grid, Facets.Except(faceVerGroup.Facets).ToList());
+        public FaceVerGroup Where(Func<FaceVer, bool> pred) => new FaceVerGroup(GridView, Facets.Where(pred).ToList());
+        public FaceVerGroup Neighboring(CubeGroup cubeGroup) => new FaceVerGroup(GridView, NeighboringIE(cubeGroup).ToList());
+        public FaceVerGroup Minus(FaceVerGroup faceVerGroup) => new FaceVerGroup(GridView, Facets.Except(faceVerGroup.Facets).ToList());
     }
 
     public class CornerGroup : FacetGroup<Corner>
     {
-        public CornerGroup(Grid grid, List<Corner> faces) : base(grid, faces)
+        public CornerGroup(GridView grid, List<Corner> faces) : base(grid, faces)
         {
         }
 
@@ -325,18 +324,18 @@ namespace ShapeGrammar
         public CornerGroup MoveBy(Vector3Int offset)
         {
             var movedCorners = Facets.SelectNN(corner => corner.MoveBy(offset));
-            return new CornerGroup(Grid, movedCorners.ToList());
+            return new CornerGroup(GridView, movedCorners.ToList());
         }
 
         public CornerGroup MoveInDirUntil(Vector3Int dir, Func<Corner, bool> stopPred)
         {
             var validCorners = Facets.SelectMany(corner => corner.MoveInDirUntil(dir, stopPred));
-            return new CornerGroup(Grid, validCorners.ToList());
+            return new CornerGroup(GridView, validCorners.ToList());
         }
 
-        public CornerGroup Where(Func<Corner, bool> pred) => new CornerGroup(Grid, Facets.Where(pred).ToList());
-        public CornerGroup Neighboring(CubeGroup cubeGroup) => new CornerGroup(Grid, NeighboringIE(cubeGroup).ToList());
-        public CornerGroup Minus(CornerGroup cornerGroup) => new CornerGroup(Grid, Facets.Except(cornerGroup.Facets).ToList());
+        public CornerGroup Where(Func<Corner, bool> pred) => new CornerGroup(GridView, Facets.Where(pred).ToList());
+        public CornerGroup Neighboring(CubeGroup cubeGroup) => new CornerGroup(GridView, NeighboringIE(cubeGroup).ToList());
+        public CornerGroup Minus(CornerGroup cornerGroup) => new CornerGroup(GridView, Facets.Except(cornerGroup.Facets).ToList());
     }
 
 }

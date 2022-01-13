@@ -90,6 +90,6 @@ namespace ShapeGrammar
 
         public bool In(CubeGroup cubeGroup) => cubeGroup.Cubes.Contains(this);
 
-        public CubeGroup Group(AreaType areaType) => new CubeGroup(Grid, areaType, new List<Cube>() { this });
+        public CubeGroup Group(AreaType areaType) => new CubeGroup(Grid.View(), areaType, new List<Cube>() { this });
     }
 }
