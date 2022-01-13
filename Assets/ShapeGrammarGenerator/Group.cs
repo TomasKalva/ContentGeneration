@@ -123,6 +123,19 @@ namespace ShapeGrammar
 
         public CubeGroup WithFloor() => Where(cube => cube.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor);
 
+        public CubeGroup Symmetrize(FaceHor faceHor)
+        {
+            // todo: what's wrong with this code???
+            var myCubePos = faceHor.MyCube.Position;
+            var dir = faceHor.OtherCube.Position - faceHor.MyCube.Position;
+            var absDir = dir.ComponentWise(Mathf.Abs);
+            Func<Vector3Int, Vector3Int> flipped =
+                faceHor.Direction.x == 0 ?
+                p => p + 2 * (myCubePos.z - p.z) * absDir + dir :
+                (Func < Vector3Int, Vector3Int > )(p => p + 2 * (myCubePos.x - p.x) * absDir + dir);
+            return new CubeGroup(Grid, AreaType, Cubes.Select(cube => Grid[flipped(cube.Position)]).ToList());
+        }
+
         public CubeGroup SetGrammarStyle(StyleSetter styleSetter)
         {
             styleSetter(this);

@@ -65,6 +65,9 @@ namespace ShapeGrammar
             // house 2
             var house2 = house.MoveBy(Vector3Int.right * 8).ApplyGrammarStyleRules(houseStyleRules);
 
+            var symmetryFace = house2.CubeGroup().BoundaryFacesH(Vector3Int.right).Facets.FirstOrDefault();
+            var house3 = house2.CubeGroup().Symmetrize(symmetryFace).SetGrammarStyle(sgStyles.RoomStyle);
+
             grid.Generate(2f, parent);
 
             stopwatch.Stop();
