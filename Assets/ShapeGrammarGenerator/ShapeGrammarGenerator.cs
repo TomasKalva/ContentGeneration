@@ -30,10 +30,9 @@ namespace ShapeGrammar
             Debug.Log("Generating world");
             
             var grid = new Grid(new Vector3Int(20, 10, 20));
-            var gridView = new GridView(grid);
 
-            var sgStyles = new ShapeGrammarStyles(gridView, FountainheadStyle);
-            var sgShapes = new ShapeGrammarShapes(gridView);
+            var sgStyles = new ShapeGrammarStyles(grid, FountainheadStyle);
+            var sgShapes = new ShapeGrammarShapes(grid);
             
             var houseStyleRules = new StyleRules(
                 new StyleRule(g => g.WithAreaType(AreaType.Room), g => g.SetGrammarStyle(sgStyles.RoomStyle)),
@@ -42,7 +41,7 @@ namespace ShapeGrammar
                 );
 
             // island
-            var island = sgShapes.CanSelectChanged(false).IslandExtrudeIter(grid[0,0,0].Group(AreaType.Garden), 1, 0.3f);
+            var island = sgShapes.IslandExtrudeIter(grid[0,0,0].Group(AreaType.Garden), 13, 0.3f);
             island.SetGrammarStyle(sgStyles.PlatformStyle);
             
             // house
@@ -55,7 +54,7 @@ namespace ShapeGrammar
             house.ApplyGrammarStyleRules(houseStyleRules);
 
             // wall
-            var wallTop = island.ExtrudeHor().MoveBy(Vector3Int.up).SetGrammarStyle(sgStyles.FlatRoofStyle);
+            var wallTop = island.ExtrudeHor(false).MoveBy(Vector3Int.up).SetGrammarStyle(sgStyles.FlatRoofStyle);
             sgShapes.Foundation(wallTop.MoveBy(Vector3Int.down)).SetGrammarStyle(sgStyles.FoundationStyle);
 
             // balcony

@@ -11,18 +11,13 @@ namespace ShapeGrammar
 
     public class ShapeGrammarShapes
     {
-        GridView GridView { get; }
+        Grid Grid { get; }
         QueryContext QC { get; }
 
-        public ShapeGrammarShapes(GridView gridView)
+        public ShapeGrammarShapes(Grid grid)
         {
-            GridView = gridView;
-            QC = new QueryContext(gridView);
-        }
-
-        public ShapeGrammarShapes CanSelectChanged(bool canSelectChanged)
-        {
-            return new ShapeGrammarShapes(new GridView(GridView.Grid, false));
+            Grid = grid;
+            QC = new QueryContext(grid);
         }
 
         public CubeGroup Room(Box3Int roomArea) => QC.GetBox(roomArea).SetAreaType(AreaType.Room);
@@ -35,7 +30,7 @@ namespace ShapeGrammar
             var roof = FlatRoof(areaXZ, posY + 2);
             var cubesBelowRoom = room.BoundaryFacesV(Vector3Int.down).Cubes().MoveBy(Vector3Int.down);
             var foundation = Foundation(cubesBelowRoom);
-            var house = new CubeGroupGroup(GridView, AreaType.House, foundation, room, roof);
+            var house = new CubeGroupGroup(Grid, AreaType.House, foundation, room, roof);
             return house;
         }
 
@@ -71,7 +66,7 @@ namespace ShapeGrammar
         {
             int cubesCount = boundingArea.Volume() / 2;
             var boundingBox = boundingArea.InflateY(0, 1);
-            var cubeGroup = new CubeGroup(GridView, AreaType.None, boundingBox.Select(coords => GridView[coords]).ToList());
+            var cubeGroup = new CubeGroup(Grid, AreaType.None, boundingBox.Select(coords => Grid[coords]).ToList());
             return QC.GetRandomHorConnected(boundingBox.Center(), cubeGroup, cubesCount);
         }
 

@@ -79,8 +79,6 @@ namespace ShapeGrammar
             chunks = new Dictionary<Vector3Int, Cube[,,]>();
         }
 
-        public GridView View() => new GridView(this);
-
         public Box2Int Bottom()
         {
             return new Box2Int(Vector2Int.zero, sizes.XZ());
@@ -107,13 +105,13 @@ namespace ShapeGrammar
             ((IEnumerable<Cube>)this).ForEach(cube => cube.Generate(cubeSide, parent));
         }
     }
-
-    public class GridView
+    /*
+    public class Grid
     {
         public Grid Grid { get; }
         public bool CanSelectChanged { get; }
 
-        public GridView(Grid grid, bool canSelectChanged = true)
+        public Grid(Grid grid, bool canSelectChanged = true)
         {
             Grid = grid;
             CanSelectChanged = canSelectChanged;
@@ -137,13 +135,13 @@ namespace ShapeGrammar
             else
                 return cube;
         }
-    }
+    }*/
 
     public class QueryContext
     {
-        GridView QueriedGrid { get; }
+        Grid QueriedGrid { get; }
 
-        public QueryContext(GridView queriedGrid)
+        public QueryContext(Grid queriedGrid)
         {
             QueriedGrid = queriedGrid;
         }

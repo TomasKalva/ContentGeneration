@@ -11,11 +11,11 @@ namespace ShapeGrammar
 {
     public class ShapeGrammarStyles
     {
-        GridView GridView { get; }
+        Grid GridView { get; }
         QueryContext QC { get; }
         ShapeGrammarObjectStyle ObjectStyle { get; }
 
-        public ShapeGrammarStyles(GridView gridView, ShapeGrammarObjectStyle objectStyle)
+        public ShapeGrammarStyles(Grid gridView, ShapeGrammarObjectStyle objectStyle)
         {
             GridView = gridView;
             QC = new QueryContext(GridView);

@@ -24,7 +24,7 @@ namespace ShapeGrammar
             return (FacetT)offsetCube?.Facets[Direction];
         }
 
-        public IEnumerable<FacetT> MoveInDirUntil<FacetT>(Vector3Int dir, Func<FacetT, bool> stopPred) where FacetT : Facet
+        public IEnumerable<FacetT> MoveInDirUntil<FacetT>(Grid gridView, Vector3Int dir, Func<FacetT, bool> stopPred) where FacetT : Facet
         {
             var validFacets = MyCube.MoveInDirUntil(dir, cube => stopPred((FacetT)cube.Facets[Direction])).Select(cube => (FacetT)cube.Facets[Direction]);
             return validFacets;
@@ -70,8 +70,8 @@ namespace ShapeGrammar
         }
 
         public FaceHor MoveBy(Vector3Int offset) => MoveBy<FaceHor>(offset);
-        public IEnumerable<FaceHor> MoveInDirUntil(Vector3Int dir, Func<FaceHor, bool> stopPred) => MoveInDirUntil<FaceHor>(dir, stopPred);
-        public FaceHorGroup Group() => new FaceHorGroup(MyCube.Grid.View(), new List<FaceHor>() { this });
+        public IEnumerable<FaceHor> MoveInDirUntil(Grid gridView, Vector3Int dir, Func<FaceHor, bool> stopPred) => MoveInDirUntil<FaceHor>(gridView, dir, stopPred);
+        public FaceHorGroup Group() => new FaceHorGroup(MyCube.Grid, new List<FaceHor>() { this });
     }
 
     public class FaceVer : Facet
@@ -101,8 +101,8 @@ namespace ShapeGrammar
         }
 
         public FaceVer MoveBy(Vector3Int offset) => MoveBy<FaceVer>(offset);
-        public IEnumerable<FaceVer> MoveInDirUntil(Vector3Int dir, Func<FaceVer, bool> stopPred) => MoveInDirUntil<FaceVer>(dir, stopPred);
-        public FaceVerGroup Group() => new FaceVerGroup(MyCube.Grid.View(), new List<FaceVer>() { this });
+        public IEnumerable<FaceVer> MoveInDirUntil(Grid gridView, Vector3Int dir, Func<FaceVer, bool> stopPred) => MoveInDirUntil<FaceVer>(gridView, dir, stopPred);
+        public FaceVerGroup Group() => new FaceVerGroup(MyCube.Grid, new List<FaceVer>() { this });
     }
 
     public class Corner : Facet
@@ -132,8 +132,8 @@ namespace ShapeGrammar
         }
 
         public Corner MoveBy(Vector3Int offset) => MoveBy<Corner>(offset);
-        public IEnumerable<Corner> MoveInDirUntil(Vector3Int dir, Func<Corner, bool> stopPred) => MoveInDirUntil<Corner>(dir, stopPred);
-        public CornerGroup Group() => new CornerGroup(MyCube.Grid.View(), new List<Corner>() { this });
+        public IEnumerable<Corner> MoveInDirUntil(Grid gridView, Vector3Int dir, Func<Corner, bool> stopPred) => MoveInDirUntil<Corner>(gridView, dir, stopPred);
+        public CornerGroup Group() => new CornerGroup(MyCube.Grid, new List<Corner>() { this });
     }
 
     public enum FACE_HOR
