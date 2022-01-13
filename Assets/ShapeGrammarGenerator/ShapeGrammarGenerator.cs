@@ -16,7 +16,7 @@ namespace ShapeGrammar
         [SerializeField]
         ShapeGrammarObjectStyle FountainheadStyle;
 
-        /*private void Start()
+        private void Start()
         {
             // Keep scene view
             if (Application.isEditor)
@@ -36,31 +36,29 @@ namespace ShapeGrammar
 
 
             //var island = sgShapes.IslandIrregular(Box2Int.AtWithSize(new Vector2Int(0, 0), new Vector2Int(20, 20)));
-            var island = sgShapes.IslandExtrudeIter(grid[0,0,0].Group(), 13, 0.3f);
+            var island = sgShapes.IslandExtrudeIter(grid[0,0,0].Group(AreaType.Garden), 13, 0.3f);
             island.SetGrammarStyle(sgStyles.PlatformStyle);
             
-            
-            
+            var house = sgShapes.House(new Box2Int(new Vector2Int(2, 2), new Vector2Int(8, 5)), 5);
 
-            var (foundation, room, roof) = sgShapes.House(new Box2Int(new Vector2Int(2, 2), new Vector2Int(8, 5)), 5);
-            var balcony = sgShapes.BalconyWide(room);
-
-            var houseBottom = foundation.CubesLayer(Vector3Int.down);
+            var houseBottom = house.WithAreaType(AreaType.Foundation).CubeGroup().CubesLayer(Vector3Int.down);
             var houseToIslandDir = island.MinkowskiMinus(houseBottom).GetRandom();
-            foundation = foundation.MoveBy(houseToIslandDir);
-            room = room.MoveBy(houseToIslandDir);
-            roof = roof.MoveBy(houseToIslandDir);
-
+            house = house.MoveBy(houseToIslandDir);
+            
             var wallTop = island.ExtrudeHor().MoveBy(Vector3Int.up).SetGrammarStyle(sgStyles.FlatRoofStyle);
             sgShapes.Foundation(wallTop.MoveBy(Vector3Int.down)).SetGrammarStyle(sgStyles.FoundationStyle);
 
-            foundation.SetGrammarStyle(sgStyles.FoundationStyle);
-            room.SetGrammarStyle(sgStyles.RoomStyle);
-            roof.SetGrammarStyle(sgStyles.FlatRoofStyle);
-            balcony.SetGrammarStyle(cg => sgStyles.BalconyStyle(cg, room));
+            house.WithAreaType(AreaType.Room).SetGrammarStyle(sgStyles.RoomStyle);
+            house.WithAreaType(AreaType.Roof).SetGrammarStyle(sgStyles.FlatRoofStyle);
+            house.WithAreaType(AreaType.Foundation).SetGrammarStyle(sgStyles.FoundationStyle);
+
+
+            var balcony = sgShapes.BalconyWide(house.WithAreaType(AreaType.Room).CubeGroup());
+            house = house.Add(balcony);
+            house.WithAreaType(AreaType.Balcony).SetGrammarStyle(cg => sgStyles.BalconyStyle(cg, house.WithAreaType(AreaType.Room).CubeGroup()));
 
             grid.Generate(2f, parent);
-        }*/
+        }
 
         public override void Generate(World world)
         {
@@ -91,7 +89,7 @@ namespace ShapeGrammar
             public CubeGroup GetBox(Box3Int box)
             {
                 var cubes = box.Select(i => QueriedGrid[i]).ToList();
-                return new CubeGroup(QueriedGrid, cubes);
+                return new CubeGroup(QueriedGrid, AreaType.None, cubes);
             }
 
             public CubeGroup GetPlatform(Box2Int areaXZ, int posY)
@@ -116,7 +114,7 @@ namespace ShapeGrammar
 
             public CubeGroup GetRandomHorConnected(Vector3Int start, CubeGroup boundingGroup, int n)
             {
-                var grp = new CubeGroup(QueriedGrid, new List<Cube>() { QueriedGrid[start] });
+                var grp = new CubeGroup(QueriedGrid, AreaType.None, new List<Cube>() { QueriedGrid[start] });
                 while (n > 0)
                 {
                     var newGrp = GetRandomHorConnected1(grp, boundingGroup);
@@ -135,7 +133,7 @@ namespace ShapeGrammar
                 if (possibleCubes.Count() == 0)
                     return start;
                 var newCube = possibleCubes.GetRandom();
-                return new CubeGroup(QueriedGrid, start.Cubes.Append(newCube).ToList());
+                return new CubeGroup(QueriedGrid, AreaType.None, start.Cubes.Append(newCube).ToList());
             }
 
             public CubeGroup ExtrudeRandomly(CubeGroup start, float keptRatio)
@@ -144,7 +142,7 @@ namespace ShapeGrammar
                 if (possibleCubes.Count() == 0)
                     return start;
                 var newCubes = possibleCubes.Shuffle().Take((int)(keptRatio * possibleCubes.Count()));
-                return new CubeGroup(QueriedGrid, start.Cubes.Concat(newCubes).ToList());
+                return new CubeGroup(QueriedGrid, start.AreaType, start.Cubes.Concat(newCubes).ToList());
             }
 
             public List<CubeGroup> Partition(Func<CubeGroup, CubeGroup, CubeGroup> groupGrower, CubeGroup boundingGroup, int groupN)
@@ -153,10 +151,10 @@ namespace ShapeGrammar
                     .Select(cube => cube.Position)
                     .Shuffle()
                     .Take(groupN)
-                    .Select(pos => new CubeGroup(QueriedGrid, QueriedGrid[pos].Group().Cubes))
+                    .Select(pos => new CubeGroup(QueriedGrid, AreaType.None, QueriedGrid[pos].Group(boundingGroup.AreaType).Cubes))
                     .ToList();
                 var totalSize = 0;
-                boundingGroup = boundingGroup.Minus(new CubeGroup(QueriedGrid, groups.SelectManyNN(grp => grp.Cubes).ToList()));
+                boundingGroup = boundingGroup.Minus(new CubeGroup(QueriedGrid, AreaType.None, groups.SelectManyNN(grp => grp.Cubes).ToList()));
                 // Iterate until no group can be grown
                 while (groups.Select(grp => grp.Cubes.Count).Sum() > totalSize)
                 {
@@ -381,6 +379,6 @@ namespace ShapeGrammar
 
         public bool In(CubeGroup cubeGroup) => cubeGroup.Cubes.Contains(this);
 
-        public CubeGroup Group() => new CubeGroup(Grid, new List<Cube>() { this });
+        public CubeGroup Group(AreaType areaType) => new CubeGroup(Grid, areaType, new List<Cube>() { this });
     }
 }
