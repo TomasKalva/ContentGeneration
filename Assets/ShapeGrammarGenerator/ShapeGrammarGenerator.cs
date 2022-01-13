@@ -34,28 +34,36 @@ namespace ShapeGrammar
             var sgStyles = new ShapeGrammarStyles(grid, qc, FountainheadStyle);
             var sgShapes = new ShapeGrammarShapes(grid, qc);
 
+            var houseStyleRules = new StyleRules(
+                new StyleRule(g => g.WithAreaType(AreaType.Room), g => g.SetGrammarStyle(sgStyles.RoomStyle)),
+                new StyleRule(g => g.WithAreaType(AreaType.Roof), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
+                new StyleRule(g => g.WithAreaType(AreaType.Foundation), g => g.SetGrammarStyle(sgStyles.FoundationStyle))
+                );
 
-            //var island = sgShapes.IslandIrregular(Box2Int.AtWithSize(new Vector2Int(0, 0), new Vector2Int(20, 20)));
+            // island
             var island = sgShapes.IslandExtrudeIter(grid[0,0,0].Group(AreaType.Garden), 13, 0.3f);
             island.SetGrammarStyle(sgStyles.PlatformStyle);
             
+            // house
             var house = sgShapes.House(new Box2Int(new Vector2Int(2, 2), new Vector2Int(8, 5)), 5);
 
             var houseBottom = house.WithAreaType(AreaType.Foundation).CubeGroup().CubesLayer(Vector3Int.down);
             var houseToIslandDir = island.MinkowskiMinus(houseBottom).GetRandom();
             house = house.MoveBy(houseToIslandDir);
-            
+
+            house.ApplyGrammarStyleRules(houseStyleRules);
+
+            // wall
             var wallTop = island.ExtrudeHor().MoveBy(Vector3Int.up).SetGrammarStyle(sgStyles.FlatRoofStyle);
             sgShapes.Foundation(wallTop.MoveBy(Vector3Int.down)).SetGrammarStyle(sgStyles.FoundationStyle);
 
-            house.WithAreaType(AreaType.Room).SetGrammarStyle(sgStyles.RoomStyle);
-            house.WithAreaType(AreaType.Roof).SetGrammarStyle(sgStyles.FlatRoofStyle);
-            house.WithAreaType(AreaType.Foundation).SetGrammarStyle(sgStyles.FoundationStyle);
-
-
+            // balcony
             var balcony = sgShapes.BalconyWide(house.WithAreaType(AreaType.Room).CubeGroup());
             house = house.Add(balcony);
             house.WithAreaType(AreaType.Balcony).SetGrammarStyle(cg => sgStyles.BalconyStyle(cg, house.WithAreaType(AreaType.Room).CubeGroup()));
+
+            // house 2
+            var house2 = house.MoveBy(Vector3Int.right * 8).ApplyGrammarStyleRules(houseStyleRules);
 
             grid.Generate(2f, parent);
         }
@@ -73,7 +81,34 @@ namespace ShapeGrammar
 
     }
 
+    public delegate CubeGroupGroup StyleSelector(CubeGroupGroup cubeGroupGroup);
 
+    public class StyleRule
+    {
+        public StyleSelector Selector { get; }
+        public StyleSetter Setter { get; }
+
+        public StyleRule(StyleSelector selector, StyleSetter setter)
+        {
+            Selector = selector;
+            Setter = setter;
+        }
+    }
+
+    public class StyleRules 
+    {
+        StyleRule[] rules;
+
+        public StyleRules(params StyleRule[] rules) 
+        {
+            this.rules = rules;
+        }
+
+        public void Apply(CubeGroupGroup cubeGroupGroup)
+        {
+            rules.ForEach(rule => rule.Selector(cubeGroupGroup).SetGrammarStyle(rule.Setter));
+        }
+    }
 
     public class Grid : IEnumerable<Cube>
     {

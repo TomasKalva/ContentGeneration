@@ -24,6 +24,7 @@ namespace ShapeGrammar
 
     public class AreaType
     {
+        public static AreaType WorldRoot { get; } = new AreaType("WorldRoot");
         public static AreaType None { get; } = new AreaType("None");
         public static AreaType Room { get; } = new AreaType("Room");
         public static AreaType Roof { get; } = new AreaType("Roof");
@@ -81,6 +82,12 @@ namespace ShapeGrammar
         public CubeGroupGroup SetGrammarStyle(StyleSetter styleSetter)
         {
             Groups.ForEach(g => styleSetter(g));
+            return this;
+        }
+
+        public CubeGroupGroup ApplyGrammarStyleRules(StyleRules styleRules) 
+        {
+            styleRules.Apply(this);
             return this;
         }
 
