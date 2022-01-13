@@ -22,27 +22,6 @@ namespace ShapeGrammar
         }
     }
 
-    public class AreaType
-    {
-        public static AreaType WorldRoot { get; } = new AreaType("WorldRoot");
-        public static AreaType None { get; } = new AreaType("None");
-        public static AreaType Room { get; } = new AreaType("Room");
-        public static AreaType Roof { get; } = new AreaType("Roof");
-        public static AreaType Foundation { get; } = new AreaType("Foundation");
-        public static AreaType Balcony { get; } = new AreaType("Balcony");
-        public static AreaType House { get; } = new AreaType("House");
-        public static AreaType WallTop { get; } = new AreaType("WallTop");
-        public static AreaType Wall { get; } = new AreaType("Wall");
-        public static AreaType Garden { get; } = new AreaType("Garden");
-
-        public string Name { get; }
-
-        private AreaType(string name)
-        {
-            Name = name;
-        }
-    }
-
     /// <summary>
     /// Disjoint union of cube groups.
     /// </summary>
@@ -148,6 +127,7 @@ namespace ShapeGrammar
         public CubeGroup SetGrammarStyle(StyleSetter styleSetter)
         {
             styleSetter(this);
+            Cubes.ForEach(cube => cube.Changed = true);
             return this;
         }
 
@@ -247,7 +227,7 @@ namespace ShapeGrammar
 
         public CubeGroup Extrude(int dist)
         {
-            return new CubeGroup(Grid, AreaType, Facets.SelectManyNN(face => face.OtherCube?.MoveInDirUntil(face.Direction, CountdownMaker(dist)))
+            return new CubeGroup(Grid, AreaType, Facets.SelectManyNN(face => face.OtherCube.MoveInDirUntil(face.Direction, CountdownMaker(dist)))
                 .ToList());
         }
 

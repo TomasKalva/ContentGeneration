@@ -30,7 +30,7 @@ namespace ShapeGrammar
             var roof = FlatRoof(areaXZ, posY + 2);
             var cubesBelowRoom = room.BoundaryFacesV(Vector3Int.down).Cubes().MoveBy(Vector3Int.down);
             var foundation = Foundation(cubesBelowRoom);
-            var house = new CubeGroupGroup(Grid, AreaType.House, foundation, room, roof);//.SetAreaType(AreaType.House);
+            var house = new CubeGroupGroup(Grid, AreaType.House, foundation, room, roof);
             return house;
         }
 

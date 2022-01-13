@@ -9,9 +9,6 @@ using static ShapeGrammar.Grid;
 
 namespace ShapeGrammar
 {
-
-    public delegate CubeGroup StyleSetter(CubeGroup cubeGroup);
-
     public class ShapeGrammarStyles
     {
         Grid Grid { get; }
