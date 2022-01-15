@@ -30,6 +30,7 @@ namespace ShapeGrammar
             Debug.Log("Generating world");
             
             var grid = new Grid(new Vector3Int(20, 10, 20));
+            var qc = new QueryContext(grid);
 
             var sgStyles = new ShapeGrammarStyles(grid, FountainheadStyle);
             var sgShapes = new ShapeGrammarShapes(grid);
@@ -40,6 +41,7 @@ namespace ShapeGrammar
                 new StyleRule(g => g.WithAreaType(AreaType.Foundation), g => g.SetGrammarStyle(sgStyles.FoundationStyle))
                 );
 
+            /*
             // island
             var island = sgShapes.IslandExtrudeIter(grid[0,0,0].Group(AreaType.Garden), 13, 0.3f);
             island.SetGrammarStyle(sgStyles.PlatformStyle);
@@ -65,8 +67,16 @@ namespace ShapeGrammar
             // house 2
             var house2 = house.MoveBy(Vector3Int.right * 8).ApplyGrammarStyleRules(houseStyleRules);
 
-            var symmetryFace = house2.CubeGroup().BoundaryFacesH(Vector3Int.right).Facets.FirstOrDefault();
+            var symmetryFace = house2.CubeGroup()
+                .CubesLayer(Vector3Int.back).Cubes.FirstOrDefault().Group(AreaType.None)
+                .MoveBy(Vector3Int.back)
+                .BoundaryFacesH(Vector3Int.back).Facets.FirstOrDefault();
             var house3 = house2.CubeGroup().Symmetrize(symmetryFace).SetGrammarStyle(sgStyles.RoomStyle);
+            */
+            var town = qc.GetOverlappingBoxes(new Box2Int(new Vector2Int(0, 0), new Vector2Int(15, 15)), 5);
+            town = qc.LiftRandomly(town, () => 2 + UnityEngine.Random.Range(1, 4));
+            town.Groups.ForEach(g => sgShapes.House(g, 2).ApplyGrammarStyleRules(houseStyleRules));
+            //town.SetGrammarStyle(sgStyles.RoomStyle);
 
             grid.Generate(2f, parent);
 
@@ -77,7 +87,7 @@ namespace ShapeGrammar
         public override void Generate(World world)
         {
             //world.AddEnemy(libraries.Enemies.MayanSwordsman(), new Vector3(0, 1, 0));
-            world.AddEnemy(libraries.Enemies.SkinnyWoman(), new Vector3(0, 1, 0));
+            world.AddEnemy(libraries.Enemies.DragonMan(), new Vector3(0, 1, 0));
 
             Debug.Log("Generating world");
 

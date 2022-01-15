@@ -121,11 +121,16 @@ namespace ShapeGrammar
             return new CubeGroup(Grid, AreaType, faceCubes.Concat(cornerCubes).Except(Cubes).ToList());
         }
 
+        public CubeGroup ExtrudeVer(Vector3Int dir, int dist, bool takeChanged = true)
+        {
+            var upCubes = BoundaryFacesV(dir).Extrude(dist, takeChanged).Cubes;
+            return new CubeGroup(Grid, AreaType, upCubes.ToList());
+        }
+
         public CubeGroup WithFloor() => Where(cube => cube.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor);
 
         public CubeGroup Symmetrize(FaceHor faceHor)
         {
-            // todo: what's wrong with this code???
             var myCubePos = faceHor.MyCube.Position;
             var dir = faceHor.OtherCube.Position - faceHor.MyCube.Position;
             var absDir = dir.ComponentWise(Mathf.Abs);

@@ -34,6 +34,15 @@ namespace ShapeGrammar
             return house;
         }
 
+        public CubeGroupGroup House(CubeGroup belowFirstFloor, int floorHeight)
+        {
+            var room = belowFirstFloor.ExtrudeVer(Vector3Int.up, floorHeight).SetAreaType(AreaType.Room);
+            var roof = room.ExtrudeVer(Vector3Int.up, 1).SetAreaType(AreaType.Roof);
+            var foundation = Foundation(belowFirstFloor);
+            var house = new CubeGroupGroup(Grid, AreaType.House, foundation, room, roof);
+            return house;
+        }
+
         public CubeGroup Foundation(CubeGroup foundationArea) => QC.MoveDownUntilGround(foundationArea).SetAreaType(AreaType.Foundation);
 
         public CubeGroup Platform(Box2Int areaXZ, int posY) => QC.GetPlatform(areaXZ, posY);

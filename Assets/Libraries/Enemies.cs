@@ -28,6 +28,7 @@ public class Enemies : ScriptableObject
     public BlobAgent blob;
     public MayanAgent mayanPrefab;
     public SkinnyWomanAgent skinnyWomanPrefab;
+    public DragonManAgent dragonManPrefab;
 
     void AddDefaultBehaviors(Behaviors behaviors)
     {
@@ -124,5 +125,34 @@ public class Enemies : ScriptableObject
         skinnyWoman.acting.MyReset();
 
         return skinnyWoman;
+    }
+
+    public Agent DragonMan()
+    {
+        var dragonMan = Instantiate(dragonManPrefab);
+        var character = dragonMan.CharacterState;
+
+        // properties
+        character.Health = 50f;
+        character.Will = 20f;
+        character.Posture = 10f;
+
+        // inventory
+        character.SetItemToSlot(SlotType.Active, new FreeWill());
+        character.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanSword());
+        character.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanSword());
+
+        // behaviors
+        var behaviors = dragonMan.Behaviors;
+        var controller = dragonMan.GetComponent<DragonManController>();
+
+        AddDefaultBehaviors(behaviors);
+
+        behaviors.AddBehavior(new DetectorBehavior(dragonMan.Slash, controller.slashDetector));
+        behaviors.AddBehavior(new DetectorBehavior(dragonMan.FlapWings, controller.castDetector));
+
+        dragonMan.acting.MyReset();
+
+        return dragonMan;
     }
 }

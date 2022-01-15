@@ -105,37 +105,6 @@ namespace ShapeGrammar
             ((IEnumerable<Cube>)this).ForEach(cube => cube.Generate(cubeSide, parent));
         }
     }
-    /*
-    public class Grid
-    {
-        public Grid Grid { get; }
-        public bool CanSelectChanged { get; }
-
-        public Grid(Grid grid, bool canSelectChanged = true)
-        {
-            Grid = grid;
-            CanSelectChanged = canSelectChanged;
-        }
-
-        public Cube this[int x, int y, int z]
-        {
-            get => GetCube(new Vector3Int(x, y, z));
-        }
-
-        public Cube this[Vector3Int coords]
-        {
-            get => GetCube(coords);
-        }
-
-        Cube GetCube(Vector3Int coords)
-        {
-            var cube = Grid[coords];
-            if (cube.Changed && !CanSelectChanged)
-                return null;
-            else
-                return cube;
-        }
-    }*/
 
     public class QueryContext
     {
@@ -150,6 +119,26 @@ namespace ShapeGrammar
         {
             var cubes = box.Select(i => QueriedGrid[i]).ToList();
             return new CubeGroup(QueriedGrid, AreaType.None, cubes);
+        }
+
+        public CubeGroupGroup GetOverlappingBoxes(Box2Int box, int boxesCount)
+        {
+            var smallBox = new Box2Int(box.leftBottom, box.leftBottom + (box.rightTop - box.leftBottom) / 4);
+            var randomBoundingBox = new Box2Int(new Vector2Int(-2, -2), new Vector2Int(2, 2));
+            var boxes = Enumerable.Range(0, boxesCount).Select(i => 
+            {
+                var b = smallBox.Border(ExtensionMethods.RandomBox(randomBoundingBox));
+                return GetBox((box.GetRandom() - b.Extents() + b).InflateY(0, 1));
+            });
+            var cubeGroup = new CubeGroupGroup(QueriedGrid, AreaType.None, Enumerable.Empty<CubeGroup>().ToList());
+            boxes.ForEach(g => cubeGroup = cubeGroup.Add(g.Minus(cubeGroup.CubeGroup())));
+            return cubeGroup;
+        }
+
+        public CubeGroupGroup LiftRandomly(CubeGroupGroup cgg, Func<int> liftingF)
+        {
+            var newGroups = cgg.Groups.Select(g => new CubeGroup(g.Grid, g.AreaType, g.MoveBy(Vector3Int.up * liftingF()).Cubes.ToList()));
+            return new CubeGroupGroup(cgg.Grid, cgg.AreaType, newGroups.ToList());
         }
 
         public CubeGroup GetPlatform(Box2Int areaXZ, int posY)
@@ -205,7 +194,7 @@ namespace ShapeGrammar
             return new CubeGroup(QueriedGrid, start.AreaType, start.Cubes.Concat(newCubes).ToList());
         }
 
-        public List<CubeGroup> Partition(Func<CubeGroup, CubeGroup, CubeGroup> groupGrower, CubeGroup boundingGroup, int groupN)
+        public CubeGroupGroup Partition(Func<CubeGroup, CubeGroup, CubeGroup> groupGrower, CubeGroup boundingGroup, int groupN)
         {
             var groups = boundingGroup.Cubes
                 .Select(cube => cube.Position)
@@ -229,7 +218,7 @@ namespace ShapeGrammar
                 }
                 groups = newGroups;
             }
-            return groups;
+            return new CubeGroupGroup(QueriedGrid, boundingGroup.AreaType, groups);
         }
     }
 

@@ -71,6 +71,11 @@ public struct Box2Int : IEnumerable<Vector2Int>
         return new Box2Int(leftBottom + border, rightTop - border);
     }
 
+    public Box2Int Border(Box2Int border)
+    {
+        return new Box2Int(leftBottom + border.leftBottom, rightTop + border.rightTop);
+    }
+
     public IEnumerator<Vector2Int> GetEnumerator()
     {
         for (int x = leftBottom.x; x < rightTop.x; x++)
@@ -113,4 +118,6 @@ public struct Box2Int : IEnumerable<Vector2Int>
         var extents = Extents();
         return extents.x * extents.y;
     }
+
+    public static Box2Int operator +(Vector2Int v, Box2Int b) => new Box2Int(b.leftBottom + v, b.rightTop + v);
 }
