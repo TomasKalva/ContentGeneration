@@ -11,6 +11,9 @@ public class DragonManController : EnemyController<DragonManAgent>
 	[SerializeField]
 	public ColliderDetector castDetector;
 
+	[SerializeField]
+	public ColliderDetector spitFireDetector;
+
 	private void Start()
 	{
 	}

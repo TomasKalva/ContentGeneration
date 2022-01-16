@@ -20,8 +20,7 @@ public class DragonManAgent : Agent
 
     public Act SpitFire()
     {
-        var attack = acting.SelectAct("SpitFire") as Attack;
-        attack.Direction = movement.AgentForward;
+        var attack = acting.SelectAct("SpitFire") as SpitFire;
         return attack;
     }
 }

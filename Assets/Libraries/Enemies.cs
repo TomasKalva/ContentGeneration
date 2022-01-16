@@ -150,6 +150,7 @@ public class Enemies : ScriptableObject
 
         behaviors.AddBehavior(new DetectorBehavior(dragonMan.Slash, controller.slashDetector));
         behaviors.AddBehavior(new DetectorBehavior(dragonMan.FlapWings, controller.castDetector));
+        behaviors.AddBehavior(new DetectorBehavior(dragonMan.SpitFire, controller.spitFireDetector));
 
         dragonMan.acting.MyReset();
 
