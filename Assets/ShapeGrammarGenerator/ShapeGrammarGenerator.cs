@@ -19,10 +19,10 @@ namespace ShapeGrammar
         private void Start()
         {
             // Keep scene view
-            if (Application.isEditor)
+            /*if (Application.isEditor)
             {
                 UnityEditor.SceneView.FocusWindowIfItsOpen(typeof(UnityEditor.SceneView));
-            }
+            }*/
 
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
@@ -87,7 +87,7 @@ namespace ShapeGrammar
         public override void Generate(World world)
         {
             //world.AddEnemy(libraries.Enemies.MayanSwordsman(), new Vector3(0, 1, 0));
-            world.AddEnemy(libraries.Enemies.DragonMan(), new Vector3(0, 1, 0));
+            world.AddEnemy(libraries.Enemies.SkinnyWoman(), new Vector3(0, 1, 0));
 
             Debug.Log("Generating world");
 

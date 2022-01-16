@@ -2530,23 +2530,23 @@
         <member name="F:Animancer.Editor.CompactUnitConversionCache.ConvertedSmallNegative">
             <summary>The value <c>-0</c> with the <see cref="F:Animancer.Editor.CompactUnitConversionCache.ApproximateSuffix"/>.</summary>
         </member>
-        <member name="F:Animancer.Editor.CompactUnitConversionCache.SuffixWidth">
+        <member name="F:Animancer.Editor.CompactUnitConversionCache._SuffixWidth">
             <summary>The pixel width of the <see cref="F:Animancer.Editor.CompactUnitConversionCache.Suffix"/> when drawn by <see cref="P:UnityEditor.EditorStyles.numberField"/>.</summary>
         </member>
         <member name="F:Animancer.Editor.CompactUnitConversionCache.Caches">
             <summary>The caches for each character count.</summary>
             <remarks><c>this[x]</c> is a cache that outputs strings with <c>x</c> characters.</remarks>
         </member>
-        <member name="F:Animancer.Editor.CompactUnitConversionCache.WidthCache">
+        <member name="F:Animancer.Editor.CompactUnitConversionCache._WidthCache">
             <summary>Strings mapped to the width they would require for a <see cref="P:UnityEditor.EditorStyles.numberField"/>.</summary>
         </member>
-        <member name="F:Animancer.Editor.CompactUnitConversionCache.FieldPadding">
+        <member name="F:Animancer.Editor.CompactUnitConversionCache._FieldPadding">
             <summary>Padding around the text in a <see cref="P:UnityEditor.EditorStyles.numberField"/>.</summary>
         </member>
-        <member name="F:Animancer.Editor.CompactUnitConversionCache.ApproximateSymbolWidth">
+        <member name="F:Animancer.Editor.CompactUnitConversionCache._ApproximateSymbolWidth">
             <summary>The pixel width of the <c>~</c> character when drawn by <see cref="P:UnityEditor.EditorStyles.numberField"/>.</summary>
         </member>
-        <member name="F:Animancer.Editor.CompactUnitConversionCache.DecimalSeparator">
+        <member name="F:Animancer.Editor.CompactUnitConversionCache._DecimalSeparator">
             <summary>The character(s) used to separate decimal values in the current OS language.</summary>
         </member>
         <member name="F:Animancer.Editor.CompactUnitConversionCache.SmallExponentialThreshold">
@@ -4362,9 +4362,7 @@
             <remarks>This indexer is identical to <see cref="M:Animancer.AnimancerLayer.GetChild(System.Int32)"/>.</remarks>
         </member>
         <member name="M:Animancer.AnimancerLayer.AddChild(Animancer.AnimancerState)">
-            <summary>
-            Adds a new port and uses <see cref="M:Animancer.AnimancerState.SetParent(Animancer.AnimancerNode,System.Int32)"/> to connect the `state` to it.
-            </summary>
+            <summary>Adds a new port and uses <see cref="M:Animancer.AnimancerState.SetParent(Animancer.AnimancerNode,System.Int32)"/> to connect the `state` to it.</summary>
         </member>
         <member name="M:Animancer.AnimancerLayer.OnAddChild(Animancer.AnimancerState)">
             <summary>Connects the `state` to this layer at its <see cref="P:Animancer.AnimancerNode.Index"/>.</summary>
@@ -4833,7 +4831,7 @@
             <summary>Flags this node as having a changed <see cref="P:Animancer.AnimancerNode.Weight"/> that needs to be applied next update.</summary>
         </member>
         <member name="M:Animancer.AnimancerNode.ApplyWeight">
-            <summary>[Internal]
+            <summary>
             Applies the <see cref="P:Animancer.AnimancerNode.Weight"/> to the connection between this node and its <see cref="P:Animancer.AnimancerNode.Parent"/>.
             </summary>
         </member>
@@ -5158,7 +5156,7 @@
             values so every connection change has a higher performance cost than with Humanoid Rigs which is generally
             more significant than the gains for having fewer playables connected at a time.
             <para></para>
-            The default is set by <see cref="M:Animancer.AnimancerPlayable.SetOutput(UnityEngine.Animator,Animancer.IAnimancerComponent)"/>.
+            The default is set by <see cref="M:Animancer.AnimancerPlayable.CreateOutput(UnityEngine.Animator,Animancer.IAnimancerComponent)"/>.
             </remarks>
             
             <example><code>
@@ -5193,11 +5191,14 @@
             <summary>
             Creates a new <see cref="T:UnityEngine.Playables.PlayableGraph"/> containing an <see cref="T:Animancer.AnimancerPlayable"/>.
             <para></para>
-            The caller is responsible for calling <see cref="M:Animancer.AnimancerPlayable.Destroy"/> on the returned object, except in Edit Mode
+            The caller is responsible for calling <see cref="M:Animancer.AnimancerPlayable.DestroyGraph"/> on the returned object, except in Edit Mode
             where it will be called automatically.
             <para></para>
             Consider calling <see cref="M:Animancer.AnimancerPlayable.SetNextGraphName(System.String)"/> before this method to give it a name.
             </summary>
+        </member>
+        <member name="M:Animancer.AnimancerPlayable.Create(UnityEngine.Playables.PlayableGraph)">
+            <summary>Creates an <see cref="T:Animancer.AnimancerPlayable"/> in an existing <see cref="T:UnityEngine.Playables.PlayableGraph"/>.</summary>
         </member>
         <member name="M:Animancer.AnimancerPlayable.OnPlayableCreate(UnityEngine.Playables.Playable)">
             <summary>[Internal] Called by Unity as it creates this <see cref="T:Animancer.AnimancerPlayable"/>.</summary>
@@ -5215,13 +5216,19 @@
         <member name="M:Animancer.AnimancerPlayable.ToString">
             <summary>[Editor-Only] Returns "AnimancerPlayable (Graph Name)".</summary>
         </member>
-        <member name="M:Animancer.AnimancerPlayable.SetOutput(Animancer.IAnimancerComponent)">
+        <member name="M:Animancer.AnimancerPlayable.TryGetOutput(UnityEngine.Playables.PlayableOutput@)">
+            <summary>
+            Outputs the <see cref="T:UnityEngine.Playables.PlayableOutput"/> connected to the <see cref="T:Animancer.AnimancerPlayable"/> and returns true
+            if it was found. Otherwise returns false.
+            </summary>
+        </member>
+        <member name="M:Animancer.AnimancerPlayable.CreateOutput(Animancer.IAnimancerComponent)">
             <summary>
             Plays this playable on the <see cref="P:Animancer.IAnimancerComponent.Animator"/> and sets the
             <see cref="P:Animancer.AnimancerPlayable.Component"/>.
             </summary>
         </member>
-        <member name="M:Animancer.AnimancerPlayable.SetOutput(UnityEngine.Animator,Animancer.IAnimancerComponent)">
+        <member name="M:Animancer.AnimancerPlayable.CreateOutput(UnityEngine.Animator,Animancer.IAnimancerComponent)">
             <summary>Plays this playable on the specified `animator` and sets the <see cref="P:Animancer.AnimancerPlayable.Component"/>.</summary>
         </member>
         <member name="M:Animancer.AnimancerPlayable.InsertOutputPlayable(UnityEngine.Playables.Playable)">
@@ -5239,12 +5246,22 @@
             </summary>
         </member>
         <member name="P:Animancer.AnimancerPlayable.IsValid">
+            <summary>Is this <see cref="T:Animancer.AnimancerPlayable"/> currently usable (not destroyed)?</summary>
+        </member>
+        <member name="M:Animancer.AnimancerPlayable.DestroyGraph">
+            <summary>Destroys the <see cref="P:Animancer.AnimancerPlayable.Graph"/>. This operation cannot be undone.</summary>
+        </member>
+        <member name="M:Animancer.AnimancerPlayable.DestroyOutput">
             <summary>
-            Returns true as long as the <see cref="T:UnityEngine.Playables.PlayableGraph"/> hasn't been destroyed (such as by <see cref="M:Animancer.AnimancerPlayable.Destroy"/>).
+            Destroys the <see cref="T:UnityEngine.Playables.PlayableOutput"/> connected to this <see cref="T:Animancer.AnimancerPlayable"/> and returns
+            true if it was found. Otherwise returns false.
             </summary>
         </member>
-        <member name="M:Animancer.AnimancerPlayable.Destroy">
-            <summary>Destroys the <see cref="T:UnityEngine.Playables.PlayableGraph"/>. This operation cannot be undone.</summary>
+        <member name="M:Animancer.AnimancerPlayable.DestroyPlayable">
+            <summary>
+            Destroys this <see cref="T:Animancer.AnimancerPlayable"/> and the <see cref="T:UnityEngine.Playables.PlayableOutput"/> connected to it (if
+            any). This operation cannot be undone.
+            </summary>
         </member>
         <member name="M:Animancer.AnimancerPlayable.OnPlayableDestroy(UnityEngine.Playables.Playable)">
             <summary>Cleans up the resources managed by this <see cref="T:Animancer.AnimancerPlayable"/>.</summary>
@@ -5373,6 +5390,12 @@
             </remarks>
             <exception cref="T:System.ArgumentNullException">The `key` is null.</exception>
         </member>
+        <member name="M:Animancer.AnimancerPlayable.GetLocalLayer(Animancer.AnimancerState)">
+            <summary>
+            Returns the <see cref="P:Animancer.AnimancerNode.Layer"/> if the <see cref="P:Animancer.AnimancerNode.Root"/> is this.
+            Otherwise returns the first layer in this graph.
+            </summary>
+        </member>
         <member name="M:Animancer.AnimancerPlayable.Stop(Animancer.IHasKey)">
             <summary>
             Gets the state registered with the <see cref="P:Animancer.IHasKey.Key"/>, stops and rewinds it to the start, then
@@ -5409,7 +5432,7 @@
             </summary>
         </member>
         <member name="M:Animancer.AnimancerPlayable.GetTotalWeight">
-            <summary>Calculates the total <see cref="P:Animancer.AnimancerNode.Weight"/> of all states in this playable.</summary>
+            <summary>Calculates the total <see cref="P:Animancer.AnimancerNode.Weight"/> of all states in all layers.</summary>
         </member>
         <member name="M:Animancer.AnimancerPlayable.GatherAnimationClips(System.Collections.Generic.ICollection{UnityEngine.AnimationClip})">
             <summary>[<see cref="T:Animancer.IAnimationClipCollection"/>] Gathers all the animations in all layers.</summary>
@@ -5639,8 +5662,23 @@
         <member name="F:Animancer.AnimancerPlayable.LayerList._Count">
             <summary>The number of layers that have actually been created.</summary>
         </member>
+        <member name="M:Animancer.AnimancerPlayable.LayerList.#ctor(Animancer.AnimancerPlayable)">
+            <summary>Creates a new <see cref="T:Animancer.AnimancerPlayable.LayerList"/>.</summary>
+        </member>
         <member name="M:Animancer.AnimancerPlayable.LayerList.#ctor(Animancer.AnimancerPlayable,UnityEngine.Playables.Playable@)">
-            <summary>[Internal] Creates a new <see cref="T:Animancer.AnimancerPlayable.LayerList"/>.</summary>
+            <summary>[Internal]
+            Creates a new <see cref="T:Animancer.AnimancerPlayable.LayerList"/> with an <see cref="T:UnityEngine.Animations.AnimationLayerMixerPlayable"/>.
+            </summary>
+        </member>
+        <member name="M:Animancer.AnimancerPlayable.LayerList.Activate(Animancer.AnimancerPlayable)">
+            <summary>[Pro-Only]
+            Sets the <see cref="P:Animancer.AnimancerPlayable.Layers"/> and assigns the main <see cref="T:UnityEngine.Playables.Playable"/> of this list.
+            </summary>
+        </member>
+        <member name="M:Animancer.AnimancerPlayable.LayerList.Activate(Animancer.AnimancerPlayable,UnityEngine.Playables.Playable)">
+            <summary>[Pro-Only]
+            Sets this list as the <see cref="P:Animancer.AnimancerPlayable.Layers"/> and the <see cref="T:UnityEngine.Playables.Playable"/> used to mix them.
+            </summary>
         </member>
         <member name="P:Animancer.AnimancerPlayable.LayerList.Count">
             <summary>[Pro-Only] The number of layers in this list.</summary>
@@ -5708,6 +5746,11 @@
         </member>
         <member name="P:Animancer.AnimancerPlayable.LayerList.Item(System.Int32)">
             <summary>Returns the layer at the specified index. If it didn't already exist, this method creates it.</summary>
+            <remarks>To only get an existing layer without creating new ones, use <see cref="M:Animancer.AnimancerPlayable.LayerList.GetLayer(System.Int32)"/> instead.</remarks>
+        </member>
+        <member name="M:Animancer.AnimancerPlayable.LayerList.GetLayer(System.Int32)">
+            <summary>Returns the layer at the specified index.</summary>
+            <remarks>To create a new layer if the target doesn't exist, use <see cref="P:Animancer.AnimancerPlayable.LayerList.Item(System.Int32)"/> instead.</remarks>
         </member>
         <member name="M:Animancer.AnimancerPlayable.LayerList.GetEnumerator">
             <summary>Returns an enumerator that will iterate through all layers.</summary>
@@ -5723,8 +5766,8 @@
         </member>
         <member name="M:Animancer.AnimancerPlayable.LayerList.IsAdditive(System.Int32)">
             <summary>[Pro-Only]
-            Checks whether the layer at the specified index is set to additive blending. Otherwise it will override any
-            earlier layers.
+            Is the layer at the specified index is set to additive blending?
+            Otherwise it will override lower layers.
             </summary>
         </member>
         <member name="M:Animancer.AnimancerPlayable.LayerList.SetAdditive(System.Int32,System.Boolean)">
@@ -5738,20 +5781,14 @@
             Sets an <see cref="T:UnityEngine.AvatarMask"/> to determine which bones the layer at the specified index will affect.
             </summary>
         </member>
-        <member name="M:Animancer.AnimancerPlayable.LayerList.SetName(System.Int32,System.String)">
-            <summary>[Editor-Conditional]
-            Sets the Inspector display name of the layer at the specified index. Note that layer names are Editor-Only
-            so any calls to this method will automatically be compiled out of runtime builds.
-            </summary>
+        <member name="M:Animancer.AnimancerPlayable.LayerList.SetDebugName(System.Int32,System.String)">
+            <summary>[Editor-Conditional] Sets the Inspector display name of the layer at the specified index.</summary>
         </member>
         <member name="P:Animancer.AnimancerPlayable.LayerList.AverageVelocity">
             <summary>
             The average velocity of the root motion of all currently playing animations, taking their current
             <see cref="P:Animancer.AnimancerNode.Weight"/> into account.
             </summary>
-        </member>
-        <member name="M:Animancer.AnimancerPlayable.LayerList.SetWeightlessChildrenConnected(System.Boolean)">
-            <summary>[Internal] Connects or disconnects all children from their parent <see cref="T:UnityEngine.Playables.Playable"/>.</summary>
         </member>
         <member name="T:Animancer.AnimancerPlayable.StateDictionary">
             <summary>A dictionary of <see cref="T:Animancer.AnimancerState"/>s mapped to their <see cref="P:Animancer.AnimancerState.Key"/>.</summary>
@@ -5902,15 +5939,16 @@
         <member name="M:Animancer.AnimancerPlayable.StateDictionary.GetClipMismatchError(System.Object,UnityEngine.AnimationClip,UnityEngine.AnimationClip)">
             <summary>Returns an error message explaining that a state already exists with the specified `key`.</summary>
         </member>
-        <member name="M:Animancer.AnimancerPlayable.StateDictionary.Register(System.Object,Animancer.AnimancerState)">
+        <member name="M:Animancer.AnimancerPlayable.StateDictionary.Register(Animancer.AnimancerState)">
             <summary>[Internal]
-            Registers the `state` in this dictionary so the `key` can be used to get it later on using
-            any of the lookup methods such as <see cref="P:Animancer.AnimancerPlayable.StateDictionary.Item(System.Object)"/>.
+            Registers the `state` in this dictionary so the <see cref="P:Animancer.AnimancerState.Key"/> can be used to get it
+            later on using any of the lookup methods such as <see cref="P:Animancer.AnimancerPlayable.StateDictionary.Item(System.Object)"/> or
+            <see cref="M:Animancer.AnimancerPlayable.StateDictionary.TryGet(System.Object,Animancer.AnimancerState@)"/>.
             </summary>
-            <remarks>The `key` can be <c>null</c>.</remarks>
+            <remarks>Does nothing if the <see cref="P:Animancer.AnimancerState.Key"/> is <c>null</c>.</remarks>
         </member>
         <member name="M:Animancer.AnimancerPlayable.StateDictionary.Unregister(Animancer.AnimancerState)">
-            <summary>[Internal] Removes the `state` from this dictionary (the opposite of <see cref="M:Animancer.AnimancerPlayable.StateDictionary.Register(System.Object,Animancer.AnimancerState)"/>).</summary>
+            <summary>[Internal] Removes the `state` from this dictionary (the opposite of <see cref="M:Animancer.AnimancerPlayable.StateDictionary.Register(Animancer.AnimancerState)"/>).</summary>
         </member>
         <member name="M:Animancer.AnimancerPlayable.StateDictionary.GetEnumerator">
             <summary>Returns an enumerator that will iterate through all registered states.</summary>
@@ -5960,12 +5998,6 @@
             <summary>
             Calls <see cref="M:Animancer.AnimancerPlayable.StateDictionary.Destroy(UnityEngine.AnimationClip)"/> on all states gathered by
             <see cref="M:Animancer.IAnimationClipCollection.GatherAnimationClips(System.Collections.Generic.ICollection{UnityEngine.AnimationClip})"/>.
-            </summary>
-        </member>
-        <member name="M:Animancer.AnimancerPlayable.StateDictionary.DestroyAll">
-            <summary>
-            Destroys all states connected to all layers (regardless of whether they are actually registered in this
-            dictionary).
             </summary>
         </member>
         <member name="P:Animancer.AnimancerPlayable.StateDictionary.Item(Animancer.AnimancerState)">
@@ -6478,6 +6510,9 @@
             a field for efficiency.
             </remarks>
         </member>
+        <member name="M:Animancer.AnimancerState.EventDispatcher.ShouldLogEndEventInterrupt">
+            <summary>Should <see cref="F:Animancer.OptionalWarning.EndEventInterrupt"/> be logged?</summary>
+        </member>
         <member name="M:Animancer.AnimancerState.EventDispatcher.OnTimeChanged">
             <summary>Notifies this dispatcher that the target's <see cref="P:Animancer.AnimancerState.Time"/> has changed.</summary>
         </member>
@@ -6940,7 +6975,7 @@
         <member name="M:Animancer.PlayableAssetState.SetBindings(UnityEngine.Object[])">
             <summary>Sets the <see cref="P:Animancer.PlayableAssetState.Bindings"/>.</summary>
         </member>
-        <member name="M:Animancer.PlayableAssetState.ShouldSkipBinding(UnityEngine.Playables.PlayableBinding,System.String@,System.Type@)">
+        <member name="M:Animancer.PlayableAssetState.GetBindingDetails(UnityEngine.Playables.PlayableBinding,System.String@,System.Type@,System.Boolean@)">
             <summary>Should the `binding` be skipped when determining how to map the <see cref="P:Animancer.PlayableAssetState.Bindings"/>?</summary>
         </member>
         <member name="M:Animancer.PlayableAssetState.Destroy">
@@ -7850,6 +7885,12 @@
             Ensures that only 0 time can be used (warn in Editor, enforce at Runtime).
             </summary>
         </member>
+        <member name="M:Animancer.Validate.LiteLayerListType(Animancer.AnimancerPlayable.LayerList)">
+            <summary>[Internal] [Lite-Only]
+            Ensures that only the inbuilt <see cref="T:Animancer.AnimancerPlayable.LayerList"/> can be used (warn in Editor,
+            enforce at Runtime).
+            </summary>
+        </member>
         <member name="M:Animancer.Validate.LiteNodeType(Animancer.AnimancerNode)">
             <summary>[Internal] [Lite-Only]
             Ensures that only inbuilt <see cref="T:Animancer.AnimancerNode"/> types can be used (warn in Editor, enforce at
@@ -8717,10 +8758,11 @@
             <see cref="T:UnityEngine.Animations.AnimationMixerPlayable"/>.
             </summary>
             <example><code>
+            AnimancerComponent animancer = ...;
             var job = new MyJob();// A struct that implements IAnimationJob.
-            var mixer = new WhateverMixerType();
+            var mixer = new WhateverMixerState();// e.g. LinearMixerState.
             mixer.CreatePlayable(animancer, job);
-            // Use mixer.Initialize and CreateState to make the children as normal.
+            // Use mixer.Initialize, CreateChild, and SetChild to configure the children as normal.
             </code>
             See also: <seealso cref="M:Animancer.MixerState.CreatePlayable``1(UnityEngine.Playables.Playable@,``0,System.Boolean)"/>
             </example>

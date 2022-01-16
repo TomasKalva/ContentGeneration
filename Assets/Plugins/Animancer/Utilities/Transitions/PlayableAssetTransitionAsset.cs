@@ -173,18 +173,29 @@ namespace Animancer
 
             /************************************************************************************************************************/
 
-            private static PlayableAsset _CurrentAsset;
+            private PlayableAsset _CurrentAsset;
+
+            /// <inheritdoc/>
+            protected override void DoMainPropertyGUI(Rect area, out Rect labelArea,
+                UnityEditor.SerializedProperty rootProperty, UnityEditor.SerializedProperty mainProperty)
+            {
+                _CurrentAsset = mainProperty.objectReferenceValue as PlayableAsset;
+                base.DoMainPropertyGUI(area, out labelArea, rootProperty, mainProperty);
+            }
+
+            /// <inheritdoc/>
+            public override void OnGUI(Rect area, UnityEditor.SerializedProperty property, GUIContent label)
+            {
+                base.OnGUI(area, property, label);
+                _CurrentAsset = null;
+            }
 
             /// <inheritdoc/>
             protected override void DoChildPropertyGUI(ref Rect area, UnityEditor.SerializedProperty rootProperty,
                 UnityEditor.SerializedProperty property, GUIContent label)
             {
                 var path = property.propertyPath;
-                if (path.EndsWith($".{nameof(_Asset)}"))
-                {
-                    _CurrentAsset = property.objectReferenceValue as PlayableAsset;
-                }
-                else if (path.EndsWith($".{nameof(_Bindings)}"))
+                if (path.EndsWith($".{nameof(_Bindings)}"))
                 {
                     IEnumerator<PlayableBinding> outputEnumerator;
                     var outputCount = 0;
@@ -197,7 +208,8 @@ namespace Animancer
 
                         while (outputEnumerator.MoveNext())
                         {
-                            if (PlayableAssetState.ShouldSkipBinding(outputEnumerator.Current, out _, out _))
+                            PlayableAssetState.GetBindingDetails(outputEnumerator.Current, out var _, out var _, out var isMarkers);
+                            if (isMarkers)
                                 continue;
 
                             if (outputCount == 0 && outputEnumerator.Current.outputTargetType == typeof(Animator))
@@ -248,7 +260,8 @@ namespace Animancer
                         if (outputEnumerator != null && outputEnumerator.MoveNext())
                         {
                             CheckIfSkip:
-                            if (PlayableAssetState.ShouldSkipBinding(outputEnumerator.Current, out var name, out var type))
+                            PlayableAssetState.GetBindingDetails(outputEnumerator.Current, out var name, out var type, out var isMarkers);
+                            if (isMarkers)
                             {
                                 outputEnumerator.MoveNext();
                                 goto CheckIfSkip;

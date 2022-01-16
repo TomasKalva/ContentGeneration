@@ -48,11 +48,12 @@ namespace Animancer
             get => _Animator;
             set
             {
-                // It doesn't seem to be possible to stop the old Animator from playing the graph.
-
                 _Animator = value;
                 if (IsPlayableInitialized)
-                    _Playable.SetOutput(value, this);
+                {
+                    _Playable.DestroyOutput();
+                    _Playable.CreateOutput(value, this);
+                }
             }
         }
 
@@ -157,7 +158,7 @@ namespace Animancer
             /// states referenced by other scripts will no longer be valid so they will need to be recreated if you
             /// want to use this object again.
             /// </summary>
-            /// <remarks>Calls <see cref="AnimancerPlayable.Destroy()"/>.</remarks>
+            /// <remarks>Calls <see cref="AnimancerPlayable.DestroyGraph()"/>.</remarks>
             Destroy,
         }
 
@@ -215,7 +216,7 @@ namespace Animancer
         /************************************************************************************************************************/
         #endregion
         /************************************************************************************************************************/
-        #region Initialisation
+        #region Initialization
         /************************************************************************************************************************/
 
 #if UNITY_EDITOR
@@ -282,7 +283,7 @@ namespace Animancer
                     break;
 
                 case DisableAction.Destroy:
-                    _Playable.Destroy();
+                    _Playable.DestroyGraph();
                     _Playable = null;
                     break;
 
@@ -299,42 +300,16 @@ namespace Animancer
             if (IsPlayableInitialized)
                 return;
 
-#if UNITY_ASSERTIONS
-#if UNITY_EDITOR
-            if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
-#endif
-            {
-                if (!gameObject.activeInHierarchy)
-                    OptionalWarning.CreateGraphWhileDisabled.Log($"An {nameof(AnimancerPlayable)} is being created for '{this}'" +
-                        $" which is attached to an inactive {nameof(GameObject)}." +
-                        $" If that object is never activated then Unity will not call {nameof(OnDestroy)}" +
-                        $" so {nameof(AnimancerPlayable)}.{nameof(AnimancerPlayable.Destroy)} will need to be called manually.", this);
-            }
-
-#if UNITY_EDITOR
-            if (OptionalWarning.CreateGraphDuringGuiEvent.IsEnabled())
-            {
-                var currentEvent = Event.current;
-                if (currentEvent != null && (currentEvent.type == EventType.Layout || currentEvent.type == EventType.Repaint))
-                    OptionalWarning.CreateGraphDuringGuiEvent.Log(
-                        $"Creating an {nameof(AnimancerPlayable)} during a {currentEvent.type} event is likely undesirable.", this);
-            }
-#endif
-#endif
-
             if (_Animator == null)
                 _Animator = GetComponent<Animator>();
 
 #if UNITY_ASSERTIONS
-            if (_Animator != null && _Animator.isHuman && _Animator.runtimeAnimatorController != null)
-                OptionalWarning.NativeControllerHumanoid.Log($"An Animator Controller is assigned to the" +
-                    $" {nameof(Animator)} component but the Rig is Humanoid so it can't be blended with Animancer." +
-                    $" See the documentation for more information: {Strings.DocsURLs.AnimatorControllersNative}", this);
+            ValidatePlayableInitialization();
 #endif
 
             AnimancerPlayable.SetNextGraphName(name + " (Animancer)");
             _Playable = AnimancerPlayable.Create();
-            _Playable.SetOutput(_Animator, this);
+            _Playable.CreateOutput(_Animator, this);
 
 #if UNITY_EDITOR
             if (_Animator != null)
@@ -344,13 +319,76 @@ namespace Animancer
 
         /************************************************************************************************************************/
 
+        /// <summary>Creates a new <see cref="AnimancerPlayable"/> in the specified `graph`.</summary>
+        /// <exception cref="InvalidOperationException">
+        /// The <see cref="AnimancerPlayable"/> is already initialized.
+        /// You must call <see cref="AnimancerPlayable.DestroyGraph"/> before re-initializing it.
+        /// </exception>
+        public void InitializePlayable(PlayableGraph graph)
+        {
+            if (IsPlayableInitialized)
+                throw new InvalidOperationException($"The {nameof(AnimancerPlayable)} is already initialized." +
+                    $" Either call this method before anything else uses it or call" +
+                    $" animancerComponent.{nameof(Playable)}.{nameof(AnimancerPlayable.DestroyGraph)} before re-initializing it.");
+
+            if (_Animator == null)
+                _Animator = GetComponent<Animator>();
+
+#if UNITY_ASSERTIONS
+            ValidatePlayableInitialization();
+#endif
+
+            _Playable = AnimancerPlayable.Create(graph);
+            _Playable.CreateOutput(_Animator, this);
+
+#if UNITY_EDITOR
+            if (_Animator != null)
+                InitialUpdateMode = UpdateMode;
+#endif
+        }
+
+        /************************************************************************************************************************/
+
+#if UNITY_ASSERTIONS
+        /// <summary>Validates various conditions relating to <see cref="AnimancerPlayable"/> initialization.</summary>
+        private void ValidatePlayableInitialization()
+        {
+#if UNITY_EDITOR
+            if (OptionalWarning.CreateGraphDuringGuiEvent.IsEnabled())
+            {
+                var currentEvent = Event.current;
+                if (currentEvent != null && (currentEvent.type == EventType.Layout || currentEvent.type == EventType.Repaint))
+                    OptionalWarning.CreateGraphDuringGuiEvent.Log(
+                        $"An {nameof(AnimancerPlayable)} is being created during a {currentEvent.type} event" +
+                        $" which is likely undesirable.", this);
+            }
+
+            if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
+#endif
+            {
+                if (!gameObject.activeInHierarchy)
+                    OptionalWarning.CreateGraphWhileDisabled.Log($"An {nameof(AnimancerPlayable)} is being created for '{this}'" +
+                        $" which is attached to an inactive {nameof(GameObject)}." +
+                        $" If that object is never activated then Unity will not call {nameof(OnDestroy)}" +
+                        $" so {nameof(AnimancerPlayable)}.{nameof(AnimancerPlayable.DestroyGraph)} will need to be called manually.", this);
+            }
+
+            if (_Animator != null && _Animator.isHuman && _Animator.runtimeAnimatorController != null)
+                OptionalWarning.NativeControllerHumanoid.Log($"An Animator Controller is assigned to the" +
+                    $" {nameof(Animator)} component but the Rig is Humanoid so it can't be blended with Animancer." +
+                    $" See the documentation for more information: {Strings.DocsURLs.AnimatorControllersNative}", this);
+        }
+#endif
+
+        /************************************************************************************************************************/
+
         /// <summary>Ensures that the <see cref="Playable"/> is properly cleaned up.</summary>
         /// <remarks>Called by Unity when this component is destroyed.</remarks>
         protected virtual void OnDestroy()
         {
             if (IsPlayableInitialized)
             {
-                _Playable.Destroy();
+                _Playable.DestroyGraph();
                 _Playable = null;
             }
         }
@@ -641,10 +679,8 @@ namespace Animancer
         /// <summary>Returns null.</summary>
         object IEnumerator.Current => null;
 
-#pragma warning disable UNT0006 // Incorrect message signature.
         /// <summary>Does nothing.</summary>
         void IEnumerator.Reset() { }
-#pragma warning restore UNT0006 // Incorrect message signature.
 
         /************************************************************************************************************************/
 

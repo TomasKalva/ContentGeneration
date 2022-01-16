@@ -23,7 +23,7 @@ namespace Animancer
     {
         /************************************************************************************************************************/
 
-        [SerializeField, HideInInspector]
+        [SerializeField]
         private TParameter[] _Thresholds;
 
         /// <summary>[<see cref="SerializeField"/>]
@@ -137,6 +137,32 @@ namespace Animancer
             if (CurrentSpeeds != null &&
                 CurrentSpeeds.arraySize != 0)
                 CurrentSpeeds.arraySize = count;
+        }
+
+        /************************************************************************************************************************/
+
+        /// <inheritdoc/>
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
+            var height = base.GetPropertyHeight(property, label);
+
+            if (property.isExpanded && CurrentThresholds != null)
+            {
+                height -= Editor.AnimancerGUI.StandardSpacing + EditorGUI.GetPropertyHeight(CurrentThresholds, label);
+            }
+
+            return height;
+        }
+
+        /************************************************************************************************************************/
+
+        /// <inheritdoc/>
+        protected override void DoChildPropertyGUI(ref Rect area, SerializedProperty rootProperty, SerializedProperty property, GUIContent label)
+        {
+            if (property.propertyPath.EndsWith($".{MixerTransition2D.ThresholdsField}"))
+                return;
+
+            base.DoChildPropertyGUI(ref area, rootProperty, property, label);
         }
 
         /************************************************************************************************************************/

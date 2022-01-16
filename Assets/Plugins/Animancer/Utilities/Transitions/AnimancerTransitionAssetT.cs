@@ -34,7 +34,7 @@ namespace Animancer
         [SerializeReference]
         private TTransition _Transition;
 
-        /// <summary>[<see cref="SerializeField"/>]
+        /// <summary>[<see cref="SerializeReference"/>]
         /// The <see cref="ITransition"/> wrapped by this <see cref="ScriptableObject"/>.
         /// </summary>
         /// <remarks>
