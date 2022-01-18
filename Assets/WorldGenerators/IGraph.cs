@@ -1,4 +1,5 @@
-﻿using SD.Tools.Algorithmia.PriorityQueues;
+﻿using PommaLabs.Hippie;
+using SD.Tools.Algorithmia.PriorityQueues;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -181,6 +182,36 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
             foreach (var neighborEdge in graph.EdgesFrom(edge.To))
             {
                 fringe.Push(neighborEdge);
+            }
+        }
+    }
+
+    public IEnumerable<EdgeT> EdgeAStar(VertexT start, Func<VertexT, VertexT, float> dist, Func<VertexT, float> distTo)
+    {
+        var found = new HashSet<VertexT>();
+        var distFrom = new Dictionary<VertexT, float>();
+        Func<EdgeT, float> edgeCost = e => distFrom[e.From] + dist(e.To, e.From) + distTo(e.To);
+        var fringe = HeapFactory.NewFibonacciHeap<EdgeT, float>();
+        distFrom.Add(start, 0f);
+        found.Add(start);
+
+        foreach (var edge in graph.EdgesFrom(start))
+        {
+            fringe.Add(edge, edgeCost(edge));
+        }
+        while (fringe.Any())
+        {
+            var edge = fringe.RemoveMin().Value;
+            if (found.Contains(edge.To))
+                continue;
+
+            distFrom.Add(edge.To, distFrom[edge.From] + dist(edge.From, edge.To));
+            yield return edge;
+
+            found.Add(edge.To);
+            foreach (var neighborEdge in graph.EdgesFrom(edge.To))
+            {
+                fringe.Add(neighborEdge, edgeCost(neighborEdge));
             }
         }
     }

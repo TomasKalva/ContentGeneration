@@ -86,6 +86,7 @@ namespace ShapeGrammar
             var path = sgShapes.ConnectByPath(start, end, box);
             path.SetGrammarStyle(sgStyles.FlatRoofStyle);
 
+
             grid.Generate(2f, parent);
 
             stopwatch.Stop();

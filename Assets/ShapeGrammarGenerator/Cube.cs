@@ -92,7 +92,7 @@ namespace ShapeGrammar
 
         public CubeGroup Group(AreaType areaType) => new CubeGroup(Grid, areaType, new List<Cube>() { this });
 
-        public IEnumerable<Cube> Neighbors()
+        public IEnumerable<Cube> NeighborsHor()
         {
             return ExtensionMethods.HorizontalDirections().Select(dir => Grid[Position + dir]);
         }
