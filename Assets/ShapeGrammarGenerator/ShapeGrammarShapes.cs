@@ -71,6 +71,16 @@ namespace ShapeGrammar
             return balcony;
         }
 
+        public CubeGroup ConnectByPath(CubeGroup cubeGroup1, CubeGroup cubeGroup2, CubeGroup pathBoundingBox)
+        {
+            // create graph for searching for the path
+            var graph = new ImplicitGraph<Cube>(cube => cube.Neighbors().Intersect(pathBoundingBox.Cubes));
+            var graphAlgs = new GraphAlgorithms<Cube, Edge<Cube>, ImplicitGraph<Cube>>(graph);
+
+            var path = graphAlgs.FindPath(cubeGroup1.Cubes.GetRandom(), cubeGroup2.Cubes);
+            return new CubeGroup(Grid, AreaType.Path, path.ToList());
+        }
+
         public CubeGroup IslandIrregular(Box2Int boundingArea)
         {
             int cubesCount = boundingArea.Volume() / 2;

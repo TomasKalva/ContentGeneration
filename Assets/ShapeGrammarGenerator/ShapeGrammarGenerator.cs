@@ -19,10 +19,10 @@ namespace ShapeGrammar
         private void Start()
         {
             // Keep scene view
-            /*if (Application.isEditor)
+            if (Application.isEditor)
             {
                 UnityEditor.SceneView.FocusWindowIfItsOpen(typeof(UnityEditor.SceneView));
-            }*/
+            }
 
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
@@ -40,8 +40,8 @@ namespace ShapeGrammar
                 new StyleRule(g => g.WithAreaType(AreaType.Roof), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Foundation), g => g.SetGrammarStyle(sgStyles.FoundationStyle))
                 );
-
             /*
+            
             // island
             var island = sgShapes.IslandExtrudeIter(grid[0,0,0].Group(AreaType.Garden), 13, 0.3f);
             island.SetGrammarStyle(sgStyles.PlatformStyle);
@@ -73,10 +73,18 @@ namespace ShapeGrammar
                 .BoundaryFacesH(Vector3Int.back).Facets.FirstOrDefault();
             var house3 = house2.CubeGroup().Symmetrize(symmetryFace).SetGrammarStyle(sgStyles.RoomStyle);
             */
-            var town = qc.GetOverlappingBoxes(new Box2Int(new Vector2Int(0, 0), new Vector2Int(15, 15)), 5);
+
+            /*var town = qc.GetOverlappingBoxes(new Box2Int(new Vector2Int(0, 0), new Vector2Int(15, 15)), 5);
             town = qc.LiftRandomly(town, () => 2 + UnityEngine.Random.Range(1, 4));
             town.Groups.ForEach(g => sgShapes.House(g, 2).ApplyGrammarStyleRules(houseStyleRules));
             //town.SetGrammarStyle(sgStyles.RoomStyle);
+            */
+
+            var box = sgShapes.Room(new Box3Int(new Vector3Int(0, 0, 0), new Vector3Int(10, 10, 10)));
+            var start = box.CubesLayer(Vector3Int.left);
+            var end = box.CubesLayer(Vector3Int.right);
+            var path = sgShapes.ConnectByPath(start, end, box);
+            path.SetGrammarStyle(sgStyles.FlatRoofStyle);
 
             grid.Generate(2f, parent);
 

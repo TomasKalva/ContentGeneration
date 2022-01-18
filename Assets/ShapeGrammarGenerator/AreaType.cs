@@ -18,6 +18,7 @@ namespace ShapeGrammar
         public static AreaType WallTop { get; } = new AreaType("WallTop");
         public static AreaType Wall { get; } = new AreaType("Wall");
         public static AreaType Garden { get; } = new AreaType("Garden");
+        public static AreaType Path { get; } = new AreaType("Path");
 
         public string Name { get; }
 

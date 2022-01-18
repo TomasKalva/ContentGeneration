@@ -185,6 +185,34 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
         }
     }
 
+    public IEnumerable<VertexT> FindPath(VertexT start, IEnumerable<VertexT> to)
+    {
+        var prev = new Dictionary<VertexT, VertexT>();
+        prev.Add(start, null);
+        var goal = new HashSet<VertexT>(to);
+        foreach(var edge in EdgeDFS(start))
+        {
+            if (prev.ContainsKey(edge.To))
+                continue;
+
+            prev.Add(edge.To, edge.From);
+            if (goal.Contains(edge.To))
+            {
+                // found the path
+                var path = new List<VertexT>();
+                var v = edge.To;
+                while(prev[v] != null)
+                {
+                    path.Add(v);
+                    v = prev[v];
+                }
+                path.Reverse();
+                return path;
+            }
+        }
+        return null;
+    }
+
     /// <summary>
     /// Has O(|V|^2) complpexity.
     /// </summary>
@@ -223,7 +251,7 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
         return infinity;
     }
 
-    public bool Path(VertexT from, VertexT to)
+    public bool PathExists(VertexT from, VertexT to)
     {
         return DFS(from).Contains(to);
     }
