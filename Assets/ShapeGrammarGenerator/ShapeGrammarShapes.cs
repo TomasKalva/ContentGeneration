@@ -77,9 +77,11 @@ namespace ShapeGrammar
             var graph = new ImplicitGraph<Cube>(cube => cube.NeighborsHor().Intersect(pathBoundingBox.Cubes));
             var graphAlgs = new GraphAlgorithms<Cube, Edge<Cube>, ImplicitGraph<Cube>>(graph);
 
-            //var path = graphAlgs.FindPath(cubeGroup1.Cubes.GetRandom(), cubeGroup2.Cubes);
-            var test = graphAlgs.EdgeAStar(cubeGroup1.Cubes.GetRandom(), (c0, c1) => (c0.Position - c1.Position).sqrMagnitude, _ => 0).Select(e => e.To);
-            return new CubeGroup(Grid, AreaType.Path, test.ToList());
+            var heuristicsV = cubeGroup2.Cubes.GetRandom();
+            var path = graphAlgs.FindPath(cubeGroup1.Cubes.GetRandom(), 
+                cubeGroup2.Cubes, (c0, c1) => (c0.Position - c1.Position).sqrMagnitude, 
+                c => (c.Position - heuristicsV.Position).Sum(x => Mathf.Abs(x)));
+            return new CubeGroup(Grid, AreaType.Path, path.ToList());
         }
 
         public CubeGroup IslandIrregular(Box2Int boundingArea)
