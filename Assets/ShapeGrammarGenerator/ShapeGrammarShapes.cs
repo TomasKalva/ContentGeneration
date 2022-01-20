@@ -74,14 +74,33 @@ namespace ShapeGrammar
         public CubeGroup ConnectByPath(CubeGroup cubeGroup1, CubeGroup cubeGroup2, CubeGroup pathBoundingBox)
         {
             // create graph for searching for the path
-            var graph = new ImplicitGraph<Cube>(cube => cube.NeighborsHor().Intersect(pathBoundingBox.Cubes));
-            var graphAlgs = new GraphAlgorithms<Cube, Edge<Cube>, ImplicitGraph<Cube>>(graph);
+            var graph = new ImplicitGraph<PathNode>(
+                pathNode => pathNode.cube.NeighborsHor().Intersect(pathBoundingBox.Cubes)
+                                .Select(c => new PathNode(pathNode.cube, c, Vector3Int.zero)));
+            var graphAlgs = new GraphAlgorithms<PathNode, Edge<PathNode>, ImplicitGraph<PathNode>>(graph);
+
+            var goal = new HashSet<Cube>(cubeGroup2.Cubes);
 
             var heuristicsV = cubeGroup2.Cubes.GetRandom();
-            var path = graphAlgs.FindPath(cubeGroup1.Cubes.GetRandom(), 
-                cubeGroup2.Cubes, (c0, c1) => (c0.Position - c1.Position).sqrMagnitude, 
-                c => (c.Position - heuristicsV.Position).Sum(x => Mathf.Abs(x)));
-            return new CubeGroup(Grid, AreaType.Path, path.ToList());
+            var path = graphAlgs.FindPath(cubeGroup1.Cubes.Select(c => new PathNode(null, c, Vector3Int.zero)).GetRandom(),
+                pn => goal.Contains(pn.cube),
+                (pn0, pn1) => (pn0.cube.Position - pn1.cube.Position).sqrMagnitude,
+                pn => (pn.cube.Position - heuristicsV.Position).Sum(x => Mathf.Abs(x)));
+            return new CubeGroup(Grid, AreaType.Path, path.Select(pn => pn.cube).ToList());
+        }
+
+        class PathNode
+        {
+            public Cube prev;
+            public Cube cube;
+            public Vector3Int enteringDirection;
+
+            public PathNode(Cube prev, Cube cube, Vector3Int enteringDirection)
+            {
+                this.prev = prev;
+                this.cube = cube;
+                this.enteringDirection = enteringDirection;
+            }
         }
 
         public CubeGroup IslandIrregular(Box2Int boundingArea)

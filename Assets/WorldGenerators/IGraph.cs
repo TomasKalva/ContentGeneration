@@ -216,18 +216,17 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
         }
     }
 
-    public IEnumerable<VertexT> FindPath(VertexT start, IEnumerable<VertexT> to, Func<VertexT, VertexT, float> dist, Func<VertexT, float> distToHeuristics)
+    public IEnumerable<VertexT> FindPath(VertexT start, Func<VertexT, bool> isGoal, Func<VertexT, VertexT, float> dist, Func<VertexT, float> distToHeuristics)
     {
         var prev = new Dictionary<VertexT, VertexT>();
         prev.Add(start, null);
-        var goal = new HashSet<VertexT>(to);
         foreach(var edge in EdgeAStar(start, dist, distToHeuristics))
         {
             if (prev.ContainsKey(edge.To))
                 continue;
 
             prev.Add(edge.To, edge.From);
-            if (goal.Contains(edge.To))
+            if (isGoal(edge.To))
             {
                 // found the path
                 var path = new List<VertexT>();

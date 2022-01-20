@@ -33,9 +33,8 @@ public class World : MonoBehaviour
         return InteractiveObjects.Where(o => (o.transform.position - point).sqrMagnitude <= dist * dist);
     }
 
-    public void AddEnemy(Agent enemyPrefab, Vector3 position)
+    public void AddEnemy(Agent enemy, Vector3 position)
     {
-        var enemy = Instantiate(enemyPrefab);
         enemy.transform.position = position;
         agents.Add(enemy);
     }

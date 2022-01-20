@@ -96,5 +96,9 @@ namespace ShapeGrammar
         {
             return ExtensionMethods.HorizontalDirections().Select(dir => Grid[Position + dir]);
         }
+        public IEnumerable<Cube> NeighborsVert()
+        {
+            return ExtensionMethods.VerticalDirections().Select(dir => Grid[Position + dir]); ;
+        }
     }
 }
