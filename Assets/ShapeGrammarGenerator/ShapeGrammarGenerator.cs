@@ -16,7 +16,7 @@ namespace ShapeGrammar
         [SerializeField]
         ShapeGrammarObjectStyle FountainheadStyle;
 
-        private void StartXXXXXXXXXXXXXXXXXXXXXXXXXXX()
+        private void Start()
         {
             // Keep scene view
             if (Application.isEditor)

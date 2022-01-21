@@ -186,9 +186,9 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
         }
     }
 
-    public IEnumerable<EdgeT> EdgeAStar(VertexT start, Func<VertexT, VertexT, float> dist, Func<VertexT, float> distTodistToHeuristics)
+    public IEnumerable<EdgeT> EdgeAStar(VertexT start, Func<VertexT, VertexT, float> dist, Func<VertexT, float> distTodistToHeuristics, IEqualityComparer<VertexT> comparer)
     {
-        var found = new HashSet<VertexT>();
+        var found = new HashSet<VertexT>(comparer);
         var distFrom = new Dictionary<VertexT, float>();
         Func<EdgeT, float> edgeCost = e => distFrom[e.From] + dist(e.To, e.From) + distTodistToHeuristics(e.To);
         var fringe = HeapFactory.NewFibonacciHeap<EdgeT, float>();
@@ -216,11 +216,11 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
         }
     }
 
-    public IEnumerable<VertexT> FindPath(VertexT start, Func<VertexT, bool> isGoal, Func<VertexT, VertexT, float> dist, Func<VertexT, float> distToHeuristics)
+    public IEnumerable<VertexT> FindPath(VertexT start, Func<VertexT, bool> isGoal, Func<VertexT, VertexT, float> dist, Func<VertexT, float> distToHeuristics, IEqualityComparer<VertexT> comparer)
     {
         var prev = new Dictionary<VertexT, VertexT>();
         prev.Add(start, null);
-        foreach(var edge in EdgeAStar(start, dist, distToHeuristics))
+        foreach(var edge in EdgeAStar(start, dist, distToHeuristics, comparer))
         {
             if (prev.ContainsKey(edge.To))
                 continue;

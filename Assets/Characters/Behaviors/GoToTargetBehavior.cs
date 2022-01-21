@@ -42,7 +42,7 @@ public class GoToTargetBehavior : Behavior
     {
         Vector3 direction = TargetPoint - agent.movement.transform.position;
         var moveDirection = new Vector2(direction.x, direction.z);
-        agent.Run(moveDirection); 
+        agent.Run(moveDirection);
 
         return !ShouldGoToTarget(agent);
     }
