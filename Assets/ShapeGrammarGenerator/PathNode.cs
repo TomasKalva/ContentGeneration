@@ -7,12 +7,6 @@ using UnityEngine;
 
 namespace ShapeGrammar
 {
-    /*class Path
-    {
-        List<Cube> 
-    }*/
-
-
     public class PathNode : IEqualityComparer<PathNode>
     {
         public static IEqualityComparer<PathNode> Comparer { get; } = new PathNode(null, null);
@@ -40,7 +34,15 @@ namespace ShapeGrammar
         {
             var horizontal = HorizontalNeighbors(pathBoundingBox);
             var vertical = VerticalNeighbors(pathBoundingBox);
-            return pathNode => pathNode.prevVerMove == 0 ? horizontal(pathNode).Concat(vertical(pathNode)) : DirectionNeighbors(pathBoundingBox, pathNode.lastHorMove.X0Z())(pathNode);
+            return pathNode =>
+            {
+                // return only horizontal directions for 1st node
+                return pathNode.prev != null ? 
+                            pathNode.prevVerMove == 0 ? 
+                                horizontal(pathNode).Concat(vertical(pathNode)) : 
+                                DirectionNeighbors(pathBoundingBox, pathNode.lastHorMove.X0Z())(pathNode) :
+                            horizontal(pathNode);
+            };
         }
         #endregion
 
@@ -59,7 +61,7 @@ namespace ShapeGrammar
             if (prev == null)
             {
                 lastHorMove = Vector2Int.zero;
-                prevVerMove = 1; // trick the stairs algorithm to start with vertical move
+                prevVerMove = 0;             
             }
             else
             {

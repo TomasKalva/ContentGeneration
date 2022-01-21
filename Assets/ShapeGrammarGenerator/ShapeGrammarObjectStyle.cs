@@ -34,6 +34,9 @@ public class ShapeGrammarObjectStyle : ScriptableObject
     ObjectStyle<CORNER>[] cornerObjectStyles;
 
     [SerializeField]
+    ObjectStyle<CUBE>[] cubeObjectStyles;
+
+    [SerializeField]
     ObjectStyle<CharacterType>[] characterStyles;
 
     public Transform GetObject<T>(ObjectStyle<T>[] objectStyles, Transform defaultT, T objectType)
@@ -58,6 +61,12 @@ public class ShapeGrammarObjectStyle : ScriptableObject
     public Transform GetCorner(CORNER objectType)
     {
         var obj = GetObject<CORNER>(cornerObjectStyles, notExistingObj, objectType);
+        return Instantiate(obj);
+    }
+
+    public Transform GetCube(CUBE objectType)
+    {
+        var obj = GetObject<CUBE>(cubeObjectStyles, notExistingObj, objectType);
         return Instantiate(obj);
     }
 

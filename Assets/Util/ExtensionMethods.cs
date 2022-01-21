@@ -208,6 +208,30 @@ static class ExtensionMethods
         }
     }
 
+    /// <summary>
+    /// Iterates over all interior elements and both their neighbors.
+    /// </summary>
+    public static void ForEach3<T>(this List<T> list, Action<T, T, T> action)
+    {
+        for(int i = 1; i < list.Count - 1; i++)
+        {
+            action(list[i - 1], list[i], list[i + 1]);
+        }
+    }
+
+    public static List<T> Select3<T>(this List<T> list, Func<T, T, T, bool> action)
+    {
+        var selected = new List<T>();
+        list.ForEach3((l, t, r) =>
+        { 
+            if (action(l, t, r))
+            {
+                selected.Add(t);
+            }
+        });
+        return selected;
+    }
+
     public static IEnumerable<U> SelectNN<T, U>(this IEnumerable<T> enumerable, Func<T, U> selector)
     {
         return enumerable.Select(selector).OfType<U>();

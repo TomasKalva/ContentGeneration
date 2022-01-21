@@ -107,6 +107,11 @@ namespace ShapeGrammar
         }
 
         public CubeGroup Where(Func<Cube, bool> pred) => new CubeGroup(Grid, AreaType, Cubes.Where(pred).ToList());
+        public CubeGroup Select3(Func<Cube, Cube, Cube, bool> pred) => new CubeGroup(Grid, AreaType, Cubes.Select3(pred).ToList());
+        /// <summary>
+        /// Includes first and last element.
+        /// </summary>
+        public CubeGroup Select3Incl(Func<Cube, Cube, Cube, bool> pred) => new CubeGroup(Grid, AreaType, Cubes.Select3(pred).Prepend(Cubes.FirstOrDefault()).Append(Cubes.LastOrDefault()).ToList());
         public CubeGroup Minus(CubeGroup group) => new CubeGroup(Grid, AreaType, Cubes.Except(group.Cubes).ToList());
 
         public IEnumerable<Vector3Int> MinkowskiMinus(CubeGroup grp) => 
@@ -283,6 +288,7 @@ namespace ShapeGrammar
         }
 
         public FaceHorGroup Where(Func<FaceHor, bool> pred) => new FaceHorGroup(Grid, Facets.Where(pred).ToList());
+        public FaceHorGroup Intersect(FaceHorGroup faceHGroup) => new FaceHorGroup(Grid, Facets.Intersect(faceHGroup.Facets).ToList());
         public FaceHorGroup Neighboring(CubeGroup cubeGroup) => new FaceHorGroup(Grid, NeighboringIE(cubeGroup).ToList());
         public FaceHorGroup Minus(FaceHorGroup faceHorGroup) => new FaceHorGroup(Grid, Facets.Except(faceHorGroup.Facets).ToList());
     }
@@ -322,6 +328,7 @@ namespace ShapeGrammar
             return this;
         }
         public FaceVerGroup Where(Func<FaceVer, bool> pred) => new FaceVerGroup(Grid, Facets.Where(pred).ToList());
+        public FaceVerGroup Intersect(FaceVerGroup faceVGroup) => new FaceVerGroup(Grid, Facets.Intersect(faceVGroup.Facets).ToList());
         public FaceVerGroup Neighboring(CubeGroup cubeGroup) => new FaceVerGroup(Grid, NeighboringIE(cubeGroup).ToList());
         public FaceVerGroup Minus(FaceVerGroup faceVerGroup) => new FaceVerGroup(Grid, Facets.Except(faceVerGroup.Facets).ToList());
     }
@@ -357,6 +364,7 @@ namespace ShapeGrammar
         }
 
         public CornerGroup Where(Func<Corner, bool> pred) => new CornerGroup(Grid, Facets.Where(pred).ToList());
+        public CornerGroup Intersect(CornerGroup cornerGroup) => new CornerGroup(Grid, Facets.Intersect(cornerGroup.Facets).ToList());
         public CornerGroup Neighboring(CubeGroup cubeGroup) => new CornerGroup(Grid, NeighboringIE(cubeGroup).ToList());
         public CornerGroup Minus(CornerGroup cornerGroup) => new CornerGroup(Grid, Facets.Except(cornerGroup.Facets).ToList());
     }

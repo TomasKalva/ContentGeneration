@@ -16,7 +16,10 @@ namespace ShapeGrammar
         public FaceHor FacesHor(Vector3Int dir) => Facets[dir] as FaceHor;
         public FaceVer FacesVer(Vector3Int dir) => Facets[dir] as FaceVer;
         public Corner Corners(Vector3Int dir) => Facets[dir] as Corner;
+        public CUBE Object;
+        public Vector3Int ObjectDir;
         public bool Changed { get; set; }
+        public ShapeGrammarObjectStyle Style { get; set; }
 
         public Cube(Grid grid, Vector3Int position)
         {
@@ -26,6 +29,7 @@ namespace ShapeGrammar
             SetHorizontalFaces(() => new FaceHor());
             SetVerticalFaces(() => new FaceVer());
             SetCorners(() => new Corner());
+            Object = CUBE.Nothing;
             Changed = false;
         }
 
@@ -70,10 +74,24 @@ namespace ShapeGrammar
             if (!Changed)
                 return;
 
+            GenerateObject(cubeSide, parent);
+
             foreach (var facet in Facets.Values)
             {
                 facet.Generate(cubeSide, parent, Position);
             }
+        }
+
+        public void GenerateObject(float cubeSide, Transform parent)
+        {
+            if (Style == null)
+                return;
+
+            var obj = Style.GetCube(Object);
+
+            obj.SetParent(parent);
+            obj.localPosition = ((Vector3)Position /*+ 0.5f * Vector3.down*//*+ 0.5f * new Vector3(1f, 0f, 1f)*/) * cubeSide;
+            obj.rotation = Quaternion.LookRotation(ObjectDir, Vector3.up);
         }
 
         public Cube MoveBy(Vector3Int offset)

@@ -82,5 +82,43 @@ namespace ShapeGrammar
 
             return balcony;
         }
+
+        public CubeGroup StairsPathStyle(CubeGroup path)
+        {
+            var hor = path.Select3Incl(
+                (prev, cube, next) => 
+                {
+                    var dirTo = cube.Position - prev.Position;
+                    var dirFrom = next.Position - cube.Position;
+                    if(dirTo.y == 0 && dirFrom.y == 0)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            );
+            hor.BoundaryFacesV(Vector3Int.down).SetStyle(ObjectStyle).Fill(FACE_VER.Floor);
+            hor.AllBoundaryFacesH().Intersect(path.AllBoundaryFacesH()).SetStyle(ObjectStyle).Fill(FACE_HOR.Railing);
+            hor.AllBoundaryCorners().Intersect(path.AllBoundaryCorners()).SetStyle(ObjectStyle).Fill(CORNER.RailingPillar);
+
+            path.Cubes.ForEach3(
+                (prev, cube, next) =>
+                {
+                    var dirTo = cube.Position - prev.Position;
+                    var dirFrom = next.Position - cube.Position;
+                    if (dirTo.y != 0)
+                    {
+                        var stairsCube = dirTo.y > 0 ? prev : cube;
+                        var stairsDirection = dirTo.y > 0 ? -dirFrom : dirFrom;
+
+                        stairsCube.Style = ObjectStyle;
+                        stairsCube.Object = CUBE.Stairs;
+                        stairsCube.ObjectDir = stairsDirection;
+                    }
+                }
+            );
+
+            return path;
+        }
     }
 }

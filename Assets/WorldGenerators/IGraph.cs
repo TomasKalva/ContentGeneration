@@ -236,6 +236,8 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
                     path.Add(v);
                     v = prev[v];
                 }
+                path.Add(v);
+
                 path.Reverse();
                 return path;
             }

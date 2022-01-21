@@ -23,6 +23,7 @@ namespace ShapeGrammar
             {
                 UnityEditor.SceneView.FocusWindowIfItsOpen(typeof(UnityEditor.SceneView));
             }
+            //UnityEngine.Random.InitState(11);
 
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
@@ -84,8 +85,7 @@ namespace ShapeGrammar
             var start = box.CubesLayer(Vector3Int.left);
             var end = box.CubesLayer(Vector3Int.right);
             var path = sgShapes.ConnectByPath(start, end, box);
-            path.SetGrammarStyle(sgStyles.FlatRoofStyle);
-
+            path.SetGrammarStyle(sgStyles.StairsPathStyle);
 
             grid.Generate(2f, parent);
 

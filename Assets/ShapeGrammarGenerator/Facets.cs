@@ -159,4 +159,10 @@ namespace ShapeGrammar
         Pillar,
         RailingPillar
     }
+
+    public enum CUBE
+    {
+        Nothing,
+        Stairs
+    }
 }
