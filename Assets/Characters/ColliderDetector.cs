@@ -14,6 +14,10 @@ public class ColliderDetector : MonoBehaviour
 
     public bool Show { get; set; }
 
+    public delegate void Collision(Collider other);
+
+    public event Collision OnEnter = delegate { };
+
     private void Start()
     {
         var renderer = GetComponent<Renderer>();
@@ -45,6 +49,7 @@ public class ColliderDetector : MonoBehaviour
     {
         if (detectionMask == (detectionMask | (1 << other.gameObject.layer)))
         {
+            OnEnter(other);
             this.other = other;
         }
     }

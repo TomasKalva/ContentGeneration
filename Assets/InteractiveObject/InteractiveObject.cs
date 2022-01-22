@@ -23,7 +23,7 @@ public class InteractiveObject : MonoBehaviour
 
     protected virtual void Initialize() { }
 
-    public virtual void Interact(Agent agent)
+    public void Interact(Agent agent)
     {
         GameViewModel.ViewModel.Message = state.MessageOnInteract;
         InteractLogic(agent);
