@@ -74,7 +74,7 @@ namespace ShapeGrammar
         public CubeGroup ConnectByPath(CubeGroup cubeGroup1, CubeGroup cubeGroup2, CubeGroup pathBoundingBox)
         {
             // create graph for searching for the path
-            var graph = new ImplicitGraph<PathNode>(PathNode.StairsNeighbors(pathBoundingBox));
+            var graph = new ImplicitGraph<PathNode>(PathNode.NotRepeatingCubes(PathNode.StairsNeighbors(pathBoundingBox)));
             var graphAlgs = new GraphAlgorithms<PathNode, Edge<PathNode>, ImplicitGraph<PathNode>>(graph);
 
             var goal = new HashSet<Cube>(cubeGroup2.Cubes);

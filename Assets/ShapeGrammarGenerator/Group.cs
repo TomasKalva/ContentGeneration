@@ -70,6 +70,7 @@ namespace ShapeGrammar
         }
 
         public CubeGroup CubeGroup() => new CubeGroup(Grid, AreaType, Groups.SelectMany(g => g.Cubes).ToList());
+        public CubeGroupGroup Select(Func<CubeGroup, CubeGroup> selector) => new CubeGroupGroup(Grid, AreaType, Groups.Select(selector).ToList());
     }
 
 
@@ -92,6 +93,12 @@ namespace ShapeGrammar
         public CubeGroup CubesLayer(Vector3Int dir)
         {
             return new CubeGroup(Grid, AreaType, Cubes.Where(cube => !Cubes.Contains(Grid[cube.Position + dir])).ToList());
+        }
+
+        public CubeGroup CubesMaxLayer(Vector3Int dir)
+        {
+            var max = Cubes.Max(cube => Vector3.Dot(cube.Position, dir));
+            return new CubeGroup(Grid, AreaType, Cubes.Where(cube => Vector3.Dot(cube.Position, dir) == max).ToList());
         }
 
         public CubeGroup MoveBy(Vector3Int offset)
@@ -150,6 +157,18 @@ namespace ShapeGrammar
         {
             styleSetter(this);
             Cubes.ForEach(cube => cube.Changed = true);
+            return this;
+        }
+
+        public CubeGroup Fill(CUBE cubeObject)
+        {
+            Cubes.ForEach(cube => cube.Object = cubeObject);
+            return this;
+        }
+
+        public CubeGroup SetStyle(ShapeGrammarObjectStyle style)
+        {
+            Cubes.ForEach(face => face.Style = style);
             return this;
         }
 

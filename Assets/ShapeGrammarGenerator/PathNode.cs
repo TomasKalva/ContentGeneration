@@ -30,6 +30,15 @@ namespace ShapeGrammar
                                 .Select(c => new PathNode(pathNode, c));
         }
 
+        public static Neighbors<PathNode> NotRepeatingCubes(Neighbors<PathNode> neighbors)
+        {
+            return pathNode =>
+            {
+                var path = new HashSet<Cube>(pathNode.ReversePath());
+                return neighbors(pathNode).Where(neighbor => !path.Contains(neighbor.cube));
+            };
+        }
+
         public static Neighbors<PathNode> StairsNeighbors(CubeGroup pathBoundingBox)
         {
             var horizontal = HorizontalNeighbors(pathBoundingBox);
@@ -80,6 +89,16 @@ namespace ShapeGrammar
             {
                 var prevHorMove = (cube.Position - prev.cube.Position).XZ();
                 return prevHorMove == Vector2Int.zero ? prev.LastHorMove() : prevHorMove;
+            }
+        }
+
+        public IEnumerable<Cube> ReversePath()
+        {
+            var pn = this;
+            while(pn != null)
+            {
+                yield return pn.cube;
+                pn = pn.prev;
             }
         }
 

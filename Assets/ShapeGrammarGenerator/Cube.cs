@@ -85,7 +85,13 @@ namespace ShapeGrammar
         public void GenerateObject(float cubeSide, Transform parent)
         {
             if (Style == null)
+            {
+                if(Object != CUBE.Nothing)
+                {
+                    Debug.LogError($"Trying to create an object {Object} when no style is set!");
+                }
                 return;
+            }
 
             var obj = Style.GetCube(Object);
 

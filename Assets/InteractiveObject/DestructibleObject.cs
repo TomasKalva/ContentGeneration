@@ -28,6 +28,7 @@ public class DestructibleObject : MonoBehaviour
             Debug.Log("Collision!!!");
             var rb = detector.other.GetComponent<Rigidbody>();
             var agent = detector.other.GetComponentInParent<Agent>();
+
             if (!agent)
             {
                 Debug.LogError($"{detector.other} doesn't have Agent!");
