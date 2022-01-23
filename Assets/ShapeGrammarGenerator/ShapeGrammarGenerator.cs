@@ -81,20 +81,23 @@ namespace ShapeGrammar
             town.Groups.ForEach(g =>
             {
                 var house = sgShapes.House(g, 5).ApplyGrammarStyleRules(houseStyleRules);
-                var upper = house.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.up).ExtrudeHor(false);
-                var lower = house.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.down).ExtrudeHor(false);
+                var upper = house.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.up).ExtrudeHor(-1, true);
+                var lower = house.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.down).ExtrudeHor(-1, true);
                 //lower.SetStyle(FountainheadStyle).Fill(CUBE.Stairs);
                 //upper.SetStyle(FountainheadStyle).Fill(CUBE.Stairs);
-                var path = sgShapes.ConnectByPath(lower, upper, house.CubeGroup().ExtrudeHor(false));
+                var path = sgShapes.ConnectByPath(lower, upper, house.CubeGroup().ExtrudeHor(-1, true));
                 path.SetGrammarStyle(sgStyles.StairsPathStyle);
             });
-
+            
             /*
             var house = sgShapes.House(qc.GetBox(new Box3Int(new Vector3Int(0, 1, 0), new Vector3Int(4, 2, 4))), 8).ApplyGrammarStyleRules(houseStyleRules);
-            var upper = house.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.up);
-            var lower = house.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.down);
-            var path = sgShapes.ConnectByPath(lower, upper, house.CubeGroup());
-            path.SetGrammarStyle(sgStyles.StairsPathStyle);*-/
+            var upper = house.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.up).ExtrudeHor(-1, true);
+            var lower = house.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.down).ExtrudeHor(-1, true);
+            
+            var path = sgShapes.ConnectByPath(lower, upper, house.CubeGroup().ExtrudeHor(-1, true));
+            path.SetGrammarStyle(sgStyles.StairsPathStyle);
+            */
+            
 
             /*
             var house = town.Groups.FirstOrDefault();

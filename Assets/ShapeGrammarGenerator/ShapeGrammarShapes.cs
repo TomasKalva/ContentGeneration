@@ -36,8 +36,8 @@ namespace ShapeGrammar
 
         public CubeGroupGroup House(CubeGroup belowFirstFloor, int floorHeight)
         {
-            var room = belowFirstFloor.ExtrudeVer(Vector3Int.up, floorHeight).SetAreaType(AreaType.Room);
-            var roof = room.ExtrudeVer(Vector3Int.up, 1).SetAreaType(AreaType.Roof);
+            var room = belowFirstFloor.ExtrudeVer(Vector3Int.up, floorHeight, false).SetAreaType(AreaType.Room);
+            var roof = room.ExtrudeVer(Vector3Int.up, 1, false).SetAreaType(AreaType.Roof);
             var foundation = Foundation(belowFirstFloor);
             var house = new CubeGroupGroup(Grid, AreaType.House, foundation, room, roof);
             return house;

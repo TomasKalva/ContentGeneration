@@ -126,11 +126,12 @@ namespace ShapeGrammar
             from cube2 in grp.Cubes
             select cube1.Position - cube2.Position).Distinct();
 
-        public CubeGroup ExtrudeHor(bool takeChanged = true)
+        public CubeGroup ExtrudeHor(int dir, bool takeChanged = true)
         {
-            var faceCubes = AllBoundaryFacesH().Extrude(1, takeChanged).Cubes;
-            var cornerCubes = AllBoundaryCorners().Extrude(1, takeChanged).Cubes;
-            return new CubeGroup(Grid, AreaType, faceCubes.Concat(cornerCubes).Except(Cubes).ToList());
+            dir = dir > 0 ? 1 : -1;
+            var faceCubes = AllBoundaryFacesH().Extrude(dir, takeChanged).Cubes;
+            var cornerCubes = AllBoundaryCorners().Extrude(dir, takeChanged).Cubes;
+            return new CubeGroup(Grid, AreaType, faceCubes.Concat(cornerCubes).Distinct().ToList());
         }
 
         public CubeGroup ExtrudeVer(Vector3Int dir, int dist, bool takeChanged = true)
@@ -162,7 +163,11 @@ namespace ShapeGrammar
 
         public CubeGroup Fill(CUBE cubeObject)
         {
-            Cubes.ForEach(cube => cube.Object = cubeObject);
+            Cubes.ForEach(cube =>
+            {
+                cube.Object = cubeObject;
+                cube.Changed = true;
+            });
             return this;
         }
 
@@ -270,11 +275,14 @@ namespace ShapeGrammar
         {
             Func<Func<Cube, bool>> stopConditionFact = () =>
             {
-                var countdown = CountdownMaker(dist);
+                var countdown = CountdownMaker(Mathf.Abs(dist));
                 return takeChanged ? countdown : cube => cube.Changed || countdown(cube);
             };
-            return new CubeGroup(Grid, AreaType, Facets.SelectManyNN(face => face.OtherCube?.MoveInDirUntil(face.Direction, stopConditionFact()))
-                .ToList());
+            Func<Facet, IEnumerable<Cube>> cubeSelector = dist > 0 ?
+                    face => face.OtherCube?.MoveInDirUntil(face.Direction, stopConditionFact()) :
+                    face => face.MyCube.MoveInDirUntil(-face.Direction, stopConditionFact());
+            var extrudedCubes = Facets.SelectManyNN(cubeSelector).ToList();
+            return new CubeGroup(Grid, AreaType, extrudedCubes);
         }
 
         protected IEnumerable<FacetT> NeighboringIE(CubeGroup cubeGroup)
