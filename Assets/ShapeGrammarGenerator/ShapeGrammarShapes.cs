@@ -43,6 +43,13 @@ namespace ShapeGrammar
             return house;
         }
 
+        public LevelGroupElement TurnToHouse(CubeGroup house)
+        {
+            var roof = house.CubesMaxLayer(Vector3Int.up).SetAreaType(AreaType.Roof).LevelElement(AreaType.Roof);
+            var room = house.Minus(roof.CubeGroup()).LevelElement(AreaType.Room);
+            return new LevelGroupElement(Grid, AreaType.House, room, roof);
+        }
+
         public CubeGroup Foundation(CubeGroup foundationArea) => QC.MoveDownUntilGround(foundationArea).SetAreaType(AreaType.Foundation);
 
         public CubeGroup Platform(Box2Int areaXZ, int posY) => QC.GetPlatform(areaXZ, posY);

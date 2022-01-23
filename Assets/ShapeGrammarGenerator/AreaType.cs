@@ -53,9 +53,9 @@ namespace ShapeGrammar
             this.rules = rules;
         }
 
-        public void Apply(LevelElement cubeGroupGroup)
+        public void Apply(LevelElement levelElement)
         {
-            rules.ForEach(rule => rule.Selector(cubeGroupGroup).ForEach(le => le.SetGrammarStyle(rule.Setter)));
+            rules.ForEach(rule => rule.Selector(levelElement).ForEach(le => le.SetGrammarStyle(rule.Setter)));
         }
     }
 }

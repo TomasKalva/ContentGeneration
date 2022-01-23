@@ -83,7 +83,13 @@ namespace ShapeGrammar
             LevelElements = levelElements.ToList();
         }
 
-        public override IEnumerable<LevelElement> Flatten() => LevelElements.Prepend(this);
+        public LevelGroupElement SetChildrenAreaType(AreaType areaType)
+        {
+            LevelElements.ForEach(le => le.SetAreaType(areaType));
+            return this;
+        }
+
+        public override IEnumerable<LevelElement> Flatten() => LevelElements.SelectMany(le => le.Flatten()).Prepend(this);
 
         public LevelGroupElement Add(LevelElement levelElement) => new LevelGroupElement(Grid, AreaType, LevelElements.Append(levelElement).ToList());
 

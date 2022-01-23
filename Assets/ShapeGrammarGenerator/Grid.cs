@@ -141,6 +141,12 @@ namespace ShapeGrammar
             return new LevelGroupElement(lge.Grid, lge.AreaType, newGroups.ToList<LevelElement>());
         }
 
+        public LevelGroupElement RaiseRandomly(LevelGroupElement lge, Func<int> liftingF)
+        {
+            var newGroups = lge.LevelElements.Select(g => new CubeGroup(g.Grid, g.AreaType, g.Cubes().Concat(g.CubeGroup().ExtrudeVer(Vector3Int.up, liftingF()).Cubes).ToList()).LevelElement(g.AreaType));
+            return new LevelGroupElement(lge.Grid, lge.AreaType, newGroups.ToList<LevelElement>());
+        }
+
         public CubeGroup GetPlatform(Box2Int areaXZ, int posY)
         {
             var box = areaXZ.InflateY(posY, posY + 1);
@@ -194,7 +200,7 @@ namespace ShapeGrammar
             return new CubeGroup(QueriedGrid, start.AreaType, start.Cubes.Concat(newCubes).ToList());
         }
 
-        public LevelElement Partition(Func<CubeGroup, CubeGroup, CubeGroup> groupGrower, CubeGroup boundingGroup, int groupN)
+        public LevelGroupElement Partition(Func<CubeGroup, CubeGroup, CubeGroup> groupGrower, CubeGroup boundingGroup, int groupN)
         {
             var groups = boundingGroup.Cubes
                 .Select(cube => cube.Position)

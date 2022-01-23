@@ -23,7 +23,7 @@ namespace ShapeGrammar
             {
                 UnityEditor.SceneView.FocusWindowIfItsOpen(typeof(UnityEditor.SceneView));
             }
-            UnityEngine.Random.InitState(11);
+            //UnityEngine.Random.InitState(11);
 
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
@@ -77,17 +77,30 @@ namespace ShapeGrammar
             
             var town = qc.GetOverlappingBoxes(new Box2Int(new Vector2Int(0, 0), new Vector2Int(15, 15)), 5);
             town = qc.LiftRandomly(town, () => 2 + UnityEngine.Random.Range(1, 4));
-            //town = town.Select(g => sgShapes.House(g, 2).ApplyGrammarStyleRules(houseStyleRules));
+
+
+            town = town.Select(g => sgShapes.House(g.CubeGroup(), 5).ApplyGrammarStyleRules(houseStyleRules));
+            var housesRoofs = town.Select(le =>
+                qc.Partition(
+                    (g, boundingG) => qc.GetRandomHorConnected1(g, boundingG),
+                        le.CubeGroup()
+                        .CubesMaxLayer(Vector3Int.up),
+                    3)
+                );
+            housesRoofs = housesRoofs.Select(houseRoof => 
+                    qc.RaiseRandomly(houseRoof as LevelGroupElement, () => UnityEngine.Random.Range(0, 4))
+                    .Select(part => sgShapes.TurnToHouse(part.CubeGroup()))
+                    .SetChildrenAreaType(AreaType.Room));
+
+            housesRoofs.ApplyGrammarStyleRules(houseStyleRules);
             town.LevelElements.ForEach(g =>
             {
-                var house = sgShapes.House(g.CubeGroup(), 5).ApplyGrammarStyleRules(houseStyleRules);
-
-                var upper = house.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.up).ExtrudeHor(-1, true);
-                var lower = house.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.down).ExtrudeHor(-1, true);
-                var path = sgShapes.ConnectByPath(lower, upper, house.CubeGroup().ExtrudeHor(-1, true));
+                var upper = g.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.up).ExtrudeHor(-1, true);
+                var lower = g.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.down).ExtrudeHor(-1, true);
+                var path = sgShapes.ConnectByPath(lower, upper, g.CubeGroup().ExtrudeHor(-1, true));
                 path.SetGrammarStyle(sgStyles.StairsPathStyle);
             });
-            
+
             /*
             var house = sgShapes.House(qc.GetBox(new Box3Int(new Vector3Int(0, 1, 0), new Vector3Int(4, 2, 4))), 8).ApplyGrammarStyleRules(houseStyleRules);
             var upper = house.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.up).ExtrudeHor(-1, true);
