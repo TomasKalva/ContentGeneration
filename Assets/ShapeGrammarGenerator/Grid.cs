@@ -121,7 +121,7 @@ namespace ShapeGrammar
             return new CubeGroup(QueriedGrid, AreaType.None, cubes);
         }
 
-        public CubeGroupGroup GetOverlappingBoxes(Box2Int box, int boxesCount)
+        public LevelGroupElement GetOverlappingBoxes(Box2Int box, int boxesCount)
         {
             var smallBox = new Box2Int(box.leftBottom, box.leftBottom + (box.rightTop - box.leftBottom) / 4);
             var randomBoundingBox = new Box2Int(new Vector2Int(-2, -2), new Vector2Int(2, 2));
@@ -130,15 +130,15 @@ namespace ShapeGrammar
                 var b = smallBox.Border(ExtensionMethods.RandomBox(randomBoundingBox));
                 return GetBox((box.GetRandom() - b.Extents() + b).InflateY(0, 1));
             });
-            var cubeGroup = new CubeGroupGroup(QueriedGrid, AreaType.None, Enumerable.Empty<CubeGroup>().ToList());
-            boxes.ForEach(g => cubeGroup = cubeGroup.Add(g.Minus(cubeGroup.CubeGroup())));
+            var cubeGroup = new LevelGroupElement(QueriedGrid, AreaType.None, Enumerable.Empty<LevelElement>().ToList());
+            boxes.ForEach(g => cubeGroup = cubeGroup.Add(g.Minus(cubeGroup.CubeGroup()).LevelElement(AreaType.None)));
             return cubeGroup;
         }
 
-        public CubeGroupGroup LiftRandomly(CubeGroupGroup cgg, Func<int> liftingF)
+        public LevelGroupElement LiftRandomly(LevelGroupElement lge, Func<int> liftingF)
         {
-            var newGroups = cgg.Groups.Select(g => new CubeGroup(g.Grid, g.AreaType, g.MoveBy(Vector3Int.up * liftingF()).Cubes.ToList()));
-            return new CubeGroupGroup(cgg.Grid, cgg.AreaType, newGroups.ToList());
+            var newGroups = lge.LevelElements.Select(g => new CubeGroup(g.Grid, g.AreaType, g.MoveBy(Vector3Int.up * liftingF()).Cubes().ToList()).LevelElement(g.AreaType));
+            return new LevelGroupElement(lge.Grid, lge.AreaType, newGroups.ToList<LevelElement>());
         }
 
         public CubeGroup GetPlatform(Box2Int areaXZ, int posY)
@@ -194,7 +194,7 @@ namespace ShapeGrammar
             return new CubeGroup(QueriedGrid, start.AreaType, start.Cubes.Concat(newCubes).ToList());
         }
 
-        public CubeGroupGroup Partition(Func<CubeGroup, CubeGroup, CubeGroup> groupGrower, CubeGroup boundingGroup, int groupN)
+        public LevelElement Partition(Func<CubeGroup, CubeGroup, CubeGroup> groupGrower, CubeGroup boundingGroup, int groupN)
         {
             var groups = boundingGroup.Cubes
                 .Select(cube => cube.Position)
@@ -218,7 +218,7 @@ namespace ShapeGrammar
                 }
                 groups = newGroups;
             }
-            return new CubeGroupGroup(QueriedGrid, boundingGroup.AreaType, groups);
+            return new LevelGroupElement(QueriedGrid, boundingGroup.AreaType, groups.Select(g => g.LevelElement(g.AreaType)).ToList<LevelElement>());
         }
     }
 

@@ -24,22 +24,22 @@ namespace ShapeGrammar
 
         public CubeGroup FlatRoof(Box2Int areaXZ, int posY) => QC.GetPlatform(areaXZ, posY).SetAreaType(AreaType.Roof);
 
-        public CubeGroupGroup House(Box2Int areaXZ, int posY)
+        public LevelElement House(Box2Int areaXZ, int posY)
         {
-            var room = Room(areaXZ.InflateY(posY, posY + 2));
-            var roof = FlatRoof(areaXZ, posY + 2);
-            var cubesBelowRoom = room.BoundaryFacesV(Vector3Int.down).Cubes().MoveBy(Vector3Int.down);
-            var foundation = Foundation(cubesBelowRoom);
-            var house = new CubeGroupGroup(Grid, AreaType.House, foundation, room, roof);
+            var room = Room(areaXZ.InflateY(posY, posY + 2)).LevelElement(AreaType.Room);
+            var roof = FlatRoof(areaXZ, posY + 2).LevelElement(AreaType.Roof);
+            var cubesBelowRoom = room.CubeGroup().BoundaryFacesV(Vector3Int.down).Cubes().MoveBy(Vector3Int.down);
+            var foundation = Foundation(cubesBelowRoom).LevelElement(AreaType.Foundation);
+            var house = new LevelGroupElement(Grid, AreaType.House, foundation, room, roof);
             return house;
         }
 
-        public CubeGroupGroup House(CubeGroup belowFirstFloor, int floorHeight)
+        public LevelElement House(CubeGroup belowFirstFloor, int floorHeight)
         {
-            var room = belowFirstFloor.ExtrudeVer(Vector3Int.up, floorHeight, false).SetAreaType(AreaType.Room);
-            var roof = room.ExtrudeVer(Vector3Int.up, 1, false).SetAreaType(AreaType.Roof);
-            var foundation = Foundation(belowFirstFloor);
-            var house = new CubeGroupGroup(Grid, AreaType.House, foundation, room, roof);
+            var room = belowFirstFloor.ExtrudeVer(Vector3Int.up, floorHeight, false).SetAreaType(AreaType.Room).LevelElement(AreaType.Room);
+            var roof = room.CubeGroup().ExtrudeVer(Vector3Int.up, 1, false).SetAreaType(AreaType.Roof).LevelElement(AreaType.Roof);
+            var foundation = Foundation(belowFirstFloor).LevelElement(AreaType.Foundation);
+            var house = new LevelGroupElement(Grid, AreaType.House, foundation, room, roof);
             return house;
         }
 

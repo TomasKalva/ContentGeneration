@@ -28,7 +28,7 @@ namespace ShapeGrammar
         }
     }
 
-    public delegate CubeGroupGroup StyleSelector(CubeGroupGroup cubeGroupGroup);
+    public delegate IEnumerable<LevelElement> StyleSelector(LevelElement cubeGroupGroup);
 
     public delegate CubeGroup StyleSetter(CubeGroup cubeGroup);
 
@@ -53,9 +53,9 @@ namespace ShapeGrammar
             this.rules = rules;
         }
 
-        public void Apply(CubeGroupGroup cubeGroupGroup)
+        public void Apply(LevelElement cubeGroupGroup)
         {
-            rules.ForEach(rule => rule.Selector(cubeGroupGroup).SetGrammarStyle(rule.Setter));
+            rules.ForEach(rule => rule.Selector(cubeGroupGroup).ForEach(le => le.SetGrammarStyle(rule.Setter)));
         }
     }
 }

@@ -22,58 +22,113 @@ namespace ShapeGrammar
         }
     }
 
-    /// <summary>
-    /// Disjoint union of cube groups.
-    /// </summary>
-    public class CubeGroupGroup : Group
+    public abstract class LevelElement
     {
-        public List<CubeGroup> Groups { get; }
+        public Grid Grid { get; }
+        public AreaType AreaType { get; set; }
 
-        public List<Cube> Cubes => Groups.SelectMany(g => g.Cubes).ToList();
+        public abstract List<Cube> Cubes();
 
-        public CubeGroupGroup(Grid grid, AreaType areaType, params CubeGroup[] groups) : base(grid, areaType)
+        public LevelElement(Grid grid, AreaType areaType)
         {
-            Groups = groups.ToList();
+            Grid = grid;
+            AreaType = areaType;
         }
 
-        public CubeGroupGroup(Grid grid, AreaType areaType, List<CubeGroup> groups) : base(grid, areaType)
+        public IEnumerable<LevelElement> WithAreaType(AreaType areaType) => Flatten().Where(g => g.AreaType == areaType).ToList();
+
+        protected abstract LevelElement MoveByImpl(Vector3Int offset);
+
+        public LevelElement MoveBy(Vector3Int offset)
         {
-            Groups = groups;
+            return MoveByImpl(offset);
         }
 
-        public CubeGroupGroup WithAreaType(AreaType areaType) => new CubeGroupGroup(Grid, areaType, Groups.Where(g => g.AreaType == areaType).ToList());
+        public abstract IEnumerable<LevelElement> Flatten();
 
-        public CubeGroupGroup Add(CubeGroup group) => new CubeGroupGroup(Grid, AreaType, Groups.Append(group).ToList());
-
-        public CubeGroupGroup MoveBy(Vector3Int offset)
-        {
-            var movedGroups = Groups.Select(g => g.MoveBy(offset)).ToList();
-            return new CubeGroupGroup(Grid, AreaType, movedGroups);
-        }
-
-        public CubeGroupGroup SetAreaType(AreaType areaType)
+        public LevelElement SetAreaType(AreaType areaType)
         {
             AreaType = areaType;
             return this;
         }
 
-        public CubeGroupGroup SetGrammarStyle(StyleSetter styleSetter)
+        public LevelElement SetGrammarStyle(StyleSetter styleSetter)
         {
-            Groups.ForEach(g => styleSetter(g));
+            styleSetter(CubeGroup());
             return this;
         }
 
-        public CubeGroupGroup ApplyGrammarStyleRules(StyleRules styleRules) 
+        public LevelElement ApplyGrammarStyleRules(StyleRules styleRules) 
         {
             styleRules.Apply(this);
             return this;
         }
 
-        public CubeGroup CubeGroup() => new CubeGroup(Grid, AreaType, Groups.SelectMany(g => g.Cubes).ToList());
-        public CubeGroupGroup Select(Func<CubeGroup, CubeGroup> selector) => new CubeGroupGroup(Grid, AreaType, Groups.Select(selector).ToList());
+        public abstract CubeGroup CubeGroup();
     }
 
+    public class LevelGroupElement : LevelElement
+    {
+        public List<LevelElement> LevelElements { get; }
 
+        public override List<Cube> Cubes() => LevelElements.SelectMany(le => le.Cubes()).ToList();
+
+        public LevelGroupElement(Grid grid, AreaType areaType, params LevelElement[] levelElements) : base(grid, areaType)
+        {
+            LevelElements = levelElements.ToList();
+        }
+
+        public LevelGroupElement(Grid grid, AreaType areaType, List<LevelElement> levelElements) : base(grid, areaType)
+        {
+            LevelElements = levelElements.ToList();
+        }
+
+        public override IEnumerable<LevelElement> Flatten() => LevelElements.Prepend(this);
+
+        public LevelGroupElement Add(LevelElement levelElement) => new LevelGroupElement(Grid, AreaType, LevelElements.Append(levelElement).ToList());
+
+        protected override LevelElement MoveByImpl(Vector3Int offset)
+        {
+            var movedGroups = LevelElements.Select(le => le.MoveBy(offset)).ToList();
+            return new LevelGroupElement(Grid, AreaType, movedGroups);
+        }
+
+        public new LevelGroupElement MoveBy(Vector3Int offset)
+        {
+            return (LevelGroupElement)MoveByImpl(offset);
+        }
+
+        public LevelGroupElement Select(Func<LevelElement, LevelElement> selector) => new LevelGroupElement(Grid, AreaType, LevelElements.Select(selector).ToList());
+
+        public override CubeGroup CubeGroup() => new CubeGroup(Grid, AreaType, Cubes());
+    }
+
+    public class LevelGeometryElement : LevelElement
+    {
+        public CubeGroup Group { get; }
+
+        public override List<Cube> Cubes() => Group.Cubes;
+
+        public LevelGeometryElement(Grid grid, AreaType areaType, CubeGroup group) : base(grid, areaType)
+        {
+            Group = group;
+        }
+
+        public override IEnumerable<LevelElement> Flatten() => new LevelElement[1] { this };
+
+        protected override LevelElement MoveByImpl(Vector3Int offset)
+        {
+            var movedGroup = Group.MoveBy(offset);
+            return new LevelGeometryElement(Grid, AreaType, movedGroup);
+        }
+
+        public new LevelGeometryElement MoveBy(Vector3Int offset)
+        {
+            return (LevelGeometryElement)MoveByImpl(offset);
+        }
+
+        public override CubeGroup CubeGroup() => Group;
+    }
 
     public class CubeGroup : Group
     {
@@ -112,6 +167,8 @@ namespace ShapeGrammar
             var validCubes = Cubes.SelectMany(corner => corner.MoveInDirUntil(dir, stopPred));
             return new CubeGroup(Grid, AreaType, validCubes.ToList());
         }
+
+        public LevelGeometryElement LevelElement(AreaType areaType) => new LevelGeometryElement(Grid, areaType, this);
 
         public CubeGroup Where(Func<Cube, bool> pred) => new CubeGroup(Grid, AreaType, Cubes.Where(pred).ToList());
         public CubeGroup Select3(Func<Cube, Cube, Cube, bool> pred) => new CubeGroup(Grid, AreaType, Cubes.Select3(pred).ToList());
