@@ -74,28 +74,27 @@ namespace ShapeGrammar
                 .BoundaryFacesH(Vector3Int.back).Facets.FirstOrDefault();
             var house3 = house2.CubeGroup().Symmetrize(symmetryFace).SetGrammarStyle(sgStyles.RoomStyle);
             */
-            /*
+            
             var town = qc.GetOverlappingBoxes(new Box2Int(new Vector2Int(0, 0), new Vector2Int(15, 15)), 5);
             town = qc.LiftRandomly(town, () => 2 + UnityEngine.Random.Range(1, 4));
             //town = town.Select(g => sgShapes.House(g, 2).ApplyGrammarStyleRules(houseStyleRules));
             town.Groups.ForEach(g =>
             {
-                var house = sgShapes.House(g, 2).ApplyGrammarStyleRules(houseStyleRules);
-                var upper = house.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.up);
-                var lower = house.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.down);
+                var house = sgShapes.House(g, 5).ApplyGrammarStyleRules(houseStyleRules);
+                var upper = house.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.up).ExtrudeHor(false);
+                var lower = house.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.down).ExtrudeHor(false);
                 //lower.SetStyle(FountainheadStyle).Fill(CUBE.Stairs);
                 //upper.SetStyle(FountainheadStyle).Fill(CUBE.Stairs);
-                sgShapes.ConnectByPath(lower, upper, house.CubeGroup());
-            });*/
+                var path = sgShapes.ConnectByPath(lower, upper, house.CubeGroup().ExtrudeHor(false));
+                path.SetGrammarStyle(sgStyles.StairsPathStyle);
+            });
 
-
+            /*
             var house = sgShapes.House(qc.GetBox(new Box3Int(new Vector3Int(0, 1, 0), new Vector3Int(4, 2, 4))), 8).ApplyGrammarStyleRules(houseStyleRules);
             var upper = house.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.up);
             var lower = house.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.down);
-            //lower.SetStyle(FountainheadStyle).Fill(CUBE.Stairs);
-            //upper.SetStyle(FountainheadStyle).Fill(CUBE.Stairs);
             var path = sgShapes.ConnectByPath(lower, upper, house.CubeGroup());
-            path.SetGrammarStyle(sgStyles.StairsPathStyle);
+            path.SetGrammarStyle(sgStyles.StairsPathStyle);*-/
 
             /*
             var house = town.Groups.FirstOrDefault();
