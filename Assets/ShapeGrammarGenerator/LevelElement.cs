@@ -116,7 +116,7 @@ namespace ShapeGrammar
 
         public LevelGroupElement Select(Func<LevelElement, LevelElement> selector) => new LevelGroupElement(Grid, AreaType, LevelElements.Select(selector).ToList());
 
-        public override CubeGroup CubeGroup() => new CubeGroup(Grid, AreaType, Cubes());
+        public override CubeGroup CubeGroup() => new CubeGroup(Grid, Cubes());
     }
 
     public class LevelGeometryElement : LevelElement

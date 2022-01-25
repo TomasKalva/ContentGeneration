@@ -105,8 +105,11 @@ namespace ShapeGrammar
                 path.SetGrammarStyle(sgStyles.StairsPathStyle);
             });*/
 
+            /*
             var town = qc.GetNonOverlappingBoxes(new Box2Int(new Vector2Int(0, 0), new Vector2Int(15, 15)), 5);
             town = town.Select(g => g.CubeGroup().SetGrammarStyle(sgStyles.RoomStyle).LevelElement(AreaType.Room));
+            */
+
             /*var first = town.LevelElements.FirstOrDefault();
             var second = town.LevelElements.LastOrDefault();
             //var moves = first.Moves(second.CubeGroup().ExtrudeHor().LevelElement(AreaType.None), new LevelElement[1] { second });
@@ -116,7 +119,7 @@ namespace ShapeGrammar
             second.SetGrammarStyle(sgStyles.RoomStyle);
             */
 
-            /*
+            
             // testing paths
             
             var box = sgShapes.Room(new Box3Int(new Vector3Int(0, 0, 0), new Vector3Int(10, 10, 10)));
@@ -124,7 +127,7 @@ namespace ShapeGrammar
             var end = box.CubesLayer(Vector3Int.right);
             var path = sgShapes.ConnectByPath(start, end, box);
             path.SetGrammarStyle(sgStyles.StairsPathStyle);
-            */
+            
 
             grid.Generate(2f, parent);
 

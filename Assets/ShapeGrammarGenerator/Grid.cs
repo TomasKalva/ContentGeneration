@@ -118,13 +118,13 @@ namespace ShapeGrammar
         public CubeGroup GetBox(Box3Int box)
         {
             var cubes = box.Select(i => QueriedGrid[i]).ToList();
-            return new CubeGroup(QueriedGrid, AreaType.None, cubes);
+            return new CubeGroup(QueriedGrid, cubes);
         }
 
         public LevelGeometryElement GetFlatBox(Box2Int box, int y = 0)
         {
             var cubes = (box.InflateY(0, 1) + y * Vector3Int.up).Select(i => QueriedGrid[i]).ToList();
-            return new CubeGroup(QueriedGrid, AreaType.None, cubes).LevelElement(AreaType.None);
+            return new CubeGroup(QueriedGrid, cubes).LevelElement(AreaType.None);
         }
 
         public LevelGroupElement GetOverlappingBoxes(Box2Int box, int boxesCount)
@@ -174,13 +174,13 @@ namespace ShapeGrammar
 
         public LevelGroupElement LiftRandomly(LevelGroupElement lge, Func<int> liftingF)
         {
-            var newGroups = lge.LevelElements.Select(g => new CubeGroup(g.Grid, g.AreaType, g.MoveBy(Vector3Int.up * liftingF()).Cubes().ToList()).LevelElement(g.AreaType));
+            var newGroups = lge.LevelElements.Select(g => new CubeGroup(g.Grid, g.MoveBy(Vector3Int.up * liftingF()).Cubes().ToList()).LevelElement(g.AreaType));
             return new LevelGroupElement(lge.Grid, lge.AreaType, newGroups.ToList<LevelElement>());
         }
 
         public LevelGroupElement RaiseRandomly(LevelGroupElement lge, Func<int> liftingF)
         {
-            var newGroups = lge.LevelElements.Select(g => new CubeGroup(g.Grid, g.AreaType, g.Cubes().Concat(g.CubeGroup().ExtrudeVer(Vector3Int.up, liftingF()).Cubes).ToList()).LevelElement(g.AreaType));
+            var newGroups = lge.LevelElements.Select(g => new CubeGroup(g.Grid, g.Cubes().Concat(g.CubeGroup().ExtrudeVer(Vector3Int.up, liftingF()).Cubes).ToList()).LevelElement(g.AreaType));
             return new LevelGroupElement(lge.Grid, lge.AreaType, newGroups.ToList<LevelElement>());
         }
 
@@ -206,7 +206,7 @@ namespace ShapeGrammar
 
         public CubeGroup GetRandomHorConnected(Vector3Int start, CubeGroup boundingGroup, int n)
         {
-            var grp = new CubeGroup(QueriedGrid, AreaType.None, new List<Cube>() { QueriedGrid[start] });
+            var grp = new CubeGroup(QueriedGrid, new List<Cube>() { QueriedGrid[start] });
             while (n > 0)
             {
                 var newGrp = GetRandomHorConnected1(grp, boundingGroup);
@@ -225,7 +225,7 @@ namespace ShapeGrammar
             if (possibleCubes.Count() == 0)
                 return start;
             var newCube = possibleCubes.GetRandom();
-            return new CubeGroup(QueriedGrid, AreaType.None, start.Cubes.Append(newCube).ToList());
+            return new CubeGroup(QueriedGrid, start.Cubes.Append(newCube).ToList());
         }
 
         public CubeGroup ExtrudeRandomly(CubeGroup start, float keptRatio)
@@ -234,7 +234,7 @@ namespace ShapeGrammar
             if (possibleCubes.Count() == 0)
                 return start;
             var newCubes = possibleCubes.Shuffle().Take((int)(keptRatio * possibleCubes.Count()));
-            return new CubeGroup(QueriedGrid, start.AreaType, start.Cubes.Concat(newCubes).ToList());
+            return new CubeGroup(QueriedGrid, start.Cubes.Concat(newCubes).ToList());
         }
 
         public LevelGroupElement Partition(Func<CubeGroup, CubeGroup, CubeGroup> groupGrower, CubeGroup boundingGroup, int groupN)
@@ -243,10 +243,10 @@ namespace ShapeGrammar
                 .Select(cube => cube.Position)
                 .Shuffle()
                 .Take(groupN)
-                .Select(pos => new CubeGroup(QueriedGrid, AreaType.None, QueriedGrid[pos].Group(boundingGroup.AreaType).Cubes))
+                .Select(pos => new CubeGroup(QueriedGrid, QueriedGrid[pos].Group().Cubes))
                 .ToList();
             var totalSize = 0;
-            boundingGroup = boundingGroup.Minus(new CubeGroup(QueriedGrid, AreaType.None, groups.SelectManyNN(grp => grp.Cubes).ToList()));
+            boundingGroup = boundingGroup.Minus(new CubeGroup(QueriedGrid, groups.SelectManyNN(grp => grp.Cubes).ToList()));
             // Iterate until no group can be grown
             while (groups.Select(grp => grp.Cubes.Count).Sum() > totalSize)
             {
@@ -261,7 +261,7 @@ namespace ShapeGrammar
                 }
                 groups = newGroups;
             }
-            return new LevelGroupElement(QueriedGrid, boundingGroup.AreaType, groups.Select(g => g.LevelElement(g.AreaType)).ToList<LevelElement>());
+            return new LevelGroupElement(QueriedGrid, AreaType.None, groups.Select(g => g.LevelElement()).ToList<LevelElement>());
         }
     }
 

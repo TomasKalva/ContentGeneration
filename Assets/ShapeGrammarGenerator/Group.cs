@@ -13,12 +13,10 @@ namespace ShapeGrammar
     public class Group
     {
         public Grid Grid { get; }
-        public AreaType AreaType { get; set; }
 
-        public Group(Grid grid, AreaType areaType)
+        public Group(Grid grid)
         {
             Grid = grid;
-            AreaType = areaType;
         }
     }
 
@@ -26,49 +24,51 @@ namespace ShapeGrammar
     {
         public virtual List<Cube> Cubes { get; }
 
-        public CubeGroup(Grid grid, AreaType areaType, List<Cube> cubes) : base(grid, areaType)
+        public CubeGroup(Grid grid,List<Cube> cubes) : base(grid)
         {
             Cubes = cubes;
         }
 
-        public CubeGroup SetAreaType(AreaType areaType)
-        {
-            AreaType = areaType;
-            return this;
-        }
-
         public CubeGroup CubesLayer(Vector3Int dir)
         {
-            return new CubeGroup(Grid, AreaType, Cubes.Where(cube => !Cubes.Contains(Grid[cube.Position + dir])).ToList());
+            return new CubeGroup(Grid, Cubes.Where(cube => !Cubes.Contains(Grid[cube.Position + dir])).ToList());
         }
 
         public CubeGroup CubesMaxLayer(Vector3Int dir)
         {
             var max = Cubes.Max(cube => Vector3.Dot(cube.Position, dir));
-            return new CubeGroup(Grid, AreaType, Cubes.Where(cube => Vector3.Dot(cube.Position, dir) == max).ToList());
+            return new CubeGroup(Grid, Cubes.Where(cube => Vector3.Dot(cube.Position, dir) == max).ToList());
         }
 
         public CubeGroup MoveBy(Vector3Int offset)
         {
             var movedCubes = Cubes.SelectNN(cube => cube.MoveBy(offset));
-            return new CubeGroup(Grid, AreaType, movedCubes.ToList());
+            return new CubeGroup(Grid, movedCubes.ToList());
         }
 
         public CubeGroup MoveInDirUntil(Vector3Int dir, Func<Cube, bool> stopPred)
         {
             var validCubes = Cubes.SelectMany(corner => corner.MoveInDirUntil(dir, stopPred));
-            return new CubeGroup(Grid, AreaType, validCubes.ToList());
+            return new CubeGroup(Grid, validCubes.ToList());
         }
 
-        public LevelGeometryElement LevelElement(AreaType areaType) => new LevelGeometryElement(Grid, areaType, this);
+        public LevelGeometryElement LevelElement(AreaType areaType = null)
+        {
+            if(areaType == null)
+            {
+                // AreaType.None is not a constant so can't be a default value
+                areaType = AreaType.None;
+            }
+            return new LevelGeometryElement(Grid, areaType, this);
+        }
 
-        public CubeGroup Where(Func<Cube, bool> pred) => new CubeGroup(Grid, AreaType, Cubes.Where(pred).ToList());
-        public CubeGroup Select3(Func<Cube, Cube, Cube, bool> pred) => new CubeGroup(Grid, AreaType, Cubes.Select3(pred).ToList());
+        public CubeGroup Where(Func<Cube, bool> pred) => new CubeGroup(Grid, Cubes.Where(pred).ToList());
+        public CubeGroup Select3(Func<Cube, Cube, Cube, bool> pred) => new CubeGroup(Grid, Cubes.Select3(pred).ToList());
         /// <summary>
         /// Includes first and last element.
         /// </summary>
-        public CubeGroup Select3Incl(Func<Cube, Cube, Cube, bool> pred) => new CubeGroup(Grid, AreaType, Cubes.Select3(pred).Prepend(Cubes.FirstOrDefault()).Append(Cubes.LastOrDefault()).ToList());
-        public CubeGroup Minus(CubeGroup group) => new CubeGroup(Grid, AreaType, Cubes.Except(group.Cubes).ToList());
+        public CubeGroup Select3Incl(Func<Cube, Cube, Cube, bool> pred) => new CubeGroup(Grid, Cubes.Select3(pred).Prepend(Cubes.FirstOrDefault()).Append(Cubes.LastOrDefault()).ToList());
+        public CubeGroup Minus(CubeGroup group) => new CubeGroup(Grid, Cubes.Except(group.Cubes).ToList());
 
         public IEnumerable<Vector3Int> MinkowskiMinus(CubeGroup grp) => 
             (from cube1 in Cubes 
@@ -80,13 +80,13 @@ namespace ShapeGrammar
             int dir = outside ? 1 : -1;
             var faceCubes = AllBoundaryFacesH().Extrude(dir, takeChanged).Cubes;
             var cornerCubes = AllBoundaryCorners().Extrude(dir, takeChanged).Cubes;
-            return new CubeGroup(Grid, AreaType, faceCubes.Concat(cornerCubes).Distinct().ToList());
+            return new CubeGroup(Grid, faceCubes.Concat(cornerCubes).Distinct().ToList());
         }
 
         public CubeGroup ExtrudeVer(Vector3Int dir, int dist, bool takeChanged = true)
         {
             var upCubes = BoundaryFacesV(dir).Extrude(dist, takeChanged).Cubes;
-            return new CubeGroup(Grid, AreaType, upCubes.ToList());
+            return new CubeGroup(Grid, upCubes.ToList());
         }
 
         public CubeGroup Extrude(bool outside = true, bool takeChanged = true)
@@ -94,7 +94,7 @@ namespace ShapeGrammar
             var sides = ExtrudeHor(outside, takeChanged).Cubes;
             var up = ExtrudeVer(Vector3Int.up, 1, takeChanged).Cubes;
             var down = ExtrudeVer(Vector3Int.down, 1, takeChanged).Cubes;
-            return new CubeGroup(Grid, AreaType, sides.Concat(up.Concat(down)).ToList());
+            return new CubeGroup(Grid, sides.Concat(up.Concat(down)).ToList());
         }
 
         public CubeGroup WithFloor() => Where(cube => cube.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor);
@@ -108,7 +108,7 @@ namespace ShapeGrammar
                 faceHor.Direction.x == 0 ?
                 p => p + 2 * (myCubePos.z - p.z) * absDir + dir :
                 (p => p + 2 * (myCubePos.x - p.x) * absDir + dir);
-            return new CubeGroup(Grid, AreaType, Cubes.Select(cube => Grid[flipped(cube.Position)]).ToList());
+            return new CubeGroup(Grid, Cubes.Select(cube => Grid[flipped(cube.Position)]).ToList());
         }
 
         public CubeGroup SetGrammarStyle(StyleSetter styleSetter)
@@ -209,14 +209,14 @@ namespace ShapeGrammar
     {
         public List<FacetT> Facets { get; }
 
-        public FacetGroup(Grid grid, List<FacetT> facets) : base(grid, AreaType.None)
+        public FacetGroup(Grid grid, List<FacetT> facets) : base(grid)
         {
             Facets = facets;
         }
 
         public CubeGroup Cubes()
         {
-            return new CubeGroup(Grid, AreaType.None, Facets.Select(face => face.MyCube).ToList());
+            return new CubeGroup(Grid, Facets.Select(face => face.MyCube).ToList());
         }
 
         /// <summary>
@@ -239,7 +239,7 @@ namespace ShapeGrammar
                     face => face.OtherCube?.MoveInDirUntil(face.Direction, stopConditionFact()) :
                     face => face.MyCube.MoveInDirUntil(-face.Direction, stopConditionFact());
             var extrudedCubes = Facets.SelectManyNN(cubeSelector).ToList();
-            return new CubeGroup(Grid, AreaType, extrudedCubes);
+            return new CubeGroup(Grid, extrudedCubes);
         }
 
         protected IEnumerable<FacetT> NeighboringIE(CubeGroup cubeGroup)
