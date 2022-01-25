@@ -200,6 +200,11 @@ static class ExtensionMethods
         return default;
     }
 
+    public static IEnumerable<T> Others<T>(this IEnumerable<T> enumerable, T me) where T : class
+    {
+        return enumerable.Where(t => t != me);
+    }
+
     public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
     {
         foreach(var item in enumerable)
@@ -312,6 +317,22 @@ static class ExtensionMethods
     public static T ApplyNTimes<T>(Func<T, T> f, T t, int n) => n == 0 ? t : ApplyNTimes(f, f(t), n - 1); 
 
     static Dictionary<Vector3Int, string> directionNames;
+
+    public static IEnumerable<Vector3Int> MinkowskiMinus(this IEnumerable<Vector3Int> s1, IEnumerable<Vector3Int> s2)
+    {
+
+        return
+            (from v1 in s1
+             from v2 in s2
+             select v1 - v2).Distinct();
+    }
+
+    public static IEnumerable<T> SetMinus<T>(this IEnumerable<T> s1, IEnumerable<T> s2)
+    {
+        var set = new HashSet<T>(s1);
+        s2.ForEach(t => set.Remove(t));
+        return set;
+    }
 
     public static string Name(this Vector3Int direction)
     {

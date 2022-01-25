@@ -121,6 +121,12 @@ namespace ShapeGrammar
             return new CubeGroup(QueriedGrid, AreaType.None, cubes);
         }
 
+        public LevelGeometryElement GetFlatBox(Box2Int box, int y = 0)
+        {
+            var cubes = (box.InflateY(0, 1) + y * Vector3Int.up).Select(i => QueriedGrid[i]).ToList();
+            return new CubeGroup(QueriedGrid, AreaType.None, cubes).LevelElement(AreaType.None);
+        }
+
         public LevelGroupElement GetOverlappingBoxes(Box2Int box, int boxesCount)
         {
             var smallBox = new Box2Int(box.leftBottom, box.leftBottom + (box.rightTop - box.leftBottom) / 4);
@@ -132,6 +138,37 @@ namespace ShapeGrammar
             });
             var cubeGroup = new LevelGroupElement(QueriedGrid, AreaType.None, Enumerable.Empty<LevelElement>().ToList());
             boxes.ForEach(g => cubeGroup = cubeGroup.Add(g.Minus(cubeGroup.CubeGroup()).LevelElement(AreaType.None)));
+            return cubeGroup;
+        }
+
+        public LevelGroupElement GetNonOverlappingBoxes(Box2Int boundingBox, int boxesCount)
+        {
+            var boudingElem = GetFlatBox(boundingBox);
+            var smallBox = new Box2Int(boundingBox.leftBottom, boundingBox.leftBottom + (boundingBox.rightTop - boundingBox.leftBottom) / 4);
+            var randomBoundingBox = new Box2Int(new Vector2Int(-2, -2), new Vector2Int(2, 2));
+
+            // get boxes
+            var boxes = Enumerable.Range(0, boxesCount).SelectNN(i =>
+            {
+                var bBounds = smallBox.Border(ExtensionMethods.RandomBox(randomBoundingBox));
+                var b = GetBox(bBounds.InflateY(0, 1)).LevelElement(AreaType.None);
+                return b;
+            });
+
+            // move boxes
+            var movedBoxes = boxes.Aggregate(new List<LevelGeometryElement>(), (moved, b) =>
+            {
+                var movesInside = b.MovesToBeInside(boudingElem);
+                var movesNotIntersecting = b.Moves(movesInside, moved);
+
+                if (movesNotIntersecting.Any())
+                {
+                    moved.Add(b.MoveBy(movesNotIntersecting.GetRandom()));
+                }
+                return moved;
+            });
+            var cubeGroup = new LevelGroupElement(QueriedGrid, AreaType.None, Enumerable.Empty<LevelElement>().ToList());
+            movedBoxes.ForEach(g => cubeGroup = cubeGroup.Add(g.CubeGroup().Minus(cubeGroup.CubeGroup()).LevelElement(AreaType.None)));
             return cubeGroup;
         }
 

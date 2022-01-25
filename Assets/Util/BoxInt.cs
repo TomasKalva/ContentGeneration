@@ -46,6 +46,8 @@ public struct Box3Int : IEnumerable<Vector3Int>
     public bool Contains(Vector3Int v) => v.AtLeast(leftBottomBack) && v.Less(rightTopFront);
 
     public Vector3Int Center() => (leftBottomBack + rightTopFront) / 2;
+
+    public static Box3Int operator +(Box3Int b, Vector3Int v) => new Box3Int(b.leftBottomBack + v, b.rightTopFront + v);
 }
 
 public struct Box2Int : IEnumerable<Vector2Int>
