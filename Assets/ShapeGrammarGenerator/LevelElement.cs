@@ -20,7 +20,14 @@ namespace ShapeGrammar
             AreaType = areaType;
         }
 
-        public IEnumerable<LevelElement> WithAreaType(AreaType areaType) => Flatten().Where(g => g.AreaType == areaType).ToList();
+        #region Collection methods
+        public IEnumerable<LevelElement> WithAreaType(AreaType areaType) => Where(g => g.AreaType == areaType).ToList();
+
+        public IEnumerable<LevelElement> Where(Func<LevelElement, bool> cond) => Flatten().Where(g => cond(g));
+
+        public abstract LevelElement ReplaceLeafs(Func<LevelElement, bool> cond, Func<LevelElement, LevelElement> replaceF);
+
+        #endregion
 
         protected abstract LevelElement MoveByImpl(Vector3Int offset);
 
@@ -63,7 +70,7 @@ namespace ShapeGrammar
         {
             var intersectBounding = MovesToIntersect(bounding);
 
-            var border = bounding.CubeGroup().Extrude().LevelElement(AreaType.None);
+            var border = bounding.CubeGroup().ExtrudeAll().LevelElement(AreaType.None);
             var intersectBorder = MovesToIntersect(border);
             return intersectBounding.SetMinus(intersectBorder);
         }
@@ -74,6 +81,12 @@ namespace ShapeGrammar
             Debug.Log("Moves executed");
             toNotIntersect.ForEach(le => MovesToIntersect(le).ForEach(v => moves.Remove(v)));
             return moves;
+        }
+
+        public IEnumerable<LevelElement> NeighborsInDirection(Vector3Int dir, IEnumerable<LevelElement> possibleNeighbors)
+        {
+            var cubesInDir = CubeGroup().ExtrudeDir(dir);
+            return possibleNeighbors.Where(le => le.CubeGroup().Intersects(cubesInDir));
         }
     }
 
@@ -116,7 +129,16 @@ namespace ShapeGrammar
 
         public LevelGroupElement Select(Func<LevelElement, LevelElement> selector) => new LevelGroupElement(Grid, AreaType, LevelElements.Select(selector).ToList());
 
+
         public override CubeGroup CubeGroup() => new CubeGroup(Grid, Cubes());
+
+        public LevelGroupElement ReplaceLeafsGrp(Func<LevelElement, bool> cond, Func<LevelElement, LevelElement> replaceF) => (LevelGroupElement)ReplaceLeafs(cond, replaceF);
+
+        public override LevelElement ReplaceLeafs(Func<LevelElement, bool> cond, Func<LevelElement, LevelElement> replaceF)
+        {
+            // todo: don't replace the group elements that aren't changed
+            return new LevelGroupElement(Grid, AreaType, LevelElements.Select(le => le.ReplaceLeafs(cond, replaceF)).ToList());
+        }
     }
 
     public class LevelGeometryElement : LevelElement
@@ -144,5 +166,10 @@ namespace ShapeGrammar
         }
 
         public override CubeGroup CubeGroup() => Group;
+
+        public override LevelElement ReplaceLeafs(Func<LevelElement, bool> cond, Func<LevelElement, LevelElement> replaceF)
+        {
+            return cond(this) ? replaceF(this) : this;
+        }
     }
 }

@@ -75,6 +75,11 @@ namespace ShapeGrammar
             from cube2 in grp.Cubes
             select cube1.Position - cube2.Position).Distinct();
 
+        public bool Intersects(CubeGroup cg)
+        {
+            return Cubes.Intersect(cg.Cubes).Any();
+        }
+
         public CubeGroup ExtrudeHor(bool outside = true, bool takeChanged = true)
         {
             int dir = outside ? 1 : -1;
@@ -89,12 +94,20 @@ namespace ShapeGrammar
             return new CubeGroup(Grid, upCubes.ToList());
         }
 
-        public CubeGroup Extrude(bool outside = true, bool takeChanged = true)
+        public CubeGroup ExtrudeAll(bool outside = true, bool takeChanged = true)
         {
             var sides = ExtrudeHor(outside, takeChanged).Cubes;
             var up = ExtrudeVer(Vector3Int.up, 1, takeChanged).Cubes;
             var down = ExtrudeVer(Vector3Int.down, 1, takeChanged).Cubes;
             return new CubeGroup(Grid, sides.Concat(up.Concat(down)).ToList());
+        }
+
+        public CubeGroup ExtrudeDir(Vector3Int dir, int dist = 1, bool takeChanged = true)
+        {
+            var extruded = dir.y == 0 ?
+                BoundaryFacesH(dir).Extrude(dist, takeChanged) :
+                BoundaryFacesV(dir).Extrude(dist, takeChanged);
+            return extruded;
         }
 
         public CubeGroup WithFloor() => Where(cube => cube.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor);

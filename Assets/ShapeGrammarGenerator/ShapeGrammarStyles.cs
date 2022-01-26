@@ -32,9 +32,9 @@ namespace ShapeGrammar
 
         public CubeGroup FlatRoofStyle(CubeGroup roofArea)
         {
-            roofArea.AllBoundaryFacesH().SetStyle(ObjectStyle).Fill(FACE_HOR.Railing);
-            roofArea.BoundaryFacesV(Vector3Int.down).SetStyle(ObjectStyle).Fill(FACE_VER.Floor);
-            roofArea.AllBoundaryCorners().SetStyle(ObjectStyle).Fill(CORNER.RailingPillar);
+            var floorParth = roofArea.BoundaryFacesV(Vector3Int.down).SetStyle(ObjectStyle).Fill(FACE_VER.Floor).Cubes();
+            floorParth.AllBoundaryFacesH().SetStyle(ObjectStyle).Fill(FACE_HOR.Railing);
+            floorParth.AllBoundaryCorners().SetStyle(ObjectStyle).Fill(CORNER.RailingPillar);
             return roofArea;
         }
 

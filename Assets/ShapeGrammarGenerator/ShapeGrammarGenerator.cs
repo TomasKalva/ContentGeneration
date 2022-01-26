@@ -110,6 +110,27 @@ namespace ShapeGrammar
             town = town.Select(g => g.CubeGroup().SetGrammarStyle(sgStyles.RoomStyle).LevelElement(AreaType.Room));
             */
 
+            var towerLayout = qc.GetBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 1));
+            var tower = sgShapes.Tower(towerLayout, 3, 4);
+            tower.ApplyGrammarStyleRules(houseStyleRules);
+
+
+            // add paths between floors
+            var floors = tower.WithAreaType(AreaType.Room);
+            var floorsAndRoof = floors.Concat(tower.WithAreaType(AreaType.Roof));
+            floors.ForEach(floor =>
+            {
+                var upperFloor = floor.NeighborsInDirection(Vector3Int.up, floorsAndRoof).FirstOrDefault();
+                if (upperFloor == null)
+                    return;
+
+                var lower = floor.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.down);
+                var upper = upperFloor.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.down);
+                var searchSpace = new CubeGroup(grid, floor.CubeGroup().ExtrudeHor(false, true).Cubes.Concat(upper.Cubes).ToList());
+                var path = sgShapes.ConnectByPath(lower, upper, searchSpace);
+                path.SetGrammarStyle(sgStyles.StairsPathStyle);
+            });
+
             /*var first = town.LevelElements.FirstOrDefault();
             var second = town.LevelElements.LastOrDefault();
             //var moves = first.Moves(second.CubeGroup().ExtrudeHor().LevelElement(AreaType.None), new LevelElement[1] { second });
@@ -119,7 +140,7 @@ namespace ShapeGrammar
             second.SetGrammarStyle(sgStyles.RoomStyle);
             */
 
-            
+            /*
             // testing paths
             
             var box = sgShapes.Room(new Box3Int(new Vector3Int(0, 0, 0), new Vector3Int(10, 10, 10)));
@@ -127,7 +148,7 @@ namespace ShapeGrammar
             var end = box.CubesLayer(Vector3Int.right);
             var path = sgShapes.ConnectByPath(start, end, box);
             path.SetGrammarStyle(sgStyles.StairsPathStyle);
-            
+            */
 
             grid.Generate(2f, parent);
 

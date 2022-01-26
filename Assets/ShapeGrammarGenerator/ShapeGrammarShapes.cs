@@ -43,7 +43,29 @@ namespace ShapeGrammar
             return house;
         }
 
-        public LevelGroupElement TurnToHouse(CubeGroup house)
+        public LevelElement Tower(CubeGroup belowFirstFloor, int floorHeight, int floorsCount)
+        {
+            var belowEl = belowFirstFloor.LevelElement(AreaType.Foundation); 
+            var towerEl = new LevelGroupElement(belowFirstFloor.Grid, AreaType.None, belowEl);
+            // create floors of the tower
+            var floors = Enumerable.Range(0, floorsCount).Aggregate(towerEl,
+                            (fls, _) =>
+                            {
+                                var newFloor = fls.CubeGroup().ExtrudeVer(Vector3Int.up, floorHeight).LevelElement(AreaType.Room);
+                                return fls.Add(newFloor);
+                            });
+            // add outside part of each floor
+            var extFloors = floors.ReplaceLeafsGrp(
+                le => le.AreaType == AreaType.Room,
+                le => new LevelGroupElement(le.Grid, AreaType.None, le, le.CubeGroup().ExtrudeHor().LevelElement(AreaType.Roof))
+                );
+            // add roof
+            var tower = extFloors.Add(extFloors.CubeGroup().ExtrudeVer(Vector3Int.up, 1).LevelElement(AreaType.Roof));
+
+            return tower;
+        }
+
+        public LevelGroupElement TurnIntoHouse(CubeGroup house)
         {
             var roof = house.CubesMaxLayer(Vector3Int.up).LevelElement(AreaType.Roof);
             var room = house.Minus(roof.CubeGroup()).LevelElement(AreaType.Room);
