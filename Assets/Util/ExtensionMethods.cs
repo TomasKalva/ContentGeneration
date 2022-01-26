@@ -237,6 +237,13 @@ static class ExtensionMethods
         return selected;
     }
 
+    public static void ForEach2<T>(this IEnumerable<T> enumerable, Action<T, T> action)
+    {
+        var first = enumerable;
+        var second = enumerable.Skip(1).Append(enumerable.FirstOrDefault());
+        first.Zip(second, (f, s) => (f,s)).ForEach((pair) => action(pair.f, pair.s));
+    }
+
     public static IEnumerable<U> SelectNN<T, U>(this IEnumerable<T> enumerable, Func<T, U> selector)
     {
         return enumerable.Select(selector).OfType<U>();

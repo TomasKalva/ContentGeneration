@@ -151,7 +151,7 @@ namespace ShapeGrammar
             */
 
             var examples = new Examples(FountainheadStyle);
-            examples.ConnectedTowers();
+            examples.ManyConnectedTowers();
 
             examples.grid.Generate(2f, parent);
 

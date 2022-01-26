@@ -83,9 +83,9 @@ namespace ShapeGrammar
             return moves;
         }
 
-        public LevelGroupElement Merge(LevelElement le)
+        public LevelGroupElement Merge(LevelElement le, AreaType areaType = null)
         {
-            return new LevelGroupElement(Grid, AreaType, this, le);
+            return new LevelGroupElement(Grid, areaType ?? AreaType.None, this, le);
         }
 
         public IEnumerable<LevelElement> NeighborsInDirection(Vector3Int dir, IEnumerable<LevelElement> possibleNeighbors)

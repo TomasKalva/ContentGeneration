@@ -28,8 +28,7 @@ namespace ShapeGrammar
         {
             var room = Room(areaXZ.InflateY(posY, posY + 2)).LevelElement(AreaType.Room);
             var roof = FlatRoof(areaXZ, posY + 2).LevelElement(AreaType.Roof);
-            var cubesBelowRoom = room.CubeGroup().BoundaryFacesV(Vector3Int.down).Cubes().MoveBy(Vector3Int.down);
-            var foundation = Foundation(cubesBelowRoom).LevelElement(AreaType.Foundation);
+            var foundation = Foundation(room).LevelElement(AreaType.Foundation);
             var house = new LevelGroupElement(Grid, AreaType.House, foundation, room, roof);
             return house;
         }
@@ -38,7 +37,7 @@ namespace ShapeGrammar
         {
             var room = belowFirstFloor.ExtrudeVer(Vector3Int.up, floorHeight, false).LevelElement(AreaType.Room);
             var roof = room.CubeGroup().ExtrudeVer(Vector3Int.up, 1, false).LevelElement(AreaType.Roof);
-            var foundation = Foundation(belowFirstFloor).LevelElement(AreaType.Foundation);
+            var foundation = Foundation(room).LevelElement(AreaType.Foundation);
             var house = new LevelGroupElement(Grid, AreaType.House, foundation, room, roof);
             return house;
         }
@@ -60,12 +59,26 @@ namespace ShapeGrammar
             return tower;
         }
 
+        public LevelGroupElement WallPathH(LevelElement area1, LevelElement area2)
+        {
+            // Create path between the towers
+            var starting = area1.CubeGroup().WithFloor();
+            var ending = area2.CubeGroup().WithFloor();
+            var forbidden = area1;
+
+            Neighbors<PathNode> neighbors = PathNode.NotIn(PathNode.HorizontalNeighbors(), forbidden.CubeGroup());
+            var path = ConnectByPath(starting, ending, neighbors).LevelElement(AreaType.Path);
+            var foundation = Foundation(path).LevelElement(AreaType.Foundation);
+
+            return path.Merge(foundation);
+        }
+
         public LevelGroupElement AddBalcony(LevelGroupElement house)
         {
             // add outside part of each floor
             var withBalcony = house.ReplaceLeafsGrp(
                 le => le.AreaType == AreaType.Room,
-                le => new LevelGroupElement(le.Grid, AreaType.None, le, le.CubeGroup().ExtrudeHor().LevelElement(AreaType.Roof))
+                le => new LevelGroupElement(le.Grid, AreaType.None, le, le.CubeGroup().CubesMaxLayer(Vector3Int.down).ExtrudeHor(true, false).LevelElement(AreaType.Roof))
             );
             return withBalcony;
         }
@@ -77,7 +90,7 @@ namespace ShapeGrammar
             return new LevelGroupElement(Grid, AreaType.House, room, roof);
         }
 
-        public CubeGroup Foundation(CubeGroup foundationArea) => QC.MoveDownUntilGround(foundationArea);
+        public CubeGroup Foundation(LevelElement toBeFounded) => QC.MoveDownUntilGround(toBeFounded.CubeGroup().MoveBy(Vector3Int.down));
 
         public CubeGroup Platform(Box2Int areaXZ, int posY) => QC.GetPlatform(areaXZ, posY);
 

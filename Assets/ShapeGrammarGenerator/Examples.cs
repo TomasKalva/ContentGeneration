@@ -26,7 +26,8 @@ namespace ShapeGrammar
             houseStyleRules = new StyleRules(
                 new StyleRule(g => g.WithAreaType(AreaType.Room), g => g.SetGrammarStyle(sgStyles.RoomStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Roof), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.Foundation), g => g.SetGrammarStyle(sgStyles.FoundationStyle))
+                new StyleRule(g => g.WithAreaType(AreaType.Foundation), g => g.SetGrammarStyle(sgStyles.FoundationStyle)),
+                new StyleRule(g => g.WithAreaType(AreaType.Path), g => g.SetGrammarStyle(sgStyles.StairsPathStyle))
             );
         }
         
@@ -46,8 +47,8 @@ namespace ShapeGrammar
             house.ApplyGrammarStyleRules(houseStyleRules);
 
             // wall
-            var wallTop = island.ExtrudeHor(true, false).Minus(island).MoveBy(Vector3Int.up).SetGrammarStyle(sgStyles.FlatRoofStyle);
-            sgShapes.Foundation(wallTop.MoveBy(Vector3Int.down)).SetGrammarStyle(sgStyles.FoundationStyle);
+            var wallTop = island.ExtrudeHor(true, false).Minus(island).MoveBy(Vector3Int.up).SetGrammarStyle(sgStyles.FlatRoofStyle).LevelElement(AreaType.Wall);
+            sgShapes.Foundation(wallTop).SetGrammarStyle(sgStyles.FoundationStyle);
 
             // balcony
             var balconyRoom = house.WithAreaType(AreaType.Room).FirstOrDefault();
@@ -125,24 +126,39 @@ namespace ShapeGrammar
             });
         }
 
-        public void ConnectedTowers()
+        public void TwoConnectedTowers()
         {
+            // Create ground layout of the tower
             var towerLayout = qc.GetBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 1));
+            
+            // Create and set towers to the world
             var tower = sgShapes.Tower(towerLayout, 3, 4);
             tower.ApplyGrammarStyleRules(houseStyleRules);
             var tower2 = tower.MoveBy(new Vector3Int(20, 0, 10)).ApplyGrammarStyleRules(houseStyleRules);
-            
-            var starting = tower.CubeGroup().WithFloor();
-            var ending = tower2.CubeGroup().WithFloor();
-            var forbidden = tower;
 
-            Neighbors<PathNode> neighbors = PathNode.NotIn(PathNode.HorizontalNeighbors(), forbidden.CubeGroup());
-            var path = sgShapes.ConnectByPath(starting, ending, neighbors);
-            path.SetGrammarStyle(sgStyles.StairsPathStyle);
+            // Create path between the towers
+            sgShapes.WallPathH(tower, tower2).ApplyGrammarStyleRules(houseStyleRules);
 
+            // Add balcony to one of the towers
             // house rules are applied to the entire house again...
             // todo: apply them only to the parts that were added
             sgShapes.AddBalcony(tower).ApplyGrammarStyleRules(houseStyleRules);
+        }
+
+        public void ManyConnectedTowers()
+        {
+            // Create ground layout of the tower
+            var towerLayout = qc.GetBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 1));
+
+            // Create and set towers to the world
+            int towersCount = 5;
+            Func<int, float> angle = i => Mathf.PI * 2f * (i / (float)towersCount);
+            var towers = Enumerable.Range(0, towersCount).Select(
+                i => sgShapes.Tower(towerLayout, 3, 4)
+                .MoveBy(Vector3Int.RoundToInt(10f * new Vector3(Mathf.Cos(angle(i)), 0f, Mathf.Sin(angle(i))))));
+
+            towers.ForEach(tower => tower.ApplyGrammarStyleRules(houseStyleRules));
+            towers.ForEach2((t1, t2) => sgShapes.WallPathH(t1, t2).ApplyGrammarStyleRules(houseStyleRules));
         }
 
         public void TestingPaths()
