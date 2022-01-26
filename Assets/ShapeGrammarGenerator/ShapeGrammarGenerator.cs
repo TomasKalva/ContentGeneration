@@ -23,13 +23,13 @@ namespace ShapeGrammar
             {
                 UnityEditor.SceneView.FocusWindowIfItsOpen(typeof(UnityEditor.SceneView));
             }
-            //UnityEngine.Random.InitState(13);
+            UnityEngine.Random.InitState(13);
 
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 
             Debug.Log("Generating world");
-            
+            /*
             var grid = new Grid(new Vector3Int(20, 10, 20));
             var qc = new QueryContext(grid);
 
@@ -41,7 +41,7 @@ namespace ShapeGrammar
                 new StyleRule(g => g.WithAreaType(AreaType.Roof), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Foundation), g => g.SetGrammarStyle(sgStyles.FoundationStyle))
                 );
-
+            */
             /*
             // island
             var island = sgShapes.IslandExtrudeIter(grid[0,0,0].Group(AreaType.Garden), 13, 0.3f);
@@ -109,7 +109,7 @@ namespace ShapeGrammar
             var town = qc.GetNonOverlappingBoxes(new Box2Int(new Vector2Int(0, 0), new Vector2Int(15, 15)), 5);
             town = town.Select(g => g.CubeGroup().SetGrammarStyle(sgStyles.RoomStyle).LevelElement(AreaType.Room));
             */
-
+            /*
             var towerLayout = qc.GetBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 1));
             var tower = sgShapes.Tower(towerLayout, 3, 4);
             tower.ApplyGrammarStyleRules(houseStyleRules);
@@ -130,7 +130,7 @@ namespace ShapeGrammar
                 var path = sgShapes.ConnectByPath(lower, upper, searchSpace);
                 path.SetGrammarStyle(sgStyles.StairsPathStyle);
             });
-
+            */
             /*var first = town.LevelElements.FirstOrDefault();
             var second = town.LevelElements.LastOrDefault();
             //var moves = first.Moves(second.CubeGroup().ExtrudeHor().LevelElement(AreaType.None), new LevelElement[1] { second });
@@ -150,7 +150,10 @@ namespace ShapeGrammar
             path.SetGrammarStyle(sgStyles.StairsPathStyle);
             */
 
-            grid.Generate(2f, parent);
+            var examples = new Examples(FountainheadStyle);
+            examples.ConnectedTowers();
+
+            examples.grid.Generate(2f, parent);
 
             stopwatch.Stop();
             Debug.Log(stopwatch.ElapsedMilliseconds);

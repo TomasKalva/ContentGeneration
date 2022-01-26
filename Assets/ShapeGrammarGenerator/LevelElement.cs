@@ -83,6 +83,11 @@ namespace ShapeGrammar
             return moves;
         }
 
+        public LevelGroupElement Merge(LevelElement le)
+        {
+            return new LevelGroupElement(Grid, AreaType, this, le);
+        }
+
         public IEnumerable<LevelElement> NeighborsInDirection(Vector3Int dir, IEnumerable<LevelElement> possibleNeighbors)
         {
             var cubesInDir = CubeGroup().ExtrudeDir(dir);

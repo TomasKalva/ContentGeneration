@@ -58,7 +58,7 @@ namespace ShapeGrammar
             var extFloors = floors.ReplaceLeafsGrp(
                 le => le.AreaType == AreaType.Room,
                 le => new LevelGroupElement(le.Grid, AreaType.None, le, le.CubeGroup().ExtrudeHor().LevelElement(AreaType.Roof))
-                );
+            );
             // add roof
             var tower = extFloors.Add(extFloors.CubeGroup().ExtrudeVer(Vector3Int.up, 1).LevelElement(AreaType.Roof));
 
@@ -99,23 +99,23 @@ namespace ShapeGrammar
             return balcony;
         }
 
-        public CubeGroup ConnectByPath(CubeGroup cubeGroup1, CubeGroup cubeGroup2, CubeGroup pathBoundingBox)
+        public CubeGroup ConnectByPath(CubeGroup startGroup, CubeGroup endGroup, Neighbors<PathNode> neighbors)
         {
             // create graph for searching for the path
-            var graph = new ImplicitGraph<PathNode>(PathNode.NotRepeatingCubes(PathNode.StairsNeighbors(pathBoundingBox)));
+            var graph = new ImplicitGraph<PathNode>(neighbors);
             var graphAlgs = new GraphAlgorithms<PathNode, Edge<PathNode>, ImplicitGraph<PathNode>>(graph);
 
-            var goal = new HashSet<Cube>(cubeGroup2.Cubes);
-            var start = cubeGroup1.Cubes.Select(c => new PathNode(null, c)).GetRandom();
+            var goal = new HashSet<Cube>(endGroup.Cubes);
+            var starting = startGroup.Cubes.Select(c => new PathNode(null, c));//.GetRandom();
 
-            var heuristicsV = cubeGroup2.Cubes.GetRandom();
-            var path = graphAlgs.FindPath(start,
+            var heuristicsV = endGroup.Cubes.GetRandom();
+            var path = graphAlgs.FindPath(/*new List<PathNode>() { */starting/*.GetRandom() }*/,
                 pn => goal.Contains(pn.cube) && pn.prevVerMove == 0,
                 (pn0, pn1) => (pn0.cube.Position - pn1.cube.Position).sqrMagnitude,
                 pn => (pn.cube.Position - heuristicsV.Position).Sum(x => Mathf.Abs(x)),
                 PathNode.Comparer);
 
-            var pathCubes = path == null ? start.cube.Group().Cubes : path.Select(pn => pn.cube).ToList();
+            var pathCubes = path == null ? starting.GetRandom().cube.Group().Cubes : path.Select(pn => pn.cube).ToList();
             return new CubeGroup(Grid, pathCubes);
         }
 

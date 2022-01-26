@@ -12,22 +12,19 @@ namespace ShapeGrammar
         public static IEqualityComparer<PathNode> Comparer { get; } = new PathNode(null, null);
 
         #region Neighborhoods
-        public static Neighbors<PathNode> HorizontalNeighbors(CubeGroup pathBoundingBox)
+        public static Neighbors<PathNode> HorizontalNeighbors()
         {
-            return pathNode => pathNode.cube.NeighborsHor().Intersect(pathBoundingBox.Cubes)
-                                .Select(c => new PathNode(pathNode, c));
+            return pathNode => pathNode.cube.NeighborsHor().Select(c => new PathNode(pathNode, c));
         }
 
-        public static Neighbors<PathNode> VerticalNeighbors(CubeGroup pathBoundingBox)
+        public static Neighbors<PathNode> VerticalNeighbors()
         {
-            return pathNode => pathNode.cube.NeighborsVer().Intersect(pathBoundingBox.Cubes)
-                                .Select(c => new PathNode(pathNode, c));
+            return pathNode => pathNode.cube.NeighborsVer().Select(c => new PathNode(pathNode, c));
         }
 
-        public static Neighbors<PathNode> DirectionNeighbors(CubeGroup pathBoundingBox, params Vector3Int[] directions)
+        public static Neighbors<PathNode> DirectionNeighbors(params Vector3Int[] directions)
         {
-            return pathNode => pathNode.cube.NeighborsDirections(directions).Intersect(pathBoundingBox.Cubes)
-                                .Select(c => new PathNode(pathNode, c));
+            return pathNode => pathNode.cube.NeighborsDirections(directions).Select(c => new PathNode(pathNode, c));
         }
 
         public static Neighbors<PathNode> NotRepeatingCubes(Neighbors<PathNode> neighbors)
@@ -39,19 +36,38 @@ namespace ShapeGrammar
             };
         }
 
-        public static Neighbors<PathNode> StairsNeighbors(CubeGroup pathBoundingBox)
+        public static Neighbors<PathNode> BoundedBy(Neighbors<PathNode> neighbors, CubeGroup pathBounds)
         {
-            var horizontal = HorizontalNeighbors(pathBoundingBox);
-            var vertical = VerticalNeighbors(pathBoundingBox);
+            var boundingSet = new HashSet<Cube>(pathBounds.Cubes);
             return pathNode =>
+            {
+                return neighbors(pathNode).Where(neighbor => boundingSet.Contains(neighbor.cube));
+            };
+        }
+
+        public static Neighbors<PathNode> NotIn(Neighbors<PathNode> neighbors, CubeGroup forbiddenCubes)
+        {
+            var forbiddenSet = new HashSet<Cube>(forbiddenCubes.Cubes);
+            return pathNode =>
+            {
+                return neighbors(pathNode).Where(neighbor => !forbiddenSet.Contains(neighbor.cube));
+            };
+        }
+
+        public static Neighbors<PathNode> StairsNeighbors()
+        {
+            var horizontal = HorizontalNeighbors();
+            var vertical = VerticalNeighbors();
+            Neighbors<PathNode> repeatingCubesNeighbors = pathNode =>
             {
                 // return only horizontal directions for 1st node
                 return pathNode.prev != null ? 
                             pathNode.prevVerMove == 0 ? 
                                 horizontal(pathNode).Concat(vertical(pathNode)) : 
-                                DirectionNeighbors(pathBoundingBox, pathNode.lastHorMove.X0Z())(pathNode) :
+                                DirectionNeighbors(pathNode.lastHorMove.X0Z())(pathNode) :
                             horizontal(pathNode);
             };
+            return NotRepeatingCubes(repeatingCubesNeighbors);
         }
         #endregion
 

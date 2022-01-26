@@ -186,19 +186,28 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
         }
     }
 
-    public IEnumerable<EdgeT> EdgeAStar(VertexT start, Func<VertexT, VertexT, float> dist, Func<VertexT, float> distTodistToHeuristics, IEqualityComparer<VertexT> comparer)
+    /// <summary>
+    /// Starting vertices have to be disjoint with the vertices reachable by path, because they have distance 0!
+    /// </summary>
+    public IEnumerable<EdgeT> EdgeAStar(IEnumerable<VertexT> starting, Func<VertexT, VertexT, float> dist, Func<VertexT, float> distTodistToHeuristics, IEqualityComparer<VertexT> comparer)
     {
         var found = new HashSet<VertexT>(comparer);
-        var distFrom = new Dictionary<VertexT, float>();
+        var distFrom = new Dictionary<VertexT, float>(comparer);
         Func<EdgeT, float> edgeCost = e => distFrom[e.From] + dist(e.To, e.From) + distTodistToHeuristics(e.To);
         var fringe = HeapFactory.NewFibonacciHeap<EdgeT, float>();
-        distFrom.Add(start, 0f);
-        found.Add(start);
 
-        foreach (var edge in graph.EdgesFrom(start))
+        starting.ForEach(startV =>
         {
-            fringe.Add(edge, edgeCost(edge));
-        }
+            distFrom.Add(startV, 0f);
+            found.Add(startV);
+
+            foreach (var edge in graph.EdgesFrom(startV))
+            {
+                fringe.Add(edge, edgeCost(edge));
+            }
+        });
+
+
         while (fringe.Any())
         {
             var edge = fringe.RemoveMin().Value;
@@ -216,27 +225,39 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
         }
     }
 
-    public IEnumerable<VertexT> FindPath(VertexT start, Func<VertexT, bool> isGoal, Func<VertexT, VertexT, float> dist, Func<VertexT, float> distToHeuristics, IEqualityComparer<VertexT> comparer)
+    /// <summary>
+    /// Starting vertices have to be disjoint with the vertices reachable by path, because they have distance 0!
+    /// </summary>
+    public IEnumerable<VertexT> FindPath(IEnumerable<VertexT> starting, Func<VertexT, bool> isGoal, Func<VertexT, VertexT, float> dist, Func<VertexT, float> distToHeuristics, IEqualityComparer<VertexT> comparer)
     {
-        var prev = new Dictionary<VertexT, VertexT>();
-        prev.Add(start, null);
-        foreach(var edge in EdgeAStar(start, dist, distToHeuristics, comparer))
+        var prev = new Dictionary<VertexT, VertexT>(comparer);
+        starting.ForEach(startV => prev.Add(startV, null));
+
+        foreach (var edge in EdgeAStar(starting, dist, distToHeuristics, comparer))
         {
             if (prev.ContainsKey(edge.To))
                 continue;
 
+            if (!prev.ContainsKey(edge.From))
+            {
+                ;
+            }
             prev.Add(edge.To, edge.From);
             if (isGoal(edge.To))
             {
                 // found the path
                 var path = new List<VertexT>();
                 var v = edge.To;
-                while(prev[v] != null)
+                while(v != null)
                 {
                     path.Add(v);
                     v = prev[v];
+                    /*
+                    if (!prev.ContainsKey(v))
+                    {
+                        break;
+                    }*/
                 }
-                path.Add(v);
 
                 path.Reverse();
                 return path;

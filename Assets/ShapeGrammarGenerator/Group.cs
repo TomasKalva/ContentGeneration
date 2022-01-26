@@ -80,6 +80,11 @@ namespace ShapeGrammar
             return Cubes.Intersect(cg.Cubes).Any();
         }
 
+        public CubeGroup Merge(CubeGroup cg)
+        {
+            return new CubeGroup(Grid, Cubes.Concat(cg.Cubes).ToList());
+        }
+
         public CubeGroup ExtrudeHor(bool outside = true, bool takeChanged = true)
         {
             int dir = outside ? 1 : -1;
