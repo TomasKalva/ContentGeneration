@@ -103,6 +103,7 @@ namespace ShapeGrammar
         {
             var towerLayout = qc.GetBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 1));
             var tower = sgShapes.Tower(towerLayout, 3, 4);
+            tower = sgShapes.AddBalcony(tower);
             tower.ApplyGrammarStyleRules(houseStyleRules);
 
 
@@ -135,27 +136,13 @@ namespace ShapeGrammar
             var ending = tower2.CubeGroup().WithFloor();
             var forbidden = tower;
 
-            var x = starting.Cubes.Where(c => c.Position == new Vector3Int(4, 13, 4));
             Neighbors<PathNode> neighbors = PathNode.NotIn(PathNode.HorizontalNeighbors(), forbidden.CubeGroup());
             var path = sgShapes.ConnectByPath(starting, ending, neighbors);
             path.SetGrammarStyle(sgStyles.StairsPathStyle);
-            
 
-            // add paths between floors
-            /*var floors = tower.WithAreaType(AreaType.Room);
-            var floorsAndRoof = floors.Concat(tower.WithAreaType(AreaType.Roof));
-            floors.ForEach(floor =>
-            {
-                var upperFloor = floor.NeighborsInDirection(Vector3Int.up, floorsAndRoof).FirstOrDefault();
-                if (upperFloor == null)
-                    return;
-
-                var lower = floor.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.down);
-                var upper = upperFloor.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.down);
-                var searchSpace = new CubeGroup(grid, floor.CubeGroup().ExtrudeHor(false, true).Cubes.Concat(upper.Cubes).ToList());
-                var path = sgShapes.ConnectByPath(lower, upper, searchSpace);
-                path.SetGrammarStyle(sgStyles.StairsPathStyle);
-            });*/
+            // house rules are applied to the entire house again...
+            // todo: apply them only to the parts that were added
+            sgShapes.AddBalcony(tower).ApplyGrammarStyleRules(houseStyleRules);
         }
 
         public void TestingPaths()

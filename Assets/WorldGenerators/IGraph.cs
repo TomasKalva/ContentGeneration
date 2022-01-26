@@ -238,10 +238,6 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
             if (prev.ContainsKey(edge.To))
                 continue;
 
-            if (!prev.ContainsKey(edge.From))
-            {
-                ;
-            }
             prev.Add(edge.To, edge.From);
             if (isGoal(edge.To))
             {
@@ -252,11 +248,6 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
                 {
                     path.Add(v);
                     v = prev[v];
-                    /*
-                    if (!prev.ContainsKey(v))
-                    {
-                        break;
-                    }*/
                 }
 
                 path.Reverse();

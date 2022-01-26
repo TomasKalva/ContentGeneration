@@ -34,7 +34,7 @@ namespace ShapeGrammar
             return house;
         }
 
-        public LevelElement House(CubeGroup belowFirstFloor, int floorHeight)
+        public LevelGroupElement House(CubeGroup belowFirstFloor, int floorHeight)
         {
             var room = belowFirstFloor.ExtrudeVer(Vector3Int.up, floorHeight, false).LevelElement(AreaType.Room);
             var roof = room.CubeGroup().ExtrudeVer(Vector3Int.up, 1, false).LevelElement(AreaType.Roof);
@@ -43,7 +43,7 @@ namespace ShapeGrammar
             return house;
         }
 
-        public LevelElement Tower(CubeGroup belowFirstFloor, int floorHeight, int floorsCount)
+        public LevelGroupElement Tower(CubeGroup belowFirstFloor, int floorHeight, int floorsCount)
         {
             var belowEl = belowFirstFloor.LevelElement(AreaType.Foundation); 
             var towerEl = new LevelGroupElement(belowFirstFloor.Grid, AreaType.None, belowEl);
@@ -54,15 +54,20 @@ namespace ShapeGrammar
                                 var newFloor = fls.CubeGroup().ExtrudeVer(Vector3Int.up, floorHeight).LevelElement(AreaType.Room);
                                 return fls.Add(newFloor);
                             });
+            // add roof
+            var tower = floors.Add(floors.CubeGroup().ExtrudeVer(Vector3Int.up, 1).LevelElement(AreaType.Roof));
+
+            return tower;
+        }
+
+        public LevelGroupElement AddBalcony(LevelGroupElement house)
+        {
             // add outside part of each floor
-            var extFloors = floors.ReplaceLeafsGrp(
+            var withBalcony = house.ReplaceLeafsGrp(
                 le => le.AreaType == AreaType.Room,
                 le => new LevelGroupElement(le.Grid, AreaType.None, le, le.CubeGroup().ExtrudeHor().LevelElement(AreaType.Roof))
             );
-            // add roof
-            var tower = extFloors.Add(extFloors.CubeGroup().ExtrudeVer(Vector3Int.up, 1).LevelElement(AreaType.Roof));
-
-            return tower;
+            return withBalcony;
         }
 
         public LevelGroupElement TurnIntoHouse(CubeGroup house)
@@ -106,10 +111,11 @@ namespace ShapeGrammar
             var graphAlgs = new GraphAlgorithms<PathNode, Edge<PathNode>, ImplicitGraph<PathNode>>(graph);
 
             var goal = new HashSet<Cube>(endGroup.Cubes);
-            var starting = startGroup.Cubes.Select(c => new PathNode(null, c));//.GetRandom();
+            var starting = startGroup.Cubes.Select(c => new PathNode(null, c));
 
             var heuristicsV = endGroup.Cubes.GetRandom();
-            var path = graphAlgs.FindPath(/*new List<PathNode>() { */starting/*.GetRandom() }*/,
+            var path = graphAlgs.FindPath(
+                starting,
                 pn => goal.Contains(pn.cube) && pn.prevVerMove == 0,
                 (pn0, pn1) => (pn0.cube.Position - pn1.cube.Position).sqrMagnitude,
                 pn => (pn.cube.Position - heuristicsV.Position).Sum(x => Mathf.Abs(x)),
