@@ -67,7 +67,11 @@ namespace ShapeGrammar
             var forbidden = area1;
 
             Neighbors<PathNode> neighbors = PathNode.NotIn(PathNode.HorizontalNeighbors(), forbidden.CubeGroup());
-            var path = ConnectByPath(starting, ending, neighbors).LevelElement(AreaType.Path);
+            var path = ConnectByPath(starting, ending, neighbors)?.LevelElement(AreaType.Path);
+            if(path == null)
+            {
+                return null;
+            }
             var foundation = Foundation(path).LevelElement(AreaType.Foundation);
 
             return path.Merge(foundation);
@@ -135,6 +139,8 @@ namespace ShapeGrammar
                 PathNode.Comparer);
 
             var pathCubes = path == null ? starting.GetRandom().cube.Group().Cubes : path.Select(pn => pn.cube).ToList();
+            // drop first and last element
+            pathCubes = pathCubes.Skip(1).Reverse().Skip(1).Reverse().ToList();
             return new CubeGroup(Grid, pathCubes);
         }
 
