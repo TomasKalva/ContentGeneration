@@ -179,14 +179,14 @@ namespace ShapeGrammar
         }
 
 
-        public LevelGroupElement FlatBoxSequence(IEnumerable<Box2Int> boxes, int count)
+        public LevelGroupElement FlatBoxes(IEnumerable<Box2Int> boxes, int count)
         {
             return new LevelGroupElement(QueriedGrid, AreaType.None, boxes.Select(box => GetFlatBox(box)).Take(count).ToList<LevelElement>());
         }
 
-        public LevelGroupElement RemoveOverlap(LevelGroupElement levelElement)
+        public LevelGroupElement RemoveOverlap(LevelGroupElement levelGroupElement)
         {
-            var movedElements = levelElement.LevelElements.Aggregate(new List<LevelElement>(), (moved, le) =>
+            var movedElements = levelGroupElement.LevelElements.Aggregate(new List<LevelElement>(), (moved, le) =>
             {
                 var movesNotIntersecting = le.NotIntersecting(moved);
 
@@ -196,7 +196,23 @@ namespace ShapeGrammar
                 }
                 return moved;
             });
-            return new LevelGroupElement(levelElement.Grid, AreaType.None, movedElements);
+            return new LevelGroupElement(levelGroupElement.Grid, AreaType.None, movedElements);
+        }
+
+        public LevelGroupElement SurroundWith(LevelElement levelElement, LevelGroupElement surroundings)
+        {
+            var movedElements = surroundings.LevelElements.Aggregate(new List<LevelElement>(), (moved, le) =>
+            {
+                var movesNear = le.MovesNearXZ(levelElement);
+                var movesNotIntersecting = le.Moves(movesNear, moved);
+
+                if (movesNotIntersecting.Any())
+                {
+                    moved.Add(le.MoveBy(movesNotIntersecting.GetRandom()));
+                }
+                return moved;
+            });
+            return new LevelGroupElement(surroundings.Grid, surroundings.AreaType, movedElements);
         }
 
         public LevelGroupElement LiftRandomly(LevelGroupElement lge, Func<int> liftingF)
@@ -222,14 +238,6 @@ namespace ShapeGrammar
             var foundationCubes = topLayer.MoveInDirUntil(Vector3Int.down, cube => cube.Position.y < 0);
             return foundationCubes;
         }
-
-        /*
-        public CubeGroup MoveNear(CubeGroup what, CubeGroup where)
-        {
-            var offset = where.MinkowskiMinus(what).Cubes.GetRandom().Position;
-            var movedWhat = what.MoveBy(offset);
-            return movedWhat;
-        }*/
 
         public CubeGroup GetRandomHorConnected(Vector3Int start, CubeGroup boundingGroup, int n)
         {

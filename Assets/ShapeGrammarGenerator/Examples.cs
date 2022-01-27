@@ -27,7 +27,10 @@ namespace ShapeGrammar
                 new StyleRule(g => g.WithAreaType(AreaType.Room), g => g.SetGrammarStyle(sgStyles.RoomStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Roof), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Foundation), g => g.SetGrammarStyle(sgStyles.FoundationStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.Path), g => g.SetGrammarStyle(sgStyles.StairsPathStyle))
+                new StyleRule(g => g.WithAreaType(AreaType.Path), g => g.SetGrammarStyle(sgStyles.StairsPathStyle)),
+                new StyleRule(g => g.WithAreaType(AreaType.Garden), g => g.SetGrammarStyle(sgStyles.GardenStyle)),
+                new StyleRule(g => g.WithAreaType(AreaType.WallTop), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
+                new StyleRule(g => g.WithAreaType(AreaType.Wall), g => g.SetGrammarStyle(sgStyles.FoundationStyle))
             );
         }
         
@@ -109,9 +112,8 @@ namespace ShapeGrammar
 
         public void RemovingOverlap()
         {
-            //var boundingBox = new Box2Int(new Vector2Int(0, 0), new Vector2Int(8, 8));
             var boxSequence = ExtensionMethods.BoxSequence(() => ExtensionMethods.RandomBox(new Vector2Int(3, 3), new Vector2Int(5, 5)));
-            var town = qc.RemoveOverlap(qc.FlatBoxSequence(boxSequence, 16));
+            var town = qc.RemoveOverlap(qc.FlatBoxes(boxSequence, 16));
             town = town.Select(le => le.SetAreaType(AreaType.Room));
             town.ApplyGrammarStyleRules(houseStyleRules);
         }
@@ -175,6 +177,26 @@ namespace ShapeGrammar
 
             towers.ForEach(tower => tower.ApplyGrammarStyleRules(houseStyleRules));
             towers.ForEach2((t1, t2) => sgShapes.WallPathH(t1, t2, 3).ApplyGrammarStyleRules(houseStyleRules));
+        }
+
+        public void Surrounded()
+        {
+            var root = new LevelGroupElement(grid, AreaType.WorldRoot);
+
+            // Create ground layout of the tower
+            var yard = qc.GetBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)).InflateY(0, 1)).LevelElement(AreaType.Garden);
+
+
+            var boxSequence = ExtensionMethods.BoxSequence(() => ExtensionMethods.RandomBox(new Vector2Int(3, 3), new Vector2Int(7, 7)));
+            var houses = qc.FlatBoxes(boxSequence, 6).Select(le => le.SetAreaType(AreaType.House));
+            
+            houses = qc.SurroundWith(yard, houses);
+            houses = houses.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => sgShapes.House(g.CubeGroup(), 3));
+
+            var wall = sgShapes.WallAround(yard, 2).Minus(houses);
+
+            root = root.AddAll(yard, houses, wall);
+            root.ApplyGrammarStyleRules(houseStyleRules);
         }
 
         public void TestingPaths()

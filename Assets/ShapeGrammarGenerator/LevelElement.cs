@@ -83,6 +83,13 @@ namespace ShapeGrammar
             return moves;
         }
 
+        public IEnumerable<Vector3Int> MovesNearXZ(LevelElement nearThis)
+        {
+            var intersectNear = nearThis.CubeGroup().MinkowskiMinus(CubeGroup().AllBoundaryFacesH().Extrude(1, false));
+            var intersect = MovesToIntersect(nearThis);
+            return intersectNear.SetMinus(intersect);
+        }
+
         /// <summary>
         /// Returns all (infinitely many) possible moves so that this doesn't intersect toNotIntersect.
         /// </summary>
@@ -98,11 +105,11 @@ namespace ShapeGrammar
                 }
             }
         }
+        /*
+        public abstract LevelGroupElement Merge(params LevelElement[] le);
+        */
 
-        public LevelGroupElement Merge(LevelElement le, AreaType areaType = null)
-        {
-            return new LevelGroupElement(Grid, areaType ?? AreaType.None, this, le);
-        }
+        public abstract LevelElement Minus(LevelElement le);
 
         public IEnumerable<LevelElement> NeighborsInDirection(Vector3Int dir, IEnumerable<LevelElement> possibleNeighbors)
         {
@@ -136,6 +143,7 @@ namespace ShapeGrammar
         public override IEnumerable<LevelElement> Flatten() => LevelElements.SelectMany(le => le.Flatten()).Prepend(this);
 
         public LevelGroupElement Add(LevelElement levelElement) => new LevelGroupElement(Grid, AreaType, LevelElements.Append(levelElement).ToList());
+        public LevelGroupElement AddAll(params LevelElement[] levelElement) => new LevelGroupElement(Grid, AreaType, LevelElements.Concat(levelElement).ToList());
 
         protected override LevelElement MoveByImpl(Vector3Int offset)
         {
@@ -160,6 +168,23 @@ namespace ShapeGrammar
             // todo: don't replace the group elements that aren't changed
             return new LevelGroupElement(Grid, AreaType, LevelElements.Select(le => le.ReplaceLeafs(cond, replaceF)).ToList());
         }
+
+        public override LevelElement Minus(LevelElement levelElement)
+        {
+            // todo: don't replace the group elements that aren't changed
+            return new LevelGroupElement(Grid, AreaType, LevelElements.Select(le => le.Minus(levelElement)).ToList());
+        }
+
+        public LevelGroupElement MinusGrp(LevelElement levelElement)
+        {
+            return (LevelGroupElement)Minus(levelElement);
+        }
+
+        /*
+        public override LevelGroupElement Merge(params LevelElement[] le)
+        {
+            return new LevelGroupElement(Grid, AreaType, LevelElements.Concat(le).ToList());
+        }*/
     }
 
     public class LevelGeometryElement : LevelElement
@@ -191,6 +216,17 @@ namespace ShapeGrammar
         public override LevelElement ReplaceLeafs(Func<LevelElement, bool> cond, Func<LevelElement, LevelElement> replaceF)
         {
             return cond(this) ? replaceF(this) : this;
+        }
+
+        public override LevelElement Minus(LevelElement levelElement)
+        {
+            // todo: don't materialize levelElement.CubeGroup() for every leaf
+            return new LevelGeometryElement(Grid, AreaType, Group.Minus(levelElement.CubeGroup()));
+        }
+        
+        public LevelGroupElement Merge(params LevelElement[] le)
+        {
+            return new LevelGroupElement(Grid, AreaType.None, le.Prepend(this).ToList());
         }
     }
 }

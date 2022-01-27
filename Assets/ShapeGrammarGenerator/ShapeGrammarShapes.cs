@@ -170,5 +170,13 @@ namespace ShapeGrammar
         {
             return ExtensionMethods.ApplyNTimes(cg => QC.ExtrudeRandomly(cg, extrudeKeptRatio), cubeGroup, iterCount);
         }
+
+        public LevelGroupElement WallAround(LevelElement inside, int height)
+        {
+            var insideCg = inside.CubeGroup();
+            var wallTop = insideCg.ExtrudeHor(true, false).Minus(insideCg).MoveBy(height * Vector3Int.up).LevelElement(AreaType.WallTop);
+            var wall = Foundation(wallTop).LevelElement(AreaType.Wall);
+            return new LevelGroupElement(inside.Grid, AreaType.None, wall, wallTop);
+        }
     }
 }

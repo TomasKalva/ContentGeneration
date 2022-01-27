@@ -30,6 +30,12 @@ namespace ShapeGrammar
             return roomArea;
         }
 
+        public CubeGroup GardenStyle(CubeGroup roomArea)
+        {
+            roomArea.BoundaryFacesV(Vector3Int.down).SetStyle(ObjectStyle).Fill(FACE_VER.Floor);
+            return roomArea;
+        }
+
         public CubeGroup FlatRoofStyle(CubeGroup roofArea)
         {
             var floorParth = roofArea.BoundaryFacesV(Vector3Int.down).SetStyle(ObjectStyle).Fill(FACE_VER.Floor).Cubes();
