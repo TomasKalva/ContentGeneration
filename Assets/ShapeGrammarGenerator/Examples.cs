@@ -100,6 +100,22 @@ namespace ShapeGrammar
             });
         }
 
+        public void NonOverlappingTown()
+        {
+            var town = qc.RemoveOverlap(qc.GetOverlappingBoxes(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)), 8));
+            town = town.Select(le => le.SetAreaType(AreaType.Room));
+            town.ApplyGrammarStyleRules(houseStyleRules);
+        }
+
+        public void RemovingOverlap()
+        {
+            //var boundingBox = new Box2Int(new Vector2Int(0, 0), new Vector2Int(8, 8));
+            var boxSequence = ExtensionMethods.BoxSequence(() => ExtensionMethods.RandomBox(new Vector2Int(3, 3), new Vector2Int(5, 5)));
+            var town = qc.RemoveOverlap(qc.FlatBoxSequence(boxSequence, 16));
+            town = town.Select(le => le.SetAreaType(AreaType.Room));
+            town.ApplyGrammarStyleRules(houseStyleRules);
+        }
+
         public void Tower()
         {
             var towerLayout = qc.GetBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 1));

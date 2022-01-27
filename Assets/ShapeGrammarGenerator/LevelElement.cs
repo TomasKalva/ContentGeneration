@@ -77,10 +77,26 @@ namespace ShapeGrammar
 
         public IEnumerable<Vector3Int> Moves(IEnumerable<Vector3Int> possibleMoves, IEnumerable<LevelElement> toNotIntersect)
         {
+            
             var moves = new HashSet<Vector3Int>(possibleMoves);
-            Debug.Log("Moves executed");
             toNotIntersect.ForEach(le => MovesToIntersect(le).ForEach(v => moves.Remove(v)));
             return moves;
+        }
+
+        /// <summary>
+        /// Returns all (infinitely many) possible moves so that this doesn't intersect toNotIntersect.
+        /// </summary>
+        public IEnumerable<Vector3Int> NotIntersecting(IEnumerable<LevelElement> toNotIntersect)
+        {
+            var forbiddenMoves = new HashSet<Vector3Int>();
+            toNotIntersect.ForEach(le => MovesToIntersect(le).ForEach(v => forbiddenMoves.Add(v)));
+            foreach (var move in ExtensionMethods.AllVectorsXZ())
+            {
+                if (!forbiddenMoves.Contains(move))
+                {
+                    yield return move;
+                }
+            }
         }
 
         public LevelGroupElement Merge(LevelElement le, AreaType areaType = null)

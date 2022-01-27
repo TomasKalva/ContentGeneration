@@ -56,7 +56,7 @@ static class ExtensionMethods
         b = a + size;
     }
 
-    public static Box2Int RandomBox(Box2Int boundingBox)
+    public static Box2Int RandomHalfBox(Box2Int boundingBox)
     {
         var M = boundingBox.rightTop - boundingBox.leftBottom;
         var m = M / 2;
@@ -67,7 +67,23 @@ static class ExtensionMethods
         return new Box2Int(b + new Vector2Int(x, y), b + new Vector2Int(X, Y));
     }
 
-    public static Box3Int RandomBox(Box3Int boundingBox)
+    public static Box2Int RandomBox(Box2Int boundingBox)
+    {
+        var M = boundingBox.rightTop - boundingBox.leftBottom;
+        GetRandomExtents(M.x, M.x, out var x, out var X);
+        GetRandomExtents(M.y, M.y, out var y, out var Y);
+
+        var b = boundingBox.leftBottom;
+        return new Box2Int(b + new Vector2Int(x, y), b + new Vector2Int(X, Y));
+    }
+
+    public static Box2Int RandomBox(Vector2Int minExt, Vector2Int maxExt)
+    {
+        var ext = minExt.ComponentWise(maxExt, (min, max) => UnityEngine.Random.Range(min, max));
+        return new Box2Int(Vector2Int.zero, ext);
+    }
+
+    public static Box3Int RandomHalfBox(this Box3Int boundingBox)
     {
         var M = boundingBox.rightTopFront - boundingBox.leftBottomBack;
         var m = M / 2;
@@ -78,6 +94,22 @@ static class ExtensionMethods
 
         var b = boundingBox.rightTopFront;
         return new Box3Int(b + new Vector3Int(x, y, z), b + new Vector3Int(X, Y, Z));
+    }
+
+    public static IEnumerable<Box3Int> BoxSequence(Func<Box3Int> f)
+    {
+        while (true)
+        {
+            yield return f();
+        }
+    }
+
+    public static IEnumerable<Box2Int> BoxSequence(Func<Box2Int> f)
+    {
+        while (true)
+        {
+            yield return f();
+        }
     }
 
     public static T ArgMax<T>(this IEnumerable<T> enumerable, Func<T, float> f)
@@ -252,6 +284,65 @@ static class ExtensionMethods
     public static IEnumerable<U> SelectManyNN<T, U>(this IEnumerable<T> enumerable, Func<T, IEnumerable<U>> selector)
     {
         return enumerable.SelectNN(selector).SelectMany(ie => ie).OfType<U>();
+    }
+
+    public static IEnumerable<int> Circle1(int r)
+    {
+        yield return r;
+        if(r != 0)
+        {
+            yield return -r;
+        }
+    }
+
+    public static IEnumerable<Vector2Int> Circle2(int r)
+    {
+        for(int y = -r; y <= r; y++)
+        {
+            int absY = Mathf.Abs(y);
+            foreach(var x in Circle1(r - absY))
+            {
+                yield return new Vector2Int(x, y);
+            }
+        }
+    }
+
+    public static IEnumerable<Vector3Int> Circle3(int r)
+    {
+        for (int z = -r; z <= r; z++)
+        {
+            int absZ = Mathf.Abs(z);
+            foreach (var xy in Circle2(r - absZ))
+            {
+                yield return new Vector3Int(xy.x, xy.y, z);
+            }
+        }
+    }
+
+    public static IEnumerable<Vector3Int> AllVectorsXZ()
+    {
+        int i = 0;
+        while (true)
+        {
+            foreach (var v in Circle2(i))
+            {
+                yield return v.X0Z();
+            }
+            i++;
+        }
+    }
+
+    public static IEnumerable<Vector3Int> AllVectors3()
+    {
+        int i = 0;
+        while (true)
+        {
+            foreach(var v in Circle3(i))
+            {
+                yield return v;
+            }
+            i++;
+        }
     }
 
     /// <summary>

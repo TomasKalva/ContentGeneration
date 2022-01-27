@@ -102,7 +102,7 @@ public class UniformRectangles : Template
         var flatBoundingBox = boundingBox.FlattenY();
         for (int j = boundingBox.leftBottomBack.y; j < boundingBox.rightTopFront.y; j++)
         {
-            var room = new Room(ExtensionMethods.RandomBox(flatBoundingBox), j, moduleLibrary, styles);
+            var room = new Room(ExtensionMethods.RandomHalfBox(flatBoundingBox), j, moduleLibrary, styles);
             room.Generate(moduleGrid);
         }
 
