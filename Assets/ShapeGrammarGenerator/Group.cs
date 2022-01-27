@@ -80,9 +80,23 @@ namespace ShapeGrammar
             return Cubes.Intersect(cg.Cubes).Any();
         }
 
+        public IEnumerable<CubeGroup> SplitToConnected()
+        {
+            var cubesSet = new HashSet<Cube>(Cubes);
+            Neighbors<Cube> neighbors = 
+                cube => ExtensionMethods.Directions()
+                    .Select(dir => cube.Grid[cube.Position + dir])
+                    .Where(neighCube => cubesSet.Contains(neighCube));
+            // create graph for searching for the path
+            var graph = new ImplicitGraph<Cube>(neighbors);
+            var graphAlgs = new GraphAlgorithms<Cube, Edge<Cube>, ImplicitGraph<Cube>>(graph);
+
+            return graphAlgs.ConnectedComponentsSymm(Cubes).Select(cubes => new CubeGroup(Grid, cubes.ToList()));
+        }
+
         public CubeGroup Merge(CubeGroup cg)
         {
-            return new CubeGroup(Grid, Cubes.Concat(cg.Cubes).ToList());
+            return new CubeGroup(Grid, Cubes.Concat(cg.Cubes).Distinct().ToList());
         }
 
         public CubeGroup ExtrudeHor(bool outside = true, bool takeChanged = true)
@@ -91,6 +105,16 @@ namespace ShapeGrammar
             var faceCubes = AllBoundaryFacesH().Extrude(dir, takeChanged).Cubes;
             var cornerCubes = AllBoundaryCorners().Extrude(dir, takeChanged).Cubes;
             return new CubeGroup(Grid, faceCubes.Concat(cornerCubes).Distinct().ToList());
+        }
+
+        public CubeGroup ExtrudeHorOut(int dist, bool takeChanged = true)
+        {
+            var totalGroup = this;
+            for(int i = 0; i < dist; i++)
+            {
+                totalGroup = totalGroup.ExtrudeHor(true, takeChanged);
+            }
+            return totalGroup.Minus(this);
         }
 
         public CubeGroup ExtrudeVer(Vector3Int dir, int dist, bool takeChanged = true)

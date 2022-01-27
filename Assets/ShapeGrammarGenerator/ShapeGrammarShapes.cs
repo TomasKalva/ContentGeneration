@@ -59,7 +59,7 @@ namespace ShapeGrammar
             return tower;
         }
 
-        public LevelGroupElement WallPathH(LevelElement area1, LevelElement area2)
+        public LevelGroupElement WallPathH(LevelElement area1, LevelElement area2, int thickness)
         {
             // Create path between the towers
             var starting = area1.CubeGroup().WithFloor();
@@ -67,11 +67,25 @@ namespace ShapeGrammar
             var forbidden = area1;
 
             Neighbors<PathNode> neighbors = PathNode.NotIn(PathNode.HorizontalNeighbors(), forbidden.CubeGroup());
-            var path = ConnectByPath(starting, ending, neighbors)?.LevelElement(AreaType.Path);
-            if(path == null)
+            var pathCubes = ConnectByPath(starting, ending, neighbors);
+            if(pathCubes == null)
             {
                 return null;
             }
+
+            if (thickness > 1)
+            {
+                var halfThickness = (thickness - 1) / 2;
+                // extruding to both sides
+                pathCubes = pathCubes.ExtrudeHorOut(halfThickness, false).Merge(pathCubes);
+                if (thickness % 2 == 0)
+                {
+                    // extruding to only 1 side
+                    pathCubes = pathCubes.ExtrudeHorOut(thickness - 1, false).Minus(pathCubes).SplitToConnected().FirstOrDefault().Merge(pathCubes);
+                }
+            }
+
+            var path = pathCubes.LevelElement(AreaType.Path);
             var foundation = Foundation(path).LevelElement(AreaType.Foundation);
 
             return path.Merge(foundation);

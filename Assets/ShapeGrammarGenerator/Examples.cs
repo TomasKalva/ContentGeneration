@@ -153,7 +153,7 @@ namespace ShapeGrammar
             var tower2 = tower.MoveBy(new Vector3Int(20, 0, 10)).ApplyGrammarStyleRules(houseStyleRules);
 
             // Create path between the towers
-            sgShapes.WallPathH(tower, tower2).ApplyGrammarStyleRules(houseStyleRules);
+            sgShapes.WallPathH(tower, tower2, 1).ApplyGrammarStyleRules(houseStyleRules);
 
             // Add balcony to one of the towers
             // house rules are applied to the entire house again...
@@ -174,7 +174,7 @@ namespace ShapeGrammar
                 .MoveBy(Vector3Int.RoundToInt(10f * new Vector3(Mathf.Cos(angle(i)), 0f, Mathf.Sin(angle(i))))));
 
             towers.ForEach(tower => tower.ApplyGrammarStyleRules(houseStyleRules));
-            towers.ForEach2((t1, t2) => sgShapes.WallPathH(t1, t2).ApplyGrammarStyleRules(houseStyleRules));
+            towers.ForEach2((t1, t2) => sgShapes.WallPathH(t1, t2, 3).ApplyGrammarStyleRules(houseStyleRules));
         }
 
         public void TestingPaths()
