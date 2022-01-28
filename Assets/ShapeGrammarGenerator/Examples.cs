@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace ShapeGrammar
 {
-    public class Examples
+    public class LevelDevelopmentKit
     {
         public ShapeGrammarObjectStyle FountainheadStyle { get; }
         public Grid grid { get; }
@@ -16,7 +16,7 @@ namespace ShapeGrammar
         public ShapeGrammarShapes sgShapes { get; }
         public StyleRules houseStyleRules { get; }
 
-        public Examples(ShapeGrammarObjectStyle objectStyle)
+        public LevelDevelopmentKit(ShapeGrammarObjectStyle objectStyle)
         {
             FountainheadStyle = objectStyle;
             grid = new Grid(new Vector3Int(20, 10, 20));
@@ -30,9 +30,16 @@ namespace ShapeGrammar
                 new StyleRule(g => g.WithAreaType(AreaType.Path), g => g.SetGrammarStyle(sgStyles.StairsPathStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Garden), g => g.SetGrammarStyle(sgStyles.GardenStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.WallTop), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.Wall), g => g.SetGrammarStyle(sgStyles.FoundationStyle))
+                new StyleRule(g => g.WithAreaType(AreaType.Wall), g => g.SetGrammarStyle(sgStyles.FoundationStyle)),
+                new StyleRule(g => g.WithAreaType(AreaType.Debug), g => g.SetGrammarStyle(sgStyles.RoomStyle))
             );
         }
+    }
+
+    public class Examples : LevelDevelopmentKit
+    {
+        public Examples(ShapeGrammarObjectStyle objectStyle) : base(objectStyle)
+        { }
         
         public void Island()
         {
@@ -176,7 +183,7 @@ namespace ShapeGrammar
                 .MoveBy(Vector3Int.RoundToInt(10f * new Vector3(Mathf.Cos(angle(i)), 0f, Mathf.Sin(angle(i))))));
 
             towers.ForEach(tower => tower.ApplyGrammarStyleRules(houseStyleRules));
-            towers.ForEach2((t1, t2) => sgShapes.WallPathH(t1, t2, 3).ApplyGrammarStyleRules(houseStyleRules));
+            towers.ForEach2Cycle((t1, t2) => sgShapes.WallPathH(t1, t2, 3).ApplyGrammarStyleRules(houseStyleRules));
         }
 
         public void Surrounded()
@@ -208,6 +215,12 @@ namespace ShapeGrammar
             Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.StairsNeighbors(), box);
             var path = sgShapes.ConnectByPath(start, end, neighbors);
             path.SetGrammarStyle(sgStyles.StairsPathStyle);
+        }
+
+        public void ControlPointDesign()
+        {
+            var controlPointsDesign = new ControlPointsLevelDesign(this);
+            controlPointsDesign.CreateLevel();
         }
     }
 }

@@ -129,5 +129,25 @@ namespace ShapeGrammar
         {
             return directions.Select(dir => Grid[Position + dir]); ;
         }
+
+        public CubeGroup LineTo(Cube other)
+        {
+            // todo: use faster algorithm than a*
+
+            Neighbors<Cube> neighbors =
+                cube => ExtensionMethods.Directions()
+                    .Select(dir => cube.Grid[cube.Position + dir]);
+            // create graph for searching for the path
+            var graph = new ImplicitGraph<Cube>(neighbors);
+            var graphAlgs = new GraphAlgorithms<Cube, Edge<Cube>, ImplicitGraph<Cube>>(graph);
+
+            var path = graphAlgs.FindPath(
+                new Cube[1] { this }, 
+                cube => cube == other,
+                (c0, c1) => (c0.Position - c1.Position).sqrMagnitude,
+                c => (c.Position - other.Position).Sum(x => Mathf.Abs(x)),
+                EqualityComparer<Cube>.Default);
+            return path.ToCubeGroup(Grid);
+        }
     }
 }

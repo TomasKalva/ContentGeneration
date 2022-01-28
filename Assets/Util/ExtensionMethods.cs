@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ShapeGrammar;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,31 @@ static class ExtensionMethods
         if (count == 0) return default;
         var i = UnityEngine.Random.Range(0, count);
         return enumerable.ElementAt(i);
+    }
+
+    public static CubeGroup ToCubeGroup(this IEnumerable<Cube> enumerable, ShapeGrammar.Grid grid)
+    {
+        return enumerable.ToList().ToCubeGroup(grid);
+    }
+
+    public static CubeGroup ToCubeGroup(this List<Cube> list, ShapeGrammar.Grid grid)
+    {
+        return new CubeGroup(grid, list);
+    }
+
+    public static CubeGroup ToCubeGroup(this IEnumerable<CubeGroup> enumerable)
+    {
+        return new CubeGroup(enumerable.FirstOrDefault().Grid, enumerable.SelectMany(cg => cg.Cubes).ToList());
+    }
+
+    public static LevelGroupElement ToLevelGroupElement(this IEnumerable<LevelElement> enumerable)
+    {
+        return enumerable.ToList().ToLevelGroupElement();
+    }
+
+    public static LevelGroupElement ToLevelGroupElement(this List<LevelElement> list)
+    {
+        return new LevelGroupElement(list.FirstOrDefault().Grid, AreaType.None, list);
     }
 
     public static Vector2Int RandomVector2Int(Vector2Int leftBottom, Vector2Int rightTop)
@@ -256,12 +282,12 @@ static class ExtensionMethods
         }
     }
 
-    public static List<T> Select3<T>(this List<T> list, Func<T, T, T, bool> action)
+    public static List<T> Where3<T>(this List<T> list, Func<T, T, T, bool> cond)
     {
         var selected = new List<T>();
         list.ForEach3((l, t, r) =>
         { 
-            if (action(l, t, r))
+            if (cond(l, t, r))
             {
                 selected.Add(t);
             }
@@ -269,11 +295,25 @@ static class ExtensionMethods
         return selected;
     }
 
-    public static void ForEach2<T>(this IEnumerable<T> enumerable, Action<T, T> action)
+    public static void ForEach2Cycle<T>(this IEnumerable<T> enumerable, Action<T, T> action)
     {
         var first = enumerable;
         var second = enumerable.Skip(1).Append(enumerable.FirstOrDefault());
         first.Zip(second, (f, s) => (f,s)).ForEach((pair) => action(pair.f, pair.s));
+    }
+
+    public static void ForEach2<T>(this IEnumerable<T> enumerable, Action<T, T> action)
+    {
+        var first = enumerable;
+        var second = enumerable.Skip(1);
+        first.Zip(second, (f, s) => (f, s)).ForEach((pair) => action(pair.f, pair.s));
+    }
+
+    public static IEnumerable<U> Select2<T, U>(this IEnumerable<T> enumerable, Func<T, T, U> selector)
+    {
+        var first = enumerable;
+        var second = enumerable.Skip(1);
+        return first.Zip(second, (f, s) => (f, s)).Select((pair) => selector(pair.f, pair.s));
     }
 
     public static IEnumerable<U> SelectNN<T, U>(this IEnumerable<T> enumerable, Func<T, U> selector)
@@ -284,6 +324,13 @@ static class ExtensionMethods
     public static IEnumerable<U> SelectManyNN<T, U>(this IEnumerable<T> enumerable, Func<T, IEnumerable<U>> selector)
     {
         return enumerable.SelectNN(selector).SelectMany(ie => ie).OfType<U>();
+    }
+
+    public static void Swap<T>(this List<T> list, int i, int j)
+    {
+        var tmp = list[i];
+        list[i] = list[j];
+        list[j] = tmp;
     }
 
     public static IEnumerable<int> Circle1(int r)
@@ -432,6 +479,18 @@ static class ExtensionMethods
         return set;
     }
 
+    public static IEnumerable<T> SetIntersect<T>(this IEnumerable<T> s1, IEnumerable<T> s2)
+    {
+        var set = new HashSet<T>(s1);
+        foreach(var t in s2)
+        {
+            if (set.Contains(t))
+            {
+                yield return t;
+            }
+        }
+    }
+
     public static string Name(this Vector3Int direction)
     {
         if(directionNames == null)
@@ -573,5 +632,22 @@ static class ExtensionMethods
     public static float PerFixedSecond(float value)
     {
         return value * Time.fixedDeltaTime;
+    }
+
+
+    // Adapted from: http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect/1968345#1968345
+    public static bool LinesIntersects(Vector2 a0, Vector2 a1, Vector2 b0, Vector2 b1)
+    {
+        float s1_x, s1_y, s2_x, s2_y;
+        s1_x = a1.x - a0.x;
+        s1_y = a1.y - a0.y;
+        s2_x = b1.x - b0.x;
+        s2_y = b1.y - b0.y;
+
+        float s, t;
+        s = (-s1_y * (a0.x - b0.x) + s1_x * (a0.y - b0.y)) / (-s2_x * s1_y + s1_x * s2_y);
+        t = (s2_x * (a0.y - b0.y) - s2_y * (a0.x - b0.x)) / (-s2_x * s1_y + s1_x * s2_y);
+
+        return s > 0 && s < 1 && t > 0 && t < 1;
     }
 }

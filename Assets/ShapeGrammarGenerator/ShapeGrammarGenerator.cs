@@ -31,7 +31,7 @@ namespace ShapeGrammar
             Debug.Log("Generating world");
 
             var examples = new Examples(FountainheadStyle);
-            examples.Surrounded();
+            examples.ControlPointDesign();
 
             examples.grid.Generate(2f, parent);
 
@@ -44,7 +44,7 @@ namespace ShapeGrammar
         public override void Generate(World world)
         {
             //world.AddEnemy(libraries.Enemies.MayanSwordsman(), new Vector3(0, 1, 0));
-            world.AddEnemy(libraries.Enemies.DragonMan(), new Vector3(0, 1, 0));
+            world.AddEnemy(libraries.Enemies.SkinnyWoman(), new Vector3(0, 1, 0));
 
             Debug.Log("Generating world");
 
