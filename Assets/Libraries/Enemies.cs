@@ -24,7 +24,7 @@ public class Enemies : ScriptableObject
     Libraries libraries;
 
     public HumanAgent human;
-    public SculptureAgent sculpture;
+    public SculptureAgent sculpturePrefab;
     public BlobAgent blob;
     public MayanAgent mayanPrefab;
     public SkinnyWomanAgent skinnyWomanPrefab;
@@ -36,6 +36,37 @@ public class Enemies : ScriptableObject
         behaviors.AddBehavior(new GoToTargetBehavior(10));
         behaviors.AddBehavior(new WaitForPlayer(10));
         behaviors.AddBehavior(new Awareness(10, new Vector2(3.0f, 5.0f), 5f, 15f));
+    }
+
+    public Agent Sculpture()
+    {
+        var sculpture = Instantiate(sculpturePrefab);
+        var character = sculpture.CharacterState;
+
+        // properties
+        character.Health = 40f;
+        character.Will = 20f;
+        character.Posture = 10f;
+
+        // inventory
+        character.SetItemToSlot(SlotType.Active, new FreeWill());
+        character.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.SculptureClub());
+        character.SetItemToSlot(SlotType.RightWeapon, libraries.Items.SculptureClub());
+
+        // behaviors
+        var behaviors = sculpture.Behaviors;
+        var controller = sculpture.GetComponent<SculptureController>();
+
+        AddDefaultBehaviors(behaviors);
+
+        behaviors.AddBehavior(new DetectorBehavior(sculpture.WideAttack, controller.leftWideDetector, controller.rightWideDownDetector));
+        behaviors.AddBehavior(new DetectorBehavior(sculpture.OverheadAttack, controller.overheadDetector));
+        behaviors.AddBehavior(new DetectorBehavior(sculpture.DoubleSwipe, controller.doubleSwipeLeftDetector, controller.doubleSwipeRightDetector));
+        behaviors.AddBehavior(new DetectorBehavior(sculpture.GroundSlam, controller.groundSlamDetector));
+
+        sculpture.acting.MyReset();
+
+        return sculpture;
     }
 
     public Agent MayanThrower()

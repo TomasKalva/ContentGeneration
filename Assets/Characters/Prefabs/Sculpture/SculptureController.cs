@@ -6,22 +6,22 @@ using UnityEngine;
 public class SculptureController : EnemyController<SculptureAgent>
 {
 	[SerializeField]
-	ColliderDetector leftWideDetector;
+	public ColliderDetector leftWideDetector;
 	
 	[SerializeField]
-	ColliderDetector rightWideDownDetector;
+	public ColliderDetector rightWideDownDetector;
 
 	[SerializeField]
-	ColliderDetector doubleSwipeLeftDetector;
+	public ColliderDetector doubleSwipeLeftDetector;
 
 	[SerializeField]
-	ColliderDetector doubleSwipeRightDetector;
+	public ColliderDetector doubleSwipeRightDetector;
 
 	[SerializeField]
-	ColliderDetector overheadDetector;
+	public ColliderDetector overheadDetector;
 
 	[SerializeField]
-	ColliderDetector groundSlamDetector;
+	public ColliderDetector groundSlamDetector;
 
     private void Start()
 	{
