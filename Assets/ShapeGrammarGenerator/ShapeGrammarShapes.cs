@@ -12,19 +12,21 @@ namespace ShapeGrammar
     public class ShapeGrammarShapes
     {
         Grid Grid { get; }
-        QueryContext QC { get; }
+        QueryContext qc { get; }
+        Placement pl { get; }
 
         public ShapeGrammarShapes(Grid grid)
         {
             Grid = grid;
-            QC = new QueryContext(grid);
+            qc = new QueryContext(grid);
+            pl = new Placement(grid);
         }
 
-        public CubeGroup Room(Box3Int roomArea) => QC.GetBox(roomArea);
+        public CubeGroup Room(Box3Int roomArea) => qc.GetBox(roomArea);
 
-        public CubeGroup FlatRoof(Box2Int areaXZ, int posY) => QC.GetPlatform(areaXZ, posY);
+        public CubeGroup FlatRoof(Box2Int areaXZ, int posY) => qc.GetPlatform(areaXZ, posY);
 
-        public LevelElement House(Box2Int areaXZ, int posY)
+        public LevelGroupElement SimpleHouseWithFoundation(Box2Int areaXZ, int posY)
         {
             var room = Room(areaXZ.InflateY(posY, posY + 2)).LevelElement(AreaType.Room);
             var roof = FlatRoof(areaXZ, posY + 2).LevelElement(AreaType.Roof);
@@ -33,13 +35,25 @@ namespace ShapeGrammar
             return house;
         }
 
-        public LevelGroupElement House(CubeGroup belowFirstFloor, int floorHeight)
+        public LevelGroupElement SimpleHouseWithFoundation(CubeGroup belowFirstFloor, int floorHeight)
         {
             var room = belowFirstFloor.ExtrudeVer(Vector3Int.up, floorHeight, false).LevelElement(AreaType.Room);
             var roof = room.CubeGroup().ExtrudeVer(Vector3Int.up, 1, false).LevelElement(AreaType.Roof);
             var foundation = Foundation(room).LevelElement(AreaType.Foundation);
             var house = new LevelGroupElement(Grid, AreaType.House, foundation, room, roof);
             return house;
+        }
+
+        public LevelGroupElement CompositeHouse(Box2Int areaXZ, int height)
+        {
+            var flatBoxes = qc.FlatBoxes(2, 5, 4);
+            var layout = qc.RemoveOverlap(pl.MoveToIntersectAll(flatBoxes));
+
+            var boxes =  qc.RaiseRandomly(layout, () => UnityEngine.Random.Range(height / 2, height))
+                    .Select(part => TurnIntoHouse(part.CubeGroup()))
+                    .SetChildrenAreaType(AreaType.Room);
+
+            return boxes;
         }
 
         public LevelGroupElement Tower(CubeGroup belowFirstFloor, int floorHeight, int floorsCount)
@@ -108,9 +122,9 @@ namespace ShapeGrammar
             return new LevelGroupElement(Grid, AreaType.House, room, roof);
         }
 
-        public CubeGroup Foundation(LevelElement toBeFounded) => QC.MoveDownUntilGround(toBeFounded.CubeGroup().MoveBy(Vector3Int.down));
+        public CubeGroup Foundation(LevelElement toBeFounded) => qc.MoveDownUntilGround(toBeFounded.CubeGroup().MoveBy(Vector3Int.down));
 
-        public CubeGroup Platform(Box2Int areaXZ, int posY) => QC.GetPlatform(areaXZ, posY);
+        public CubeGroup Platform(Box2Int areaXZ, int posY) => qc.GetPlatform(areaXZ, posY);
 
         public CubeGroup BalconyOne(CubeGroup house)
         {
@@ -163,12 +177,12 @@ namespace ShapeGrammar
             int cubesCount = boundingArea.Volume() / 2;
             var boundingBox = boundingArea.InflateY(0, 1);
             var cubeGroup = new CubeGroup(Grid, boundingBox.Select(coords => Grid[coords]).ToList());
-            return QC.GetRandomHorConnected(boundingBox.Center(), cubeGroup, cubesCount);
+            return qc.GetRandomHorConnected(boundingBox.Center(), cubeGroup, cubesCount);
         }
 
         public CubeGroup IslandExtrudeIter(CubeGroup cubeGroup, int iterCount, float extrudeKeptRatio)
         {
-            return ExtensionMethods.ApplyNTimes(cg => QC.ExtrudeRandomly(cg, extrudeKeptRatio), cubeGroup, iterCount);
+            return ExtensionMethods.ApplyNTimes(cg => qc.ExtrudeRandomly(cg, extrudeKeptRatio), cubeGroup, iterCount);
         }
 
         public LevelGroupElement WallAround(LevelElement inside, int height)

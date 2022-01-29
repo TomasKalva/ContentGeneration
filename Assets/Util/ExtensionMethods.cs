@@ -40,14 +40,19 @@ static class ExtensionMethods
         return new CubeGroup(enumerable.FirstOrDefault().Grid, enumerable.SelectMany(cg => cg.Cubes).ToList());
     }
 
-    public static LevelGroupElement ToLevelGroupElement(this IEnumerable<LevelElement> enumerable)
+    public static LevelGroupElement ToLevelGroupElement(this IEnumerable<LevelElement> enumerable, ShapeGrammar.Grid grid)
     {
-        return enumerable.ToList().ToLevelGroupElement();
+        return enumerable.ToList().ToLevelGroupElement(grid);
     }
 
-    public static LevelGroupElement ToLevelGroupElement(this List<LevelElement> list)
+    public static LevelGroupElement ToLevelGroupElement(this List<LevelElement> list, ShapeGrammar.Grid grid)
     {
-        return new LevelGroupElement(list.FirstOrDefault().Grid, AreaType.None, list);
+        return new LevelGroupElement(grid, AreaType.None, list);
+    }
+    
+    public static IEnumerable<T> ToEnumerable<T>(this T t)
+    {
+        return new T[1] { t };
     }
 
     public static Vector2Int RandomVector2Int(Vector2Int leftBottom, Vector2Int rightTop)
@@ -269,6 +274,17 @@ static class ExtensionMethods
         {
             action(item);
         }
+    }
+
+    public static IEnumerable<U> IntersectMany<T, U>(this IEnumerable<T> enumerable, Func<T, IEnumerable<U>> selector)
+    {
+        if (!enumerable.Any())
+        {
+            throw new InvalidOperationException("Can't create intersection of zero sets!");
+        }
+        return !enumerable.Skip(1).Any() ?
+            selector(enumerable.First()) :
+            SetIntersect(selector(enumerable.First()), IntersectMany(enumerable.Skip(1), selector));
     }
 
     /// <summary>

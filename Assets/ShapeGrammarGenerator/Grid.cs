@@ -109,10 +109,12 @@ namespace ShapeGrammar
     public class QueryContext
     {
         Grid QueriedGrid { get; }
+        Placement pl { get; }
 
         public QueryContext(Grid queriedGrid)
         {
             QueriedGrid = queriedGrid;
+            pl = new Placement(queriedGrid);
         }
 
         public CubeGroup GetBox(Box3Int box)
@@ -128,26 +130,31 @@ namespace ShapeGrammar
         }
 
         /// <summary>
-        /// Returns boxes whose cubes that overlap are cut out.
+        /// Returns shapes whose cubes that overlap are cut out.
         /// </summary>
-        public LevelGroupElement GetOverlappingBoxes(Box2Int box, int boxesCount)
+        public LevelGroupElement RemoveOverlap(LevelGroupElement shapes)
         {
+            /*
             var smallBox = new Box2Int(box.leftBottom, box.leftBottom + (box.rightTop - box.leftBottom) / 4);
             var randomBoundingBox = new Box2Int(new Vector2Int(-2, -2), new Vector2Int(2, 2));
             var boxes = Enumerable.Range(0, boxesCount).Select(i => 
             {
                 var b = smallBox.Border(ExtensionMethods.RandomHalfBox(randomBoundingBox));
                 return GetBox((box.GetRandom() - b.Extents() + b).InflateY(0, 1));
-            });
-            var cubeGroup = new LevelGroupElement(QueriedGrid, AreaType.None, Enumerable.Empty<LevelElement>().ToList());
-            boxes.ForEach(g => cubeGroup = cubeGroup.Add(g.Minus(cubeGroup.CubeGroup()).LevelElement(AreaType.None)));
-            return cubeGroup;
+            });*/
+            //var cubeGroup = new LevelGroupElement(QueriedGrid, AreaType.None, Enumerable.Empty<LevelElement>().ToList());
+            //boxes.ForEach(g => cubeGroup = cubeGroup.Add(g.Minus(cubeGroup.CubeGroup()).LevelElement(AreaType.None)));
+            var newShapes = shapes.LevelElements.Aggregate((IEnumerable<LevelElement>)new List<LevelElement>(),
+                (overlapped, le) => overlapped.Append(le.Minus(overlapped.ToLevelGroupElement(shapes.Grid))))
+                .Where(shape => shape.Cubes().Any())
+                .ToLevelGroupElement(shapes.Grid);
+            return newShapes;
         }
 
         /// <summary>
         /// Returns boxes in the bounding box that don't overlap.
         /// </summary>
-        public LevelGroupElement GetNonOverlappingBoxes(Box2Int boundingBox, int boxesCount)
+        /*public LevelGroupElement GetNonOverlappingBoxes(Box2Int boundingBox, int boxesCount)
         {
             var boudingElem = GetFlatBox(boundingBox);
             var smallBox = new Box2Int(boundingBox.leftBottom, boundingBox.leftBottom + (boundingBox.rightTop - boundingBox.leftBottom) / 4);
@@ -159,24 +166,24 @@ namespace ShapeGrammar
                 var bBounds = smallBox.Border(ExtensionMethods.RandomHalfBox(randomBoundingBox));
                 var b = GetBox(bBounds.InflateY(0, 1)).LevelElement(AreaType.None);
                 return b;
-            });
+            }).ToLevelGroupElement();
 
             // move boxes
-            var movedBoxes = boxes.Aggregate(new List<LevelGeometryElement>(), (moved, b) =>
-            {
-                var movesInside = b.MovesToBeInside(boudingElem);
-                var movesNotIntersecting = b.Moves(movesInside, moved);
 
-                if (movesNotIntersecting.Any())
+            var movedBoxes = MoveLevelGroup(boxes,
+                (moved, le) =>
                 {
-                    moved.Add(b.MoveBy(movesNotIntersecting.GetRandom()));
-                }
-                return moved;
-            });
+                    var movesInside = le.MovesToBeInside(boudingElem);
+                    var movesNotIntersecting = le.Moves(movesInside, moved);
+                    return movesNotIntersecting;
+                },
+                moves => moves.GetRandom()
+                );
+
             var cubeGroup = new LevelGroupElement(QueriedGrid, AreaType.None, Enumerable.Empty<LevelElement>().ToList());
-            movedBoxes.ForEach(g => cubeGroup = cubeGroup.Add(g.CubeGroup().Minus(cubeGroup.CubeGroup()).LevelElement(AreaType.None)));
+            movedBoxes.LevelElements.ForEach(g => cubeGroup = cubeGroup.Add(g.CubeGroup().Minus(cubeGroup.CubeGroup()).LevelElement(AreaType.None)));
             return cubeGroup;
-        }
+        }*/
 
 
         public LevelGroupElement FlatBoxes(IEnumerable<Box2Int> boxes, int count)
@@ -184,35 +191,10 @@ namespace ShapeGrammar
             return new LevelGroupElement(QueriedGrid, AreaType.None, boxes.Select(box => GetFlatBox(box)).Take(count).ToList<LevelElement>());
         }
 
-        public LevelGroupElement RemoveOverlap(LevelGroupElement levelGroupElement)
+        public LevelGroupElement FlatBoxes(int minSize, int maxSize, int count)
         {
-            var movedElements = levelGroupElement.LevelElements.Aggregate(new List<LevelElement>(), (moved, le) =>
-            {
-                var movesNotIntersecting = le.NotIntersecting(moved);
-
-                if (movesNotIntersecting.Any())
-                {
-                    moved.Add(le.MoveBy(movesNotIntersecting.FirstOrDefault()));
-                }
-                return moved;
-            });
-            return new LevelGroupElement(levelGroupElement.Grid, AreaType.None, movedElements);
-        }
-
-        public LevelGroupElement SurroundWith(LevelElement levelElement, LevelGroupElement surroundings)
-        {
-            var movedElements = surroundings.LevelElements.Aggregate(new List<LevelElement>(), (moved, le) =>
-            {
-                var movesNear = le.MovesNearXZ(levelElement);
-                var movesNotIntersecting = le.Moves(movesNear, moved);
-
-                if (movesNotIntersecting.Any())
-                {
-                    moved.Add(le.MoveBy(movesNotIntersecting.GetRandom()));
-                }
-                return moved;
-            });
-            return new LevelGroupElement(surroundings.Grid, surroundings.AreaType, movedElements);
+            var boxSequence = ExtensionMethods.BoxSequence(() => ExtensionMethods.RandomBox(new Vector2Int(minSize, minSize), new Vector2Int(maxSize, maxSize)));
+            return FlatBoxes(boxSequence, count);
         }
 
         public LevelGroupElement LiftRandomly(LevelGroupElement lge, Func<int> liftingF)

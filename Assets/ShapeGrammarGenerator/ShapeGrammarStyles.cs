@@ -91,7 +91,7 @@ namespace ShapeGrammar
 
         public CubeGroup StairsPathStyle(CubeGroup path)
         {
-            var hor = path.Select3Incl(
+            var hor = path.Where3Cycle(
                 (prev, cube, next) => 
                 {
                     var dirTo = cube.Position - prev.Position;

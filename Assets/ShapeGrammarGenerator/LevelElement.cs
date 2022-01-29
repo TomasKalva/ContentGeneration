@@ -58,6 +58,7 @@ namespace ShapeGrammar
 
         public abstract CubeGroup CubeGroup();
 
+        #region Movement
         /// <summary>
         /// Moves of this level element to intersect the argument element.
         /// </summary>
@@ -105,6 +106,9 @@ namespace ShapeGrammar
                 }
             }
         }
+
+        #endregion
+
         /*
         public abstract LevelGroupElement Merge(params LevelElement[] le);
         */

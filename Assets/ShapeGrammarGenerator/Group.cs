@@ -67,7 +67,7 @@ namespace ShapeGrammar
         /// <summary>
         /// Includes first and last element.
         /// </summary>
-        public CubeGroup Select3Incl(Func<Cube, Cube, Cube, bool> pred) => new CubeGroup(Grid, Cubes.Where3(pred).Prepend(Cubes.FirstOrDefault()).Append(Cubes.LastOrDefault()).ToList());
+        public CubeGroup Where3Cycle(Func<Cube, Cube, Cube, bool> pred) => new CubeGroup(Grid, Cubes.Where3(pred).Prepend(Cubes.FirstOrDefault()).Append(Cubes.LastOrDefault()).ToList());
         public CubeGroup Minus(CubeGroup group) => new CubeGroup(Grid, Cubes.Except(group.Cubes).ToList());
 
         public IEnumerable<Vector3Int> MinkowskiMinus(CubeGroup grp) => 

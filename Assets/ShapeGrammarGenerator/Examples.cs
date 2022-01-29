@@ -14,6 +14,7 @@ namespace ShapeGrammar
         public QueryContext qc { get; }
         public ShapeGrammarStyles sgStyles { get; }
         public ShapeGrammarShapes sgShapes { get; }
+        public Placement pl { get; }
         public StyleRules houseStyleRules { get; }
 
         public LevelDevelopmentKit(ShapeGrammarObjectStyle objectStyle)
@@ -23,6 +24,7 @@ namespace ShapeGrammar
             qc = new QueryContext(grid);
             sgStyles = new ShapeGrammarStyles(grid, FountainheadStyle);
             sgShapes = new ShapeGrammarShapes(grid);
+            pl = new Placement(grid);
             houseStyleRules = new StyleRules(
                 new StyleRule(g => g.WithAreaType(AreaType.Room), g => g.SetGrammarStyle(sgStyles.RoomStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Roof), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
@@ -48,7 +50,7 @@ namespace ShapeGrammar
             island.SetGrammarStyle(sgStyles.PlatformStyle);
 
             // house
-            var house = sgShapes.House(new Box2Int(new Vector2Int(2, 2), new Vector2Int(8, 5)), 5);
+            var house = sgShapes.SimpleHouseWithFoundation(new Box2Int(new Vector2Int(2, 2), new Vector2Int(8, 5)), 5);
 
             var houseBottom = house.WithAreaType(AreaType.Foundation).FirstOrDefault().CubeGroup().CubesLayer(Vector3Int.down);
             var houseToIslandDir = island.MinkowskiMinus(houseBottom).GetRandom();
@@ -63,7 +65,7 @@ namespace ShapeGrammar
             // balcony
             var balconyRoom = house.WithAreaType(AreaType.Room).FirstOrDefault();
             var balcony = sgShapes.BalconyWide(balconyRoom.CubeGroup()).LevelElement(AreaType.Balcony);
-            house = house.ReplaceLeafs(le => le == balconyRoom, le => new LevelGroupElement(grid, AreaType.None, balconyRoom, balcony));
+            house = house.ReplaceLeafsGrp(le => le == balconyRoom, le => new LevelGroupElement(grid, AreaType.None, balconyRoom, balcony));
             house.WithAreaType(AreaType.Balcony).FirstOrDefault().SetGrammarStyle(cg => sgStyles.BalconyStyle(cg, house.WithAreaType(AreaType.Room).FirstOrDefault().CubeGroup()));
 
             // house 2
@@ -79,9 +81,11 @@ namespace ShapeGrammar
         public void Houses()
         {
             // houses
-            var town = qc.GetOverlappingBoxes(new Box2Int(new Vector2Int(0, 0), new Vector2Int(15, 15)), 5);
+            var flatBoxes = qc.FlatBoxes(3, 7, 5);
+            var bounds = qc.GetFlatBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(15, 15)));
+            var town = qc.RemoveOverlap(pl.PlaceInside(bounds, flatBoxes));
             town = qc.LiftRandomly(town, () => 2 + UnityEngine.Random.Range(1, 4));
-            town = town.Select(g => sgShapes.House(g.CubeGroup(), 5).ApplyGrammarStyleRules(houseStyleRules));
+            town = town.Select(g => sgShapes.SimpleHouseWithFoundation(g.CubeGroup(), 5).ApplyGrammarStyleRules(houseStyleRules));
 
             // house roofs
             var housesRoofs = town.Select(le =>
@@ -112,7 +116,10 @@ namespace ShapeGrammar
 
         public void NonOverlappingTown()
         {
-            var town = qc.RemoveOverlap(qc.GetOverlappingBoxes(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)), 8));
+            var flatBoxes = qc.FlatBoxes(2, 6, 8);
+            var bounds = qc.GetFlatBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)));
+            var town = pl.MoveToNotOverlap(flatBoxes);// qc.GetOverlappingBoxes(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)), 8));
+            //var town = qc.GetNonOverlappingBoxes(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)), 8);
             town = town.Select(le => le.SetAreaType(AreaType.Room));
             town.ApplyGrammarStyleRules(houseStyleRules);
         }
@@ -120,7 +127,7 @@ namespace ShapeGrammar
         public void RemovingOverlap()
         {
             var boxSequence = ExtensionMethods.BoxSequence(() => ExtensionMethods.RandomBox(new Vector2Int(3, 3), new Vector2Int(5, 5)));
-            var town = qc.RemoveOverlap(qc.FlatBoxes(boxSequence, 16));
+            var town = pl.MoveToNotOverlap(qc.FlatBoxes(boxSequence, 16));
             town = town.Select(le => le.SetAreaType(AreaType.Room));
             town.ApplyGrammarStyleRules(houseStyleRules);
         }
@@ -197,8 +204,8 @@ namespace ShapeGrammar
             var boxSequence = ExtensionMethods.BoxSequence(() => ExtensionMethods.RandomBox(new Vector2Int(3, 3), new Vector2Int(7, 7)));
             var houses = qc.FlatBoxes(boxSequence, 6).Select(le => le.SetAreaType(AreaType.House));
             
-            houses = qc.SurroundWith(yard, houses);
-            houses = houses.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => sgShapes.House(g.CubeGroup(), 3));
+            houses = pl.SurroundWith(yard, houses);
+            houses = houses.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => sgShapes.SimpleHouseWithFoundation(g.CubeGroup(), 3));
 
             var wall = sgShapes.WallAround(yard, 2).Minus(houses);
 
@@ -221,6 +228,12 @@ namespace ShapeGrammar
         {
             var controlPointsDesign = new ControlPointsLevelDesign(this);
             controlPointsDesign.CreateLevel();
+        }
+
+        public void CompositeHouse()
+        {
+            var house = sgShapes.CompositeHouse(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)), 6);
+            house.ApplyGrammarStyleRules(houseStyleRules);
         }
     }
 }

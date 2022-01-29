@@ -38,21 +38,18 @@ namespace ShapeGrammar
             var boxSequence = ExtensionMethods.BoxSequence(() => ExtensionMethods.RandomBox(new Vector2Int(3, 3), new Vector2Int(7, 7)));
             var houses = ldk.qc.FlatBoxes(boxSequence, 20).Select(le => le.SetAreaType(AreaType.House));
 
-            houses = houses.LevelElements.Aggregate((IEnumerable<LevelElement>)new List<LevelElement>(),
+            houses = ldk.pl.MoveLevelGroup(houses,
                 (moved, le) =>
                 {
                     var prev = moved.Any() ? moved.FirstOrDefault() : controlPoints.Cubes.FirstOrDefault().Group().LevelElement();
                     //var movesToPrev = le.MovesNearXZ(prev);
                     var movesOnLine = le.MovesToIntersect(controlLine);
                     var possibleMoves = le.Moves(/*movesToPrev.SetIntersect(*/movesOnLine/*)*/, moved);
-                    if (possibleMoves.Any())
-                    {
-                        moved = moved.Append(le.MoveBy(possibleMoves.GetRandom()));
-                    }
-                    return moved;
-                }).ToLevelGroupElement();
+                    return possibleMoves;
+                },
+                moves => moves.GetRandom());
 
-            houses = houses.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => ldk.sgShapes.House(g.CubeGroup(), 3));
+            houses = houses.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => ldk.sgShapes.SimpleHouseWithFoundation(g.CubeGroup(), 3));
 
             root = root.AddAll(/*controlLine, controlPoints.MoveBy(Vector3Int.up).LevelElement(AreaType.Debug),*/ houses);
             root.ApplyGrammarStyleRules(ldk.houseStyleRules);

@@ -31,9 +31,16 @@ namespace ShapeGrammar
             Debug.Log("Generating world");
 
             var examples = new Examples(FountainheadStyle);
-            examples.ControlPointDesign();
+            examples.CompositeHouse();
 
             examples.grid.Generate(2f, parent);
+
+            /*
+            var l1 = new List<int>() { 1, 2, 3 };
+            var l2 = new List<int>() { 2, 2, 5 };
+            var l3 = new List<int>() { 4, 2, 3 };
+            var l = new List<List<int>>() { l1, l2, l3 }.IntersectMany(x => x);
+            l.ForEach(x => Debug.Log(x));*/
 
             //Debug.Log(ExtensionMethods.Circle3(2).Count());// ForEach(v => Debug.Log($"{v}\n"));
 
