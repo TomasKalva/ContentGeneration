@@ -250,6 +250,10 @@ PrefabInstance:
       propertyPath: damageStartT
       value: 0.4
       objectReference: {fileID: 0}
+    - target: {fileID: 1418182123817457647, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8752f8e1c92e4704abe59fbcca0cc96e, type: 2}
     - target: {fileID: 3334858607170646547, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
       propertyPath: m_Layer
       value: 10
