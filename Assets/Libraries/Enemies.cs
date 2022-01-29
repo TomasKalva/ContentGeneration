@@ -23,7 +23,7 @@ public class Enemies : ScriptableObject
     [SerializeField]
     Libraries libraries;
 
-    public HumanAgent human;
+    public HumanAgent humanPrefab;
     public SculptureAgent sculpturePrefab;
     public BlobAgent blob;
     public MayanAgent mayanPrefab;
@@ -36,6 +36,34 @@ public class Enemies : ScriptableObject
         behaviors.AddBehavior(new GoToTargetBehavior(10));
         behaviors.AddBehavior(new WaitForPlayer(10));
         behaviors.AddBehavior(new Awareness(10, new Vector2(3.0f, 5.0f), 5f, 15f));
+    }
+
+    public Agent Human()
+    {
+        var human = Instantiate(humanPrefab);
+        var character = human.CharacterState;
+
+        // properties
+        character.Health = 40f;
+        character.Will = 20f;
+        character.Posture = 10f;
+
+        // inventory
+        character.SetItemToSlot(SlotType.Active, new FreeWill());
+        character.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanKnife());
+        character.SetItemToSlot(SlotType.RightWeapon, libraries.Items.Scythe());
+
+        // behaviors
+        var behaviors = human.Behaviors;
+        var controller = human.GetComponent<HumanController>();
+
+        AddDefaultBehaviors(behaviors);
+
+        behaviors.AddBehavior(new DetectorBehavior(human.Attack, controller.attackArea));
+
+        human.acting.MyReset();
+
+        return human;
     }
 
     public Agent Sculpture()
@@ -112,7 +140,7 @@ public class Enemies : ScriptableObject
         // inventory
         character.SetItemToSlot(SlotType.Active, new FreeWill());
         character.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanSword());
-        character.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanSword());
+        character.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanKnife());
 
         // behaviors
         var behaviors = mayan.Behaviors;

@@ -5,18 +5,19 @@ using UnityEngine;
 
 public class HumanAgent : Agent
 {
-    public void Backstep()
+    public Act Backstep()
     {
-        acting.SelectAct("Backstep");
+        return acting.SelectAct("Backstep");
     }
 
-    public void Roll(Vector2 direction)
+    public Act Roll(Vector2 direction)
     {
         var roll = acting.SelectAct("Roll") as Roll;
         roll.Direction = direction;
+        return roll;
     }
 
-    public void Attack()
+    public Act Attack()
     {
         var currentAct = acting.ActiveAct;
 
@@ -31,5 +32,7 @@ public class HumanAgent : Agent
             attack = acting.SelectAct("Slash") as Attack;
         }
         attack.Direction = movement.AgentForward;
+        
+        return attack;
     }
 }

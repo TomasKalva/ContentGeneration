@@ -25,17 +25,5 @@ public class SculptureController : EnemyController<SculptureAgent>
 
     private void Start()
 	{
-		var behaviors = agent.Behaviors;
-
-		behaviors.AddBehavior(new TurnToTargetBehavior(10));
-		behaviors.AddBehavior(new GoToTargetBehavior(5));
-		behaviors.AddBehavior(new WaitForPlayer(10));
-
-		behaviors.AddBehavior(new DetectorBehavior(agent.WideAttack, leftWideDetector, rightWideDownDetector));
-		behaviors.AddBehavior(new DetectorBehavior(agent.OverheadAttack, overheadDetector));
-		behaviors.AddBehavior(new DetectorBehavior(agent.DoubleSwipe, doubleSwipeLeftDetector, doubleSwipeRightDetector));
-		behaviors.AddBehavior(new DetectorBehavior(agent.GroundSlam, groundSlamDetector));
-
-		agent.acting.MyReset();
 	}
 }

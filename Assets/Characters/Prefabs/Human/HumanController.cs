@@ -6,7 +6,7 @@ using UnityEngine;
 public class HumanController : EnemyController<HumanAgent>
 {
 	[SerializeField]
-	ColliderDetector attackArea;
+	public ColliderDetector attackArea;
 
 	protected override void UpdateController(Vector2 movementDirection)
 	{
