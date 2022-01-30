@@ -29,6 +29,7 @@ public class Enemies : ScriptableObject
     public MayanAgent mayanPrefab;
     public SkinnyWomanAgent skinnyWomanPrefab;
     public DragonManAgent dragonManPrefab;
+    public DogAgent dogPrefab;
 
     void AddDefaultBehaviors(Behaviors behaviors)
     {
@@ -214,5 +215,35 @@ public class Enemies : ScriptableObject
         dragonMan.acting.MyReset();
 
         return dragonMan;
+    }
+
+    public Agent Dog()
+    {
+        var dog = Instantiate(dogPrefab);
+        var character = dog.CharacterState;
+
+        // properties
+        character.Health = 50f;
+        character.Will = 20f;
+        character.Posture = 10f;
+
+        // inventory
+        character.SetItemToSlot(SlotType.Active, new FreeWill());
+        character.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanSword());
+        //character.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanSword());
+
+        // behaviors
+        var behaviors = dog.Behaviors;
+        var controller = dog.GetComponent<DogController>();
+
+        AddDefaultBehaviors(behaviors);
+
+        behaviors.AddBehavior(new DetectorBehavior(dog.DashForward, controller.dashForwardDetector));
+        behaviors.AddBehavior(new DetectorBehavior(dog.LeftSlash, controller.slashDetector));
+        behaviors.AddBehavior(new DetectorBehavior(dog.RightSlash, controller.slashDetector));
+
+        dog.acting.MyReset();
+
+        return dog;
     }
 }

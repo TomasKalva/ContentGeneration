@@ -216,10 +216,16 @@ public class Agent : MonoBehaviour
 		var inventory = state.Inventory;
 
 		var leftWeaponItem = inventory.LeftWeaponSlot.Item;
-		leftWeaponSlot.Weapon = leftWeaponItem?.RealObject.GetComponent<Weapon>();
+		if(leftWeaponSlot != null)
+		{
+			leftWeaponSlot.Weapon = leftWeaponItem?.RealObject.GetComponent<Weapon>();
+		}
 
 		var rightWeaponItem = inventory.RightWeaponSlot.Item;
-		rightWeaponSlot.Weapon = rightWeaponItem?.RealObject.GetComponent<Weapon>();
+		if(rightWeaponSlot != null)
+		{
+			rightWeaponSlot.Weapon = rightWeaponItem?.RealObject.GetComponent<Weapon>();
+		}
 	}
 
 	public void Turn(Vector2 direction)
