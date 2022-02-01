@@ -122,7 +122,7 @@ namespace ShapeGrammar
             return (alreadyAdded, last) =>
             {
                 var element = elementF();
-                var possibleMoves = element.Moves(element.MovesToPartlyIntersectXZ(last), alreadyAdded.Others(element));
+                var possibleMoves = element.Moves(element.MovesToPartlyIntersectXZ(last), alreadyAdded.Others(last));
                 return possibleMoves.Any() ? element.MoveBy(possibleMoves.GetRandom()).Minus(last) : null;
             };
         }
@@ -211,12 +211,19 @@ namespace ShapeGrammar
                 return ldk.qc.GetFlatBox(ExtensionMethods.RandomBox(largeDistr, largeDistr)).SetAreaType(AreaType.Room);
             };
 
-            var boxAdder = AddNearXZ(smallBox);
+            var adders = new List<AddElement>()
+            {
+                 AddNearXZ(smallBox),
+                 AddNearXZ(largeBox),
+                 AddRemoveOverlap(largeBox),
+                 //PathTo(smallBox), todo: debug path!
+            };
             
             var levelElements = Enumerable.Range(0, length).Aggregate(new AddingContext(Enumerable.Empty<LevelElement>(), start),
                 (addingCont, i) =>
                 {
-                    var newElem = boxAdder(addingCont.Added, addingCont.Last);
+                    var adder = adders.GetRandom();
+                    var newElem = adder(addingCont.Added, addingCont.Last);
 
                     if (newElem != null)
                     {
