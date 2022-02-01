@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using UnityEngine;
 
 namespace ShapeGrammar
@@ -30,18 +26,23 @@ namespace ShapeGrammar
             var root = new LevelGroupElement(ldk.grid, AreaType.WorldRoot);
 
             // Create ground layout of the tower
-            var yard = ldk.qc.GetBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(50, 50)).InflateY(0, 1));
+            var yard = ldk.qc.GetBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(30, 30)).InflateY(0, 1));
 
             var controlPoints = ControlPoints(yard, 10);
             var controlLine = ConnectByLine(controlPoints).LevelElement(AreaType.Debug);
 
-            var boxSequence = ExtensionMethods.BoxSequence(() => ExtensionMethods.RandomBox(new Vector2Int(3, 3), new Vector2Int(7, 7)));
-            var houses = ldk.qc.FlatBoxes(boxSequence, 20).Select(le => le.SetAreaType(AreaType.House));
+            var smallDistr = new SlopeDistr(center: 6, width: 3, rightness: 0.3f);
+            //var boxSequence = ExtensionMethods.BoxSequence(() => ExtensionMethods.RandomBox(new Vector2Int(3, 3), new Vector2Int(8, 8)));
+            var smallBoxSequence = ExtensionMethods.BoxSequence(() => ExtensionMethods.RandomBox(smallDistr, smallDistr));
+            var largeDistr = new SlopeDistr(center: 10, width: 3, rightness: 0.3f);
+            var largeBoxSequence = ExtensionMethods.BoxSequence(() => ExtensionMethods.RandomBox(largeDistr, largeDistr));
+            var houses = ldk.qc.FlatBoxes(smallBoxSequence.Take(7).Concat(largeBoxSequence).Take(10).Shuffle(), 10).Select(le => le.SetAreaType(AreaType.House));
+            //houses = houses.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => ldk.sgShapes.CompositeHouse(4));
 
             houses = ldk.pl.MoveLevelGroup(houses,
                 (moved, le) =>
                 {
-                    var prev = moved.Any() ? moved.FirstOrDefault() : controlPoints.Cubes.FirstOrDefault().Group().LevelElement();
+                    //var prev = moved.Any() ? moved.FirstOrDefault() : controlPoints.Cubes.FirstOrDefault().Group().LevelElement();
                     //var movesToPrev = le.MovesNearXZ(prev);
                     var movesOnLine = le.MovesToIntersect(controlLine);
                     var possibleMoves = le.Moves(/*movesToPrev.SetIntersect(*/movesOnLine/*)*/, moved);
@@ -49,7 +50,7 @@ namespace ShapeGrammar
                 },
                 moves => moves.GetRandom());
 
-            houses = houses.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => ldk.sgShapes.SimpleHouseWithFoundation(g.CubeGroup(), 3));
+            houses = houses.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => ldk.sgShapes.SimpleHouseWithFoundation(g.CubeGroup(), UnityEngine.Random.Range(3, 7)));
 
             root = root.AddAll(/*controlLine, controlPoints.MoveBy(Vector3Int.up).LevelElement(AreaType.Debug),*/ houses);
             root.ApplyGrammarStyleRules(ldk.houseStyleRules);
@@ -60,6 +61,7 @@ namespace ShapeGrammar
         public CubeGroup ControlPoints(CubeGroup bounds, int count)
         {
             var controlPoints = bounds.Cubes.Shuffle().Take(count).ToList();
+            //controlPoints = controlPoints.Select(cube => cube.Grid[cube.Position + Vector3Int.up * UnityEngine.Random.Range(0, 10)]).ToList();
             int iters = 0;
 
             RemoveIntersection:
@@ -95,6 +97,66 @@ namespace ShapeGrammar
         public CubeGroup ConnectByLine(CubeGroup controlPoints)
         {
             return controlPoints.Cubes.Select2((c0, c1) => c0.LineTo(c1)).ToCubeGroup();
+        }
+    }
+
+    
+    public class CurvesLevelDesign : LevelDesign
+    {
+        public CurvesLevelDesign(LevelDevelopmentKit ldk) : base(ldk)
+        {
+        }
+
+        public override LevelElement CreateLevel()
+        {
+            int length = 10;
+            // Height
+            var heightDistr = new UniformDistr(5, 15);
+            var heightCurve = ExtensionMethods.Naturals().Select(_ => heightDistr.Sample());
+            var smooth = heightCurve.Select2((a,b) => (a + b) / 2);
+            heightCurve = heightCurve.Interleave(smooth).Take(length);
+
+            // Size
+            var smallDistr = new SlopeDistr(center: 5, width: 3, rightness: 0.3f);
+            var smallBoxSequence = ExtensionMethods.BoxSequence(() => ExtensionMethods.RandomBox(smallDistr, smallDistr));
+            var largeDistr = new SlopeDistr(center: 8, width: 3, rightness: 0.3f);
+            var largeBoxSequence = ExtensionMethods.BoxSequence(() => ExtensionMethods.RandomBox(largeDistr, largeDistr));
+
+            // Type
+            var areaTypeCurve = ExtensionMethods.Naturals().Select(i => UnityEngine.Random.Range(0f, 1f) < 0.5f ? AreaType.House : AreaType.Garden);
+
+            var areas = ldk.qc.FlatBoxes(smallBoxSequence.Take((int)(0.7f * length)).Concat(largeBoxSequence).Take(length).Shuffle(), length).Select(le => le.SetAreaType(AreaType.House));
+            
+            
+            areas = ldk.pl.MoveLevelGroup(areas,
+                (moved, le) =>
+                {
+                    var prev = moved.Any() ? moved.LastOrDefault() : areas.LevelElements.FirstOrDefault();
+                    var movesToPrev = le.MovesNearXZ(prev);
+                    //var movesOnLine = le.MovesToIntersect(controlLine);
+                    var possibleMoves = le.Moves(movesToPrev, moved);
+                    return possibleMoves;
+                },
+                moves => moves.GetRandom());
+
+            //areas = ldk.pl.MoveToNotOverlap(areas);
+
+            areas = areas.LevelElements.Select((le, i) =>
+            {
+                return le.SetAreaType(AreaType.House/*areaTypeCurve.ElementAt(i)*/)
+                    .MoveBy(Vector3Int.up * heightCurve.ElementAt(i));
+            }).ToLevelGroupElement(areas.Grid);
+
+            areas = areas.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => ldk.sgShapes.SimpleHouseWithFoundation(g.CubeGroup(), 4));
+
+            areas.ApplyGrammarStyleRules(ldk.houseStyleRules);
+
+            return areas;
+            /*
+            var sizeCurve =
+            var areaCreatorCurve =
+            var widenessCurve =
+            */
         }
     }
 }

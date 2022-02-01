@@ -116,11 +116,13 @@ namespace ShapeGrammar
 
         public void NonOverlappingTown()
         {
-            var flatBoxes = qc.FlatBoxes(2, 6, 8);
+            var flatBoxes = qc.FlatBoxes(3, 8, 8);
             var bounds = qc.GetFlatBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)));
             var town = pl.MoveToNotOverlap(flatBoxes);// qc.GetOverlappingBoxes(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)), 8));
             //var town = qc.GetNonOverlappingBoxes(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)), 8);
-            town = town.Select(le => le.SetAreaType(AreaType.Room));
+            var intSeq = new IntervalDistr(new IntDistr(), 4, 10);
+            town = qc.RaiseRandomly(town, intSeq.Sample);
+            town = town.Select(le => sgShapes.TurnIntoHouse(le.CubeGroup()));// le.SetAreaType(AreaType.Room));
             town.ApplyGrammarStyleRules(houseStyleRules);
         }
 
@@ -230,10 +232,123 @@ namespace ShapeGrammar
             controlPointsDesign.CreateLevel();
         }
 
+        public void CurveDesign()
+        {
+            var CurveDesign = new CurvesLevelDesign(this);
+            CurveDesign.CreateLevel();
+        }
+
         public void CompositeHouse()
         {
-            var house = sgShapes.CompositeHouse(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)), 6);
+            var house = sgShapes.CompositeHouse(/*new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)),*/ 6);
             house.ApplyGrammarStyleRules(houseStyleRules);
+        }
+    }
+
+    public interface IIntDistr
+    {
+        public int Sample();
+    }
+
+    public class RandomIntDistr : IIntDistr
+    {
+        int min, max;
+
+        public RandomIntDistr(int min, int max)
+        {
+            this.min = min;
+            this.max = max;
+        }
+
+        public int Sample()
+        {
+            return UnityEngine.Random.Range(min, max);
+        }
+    }
+
+    public class IntDistr : IIntDistr
+    {
+        int start, step;
+        int current;
+
+        public IntDistr(int start = 0, int step = 1)
+        {
+            this.start = start;
+            this.step = step;
+            this.current = start - step;
+        }
+
+        public int Sample()
+        {
+            current += step;
+            return current;
+        }
+    }
+
+    public class IntervalDistr : IIntDistr
+    {
+        IIntDistr seq;
+        int min, max;
+
+        public IntervalDistr(IIntDistr seq, int min, int max)
+        {
+            this.seq = seq;
+            this.min = min;
+            this.max = max;
+
+            Debug.Assert(max > min);
+        }
+
+        public int Sample()
+        {
+            var i = seq.Sample();
+            return i.Mod(max - min) + min;
+        }
+    }
+
+    /// <summary>
+    /// Binomial distribution given by center and width.
+    /// </summary>
+    public class SlopeDistr : IIntDistr
+    {
+        float p;
+        int center, width;
+        int size;
+
+        public SlopeDistr(int center = 0, int width = 1, float rightness = 0.5f)
+        {
+            this.center = center;
+            this.width = width;
+            this.p = rightness;
+            size = 1 + 2 * width;
+        }
+
+        public int Sample()
+        {
+            var successes = 0;
+            for(int i = 0; i < size; i++)
+            {
+                if(UnityEngine.Random.Range(0f, 1f) < p)
+                {
+                    successes++;
+                }
+            }
+            return center + successes - width;
+        }
+    }
+    public class UniformDistr : IIntDistr
+    {
+        int min, max;
+
+        public UniformDistr(int min, int max)
+        {
+            this.min = min;
+            this.max = max;
+        }
+
+        public int Sample()
+        {
+            return UnityEngine.Random.Range(min, max);
         }
     }
 }

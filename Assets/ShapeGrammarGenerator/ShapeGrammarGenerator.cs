@@ -31,7 +31,7 @@ namespace ShapeGrammar
             Debug.Log("Generating world");
 
             var examples = new Examples(FountainheadStyle);
-            examples.CompositeHouse();
+            examples.CurveDesign();
 
             examples.grid.Generate(2f, parent);
 

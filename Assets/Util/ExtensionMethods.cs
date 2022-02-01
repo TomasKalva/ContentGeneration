@@ -114,6 +114,16 @@ static class ExtensionMethods
         return new Box2Int(Vector2Int.zero, ext);
     }
 
+    public static Box2Int RandomBox(int minExt, int maxExt)
+    {
+        return RandomBox(minExt * Vector2Int.one, maxExt * Vector2Int.one);
+    }
+
+    public static Box2Int RandomBox(IIntDistr xDistr, IIntDistr yDistr) 
+    {
+        return new Box2Int(Vector2Int.zero, new Vector2Int(xDistr.Sample(), yDistr.Sample()));
+    }
+
     public static Box3Int RandomHalfBox(this Box3Int boundingBox)
     {
         var M = boundingBox.rightTopFront - boundingBox.leftBottomBack;
@@ -332,6 +342,12 @@ static class ExtensionMethods
         return first.Zip(second, (f, s) => (f, s)).Select((pair) => selector(pair.f, pair.s));
     }
 
+    public static IEnumerable<T> Interleave<T>(this IEnumerable<T> ie1, IEnumerable<T> ie2)
+    {
+        return ie1.Zip(ie2, (f, s) => new[] { f, s })
+                       .SelectMany(f => f);
+    }
+
     public static IEnumerable<U> SelectNN<T, U>(this IEnumerable<T> enumerable, Func<T, U> selector)
     {
         return enumerable.Select(selector).OfType<U>();
@@ -408,6 +424,16 @@ static class ExtensionMethods
         }
     }
 
+    public static IEnumerable<int> Naturals()
+    {
+        int i = 0;
+        while (true)
+        {
+            yield return i;
+            i++;
+        }
+    }
+
     /// <summary>
     /// Using Fisher–Yates shuffle.
     /// </summary>
@@ -473,6 +499,11 @@ static class ExtensionMethods
     public static Vector3Int Mod(this Vector3Int u, Vector3Int v)
     {
         return u.ComponentWise(v, (a, b) => a < 0 ? (a % b + b ) % b : a % b);
+    }
+
+    public static int Mod(this int u, int v)
+    {
+        return u < 0 ? (u % v + v) % v : u % v;
     }
 
     public static T ApplyNTimes<T>(Func<T, T> f, T t, int n) => n == 0 ? t : ApplyNTimes(f, f(t), n - 1); 

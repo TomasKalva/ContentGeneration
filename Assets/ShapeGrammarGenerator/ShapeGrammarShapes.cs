@@ -44,7 +44,7 @@ namespace ShapeGrammar
             return house;
         }
 
-        public LevelGroupElement CompositeHouse(Box2Int areaXZ, int height)
+        public LevelGroupElement CompositeHouse(/*Box2Int areaXZ,*/ int height)
         {
             var flatBoxes = qc.FlatBoxes(2, 5, 4);
             var layout = qc.RemoveOverlap(pl.MoveToIntersectAll(flatBoxes));
@@ -52,8 +52,9 @@ namespace ShapeGrammar
             var boxes =  qc.RaiseRandomly(layout, () => UnityEngine.Random.Range(height / 2, height))
                     .Select(part => TurnIntoHouse(part.CubeGroup()))
                     .SetChildrenAreaType(AreaType.Room);
+            var symBoxes = boxes.SymmetrizeGrp(boxes.CubeGroup().CubesMaxLayer(Vector3Int.left).Cubes.GetRandom().FacesHor(Vector3Int.left));
 
-            return boxes;
+            return boxes.Merge(symBoxes);
         }
 
         public LevelGroupElement Tower(CubeGroup belowFirstFloor, int floorHeight, int floorsCount)
@@ -192,5 +193,19 @@ namespace ShapeGrammar
             var wall = Foundation(wallTop).LevelElement(AreaType.Wall);
             return new LevelGroupElement(inside.Grid, AreaType.None, wall, wallTop);
         }
+
+
+        /*
+        public LevelGroupElement CompositeHouse(Box2Int areaXZ, int height)
+        {
+            var flatBoxes = qc.FlatBoxes(2, 5, 4);
+            var layout = qc.RemoveOverlap(pl.MoveToIntersectAll(flatBoxes));
+
+            var boxes = qc.RaiseRandomly(layout, () => UnityEngine.Random.Range(height / 2, height))
+                    .Select(part => TurnIntoHouse(part.CubeGroup()))
+                    .SetChildrenAreaType(AreaType.Room);
+
+            return boxes;
+        }*/
     }
 }

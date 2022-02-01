@@ -120,6 +120,8 @@ namespace ShapeGrammar
             var cubesInDir = CubeGroup().ExtrudeDir(dir);
             return possibleNeighbors.Where(le => le.CubeGroup().Intersects(cubesInDir));
         }
+
+        public abstract LevelElement Symmetrize(FaceHor faceHor);
     }
 
     public class LevelGroupElement : LevelElement
@@ -184,11 +186,18 @@ namespace ShapeGrammar
             return (LevelGroupElement)Minus(levelElement);
         }
 
-        /*
-        public override LevelGroupElement Merge(params LevelElement[] le)
+        
+        public LevelGroupElement Merge(params LevelElement[] les)
         {
-            return new LevelGroupElement(Grid, AreaType, LevelElements.Concat(le).ToList());
-        }*/
+            return new LevelGroupElement(Grid, AreaType, les.Append(this).ToList());
+        }
+
+        public override LevelElement Symmetrize(FaceHor faceHor)
+        {
+            return new LevelGroupElement(Grid, AreaType, LevelElements.Select(le => le.Symmetrize(faceHor)).ToList<LevelElement>());
+        }
+
+        public LevelGroupElement SymmetrizeGrp(FaceHor faceHor) => (LevelGroupElement)Symmetrize(faceHor);
     }
 
     public class LevelGeometryElement : LevelElement
@@ -231,6 +240,11 @@ namespace ShapeGrammar
         public LevelGroupElement Merge(params LevelElement[] le)
         {
             return new LevelGroupElement(Grid, AreaType.None, le.Prepend(this).ToList());
+        }
+
+        public override LevelElement Symmetrize(FaceHor faceHor)
+        {
+            return new LevelGeometryElement(Grid, AreaType, Group.Symmetrize(faceHor));
         }
     }
 }
