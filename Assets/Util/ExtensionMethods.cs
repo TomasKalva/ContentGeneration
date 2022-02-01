@@ -493,7 +493,7 @@ static class ExtensionMethods
 
     public static Vector3Int Div(this Vector3Int u, Vector3Int v)
     {
-        return u.ComponentWise(v, (a, b) => a < 0 ? a / b - 1 : a / b);
+        return u.ComponentWise(v, (a, b) => a < 0 ? (a + 1) / b - 1 : a / b);
     }
 
     public static Vector3Int Mod(this Vector3Int u, Vector3Int v)

@@ -23,7 +23,7 @@ namespace ShapeGrammar
             {
                 UnityEditor.SceneView.FocusWindowIfItsOpen(typeof(UnityEditor.SceneView));
             }
-            //UnityEngine.Random.InitState(13);
+            UnityEngine.Random.InitState(13);
 
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
