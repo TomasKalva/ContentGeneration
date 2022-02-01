@@ -91,6 +91,23 @@ namespace ShapeGrammar
             return intersectNear.SetMinus(intersect);
         }
 
+        public IEnumerable<Vector3Int> MovesToPartlyIntersectXZ(LevelElement partlyIntersectThis)
+        {
+            var intersectNear = partlyIntersectThis.CubeGroup().MinkowskiMinus(CubeGroup().AllBoundaryFacesH().Extrude(1, false));
+            var intersect = MovesToIntersect(partlyIntersectThis);
+            return intersectNear.SetIntersect(intersect);
+        }
+
+        /// <summary>
+        /// Dist should be at least 1.
+        /// </summary>
+        public IEnumerable<Vector3Int> MovesInDistanceXZ(LevelElement toThis, int dist)
+        {
+            var intersectClose = toThis.CubeGroup().MinkowskiMinus(CubeGroup().AllBoundaryFacesH().Extrude(dist, false));
+            var intersectNear = toThis.CubeGroup().MinkowskiMinus(CubeGroup().AllBoundaryFacesH().Extrude(dist + 1, false));
+            return intersectNear.SetMinus(intersectClose);
+        }
+
         /// <summary>
         /// Returns all (infinitely many) possible moves so that this doesn't intersect toNotIntersect.
         /// </summary>

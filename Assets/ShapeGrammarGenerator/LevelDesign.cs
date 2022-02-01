@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace ShapeGrammar
@@ -103,13 +105,50 @@ namespace ShapeGrammar
     
     public class CurvesLevelDesign : LevelDesign
     {
+        delegate LevelElement AddElement(IEnumerable<LevelElement> alreadyAdded, LevelElement last);
+
+        AddElement AddNearXZ(Func<LevelElement> elementF)
+        {
+            return (alreadyAdded, last) =>
+            {
+                var element = elementF();
+                var possibleMoves = element.Moves(element.MovesNearXZ(last), alreadyAdded);
+                return possibleMoves.Any() ? element.MoveBy(possibleMoves.GetRandom()) : null;
+            };
+        }
+
+        AddElement AddRemoveOverlap(Func<LevelElement> elementF)
+        {
+            return (alreadyAdded, last) =>
+            {
+                var element = elementF();
+                var possibleMoves = element.Moves(element.MovesToPartlyIntersectXZ(last), alreadyAdded.Others(element));
+                return possibleMoves.Any() ? element.MoveBy(possibleMoves.GetRandom()).Minus(last) : null;
+            };
+        }
+
+        AddElement PathTo(Func<LevelElement> elementF)
+        {
+            return (alreadyAdded, last) =>
+            {
+                var element = elementF();
+                var possibleMoves = element.Moves(element.MovesInDistanceXZ(last, 5), alreadyAdded);
+                if (!possibleMoves.Any())
+                    return null;
+
+                var area = element.MoveBy(possibleMoves.GetRandom());
+                var path = ldk.sgShapes.WallPathH(last, area, 2);
+                return new LevelGroupElement(last.Grid, AreaType.None, path, area);
+            };
+        }
+
         public CurvesLevelDesign(LevelDevelopmentKit ldk) : base(ldk)
         {
         }
 
         public override LevelElement CreateLevel()
         {
-            int length = 30;
+            int length = 10;
             // Height
             var heightDistr = new UniformDistr(5, 15);
             var heightCurve = ExtensionMethods.Naturals().Select(_ => heightDistr.Sample());
@@ -122,12 +161,14 @@ namespace ShapeGrammar
             var largeDistr = new SlopeDistr(center: 8, width: 3, rightness: 0.3f);
             var largeBoxSequence = ExtensionMethods.BoxSequence(() => ExtensionMethods.RandomBox(largeDistr, largeDistr));
 
+
+
             // Type
             var areaTypeCurve = ExtensionMethods.Naturals().Select(i => UnityEngine.Random.Range(0f, 1f) < 0.5f ? AreaType.House : AreaType.Garden);
 
             var areas = ldk.qc.FlatBoxes(smallBoxSequence.Take((int)(0.7f * length)).Concat(largeBoxSequence).Take(length).Shuffle(), length).Select(le => le.SetAreaType(AreaType.Room));
 
-            Debug.Log($"Cubes count {areas.Cubes().Count}");
+            /*
 
             areas = ldk.pl.MoveLevelGroup(areas,
                 (moved, le) =>
@@ -142,19 +183,52 @@ namespace ShapeGrammar
 
             //areas = ldk.pl.MoveToNotOverlap(areas);
 
-            /*areas = areas.LevelElements.Select((le, i) =>
+            areas = areas.LevelElements.Select((le, i) =>
             {
                 return le.SetAreaType(areaTypeCurve.ElementAt(i))
                     .MoveBy(Vector3Int.up * heightCurve.ElementAt(i));
             }).ToLevelGroupElement(areas.Grid);
             
             areas = areas.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => ldk.sgShapes.SimpleHouseWithFoundation(g.CubeGroup(), 4));
-            */
-
-            Debug.Log($"After moving cubes count {areas.Cubes().Count()}");
-            Debug.Log($"Distinct cubes count {areas.Cubes().Distinct().Count()}");
+            
 
             areas.ApplyGrammarStyleRules(ldk.houseStyleRules);
+            */
+
+
+            var group = new LevelGroupElement(ldk.grid, AreaType.None);
+            var start = ldk.qc.GetBox(new Box3Int(Vector3Int.zero, Vector3Int.one)).LevelElement();
+
+            Func<LevelElement> smallBox = () =>
+            {
+                var smallDistr = new SlopeDistr(center: 5, width: 3, rightness: 0.3f);
+                return ldk.qc.GetFlatBox(ExtensionMethods.RandomBox(smallDistr, smallDistr)).SetAreaType(AreaType.Room);
+            };
+
+            Func<LevelElement> largeBox = () =>
+            {
+                var largeDistr = new SlopeDistr(center: 8, width: 3, rightness: 0.3f);
+                return ldk.qc.GetFlatBox(ExtensionMethods.RandomBox(largeDistr, largeDistr)).SetAreaType(AreaType.Room);
+            };
+
+            var boxAdder = AddNearXZ(smallBox);
+            
+            var levelElements = Enumerable.Range(0, length).Aggregate(new AddingContext(Enumerable.Empty<LevelElement>(), start),
+                (addingCont, i) =>
+                {
+                    var newElem = boxAdder(addingCont.Added, addingCont.Last);
+
+                    if (newElem != null)
+                    {
+                        addingCont = new AddingContext(addingCont.Added.Append(newElem), newElem);
+                    }
+                    return addingCont;
+                }).Added.ToLevelGroupElement(group.Grid);
+
+            levelElements = levelElements.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => ldk.sgShapes.SimpleHouseWithFoundation(g.CubeGroup(), 4));
+
+
+            levelElements.ApplyGrammarStyleRules(ldk.houseStyleRules);
 
             return areas;
             /*
@@ -162,6 +236,18 @@ namespace ShapeGrammar
             var areaCreatorCurve =
             var widenessCurve =
             */
+        }
+
+        class AddingContext
+        {
+            public IEnumerable<LevelElement> Added { get; }
+            public LevelElement Last { get; }
+
+            public AddingContext(IEnumerable<LevelElement> added, LevelElement last)
+            {
+                Added = added;
+                Last = last;
+            }
         }
     }
 }
