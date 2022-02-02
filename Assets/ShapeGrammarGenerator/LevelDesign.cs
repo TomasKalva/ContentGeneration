@@ -154,24 +154,18 @@ namespace ShapeGrammar
         {
             return addingState =>
             {
-                // Height curve
-                var heightDistr = new UniformDistr(2, 10);
-                var heightCurve = ExtensionMethods.Naturals().Select(_ => heightDistr.Sample());
-                var smooth = heightCurve.Select2((a, b) => (a + b) / 2);
-                heightCurve = heightCurve.Interleave(smooth).Take(length);
-
                 var group = new LevelGroupElement(ldk.grid, AreaType.None);
 
                 Func<LevelElement> smallBox = () =>
                 {
                     var smallDistr = new SlopeDistr(center: 5, width: 3, rightness: 0.3f);
-                    return ldk.qc.GetFlatBox(ExtensionMethods.RandomBox(smallDistr, smallDistr)).SetAreaType(AreaType.Room);
+                    return ldk.qc.GetFlatBox(ExtensionMethods.RandomBox(smallDistr, smallDistr)).SetAreaType(AreaType.House);
                 };
 
                 Func<LevelElement> largeBox = () =>
                 {
                     var largeDistr = new SlopeDistr(center: 8, width: 3, rightness: 0.3f);
-                    return ldk.qc.GetFlatBox(ExtensionMethods.RandomBox(largeDistr, largeDistr)).SetAreaType(AreaType.Room);
+                    return ldk.qc.GetFlatBox(ExtensionMethods.RandomBox(largeDistr, largeDistr)).SetAreaType(AreaType.House);
                 };
 
                 var adders = new List<AddElement>()
@@ -186,20 +180,39 @@ namespace ShapeGrammar
             };
         }
 
+        AddElement SplittingPath(LevelElement start, int length)
+        {
+            return addingState =>
+            {
+                var pathMaker = LinearCurveDesign(start, length / 3);
+                var first = pathMaker(addingState);
+                var branches = pathMaker(first);
+                branches = pathMaker(branches.SetElement(first.Last));
+                return branches;
+            };
+        }
+
         public override LevelElement CreateLevel()
         {
-            int length = 10;
+            int length = 18;
+
+            // Height curve
+            var heightDistr = new UniformDistr(2, 10);
+            var heightCurve = ExtensionMethods.Naturals().Select(_ => heightDistr.Sample());
+            var smooth = heightCurve.Select2((a, b) => (a + b) / 2);
+            heightCurve = heightCurve.Interleave(smooth);
 
             var start = ldk.qc.GetBox(new Box3Int(Vector3Int.zero, Vector3Int.one)).LevelElement();
 
             AddingState state = new AddingState(start, ldk.grid);
 
-            var addedLine = LinearCurveDesign(start, length)(state);
-            /*levelElements = levelElements.Merge(
-                LinearCurveDesign(levelElements.LevelElements[length/3], 4),
-                LinearCurveDesign(levelElements.LevelElements[length * 2 / 3], 3)
-                );*/
+            var addedLine = SplittingPath(start, length)(state);
             var levelElements = addedLine.ToGroup();
+
+            levelElements = levelElements.LevelElements.Select((le, i) =>
+            {
+                return le.MoveBy(Vector3Int.up * heightCurve.ElementAt(i));
+            }).ToLevelGroupElement(ldk.grid);
 
             levelElements = levelElements.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => ldk.sgShapes.SimpleHouseWithFoundation(g.CubeGroup(), 4));
 
@@ -221,7 +234,7 @@ namespace ShapeGrammar
                 Last = last;
             }
 
-            AddingState(IEnumerable<LevelElement> added, LevelElement last, Grid grid)
+            public AddingState(IEnumerable<LevelElement> added, LevelElement last, Grid grid)
             {
                 Added = added;
                 Last = last;
@@ -241,6 +254,11 @@ namespace ShapeGrammar
             public AddingState PushElement(LevelElement le)
             {
                 return new AddingState(Added.Append(le), le, Grid);
+            }
+
+            public AddingState SetElement(LevelElement le)
+            {
+                return new AddingState(Added, le, Grid);
             }
 
             public LevelGroupElement ToGroup()
