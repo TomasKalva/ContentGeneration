@@ -21,9 +21,10 @@ namespace ShapeGrammar
         }
 
         #region Collection methods
-        public IEnumerable<LevelElement> WithAreaType(AreaType areaType) => Where(g => g.AreaType == areaType).ToList();
+        public IEnumerable<LevelElement> WithAreaType(AreaType areaType) => Where(g => g.AreaType == areaType).LevelElements.ToList();
 
-        public IEnumerable<LevelElement> Where(Func<LevelElement, bool> cond) => Flatten().Where(g => cond(g));
+        public LevelGroupElement Where(Func<LevelElement, bool> cond) => Flatten().Where(g => cond(g)).ToLevelGroupElement(Grid);
+        public LevelGroupElement WhereGeom(Func<LevelElement, bool> cond) => Leafs().Where(g => cond(g)).ToLevelGroupElement(Grid);
 
         public abstract LevelElement ReplaceLeafs(Func<LevelElement, bool> cond, Func<LevelElement, LevelElement> replaceF);
 
@@ -37,6 +38,8 @@ namespace ShapeGrammar
         }
 
         public abstract IEnumerable<LevelElement> Flatten();
+
+        public abstract IEnumerable<LevelElement> Leafs();
 
         public LevelElement SetAreaType(AreaType areaType)
         {
@@ -139,6 +142,8 @@ namespace ShapeGrammar
         }
 
         public abstract LevelElement Symmetrize(FaceHor faceHor);
+
+        public abstract LevelGroupElement Merge(params LevelElement[] les);
     }
 
     public class LevelGroupElement : LevelElement
@@ -164,6 +169,7 @@ namespace ShapeGrammar
         }
 
         public override IEnumerable<LevelElement> Flatten() => LevelElements.SelectMany(le => le.Flatten()).Prepend(this);
+        public override IEnumerable<LevelElement> Leafs() => LevelElements.SelectMany(le => le.Leafs());
 
         public LevelGroupElement Add(LevelElement levelElement) => new LevelGroupElement(Grid, AreaType, LevelElements.Append(levelElement).ToList());
         public LevelGroupElement AddAll(params LevelElement[] levelElement) => new LevelGroupElement(Grid, AreaType, LevelElements.Concat(levelElement).ToList());
@@ -204,7 +210,7 @@ namespace ShapeGrammar
         }
 
         
-        public LevelGroupElement Merge(params LevelElement[] les)
+        public override LevelGroupElement Merge(params LevelElement[] les)
         {
             return new LevelGroupElement(Grid, AreaType, les.Append(this).ToList());
         }
@@ -229,6 +235,7 @@ namespace ShapeGrammar
         }
 
         public override IEnumerable<LevelElement> Flatten() => new LevelElement[1] { this };
+        public override IEnumerable<LevelElement> Leafs() => this.ToEnumerable();
 
         protected override LevelElement MoveByImpl(Vector3Int offset)
         {
@@ -254,7 +261,7 @@ namespace ShapeGrammar
             return new LevelGeometryElement(Grid, AreaType, Group.Minus(levelElement.CubeGroup()));
         }
         
-        public LevelGroupElement Merge(params LevelElement[] le)
+        public override LevelGroupElement Merge(params LevelElement[] le)
         {
             return new LevelGroupElement(Grid, AreaType.None, le.Prepend(this).ToList());
         }

@@ -122,7 +122,7 @@ namespace ShapeGrammar
             return (alreadyAdded, last) =>
             {
                 var element = elementF();
-                var possibleMoves = element.Moves(element.MovesToPartlyIntersectXZ(last), alreadyAdded.Others(last));
+                var possibleMoves = element.Moves(element.MovesToPartlyIntersectXZ(last.Where(le => le.AreaType != AreaType.Path)), alreadyAdded.Others(last));
                 return possibleMoves.Any() ? element.MoveBy(possibleMoves.GetRandom()).Minus(last) : null;
             };
         }
@@ -137,7 +137,8 @@ namespace ShapeGrammar
                     return null;
 
                 var area = element.MoveBy(possibleMoves.GetRandom());
-                var path = ldk.sgShapes.WallPathH(last, area, 2);
+                var start = last.WhereGeom(le => le.AreaType != AreaType.Path);
+                var path = ldk.paths.PathH(start, area, 4, alreadyAdded.ToLevelGroupElement(last.Grid));
                 return new LevelGroupElement(last.Grid, AreaType.None, path, area);
             };
         }
@@ -148,7 +149,7 @@ namespace ShapeGrammar
 
         public override LevelElement CreateLevel()
         {
-            int length = 10;
+            int length = 30;
             // Height
             var heightDistr = new UniformDistr(5, 15);
             var heightCurve = ExtensionMethods.Naturals().Select(_ => heightDistr.Sample());
@@ -216,7 +217,7 @@ namespace ShapeGrammar
                  AddNearXZ(smallBox),
                  AddNearXZ(largeBox),
                  AddRemoveOverlap(largeBox),
-                 //PathTo(smallBox), todo: debug path!
+                 PathTo(smallBox),
             };
             
             var levelElements = Enumerable.Range(0, length).Aggregate(new AddingContext(Enumerable.Empty<LevelElement>(), start),

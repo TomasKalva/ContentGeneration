@@ -74,38 +74,6 @@ namespace ShapeGrammar
             return tower;
         }
 
-        public LevelGroupElement WallPathH(LevelElement area1, LevelElement area2, int thickness)
-        {
-            // Create path between the towers
-            var starting = area1.CubeGroup().WithFloor();
-            var ending = area2.CubeGroup().WithFloor();
-            var forbidden = area1;
-
-            Neighbors<PathNode> neighbors = PathNode.NotIn(PathNode.HorizontalNeighbors(), forbidden.CubeGroup());
-            var pathCubes = ConnectByPath(starting, ending, neighbors);
-            if(pathCubes == null)
-            {
-                return null;
-            }
-
-            if (thickness > 1)
-            {
-                var halfThickness = (thickness - 1) / 2;
-                // extruding to both sides
-                pathCubes = pathCubes.ExtrudeHorOut(halfThickness, false).Merge(pathCubes);
-                if (thickness % 2 == 0)
-                {
-                    // extruding to only 1 side
-                    pathCubes = pathCubes.ExtrudeHorOut(thickness - 1, false).Minus(pathCubes).SplitToConnected().FirstOrDefault().Merge(pathCubes);
-                }
-            }
-
-            var path = pathCubes.LevelElement(AreaType.Path);
-            var foundation = Foundation(path).LevelElement(AreaType.Foundation);
-
-            return path.Merge(foundation);
-        }
-
         public LevelGroupElement AddBalcony(LevelGroupElement house)
         {
             // add outside part of each floor
@@ -148,29 +116,6 @@ namespace ShapeGrammar
                .Extrude(1);
 ;
             return balcony;
-        }
-
-        public CubeGroup ConnectByPath(CubeGroup startGroup, CubeGroup endGroup, Neighbors<PathNode> neighbors)
-        {
-            // create graph for searching for the path
-            var graph = new ImplicitGraph<PathNode>(neighbors);
-            var graphAlgs = new GraphAlgorithms<PathNode, Edge<PathNode>, ImplicitGraph<PathNode>>(graph);
-
-            var goal = new HashSet<Cube>(endGroup.Cubes);
-            var starting = startGroup.Cubes.Select(c => new PathNode(null, c));
-
-            var heuristicsV = endGroup.Cubes.GetRandom();
-            var path = graphAlgs.FindPath(
-                starting,
-                pn => goal.Contains(pn.cube) && pn.prevVerMove == 0,
-                (pn0, pn1) => (pn0.cube.Position - pn1.cube.Position).sqrMagnitude,
-                pn => (pn.cube.Position - heuristicsV.Position).Sum(x => Mathf.Abs(x)),
-                PathNode.Comparer);
-
-            var pathCubes = path == null ? starting.GetRandom().cube.Group().Cubes : path.Select(pn => pn.cube).ToList();
-            // drop first and last element
-            pathCubes = pathCubes.Skip(1).Reverse().Skip(1).Reverse().ToList();
-            return new CubeGroup(Grid, pathCubes);
         }
 
         public CubeGroup IslandIrregular(Box2Int boundingArea)

@@ -15,6 +15,7 @@ namespace ShapeGrammar
         public ShapeGrammarStyles sgStyles { get; }
         public ShapeGrammarShapes sgShapes { get; }
         public Placement pl { get; }
+        public Paths paths { get; }
         public StyleRules houseStyleRules { get; }
 
         public LevelDevelopmentKit(ShapeGrammarObjectStyle objectStyle)
@@ -25,6 +26,7 @@ namespace ShapeGrammar
             sgStyles = new ShapeGrammarStyles(grid, FountainheadStyle);
             sgShapes = new ShapeGrammarShapes(grid);
             pl = new Placement(grid);
+            paths = new Paths(grid);
             houseStyleRules = new StyleRules(
                 new StyleRule(g => g.WithAreaType(AreaType.Room), g => g.SetGrammarStyle(sgStyles.RoomStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Roof), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
@@ -109,7 +111,7 @@ namespace ShapeGrammar
                 var lower = g.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.down).ExtrudeHor(false, true);
                 var searchSpace = g.CubeGroup().ExtrudeHor(false, true);
                 Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.StairsNeighbors(), searchSpace);
-                var path = sgShapes.ConnectByPath(lower, upper, neighbors);
+                var path = paths.ConnectByPath(lower, upper, neighbors);
                 path.SetGrammarStyle(sgStyles.StairsPathStyle);
             });
         }
@@ -155,7 +157,7 @@ namespace ShapeGrammar
                 var upper = upperFloor.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.down);
                 var searchSpace = new CubeGroup(grid, floor.CubeGroup().ExtrudeHor(false, true).Cubes.Concat(upper.Cubes).ToList());
                 Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.StairsNeighbors(), searchSpace);
-                var path = sgShapes.ConnectByPath(lower, upper, neighbors);
+                var path = paths.ConnectByPath(lower, upper, neighbors);
                 path.SetGrammarStyle(sgStyles.StairsPathStyle);
             });
         }
@@ -171,7 +173,7 @@ namespace ShapeGrammar
             var tower2 = tower.MoveBy(new Vector3Int(20, 0, 10)).ApplyGrammarStyleRules(houseStyleRules);
 
             // Create path between the towers
-            sgShapes.WallPathH(tower, tower2, 1).ApplyGrammarStyleRules(houseStyleRules);
+            paths.WalkableWallPathH(tower, tower2, 1).ApplyGrammarStyleRules(houseStyleRules);
 
             // Add balcony to one of the towers
             // house rules are applied to the entire house again...
@@ -192,7 +194,7 @@ namespace ShapeGrammar
                 .MoveBy(Vector3Int.RoundToInt(10f * new Vector3(Mathf.Cos(angle(i)), 0f, Mathf.Sin(angle(i))))));
 
             towers.ForEach(tower => tower.ApplyGrammarStyleRules(houseStyleRules));
-            towers.ForEach2Cycle((t1, t2) => sgShapes.WallPathH(t1, t2, 3).ApplyGrammarStyleRules(houseStyleRules));
+            towers.ForEach2Cycle((t1, t2) => paths.WalkableWallPathH(t1, t2, 3).ApplyGrammarStyleRules(houseStyleRules));
         }
 
         public void Surrounded()
@@ -222,7 +224,7 @@ namespace ShapeGrammar
             var start = box.CubesLayer(Vector3Int.left);
             var end = box.CubesLayer(Vector3Int.right);
             Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.StairsNeighbors(), box);
-            var path = sgShapes.ConnectByPath(start, end, neighbors);
+            var path = paths.ConnectByPath(start, end, neighbors);
             path.SetGrammarStyle(sgStyles.StairsPathStyle);
         }
 

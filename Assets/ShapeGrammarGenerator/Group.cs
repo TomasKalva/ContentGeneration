@@ -26,7 +26,8 @@ namespace ShapeGrammar
 
         public CubeGroup(Grid grid,List<Cube> cubes) : base(grid)
         {
-            Cubes = cubes;
+            //Debug.Assert(cubes.Distinct().Count() == cubes.Count);
+            Cubes = cubes.Distinct().ToList();
         }
 
         public CubeGroup CubesLayer(Vector3Int dir)
@@ -280,7 +281,7 @@ namespace ShapeGrammar
             Func<Facet, IEnumerable<Cube>> cubeSelector = dist > 0 ?
                     face => face.OtherCube?.MoveInDirUntil(face.Direction, stopConditionFact()) :
                     face => face.MyCube.MoveInDirUntil(-face.Direction, stopConditionFact());
-            var extrudedCubes = Facets.SelectManyNN(cubeSelector).ToList();
+            var extrudedCubes = Facets.SelectManyNN(cubeSelector).Distinct().ToList();
             return new CubeGroup(Grid, extrudedCubes);
         }
 
