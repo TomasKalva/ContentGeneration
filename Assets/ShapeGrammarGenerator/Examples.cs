@@ -54,7 +54,7 @@ namespace ShapeGrammar
             // house
             var house = sgShapes.SimpleHouseWithFoundation(new Box2Int(new Vector2Int(2, 2), new Vector2Int(8, 5)), 5);
 
-            var houseBottom = house.WithAreaType(AreaType.Foundation).FirstOrDefault().CubeGroup().CubesLayer(Vector3Int.down);
+            var houseBottom = house.WithAreaType(AreaType.Foundation).FirstOrDefault().CubeGroup().CubeGroupLayer(Vector3Int.down);
             var houseToIslandDir = island.MinkowskiMinus(houseBottom).GetRandom();
             house = house.MoveBy(houseToIslandDir);
 
@@ -74,7 +74,7 @@ namespace ShapeGrammar
             var house2 = house.MoveBy(Vector3Int.right * 8).ApplyGrammarStyleRules(houseStyleRules);
 
             var symmetryFace = house2.CubeGroup()
-                .CubesLayer(Vector3Int.back).Cubes.FirstOrDefault().Group()
+                .CubeGroupLayer(Vector3Int.back).Cubes.FirstOrDefault().Group()
                 .MoveBy(Vector3Int.back)
                 .BoundaryFacesH(Vector3Int.back).Facets.FirstOrDefault();
             var house3 = house2.CubeGroup().Symmetrize(symmetryFace).SetGrammarStyle(sgStyles.RoomStyle);
@@ -94,7 +94,7 @@ namespace ShapeGrammar
                 qc.Partition(
                     (g, boundingG) => qc.GetRandomHorConnected1(g, boundingG),
                         le.CubeGroup()
-                        .CubesMaxLayer(Vector3Int.up),
+                        .CubeGroupMaxLayer(Vector3Int.up),
                     3)
                 );
             housesRoofs = housesRoofs.Select(houseRoof =>
@@ -107,8 +107,8 @@ namespace ShapeGrammar
             // paths from room to roof
             town.LevelElements.ForEach(g =>
             {
-                var upper = g.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.up).ExtrudeHor(false, true);
-                var lower = g.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.down).ExtrudeHor(false, true);
+                var upper = g.CubeGroup().WithFloor().CubeGroupMaxLayer(Vector3Int.up).ExtrudeHor(false, true);
+                var lower = g.CubeGroup().WithFloor().CubeGroupMaxLayer(Vector3Int.down).ExtrudeHor(false, true);
                 var searchSpace = g.CubeGroup().ExtrudeHor(false, true);
                 Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.StairsNeighbors(), searchSpace);
                 var path = paths.ConnectByPath(lower, upper, neighbors);
@@ -153,8 +153,8 @@ namespace ShapeGrammar
                 if (upperFloor == null)
                     return;
 
-                var lower = floor.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.down);
-                var upper = upperFloor.CubeGroup().WithFloor().CubesMaxLayer(Vector3Int.down);
+                var lower = floor.CubeGroup().WithFloor().CubeGroupMaxLayer(Vector3Int.down);
+                var upper = upperFloor.CubeGroup().WithFloor().CubeGroupMaxLayer(Vector3Int.down);
                 var searchSpace = new CubeGroup(grid, floor.CubeGroup().ExtrudeHor(false, true).Cubes.Concat(upper.Cubes).ToList());
                 Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.StairsNeighbors(), searchSpace);
                 var path = paths.ConnectByPath(lower, upper, neighbors);
@@ -221,8 +221,8 @@ namespace ShapeGrammar
         {
             // testing paths
             var box = sgShapes.Room(new Box3Int(new Vector3Int(0, 0, 0), new Vector3Int(10, 10, 10)));
-            var start = box.CubesLayer(Vector3Int.left);
-            var end = box.CubesLayer(Vector3Int.right);
+            var start = box.CubeGroupLayer(Vector3Int.left);
+            var end = box.CubeGroupLayer(Vector3Int.right);
             Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.StairsNeighbors(), box);
             var path = paths.ConnectByPath(start, end, neighbors);
             path.SetGrammarStyle(sgStyles.StairsPathStyle);
@@ -238,6 +238,15 @@ namespace ShapeGrammar
         {
             var CurveDesign = new CurvesLevelDesign(this);
             CurveDesign.CreateLevel();
+        }
+
+        public void House()
+        {
+            var houseBox = qc.GetFlatBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(6, 6)), 0);
+
+            var house = sgShapes.SimpleHouseWithFoundation(houseBox.CubeGroup(), 8);
+
+            house.ApplyGrammarStyleRules(houseStyleRules);
         }
 
         public void CompositeHouse()

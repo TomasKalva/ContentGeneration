@@ -37,7 +37,9 @@ namespace ShapeGrammar
 
         public LevelGroupElement SimpleHouseWithFoundation(CubeGroup belowFirstFloor, int floorHeight)
         {
-            var room = belowFirstFloor.ExtrudeVer(Vector3Int.up, floorHeight, false).LevelElement(AreaType.Room);
+            var room = belowFirstFloor.ExtrudeVer(Vector3Int.up, floorHeight, false)
+                .LevelElement(AreaType.Room)
+                .Split(Vector3Int.up, floorHeight / 2);
             var roof = room.CubeGroup().ExtrudeVer(Vector3Int.up, 1, false).LevelElement(AreaType.Roof);
             var foundation = Foundation(room).LevelElement(AreaType.Foundation);
             var house = new LevelGroupElement(Grid, AreaType.House, foundation, room, roof);
@@ -52,7 +54,7 @@ namespace ShapeGrammar
             var boxes =  qc.RaiseRandomly(layout, () => UnityEngine.Random.Range(height / 2, height))
                     .Select(part => TurnIntoHouse(part.CubeGroup()))
                     .SetChildrenAreaType(AreaType.Room);
-            var symBoxes = boxes.SymmetrizeGrp(boxes.CubeGroup().CubesMaxLayer(Vector3Int.left).Cubes.GetRandom().FacesHor(Vector3Int.left));
+            var symBoxes = boxes.SymmetrizeGrp(boxes.CubeGroup().CubeGroupMaxLayer(Vector3Int.left).Cubes.GetRandom().FacesHor(Vector3Int.left));
 
             return boxes.Merge(symBoxes);
         }
@@ -79,14 +81,14 @@ namespace ShapeGrammar
             // add outside part of each floor
             var withBalcony = house.ReplaceLeafsGrp(
                 le => le.AreaType == AreaType.Room,
-                le => new LevelGroupElement(le.Grid, AreaType.None, le, le.CubeGroup().CubesMaxLayer(Vector3Int.down).ExtrudeHor(true, false).LevelElement(AreaType.Roof))
+                le => new LevelGroupElement(le.Grid, AreaType.None, le, le.CubeGroup().CubeGroupMaxLayer(Vector3Int.down).ExtrudeHor(true, false).LevelElement(AreaType.Roof))
             );
             return withBalcony;
         }
 
         public LevelGroupElement TurnIntoHouse(CubeGroup house)
         {
-            var roof = house.CubesMaxLayer(Vector3Int.up).LevelElement(AreaType.Roof);
+            var roof = house.CubeGroupMaxLayer(Vector3Int.up).LevelElement(AreaType.Roof);
             var room = house.Minus(roof.CubeGroup()).LevelElement(AreaType.Room);
             return new LevelGroupElement(Grid, AreaType.House, room, roof);
         }

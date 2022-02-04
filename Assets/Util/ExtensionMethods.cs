@@ -49,7 +49,7 @@ static class ExtensionMethods
     {
         return new LevelGroupElement(grid, AreaType.None, list);
     }
-    
+
     public static IEnumerable<T> ToEnumerable<T>(this T t)
     {
         return new T[1] { t };
@@ -271,6 +271,31 @@ static class ExtensionMethods
             i++;
         }
         return default;
+    }
+
+    public static int IndexOfInterval(this IEnumerable<int> intervals, float value) => IndexOfInterval(intervals.Select(v => (float)v), value);
+
+    /// <summary>
+    /// Array intervals should be sorted from lowest to highest.
+    /// Less than smallest => 0. More than highest => intervals.Count() + 1.
+    /// </summary>
+    public static int IndexOfInterval(this IEnumerable<float> intervals, float value)
+    {
+        if (!intervals.Any())
+            return 0;
+        if (value < intervals.First())
+            return 0;
+
+        int i = 0;
+        foreach(var v in intervals)
+        {
+            if (value >= v)
+            {
+                return i + 1;
+            }
+            i++;
+        }
+        throw new InvalidOperationException("This code shouldn't be reached.");
     }
 
     public static IEnumerable<T> Others<T>(this IEnumerable<T> enumerable, T me) where T : class

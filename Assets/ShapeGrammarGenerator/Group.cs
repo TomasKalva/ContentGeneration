@@ -26,19 +26,24 @@ namespace ShapeGrammar
 
         public CubeGroup(Grid grid,List<Cube> cubes) : base(grid)
         {
-            //Debug.Assert(cubes.Distinct().Count() == cubes.Count);
+            Debug.Assert(cubes.Any());
             Cubes = cubes.Distinct().ToList();
         }
 
-        public CubeGroup CubesLayer(Vector3Int dir)
+        public CubeGroup CubeGroupLayer(Vector3Int dir)
         {
             return new CubeGroup(Grid, Cubes.Where(cube => !Cubes.Contains(Grid[cube.Position + dir])).ToList());
         }
 
-        public CubeGroup CubesMaxLayer(Vector3Int dir)
+        public CubeGroup CubeGroupMaxLayer(Vector3Int dir)
+        {
+            return new CubeGroup(Grid, CubesMaxLayer(dir).ToList());
+        }
+
+        IEnumerable<Cube> CubesMaxLayer(Vector3Int dir)
         {
             var max = Cubes.Max(cube => Vector3.Dot(cube.Position, dir));
-            return new CubeGroup(Grid, Cubes.Where(cube => Vector3.Dot(cube.Position, dir) == max).ToList());
+            return Cubes.Where(cube => Vector3.Dot(cube.Position, dir) == max);
         }
 
         public CubeGroup MoveBy(Vector3Int offset)
@@ -154,6 +159,14 @@ namespace ShapeGrammar
             return new CubeGroup(Grid, Cubes.Select(cube => Grid[flipped(cube.Position)]).ToList());
         }
 
+        public IEnumerable<CubeGroup> Split(Vector3Int dir, params int[] dist)
+        {
+            var min = Cubes.Min(cube => Vector3.Dot(cube.Position, dir));
+            return from cube in Cubes
+                   group cube by dist.IndexOfInterval((int)(Vector3.Dot(cube.Position, dir) - min)) into splitGroup
+                   select splitGroup.AsEnumerable().ToCubeGroup(Grid);
+        }
+
         public CubeGroup SetGrammarStyle(StyleSetter styleSetter)
         {
             styleSetter(this);
@@ -190,7 +203,7 @@ namespace ShapeGrammar
 
         public FaceHorGroup BoundaryFacesH(params Vector3Int[] horDirs)
         {
-            return new FaceHorGroup(Grid, horDirs.Select(horDir => CubesLayer(horDir).FacesH(horDir)).SelectMany(i => i.Facets).ToList());
+            return new FaceHorGroup(Grid, horDirs.Select(horDir => CubeGroupLayer(horDir).FacesH(horDir)).SelectMany(i => i.Facets).ToList());
         }
 
         public FaceHorGroup AllBoundaryFacesH()
@@ -212,7 +225,7 @@ namespace ShapeGrammar
 
         public FaceVerGroup BoundaryFacesV(params Vector3Int[] verDirs)
         {
-            return new FaceVerGroup(Grid, verDirs.Select(verDir => CubesLayer(verDir).FacesV(verDir)).SelectMany(i => i.Facets).ToList());
+            return new FaceVerGroup(Grid, verDirs.Select(verDir => CubeGroupLayer(verDir).FacesV(verDir)).SelectMany(i => i.Facets).ToList());
         }
 
         public FaceVerGroup AllBoundaryFacesV()
@@ -237,7 +250,7 @@ namespace ShapeGrammar
 
         public CornerGroup BoundaryCorners(params Vector3Int[] horDirs)
         {
-            return new CornerGroup(Grid, horDirs.Select(verDir => CubesLayer(verDir).Corners(verDir)).SelectMany(i => i.Facets).ToList());
+            return new CornerGroup(Grid, horDirs.Select(verDir => CubeGroupLayer(verDir).Corners(verDir)).SelectMany(i => i.Facets).ToList());
         }
 
         public CornerGroup AllBoundaryCorners()

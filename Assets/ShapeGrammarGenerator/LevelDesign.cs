@@ -194,7 +194,7 @@ namespace ShapeGrammar
 
         public override LevelElement CreateLevel()
         {
-            int length = 18;
+            int length = 8;
 
             // Height curve
             var heightDistr = new UniformDistr(2, 10);
@@ -206,7 +206,8 @@ namespace ShapeGrammar
 
             AddingState state = new AddingState(start, ldk.grid);
 
-            var addedLine = SplittingPath(start, length)(state);
+            //var addedLine = SplittingPath(start, length)(state);
+            var addedLine = LinearCurveDesign(start, length)(state);
             var levelElements = addedLine.ToGroup();
 
             levelElements = levelElements.LevelElements.Select((le, i) =>
@@ -214,7 +215,7 @@ namespace ShapeGrammar
                 return le.MoveBy(Vector3Int.up * heightCurve.ElementAt(i));
             }).ToLevelGroupElement(ldk.grid);
 
-            levelElements = levelElements.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => ldk.sgShapes.SimpleHouseWithFoundation(g.CubeGroup(), 4));
+            levelElements = levelElements.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => ldk.sgShapes.SimpleHouseWithFoundation(g.CubeGroup(), 8));
 
 
             levelElements.ApplyGrammarStyleRules(ldk.houseStyleRules);
