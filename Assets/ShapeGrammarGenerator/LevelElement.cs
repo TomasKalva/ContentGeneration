@@ -26,7 +26,7 @@ namespace ShapeGrammar
         public LevelGroupElement Where(Func<LevelElement, bool> cond) => Flatten().Where(g => cond(g)).ToLevelGroupElement(Grid);
         public LevelGroupElement WhereGeom(Func<LevelElement, bool> cond) => Leafs().Where(g => cond(g)).ToLevelGroupElement(Grid);
 
-        public abstract LevelElement ReplaceLeafs(Func<LevelElement, bool> cond, Func<LevelElement, LevelElement> replaceF);
+        public abstract LevelElement ReplaceLeafs(Func<LevelGeometryElement, bool> cond, Func<LevelGeometryElement, LevelElement> replaceF);
 
         #endregion
 
@@ -196,10 +196,11 @@ namespace ShapeGrammar
 
         public override CubeGroup CubeGroup() => new CubeGroup(Grid, Cubes());
 
-        public LevelGroupElement ReplaceLeafsGrp(Func<LevelElement, bool> cond, Func<LevelElement, LevelElement> replaceF) => (LevelGroupElement)ReplaceLeafs(cond, replaceF);
-        public LevelGroupElement ReplaceLeafsGrp(int index, Func<LevelElement, LevelElement> replaceF) => (LevelGroupElement)ReplaceLeafs(le => le == Leafs().ElementAt(index), replaceF);
+        public LevelGroupElement ReplaceLeafsGrp(Func<LevelGeometryElement, bool> cond, Func<LevelGeometryElement, LevelElement> replaceF) => (LevelGroupElement)ReplaceLeafs(cond, replaceF);
+        public LevelGroupElement ReplaceLeafsGrp(int index, Func<LevelGeometryElement, LevelElement> replaceF) => (LevelGroupElement)ReplaceLeafs(le => le == Leafs().ElementAt(index), replaceF);
+        public LevelGroupElement ReplaceLeafsGrp(LevelGeometryElement replacedElement, Func<LevelGeometryElement, LevelElement> replaceF) => (LevelGroupElement)ReplaceLeafs(le => le == replacedElement, replaceF);
 
-        public override LevelElement ReplaceLeafs(Func<LevelElement, bool> cond, Func<LevelElement, LevelElement> replaceF)
+        public override LevelElement ReplaceLeafs(Func<LevelGeometryElement, bool> cond, Func<LevelGeometryElement, LevelElement> replaceF)
         {
             // todo: don't replace the group elements that aren't changed
             return new LevelGroupElement(Grid, AreaType, LevelElements.Select(le => le.ReplaceLeafs(cond, replaceF)).ToList());
@@ -219,7 +220,7 @@ namespace ShapeGrammar
         
         public override LevelGroupElement Merge(params LevelElement[] les)
         {
-            return new LevelGroupElement(Grid, AreaType, les.Append(this).ToList());
+            return new LevelGroupElement(Grid, AreaType, les.Concat(LevelElements).ToList());
         }
 
         public override LevelElement Symmetrize(FaceHor faceHor)
@@ -267,7 +268,7 @@ namespace ShapeGrammar
 
         public override CubeGroup CubeGroup() => Group;
 
-        public override LevelElement ReplaceLeafs(Func<LevelElement, bool> cond, Func<LevelElement, LevelElement> replaceF)
+        public override LevelElement ReplaceLeafs(Func<LevelGeometryElement, bool> cond, Func<LevelGeometryElement, LevelElement> replaceF)
         {
             return cond(this) ? replaceF(this) : this;
         }
