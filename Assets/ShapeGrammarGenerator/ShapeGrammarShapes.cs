@@ -38,8 +38,8 @@ namespace ShapeGrammar
         public LevelGroupElement SimpleHouseWithFoundation(CubeGroup belowFirstFloor, int floorHeight)
         {
             var room = belowFirstFloor.ExtrudeVer(Vector3Int.up, floorHeight, false)
-                .LevelElement(AreaType.Room)
-                .SplitRel(Vector3Int.up, 0.3f, 0.7f);
+                .LevelElement(AreaType.Room);
+                //.SplitRel(Vector3Int.up, AreaType.Room, 0.3f, 0.7f);
             var roof = room.CubeGroup().ExtrudeVer(Vector3Int.up, 1, false).LevelElement(AreaType.Roof);
             var foundation = Foundation(room).LevelElement(AreaType.Foundation);
             var house = new LevelGroupElement(Grid, AreaType.House, foundation, room, roof);
@@ -154,5 +154,14 @@ namespace ShapeGrammar
 
             return boxes;
         }*/
+
+        public LevelGroupElement SubdivideRoom(LevelGeometryElement box)
+        {
+            var splitBox = box.SplitRel(Vector3Int.right, AreaType.None, 0.5f).SplitRel(Vector3Int.up, AreaType.Room, 0.5f);
+            return splitBox
+                .ReplaceLeafsGrp(0, le => le.SetAreaType(AreaType.Wall))
+                .ReplaceLeafsGrp(1, le => le.SetAreaType(AreaType.OpenRoom))
+                .ReplaceLeafsGrp(3, le => le.SetAreaType(AreaType.Empty));
+        }
     }
 }

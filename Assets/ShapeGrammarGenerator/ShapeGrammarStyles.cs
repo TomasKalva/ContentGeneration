@@ -30,6 +30,13 @@ namespace ShapeGrammar
             return roomArea;
         }
 
+        public CubeGroup OpenRoomStyle(CubeGroup roomArea)
+        {
+            roomArea.BoundaryFacesV(Vector3Int.down).SetStyle(ObjectStyle).Fill(FACE_VER.Floor);
+            roomArea.AllBoundaryCorners().SetStyle(ObjectStyle).Fill(CORNER.Pillar);
+            return roomArea;
+        }
+
         public CubeGroup EmptyStyle(CubeGroup emptyArea)
         {
             return emptyArea;

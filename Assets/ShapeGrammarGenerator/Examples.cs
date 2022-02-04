@@ -29,6 +29,7 @@ namespace ShapeGrammar
             paths = new Paths(grid);
             houseStyleRules = new StyleRules(
                 new StyleRule(g => g.WithAreaType(AreaType.Room), g => g.SetGrammarStyle(sgStyles.RoomStyle)),
+                new StyleRule(g => g.WithAreaType(AreaType.OpenRoom), g => g.SetGrammarStyle(sgStyles.OpenRoomStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Roof), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Foundation), g => g.SetGrammarStyle(sgStyles.FoundationStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Path), g => g.SetGrammarStyle(sgStyles.StairsPathStyle)),
@@ -36,6 +37,7 @@ namespace ShapeGrammar
                 new StyleRule(g => g.WithAreaType(AreaType.WallTop), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Wall), g => g.SetGrammarStyle(sgStyles.FoundationStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Empty), g => g.SetGrammarStyle(sgStyles.EmptyStyle)),
+                new StyleRule(g => g.WithAreaType(AreaType.Inside), g => g.SetGrammarStyle(sgStyles.RoomStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Debug), g => g.SetGrammarStyle(sgStyles.RoomStyle))
             );
         }
@@ -245,9 +247,20 @@ namespace ShapeGrammar
         {
             var houseBox = qc.GetFlatBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 8)), 0);
             
-            var box = houseBox.CubeGroup().ExtrudeVer(Vector3Int.up, 10).LevelElement();
-            box.SplitRel(Vector3Int.up, 0.3f, 0.7f).SplitRel(Vector3Int.right, 0.3f, 0.7f)
-                .ReplaceLeafs(_ => true, g => g.SetAreaType(AreaType.Room)).ApplyGrammarStyleRules(houseStyleRules);
+            var box = houseBox.CubeGroup().ExtrudeVer(Vector3Int.up, 10).LevelElement(AreaType.Room);
+            var splitBox = box.SplitRel(Vector3Int.right, AreaType.None, 0.5f).SplitRel(Vector3Int.up, AreaType.Room, 0.5f);
+
+            var wall = splitBox.Leafs().ElementAt(0);
+
+            var empty = splitBox.Leafs().ElementAt(3);
+
+            splitBox
+                .ReplaceLeafsGrp(0, le => le.SetAreaType(AreaType.Wall))
+                .ReplaceLeafsGrp(1, le => le.SetAreaType(AreaType.OpenRoom))
+                .ReplaceLeafsGrp(3, le => le.SetAreaType(AreaType.Empty))
+                .ApplyGrammarStyleRules(houseStyleRules);
+
+            //box.ReplaceLeafs(_ => true, g => g.SetAreaType(AreaType.Room)).ApplyGrammarStyleRules(houseStyleRules);
             
             /*
             var house = sgShapes.SimpleHouseWithFoundation(houseBox.CubeGroup(), 8);

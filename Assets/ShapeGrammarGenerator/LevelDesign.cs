@@ -146,6 +146,21 @@ namespace ShapeGrammar
             };
         }
 
+        AddElement SubdivideRoom()
+        {
+            return (addingState) =>
+            {
+                var room = addingState.Added.ToLevelGroupElement(ldk.grid).Nonterminals(AreaType.Room).FirstOrDefault();
+                if (room == null)
+                    return addingState;
+
+                ldk.sgShapes.SubdivideRoom(room);
+                //var possibleMoves = element.Moves(element.MovesNearXZ(addingState.Last), addingState.Added);
+                //var movedElement = possibleMoves.Any() ? element.MoveBy(possibleMoves.GetRandom()) : null;
+                return addingState;
+            };
+        }
+
         public CurvesLevelDesign(LevelDevelopmentKit ldk) : base(ldk)
         {
         }
