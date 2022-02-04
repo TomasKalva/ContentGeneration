@@ -271,9 +271,14 @@ namespace ShapeGrammar
             return new LevelGeometryElement(Grid, AreaType, Group.Symmetrize(faceHor));
         }
 
-        public LevelGroupElement Split(Vector3Int dir, int dist)
+        public LevelGroupElement Split(Vector3Int dir, params int[] dist)
         {
             return new LevelGroupElement(Grid, AreaType.None, Group.Split(dir, dist).Select(g => new LevelGeometryElement(Grid, AreaType, g)).ToList<LevelElement>());
+        }
+
+        public LevelGroupElement SplitRel(Vector3Int dir, params float[] dist)
+        {
+            return new LevelGroupElement(Grid, AreaType.None, Group.SplitRel(dir, dist).Select(g => new LevelGeometryElement(Grid, AreaType, g)).ToList<LevelElement>());
         }
     }
 }

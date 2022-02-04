@@ -159,12 +159,26 @@ namespace ShapeGrammar
             return new CubeGroup(Grid, Cubes.Select(cube => Grid[flipped(cube.Position)]).ToList());
         }
 
-        public IEnumerable<CubeGroup> Split(Vector3Int dir, params int[] dist)
+        /// <summary>
+        /// dists are in number of cubes from cube from lowest value in dir.
+        /// </summary>
+        public IEnumerable<CubeGroup> Split(Vector3Int dir, params int[] dists)
         {
             var min = Cubes.Min(cube => Vector3.Dot(cube.Position, dir));
             return from cube in Cubes
-                   group cube by dist.IndexOfInterval((int)(Vector3.Dot(cube.Position, dir) - min)) into splitGroup
+                   group cube by dists.IndexOfInterval((int)(Vector3.Dot(cube.Position, dir) - min)) into splitGroup
                    select splitGroup.AsEnumerable().ToCubeGroup(Grid);
+        }
+
+        /// <summary>
+        /// relDists are relative in distance between cube with lowest and highest value in dir.
+        /// </summary>
+        public IEnumerable<CubeGroup> SplitRel(Vector3Int dir, params float[] relDists)
+        {
+            var min = Cubes.Min(cube => Vector3.Dot(cube.Position, dir));
+            var max = Cubes.Max(cube => Vector3.Dot(cube.Position, dir));
+            var minMaxDist = max - min;
+            return Split(dir, relDists.Select(relDist => (int)(minMaxDist * relDist)).ToArray());
         }
 
         public CubeGroup SetGrammarStyle(StyleSetter styleSetter)

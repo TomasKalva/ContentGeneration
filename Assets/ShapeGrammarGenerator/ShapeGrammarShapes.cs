@@ -39,7 +39,7 @@ namespace ShapeGrammar
         {
             var room = belowFirstFloor.ExtrudeVer(Vector3Int.up, floorHeight, false)
                 .LevelElement(AreaType.Room)
-                .Split(Vector3Int.up, floorHeight / 2);
+                .SplitRel(Vector3Int.up, 0.3f, 0.7f);
             var roof = room.CubeGroup().ExtrudeVer(Vector3Int.up, 1, false).LevelElement(AreaType.Roof);
             var foundation = Foundation(room).LevelElement(AreaType.Foundation);
             var house = new LevelGroupElement(Grid, AreaType.House, foundation, room, roof);
