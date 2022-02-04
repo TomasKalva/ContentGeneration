@@ -144,6 +144,10 @@ namespace ShapeGrammar
         public abstract LevelElement Symmetrize(FaceHor faceHor);
 
         public abstract LevelGroupElement Merge(params LevelElement[] les);
+
+        public abstract LevelGroupElement Split(Vector3Int dir, params int[] dist);
+
+        public abstract LevelGroupElement SplitRel(Vector3Int dir, params float[] dist);
     }
 
     public class LevelGroupElement : LevelElement
@@ -221,6 +225,16 @@ namespace ShapeGrammar
         }
 
         public LevelGroupElement SymmetrizeGrp(FaceHor faceHor) => (LevelGroupElement)Symmetrize(faceHor);
+
+        public override LevelGroupElement Split(Vector3Int dir, params int[] dist)
+        {
+            return new LevelGroupElement(Grid, AreaType.None, LevelElements.Select(le => le.Split(dir, dist)).ToList<LevelElement>());
+        }
+
+        public override LevelGroupElement SplitRel(Vector3Int dir, params float[] dist)
+        {
+            return new LevelGroupElement(Grid, AreaType.None, LevelElements.Select(le => le.SplitRel(dir, dist)).ToList<LevelElement>());
+        }
     }
 
     public class LevelGeometryElement : LevelElement
@@ -271,12 +285,12 @@ namespace ShapeGrammar
             return new LevelGeometryElement(Grid, AreaType, Group.Symmetrize(faceHor));
         }
 
-        public LevelGroupElement Split(Vector3Int dir, params int[] dist)
+        public override LevelGroupElement Split(Vector3Int dir, params int[] dist)
         {
             return new LevelGroupElement(Grid, AreaType.None, Group.Split(dir, dist).Select(g => new LevelGeometryElement(Grid, AreaType, g)).ToList<LevelElement>());
         }
 
-        public LevelGroupElement SplitRel(Vector3Int dir, params float[] dist)
+        public override LevelGroupElement SplitRel(Vector3Int dir, params float[] dist)
         {
             return new LevelGroupElement(Grid, AreaType.None, Group.SplitRel(dir, dist).Select(g => new LevelGeometryElement(Grid, AreaType, g)).ToList<LevelElement>());
         }

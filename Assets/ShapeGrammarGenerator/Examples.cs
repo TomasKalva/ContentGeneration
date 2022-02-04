@@ -35,6 +35,7 @@ namespace ShapeGrammar
                 new StyleRule(g => g.WithAreaType(AreaType.Garden), g => g.SetGrammarStyle(sgStyles.GardenStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.WallTop), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Wall), g => g.SetGrammarStyle(sgStyles.FoundationStyle)),
+                new StyleRule(g => g.WithAreaType(AreaType.Empty), g => g.SetGrammarStyle(sgStyles.EmptyStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Debug), g => g.SetGrammarStyle(sgStyles.RoomStyle))
             );
         }
@@ -243,12 +244,17 @@ namespace ShapeGrammar
         public void House()
         {
             var houseBox = qc.GetFlatBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 8)), 0);
-
-            //var house = sgShapes.SimpleHouseWithFoundation(houseBox.CubeGroup(), 8);
+            
+            var box = houseBox.CubeGroup().ExtrudeVer(Vector3Int.up, 10).LevelElement();
+            box.SplitRel(Vector3Int.up, 0.3f, 0.7f).SplitRel(Vector3Int.right, 0.3f, 0.7f)
+                .ReplaceLeafs(_ => true, g => g.SetAreaType(AreaType.Room)).ApplyGrammarStyleRules(houseStyleRules);
+            
+            /*
+            var house = sgShapes.SimpleHouseWithFoundation(houseBox.CubeGroup(), 8);
             var split = qc.RecursivelySplitXZ(houseBox, 4).ReplaceLeafs(_ => true, g => g.SetAreaType(AreaType.Room));
+            split.ApplyGrammarStyleRules(houseStyleRules);*/
 
 
-            split.ApplyGrammarStyleRules(houseStyleRules);
         }
 
         public void CompositeHouse()

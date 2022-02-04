@@ -170,6 +170,23 @@ namespace ShapeGrammar
             }
         }
 
+        public LevelElement RecursivelySplit(LevelGeometryElement levelElement, int maxSide)
+        {
+            var cubeGroup = levelElement.CubeGroup();
+            var maxLengthDir = ExtensionMethods.PositiveDirections().ArgMax(dir => cubeGroup.ExtentsDir(dir));
+            var maxLength = cubeGroup.ExtentsDir(maxLengthDir);
+            if (maxLength <= maxSide)
+            {
+                return levelElement;
+            }
+            else
+            {
+                var relDist = UnityEngine.Random.Range(0.3f, 0.7f);
+                var splitGroup = levelElement.SplitRel(maxLengthDir, relDist);
+                return splitGroup.Select(lg => RecursivelySplit((LevelGeometryElement)lg, maxSide));
+            }
+        }
+
         public LevelGroupElement FlatBoxes(IEnumerable<Box2Int> boxes, int count)
         {
             return new LevelGroupElement(QueriedGrid, AreaType.None, boxes.Select(box => GetFlatBox(box)).Take(count).ToList<LevelElement>());
