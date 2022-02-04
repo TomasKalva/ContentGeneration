@@ -151,40 +151,24 @@ namespace ShapeGrammar
             return newShapes;
         }
 
-        /// <summary>
-        /// Returns boxes in the bounding box that don't overlap.
-        /// </summary>
-        /*public LevelGroupElement GetNonOverlappingBoxes(Box2Int boundingBox, int boxesCount)
+        public LevelElement RecursivelySplitXZ(LevelGeometryElement levelElement, int maxSide)
         {
-            var boudingElem = GetFlatBox(boundingBox);
-            var smallBox = new Box2Int(boundingBox.leftBottom, boundingBox.leftBottom + (boundingBox.rightTop - boundingBox.leftBottom) / 4);
-            var randomBoundingBox = new Box2Int(new Vector2Int(-2, -2), new Vector2Int(2, 2));
-
-            // get boxes
-            var boxes = Enumerable.Range(0, boxesCount).SelectNN(i =>
+            var cubeGroup = levelElement.CubeGroup();
+            var lengthX = cubeGroup.LengthX();
+            var lengthZ = cubeGroup.LengthZ();
+            if (Mathf.Max(lengthX, lengthZ) <= maxSide)
             {
-                var bBounds = smallBox.Border(ExtensionMethods.RandomHalfBox(randomBoundingBox));
-                var b = GetBox(bBounds.InflateY(0, 1)).LevelElement(AreaType.None);
-                return b;
-            }).ToLevelGroupElement();
-
-            // move boxes
-
-            var movedBoxes = MoveLevelGroup(boxes,
-                (moved, le) =>
-                {
-                    var movesInside = le.MovesToBeInside(boudingElem);
-                    var movesNotIntersecting = le.Moves(movesInside, moved);
-                    return movesNotIntersecting;
-                },
-                moves => moves.GetRandom()
-                );
-
-            var cubeGroup = new LevelGroupElement(QueriedGrid, AreaType.None, Enumerable.Empty<LevelElement>().ToList());
-            movedBoxes.LevelElements.ForEach(g => cubeGroup = cubeGroup.Add(g.CubeGroup().Minus(cubeGroup.CubeGroup()).LevelElement(AreaType.None)));
-            return cubeGroup;
-        }*/
-
+                return levelElement;
+            }
+            else
+            {
+                var dir = lengthX < lengthZ ?
+                    Vector3Int.forward : Vector3Int.right;
+                var relDist = UnityEngine.Random.Range(0.3f, 0.7f);
+                var splitGroup = levelElement.SplitRel(dir, relDist);
+                return splitGroup.Select(lg => RecursivelySplitXZ((LevelGeometryElement)lg, maxSide));
+            }
+        }
 
         public LevelGroupElement FlatBoxes(IEnumerable<Box2Int> boxes, int count)
         {

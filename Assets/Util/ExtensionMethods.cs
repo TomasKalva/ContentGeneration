@@ -608,6 +608,11 @@ static class ExtensionMethods
         return f(v.x) + f(v.y) + f(v.z);
     }
 
+    public static int Dot(this Vector3Int u, Vector3Int v)
+    {
+        return u.x * v.x + u.y * v.y + u.z * v.z;
+    }
+
     public static Vector3 ComponentWise(this Vector3 v, Func<float, float> f)
     {
         return new Vector3(f(v.x), f(v.y), f(v.z));

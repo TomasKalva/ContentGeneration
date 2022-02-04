@@ -242,11 +242,13 @@ namespace ShapeGrammar
 
         public void House()
         {
-            var houseBox = qc.GetFlatBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(6, 6)), 0);
+            var houseBox = qc.GetFlatBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 8)), 0);
 
-            var house = sgShapes.SimpleHouseWithFoundation(houseBox.CubeGroup(), 8);
+            //var house = sgShapes.SimpleHouseWithFoundation(houseBox.CubeGroup(), 8);
+            var split = qc.RecursivelySplitXZ(houseBox, 4).ReplaceLeafs(_ => true, g => g.SetAreaType(AreaType.Room));
 
-            house.ApplyGrammarStyleRules(houseStyleRules);
+
+            split.ApplyGrammarStyleRules(houseStyleRules);
         }
 
         public void CompositeHouse()

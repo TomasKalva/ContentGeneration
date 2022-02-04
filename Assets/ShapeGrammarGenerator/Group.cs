@@ -24,6 +24,12 @@ namespace ShapeGrammar
     {
         public virtual List<Cube> Cubes { get; }
 
+        public int ExtentsDir(Vector3Int dir) => dir.Dot(CubesMaxLayer(dir).FirstOrDefault().Position - CubesMaxLayer(-dir).FirstOrDefault().Position) + 1;
+
+        public int LengthX() => ExtentsDir(Vector3Int.right);
+        public int LengthY() => ExtentsDir(Vector3Int.up);
+        public int LengthZ() => ExtentsDir(Vector3Int.forward);
+
         public CubeGroup(Grid grid,List<Cube> cubes) : base(grid)
         {
             Debug.Assert(cubes.Any());
@@ -178,7 +184,7 @@ namespace ShapeGrammar
             var min = Cubes.Min(cube => Vector3.Dot(cube.Position, dir));
             var max = Cubes.Max(cube => Vector3.Dot(cube.Position, dir));
             var minMaxDist = max - min;
-            return Split(dir, relDists.Select(relDist => (int)(minMaxDist * relDist)).ToArray());
+            return Split(dir, relDists.Select(relDist => Mathf.RoundToInt((minMaxDist * relDist))).ToArray());
         }
 
         public CubeGroup SetGrammarStyle(StyleSetter styleSetter)
