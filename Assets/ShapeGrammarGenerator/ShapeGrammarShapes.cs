@@ -155,9 +155,10 @@ namespace ShapeGrammar
             return boxes;
         }*/
 
-        public LevelGroupElement SubdivideRoom(LevelGeometryElement box)
+        public LevelGroupElement SubdivideRoom(LevelGeometryElement box, Vector3Int horDir, float width)
         {
-            var splitBox = box.SplitRel(Vector3Int.right, AreaType.None, 0.5f).SplitRel(Vector3Int.up, AreaType.Room, 0.5f);
+
+            var splitBox = box.SplitRel(horDir, AreaType.None, width).SplitRel(Vector3Int.up, AreaType.Room, 0.5f);
             return splitBox
                 .ReplaceLeafsGrp(0, le => le.SetAreaType(AreaType.Wall))
                 .ReplaceLeafsGrp(1, le => le.SetAreaType(AreaType.OpenRoom))

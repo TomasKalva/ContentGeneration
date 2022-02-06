@@ -170,10 +170,11 @@ namespace ShapeGrammar
         /// </summary>
         public IEnumerable<CubeGroup> Split(Vector3Int dir, params int[] dists)
         {
-            var min = Cubes.Min(cube => Vector3.Dot(cube.Position, dir));
-            return from cube in Cubes
-                   group cube by dists.IndexOfInterval((int)(Vector3.Dot(cube.Position, dir) - min)) into splitGroup
+            var min = Cubes.Min(cube => cube.Position.Dot(dir));
+            var split = from cube in Cubes
+                   group cube by dists.IndexOfInterval((cube.Position.Dot(dir) - min)) into splitGroup
                    select splitGroup.AsEnumerable().ToCubeGroup(Grid);
+            return Vector3Int.one.Dot(dir) > 0 ? split : split.Reverse();
         }
 
         /// <summary>
@@ -181,9 +182,9 @@ namespace ShapeGrammar
         /// </summary>
         public IEnumerable<CubeGroup> SplitRel(Vector3Int dir, params float[] relDists)
         {
-            var min = Cubes.Min(cube => Vector3.Dot(cube.Position, dir));
-            var max = Cubes.Max(cube => Vector3.Dot(cube.Position, dir));
-            var minMaxDist = max - min;
+            var min = Cubes.Min(cube => cube.Position.Dot(dir));
+            var max = Cubes.Max(cube => cube.Position.Dot(dir));
+            var minMaxDist = max - min + 1;
             return Split(dir, relDists.Select(relDist => Mathf.RoundToInt((minMaxDist * relDist))).ToArray());
         }
 

@@ -154,7 +154,7 @@ namespace ShapeGrammar
                 if (room == null)
                     return addingState;
 
-                var changedAdded = addingState.Added.ReplaceLeafsGrp(room, _ => ldk.sgShapes.SubdivideRoom(room));
+                var changedAdded = addingState.Added.ReplaceLeafsGrp(room, _ => ldk.sgShapes.SubdivideRoom(room, ExtensionMethods.HorizontalDirections().GetRandom(), 0.3f));
                 return addingState.ChangeAdded(changedAdded);
             };
         }
@@ -230,7 +230,7 @@ namespace ShapeGrammar
             }).ToLevelGroupElement(ldk.grid);
 
             levelElements = levelElements.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => ldk.sgShapes.SimpleHouseWithFoundation(g.CubeGroup(), 8));
-            levelElements = levelElements.ReplaceLeafsGrp(g => g.AreaType == AreaType.Room, g => ldk.sgShapes.SubdivideRoom(g));
+            levelElements = levelElements.ReplaceLeafsGrp(g => g.AreaType == AreaType.Room, g => ldk.sgShapes.SubdivideRoom(g, ExtensionMethods.HorizontalDirections().GetRandom(), 0.3f));
 
             levelElements.ApplyGrammarStyleRules(ldk.houseStyleRules);
 
