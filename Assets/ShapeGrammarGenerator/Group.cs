@@ -32,7 +32,7 @@ namespace ShapeGrammar
 
         public CubeGroup(Grid grid,List<Cube> cubes) : base(grid)
         {
-            Debug.Assert(cubes.Any());
+            //Debug.Assert(cubes.Any());
             Cubes = cubes.Distinct().ToList();
         }
 

@@ -151,7 +151,15 @@ namespace ShapeGrammar
             return newShapes;
         }
 
-        public LevelElement RecursivelySplitXZ(LevelGeometryElement levelElement, int maxSide)
+        public LevelGroupElement RecursivelySplitXZ(LevelGeometryElement levelElement, int maxSide)
+        {
+            return RecursivelySplitXZImpl(levelElement, maxSide).Leafs().ToLevelGroupElement(levelElement.Grid);
+        }
+
+        /// <summary>
+        /// Can create cube groups with zero cubes.
+        /// </summary>
+        LevelElement RecursivelySplitXZImpl(LevelGeometryElement levelElement, int maxSide)
         {
             var cubeGroup = levelElement.CubeGroup();
             var lengthX = cubeGroup.LengthX();
@@ -166,11 +174,16 @@ namespace ShapeGrammar
                     Vector3Int.forward : Vector3Int.right;
                 var relDist = UnityEngine.Random.Range(0.3f, 0.7f);
                 var splitGroup = levelElement.SplitRel(dir, levelElement.AreaType, relDist);
-                return splitGroup.Select(lg => RecursivelySplitXZ((LevelGeometryElement)lg, maxSide));
+                return splitGroup.Select(lg => RecursivelySplitXZImpl((LevelGeometryElement)lg, maxSide));
             }
         }
 
-        public LevelElement RecursivelySplit(LevelGeometryElement levelElement, int maxSide)
+        public LevelGroupElement RecursivelySplit(LevelGeometryElement levelElement, int maxSide)
+        {
+            return RecursivelySplitImpl(levelElement, maxSide).Leafs().ToLevelGroupElement(levelElement.Grid);
+        }
+
+        LevelElement RecursivelySplitImpl(LevelGeometryElement levelElement, int maxSide)
         {
             var cubeGroup = levelElement.CubeGroup();
             var maxLengthDir = ExtensionMethods.PositiveDirections().ArgMax(dir => cubeGroup.ExtentsDir(dir));
@@ -183,7 +196,7 @@ namespace ShapeGrammar
             {
                 var relDist = UnityEngine.Random.Range(0.3f, 0.7f);
                 var splitGroup = levelElement.SplitRel(maxLengthDir, levelElement.AreaType, relDist);
-                return splitGroup.Select(lg => RecursivelySplit((LevelGeometryElement)lg, maxSide));
+                return splitGroup.Select(lg => RecursivelySplitImpl((LevelGeometryElement)lg, maxSide));
             }
         }
 
