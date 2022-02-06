@@ -164,5 +164,18 @@ namespace ShapeGrammar
                 .ReplaceLeafsGrp(1, le => le.SetAreaType(AreaType.OpenRoom))
                 .ReplaceLeafsGrp(3, le => le.SetAreaType(AreaType.Empty));
         }
+
+        public LevelGroupElement FloorPlan(LevelGeometryElement box, int maxRoomSize)
+        {
+            return qc.RecursivelySplitXZ(box, maxRoomSize).Leafs().ToLevelGroupElement(box.Grid);
+        }
+
+        public LevelGroupElement PickAndConnect(LevelGroupElement floorPlan, float keepProb)
+        {
+            var picked = floorPlan.LevelElements.Select(le => UnityEngine.Random.Range(0f, 1f) < keepProb ? le : le.SetAreaType(AreaType.Empty)).ToLevelGroupElement(floorPlan.Grid);
+            var nonEmpty = picked.NonEmpty().CubeGroup().SplitToConnected().ToLevelGroupElement(floorPlan.Grid);
+            var empty = picked.Empty().CubeGroup().SplitToConnected().ToLevelGroupElement(floorPlan.Grid).ReplaceLeafs(_ => true, le => le.SetAreaType(AreaType.Empty));
+            return nonEmpty.Merge(empty);
+        }
     }
 }

@@ -22,6 +22,7 @@ namespace ShapeGrammar
         public static AreaType Path { get; } = new AreaType("Path");
         public static AreaType Empty { get; } = new AreaType("Empty");
         public static AreaType Inside { get; } = new AreaType("Inside");
+        public static AreaType Platform { get; } = new AreaType("Platform");
         public static AreaType Debug { get; } = new AreaType("Debug");
 
         public string Name { get; }

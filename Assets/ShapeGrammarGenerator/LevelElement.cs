@@ -150,6 +150,7 @@ namespace ShapeGrammar
         public abstract LevelGroupElement Split(Vector3Int dir, AreaType subareasType, params int[] dist);
 
         public abstract LevelGroupElement SplitRel(Vector3Int dir, AreaType subareasType, params float[] dist);
+
     }
 
     public class LevelGroupElement : LevelElement
@@ -239,6 +240,8 @@ namespace ShapeGrammar
         {
             return new LevelGroupElement(Grid, AreaType, LevelElements.Select(le => le.SplitRel(dir, subareasType, dist)).ToList<LevelElement>());
         }
+        public LevelGroupElement Empty() => LevelElements.Where(le => le.AreaType == AreaType.Empty).ToLevelGroupElement(Grid);
+        public LevelGroupElement NonEmpty() => LevelElements.Where(le => le.AreaType != AreaType.Empty).ToLevelGroupElement(Grid);
     }
 
     public class LevelGeometryElement : LevelElement

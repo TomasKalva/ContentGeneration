@@ -38,6 +38,7 @@ namespace ShapeGrammar
                 new StyleRule(g => g.WithAreaType(AreaType.Wall), g => g.SetGrammarStyle(sgStyles.FoundationStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Empty), g => g.SetGrammarStyle(sgStyles.EmptyStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Inside), g => g.SetGrammarStyle(sgStyles.RoomStyle)),
+                new StyleRule(g => g.WithAreaType(AreaType.Platform), g => g.SetGrammarStyle(sgStyles.PlatformStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Debug), g => g.SetGrammarStyle(sgStyles.RoomStyle))
             );
         }
@@ -243,7 +244,7 @@ namespace ShapeGrammar
             CurveDesign.CreateLevel();
         }
 
-        public void House()
+        public void SplitHouse()
         {
             var houseBox = qc.GetFlatBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 8)), 0);
             
@@ -259,15 +260,38 @@ namespace ShapeGrammar
                 .ReplaceLeafsGrp(1, le => le.SetAreaType(AreaType.OpenRoom))
                 .ReplaceLeafsGrp(3, le => le.SetAreaType(AreaType.Empty))
                 .ApplyGrammarStyleRules(houseStyleRules);
+        }
 
-            //box.ReplaceLeafs(_ => true, g => g.SetAreaType(AreaType.Room)).ApplyGrammarStyleRules(houseStyleRules);
-            
-            /*
-            var house = sgShapes.SimpleHouseWithFoundation(houseBox.CubeGroup(), 8);
-            var split = qc.RecursivelySplitXZ(houseBox, 4).ReplaceLeafs(_ => true, g => g.SetAreaType(AreaType.Room));
-            split.ApplyGrammarStyleRules(houseStyleRules);*/
+        public void PartlyBrokenFloorHouse()
+        {
+
+            var floorBox = qc.GetFlatBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)), 0);
+
+            Func<LevelGeometryElement, LevelElement> brokenFloor = (floor) =>
+            {
+                var floorPlan = sgShapes.FloorPlan(floor, 4);
+                var partlyBrokenFloor = sgShapes.PickAndConnect(floorPlan, 0.5f).ReplaceLeafs(le => le.AreaType != AreaType.Empty, le => le.SetAreaType(AreaType.Platform));
+                return partlyBrokenFloor;
+            };
+
+            var house = floorBox.CubeGroup().ExtrudeVer(Vector3Int.up, 15).LevelElement(AreaType.Room);
+            var houseFloors = house.SplitRel(Vector3Int.up, AreaType.None, 0.2f, 0.5f, 0.7f).ReplaceLeafsGrp(_ => true, le => brokenFloor(le));
 
 
+            houseFloors.ApplyGrammarStyleRules(houseStyleRules);
+            //house.SetAreaType(AreaType.Room).ApplyGrammarStyleRules(houseStyleRules);
+            /*var splitBox = floorPlan.SplitRel(Vector3Int.right, AreaType.None, 0.5f).SplitRel(Vector3Int.up, AreaType.Room, 0.5f);
+
+            var wall = splitBox.Leafs().ElementAt(0);
+
+            var empty = splitBox.Leafs().ElementAt(3);
+
+            splitBox
+                .ReplaceLeafsGrp(0, le => le.SetAreaType(AreaType.Wall))
+                .ReplaceLeafsGrp(1, le => le.SetAreaType(AreaType.OpenRoom))
+                .ReplaceLeafsGrp(3, le => le.SetAreaType(AreaType.Empty))
+                .ApplyGrammarStyleRules(houseStyleRules);
+            */
         }
 
         public void CompositeHouse()

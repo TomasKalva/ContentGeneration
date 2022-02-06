@@ -40,6 +40,11 @@ static class ExtensionMethods
         return new CubeGroup(enumerable.FirstOrDefault().Grid, enumerable.SelectMany(cg => cg.Cubes).ToList());
     }
 
+    public static LevelGroupElement ToLevelGroupElement(this IEnumerable<CubeGroup> enumerable, ShapeGrammar.Grid grid)
+    {
+        return enumerable.Select(g => new LevelGeometryElement(g.Grid, AreaType.None, g)).ToLevelGroupElement(grid);
+    }
+
     public static LevelGroupElement ToLevelGroupElement(this IEnumerable<LevelElement> enumerable, ShapeGrammar.Grid grid)
     {
         return enumerable.ToList().ToLevelGroupElement(grid);

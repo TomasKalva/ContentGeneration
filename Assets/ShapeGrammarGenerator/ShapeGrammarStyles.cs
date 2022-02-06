@@ -25,7 +25,7 @@ namespace ShapeGrammar
         public CubeGroup RoomStyle(CubeGroup roomArea)
         {
             roomArea.AllBoundaryFacesH().SetStyle(ObjectStyle).Fill(FACE_HOR.Wall);
-            roomArea.BoundaryFacesV(Vector3Int.down).SetStyle(ObjectStyle).Fill(FACE_VER.Floor);
+            roomArea.CubeGroupMaxLayer(Vector3Int.down).BoundaryFacesV(Vector3Int.down).SetStyle(ObjectStyle).Fill(FACE_VER.Floor);
             roomArea.AllBoundaryCorners().SetStyle(ObjectStyle).Fill(CORNER.Pillar);
             return roomArea;
         }
@@ -63,15 +63,16 @@ namespace ShapeGrammar
             return foundationArea;
         }
 
-        public CubeGroup PlatformStyle(CubeGroup platformTop)
+        public CubeGroup PlatformStyle(CubeGroup platformArea)
         {
-            platformTop.BoundaryFacesV(Vector3Int.down).SetStyle(ObjectStyle).Fill(FACE_VER.Floor);
+            platformArea.BoundaryFacesV(Vector3Int.down).SetStyle(ObjectStyle).Fill(FACE_VER.Floor);
+            var platformTop = platformArea.WithFloor();
             platformTop.BoundaryCorners(ExtensionMethods.HorizontalDirections().ToArray())
                 .MoveBy(-Vector3Int.up)
                 .MoveInDirUntil(Vector3Int.down, corner => corner.MyCube.Position.y < 0)
                 .SetStyle(ObjectStyle).Fill(CORNER.Pillar);
 
-            return platformTop;
+            return platformArea;
         }
 
         public CubeGroup BalconyStyle(CubeGroup balcony, CubeGroup house)
