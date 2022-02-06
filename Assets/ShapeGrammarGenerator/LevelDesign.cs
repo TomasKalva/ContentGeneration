@@ -230,8 +230,9 @@ namespace ShapeGrammar
             }).ToLevelGroupElement(ldk.grid);
 
             levelElements = levelElements.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => ldk.sgShapes.SimpleHouseWithFoundation(g.CubeGroup(), 8));
-            levelElements = levelElements.ReplaceLeafsGrp(g => g.AreaType == AreaType.Room, g => ldk.sgShapes.SubdivideRoom(g, ExtensionMethods.HorizontalDirections().GetRandom(), 0.3f));
-
+            //levelElements = levelElements.ReplaceLeafsGrp(g => g.AreaType == AreaType.Room, g => ldk.sgShapes.SubdivideRoom(g, ExtensionMethods.HorizontalDirections().GetRandom(), 0.3f));
+            levelElements = levelElements.ReplaceLeafsGrp(g => g.AreaType == AreaType.Room, g => ldk.sgShapes.FloorHouse(g, ldk.sgShapes.BrokenFloor));
+            
             levelElements.ApplyGrammarStyleRules(ldk.houseStyleRules);
 
             return levelElements;

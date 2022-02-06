@@ -277,21 +277,7 @@ namespace ShapeGrammar
             var house = floorBox.CubeGroup().ExtrudeVer(Vector3Int.up, 15).LevelElement(AreaType.Room);
             var houseFloors = house.SplitRel(Vector3Int.up, AreaType.None, 0.2f, 0.5f, 0.7f).ReplaceLeafsGrp(_ => true, le => brokenFloor(le));
 
-
             houseFloors.ApplyGrammarStyleRules(houseStyleRules);
-            //house.SetAreaType(AreaType.Room).ApplyGrammarStyleRules(houseStyleRules);
-            /*var splitBox = floorPlan.SplitRel(Vector3Int.right, AreaType.None, 0.5f).SplitRel(Vector3Int.up, AreaType.Room, 0.5f);
-
-            var wall = splitBox.Leafs().ElementAt(0);
-
-            var empty = splitBox.Leafs().ElementAt(3);
-
-            splitBox
-                .ReplaceLeafsGrp(0, le => le.SetAreaType(AreaType.Wall))
-                .ReplaceLeafsGrp(1, le => le.SetAreaType(AreaType.OpenRoom))
-                .ReplaceLeafsGrp(3, le => le.SetAreaType(AreaType.Empty))
-                .ApplyGrammarStyleRules(houseStyleRules);
-            */
         }
 
         public void CompositeHouse()

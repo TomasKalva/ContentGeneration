@@ -134,6 +134,16 @@ namespace ShapeGrammar
         public Corner MoveBy(Vector3Int offset) => MoveBy<Corner>(offset);
         public IEnumerable<Corner> MoveInDirUntil(Grid gridView, Vector3Int dir, Func<Corner, bool> stopPred) => MoveInDirUntil<Corner>(gridView, dir, stopPred);
         public CornerGroup Group() => new CornerGroup(MyCube.Grid, new List<Corner>() { this });
+
+        public IEnumerable<Cube> AllNeighbors()
+        {
+            var pos = MyCube.Position;
+            var grid = MyCube.Grid;
+            yield return MyCube;
+            yield return grid[pos + Direction];
+            yield return grid[pos + Vector3Int.forward * Direction.z];
+            yield return grid[pos + Vector3Int.right * Direction.x];
+        }
     }
 
     public enum FACE_HOR

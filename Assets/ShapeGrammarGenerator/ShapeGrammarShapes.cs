@@ -177,5 +177,21 @@ namespace ShapeGrammar
             var empty = picked.Empty().CubeGroup().SplitToConnected().ToLevelGroupElement(floorPlan.Grid).ReplaceLeafs(_ => true, le => le.SetAreaType(AreaType.Empty));
             return nonEmpty.Merge(empty);
         }
+
+        public LevelGroupElement FloorHouse(LevelGeometryElement box, Func<LevelGeometryElement, LevelElement> floorCreator)
+        {
+            var floorBox = box.CubeGroup().CubeGroupMaxLayer(Vector3Int.down);
+            var house = box;
+            var houseFloors = house.SplitRel(Vector3Int.up, AreaType.None, 0.2f, 0.5f, 0.7f).ReplaceLeafsGrp(_ => true, le => floorCreator(le));
+
+            return houseFloors;
+        }
+
+        public LevelElement BrokenFloor(LevelGeometryElement box)
+        {
+            var floorPlan = FloorPlan(box, 4);
+            var partlyBrokenFloor = PickAndConnect(floorPlan, 0.5f).ReplaceLeafs(le => le.AreaType != AreaType.Empty, le => le.SetAreaType(AreaType.Platform));
+            return partlyBrokenFloor;
+        }
     }
 }

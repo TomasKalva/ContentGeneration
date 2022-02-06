@@ -274,6 +274,12 @@ namespace ShapeGrammar
             return new CornerGroup(Grid, horDirs.Select(verDir => CubeGroupLayer(verDir).Corners(verDir)).SelectMany(i => i.Facets).ToList());
         }
 
+        public CornerGroup SpecialCorners(params Vector3Int[] horDirs)
+        {
+            var specialCorners = BoundaryCorners(horDirs).Facets.Where(corner => corner.AllNeighbors().Where(c => c.In(this)).Count() != 2).ToList();
+            return new CornerGroup(Grid, specialCorners);
+        }
+
         public CornerGroup AllBoundaryCorners()
         {
             return BoundaryCorners(ExtensionMethods.HorizontalDirections().ToArray());

@@ -67,7 +67,7 @@ namespace ShapeGrammar
         {
             platformArea.BoundaryFacesV(Vector3Int.down).SetStyle(ObjectStyle).Fill(FACE_VER.Floor);
             var platformTop = platformArea.WithFloor();
-            platformTop.BoundaryCorners(ExtensionMethods.HorizontalDirections().ToArray())
+            platformTop.SpecialCorners(ExtensionMethods.HorizontalDirections().ToArray())
                 .MoveBy(-Vector3Int.up)
                 .MoveInDirUntil(Vector3Int.down, corner => corner.MyCube.Position.y < 0)
                 .SetStyle(ObjectStyle).Fill(CORNER.Pillar);
