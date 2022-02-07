@@ -256,13 +256,13 @@ namespace ShapeGrammar
                 var adders = new List<AddElement>()
                 {
                      AddNearXZ(smallBox),
-                     AddNearXZ(largeBox),
+                     /*AddNearXZ(largeBox),
                      AddNearXZ(balconyTower),
                      AddNearXZ(surrounded),
-                     AddNearXZ(island),
+                     AddNearXZ(island),*/
                      //AddRemoveOverlap(largeBox),
                      PathTo(smallBox),
-                     PathTo(tower),
+                     //PathTo(tower),
                 }.Shuffle().ToList();
 
                 return addingState.ChangeAll(Enumerable.Range(0, length).Select(i => adders[i % adders.Count]));
@@ -302,7 +302,6 @@ namespace ShapeGrammar
 
             AddingState state = new AddingState(start, ldk.grid, le => le/*.MoveBy((heightDistr.Sample() - le.CubeGroup().CubeGroupMaxLayer(Vector3Int.down).Cubes.FirstOrDefault().Position.y)* Vector3Int.up)*/);
 
-            //var addedLine = SplittingPath(start, length)(state);
             var addedLine = LinearCurveDesign(start, length)(state);
 
             var changers = Enumerable.Repeat(SplitToFloors(), 100).Concat(
@@ -311,19 +310,6 @@ namespace ShapeGrammar
 
             var subdividedRooms = addedLine.ChangeAll(changers);
             var levelElements = subdividedRooms.Added;
-            
-
-            
-            /*
-            levelElements = levelElements.LevelElements.Select((le, i) =>
-            {
-                return le.MoveBy(Vector3Int.up * heightCurve.ElementAt(i));
-            }).ToLevelGroupElement(ldk.grid);
-
-            levelElements = levelElements.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => ldk.sgShapes.SimpleHouseWithFoundation(g.CubeGroup(), 8));*/
-
-            //levelElements = levelElements.ReplaceLeafsGrp(g => g.AreaType == AreaType.Room, g => ldk.sgShapes.SubdivideRoom(g, ExtensionMethods.HorizontalDirections().GetRandom(), 0.3f));
-            //levelElements = levelElements.ReplaceLeafsGrp(g => g.AreaType == AreaType.Room && g.Cubes().Any(), g => ldk.sgShapes.FloorHouse(g, ldk.sgShapes.BrokenFloor, 3, 6, 9));
             
             levelElements.ApplyGrammarStyleRules(ldk.houseStyleRules);
 

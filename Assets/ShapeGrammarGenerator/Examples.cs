@@ -51,7 +51,7 @@ namespace ShapeGrammar
         public Examples(ShapeGrammarObjectStyle objectStyle) : base(objectStyle)
         { }
         
-        public void Island()
+        public void IslandAndHouses()
         {
             // island
             var island = sgShapes.IslandExtrudeIter(grid[0, 0, 0].Group(), 13, 0.3f);
@@ -84,6 +84,18 @@ namespace ShapeGrammar
                 .MoveBy(Vector3Int.back)
                 .BoundaryFacesH(Vector3Int.back).Facets.FirstOrDefault();
             var house3 = house2.CubeGroup().Symmetrize(symmetryFace).SetGrammarStyle(sgStyles.RoomStyle);
+        }
+
+        public void Island()
+        {
+            var island = sgShapes.IslandExtrudeIter(grid[0, 0, 0].Group(), 13, 0.3f);
+
+            // wall
+            var wallTop = island.ExtrudeHor(true, false).Minus(island).MoveBy(Vector3Int.up).LevelElement(AreaType.WallTop);
+            var foundation = sgShapes.Foundation(wallTop).LevelElement(AreaType.Foundation);
+            var total = new LevelGroupElement(grid, AreaType.None, island.LevelElement(AreaType.Garden), foundation, wallTop);
+
+            total.ApplyGrammarStyleRules(houseStyleRules);
         }
 
         public void Houses()
