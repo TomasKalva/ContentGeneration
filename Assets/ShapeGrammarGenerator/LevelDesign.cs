@@ -154,7 +154,7 @@ namespace ShapeGrammar
                 if (room == null)
                     return addingState;
 
-                var changedAdded = addingState.Added.ReplaceLeafsGrp(room, _ => ldk.sgShapes.SubdivideRoom(room, ExtensionMethods.HorizontalDirections().GetRandom(), 0.3f));
+                var changedAdded = addingState.Added.ReplaceLeafsGrp(room, _ => ldk.tr.SubdivideRoom(room, ExtensionMethods.HorizontalDirections().GetRandom(), 0.3f));
                 return addingState.ChangeAdded(changedAdded);
             };
         }
@@ -262,6 +262,15 @@ namespace ShapeGrammar
                 branches = pathMaker(branches.SetElement(first.Last));
                 return branches;
             };
+        }
+
+        IEnumerable<int> HeightCurve()
+        {
+            var heightDistr = new UniformDistr(2, 10);
+            var heightCurve = ExtensionMethods.Naturals().Select(_ => heightDistr.Sample());
+            var smooth = heightCurve.Select2((a, b) => (a + b) / 2);
+            heightCurve = heightCurve.Interleave(smooth);
+            return heightCurve;
         }
 
         public override LevelElement CreateLevel()

@@ -141,58 +141,5 @@ namespace ShapeGrammar
             var wall = Foundation(wallTop).LevelElement(AreaType.Wall);
             return new LevelGroupElement(inside.Grid, AreaType.None, wall, wallTop);
         }
-
-
-        /*
-        public LevelGroupElement CompositeHouse(Box2Int areaXZ, int height)
-        {
-            var flatBoxes = qc.FlatBoxes(2, 5, 4);
-            var layout = qc.RemoveOverlap(pl.MoveToIntersectAll(flatBoxes));
-
-            var boxes = qc.RaiseRandomly(layout, () => UnityEngine.Random.Range(height / 2, height))
-                    .Select(part => TurnIntoHouse(part.CubeGroup()))
-                    .SetChildrenAreaType(AreaType.Room);
-
-            return boxes;
-        }*/
-
-        public LevelGroupElement SubdivideRoom(LevelGeometryElement box, Vector3Int horDir, float width)
-        {
-
-            var splitBox = box.SplitRel(horDir, AreaType.None, width).SplitRel(Vector3Int.up, AreaType.Room, 0.5f);
-            return splitBox
-                .ReplaceLeafsGrp(0, le => le.SetAreaType(AreaType.Wall))
-                .ReplaceLeafsGrp(1, le => le.SetAreaType(AreaType.OpenRoom))
-                .ReplaceLeafsGrp(3, le => le.SetAreaType(AreaType.Empty));
-        }
-
-        public LevelGroupElement FloorPlan(LevelGeometryElement box, int maxRoomSize)
-        {
-            return qc.RecursivelySplitXZ(box, maxRoomSize).Leafs().ToLevelGroupElement(box.Grid);
-        }
-
-        public LevelGroupElement PickAndConnect(LevelGroupElement floorPlan, float keepProb)
-        {
-            var picked = floorPlan.LevelElements.Select(le => UnityEngine.Random.Range(0f, 1f) < keepProb ? le : le.SetAreaType(AreaType.Empty)).ToLevelGroupElement(floorPlan.Grid);
-            var nonEmpty = picked.NonEmpty().CubeGroup().SplitToConnected().ToLevelGroupElement(floorPlan.Grid);
-            var empty = picked.Empty().CubeGroup().SplitToConnected().ToLevelGroupElement(floorPlan.Grid).ReplaceLeafs(_ => true, le => le.SetAreaType(AreaType.Empty));
-            return nonEmpty.Merge(empty);
-        }
-
-        public LevelGroupElement FloorHouse(LevelGeometryElement box, Func<LevelGeometryElement, LevelElement> floorCreator, params int[] floors)
-        {
-            var floorBox = box.CubeGroup().CubeGroupMaxLayer(Vector3Int.down);
-            var house = box;
-            var houseFloors = house.Split(Vector3Int.up, AreaType.None, floors).ReplaceLeafsGrp(_ => true, le => floorCreator(le));
-
-            return houseFloors;
-        }
-
-        public LevelElement BrokenFloor(LevelGeometryElement box)
-        {
-            var floorPlan = FloorPlan(box, 3);
-            var partlyBrokenFloor = PickAndConnect(floorPlan, 0.5f).ReplaceLeafs(le => le.AreaType != AreaType.Empty, le => le.SetAreaType(AreaType.Platform));
-            return partlyBrokenFloor;
-        }
     }
 }

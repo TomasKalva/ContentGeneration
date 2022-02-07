@@ -16,6 +16,7 @@ namespace ShapeGrammar
         public ShapeGrammarShapes sgShapes { get; }
         public Placement pl { get; }
         public Paths paths { get; }
+        public Transformations tr { get; }
         public StyleRules houseStyleRules { get; }
 
         public LevelDevelopmentKit(ShapeGrammarObjectStyle objectStyle)
@@ -27,6 +28,7 @@ namespace ShapeGrammar
             sgShapes = new ShapeGrammarShapes(grid);
             pl = new Placement(grid);
             paths = new Paths(grid);
+            tr = new Transformations(this);
             houseStyleRules = new StyleRules(
                 new StyleRule(g => g.WithAreaType(AreaType.Room), g => g.SetGrammarStyle(sgStyles.RoomStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.OpenRoom), g => g.SetGrammarStyle(sgStyles.OpenRoomStyle)),
@@ -264,13 +266,12 @@ namespace ShapeGrammar
 
         public void PartlyBrokenFloorHouse()
         {
-
             var floorBox = qc.GetFlatBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)), 0);
 
             Func<LevelGeometryElement, LevelElement> brokenFloor = (floor) =>
             {
-                var floorPlan = sgShapes.FloorPlan(floor, 4);
-                var partlyBrokenFloor = sgShapes.PickAndConnect(floorPlan, 0.5f).ReplaceLeafs(le => le.AreaType != AreaType.Empty, le => le.SetAreaType(AreaType.Platform));
+                var floorPlan = tr.SplittingFloorPlan(floor, 4);
+                var partlyBrokenFloor = tr.PickAndConnect(floorPlan, tr.PickWithChance(0.5f)).ReplaceLeafs(le => le.AreaType != AreaType.Empty, le => le.SetAreaType(AreaType.Platform));
                 return partlyBrokenFloor;
             };
 
@@ -284,113 +285,6 @@ namespace ShapeGrammar
         {
             var house = sgShapes.CompositeHouse(/*new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)),*/ 6);
             house.ApplyGrammarStyleRules(houseStyleRules);
-        }
-    }
-
-    public interface IIntDistr
-    {
-        public int Sample();
-    }
-
-    public class RandomIntDistr : IIntDistr
-    {
-        int min, max;
-
-        public RandomIntDistr(int min, int max)
-        {
-            this.min = min;
-            this.max = max;
-        }
-
-        public int Sample()
-        {
-            return UnityEngine.Random.Range(min, max);
-        }
-    }
-
-    public class IntDistr : IIntDistr
-    {
-        int start, step;
-        int current;
-
-        public IntDistr(int start = 0, int step = 1)
-        {
-            this.start = start;
-            this.step = step;
-            this.current = start - step;
-        }
-
-        public int Sample()
-        {
-            current += step;
-            return current;
-        }
-    }
-
-    public class IntervalDistr : IIntDistr
-    {
-        IIntDistr seq;
-        int min, max;
-
-        public IntervalDistr(IIntDistr seq, int min, int max)
-        {
-            this.seq = seq;
-            this.min = min;
-            this.max = max;
-
-            Debug.Assert(max > min);
-        }
-
-        public int Sample()
-        {
-            var i = seq.Sample();
-            return i.Mod(max - min) + min;
-        }
-    }
-
-    /// <summary>
-    /// Binomial distribution given by center and width.
-    /// </summary>
-    public class SlopeDistr : IIntDistr
-    {
-        float p;
-        int center, width;
-        int size;
-
-        public SlopeDistr(int center = 0, int width = 1, float rightness = 0.5f)
-        {
-            this.center = center;
-            this.width = width;
-            this.p = rightness;
-            size = 1 + 2 * width;
-        }
-
-        public int Sample()
-        {
-            var successes = 0;
-            for(int i = 0; i < size; i++)
-            {
-                if(UnityEngine.Random.Range(0f, 1f) < p)
-                {
-                    successes++;
-                }
-            }
-            return center + successes - width;
-        }
-    }
-    public class UniformDistr : IIntDistr
-    {
-        int min, max;
-
-        public UniformDistr(int min, int max)
-        {
-            this.min = min;
-            this.max = max;
-        }
-
-        public int Sample()
-        {
-            return UnityEngine.Random.Range(min, max);
         }
     }
 }
