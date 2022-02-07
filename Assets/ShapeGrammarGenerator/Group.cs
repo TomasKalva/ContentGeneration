@@ -24,6 +24,18 @@ namespace ShapeGrammar
     {
         public virtual List<Cube> Cubes { get; }
 
+        public Vector3Int LeftBottomBack() => new Vector3Int(
+                Cubes.Min(c => c.Position.x),
+                Cubes.Min(c => c.Position.y),
+                Cubes.Min(c => c.Position.z)
+            );
+
+        public Vector3Int RightTopFront() => new Vector3Int(
+                Cubes.Max(c => c.Position.x),
+                Cubes.Max(c => c.Position.y),
+                Cubes.Max(c => c.Position.z)
+            );
+        public Vector3Int Extents() => RightTopFront() - LeftBottomBack() + Vector3Int.one;
         public int ExtentsDir(Vector3Int dir) => dir.Dot(CubesMaxLayer(dir).FirstOrDefault().Position - CubesMaxLayer(-dir).FirstOrDefault().Position) + 1;
 
         public int LengthX() => ExtentsDir(Vector3Int.right);
