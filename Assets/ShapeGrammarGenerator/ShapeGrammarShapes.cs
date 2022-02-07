@@ -46,7 +46,7 @@ namespace ShapeGrammar
             return house;
         }
 
-        public LevelGroupElement CompositeHouse(/*Box2Int areaXZ,*/ int height)
+        public LevelGroupElement CompositeHouse(int height)
         {
             var flatBoxes = qc.FlatBoxes(2, 5, 4);
             var layout = qc.RemoveOverlap(pl.MoveToIntersectAll(flatBoxes));
@@ -90,7 +90,8 @@ namespace ShapeGrammar
         {
             var roof = house.CubeGroupMaxLayer(Vector3Int.up).LevelElement(AreaType.Roof);
             var room = house.Minus(roof.CubeGroup()).LevelElement(AreaType.Room);
-            return new LevelGroupElement(Grid, AreaType.House, room, roof);
+            var foundation = Foundation(room).LevelElement(AreaType.Foundation);
+            return new LevelGroupElement(Grid, AreaType.House, foundation, room, roof);
         }
 
         public CubeGroup Foundation(LevelElement toBeFounded) => qc.MoveDownUntilGround(toBeFounded.CubeGroup().MoveBy(Vector3Int.down));
@@ -178,11 +179,11 @@ namespace ShapeGrammar
             return nonEmpty.Merge(empty);
         }
 
-        public LevelGroupElement FloorHouse(LevelGeometryElement box, Func<LevelGeometryElement, LevelElement> floorCreator)
+        public LevelGroupElement FloorHouse(LevelGeometryElement box, Func<LevelGeometryElement, LevelElement> floorCreator, params int[] floors)
         {
             var floorBox = box.CubeGroup().CubeGroupMaxLayer(Vector3Int.down);
             var house = box;
-            var houseFloors = house.SplitRel(Vector3Int.up, AreaType.None, 0.2f, 0.5f, 0.7f).ReplaceLeafsGrp(_ => true, le => floorCreator(le));
+            var houseFloors = house.Split(Vector3Int.up, AreaType.None, floors).ReplaceLeafsGrp(_ => true, le => floorCreator(le));
 
             return houseFloors;
         }

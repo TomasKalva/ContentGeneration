@@ -106,7 +106,7 @@ namespace ShapeGrammar
 
             var pathCubes = path == null ? starting.GetRandom().cube.Group().Cubes : path.Select(pn => pn.cube).ToList();
             // drop first and last element
-            pathCubes = pathCubes.Skip(1).Reverse().Skip(1).Reverse().ToList();
+            //pathCubes = pathCubes.Skip(1).Reverse().Skip(1).Reverse().ToList();
             return new CubeGroup(Grid, pathCubes);
         }
     }

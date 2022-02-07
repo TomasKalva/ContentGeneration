@@ -172,7 +172,7 @@ namespace ShapeGrammar
                 Func<LevelElement> smallBox = () =>
                 {
                     var smallDistr = new SlopeDistr(center: 5, width: 3, rightness: 0.3f);
-                    return ldk.sgShapes.TurnIntoHouse(ldk.qc.GetFlatBox(ExtensionMethods.RandomBox(smallDistr, smallDistr)).CubeGroup().ExtrudeVer(Vector3Int.up, 6));//.SetAreaType(AreaType.House);
+                    return ldk.sgShapes.TurnIntoHouse(ldk.qc.GetFlatBox(ExtensionMethods.RandomBox(smallDistr, smallDistr)).CubeGroup().ExtrudeVer(Vector3Int.up, 6));
                 };
 
                 Func<LevelElement> largeBox = () =>
@@ -181,15 +181,74 @@ namespace ShapeGrammar
                     return ldk.sgShapes.TurnIntoHouse(ldk.qc.GetFlatBox(ExtensionMethods.RandomBox(largeDistr, largeDistr)).CubeGroup().ExtrudeVer(Vector3Int.up, 6));
                 };
 
+                Func<LevelElement> balconyTower = () =>
+                {
+                    // Create ground layout of the tower
+                    var towerLayout = ldk.qc.GetBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 1));
+
+                    // Create and set towers to the world
+                    var tower = ldk.sgShapes.Tower(towerLayout, 3, 4);
+
+                    tower = ldk.sgShapes.AddBalcony(tower);
+                    return tower;
+                };
+
+                Func<LevelElement> tower = () =>
+                {
+                    var size = UnityEngine.Random.Range(3, 4);
+                    var floorsCount = UnityEngine.Random.Range(3, 6);
+
+                    // Create ground layout of the tower
+                    var towerLayout = ldk.qc.GetBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(size, size)).InflateY(0, 1));
+
+                    // Create and set towers to the world
+                    var tower = ldk.sgShapes.Tower(towerLayout, 3, floorsCount);
+                    return tower;
+                };
+
+
+                Func<LevelElement> surrounded = () =>
+                {
+                    var surrounded = new LevelGroupElement(ldk.grid, AreaType.None);
+
+                    // Create ground layout of the tower
+                    var yard = ldk.qc.GetBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)).InflateY(0, 1)).LevelElement(AreaType.Garden);
+
+                    var boxSequence = ExtensionMethods.BoxSequence(() => ExtensionMethods.RandomBox(new Vector2Int(3, 3), new Vector2Int(7, 7)));
+                    var houses = ldk.qc.FlatBoxes(boxSequence, 6).Select(le => le.SetAreaType(AreaType.House));
+
+                    houses = ldk.pl.SurroundWith(yard, houses);
+                    houses = houses.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => ldk.sgShapes.SimpleHouseWithFoundation(g.CubeGroup(), 3));
+
+                    var wall = ldk.sgShapes.WallAround(yard, 2).Minus(houses);
+
+                    surrounded = surrounded.AddAll(yard, houses, wall);
+                    return surrounded;
+                };
+
+                Func<LevelElement> island = () =>
+                {
+                    var island = ldk.sgShapes.IslandExtrudeIter(ldk.grid[0, 0, 0].Group(), 13, 0.3f);
+
+                    // wall
+                    var wallTop = island.ExtrudeHor(true, false).Minus(island).MoveBy(Vector3Int.up).LevelElement(AreaType.WallTop);
+                    var foundation = ldk.sgShapes.Foundation(wallTop).LevelElement(AreaType.Foundation);
+                    return new LevelGroupElement(ldk.grid, AreaType.None, island.LevelElement(AreaType.Garden), foundation, wallTop);
+                };
+
                 var adders = new List<AddElement>()
                 {
                      AddNearXZ(smallBox),
                      AddNearXZ(largeBox),
-                     AddRemoveOverlap(largeBox),
+                     AddNearXZ(balconyTower),
+                     AddNearXZ(surrounded),
+                     AddNearXZ(island),
+                     //AddRemoveOverlap(largeBox),
                      PathTo(smallBox),
-                };
+                     PathTo(tower),
+                }.Shuffle().ToList();
 
-                return addingState.AddAll(Enumerable.Range(0, length).Select(_ => adders.GetRandom()));
+                return addingState.AddAll(Enumerable.Range(0, length).Select(i => adders[i % adders.Count]));
             };
         }
 
@@ -233,7 +292,7 @@ namespace ShapeGrammar
             levelElements = levelElements.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => ldk.sgShapes.SimpleHouseWithFoundation(g.CubeGroup(), 8));*/
 
             //levelElements = levelElements.ReplaceLeafsGrp(g => g.AreaType == AreaType.Room, g => ldk.sgShapes.SubdivideRoom(g, ExtensionMethods.HorizontalDirections().GetRandom(), 0.3f));
-            levelElements = levelElements.ReplaceLeafsGrp(g => g.AreaType == AreaType.Room && g.Cubes().Any(), g => ldk.sgShapes.FloorHouse(g, ldk.sgShapes.BrokenFloor));
+            //levelElements = levelElements.ReplaceLeafsGrp(g => g.AreaType == AreaType.Room && g.Cubes().Any(), g => ldk.sgShapes.FloorHouse(g, ldk.sgShapes.BrokenFloor, 3, 6, 9));
             
             levelElements.ApplyGrammarStyleRules(ldk.houseStyleRules);
 

@@ -244,7 +244,7 @@ namespace ShapeGrammar
             CurveDesign.CreateLevel();
         }
 
-        public void SplitHouse()
+        public void SplitRoom()
         {
             var houseBox = qc.GetFlatBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 8)), 0);
             
