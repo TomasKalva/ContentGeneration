@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d0ed97f30bdfedb4d8773a537a0f4bd8, type: 3}
-  m_Name: ShapeGrammarStyle
+  m_Name: FountainheadSGStyle
   m_EditorClassIdentifier: 
   notExistingObj: {fileID: 7939442977542790134, guid: ed07b9d3cce8ba04bb0e2c776113c39b, type: 3}
   faceHorObjectStyles:

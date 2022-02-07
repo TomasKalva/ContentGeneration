@@ -189,7 +189,7 @@ namespace ShapeGrammar
 
         public LevelElement BrokenFloor(LevelGeometryElement box)
         {
-            var floorPlan = FloorPlan(box, 4);
+            var floorPlan = FloorPlan(box, 3);
             var partlyBrokenFloor = PickAndConnect(floorPlan, 0.5f).ReplaceLeafs(le => le.AreaType != AreaType.Empty, le => le.SetAreaType(AreaType.Platform));
             return partlyBrokenFloor;
         }

@@ -112,7 +112,7 @@ namespace ShapeGrammar
             return (addingState) =>
             {
                 var element = elementF();
-                var possibleMoves = element.Moves(element.MovesNearXZ(addingState.Last), addingState.Added.LevelElements);
+                var possibleMoves = element.Moves(element.MovesNearXZ(addingState.Last).Where(m => m.y == 0), addingState.Added.LevelElements);
                 var movedElement = possibleMoves.Any() ? element.MoveBy(possibleMoves.GetRandom()) : null;
                 return addingState.PushElement(movedElement);
             };
@@ -123,7 +123,7 @@ namespace ShapeGrammar
             return (addingState) =>
             {
                 var element = elementF();
-                var possibleMoves = element.Moves(element.MovesToPartlyIntersectXZ(addingState.Last.Where(le => le.AreaType != AreaType.Path)), addingState.Added.LevelElements.Others(addingState.Last));
+                var possibleMoves = element.Moves(element.MovesToPartlyIntersectXZ(addingState.Last.Where(le => le.AreaType != AreaType.Path)).Where(m => m.y == 0), addingState.Added.LevelElements.Others(addingState.Last));
                 var movedElement = possibleMoves.Any() ? element.MoveBy(possibleMoves.GetRandom()).Minus(addingState.Last) : null;
                 return addingState.PushElement(movedElement);
             };
@@ -134,13 +134,13 @@ namespace ShapeGrammar
             return (addingState) =>
             {
                 var element = elementF();
-                var possibleMoves = element.Moves(element.MovesInDistanceXZ(addingState.Last, 5), addingState.Added.LevelElements);
+                var possibleMoves = element.Moves(element.MovesInDistanceXZ(addingState.Last, 5).Where(m => m.y == 0), addingState.Added.LevelElements);
                 if (!possibleMoves.Any())
                     return addingState;
 
                 var area = element.MoveBy(possibleMoves.GetRandom());
                 var start = addingState.Last.WhereGeom(le => le.AreaType != AreaType.Path);
-                var path = ldk.paths.PathH(start, area, 4, addingState.Added);
+                var path = ldk.paths.PathH(start, area, 2, addingState.Added).SetAreaType(AreaType.Platform);
                 var newElement = new LevelGroupElement(addingState.Last.Grid, AreaType.None, path, area);
                 return addingState.PushElement(newElement);
             };
@@ -172,13 +172,13 @@ namespace ShapeGrammar
                 Func<LevelElement> smallBox = () =>
                 {
                     var smallDistr = new SlopeDistr(center: 5, width: 3, rightness: 0.3f);
-                    return ldk.qc.GetFlatBox(ExtensionMethods.RandomBox(smallDistr, smallDistr)).SetAreaType(AreaType.House);
+                    return ldk.sgShapes.TurnIntoHouse(ldk.qc.GetFlatBox(ExtensionMethods.RandomBox(smallDistr, smallDistr)).CubeGroup().ExtrudeVer(Vector3Int.up, 6));//.SetAreaType(AreaType.House);
                 };
 
                 Func<LevelElement> largeBox = () =>
                 {
                     var largeDistr = new SlopeDistr(center: 8, width: 3, rightness: 0.3f);
-                    return ldk.qc.GetFlatBox(ExtensionMethods.RandomBox(largeDistr, largeDistr)).SetAreaType(AreaType.House);
+                    return ldk.sgShapes.TurnIntoHouse(ldk.qc.GetFlatBox(ExtensionMethods.RandomBox(largeDistr, largeDistr)).CubeGroup().ExtrudeVer(Vector3Int.up, 6));
                 };
 
                 var adders = new List<AddElement>()
@@ -215,7 +215,7 @@ namespace ShapeGrammar
             var smooth = heightCurve.Select2((a, b) => (a + b) / 2);
             heightCurve = heightCurve.Interleave(smooth);
 
-            var start = ldk.qc.GetBox(new Box3Int(Vector3Int.zero, Vector3Int.one)).LevelElement();
+            var start = ldk.qc.GetBox(new Box3Int(Vector3Int.zero, Vector3Int.one)).ExtrudeVer(Vector3Int.up, 10).LevelElement();
 
             AddingState state = new AddingState(start, ldk.grid);
 
@@ -223,15 +223,17 @@ namespace ShapeGrammar
             var addedLine = LinearCurveDesign(start, length)(state);
             
             var levelElements = addedLine.Added;
-
+            
+            /*
             levelElements = levelElements.LevelElements.Select((le, i) =>
             {
                 return le.MoveBy(Vector3Int.up * heightCurve.ElementAt(i));
             }).ToLevelGroupElement(ldk.grid);
 
-            levelElements = levelElements.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => ldk.sgShapes.SimpleHouseWithFoundation(g.CubeGroup(), 8));
+            levelElements = levelElements.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => ldk.sgShapes.SimpleHouseWithFoundation(g.CubeGroup(), 8));*/
+
             //levelElements = levelElements.ReplaceLeafsGrp(g => g.AreaType == AreaType.Room, g => ldk.sgShapes.SubdivideRoom(g, ExtensionMethods.HorizontalDirections().GetRandom(), 0.3f));
-            levelElements = levelElements.ReplaceLeafsGrp(g => g.AreaType == AreaType.Room, g => ldk.sgShapes.FloorHouse(g, ldk.sgShapes.BrokenFloor));
+            levelElements = levelElements.ReplaceLeafsGrp(g => g.AreaType == AreaType.Room && g.Cubes().Any(), g => ldk.sgShapes.FloorHouse(g, ldk.sgShapes.BrokenFloor));
             
             levelElements.ApplyGrammarStyleRules(ldk.houseStyleRules);
 

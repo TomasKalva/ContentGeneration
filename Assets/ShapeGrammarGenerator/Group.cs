@@ -280,6 +280,11 @@ namespace ShapeGrammar
             return new CornerGroup(Grid, specialCorners);
         }
 
+        public CornerGroup AllSpecialCorners()
+        {
+            return SpecialCorners(ExtensionMethods.HorizontalDirections().ToArray());
+        }
+
         public CornerGroup AllBoundaryCorners()
         {
             return BoundaryCorners(ExtensionMethods.HorizontalDirections().ToArray());
