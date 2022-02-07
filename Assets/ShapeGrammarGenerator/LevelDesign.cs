@@ -161,6 +161,21 @@ namespace ShapeGrammar
             };
         }
 
+        AddElement SplitToFloors()
+        {
+            return (addingState) =>
+            {
+                var room = addingState.Added.Nonterminals(AreaType.Room)
+                    .Where(room => room.CubeGroup().Extents().AtLeast(new Vector3Int(5, 5, 5)))
+                    .FirstOrDefault();
+                if (room == null)
+                    return addingState;
+
+                var changedAdded = addingState.Added.ReplaceLeafsGrp(room, _ => ldk.tr.FloorHouse(room, ldk.tr.BrokenFloor, 3, 6, 9));
+                return addingState.ChangeAdded(changedAdded);
+            };
+        }
+
         public CurvesLevelDesign(LevelDevelopmentKit ldk) : base(ldk)
         {
         }
@@ -290,7 +305,9 @@ namespace ShapeGrammar
             //var addedLine = SplittingPath(start, length)(state);
             var addedLine = LinearCurveDesign(start, length)(state);
 
-            var changers = Enumerable.Repeat(SubdivideRoom(), 100).ToList();
+            var changers = Enumerable.Repeat(SplitToFloors(), 100).Concat(
+                    Enumerable.Repeat(SubdivideRoom(), 100)
+                ).ToList();
 
             var subdividedRooms = addedLine.ChangeAll(changers);
             var levelElements = subdividedRooms.Added;
