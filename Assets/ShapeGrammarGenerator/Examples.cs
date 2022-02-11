@@ -293,6 +293,14 @@ namespace ShapeGrammar
             houseFloors.ApplyGrammarStyleRules(houseStyleRules);
         }
 
+        public void JustHouse()
+        {
+            var floorBox = qc.GetFlatBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)), 0);
+            var house = sgShapes.TurnIntoHouse(floorBox.CubeGroup().ExtrudeVer(Vector3Int.up, 3));
+
+            house.ApplyGrammarStyleRules(houseStyleRules);
+        }
+
         public void CompositeHouse()
         {
             var house = sgShapes.CompositeHouse(/*new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)),*/ 6);
