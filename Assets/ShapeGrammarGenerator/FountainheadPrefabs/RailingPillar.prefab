@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 566660980455059008}
   - component: {fileID: 5241116901792991713}
   - component: {fileID: 3059832152149982629}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: RailingPillar
   m_TagString: Untagged
   m_Icon: {fileID: 0}

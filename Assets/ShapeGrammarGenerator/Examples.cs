@@ -252,10 +252,10 @@ namespace ShapeGrammar
             controlPointsDesign.CreateLevel();
         }
 
-        public void CurveDesign()
+        public LevelElement CurveDesign()
         {
             var CurveDesign = new CurvesLevelDesign(this);
-            CurveDesign.CreateLevel();
+            return CurveDesign.CreateLevel();
         }
 
         public void SplitRoom()

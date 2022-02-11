@@ -49,12 +49,13 @@ namespace ShapeGrammar
             //world.AddEnemy(libraries.Enemies.DragonMan(), new Vector3(0, 1, 0));
 
             var examples = new Examples(FountainheadStyle);
-            examples.ManyConnectedTowers();
+            var levelRoot = examples.CurveDesign();
             examples.grid.Generate(2f, parent);
 
             Debug.Log("Generating world");
 
-            world.AddInteractiveObject(interactiveObjects.bonfire, transform.position);
+            var goodBonfirePosition = parent.position + 2 * levelRoot.CubeGroup().WithFloor().Cubes.GetRandom().Position;
+            world.AddInteractiveObject(interactiveObjects.bonfire, goodBonfirePosition);
         }
 
 
