@@ -45,7 +45,7 @@ namespace ShapeGrammar
             }
         }
 
-        public override void Generate(float cubeSide, Transform parent, Vector3Int cubePosition)
+        public override void Generate(float scale, Transform parent, Vector3Int cubePosition)
         {
             if (Style == null)
                 return;
@@ -58,7 +58,8 @@ namespace ShapeGrammar
             var obj = Style.GetFaceHor(FaceType);
 
             obj.SetParent(parent);
-            obj.localPosition = (cubePosition + offset) * cubeSide;
+            obj.localScale = scale * Vector3.one;
+            obj.localPosition = (cubePosition + offset) * scale;
             obj.rotation = Quaternion.LookRotation(Direction, Vector3.up);
         }
 
@@ -88,7 +89,7 @@ namespace ShapeGrammar
             }
         }
 
-        public override void Generate(float cubeSide, Transform parent, Vector3Int cubePosition)
+        public override void Generate(float scale, Transform parent, Vector3Int cubePosition)
         {
             if (Style == null)
                 return;
@@ -97,7 +98,8 @@ namespace ShapeGrammar
             var obj = Style.GetFaceVer(FaceType);
 
             obj.SetParent(parent);
-            obj.localPosition = (cubePosition + offset) * cubeSide;
+            obj.localScale = scale * Vector3.one;
+            obj.localPosition = (cubePosition + offset) * scale;
         }
 
         public FaceVer MoveBy(Vector3Int offset) => MoveBy<FaceVer>(offset);
@@ -119,7 +121,7 @@ namespace ShapeGrammar
             }
         }
 
-        public override void Generate(float cubeSide, Transform parent, Vector3Int cubePosition)
+        public override void Generate(float scale, Transform parent, Vector3Int cubePosition)
         {
             if (Style == null)
                 return;
@@ -128,7 +130,8 @@ namespace ShapeGrammar
             var obj = Style.GetCorner(CornerType);
 
             obj.SetParent(parent);
-            obj.localPosition = (cubePosition + offset) * cubeSide;
+            obj.localScale = scale * Vector3.one;
+            obj.localPosition = (cubePosition + offset) * scale;
         }
 
         public Corner MoveBy(Vector3Int offset) => MoveBy<Corner>(offset);

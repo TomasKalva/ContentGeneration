@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6391615050704664683}
   - component: {fileID: 4545669522370267494}
   - component: {fileID: 3589705979385782265}
-  - component: {fileID: 8672165728306812429}
+  - component: {fileID: 6801365570996993739}
   m_Layer: 0
   m_Name: Fence
   m_TagString: Untagged
@@ -84,7 +84,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &8672165728306812429
+--- !u!65 &6801365570996993739
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,5 +95,5 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.9516703, y: 1.9984356, z: 0.18246186}
-  m_Center: {x: -0.0031881928, y: 1.0041504, z: -0.003188312}
+  m_Size: {x: 0.97583514, y: 0.9992178, z: 0.09123093}
+  m_Center: {x: -0.0015940964, y: 0.5020752, z: -0.001594156}

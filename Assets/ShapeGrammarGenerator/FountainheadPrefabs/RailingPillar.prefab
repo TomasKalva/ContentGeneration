@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5144128346583012565}
   - component: {fileID: 566660980455059008}
   - component: {fileID: 5241116901792991713}
-  - component: {fileID: 3059832152149982629}
+  - component: {fileID: 3374448315180288774}
   m_Layer: 0
   m_Name: RailingPillar
   m_TagString: Untagged
@@ -84,7 +84,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &3059832152149982629
+--- !u!65 &3374448315180288774
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,5 +95,5 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.33015466, y: 1.0613167, z: 0.33015466}
-  m_Center: {x: -4.000348e-24, y: 0.37364772, z: 4.9451864e-24}
+  m_Size: {x: 0.16507733, y: 0.5306583, z: 0.16507733}
+  m_Center: {x: -2.2816303e-24, y: 0.21311295, z: 2.8205264e-24}

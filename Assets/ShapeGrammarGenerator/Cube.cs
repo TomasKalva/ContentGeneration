@@ -69,16 +69,16 @@ namespace ShapeGrammar
             return this;
         }
 
-        public void Generate(float cubeSide, Transform parent)
+        public void Generate(float scale, Transform parent)
         {
             if (!Changed)
                 return;
 
-            GenerateObject(cubeSide, parent);
+            GenerateObject(scale, parent);
 
             foreach (var facet in Facets.Values)
             {
-                facet.Generate(cubeSide, parent, Position);
+                facet.Generate(scale, parent, Position);
             }
         }
 
@@ -96,7 +96,8 @@ namespace ShapeGrammar
             var obj = Style.GetCube(Object);
 
             obj.SetParent(parent);
-            obj.localPosition = ((Vector3)Position /*+ 0.5f * Vector3.down*//*+ 0.5f * new Vector3(1f, 0f, 1f)*/) * cubeSide;
+            obj.localScale = cubeSide * Vector3.one;
+            obj.localPosition = ((Vector3)Position) * cubeSide;
             obj.rotation = Quaternion.LookRotation(ObjectDir, Vector3.up);
         }
 

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9130799421578776321}
   - component: {fileID: 7066835436358176510}
   - component: {fileID: 1685731681162131788}
-  - component: {fileID: 5736425159243220545}
+  - component: {fileID: 5406997402267361919}
   m_Layer: 12
   m_Name: BeamMiddle
   m_TagString: Untagged
@@ -84,7 +84,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &5736425159243220545
+--- !u!65 &5406997402267361919
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,5 +95,5 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.18816535, y: 2, z: 0.18816535}
-  m_Center: {x: -1.0706202e-23, y: 1, z: 1.323489e-23}
+  m_Size: {x: 0.094082676, y: 1, z: 0.094082676}
+  m_Center: {x: -5.353101e-24, y: 0.5, z: 6.617445e-24}

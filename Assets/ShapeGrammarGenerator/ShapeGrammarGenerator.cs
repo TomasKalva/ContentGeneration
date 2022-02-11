@@ -49,10 +49,11 @@ namespace ShapeGrammar
         {
             //world.AddEnemy(libraries.Enemies.MayanSwordsman(), new Vector3(0, 1, 0));
             //world.AddEnemy(libraries.Enemies.DragonMan(), new Vector3(0, 1, 0));
+            worldScale = 2.8f;
 
             var examples = new Examples(FountainheadStyle);
             var levelRoot = examples.Tower();
-            examples.grid.Generate(2f, parent);
+            examples.grid.Generate(worldScale, parent);
 
             Debug.Log("Generating world");
 
