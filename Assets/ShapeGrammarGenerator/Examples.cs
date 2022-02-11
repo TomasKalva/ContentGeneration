@@ -154,7 +154,7 @@ namespace ShapeGrammar
             town.ApplyGrammarStyleRules(houseStyleRules);
         }
 
-        public void Tower()
+        public LevelElement Tower()
         {
             var towerLayout = qc.GetBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 1));
             var tower = sgShapes.Tower(towerLayout, 3, 4);
@@ -178,6 +178,7 @@ namespace ShapeGrammar
                 var path = paths.ConnectByPath(lower, upper, neighbors);
                 path.SetGrammarStyle(sgStyles.StairsPathStyle);
             });
+            return tower;
         }
 
         public void TwoConnectedTowers()

@@ -130,8 +130,19 @@ namespace ShapeGrammar
                 }
             );
             hor.BoundaryFacesV(Vector3Int.down).SetStyle(ObjectStyle).Fill(FACE_VER.Floor);
-            hor.AllBoundaryFacesH().Intersect(path.AllBoundaryFacesH()).SetStyle(ObjectStyle).Fill(FACE_HOR.Railing);
-            hor.AllBoundaryCorners().Intersect(path.AllBoundaryCorners()).SetStyle(ObjectStyle).Fill(CORNER.RailingPillar);
+
+            var verTop = path.Cubes.Where3(
+                (prev, cube, next) =>
+                {
+                    var dirTo = cube.Position - prev.Position;
+                    var dirFrom = next.Position - cube.Position;
+                    return dirTo.y > 0 || dirFrom.y < 0;
+                    }).ToCubeGroup(GridView);
+
+
+            verTop.BoundaryFacesV(Vector3Int.down).SetStyle(ObjectStyle).Fill(FACE_VER.Nothing);
+            //hor.AllBoundaryFacesH().Intersect(path.AllBoundaryFacesH()).SetStyle(ObjectStyle).Fill(FACE_HOR.Railing);
+            //hor.AllBoundaryCorners().Intersect(path.AllBoundaryCorners()).SetStyle(ObjectStyle).Fill(CORNER.RailingPillar);
 
             path.Cubes.ForEach3(
                 (prev, cube, next) =>
@@ -152,5 +163,6 @@ namespace ShapeGrammar
 
             return path;
         }
+
     }
 }

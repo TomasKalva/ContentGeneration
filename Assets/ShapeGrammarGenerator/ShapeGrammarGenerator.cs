@@ -16,6 +16,8 @@ namespace ShapeGrammar
         [SerializeField]
         ShapeGrammarObjectStyle FountainheadStyle;
 
+        float worldScale;
+
         /*
         private void Start()
         {
@@ -49,7 +51,7 @@ namespace ShapeGrammar
             //world.AddEnemy(libraries.Enemies.DragonMan(), new Vector3(0, 1, 0));
 
             var examples = new Examples(FountainheadStyle);
-            var levelRoot = examples.CurveDesign();
+            var levelRoot = examples.Tower();
             examples.grid.Generate(2f, parent);
 
             Debug.Log("Generating world");
