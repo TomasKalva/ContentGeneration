@@ -91,7 +91,7 @@ public interface IGraph<VertexT, EdgeT> where VertexT : class where EdgeT : IEdg
 
 public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where EdgeT : IEdge<VertexT> where GraphT : IGraph<VertexT, EdgeT>
 {
-    IGraph<VertexT, EdgeT> graph;
+    protected IGraph<VertexT, EdgeT> graph;
 
     public GraphAlgorithms(IGraph<VertexT, EdgeT> graph)
     {

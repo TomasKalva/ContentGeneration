@@ -177,47 +177,31 @@ namespace ShapeGrammar
         }
 
         
-        AddElement ConnectTwoUnconnected(Graph<LevelGeometryElement> connectednessGraph)
+        AddElement ConnectTwoUnconnected(Graph<LevelGeometryElement> connectednessGraph, LevelGroupElement levelGeometry)
         {
+            // find two areas with floor next to each other
+            // calculation is done eagerly and in advance, so it doesn't react on changes of geometry
+            var elementsWithFloor = levelGeometry.Leafs().Where(le => AreaType.CanBeConnectedByStairs(le.AreaType) && le.CubeGroup().WithFloor().Cubes.Any());
+            var closeElementsWithFloor = elementsWithFloor
+                .Select2Distinct((el1, el2) => new { el1, el2 })
+                .Where(pair => pair.el1.CubeGroup().ExtrudeAll().Intersects(pair.el2.CubeGroup())).ToList();
+
             return (addingState) =>
             {
-                var stopwatch = new System.Diagnostics.Stopwatch();
-                stopwatch.Start();
+                var closePair = closeElementsWithFloor.Where(pair => !connectednessGraph.PathExists(pair.el1, pair.el2)).GetRandom();
 
-                // find two areas with floor next to each other
-                var elementsWithFloor = addingState.Added.Leafs().Where(le => le.AreaType != AreaType.Path && le.CubeGroup().WithFloor().Cubes.Any());
-                var neighborsWithFloor = elementsWithFloor
-                    .Select2Distinct((el1, el2) => new { el1, el2 })
-                    .Where(pair => pair.el1.CubeGroup().ExtrudeAll().Intersects(pair.el2.CubeGroup()));
-                var neighbors = neighborsWithFloor.Where(pair => !connectednessGraph.AreConnected(pair.el1, pair.el2)).GetRandom();
-
-                if (neighbors == null)
+                if (closePair == null)
                     return addingState;
 
-                var searchSpace = new CubeGroup(ldk.grid, neighbors.el1.CubeGroup().Merge(neighbors.el2.CubeGroup()).Cubes);
+                var searchSpace = new CubeGroup(ldk.grid, closePair.el1.CubeGroup().Merge(closePair.el2.CubeGroup()).Cubes);
                 Neighbors<PathNode> neighborNodes = PathNode.BoundedBy(PathNode.StairsNeighbors(), searchSpace);
-                var newPath = ldk.paths.ConnectByPath(neighbors.el1.CubeGroup().WithFloor(), neighbors.el2.CubeGroup().WithFloor(), neighborNodes);
+                var newPath = ldk.paths.ConnectByPath(closePair.el1.CubeGroup().WithFloor(), closePair.el2.CubeGroup().WithFloor(), neighborNodes);
+
                 if (newPath == null)
                     return addingState;
 
-                stopwatch.Stop();
-                Debug.Log($"Length: {newPath.Cubes.Count},\tTime:{stopwatch.ElapsedMilliseconds}");
-
-                connectednessGraph.Connect(neighbors.el1, neighbors.el2);
+                connectednessGraph.Connect(closePair.el1, closePair.el2);
                 return addingState.TryPushIntersecting(newPath.LevelElement(AreaType.Path));
-
-                /*
-                var addedPaths = addingState.ChangeAll(neighborsWithFloor.SelectNN(neighbors =>
-                {
-                    var searchSpace = new CubeGroup(ldk.grid, neighbors.el1.Cubes().Concat(neighbors.el2.Cubes()).ToList());
-                    Neighbors<PathNode> neighborNodes = PathNode.BoundedBy(PathNode.StairsNeighbors(), searchSpace);
-                    var newPath = ldk.paths.ConnectByPath(neighbors.el1.CubeGroup().WithFloor(), neighbors.el2.CubeGroup().WithFloor(), neighborNodes);
-                    return (AddElement)(addingState => addingState.TryPush(newPath?.LevelElement(AreaType.Path)));
-                }
-                ));*///.ToLevelGroupElement(ldk.grid);
-                // connect them by door
-
-                //return addedPaths;
             };
         }
 
@@ -301,12 +285,12 @@ namespace ShapeGrammar
                 var adders = new List<AddElement>()
                 {
                      AddNearXZ(smallBox),
-                     /*AddNearXZ(largeBox),
+                     AddNearXZ(largeBox),
                      AddNearXZ(balconyTower),
-                     AddNearXZ(surrounded),
-                     AddNearXZ(island),*/
+                     //AddNearXZ(surrounded),
+                     //AddNearXZ(island),
                      //AddRemoveOverlap(largeBox),
-                     //PathTo(smallBox),
+                     PathTo(smallBox),
                      //PathTo(tower),
                 }.Shuffle().ToList();
 
@@ -337,7 +321,7 @@ namespace ShapeGrammar
 
         public override LevelElement CreateLevel()
         {
-            int length = 3;
+            int length = 8;
 
             // Height curve
             var heightCurve = HeightCurve();
@@ -360,7 +344,7 @@ namespace ShapeGrammar
 
             var connectednessGraph = new Graph<LevelGeometryElement>(addedLine.Added.Leafs().ToList(), new List<Edge<LevelGeometryElement>>());
 
-            var connectedLine = addedLine.AddUntilCan(ConnectTwoUnconnected(connectednessGraph), 10);// (ConnectTwoUnconnected(connectednessGraph)(addedLine));
+            var connectedLine = addedLine.AddUntilCan(ConnectTwoUnconnected(connectednessGraph, addedLine.Added), 1000);
             var levelElements = connectedLine.Added;
             
 

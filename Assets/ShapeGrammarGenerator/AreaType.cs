@@ -25,6 +25,23 @@ namespace ShapeGrammar
         public static AreaType Platform { get; } = new AreaType("Platform");
         public static AreaType Debug { get; } = new AreaType("Debug");
 
+        public static HashSet<AreaType> ConnectableByStairs { get; }
+
+        static AreaType()
+        {
+            ConnectableByStairs = new HashSet<AreaType>()
+            {
+                Room,
+                OpenRoom,
+                Roof,
+                WallTop,
+                Garden,
+                Platform
+            };
+        }
+
+        public static bool CanBeConnectedByStairs(AreaType areaType) => ConnectableByStairs.Contains(areaType);
+
         public string Name { get; }
 
         private AreaType(string name)

@@ -5,21 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class Graph<VertexT> : IGraph<VertexT, Edge<VertexT>> where VertexT : class
+public class Graph<VertexT> : GraphAlgorithms<VertexT, Edge<VertexT>, Graph<VertexT>>, IGraph<VertexT, Edge<VertexT>> where VertexT : class
 {
     public List<VertexT> Vertices { get; }
     public List<Edge<VertexT>> Edges { get; }
 
-    public Graph()
+    public Graph() : base(null)
     {
         Vertices = new List<VertexT>();
         Edges = new List<Edge<VertexT>>();
+        graph = this;
     }
 
-    public Graph(List<VertexT> vertices, List<Edge<VertexT>> edges)
+    public Graph(List<VertexT> vertices, List<Edge<VertexT>> edges) : base(null)
     {
         Vertices = vertices;
         Edges = edges;
+        graph = this;
     }
 
     public void AddVertex(VertexT area)
