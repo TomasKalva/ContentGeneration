@@ -114,7 +114,7 @@ namespace ShapeGrammar
                 var element = elementF();
                 var possibleMoves = element.Moves(element.MovesNearXZ(addingState.Last).Where(m => m.y == 0), addingState.Added.LevelElements);
                 var movedElement = possibleMoves.Any() ? element.MoveBy(possibleMoves.GetRandom()) : null;
-                return addingState.PushElement(movedElement);
+                return addingState.TryPush(movedElement);
             };
         }
 
@@ -125,10 +125,10 @@ namespace ShapeGrammar
                 var element = elementF();
                 var possibleMoves = element.Moves(element.MovesToPartlyIntersectXZ(addingState.Last.Where(le => le.AreaType != AreaType.Path)).Where(m => m.y == 0), addingState.Added.LevelElements.Others(addingState.Last));
                 var movedElement = possibleMoves.Any() ? element.MoveBy(possibleMoves.GetRandom()).Minus(addingState.Last) : null;
-                return addingState.PushElement(movedElement);
+                return addingState.TryPush(movedElement);
             };
         }
-
+        
         AddElement PathTo(Func<LevelElement> elementF)
         {
             return (addingState) =>
@@ -142,7 +142,7 @@ namespace ShapeGrammar
                 var start = addingState.Last.WhereGeom(le => le.AreaType != AreaType.Path);
                 var path = ldk.paths.PathH(start, area, 2, addingState.Added).SetAreaType(AreaType.Platform);
                 var newElement = new LevelGroupElement(addingState.Last.Grid, AreaType.None, path, area);
-                return addingState.PushElement(newElement);
+                return addingState.TryPush(newElement);
             };
         }
 
@@ -173,6 +173,35 @@ namespace ShapeGrammar
 
                 var changedAdded = addingState.Added.ReplaceLeafsGrp(room, _ => ldk.tr.FloorHouse(room, ldk.tr.BrokenFloor, 3, 6, 9));
                 return addingState.ChangeAdded(changedAdded);
+            };
+        }
+
+        
+        AddElement ConnectAll()
+        {
+            return (addingState) =>
+            {
+                // find two areas with floor next to each other
+                var elementsWithFloor = addingState.Added.Leafs().Where(le => le.CubeGroup().WithFloor().Cubes.Any());
+                var neighborsWithFloor = elementsWithFloor
+                    .Select2Distinct((el1, el2) => new { el1, el2 })
+                    .Where(pair => pair.el1.CubeGroup().ExtrudeAll().Intersects(pair.el2.CubeGroup()));
+                var neighbors = neighborsWithFloor.FirstOrDefault();
+
+                var addedPaths = addingState.ChangeAll(neighborsWithFloor.SelectNN(neighbors =>
+                {
+                    var searchSpace = new CubeGroup(ldk.grid, neighbors.el1.Cubes().Concat(neighbors.el2.Cubes()).ToList());
+                    Neighbors<PathNode> neighborNodes = PathNode.BoundedBy(PathNode.StairsNeighbors(), searchSpace);
+                    var newPath = ldk.paths.ConnectByPath(neighbors.el1.CubeGroup().WithFloor(), neighbors.el2.CubeGroup().WithFloor(), neighborNodes);
+                    return (AddElement)(addingState => addingState.TryPush(newPath?.LevelElement(AreaType.Path)));
+                    /*
+                    if (newPath == null)
+                        return addingState;*/
+                }
+                ));//.ToLevelGroupElement(ldk.grid);
+                // connect them by door
+
+                return addedPaths;
             };
         }
 
@@ -304,13 +333,21 @@ namespace ShapeGrammar
 
             var addedLine = LinearCurveDesign(start, length)(state);
 
+            /*
             var changers = Enumerable.Repeat(SplitToFloors(), 100).Concat(
                     Enumerable.Repeat(SubdivideRoom(), 100)
                 ).ToList();
-
-            var subdividedRooms = addedLine.ChangeAll(changers);
-            var levelElements = subdividedRooms.Added;
             
+            var subdividedRooms = addedLine.ChangeAll(changers);
+            */
+            addedLine.Added.ApplyGrammarStyleRules(ldk.houseStyleRules);
+
+
+            var connectedLine = ConnectAll()(addedLine);
+            var levelElements = connectedLine.Added;
+            
+
+
             levelElements.ApplyGrammarStyleRules(ldk.houseStyleRules);
 
             return levelElements;
@@ -349,9 +386,12 @@ namespace ShapeGrammar
                 });
             }
 
-            public AddingState PushElement(LevelElement le)
+            public AddingState TryPush(LevelElement le)
             {
-                var newLe = le == null ? le : AfterPushed(le);
+                if (le == null)
+                    return this;
+
+                var newLe = AfterPushed(le);
                 return new AddingState(Added.Merge(newLe), newLe, Grid, AfterPushed);
             }
 

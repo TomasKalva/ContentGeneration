@@ -367,6 +367,19 @@ static class ExtensionMethods
         return first.Zip(second, (f, s) => (f, s)).Select((pair) => selector(pair.f, pair.s));
     }
 
+    public static IEnumerable<U> Select2Distinct<T, U>(this IEnumerable<T> enumerable, Func<T, T, U> selector)
+    {
+        int k = 0;
+        foreach(var second in enumerable)
+        {
+            foreach(var first in enumerable.Take(k))
+            {
+                yield return selector(first, second);
+            }
+            k++;
+        }
+    }
+
     public static IEnumerable<T> Interleave<T>(this IEnumerable<T> ie1, IEnumerable<T> ie2)
     {
         return ie1.Zip(ie2, (f, s) => new[] { f, s })

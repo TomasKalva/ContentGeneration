@@ -151,6 +151,7 @@ namespace ShapeGrammar
 
         public abstract LevelGroupElement SplitRel(Vector3Int dir, AreaType subareasType, params float[] dist);
 
+
     }
 
     public class LevelGroupElement : LevelElement

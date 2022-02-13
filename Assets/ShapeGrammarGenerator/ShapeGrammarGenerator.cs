@@ -52,12 +52,12 @@ namespace ShapeGrammar
             worldScale = 2.8f;
 
             var examples = new Examples(FountainheadStyle);
-            var levelRoot = examples.Tower();
+            var levelRoot = examples.CurveDesign();
             examples.grid.Generate(worldScale, parent);
 
             Debug.Log("Generating world");
 
-            var goodBonfirePosition = parent.position + 2 * levelRoot.CubeGroup().WithFloor().Cubes.GetRandom().Position;
+            var goodBonfirePosition = parent.position + worldScale * (Vector3) levelRoot.CubeGroup().WithFloor().Cubes.GetRandom().Position;
             world.AddInteractiveObject(interactiveObjects.bonfire, goodBonfirePosition);
         }
 
