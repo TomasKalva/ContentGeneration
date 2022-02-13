@@ -139,11 +139,17 @@ namespace ShapeGrammar
                     return dirTo.y > 0 || dirFrom.y < 0;
                     }).ToCubeGroup(GridView);
 
-
+            // empty vertical faces between cubes
             verTop.BoundaryFacesV(Vector3Int.down).SetStyle(ObjectStyle).Fill(FACE_VER.Nothing);
-            //hor.AllBoundaryFacesH().Intersect(path.AllBoundaryFacesH()).SetStyle(ObjectStyle).Fill(FACE_HOR.Railing);
+
+            // empty horizontal faces between cubes
+            var horFacesInside = path.FacesH(ExtensionMethods.HorizontalDirections().ToArray()).Facets.SetMinus(path.AllBoundaryFacesH().Facets);
+            new FaceHorGroup(path.Grid, horFacesInside.ToList()).Fill(FACE_HOR.Nothing);
+
+            //hor.Intersect(path.AllBoundaryFacesH()).SetStyle(ObjectStyle).Fill(FACE_HOR.Railing);
             //hor.AllBoundaryCorners().Intersect(path.AllBoundaryCorners()).SetStyle(ObjectStyle).Fill(CORNER.RailingPillar);
 
+            // add stairs
             path.Cubes.ForEach3(
                 (prev, cube, next) =>
                 {

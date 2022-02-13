@@ -181,6 +181,9 @@ namespace ShapeGrammar
         {
             return (addingState) =>
             {
+                var stopwatch = new System.Diagnostics.Stopwatch();
+                stopwatch.Start();
+
                 // find two areas with floor next to each other
                 var elementsWithFloor = addingState.Added.Leafs().Where(le => le.AreaType != AreaType.Path && le.CubeGroup().WithFloor().Cubes.Any());
                 var neighborsWithFloor = elementsWithFloor
@@ -196,6 +199,9 @@ namespace ShapeGrammar
                 var newPath = ldk.paths.ConnectByPath(neighbors.el1.CubeGroup().WithFloor(), neighbors.el2.CubeGroup().WithFloor(), neighborNodes);
                 if (newPath == null)
                     return addingState;
+
+                stopwatch.Stop();
+                Debug.Log($"Length: {newPath.Cubes.Count},\tTime:{stopwatch.ElapsedMilliseconds}");
 
                 connectednessGraph.Connect(neighbors.el1, neighbors.el2);
                 return addingState.TryPushIntersecting(newPath.LevelElement(AreaType.Path));
@@ -331,7 +337,7 @@ namespace ShapeGrammar
 
         public override LevelElement CreateLevel()
         {
-            int length = 1;
+            int length = 3;
 
             // Height curve
             var heightCurve = HeightCurve();
