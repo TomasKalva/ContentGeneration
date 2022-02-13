@@ -137,6 +137,8 @@ namespace ShapeGrammar
 
         public abstract LevelElement Minus(LevelElement le);
 
+        public abstract LevelElement MinusInPlace(LevelElement levelElement);
+
         public IEnumerable<LevelElement> NeighborsInDirection(Vector3Int dir, IEnumerable<LevelElement> possibleNeighbors)
         {
             var cubesInDir = CubeGroup().ExtrudeDir(dir);
@@ -151,12 +153,15 @@ namespace ShapeGrammar
 
         public abstract LevelGroupElement SplitRel(Vector3Int dir, AreaType subareasType, params float[] dist);
 
-
+        public virtual string Print(int indent)
+        {
+            return $"{new string('\t', indent)}{AreaType.Name}({Cubes().Count})";
+        }
     }
 
     public class LevelGroupElement : LevelElement
     {
-        public List<LevelElement> LevelElements { get; }
+        public List<LevelElement> LevelElements { get; private set; }
 
         public override List<Cube> Cubes() => LevelElements.SelectMany(le => le.Cubes()).ToList();
 
@@ -214,6 +219,12 @@ namespace ShapeGrammar
             return new LevelGroupElement(Grid, AreaType, LevelElements.Select(le => le.Minus(levelElement)).ToList());
         }
 
+        public override LevelElement MinusInPlace(LevelElement levelElement)
+        {
+            LevelElements = LevelElements.Select(le => le.MinusInPlace(levelElement)).ToList();
+            return this;
+        }
+
         public LevelGroupElement MinusGrp(LevelElement levelElement)
         {
             return (LevelGroupElement)Minus(levelElement);
@@ -243,11 +254,23 @@ namespace ShapeGrammar
         }
         public LevelGroupElement Empty() => LevelElements.Where(le => le.AreaType == AreaType.Empty).ToLevelGroupElement(Grid);
         public LevelGroupElement NonEmpty() => LevelElements.Where(le => le.AreaType != AreaType.Empty).ToLevelGroupElement(Grid);
+
+        public override string Print(int indent)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine(base.Print(indent));
+            LevelElements.ForEach(
+                le =>
+                {
+                    sb.AppendLine(le.Print(indent + 1));
+                });
+            return sb.ToString();
+        }
     }
 
     public class LevelGeometryElement : LevelElement
     {
-        public CubeGroup Group { get; }
+        public CubeGroup Group { get; private set; }
 
         public override List<Cube> Cubes() => Group.Cubes;
 
@@ -282,7 +305,13 @@ namespace ShapeGrammar
             // todo: don't materialize levelElement.CubeGroup() for every leaf
             return new LevelGeometryElement(Grid, AreaType, Group.Minus(levelElement.CubeGroup()));
         }
-        
+
+        public override LevelElement MinusInPlace(LevelElement levelElement)
+        {
+            Group = Group.Minus(levelElement.CubeGroup());
+            return this;
+        }
+
         public override LevelGroupElement Merge(params LevelElement[] le)
         {
             return new LevelGroupElement(Grid, AreaType.None, le.Prepend(this).ToList());

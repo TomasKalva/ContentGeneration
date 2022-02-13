@@ -51,9 +51,24 @@ namespace ShapeGrammar
             //world.AddEnemy(libraries.Enemies.DragonMan(), new Vector3(0, 1, 0));
             worldScale = 2.8f;
 
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+
             var examples = new Examples(FountainheadStyle);
             var levelRoot = examples.CurveDesign();
             examples.grid.Generate(worldScale, parent);
+
+            stopwatch.Stop();
+            Debug.Log(stopwatch.ElapsedMilliseconds);
+
+            Debug.Log(levelRoot.Print(0));
+            /*
+            Debug.Log("Generating world");
+            var l = new List<int>() { 1, 2, 3 };
+            l.Select2Distinct((a, b) =>
+            {
+                return new { a, b };
+            }).ForEach(pair => Debug.Log($"{pair.a}, {pair.b}"));*/
 
             Debug.Log("Generating world");
 
