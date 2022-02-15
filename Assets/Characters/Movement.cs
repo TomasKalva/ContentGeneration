@@ -61,6 +61,15 @@ public class Movement : MonoBehaviour {
 		body.AddForce(projectedForce);
 	}
 
+	Vector3 MoveGroundDirection(Vector2 moveDirection, Vector3 groundNormal)
+	{
+		var movePlaneN = new Vector3(moveDirection.y, 0f, -moveDirection.x);
+		var groundPlaneN = groundNormal.normalized;
+		var moveOnGroundDir = Vector3.Cross(movePlaneN, groundPlaneN).normalized;
+		var projectedDir = Vector3.Project(moveDirection.X0Z(), moveOnGroundDir);
+		return projectedDir;
+	}
+
 	public void Move(Vector2 direction, float speed, bool setDirection = true)
 	{
         if (!OnGround)
@@ -68,7 +77,7 @@ public class Movement : MonoBehaviour {
 			return;
         }
 
-		var projectedDir = ExtensionMethods.ProjectDirectionOnPlane(direction.X0Z(), contactNormal.normalized);
+		var projectedDir = MoveGroundDirection(direction, contactNormal);
 
 		velocity = speed * projectedDir;
 		applyFriction = false;
@@ -80,7 +89,9 @@ public class Movement : MonoBehaviour {
 
 	public void Accelerate(Vector2 dV, float speed)
 	{
+		// todo: change it to MoveGroundDirection, but there is problem when touching object and trying to accelerate
 		var projectedDir = ExtensionMethods.ProjectDirectionOnPlane(dV.X0Z(), contactNormal.normalized);
+		//var projectedDir = MoveGroundDirection(direction, contactNormal);
 
 		velocity += speed * projectedDir;
 		applyFriction = false;

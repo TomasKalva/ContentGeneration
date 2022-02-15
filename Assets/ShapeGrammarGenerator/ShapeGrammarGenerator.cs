@@ -72,7 +72,8 @@ namespace ShapeGrammar
 
             Debug.Log("Generating world");
 
-            var goodBonfirePosition = parent.position + worldScale * (Vector3) levelRoot.CubeGroup().WithFloor().Cubes.GetRandom().Position;
+            var goodBonfirePosition = parent.position + worldScale * (Vector3) levelRoot.CubeGroup().WithFloor().Cubes
+                .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor)).GetRandom().Position;
             world.AddInteractiveObject(interactiveObjects.bonfire, goodBonfirePosition);
         }
 
