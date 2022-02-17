@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 222c5448fd11ea84bbfe0c388c3fdbc7, type: 3}
   m_Name: InteractiveObjects
   m_EditorClassIdentifier: 
-  bonfire: {fileID: 8348426894195509786, guid: 7df4f3c3374e1784c8b3db1c2527d70b, type: 3}
+  bonfire: {fileID: 3348391647993300938, guid: 7df4f3c3374e1784c8b3db1c2527d70b, type: 3}
