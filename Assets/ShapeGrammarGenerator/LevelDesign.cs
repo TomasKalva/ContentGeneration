@@ -268,7 +268,7 @@ namespace ShapeGrammar
 
                     var wall = ldk.sgShapes.WallAround(yard, 2).Minus(houses);
 
-                    surrounded = surrounded.AddAll(yard, houses, wall);
+                    surrounded = surrounded.AddAll(yard.CubeGroup().ExtrudeVer(Vector3Int.up, 2).Merge(yard.CubeGroup()).LevelElement(AreaType.Garden), houses, wall);
                     return surrounded;
                 };
 
@@ -321,7 +321,7 @@ namespace ShapeGrammar
 
         public override LevelElement CreateLevel()
         {
-            int length = 8;
+            int length = 5;
 
             // Height curve
             var heightCurve = HeightCurve();

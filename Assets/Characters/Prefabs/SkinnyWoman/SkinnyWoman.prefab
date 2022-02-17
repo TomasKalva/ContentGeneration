@@ -31,6 +31,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.22399873, z: 4.585}
   m_LocalScale: {x: 1.5857246, y: 0.14128, z: 2.0291085}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7842897044595847418}
   m_RootOrder: 2
@@ -130,25 +131,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!95 &3025493158891192715
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4140070143780790183}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5245136111020689035
 GameObject:
   m_ObjectHideFlags: 0
@@ -181,6 +163,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 12.696931, y: 0.77300024, z: -6.0965576}
   m_LocalScale: {x: 0.35, y: 0.35, z: 0.35}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7842897044595847418}
   m_RootOrder: 0
@@ -442,6 +425,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.22399873, z: 2.194}
   m_LocalScale: {x: 1.8456042, y: 0.14128, z: 2.5132325}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7842897044595847418}
   m_RootOrder: 1
@@ -575,6 +559,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.3, y: 1.3, z: 1.3}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5245136111020689034}
   - {fileID: 2758566781443858457}
@@ -676,10 +661,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.24950537
-  m_Height: 0.84378785
+  m_Radius: 0.30693147
+  m_Height: 1.0323797
   m_Direction: 1
-  m_Center: {x: 0.0061563803, y: 0.39821208, z: 0.024001783}
+  m_Center: {x: 0.0061563803, y: 0.40718, z: 0.08142774}
 --- !u!114 &3008176056970571526
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -732,15 +717,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7beb9fa765a5ad34ca8650a306ad6d20, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1
+      value: 1.3182
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7beb9fa765a5ad34ca8650a306ad6d20, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1
+      value: 1.3182
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7beb9fa765a5ad34ca8650a306ad6d20, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1
+      value: 1.3182
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7beb9fa765a5ad34ca8650a306ad6d20, type: 3}
       propertyPath: m_LocalPosition.x
@@ -748,7 +733,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7beb9fa765a5ad34ca8650a306ad6d20, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.259
+      value: -0.485
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7beb9fa765a5ad34ca8650a306ad6d20, type: 3}
       propertyPath: m_LocalPosition.z
@@ -813,6 +798,26 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1167371376299940394, guid: 7beb9fa765a5ad34ca8650a306ad6d20, type: 3}
   m_PrefabInstance: {fileID: 3870019305014567670}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &3025493158891192715
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4140070143780790183}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &3887607426626656970
 PrefabInstance:
   m_ObjectHideFlags: 0

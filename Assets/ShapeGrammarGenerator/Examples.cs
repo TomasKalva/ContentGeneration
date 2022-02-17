@@ -9,7 +9,8 @@ namespace ShapeGrammar
 {
     public class LevelDevelopmentKit
     {
-        public ShapeGrammarObjectStyle FountainheadStyle { get; }
+        public ShapeGrammarObjectStyle DefaultHouseStyle { get; }
+        public ShapeGrammarObjectStyle GardenStyle { get; }
         public Grid grid { get; }
         public QueryContext qc { get; }
         public ShapeGrammarStyles sgStyles { get; }
@@ -19,12 +20,12 @@ namespace ShapeGrammar
         public Transformations tr { get; }
         public StyleRules houseStyleRules { get; }
 
-        public LevelDevelopmentKit(ShapeGrammarObjectStyle objectStyle)
+        public LevelDevelopmentKit(ShapeGrammarObjectStyle defaultHouseStyle, ShapeGrammarObjectStyle gardenStyle)
         {
-            FountainheadStyle = objectStyle;
+            DefaultHouseStyle = defaultHouseStyle;
             grid = new Grid(new Vector3Int(20, 10, 20));
             qc = new QueryContext(grid);
-            sgStyles = new ShapeGrammarStyles(grid, FountainheadStyle);
+            sgStyles = new ShapeGrammarStyles(grid, DefaultHouseStyle, gardenStyle);
             sgShapes = new ShapeGrammarShapes(grid);
             pl = new Placement(grid);
             paths = new Paths(grid);
@@ -48,7 +49,7 @@ namespace ShapeGrammar
 
     public class Examples : LevelDevelopmentKit
     {
-        public Examples(ShapeGrammarObjectStyle objectStyle) : base(objectStyle)
+        public Examples(ShapeGrammarObjectStyle defaultHouseStyle, ShapeGrammarObjectStyle gardenStyle) : base(defaultHouseStyle, gardenStyle)
         { }
         
         public void IslandAndHouses()

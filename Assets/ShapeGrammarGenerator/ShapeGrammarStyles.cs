@@ -13,26 +13,28 @@ namespace ShapeGrammar
     {
         Grid GridView { get; }
         QueryContext QC { get; }
-        ShapeGrammarObjectStyle ObjectStyle { get; }
+        ShapeGrammarObjectStyle DefaultHouseStyle { get; }
+        ShapeGrammarObjectStyle DefaultGardenStyle { get; }
 
-        public ShapeGrammarStyles(Grid gridView, ShapeGrammarObjectStyle objectStyle)
+        public ShapeGrammarStyles(Grid gridView, ShapeGrammarObjectStyle defaultHouseStyle, ShapeGrammarObjectStyle gardenStyle)
         {
             GridView = gridView;
             QC = new QueryContext(GridView);
-            ObjectStyle = objectStyle;
+            DefaultHouseStyle = defaultHouseStyle;
+            DefaultGardenStyle = gardenStyle;
         }
 
         public CubeGroup RoomStyle(CubeGroup roomArea)
         {
-            roomArea.AllBoundaryFacesH().SetStyle(ObjectStyle).Fill(FACE_HOR.Wall);
-            roomArea.CubeGroupMaxLayer(Vector3Int.down).BoundaryFacesV(Vector3Int.down).SetStyle(ObjectStyle).Fill(FACE_VER.Floor);
-            roomArea.AllBoundaryCorners().SetStyle(ObjectStyle).Fill(CORNER.Pillar);
+            roomArea.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Wall);
+            roomArea.CubeGroupMaxLayer(Vector3Int.down).BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Floor);
+            roomArea.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.Pillar);
             return roomArea;
         }
 
         public CubeGroup OpenRoomStyle(CubeGroup roomArea)
         {
-            roomArea.BoundaryFacesV(Vector3Int.down).SetStyle(ObjectStyle).Fill(FACE_VER.Floor);
+            roomArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Floor);
             //roomArea.AllBoundaryCorners().SetStyle(ObjectStyle).Fill(CORNER.Pillar);
             return roomArea;
         }
@@ -44,46 +46,46 @@ namespace ShapeGrammar
 
         public CubeGroup GardenStyle(CubeGroup roomArea)
         {
-            roomArea.BoundaryFacesV(Vector3Int.down).SetStyle(ObjectStyle).Fill(FACE_VER.Floor);
+            roomArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultGardenStyle).Fill(FACE_VER.Floor);
             return roomArea;
         }
 
         public CubeGroup FlatRoofStyle(CubeGroup roofArea)
         {
-            var floorParth = roofArea.BoundaryFacesV(Vector3Int.down).SetStyle(ObjectStyle).Fill(FACE_VER.Floor).Cubes();
-            floorParth.AllBoundaryFacesH().SetStyle(ObjectStyle).Fill(FACE_HOR.Railing);
-            floorParth.AllBoundaryCorners().SetStyle(ObjectStyle).Fill(CORNER.RailingPillar);
+            var floorParth = roofArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Floor).Cubes();
+            floorParth.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Railing);
+            floorParth.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.RailingPillar);
             return roofArea;
         }
 
         public CubeGroup FoundationStyle(CubeGroup foundationArea)
         {
-            foundationArea.AllBoundaryFacesH().SetStyle(ObjectStyle).Fill(FACE_HOR.Wall);
-            foundationArea.AllBoundaryCorners().SetStyle(ObjectStyle).Fill(CORNER.Pillar);
+            foundationArea.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Wall);
+            foundationArea.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.Pillar);
             return foundationArea;
         }
 
         public CubeGroup PlatformStyle(CubeGroup platformArea)
         {
-            platformArea.BoundaryFacesV(Vector3Int.down).SetStyle(ObjectStyle).Fill(FACE_VER.Floor);
+            platformArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Floor);
             var platformTop = platformArea.WithFloor();
             platformTop.SpecialCorners(ExtensionMethods.HorizontalDirections().ToArray())
                 .MoveBy(-Vector3Int.up)
                 .MoveInDirUntil(Vector3Int.down, corner => corner.MyCube.Position.y < 0)
-                .SetStyle(ObjectStyle).Fill(CORNER.Pillar);
+                .SetStyle(DefaultHouseStyle).Fill(CORNER.Pillar);
 
             return platformArea;
         }
 
         public CubeGroup PlatformRailingStyle(CubeGroup platformArea)
         {
-            platformArea.BoundaryFacesV(Vector3Int.down).SetStyle(ObjectStyle).Fill(FACE_VER.Floor);
+            platformArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Floor);
             var platformTop = platformArea.WithFloor();
-            platformTop.AllBoundaryFacesH().SetStyle(ObjectStyle).Fill(FACE_HOR.Railing);
+            platformTop.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Railing);
             platformTop.SpecialCorners(ExtensionMethods.HorizontalDirections().ToArray())
                 .MoveBy(-Vector3Int.up)
                 .MoveInDirUntil(Vector3Int.down, corner => corner.MyCube.Position.y < 0)
-                .SetStyle(ObjectStyle).Fill(CORNER.Pillar);
+                .SetStyle(DefaultHouseStyle).Fill(CORNER.Pillar);
 
             return platformArea;
         }
@@ -91,7 +93,7 @@ namespace ShapeGrammar
         public CubeGroup BalconyStyle(CubeGroup balcony, CubeGroup house)
         {
             // Floor
-            balcony.BoundaryFacesV(Vector3Int.down).SetStyle(ObjectStyle).Fill(FACE_VER.Floor);
+            balcony.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Floor);
 
             // Add railing to the balcony
             var facesNearHouse = balcony.AllBoundaryFacesH()
@@ -100,11 +102,11 @@ namespace ShapeGrammar
                .Minus(facesNearHouse);
 
             railingFaces
-               .SetStyle(ObjectStyle)
+               .SetStyle(DefaultHouseStyle)
                .Fill(FACE_HOR.Railing);
             railingFaces
                .Corners()
-               .SetStyle(ObjectStyle)
+               .SetStyle(DefaultHouseStyle)
                .Fill(CORNER.RailingPillar);
 
             // Door to house
@@ -129,7 +131,7 @@ namespace ShapeGrammar
                     return false;
                 }
             );
-            hor.BoundaryFacesV(Vector3Int.down).SetStyle(ObjectStyle).Fill(FACE_VER.Floor);
+            hor.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Floor);
 
             var verTop = path.Cubes.Where3(
                 (prev, cube, next) =>
@@ -140,7 +142,7 @@ namespace ShapeGrammar
                     }).ToCubeGroup(GridView);
 
             // empty vertical faces between cubes
-            verTop.BoundaryFacesV(Vector3Int.down).SetStyle(ObjectStyle).Fill(FACE_VER.Nothing);
+            verTop.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Nothing);
 
             // empty horizontal faces between cubes
             var horFacesInside = path.FacesH(ExtensionMethods.HorizontalDirections().ToArray()).Facets.SetMinus(path.AllBoundaryFacesH().Facets);
@@ -151,7 +153,7 @@ namespace ShapeGrammar
 
             // add stairs
             path.Cubes.ForEach3(
-                (prev, cube, next) =>
+                (Action<Cube, Cube, Cube>)((prev, cube, next) =>
                 {
                     var dirTo = cube.Position - prev.Position;
                     var dirFrom = next.Position - cube.Position;
@@ -160,11 +162,11 @@ namespace ShapeGrammar
                         var stairsCube = dirTo.y > 0 ? prev : cube;
                         var stairsDirection = dirTo.y > 0 ? -dirFrom : dirFrom;
 
-                        stairsCube.Style = ObjectStyle;
+                        stairsCube.Style = this.DefaultHouseStyle;
                         stairsCube.Object = CUBE.Stairs;
                         stairsCube.ObjectDir = stairsDirection;
                     }
-                }
+                })
             );
 
             return path;

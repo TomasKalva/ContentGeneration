@@ -1,4 +1,5 @@
 using ContentGeneration.Assets.UI.Model;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -30,6 +31,17 @@ public class Enemies : ScriptableObject
     public SkinnyWomanAgent skinnyWomanPrefab;
     public DragonManAgent dragonManPrefab;
     public DogAgent dogPrefab;
+
+    public IEnumerable<Func<Agent>> AllAgents () => new List<Func<Agent>>()
+    {
+        Human,
+        Sculpture,
+        MayanThrower,
+        MayanSwordsman,
+        SkinnyWoman,
+        DragonMan,
+        Dog,
+    };
 
     void AddDefaultBehaviors(Behaviors behaviors)
     {

@@ -14,7 +14,10 @@ namespace ShapeGrammar
         Transform parent;
 
         [SerializeField]
-        ShapeGrammarObjectStyle FountainheadStyle;
+        ShapeGrammarObjectStyle DefaultHouseStyle;
+
+        [SerializeField]
+        ShapeGrammarObjectStyle GardenStyle;
 
         float worldScale;
 
@@ -54,7 +57,7 @@ namespace ShapeGrammar
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 
-            var examples = new Examples(FountainheadStyle);
+            var examples = new Examples(DefaultHouseStyle, GardenStyle);
             var levelRoot = examples.CurveDesign();
             examples.grid.Generate(worldScale, parent);
 
@@ -72,11 +75,19 @@ namespace ShapeGrammar
 
             Debug.Log("Generating world");
 
-            var goodBonfirePosition = parent.position + worldScale * (Vector3) levelRoot.CubeGroup().WithFloor().Cubes
-                .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor)).GetRandom().Position;
+            var goodBonfirePosition = GridToWorld(levelRoot.CubeGroup().WithFloor().Cubes
+                .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor)).GetRandom().Position);
             world.AddInteractiveObject(interactiveObjects.bonfire, goodBonfirePosition);
+
+            var allEnemies = libraries.Enemies.AllAgents();
+            var enemyCubes = levelRoot.CubeGroup().WithFloor().Cubes.Shuffle().Take(10);
+            enemyCubes.ForEach(cube => world.AddEnemy(allEnemies.GetRandom()(), GridToWorld(cube.Position)));
         }
 
+        Vector3 GridToWorld(Vector3 pos)
+        {
+            return parent.position + worldScale * pos;
+        }
 
     }
 }
