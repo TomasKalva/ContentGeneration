@@ -23,6 +23,9 @@ public class Items : ScriptableObject
     [SerializeField]
     Weapons weapons;
 
+    [SerializeField]
+    PhysicalItem physicalItemPrefab;
+
     public ItemState BlueIchorEssence() => new BlueIchorEssence();
     public ItemState RedIchorEssence() => new RedIchorEssence();
     public ItemState FreeWill() => new FreeWill();
@@ -34,4 +37,11 @@ public class Items : ScriptableObject
     public ItemState Scythe() => new WeaponItem("Scythe", "Harvesting tool", weapons.Scythe().transform);
     public ItemState Mace() => new WeaponItem("Mace", "Mace", weapons.Mace().transform);
     public ItemState Katana() => new WeaponItem("Katana", "Katana", weapons.Katana().transform);
+
+    public PhysicalItem Physical(ItemState itemState)
+    {
+        var physicalItem = Instantiate(physicalItemPrefab);
+        physicalItem.Item = itemState;
+        return physicalItem;
+    }
 }

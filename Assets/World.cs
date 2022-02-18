@@ -39,9 +39,8 @@ public class World : MonoBehaviour
         agents.Add(enemy);
     }
 
-    public void AddItem(PhysicalItem itemPrefab, Vector3 position)
+    public void AddItem(PhysicalItem item, Vector3 position)
     {
-        var item = Instantiate(itemPrefab);
         item.transform.position = position;
     }
 

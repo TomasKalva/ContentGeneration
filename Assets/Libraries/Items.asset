@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: Items
   m_EditorClassIdentifier: 
   weapons: {fileID: 11400000, guid: 633c9bb7e3c734248bab76460fd83e1e, type: 2}
+  physicalItemPrefab: {fileID: 5493687118069396729, guid: 11441b73fa9c64b41b699592cf5aaf4e, type: 3}
