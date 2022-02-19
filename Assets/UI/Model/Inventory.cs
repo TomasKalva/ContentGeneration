@@ -21,7 +21,13 @@ namespace ContentGeneration.Assets.UI.Model
         LeftWeapon,
         RightWeapon,
     }
-
+    static class SlotTypeExtensions
+    {
+        public static bool IsWeapon(this SlotType slotType)
+        {
+            return slotType == SlotType.LeftWeapon || slotType == SlotType.RightWeapon;
+        }
+    }
 
     public class InventorySlot : INotifyPropertyChanged
     {
@@ -210,6 +216,25 @@ namespace ContentGeneration.Assets.UI.Model
             }
             else
             {
+                return null;
+            }
+        }
+
+        public InventorySlot EquipWeapon(SlotType slotType, WeaponItem weapon)
+        {
+            if(slotType == SlotType.RightWeapon)
+            {
+                RightWeaponSlot.Item = weapon;
+                return RightWeaponSlot;
+            }
+            else if (slotType == SlotType.LeftWeapon)
+            {
+                LeftWeaponSlot.Item = weapon;
+                return LeftWeaponSlot;
+            }
+            else
+            {
+                Debug.LogError($"{slotType} should be a weapon slot!");
                 return null;
             }
         }

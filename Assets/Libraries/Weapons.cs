@@ -26,8 +26,10 @@ public class Weapons : ScriptableObject
     [SerializeField]
     Weapon mayanKnife;
 
+    /*
     [SerializeField]
     Weapon fireball;
+    */
 
     [SerializeField]
     Weapon mayanSword;
@@ -55,12 +57,13 @@ public class Weapons : ScriptableObject
         return knife;
     }
 
+    /*
     public Weapon Fireball()
     {
         var fb = Instantiate(fireball);
         fb.Damage = 5f;
         return fb;
-    }
+    }*/
 
     public Weapon SculptureClub()
     {
