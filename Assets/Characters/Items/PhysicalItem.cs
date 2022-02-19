@@ -7,6 +7,7 @@ using UnityEngine.Events;
 public class PhysicalItem : InteractiveObject
 {
     public ItemState Item { get; set; }
+    bool beingPickeUp = false;
 
     protected override void Initialize()
     {
@@ -15,7 +16,11 @@ public class PhysicalItem : InteractiveObject
 
     protected override void InteractLogic(Agent agent)
     {
-        agent.PickUpItem(this);
+        if (!beingPickeUp)
+        {
+            agent.PickUpItem(this);
+            beingPickeUp = true;
+        }
     }
 
     public void PickUpItem(Agent agent)
