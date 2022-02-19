@@ -65,8 +65,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _name: Bonfire
-  _messageOnInteract: Spawn point set
-  _interactionDescription: Set spawning point
+  _messageOnInteract: Grave chosen
+  _interactionDescription: Choose Grave
 --- !u!1 &8348426894673091242
 GameObject:
   m_ObjectHideFlags: 0
