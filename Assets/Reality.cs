@@ -15,7 +15,7 @@ public class Reality : MonoBehaviour
 
     public ModuleGrid ModuleGrid { get; set; }
 
-    private void Start()
+    private void Awake()
     {
         var worldGenerator = GetComponent<WorldGenerator>();
         var world = GameObject.Find("World").GetComponent<World>();

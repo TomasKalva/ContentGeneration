@@ -16,12 +16,14 @@
                 <DataTrigger Binding="{Binding VisibleOnCamera}" Value="False">
                     <Setter Property="Visibility" Value="Hidden"/>
                 </DataTrigger>
+                <DataTrigger Binding="{Binding DamageTaken.TimedOut}" Value="True">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </DataTrigger>
             </Style.Triggers>
         </Style>
     </UserControl.Style>
     <StackPanel>
         <comp:ProgressBarNum DataContext="{Binding Health}" Color="Red"/>
         <comp:ProgressBarNum DataContext="{Binding Will}" Color="Green"/>
-        <comp:ProgressBarNum DataContext="{Binding Posture}" Color="Yellow"/>
     </StackPanel>
 </UserControl>

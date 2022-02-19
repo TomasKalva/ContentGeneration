@@ -47,6 +47,8 @@ namespace ContentGeneration.Assets.UI.Model
             set { _posture = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
+        public DamageTaken DamageTaken { get; }
+
         public bool PostureBroken { get; set; }
 
         public bool Dead => Health <= 0f;
@@ -59,6 +61,7 @@ namespace ContentGeneration.Assets.UI.Model
             Will = new FloatRange(20, 20);
             Posture = 10f;
             Inventory = new EnemyInventory(this);
+            DamageTaken = new DamageTaken(2f);
         }
 
         /// <summary>
@@ -95,6 +98,8 @@ namespace ContentGeneration.Assets.UI.Model
             {
                 PostureBroken = false;
             }
+
+            DamageTaken.Update(Time.fixedDeltaTime);
         }
 #endif
 
@@ -112,6 +117,8 @@ namespace ContentGeneration.Assets.UI.Model
                 Agent.Stagger(damageDealer.PushForce(Agent.transform));
                 PostureBroken = true;
             }
+
+            DamageTaken.AddDamage(damageDealer.Damage);
         }
 #endif
 
@@ -135,7 +142,7 @@ namespace ContentGeneration.Assets.UI.Model
             PropertyChanged?.Invoke(thisInstance, new PropertyChangedEventArgs(name));
         }
 
-#region Screen position of health bars
+        #region Screen position of health bars
 
 #if NOESIS
         private float _uiScreenPosX;
@@ -200,6 +207,56 @@ namespace ContentGeneration.Assets.UI.Model
         public float ScreenPosY => 0f;
 #endif
 
-#endregion
+        #endregion
+    }
+
+    public class DamageTaken : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+
+        private float timeOutDuration;
+
+        private float timeRemaining;
+
+        private bool _timedOut;
+        public bool TimedOut
+        {
+            get { return _timedOut; }
+            set { _timedOut = value; PropertyChanged.OnPropertyChanged(this); }
+        }
+
+        private float _damage;
+
+        public float Damage
+        {
+            get { return _damage; }
+            set { _damage = value; PropertyChanged.OnPropertyChanged(this); }
+        }
+
+        public DamageTaken(float timeOutDuration)
+        {
+            this.timeOutDuration = timeOutDuration;
+            Damage = 0f;
+            TimedOut = true;
+            timeRemaining = 0f;
+        }
+
+        public void AddDamage(float damage)
+        {
+            timeRemaining = timeOutDuration;
+            Damage += damage;
+            TimedOut = false;
+        }
+
+        public void Update(float deltaT)
+        {
+            timeRemaining -= deltaT;
+            if (!TimedOut && timeRemaining < 0)
+            {
+                TimedOut = true;
+                Damage = 0f;
+            }
+        }
     }
 }

@@ -39,13 +39,14 @@ using UnityEngine;
 [RequireComponent(typeof(AnimancerComponent))]
 public class Agent : MonoBehaviour
 {
-    public Movement movement;
-    public Acting acting;
+	public Movement movement;
+	public Acting acting;
 	public Animator animator;
 	public AnimancerComponent animancerAnimator;
 	public CharacterRef characterRef;
 	public Renderer myRenderer;
 	public Behaviors Behaviors { get; set; }
+	private HealthBar HealthBar { get; }
 
 	public CharacterState CharacterState
 	{
