@@ -46,7 +46,6 @@ public class Agent : MonoBehaviour
 	public CharacterRef characterRef;
 	public Renderer myRenderer;
 	public Behaviors Behaviors { get; set; }
-	private HealthBar HealthBar { get; }
 
 	public CharacterState CharacterState
 	{

@@ -7,7 +7,7 @@
              xmlns:comp="clr-namespace:ContentGeneration.Assets.UI.Components"
              xmlns:m="clr-namespace:ContentGeneration.Assets.UI.Model"
              mc:Ignorable="d" 
-             d:DesignHeight="45" d:DesignWidth="180"
+             d:DesignHeight="55" d:DesignWidth="180"
              x:Name="parent"
              d:DataContext="{d:DesignInstance m:CharacterState}">
     <UserControl.Style>
@@ -25,5 +25,8 @@
     <StackPanel>
         <comp:ProgressBarNum DataContext="{Binding Health}" Color="Red"/>
         <comp:ProgressBarNum DataContext="{Binding Will}" Color="Green"/>
+        <Border Background="White" Width="50" BorderThickness="2" BorderBrush="Black">
+            <TextBlock Text="{Binding DamageTaken.Damage}" FontSize="10" Foreground="Black" TextAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
     </StackPanel>
 </UserControl>

@@ -22,7 +22,7 @@
                         <!-- Margin="-100000" to center the control... explanation here:
                             https://stackoverflow.com/questions/13219321/positioning-an-element-inside-the-canvas-by-its-center-instead-of-the-top-left
                         -->
-                        <comp:FloatingHealthBar DataContext="{Binding}" Width="100" Height="40" Margin="-100000"/>
+                        <comp:FloatingHealthBar DataContext="{Binding}" Width="100" Height="55" Margin="-100000"/>
                         <!--<comp:ProgressBarNum DataContext="{Binding Health}" Color="Red" Width="100" Height="10" Margin="-100000"/>-->
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
