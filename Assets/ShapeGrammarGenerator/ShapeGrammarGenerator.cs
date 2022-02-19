@@ -75,9 +75,9 @@ namespace ShapeGrammar
 
             Debug.Log("Generating world");
 
-            var goodBonfirePosition = GridToWorld(levelRoot.CubeGroup().WithFloor().Cubes
-                .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor)).GetRandom().Position);
-            world.AddInteractiveObject(interactiveObjects.Grave(), goodBonfirePosition);
+            var goodGraveCube = levelRoot.CubeGroup().WithFloor().Cubes
+                .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor)).GetRandom();
+            world.AddInteractiveObject(interactiveObjects.Grave(), GridToWorld(goodGraveCube.Position));
 
             var allEnemies = libraries.Enemies.AllAgents();
             var enemyCubes = levelRoot.CubeGroup().WithFloor().Cubes.Shuffle().Take(10);
@@ -85,6 +85,9 @@ namespace ShapeGrammar
 
             var itemCubes = levelRoot.CubeGroup().WithFloor().Cubes.Shuffle().Take(10);
             itemCubes.ForEach(cube => world.AddItem(libraries.Items.Physical(libraries.Items.Mace()), GridToWorld(cube.Position)));
+
+            var kilnCube = goodGraveCube.NeighborsHor().GetRandom();
+            world.AddInteractiveObject(interactiveObjects.AscensionKiln(), GridToWorld(kilnCube.Position));
         }
 
         Vector3 GridToWorld(Vector3 pos)

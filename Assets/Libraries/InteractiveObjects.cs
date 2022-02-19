@@ -24,15 +24,32 @@ public class InteractiveObjects : ScriptableObject
     [SerializeField]
     InteractiveObject gravePrefab;
 
+    [SerializeField]
+    InteractiveObject ascensionKilnPrefab;
+
     public InteractiveObject Grave()
     {
-        var state = new GraveState() 
+        var state = new Grave() 
         {
             Name = "Grave",
             MessageOnInteract = "Grave chosen",
             InteractionDescription = "Choose Grave"
         };
         var obj = Instantiate(gravePrefab);
+        obj.State = state;
+
+        return obj;
+    }
+
+    public InteractiveObject AscensionKiln()
+    {
+        var state = new AscensionKiln()
+        {
+            Name = "Ascension Kiln",
+            MessageOnInteract = "Will increased",
+            InteractionDescription = "Increase will"
+        };
+        var obj = Instantiate(ascensionKilnPrefab);
         obj.State = state;
 
         return obj;

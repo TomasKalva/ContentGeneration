@@ -7,14 +7,9 @@ using System.Threading.Tasks;
 
 namespace Assets.InteractiveObject
 {
-    public class GraveState : InteractiveObjectState
+    public class Grave : InteractiveObjectState
     {
         AgentSpawner PlayerSpawner => InteractiveObject.GetComponentInChildren<AgentSpawner>();
-        /*
-        public override void Interact(Agent agent)
-        {
-            InteractiveObject.World.Bonfire = this;
-        }*/
 
         public override void Interact(global::Agent agent)
         {

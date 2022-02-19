@@ -20,7 +20,6 @@ public class InteractiveObject : MonoBehaviour
         }
     }
 
-
     public World World { get; private set; }
 
     public Reality Reality { get; private set; }

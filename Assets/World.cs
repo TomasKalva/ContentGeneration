@@ -9,7 +9,7 @@ public class World : MonoBehaviour
 
     List<InteractiveObject> interactiveObjects;
     List<Agent> agents;
-    public GraveState Grave { get; set; }
+    public Grave Grave { get; set; }
 
     public delegate void WorldCreated();
     public static event WorldCreated OnCreated;
@@ -64,7 +64,7 @@ public class World : MonoBehaviour
     public void Created()
     {
         Initialize();
-        Grave = GameObject.FindGameObjectWithTag("DefaultSpawnPoint").GetComponent<InteractiveObject>().State as GraveState;
+        Grave = GameObject.FindGameObjectWithTag("DefaultSpawnPoint").GetComponent<InteractiveObject>().State as Grave;
 
         if (Grave != null)
         {

@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: InteractiveObjects
   m_EditorClassIdentifier: 
   gravePrefab: {fileID: 8498464949297270748, guid: 7df4f3c3374e1784c8b3db1c2527d70b, type: 3}
-  bonfire: {fileID: 3348391647993300938, guid: 7df4f3c3374e1784c8b3db1c2527d70b, type: 3}
+  ascensionKilnPrefab: {fileID: 5741530064482036920, guid: ca3cbaa14f69d5e438f2eb8efdaf8d01, type: 3}
