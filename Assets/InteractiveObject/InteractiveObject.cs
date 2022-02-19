@@ -40,4 +40,9 @@ public class InteractiveObject : MonoBehaviour
         
         State?.Interact(agent);
     }
+
+    public void OptionalInteract(Agent agent, int optionIndex)
+    {
+        State.OptionalInteract(agent, optionIndex);
+    }
 }

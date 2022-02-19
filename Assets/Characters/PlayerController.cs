@@ -57,6 +57,9 @@ public class PlayerController : MonoBehaviour
 			{"Interact", false },
 			{"Suicide", false },
 			{"UseItem", false },
+			{"Option1", false },
+			{"Option2", false },
+			{"Option3", false },
 		};
 
 		spacePartitioning = new SpacePartitioning();
@@ -297,9 +300,19 @@ public class PlayerController : MonoBehaviour
 
 		var interactiveObject = PlayerCharacterState.CurrentInteractiveObject;
 
-		if (buttonDown["Interact"] && interactiveObject != null)
+		if(interactiveObject != null)
 		{
-			interactiveObject.Interact(myAgent);
+			if (buttonDown["Interact"])
+			{
+				interactiveObject.Interact(myAgent);
+            }
+            else
+            {
+				var buttonIndex = buttonDown["Option1"] ? 0 :
+									buttonDown["Option2"] ? 1 :
+										buttonDown["Option3"] ? 2 : -1;
+				interactiveObject.OptionalInteract(myAgent, buttonIndex);
+			}
 		}
 
 		if (buttonDown["Suicide"])

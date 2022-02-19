@@ -137,10 +137,34 @@
                         <Setter Property="Opacity" Value="1"/>
                     </Style>
                 </Border.Style>
-                <TextBlock Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="20">
-                    <Run Text ="E:" FontSize="30"/>
-                    <Run Text="{Binding PlayerState.CurrentInteractiveObjectState.InteractionDescription}"/>
-                </TextBlock>
+                <StackPanel>
+                    <TextBlock Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="20">
+                        <Run Text ="E:" FontSize="30"/>
+                        <Run Text="{Binding PlayerState.CurrentInteractiveObjectState.InteractionDescription}"/>
+                    </TextBlock>
+                    <ItemsControl ItemsSource="{Binding PlayerState.CurrentInteractiveObjectState.InteractOptions.Options}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="20" Margin="20">
+                                    <Run Text ="{Binding Index}" FontSize="25"/>
+                                    <Run Text =":" FontSize="25"/>
+                                    <Run Text ="{Binding Description}"/>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemContainerStyle>
+                            <Style TargetType="{x:Type ContentPresenter}">
+                                <Setter Property="Canvas.Left" Value="{Binding UIScreenPosX}"/>
+                                <Setter Property="Canvas.Top" Value="{Binding UIScreenPosY}"/>
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
+                    </ItemsControl>
+                </StackPanel>
             </Border>
 
             <!-- Message -->

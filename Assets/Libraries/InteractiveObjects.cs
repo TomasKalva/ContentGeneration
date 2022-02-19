@@ -29,11 +29,14 @@ public class InteractiveObjects : ScriptableObject
 
     public InteractiveObject Grave()
     {
-        var state = new Grave() 
+        var state = new Grave()
         {
             Name = "Grave",
             MessageOnInteract = "Grave chosen",
-            InteractionDescription = "Choose Grave"
+            InteractionDescription = "Choose Grave",
+            InteractOptions = new InteractOptions()
+                .AddOption("Take candle", agent => Debug.Log("Taking candle"))
+                .AddOption("Put candle", agent => Debug.Log("Putting candle"))
         };
         var obj = Instantiate(gravePrefab);
         obj.State = state;
