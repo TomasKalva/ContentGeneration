@@ -203,8 +203,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5493687118069396730}
-  - component: {fileID: 5493687118069396729}
-  - component: {fileID: 5493687118069396734}
+  - component: {fileID: 6431836430124876632}
   m_Layer: 0
   m_Name: PhysicalItem
   m_TagString: Untagged
@@ -228,7 +227,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5493687118069396729
+--- !u!114 &6431836430124876632
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -237,22 +236,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 5493687118069396735}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00cee15cb3161c1479e71bf587fb1255, type: 3}
+  m_Script: {fileID: 11500000, guid: 211c426cb5d2b254ebc2be15ba0a6d61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: {fileID: 0}
---- !u!114 &5493687118069396734
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5493687118069396735}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a23eeda63e2d7b4ebfc69b1ec3a4333, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _name: Item
-  _messageOnInteract: Item picked up
-  _interactionDescription: Pick up item

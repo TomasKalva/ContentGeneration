@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PickUpItem : AnimatedAct
 {
-    public PhysicalItem PhysicalItem { get; set; }
+    public PhysicalItemState PhysicalItem { get; set; }
 
     public override void OnStart(Agent agent)
     {

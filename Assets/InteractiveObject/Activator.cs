@@ -8,7 +8,7 @@ using UnityEngine;
 /// <summary>
 /// Activates Almond.
 /// </summary>
-public class Activator : InteractiveObject
+public class Activator : InteractiveObjectState
 {
     ActionObject actionObject;
 
@@ -17,7 +17,7 @@ public class Activator : InteractiveObject
         this.actionObject = actionObject;
     }
 
-    protected override void InteractLogic(Agent agent)
+    public override void Interact(Agent agent)
     {
         if (actionObject != null)
         {

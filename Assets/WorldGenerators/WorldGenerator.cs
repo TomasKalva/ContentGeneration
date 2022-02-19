@@ -33,7 +33,7 @@ public class WorldGenerator : MonoBehaviour
         //world.AddItem(items.BlueIchorEssence, new Vector3(0, 0, -54));
 
 
-        world.AddInteractiveObject(interactiveObjects.bonfire, new Vector3(0, 0, 0));
+        //world.AddInteractiveObject(interactiveObjects.Grave(), new Vector3(0, 0, 0));
     }
 
     public virtual void DestroyWorld() { }

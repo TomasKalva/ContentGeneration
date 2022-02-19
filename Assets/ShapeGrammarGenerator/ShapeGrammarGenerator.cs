@@ -77,7 +77,7 @@ namespace ShapeGrammar
 
             var goodBonfirePosition = GridToWorld(levelRoot.CubeGroup().WithFloor().Cubes
                 .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor)).GetRandom().Position);
-            world.AddInteractiveObject(interactiveObjects.bonfire, goodBonfirePosition);
+            world.AddInteractiveObject(interactiveObjects.Grave(), goodBonfirePosition);
 
             var allEnemies = libraries.Enemies.AllAgents();
             var enemyCubes = levelRoot.CubeGroup().WithFloor().Cubes.Shuffle().Take(10);

@@ -6,18 +6,30 @@ using UnityEngine;
 
 public class InteractiveObject : MonoBehaviour
 {
-    public InteractiveObjectState state;
+    public InteractiveObjectState _state;
+    public InteractiveObjectState State
+    {
+        get => _state;
+        set
+        {
+            _state = value;
+            if(_state.InteractiveObject != this)
+            {
+                _state.InteractiveObject = this;
+            }
+        }
+    }
 
-    protected World world;
 
-    protected Reality reality;
+    public World World { get; private set; }
 
+    public Reality Reality { get; private set; }
+    
     // Start is called before the first frame update
     void Awake()
     {
-        state = GetComponent<InteractiveObjectState>();
-        world = GameObject.Find("World").GetComponent<World>();
-        reality = GameObject.Find("Reality").GetComponent<Reality>();
+        World = GameObject.Find("World").GetComponent<World>();
+        Reality = GameObject.Find("Reality").GetComponent<Reality>();
         Initialize();
     }
 
@@ -25,12 +37,8 @@ public class InteractiveObject : MonoBehaviour
 
     public void Interact(Agent agent)
     {
-        GameViewModel.ViewModel.Message = state.MessageOnInteract;
-        InteractLogic(agent);
-    }
-
-    protected virtual void InteractLogic(Agent agent)
-    {
-        Debug.Log("Interacted");
+        GameViewModel.ViewModel.Message = State.MessageOnInteract;
+        
+        State?.Interact(agent);
     }
 }

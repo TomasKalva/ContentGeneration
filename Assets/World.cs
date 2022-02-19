@@ -1,3 +1,4 @@
+using Assets.InteractiveObject;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ public class World : MonoBehaviour
 
     List<InteractiveObject> interactiveObjects;
     List<Agent> agents;
-    public Bonfire Bonfire { get; set; }
+    public GraveState Grave { get; set; }
 
     public delegate void WorldCreated();
     public static event WorldCreated OnCreated;
@@ -39,14 +40,13 @@ public class World : MonoBehaviour
         agents.Add(enemy);
     }
 
-    public void AddItem(PhysicalItem item, Vector3 position)
+    public void AddItem(InteractiveObject item, Vector3 position)
     {
         item.transform.position = position;
     }
 
-    public void AddInteractiveObject(InteractiveObject interactiveObjectPrefab, Vector3 position)
+    public void AddInteractiveObject(InteractiveObject interactiveObject, Vector3 position)
     {
-        var interactiveObject = Instantiate(interactiveObjectPrefab);
         interactiveObject.transform.position = position;
     }
 
@@ -58,17 +58,17 @@ public class World : MonoBehaviour
 
     public void OnPlayerDeath()
     {
-        Bonfire.SpawnPlayer();
+        Grave.SpawnPlayer();
     }
 
     public void Created()
     {
         Initialize();
-        Bonfire = GameObject.FindGameObjectWithTag("DefaultSpawnPoint").GetComponent<Bonfire>();
+        Grave = GameObject.FindGameObjectWithTag("DefaultSpawnPoint").GetComponent<InteractiveObject>().State as GraveState;
 
-        if (Bonfire != null)
+        if (Grave != null)
         {
-            Bonfire.SpawnPlayer();
+            Grave.SpawnPlayer();
         }
         else
         {

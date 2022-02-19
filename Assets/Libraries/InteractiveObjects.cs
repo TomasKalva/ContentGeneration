@@ -1,3 +1,5 @@
+using Assets.InteractiveObject;
+using ContentGeneration.Assets.UI.Model;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -19,6 +21,20 @@ public class InteractiveObjects : ScriptableObject
         Selection.activeObject = asset;
     }
 
-    public Bonfire bonfire;
+    [SerializeField]
+    InteractiveObject gravePrefab;
 
+    public InteractiveObject Grave()
+    {
+        var state = new GraveState() 
+        {
+            Name = "Grave",
+            MessageOnInteract = "Grave chosen",
+            InteractionDescription = "Choose Grave"
+        };
+        var obj = Instantiate(gravePrefab);
+        obj.State = state;
+
+        return obj;
+    }
 }

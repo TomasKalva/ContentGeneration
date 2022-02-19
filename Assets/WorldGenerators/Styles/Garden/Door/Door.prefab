@@ -29,6 +29,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -1.68, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4752932135830366365}
   m_RootOrder: 0
@@ -123,6 +124,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.255}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4752932135830366365}
   - {fileID: 3085901937093667167}
@@ -159,6 +161,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.99583334, y: 0.99375, z: 0.49693662}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1617922934800275205}
   m_RootOrder: 1
@@ -268,6 +271,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.68, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8436130211150566977}
   m_Father: {fileID: 1617922934800275205}
@@ -285,8 +289,7 @@ GameObject:
   - component: {fileID: 1625204146561437034}
   - component: {fileID: 1517387445455425049}
   - component: {fileID: 8192997409678865240}
-  - component: {fileID: 374502831469550565}
-  - component: {fileID: 3842687780451405398}
+  - component: {fileID: 6375646707724697816}
   m_Layer: 0
   m_Name: Door
   m_TagString: Untagged
@@ -304,6 +307,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 45.990456, y: 16.002172, z: 143.89703}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1617922934800275205}
   m_Father: {fileID: 0}
@@ -311,7 +315,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1625204146561437034
 Animator:
-  serializedVersion: 3
+  serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -324,6 +328,7 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -357,7 +362,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Animator: {fileID: 1625204146561437034}
   _ActionOnDisable: 0
---- !u!114 &374502831469550565
+--- !u!114 &6375646707724697816
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -366,22 +371,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 6810099170241836708}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db8022a4b196030448eba32410a43406, type: 3}
+  m_Script: {fileID: 11500000, guid: 211c426cb5d2b254ebc2be15ba0a6d61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: {fileID: 0}
---- !u!114 &3842687780451405398
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6810099170241836708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a23eeda63e2d7b4ebfc69b1ec3a4333, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _name: Door
-  _messageOnInteract: You've opened the door
-  _interactionDescription: Open door

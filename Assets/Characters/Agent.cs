@@ -243,7 +243,7 @@ public class Agent : MonoBehaviour
 		enabled = false;
     }
 
-	public virtual void PickUpItem(PhysicalItem physicalItem)
+	public virtual void PickUpItem(PhysicalItemState physicalItem)
     {
 		Debug.Log($"Picking up item {physicalItem.Item.Name}");
 		var pickUpItem = acting.SelectAct("PickUpItem") as PickUpItem;

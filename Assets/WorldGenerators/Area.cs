@@ -170,9 +170,9 @@ public class CharacterWorldObject : WorldObject
 
 public class ItemWorldObject : WorldObject
 {
-    public PhysicalItem item { get; }
+    public InteractiveObject item { get; }
 
-    public ItemWorldObject(PhysicalItem itemPrefab)
+    public ItemWorldObject(InteractiveObject itemPrefab)
     {
         this.item = itemPrefab;
     }

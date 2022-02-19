@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+/// <summary>
+/// DEPRECATED!!!
+/// </summary>
 public class PhysicalItems : ScriptableObject
 {
     [MenuItem("Assets/Create/PhysicalItems")]
@@ -19,18 +22,21 @@ public class PhysicalItems : ScriptableObject
 
         Selection.activeObject = asset;
     }
-
+    
     [SerializeField]
-    PhysicalItem physicalItemPrefab;
+    InteractiveObject physicalItemPrefab;
 
-    PhysicalItem CreateItem(ItemState itemState)
+    InteractiveObject CreateItem(ItemState itemState)
     {
+        return null;
+        /*
         var newPhysicalItem = Instantiate(physicalItemPrefab);
         newPhysicalItem.Item = itemState;
         return newPhysicalItem;
+        */
     }
 
-    public PhysicalItem BlueIchorEssence() => CreateItem(new BlueIchorEssence());
-    public PhysicalItem RedIchorEssence() => CreateItem(new RedIchorEssence());
-    public PhysicalItem FreeWill() => CreateItem(new FreeWill());
+    public InteractiveObject BlueIchorEssence() => CreateItem(new BlueIchorEssence());
+    public InteractiveObject RedIchorEssence() => CreateItem(new RedIchorEssence());
+    public InteractiveObject FreeWill() => CreateItem(new FreeWill());
 }

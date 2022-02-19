@@ -220,7 +220,7 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
-        public InventorySlot EquipWeapon(SlotType slotType, WeaponItem weapon)
+        public InventorySlot EquipWeapon(SlotType slotType, ItemState weapon)
         {
             if(slotType == SlotType.RightWeapon)
             {
@@ -234,7 +234,9 @@ namespace ContentGeneration.Assets.UI.Model
             }
             else
             {
+#if NOESIS
                 Debug.LogError($"{slotType} should be a weapon slot!");
+#endif
                 return null;
             }
         }
