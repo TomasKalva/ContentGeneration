@@ -1,0 +1,16 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.VFX;
+
+public class Kiln : MonoBehaviour
+{
+    [SerializeField]
+    VisualEffect fire;
+
+    public void BurstFire()
+    {
+        fire.SendEvent("FireBurst");
+        Debug.Log("FireBurst");
+    }
+}
