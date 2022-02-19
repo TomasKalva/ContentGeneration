@@ -649,8 +649,8 @@ InputManager:
     m_Name: Noesis_Horizontal
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: j
-    positiveButton: l
+    negativeButton: z
+    positiveButton: x
     altNegativeButton: 
     altPositiveButton: 
     gravity: 0
@@ -665,8 +665,8 @@ InputManager:
     m_Name: Noesis_Horizontal
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: j
-    positiveButton: l
+    negativeButton: z
+    positiveButton: x
     altNegativeButton: 
     altPositiveButton: 
     gravity: 1000
@@ -681,8 +681,8 @@ InputManager:
     m_Name: Noesis_Vertical
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: k
-    positiveButton: i
+    negativeButton: v
+    positiveButton: f
     altNegativeButton: 
     altPositiveButton: 
     gravity: 0
@@ -697,8 +697,8 @@ InputManager:
     m_Name: Noesis_Vertical
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: k
-    positiveButton: i
+    negativeButton: v
+    positiveButton: f
     altNegativeButton: 
     altPositiveButton: 
     gravity: 1000
@@ -716,7 +716,7 @@ InputManager:
     negativeButton: 
     positiveButton: joystick button 0
     altNegativeButton: 
-    altPositiveButton: o
+    altPositiveButton: e
     gravity: 0
     dead: 0
     sensitivity: 1
@@ -748,7 +748,7 @@ InputManager:
     negativeButton: 
     positiveButton: joystick button 3
     altNegativeButton: 
-    altPositiveButton: u
+    altPositiveButton: q
     gravity: 0
     dead: 0
     sensitivity: 1
@@ -780,7 +780,7 @@ InputManager:
     negativeButton: 
     positiveButton: joystick button 7
     altNegativeButton: 
-    altPositiveButton: t
+    altPositiveButton: r
     gravity: 0
     dead: 0
     sensitivity: 1
@@ -901,3 +901,4 @@ InputManager:
     type: 2
     axis: 3
     joyNum: 0
+  m_UsePhysicalKeys: 0

@@ -22,7 +22,7 @@ public class WeaponSlot : MonoBehaviour
         if (weapon == null) return;
 
         weapon.transform.SetParent(null);
-        weapon.Active = false;
+        weapon.gameObject.SetActive(false);
         //Destroy(weapon.gameObject);
     }
 
@@ -37,7 +37,7 @@ public class WeaponSlot : MonoBehaviour
         //var weapon = Instantiate(weapon, transform);
         newWeapon.transform.SetParent(transform);
         newWeapon.FindOwner();
-        newWeapon.Active = true;
+        newWeapon.gameObject.SetActive(true);
 
         newWeapon.transform.localPosition = Vector3.zero;
         newWeapon.transform.localRotation = Quaternion.identity;
