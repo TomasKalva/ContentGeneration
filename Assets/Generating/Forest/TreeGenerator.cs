@@ -16,8 +16,8 @@ public class TreeGenerator : MonoBehaviour
 
     public GameObject Generate()
     {
-        //var tree =  Instantiate(trunk);
-        var tree = (GameObject)UnityEditor.PrefabUtility.InstantiatePrefab(trunk);
+        var tree =  Instantiate(trunk);
+        //var tree = (GameObject)UnityEditor.PrefabUtility.InstantiatePrefab(trunk);
         trunk.transform.localScale = new Vector3(1f, Random.Range(minHeight, maxHeight), 1f);
 
         return tree;
