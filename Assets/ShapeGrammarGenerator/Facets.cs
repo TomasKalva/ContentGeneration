@@ -73,6 +73,8 @@ namespace ShapeGrammar
         public FaceHor MoveBy(Vector3Int offset) => MoveBy<FaceHor>(offset);
         public IEnumerable<FaceHor> MoveInDirUntil(Grid gridView, Vector3Int dir, Func<FaceHor, bool> stopPred) => MoveInDirUntil<FaceHor>(gridView, dir, stopPred);
         public FaceHorGroup Group() => new FaceHorGroup(MyCube.Grid, new List<FaceHor>() { this });
+
+        public FaceHor OtherFacet() => OtherCube.FacesHor(-Direction);
     }
 
     public class FaceVer : Facet

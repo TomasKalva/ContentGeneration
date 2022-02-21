@@ -46,14 +46,14 @@ public class AnimatedAct : Act
 
     protected void PlayAnimation(Agent agent)
     {
-        agent.animancerAnimator.Play(anim, 1f);
+        agent.animancerAnimator.Play(anim, 0.1f);
     }
 
     protected AnimancerState PlayIfNotActive(Agent agent, float transitionTime)
     {
         if (!agent.animancerAnimator.IsPlaying(anim))
         {
-            return agent.animancerAnimator.Play(anim, 1f/* transitionTime*/);
+            return agent.animancerAnimator.Play(anim, transitionTime);
         }
         return agent.animancerAnimator.States.Current;
     }

@@ -146,14 +146,32 @@ namespace ShapeGrammar
 
             // empty horizontal faces between cubes
             var horFacesInside = path.FacesH(ExtensionMethods.HorizontalDirections().ToArray()).Facets.SetMinus(path.AllBoundaryFacesH().Facets);
-            new FaceHorGroup(path.Grid, horFacesInside.ToList()).Fill(FACE_HOR.Nothing);
+            horFacesInside.ForEach(faceH =>
+            {
+                //faceH.FaceType = FACE_HOR.Door;
+                //return;
+
+                var otherFace = faceH.OtherFacet();
+                if(faceH.FaceType == FACE_HOR.Door || otherFace.FaceType == FACE_HOR.Door)
+                {
+                    return;
+                }
+                if (faceH.FaceType == FACE_HOR.Wall || otherFace.FaceType == FACE_HOR.Wall)
+                {
+                    faceH.FaceType = FACE_HOR.Door;
+                    otherFace.FaceType = FACE_HOR.Nothing;
+                    return;
+                }
+                faceH.FaceType = FACE_HOR.Nothing;
+            });
+            //new FaceHorGroup(path.Grid, horFacesInside.ToList()).Fill(FACE_HOR.Nothing);
 
             //hor.Intersect(path.AllBoundaryFacesH()).SetStyle(ObjectStyle).Fill(FACE_HOR.Railing);
             //hor.AllBoundaryCorners().Intersect(path.AllBoundaryCorners()).SetStyle(ObjectStyle).Fill(CORNER.RailingPillar);
 
             // add stairs
             path.Cubes.ForEach3(
-                (Action<Cube, Cube, Cube>)((prev, cube, next) =>
+                (prev, cube, next) =>
                 {
                     var dirTo = cube.Position - prev.Position;
                     var dirFrom = next.Position - cube.Position;
@@ -166,7 +184,7 @@ namespace ShapeGrammar
                         stairsCube.Object = CUBE.Stairs;
                         stairsCube.ObjectDir = stairsDirection;
                     }
-                })
+                }
             );
 
             return path;
