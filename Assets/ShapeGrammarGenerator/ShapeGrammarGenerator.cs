@@ -52,6 +52,8 @@ namespace ShapeGrammar
         {
             //world.AddEnemy(libraries.Enemies.MayanSwordsman(), new Vector3(0, 1, 0));
             //world.AddEnemy(libraries.Enemies.DragonMan(), new Vector3(0, 1, 0));
+            UnityEngine.Random.InitState(16);
+
             worldScale = 2.8f;
 
             var stopwatch = new System.Diagnostics.Stopwatch();
@@ -65,13 +67,6 @@ namespace ShapeGrammar
             Debug.Log(stopwatch.ElapsedMilliseconds);
 
             Debug.Log(levelRoot.Print(0));
-            /*
-            Debug.Log("Generating world");
-            var l = new List<int>() { 1, 2, 3 };
-            l.Select2Distinct((a, b) =>
-            {
-                return new { a, b };
-            }).ForEach(pair => Debug.Log($"{pair.a}, {pair.b}"));*/
 
             Debug.Log("Generating world");
 
@@ -79,7 +74,7 @@ namespace ShapeGrammar
                 .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor)).GetRandom();
             world.AddInteractiveObject(interactiveObjects.Grave(), GridToWorld(goodGraveCube.Position));
 
-            var allEnemies = libraries.Enemies.AllAgents();
+            /*var allEnemies = libraries.Enemies.AllAgents();
             var enemyCubes = levelRoot.CubeGroup().WithFloor().Cubes.Shuffle().Take(10);
             enemyCubes.ForEach(cube => world.AddEnemy(allEnemies.GetRandom()(), GridToWorld(cube.Position)));
             
@@ -88,7 +83,7 @@ namespace ShapeGrammar
 
             var kilnCube = goodGraveCube.NeighborsHor().GetRandom();
             world.AddInteractiveObject(interactiveObjects.AscensionKiln(), GridToWorld(kilnCube.Position));
-            
+            */
         }
 
         Vector3 GridToWorld(Vector3 pos)

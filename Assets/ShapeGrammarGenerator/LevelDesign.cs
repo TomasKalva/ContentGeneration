@@ -140,7 +140,8 @@ namespace ShapeGrammar
 
                 var area = element.MoveBy(possibleMoves.GetRandom());
                 var start = addingState.Last.WhereGeom(le => le.AreaType != AreaType.Path);
-                var path = ldk.paths.PathH(start, area, 2, addingState.Added).SetAreaType(AreaType.Platform);
+                var pathCG = ldk.paths.PathH(start, area, 2, addingState.Added).CubeGroup();
+                var path = pathCG.ExtrudeVer(Vector3Int.up, 2).Merge(pathCG).LevelElement(AreaType.Platform);
                 var newElement = new LevelGroupElement(addingState.Last.Grid, AreaType.None, path, area);
                 return addingState.TryPush(newElement);
             };
@@ -181,7 +182,7 @@ namespace ShapeGrammar
         {
             // find two areas with floor next to each other
             // calculation is done eagerly and in advance, so it doesn't react on changes of geometry
-            var elementsWithFloor = levelGeometry.Leafs().Where(le => AreaType.CanBeConnectedByStairs(le.AreaType) && le.CubeGroup().WithFloor().Cubes.Any());
+            var elementsWithFloor = levelGeometry.Leafs().Where(le => AreaType.CanBeConnectedByStairs(le.AreaType) && le.CubeGroup().WithFloor().Cubes.Any()).ToList();
             var closeElementsWithFloor = elementsWithFloor
                 .Select2Distinct((el1, el2) => new { el1, el2 })
                 .Where(pair => pair.el1.CubeGroup().ExtrudeAll().Intersects(pair.el2.CubeGroup())).ToList();
@@ -321,7 +322,7 @@ namespace ShapeGrammar
 
         public override LevelElement CreateLevel()
         {
-            int length = 5;
+            int length = 6;
 
             // Height curve
             var heightCurve = HeightCurve();
@@ -333,18 +334,18 @@ namespace ShapeGrammar
 
             var addedLine = LinearCurveDesign(start, length)(state);
 
-            /*
-            var changers = Enumerable.Repeat(SplitToFloors(), 100).Concat(
+            
+            var changers = Enumerable.Repeat(SplitToFloors(), 100)/*.Concat(
                     Enumerable.Repeat(SubdivideRoom(), 100)
-                ).ToList();
+                )*/.ToList();
             
             var subdividedRooms = addedLine.ChangeAll(changers);
-            */
-            //addedLine.Added.ApplyGrammarStyleRules(ldk.houseStyleRules);
+            
+            subdividedRooms.Added.ApplyGrammarStyleRules(ldk.houseStyleRules);
 
-            var connectednessGraph = new Graph<LevelGeometryElement>(addedLine.Added.Leafs().ToList(), new List<Edge<LevelGeometryElement>>());
+            var connectednessGraph = new Graph<LevelGeometryElement>(subdividedRooms.Added.Leafs().ToList(), new List<Edge<LevelGeometryElement>>());
 
-            var connectedLine = addedLine.AddUntilCan(ConnectTwoUnconnected(connectednessGraph, addedLine.Added), 1000);
+            var connectedLine = subdividedRooms.AddUntilCan(ConnectTwoUnconnected(connectednessGraph, subdividedRooms.Added), 1000);
             var levelElements = connectedLine.Added;
             
 

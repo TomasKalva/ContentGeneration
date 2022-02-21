@@ -57,8 +57,10 @@ namespace ShapeGrammar
         {
             var floorBox = box.CubeGroup().CubeGroupMaxLayer(Vector3Int.down);
             var house = box;
-            var houseFloors = house.Split(Vector3Int.up, AreaType.None, floors).ReplaceLeafsGrp(_ => true, le => floorCreator(le));
-
+            var allFloors = house.Split(Vector3Int.up, AreaType.None, floors);
+            var houseFloors = allFloors.ReplaceLeafsGrp(le => le != allFloors.Leafs().ElementAt(0), le => floorCreator(le))
+                    .ReplaceLeafsGrp(0, le => le.SetAreaType(AreaType.Room));
+            
             return houseFloors;
         }
 

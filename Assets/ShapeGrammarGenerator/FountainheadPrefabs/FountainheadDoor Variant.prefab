@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7662992365218239644}
   - component: {fileID: 4535314419656972178}
   - component: {fileID: 1588801615810675479}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Wall.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107,7 +107,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 237132792799230450}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: FountainheadDoor Variant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -142,7 +142,7 @@ GameObject:
   - component: {fileID: 5472691350104630127}
   - component: {fileID: 3643176404077593752}
   - component: {fileID: 3147229240129598909}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: FramesVertical
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -225,7 +225,7 @@ GameObject:
   - component: {fileID: 2123235114996731443}
   - component: {fileID: 8877890413261112220}
   - component: {fileID: 7762729909851792886}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -306,7 +306,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3309305415332581726}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -341,7 +341,7 @@ GameObject:
   - component: {fileID: 3198711358063023839}
   - component: {fileID: 8193393064708214672}
   - component: {fileID: 5959460037881994075}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Insides
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -424,7 +424,7 @@ GameObject:
   - component: {fileID: 6210797344588270313}
   - component: {fileID: 7772527848536172861}
   - component: {fileID: 3211157140091965151}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: InsideBolts
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -509,7 +509,7 @@ GameObject:
   - component: {fileID: 1002945689420796556}
   - component: {fileID: 4637523445246556146}
   - component: {fileID: 4725801552948119909}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -610,7 +610,7 @@ GameObject:
   - component: {fileID: 830963944894157856}
   - component: {fileID: 4495812616591076407}
   - component: {fileID: 7993075331732263400}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: FrameBolts
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -693,7 +693,7 @@ GameObject:
   - component: {fileID: 5111584747259939533}
   - component: {fileID: 7930984164535287514}
   - component: {fileID: 8338119029104571306}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: FramesHorizontal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -776,7 +776,7 @@ GameObject:
   - component: {fileID: 236390917366883267}
   - component: {fileID: 2199643836396467686}
   - component: {fileID: 519942504567565925}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: WallFrame
   m_TagString: Untagged
   m_Icon: {fileID: 0}

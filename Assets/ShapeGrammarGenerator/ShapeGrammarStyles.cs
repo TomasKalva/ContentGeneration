@@ -164,7 +164,6 @@ namespace ShapeGrammar
                 }
                 faceH.FaceType = FACE_HOR.Nothing;
             });
-            //new FaceHorGroup(path.Grid, horFacesInside.ToList()).Fill(FACE_HOR.Nothing);
 
             //hor.Intersect(path.AllBoundaryFacesH()).SetStyle(ObjectStyle).Fill(FACE_HOR.Railing);
             //hor.AllBoundaryCorners().Intersect(path.AllBoundaryCorners()).SetStyle(ObjectStyle).Fill(CORNER.RailingPillar);
