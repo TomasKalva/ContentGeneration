@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class Enemies : ScriptableObject
 {
+#if UNITY_EDITOR
     [MenuItem("Assets/Create/Enemies")]
     public static void CreateMyAsset()
     {
@@ -20,6 +21,7 @@ public class Enemies : ScriptableObject
 
         Selection.activeObject = asset;
     }
+#endif
 
     [SerializeField]
     Libraries libraries;

@@ -19,6 +19,7 @@ public class Reality : MonoBehaviour
     {
         var worldGenerator = GetComponent<WorldGenerator>();
         var world = GameObject.Find("World").GetComponent<World>();
+        world.Initialize();
 
         worldGenerator.DestroyWorld();
         worldGenerator.Generate(world);

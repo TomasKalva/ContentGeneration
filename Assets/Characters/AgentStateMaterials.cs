@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class MakeScriptableObject
 {
+#if UNITY_EDITOR
     [MenuItem("Assets/Create/AgentStateMaterial")]
     public static void CreateMyAsset()
     {
@@ -18,6 +19,7 @@ public class MakeScriptableObject
 
         Selection.activeObject = asset;
     }
+#endif
 }
 
 public class AgentStateMaterials : ScriptableObject

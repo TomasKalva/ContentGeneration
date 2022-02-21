@@ -9,6 +9,7 @@ using UnityEngine;
 /// </summary>
 public class PhysicalItems : ScriptableObject
 {
+#if UNITY_EDITOR
     [MenuItem("Assets/Create/PhysicalItems")]
     public static void CreateMyAsset()
     {
@@ -22,7 +23,8 @@ public class PhysicalItems : ScriptableObject
 
         Selection.activeObject = asset;
     }
-    
+#endif
+
     [SerializeField]
     InteractiveObject physicalItemPrefab;
 

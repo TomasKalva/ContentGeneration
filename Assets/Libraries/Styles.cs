@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Styles : ScriptableObject
 {
+#if UNITY_EDITOR
     [MenuItem("Assets/Create/Styles")]
     public static void CreateMyAsset()
     {
@@ -18,6 +19,7 @@ public class Styles : ScriptableObject
 
         Selection.activeObject = asset;
     }
+#endif
 
     [SerializeField]
     public Style gothic;

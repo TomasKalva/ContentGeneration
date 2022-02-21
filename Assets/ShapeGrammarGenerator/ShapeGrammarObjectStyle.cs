@@ -7,6 +7,7 @@ using ShapeGrammar;
 
 public class ShapeGrammarObjectStyle : ScriptableObject
 {
+#if UNITY_EDITOR
     [MenuItem("Assets/Create/ShapeGrammarStyle")]
     public static void CreateMyAsset()
     {
@@ -20,6 +21,7 @@ public class ShapeGrammarObjectStyle : ScriptableObject
 
         Selection.activeObject = asset;
     }
+#endif
 
     [SerializeField]
     Transform notExistingObj;

@@ -43,18 +43,3 @@ public class ForestGenerator : MonoBehaviour
         Gizmos.DrawCube(Vector3.zero, new Vector3(1f, 0.1f, 1f));
     }
 }
-
-[CustomEditor(typeof(ForestGenerator))]
-public class ForestGeneratorOnInspector : Editor
-{
-    public override void OnInspectorGUI()
-    {
-        base.DrawDefaultInspector();
-        if (GUILayout.Button("Generate", GUILayout.Width(100), GUILayout.Height(60)))
-        {
-            var generator = (ForestGenerator)target;
-            generator.Generate();
-        }
-        GUILayout.Label("generate");
-    }
-}

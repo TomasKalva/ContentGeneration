@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Style : ScriptableObject
 {
+#if UNITY_EDITOR
     [MenuItem("Assets/Create/Style")]
     public static void CreateMyAsset()
     {
@@ -19,6 +20,7 @@ public class Style : ScriptableObject
 
         Selection.activeObject = asset;
     }
+#endif
 
     [SerializeField]
     Transform notExistingObj;

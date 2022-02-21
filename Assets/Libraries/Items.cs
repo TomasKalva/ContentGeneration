@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Items : ScriptableObject
 {
+#if UNITY_EDITOR
     [MenuItem("Assets/Create/Items")]
     public static void CreateMyAsset()
     {
@@ -19,6 +20,7 @@ public class Items : ScriptableObject
 
         Selection.activeObject = asset;
     }
+#endif
 
     [SerializeField]
     Weapons weapons;

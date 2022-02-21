@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class InteractiveObjects : ScriptableObject
 {
+#if UNITY_EDITOR
     [MenuItem("Assets/Create/InteractiveObjects")]
     public static void CreateMyAsset()
     {
@@ -20,6 +21,7 @@ public class InteractiveObjects : ScriptableObject
 
         Selection.activeObject = asset;
     }
+#endif
 
     [SerializeField]
     InteractiveObject gravePrefab;

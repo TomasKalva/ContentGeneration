@@ -178,7 +178,7 @@ public class CurveAttribute : PropertyAttribute
     }
 }
 
-
+#if UNITY_EDITOR
 [CustomPropertyDrawer(typeof(CurveAttribute))]
 public class CurveDrawer : PropertyDrawer
 {
@@ -191,3 +191,4 @@ public class CurveDrawer : PropertyDrawer
         }
     }
 }
+#endif

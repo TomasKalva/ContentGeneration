@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Libraries : ScriptableObject
 {
+#if UNITY_EDITOR
     [MenuItem("Assets/Create/Libraries")]
     public static void CreateMyAsset()
     {
@@ -19,6 +20,7 @@ public class Libraries : ScriptableObject
 
         Selection.activeObject = asset;
     }
+#endif
 
     public Items Items;
     public Enemies Enemies;

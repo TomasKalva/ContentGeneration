@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Modules : ScriptableObject
 {
+#if UNITY_EDITOR
     [MenuItem("Assets/Create/Modules")]
     public static void CreateMyAsset()
     {
@@ -18,6 +19,7 @@ public class Modules : ScriptableObject
 
         Selection.activeObject = asset;
     }
+#endif
 
     [SerializeField]
     Module room;

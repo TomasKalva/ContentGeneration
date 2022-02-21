@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Objects : ScriptableObject
 {
+#if UNITY_EDITOR
     [MenuItem("Assets/Create/Objects")]
     public static void CreateMyAsset()
     {
@@ -18,6 +19,7 @@ public class Objects : ScriptableObject
 
         Selection.activeObject = asset;
     }
+#endif
 
     //public Transform spawnPoint;
 
