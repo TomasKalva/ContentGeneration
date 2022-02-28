@@ -52,7 +52,7 @@ namespace ShapeGrammar
         {
             //world.AddEnemy(libraries.Enemies.MayanSwordsman(), new Vector3(0, 1, 0));
             //world.AddEnemy(libraries.Enemies.DragonMan(), new Vector3(0, 1, 0));
-            UnityEngine.Random.InitState(16);
+            //UnityEngine.Random.InitState(17);
 
             worldScale = 2.8f;
 
@@ -73,17 +73,19 @@ namespace ShapeGrammar
             var goodGraveCube = levelRoot.CubeGroup().WithFloor().Cubes
                 .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor)).GetRandom();
             world.AddInteractiveObject(interactiveObjects.Grave(), GridToWorld(goodGraveCube.Position));
-
-            /*var allEnemies = libraries.Enemies.AllAgents();
+            
+            /*
+            var allEnemies = libraries.Enemies.AllAgents();
             var enemyCubes = levelRoot.CubeGroup().WithFloor().Cubes.Shuffle().Take(10);
             enemyCubes.ForEach(cube => world.AddEnemy(allEnemies.GetRandom()(), GridToWorld(cube.Position)));
-            
+            */
+
             var itemCubes = levelRoot.CubeGroup().WithFloor().Cubes.Shuffle().Take(10);
             itemCubes.ForEach(cube => world.AddItem(libraries.Items.Physical(libraries.Items.Mace()), GridToWorld(cube.Position)));
 
             var kilnCube = goodGraveCube.NeighborsHor().GetRandom();
             world.AddInteractiveObject(interactiveObjects.AscensionKiln(), GridToWorld(kilnCube.Position));
-            */
+            
         }
 
         Vector3 GridToWorld(Vector3 pos)

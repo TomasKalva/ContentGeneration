@@ -19,7 +19,10 @@ public class Door : InteractiveObject
 
     private void Awake()
     {
-        State = new DoorState();
+        State = new DoorState() 
+        { 
+            InteractionDescription = "Open/Close" 
+        };
     }
 
     public void SwitchPosition()

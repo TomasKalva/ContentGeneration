@@ -322,7 +322,7 @@ namespace ShapeGrammar
 
         public override LevelElement CreateLevel()
         {
-            int length = 6;
+            int length = 8;
 
             // Height curve
             var heightCurve = HeightCurve();

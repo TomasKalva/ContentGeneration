@@ -81,7 +81,7 @@ namespace ShapeGrammar
             // add outside part of each floor
             var withBalcony = house.ReplaceLeafsGrp(
                 le => le.AreaType == AreaType.Room,
-                le => new LevelGroupElement(le.Grid, AreaType.None, le, le.CubeGroup().CubeGroupMaxLayer(Vector3Int.down).ExtrudeHor(true, false).LevelElement(AreaType.Roof))
+                le => new LevelGroupElement(le.Grid, AreaType.None, le, le.CubeGroup().CubeGroupMaxLayer(Vector3Int.down).ExtrudeHor(true, true).LevelElement(AreaType.Roof))
             );
             return withBalcony;
         }
