@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace ShapeGrammar
 {
@@ -46,10 +47,12 @@ namespace ShapeGrammar
 
         Cube GetCube(Vector3Int coords)
         {
+            Profiler.BeginSample("GetCube");
             var chunkCoords = TryCreateChunk(coords);
             var localCoords = coords.Mod(sizes);
             var cube = chunks[chunkCoords][localCoords.x, localCoords.y, localCoords.z];
             Debug.Assert(cube != null, $"chunks[{chunkCoords}][{localCoords}] is null");
+            Profiler.EndSample();
             return cube;
         }
 

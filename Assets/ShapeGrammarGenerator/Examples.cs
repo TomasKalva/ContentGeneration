@@ -31,10 +31,10 @@ namespace ShapeGrammar
             paths = new Paths(grid);
             tr = new Transformations(this);
             houseStyleRules = new StyleRules(
-                new StyleRule(g => g.WithAreaType(AreaType.Room), g => g.SetGrammarStyle(sgStyles.RoomStyle)),
+                new StyleRule(g => g.WithAreaType(AreaType.Room), g => g.SetGrammarStyle(sgStyles.PlainRoomStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.OpenRoom), g => g.SetGrammarStyle(sgStyles.OpenRoomStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.Roof), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.Foundation), g => g.SetGrammarStyle(sgStyles.FoundationStyle)),
+                new StyleRule(g => g.WithAreaType(AreaType.Roof), g => g.SetGrammarStyle(sgStyles.PlainFlatRoofStyle)),
+                new StyleRule(g => g.WithAreaType(AreaType.Foundation), g => g.SetGrammarStyle(sgStyles.PlainRoomStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Path), g => g.SetGrammarStyle(sgStyles.StairsPathStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Garden), g => g.SetGrammarStyle(sgStyles.GardenStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.WallTop), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
@@ -87,7 +87,7 @@ namespace ShapeGrammar
             var house3 = house2.CubeGroup().Symmetrize(symmetryFace).SetGrammarStyle(sgStyles.RoomStyle);
         }
 
-        public void Island()
+        public LevelElement Island()
         {
             var island = sgShapes.IslandExtrudeIter(grid[0, 0, 0].Group(), 13, 0.3f);
 
@@ -97,6 +97,8 @@ namespace ShapeGrammar
             var total = new LevelGroupElement(grid, AreaType.None, island.LevelElement(AreaType.Garden), foundation, wallTop);
 
             total.ApplyGrammarStyleRules(houseStyleRules);
+
+            return total;
         }
 
         public void Houses()

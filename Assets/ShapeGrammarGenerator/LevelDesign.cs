@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Profiling;
+using static ShapeGrammar.WorldState;
 
 namespace ShapeGrammar
 {
@@ -105,49 +107,48 @@ namespace ShapeGrammar
     
     public class CurvesLevelDesign : LevelDesign
     {
-        delegate AddingState AddElement(AddingState state);
 
-        AddElement AddNearXZ(Func<LevelElement> elementF)
+        ChangeWorld AddNearXZ(Func<LevelElement> elementF)
         {
             return (addingState) =>
             {
                 var element = elementF();
-                var possibleMoves = element.Moves(element.MovesNearXZ(addingState.Last).Where(m => m.y == 0), addingState.Added.LevelElements);
+                var possibleMoves = element.Moves(element.MovesNearXZ(addingState.Current).Where(m => m.y == 0), addingState.Added.LevelElements);
                 var movedElement = possibleMoves.Any() ? element.MoveBy(possibleMoves.GetRandom()) : null;
                 return addingState.TryPush(movedElement);
             };
         }
 
-        AddElement AddRemoveOverlap(Func<LevelElement> elementF)
+        ChangeWorld AddRemoveOverlap(Func<LevelElement> elementF)
         {
             return (addingState) =>
             {
                 var element = elementF();
-                var possibleMoves = element.Moves(element.MovesToPartlyIntersectXZ(addingState.Last.Where(le => le.AreaType != AreaType.Path)).Where(m => m.y == 0), addingState.Added.LevelElements.Others(addingState.Last));
-                var movedElement = possibleMoves.Any() ? element.MoveBy(possibleMoves.GetRandom()).Minus(addingState.Last) : null;
+                var possibleMoves = element.Moves(element.MovesToPartlyIntersectXZ(addingState.Current.Where(le => le.AreaType != AreaType.Path)).Where(m => m.y == 0), addingState.Added.LevelElements.Others(addingState.Current));
+                var movedElement = possibleMoves.Any() ? element.MoveBy(possibleMoves.GetRandom()).Minus(addingState.Current) : null;
                 return addingState.TryPush(movedElement);
             };
         }
         
-        AddElement PathTo(Func<LevelElement> elementF)
+        ChangeWorld PathTo(Func<LevelElement> elementF)
         {
             return (addingState) =>
             {
                 var element = elementF();
-                var possibleMoves = element.Moves(element.MovesInDistanceXZ(addingState.Last, 5).Where(m => m.y == 0), addingState.Added.LevelElements);
+                var possibleMoves = element.Moves(element.MovesInDistanceXZ(addingState.Current, 5).Where(m => m.y == 0), addingState.Added.LevelElements);
                 if (!possibleMoves.Any())
                     return addingState;
 
                 var area = element.MoveBy(possibleMoves.GetRandom());
-                var start = addingState.Last.WhereGeom(le => le.AreaType != AreaType.Path);
+                var start = addingState.Current.WhereGeom(le => le.AreaType != AreaType.Path);
                 var pathCG = ldk.paths.PathH(start, area, 2, addingState.Added).CubeGroup();
                 var path = pathCG.ExtrudeVer(Vector3Int.up, 2).Merge(pathCG).LevelElement(AreaType.Platform);
-                var newElement = new LevelGroupElement(addingState.Last.Grid, AreaType.None, path, area);
+                var newElement = new LevelGroupElement(addingState.Current.Grid, AreaType.None, path, area);
                 return addingState.TryPush(newElement);
             };
         }
 
-        AddElement SubdivideRoom()
+        ChangeWorld SubdivideRoom()
         {
             return (addingState) =>
             {
@@ -162,7 +163,7 @@ namespace ShapeGrammar
             };
         }
 
-        AddElement SplitToFloors()
+        ChangeWorld SplitToFloors()
         {
             return (addingState) =>
             {
@@ -178,7 +179,7 @@ namespace ShapeGrammar
         }
 
         
-        AddElement ConnectTwoUnconnected(Graph<LevelGeometryElement> connectednessGraph, LevelGroupElement levelGeometry)
+        ChangeWorld ConnectTwoUnconnected(Graph<LevelGeometryElement> connectednessGraph, LevelGroupElement levelGeometry)
         {
             // find two areas with floor next to each other
             // calculation is done eagerly and in advance, so it doesn't react on changes of geometry
@@ -210,7 +211,7 @@ namespace ShapeGrammar
         {
         }
 
-        AddElement LinearCurveDesign(LevelElement start, int length)
+        ChangeWorld LinearCurveDesign(LevelElement start, int length)
         {
             return addingState =>
             {
@@ -283,7 +284,7 @@ namespace ShapeGrammar
                     return new LevelGroupElement(ldk.grid, AreaType.None, island.LevelElement(AreaType.Garden), foundation, wallTop);
                 };
 
-                var adders = new List<AddElement>()
+                var adders = new List<ChangeWorld>()
                 {
                      AddNearXZ(smallBox),
                      AddNearXZ(largeBox),
@@ -299,14 +300,14 @@ namespace ShapeGrammar
             };
         }
 
-        AddElement SplittingPath(LevelElement start, int length)
+        ChangeWorld SplittingPath(LevelElement start, int length)
         {
             return addingState =>
             {
                 var pathMaker = LinearCurveDesign(start, length / 3);
                 var first = pathMaker(addingState);
                 var branches = pathMaker(first);
-                branches = pathMaker(branches.SetElement(first.Last));
+                branches = pathMaker(branches.SetElement(first.Current));
                 return branches;
             };
         }
@@ -322,29 +323,28 @@ namespace ShapeGrammar
 
         public override LevelElement CreateLevel()
         {
-            int length = 8;
+            int length = 28;
 
             // Height curve
             var heightCurve = HeightCurve();
             var heightDistr = new UniformDistr(0, 6);
 
             var start = ldk.qc.GetBox(new Box3Int(Vector3Int.zero, Vector3Int.one)).ExtrudeVer(Vector3Int.up, 10).LevelElement();
-
-            AddingState state = new AddingState(start, ldk.grid, le => le.ApplyGrammarStyleRules(ldk.houseStyleRules)/*.MoveBy((heightDistr.Sample() - le.CubeGroup().CubeGroupMaxLayer(Vector3Int.down).Cubes.FirstOrDefault().Position.y)* Vector3Int.up)*/);
+            WorldState state = new WorldState(start, ldk.grid, le => le.ApplyGrammarStyleRules(ldk.houseStyleRules)/*.MoveBy((heightDistr.Sample() - le.CubeGroup().CubeGroupMaxLayer(Vector3Int.down).Cubes.FirstOrDefault().Position.y)* Vector3Int.up)*/);
 
             var addedLine = LinearCurveDesign(start, length)(state);
 
             
-            var changers = Enumerable.Repeat(SplitToFloors(), 100)/*.Concat(
+            var changers = Enumerable.Repeat(SplitToFloors(), 100).Concat(
                     Enumerable.Repeat(SubdivideRoom(), 100)
-                )*/.ToList();
+                ).ToList();
             
             var subdividedRooms = addedLine.ChangeAll(changers);
             
             subdividedRooms.Added.ApplyGrammarStyleRules(ldk.houseStyleRules);
 
             var connectednessGraph = new Graph<LevelGeometryElement>(subdividedRooms.Added.Leafs().ToList(), new List<Edge<LevelGeometryElement>>());
-
+            
             var connectedLine = subdividedRooms.AddUntilCan(ConnectTwoUnconnected(connectednessGraph, subdividedRooms.Added), 1000);
             var levelElements = connectedLine.Added;
             
@@ -353,87 +353,6 @@ namespace ShapeGrammar
             //levelElements.ApplyGrammarStyleRules(ldk.houseStyleRules);
 
             return levelElements;
-        }
-
-        class AddingState
-        {
-            public LevelGroupElement Added { get; }
-            public LevelElement Last { get; }
-            Grid Grid { get; }
-            public delegate LevelElement TransformPushed(LevelElement levelElement);
-            public TransformPushed AfterPushed { get; }
-
-            public AddingState(LevelElement last, Grid grid, TransformPushed afterPushed)
-            {
-                Added = new LevelGroupElement(grid, AreaType.None);
-                Last = last;
-                AfterPushed = afterPushed;
-            }
-
-            public AddingState(LevelGroupElement added, LevelElement last, Grid grid, TransformPushed afterPushed)
-            {
-                Added = added;
-                Last = last;
-                AfterPushed = afterPushed;
-            }
-
-            public AddingState ChangeAll(IEnumerable<AddElement> adders)
-            {
-                return adders.Aggregate(this,
-                (addingState, adder) =>
-                {
-                    var newState = adder(addingState);
-
-                    return newState.Last == null ? addingState : newState;
-                });
-            }
-
-            public AddingState AddUntilCan(AddElement adder, int maxIterations)
-            {
-                var newAddingState = this;
-                int counter = 0;
-                while (true)
-                {
-                    if (counter++ > maxIterations)
-                        return newAddingState;
-
-                    var newState = adder(newAddingState);
-
-                    if (newState == newAddingState)
-                        return newAddingState;
-                    else
-                        newAddingState = newState;
-                }
-            }
-
-            public AddingState TryPush(LevelElement le)
-            {
-                if (le == null)
-                    return this;
-
-                var newLe = AfterPushed(le);
-                return new AddingState(Added.Merge(newLe), newLe, Grid, AfterPushed);
-            }
-
-            public AddingState TryPushIntersecting(LevelElement le)
-            {
-                if (le == null)
-                    return this;
-
-                var newLe = AfterPushed(le);
-                var added = Added.MinusInPlace(newLe);
-                return new AddingState(added.Merge(newLe), newLe, Grid, AfterPushed);
-            }
-
-            public AddingState SetElement(LevelElement le)
-            {
-                return new AddingState(Added, le, Grid, AfterPushed);
-            }
-
-            public AddingState ChangeAdded(LevelGroupElement newAdded)
-            {
-                return new AddingState(newAdded, Last, Grid, AfterPushed);
-            }
         }
     }
 }

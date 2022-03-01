@@ -60,7 +60,7 @@ namespace ShapeGrammar
             stopwatch.Start();
 
             var examples = new Examples(DefaultHouseStyle, GardenStyle);
-            var levelRoot = examples.CurveDesign();
+            var levelRoot = examples.Island();
             examples.grid.Generate(worldScale, parent);
 
             stopwatch.Stop();
@@ -86,6 +86,27 @@ namespace ShapeGrammar
             var kilnCube = goodGraveCube.NeighborsHor().GetRandom();
             world.AddInteractiveObject(interactiveObjects.AscensionKiln(), GridToWorld(kilnCube.Position));
             
+        }
+
+        bool generated = false;
+
+        private void Update()
+        {
+            if (generated) return;
+            generated = true;
+
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+
+            Debug.Log("Generating world", this);
+
+            UnityEngine.Profiling.Profiler.BeginSample("Generating world");
+            var examples = new Examples(DefaultHouseStyle, GardenStyle);
+            var levelRoot = examples.CurveDesign();
+
+
+            stopwatch.Stop();
+            Debug.Log(stopwatch.ElapsedMilliseconds);
         }
 
         Vector3 GridToWorld(Vector3 pos)

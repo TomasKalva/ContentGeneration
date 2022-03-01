@@ -32,6 +32,13 @@ namespace ShapeGrammar
             return roomArea;
         }
 
+        public CubeGroup PlainRoomStyle(CubeGroup roomArea)
+        {
+            roomArea.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Wall);
+            roomArea.CubeGroupMaxLayer(Vector3Int.down).BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Floor);
+            return roomArea;
+        }
+
         public CubeGroup OpenRoomStyle(CubeGroup roomArea)
         {
             roomArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Floor);
@@ -55,6 +62,12 @@ namespace ShapeGrammar
             var floorParth = roofArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Floor).Cubes();
             floorParth.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Railing);
             floorParth.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.RailingPillar);
+            return roofArea;
+        }
+
+        public CubeGroup PlainFlatRoofStyle(CubeGroup roofArea)
+        {
+            var floorParth = roofArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Floor).Cubes();
             return roofArea;
         }
 
