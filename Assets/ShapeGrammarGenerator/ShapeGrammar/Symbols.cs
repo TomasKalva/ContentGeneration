@@ -16,6 +16,7 @@ namespace ShapeGrammar
         public Symbol FloorGiver(Node giveTo) => new FloorGiver("FloorGiver", giveTo);
         public Symbol Room { get; } = new Symbol("Room");
         public Symbol Terrace { get; } = new Symbol("Terrace");
+        public Symbol Roof { get; } = new Symbol("Roof");
         public Symbol Foundation { get; } = new Symbol("Foundation");
     }
 

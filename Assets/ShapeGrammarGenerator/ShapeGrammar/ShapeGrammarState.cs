@@ -93,27 +93,58 @@ namespace ShapeGrammar
                 state =>
                 {
                     var room = state.WithActiveSymbols(sym.Room);
+                    if (room.LevelElement.CubeGroup().LengthY() <= 1)
+                        return null;
+
                     var terraces =
                     // for give parametrization
                         ExtensionMethods.HorizontalDirections().Shuffle()
-                        .Select(dir => room.LevelElement.CubeGroup()
-                    
-                    // create a new object
+                        .Select(dir =>
+
+                        // access the object
+                        room.LevelElement.CubeGroup()
+
+                        // create a new object
                         .ExtrudeDir(dir, 2).LevelElement(AreaType.Colonnade))
-                    
-                    // fail if no such object exists
+
+                        // fail if no such object exists
                         .Where(le => le.CubeGroup().NotTaken());
                     if (!terraces.Any())
                         return null;
 
                     // and modify the dag
-                    var terrace = terraces.FirstOrDefault();
+                    var terraceSpace = terraces.FirstOrDefault();
+                    var lge = terraceSpace.Split(Vector3Int.down, AreaType.None, 1);
+                    var terrace = lge.LevelElements[1].SetAreaType(AreaType.Colonnade).GrammarNode(sym.Terrace);
+                    var roof = lge.LevelElements[0].SetAreaType(AreaType.Roof).GrammarNode(sym.Roof);
                     return new[]
                     {
-                        state.Add(room).SetTo(terrace.GrammarNode(sym.Terrace)),
+                        state.Add(room).SetTo(roof),
+                        state.Add(terrace).SetTo(terrace),
                     };
                 });
         }
+
+        /*
+        public Production ExtrudeRoof()
+        {
+            return new Production(
+                state => state.WithActiveSymbols(sym.Terrace) != null,
+                state =>
+                {
+                    var terrace = state.WithActiveSymbols(sym.Terrace);
+                    if (terrace.Derived.Where(derNode => derNode.HasActiveSymbols(sym.Roof)).Any())
+                        return null;
+
+                    var roof = terrace.LevelElement.CubeGroup().ExtrudeDir(Vector3Int.up).LevelElement(AreaType.Roof);
+                    return new[]
+                    {
+                        state.Add(terrace).SetTo(roof.GrammarNode(sym.Roof)),
+                    };
+                }
+                );
+        }*/
+        
     }
 
     public abstract class Operation 
