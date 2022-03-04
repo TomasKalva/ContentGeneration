@@ -35,7 +35,7 @@ namespace ShapeGrammar
                 new StyleRule(g => g.WithAreaType(AreaType.Room), g => g.SetGrammarStyle(sgStyles.PlainRoomStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.OpenRoom), g => g.SetGrammarStyle(sgStyles.OpenRoomStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Roof), g => g.SetGrammarStyle(sgStyles.PlainFlatRoofStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.Foundation), g => g.SetGrammarStyle(sgStyles.PlainRoomStyle)),
+                new StyleRule(g => g.WithAreaType(AreaType.Foundation), g => g.SetGrammarStyle(sgStyles.FoundationStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Path), g => g.SetGrammarStyle(sgStyles.StairsPathStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Garden), g => g.SetGrammarStyle(sgStyles.GardenStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.WallTop), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
@@ -264,6 +264,12 @@ namespace ShapeGrammar
             return CurveDesign.CreateLevel();
         }
 
+        public LevelElement ShapeGrammarDesign()
+        {
+            var ShapeGrammarLevelDesign = new ShapeGrammarLevelDesign(this);
+            return ShapeGrammarLevelDesign.CreateLevel();
+        }
+
         public void SplitRoom()
         {
             var houseBox = qc.GetFlatBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 8)), 0);
@@ -299,12 +305,13 @@ namespace ShapeGrammar
             houseFloors.ApplyGrammarStyleRules(houseStyleRules);
         }
 
-        public void JustHouse()
+        public LevelElement JustHouse()
         {
             var floorBox = qc.GetFlatBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)), 0);
             var house = sgShapes.TurnIntoHouse(floorBox.CubeGroup().ExtrudeVer(Vector3Int.up, 3));
 
             house.ApplyGrammarStyleRules(houseStyleRules);
+            return house;
         }
 
         public void CompositeHouse()

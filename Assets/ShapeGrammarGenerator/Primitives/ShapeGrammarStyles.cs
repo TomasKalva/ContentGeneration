@@ -74,7 +74,7 @@ namespace ShapeGrammar
         public CubeGroup FoundationStyle(CubeGroup foundationArea)
         {
             foundationArea.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Wall);
-            foundationArea.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.Pillar);
+            //foundationArea.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.Pillar);
             return foundationArea;
         }
 

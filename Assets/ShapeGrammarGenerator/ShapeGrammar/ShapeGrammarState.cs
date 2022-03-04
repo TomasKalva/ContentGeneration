@@ -26,37 +26,11 @@ namespace ShapeGrammar
         {
             Symbols = symbols;
             LevelElement = levelElement;
+            Derived = new List<Node>();
         }
     }
 
-    public abstract class Symbol { }
-
-    public class BrokenFloor : Symbol
-    {
-    }
-
-    public class ConnectTo : Symbol
-    {
-        public Node To { get; }
-    }
-
-    public class NotTaken : Symbol
-    {
-    }
-
-    public class ExtrudeUp : Symbol
-    {
-    }
-
-    public class CreateFrom : Symbol
-    {
-        public List<Node> From { get; }
-    }
-
-    public class FloorGiver : Symbol
-    {
-        public Node GiveTo { get; } 
-    }
+    
 
     public class Production
     {
@@ -76,40 +50,47 @@ namespace ShapeGrammar
     public class Productions
     {
         public LevelDevelopmentKit ldk { get; }
+        public Symbols sym { get; } = new Symbols();
+
+        public Productions(LevelDevelopmentKit ldk)
+        {
+            this.ldk = ldk;
+        }
 
         public Production CreateNewHouse()
         {
             return new Production(
-                (state) => true,
-                (state) =>
+                state => true,
+                state =>
                 {
                     var root = state.Root;
-                    var room = ldk.sgShapes.Room(new Box2Int(0, 0, 5, 5).InflateY(5, 5));
+                    var room = ldk.sgShapes.Room(new Box2Int(0, 0, 5, 5).InflateY(5, 10));
                     var movedRoom = ldk.pl.MoveToNotOverlap(state.WorldState.Added, room);
                     var foundation = ldk.sgShapes.Foundation(movedRoom);
-                    return new[] 
-                    { 
-                        state.Add(root).SetTo(room.GrammarNode()),
-                        state.Add(root).SetTo(foundation.GrammarNode())
+                    return new[]
+                    {
+                        state.Add(root).SetTo(movedRoom.GrammarNode(sym.Room)),
+                        state.Add(root).SetTo(foundation.GrammarNode(sym.Foundation))
                     };
                 });
         }
+
 
         /*
         public Production ExtrudeTerrace()
         {
             return new Production(
-                (state) => true,
-                (state) =>
+                state => true,
+                state =>
                 {
+
                     var house = state.
                     var room = ldk.sgShapes.Room(new Box2Int(0, 0, 5, 5).InflateY(5, 5));
                     var movedRoom = ldk.pl.MoveToNotOverlap(state.WorldState.Added, room);
                     var foundation = ldk.sgShapes.Foundation(movedRoom);
                     return new[] { room.GrammarNode(), foundation.GrammarNode() };
                 });
-        }
-        */
+        }*/
     }
 
     public abstract class Operation 
@@ -145,7 +126,7 @@ namespace ShapeGrammar
         public override void ChangeState(ShapeGrammarState grammarState)
         {
             AddIntoDag();
-            var lge = From.Select(node => node.LevelElement).ToLevelGroupElement(grammarState.WorldState.Grid);
+            var lge = To.Select(node => node.LevelElement).ToLevelGroupElement(grammarState.WorldState.Grid);
             grammarState.WorldState = grammarState.WorldState.TryPush(lge);
         }
     }
@@ -156,7 +137,7 @@ namespace ShapeGrammar
         {
             AddIntoDag();
             From.ForEach(node => node.LevelElement = LevelElement.Empty(grammarState.WorldState.Grid));
-            var lge = From.Select(node => node.LevelElement).ToLevelGroupElement(grammarState.WorldState.Grid);
+            var lge = To.Select(node => node.LevelElement).ToLevelGroupElement(grammarState.WorldState.Grid);
             grammarState.WorldState = grammarState.WorldState.TryPush(lge);
         }
     }
@@ -181,12 +162,12 @@ namespace ShapeGrammar
 
         List<Operation> Applied { get; }
 
-        public ShapeGrammarState()
+        public ShapeGrammarState(LevelDevelopmentKit ldk)
         {
             var grid = new Grid(new UnityEngine.Vector3Int(20, 20, 20));
-            var empty = new LevelGeometryElement(grid, AreaType.None, new CubeGroup(grid, new List<Cube>()));
+            var empty = LevelElement.Empty(grid); new LevelGeometryElement(grid, AreaType.None, new CubeGroup(grid, new List<Cube>()));
             Root = new Node(empty, new HashSet<Symbol>());
-            var worldState = new WorldState(empty, grid, le => le);
+            WorldState = new WorldState(empty, grid, le => le.ApplyGrammarStyleRules(ldk.houseStyleRules)).TryPush(empty);
             Applied = new List<Operation>();
         }
 
@@ -222,15 +203,15 @@ namespace ShapeGrammar
 
         public ShapeGrammarState ShapeGrammarState { get; }
 
-        public ShapeGrammar(List<Production> productions)
+        public ShapeGrammar(List<Production> productions, LevelDevelopmentKit ldk)
         {
             Productions = productions;
-            ShapeGrammarState = new ShapeGrammarState();
+            ShapeGrammarState = new ShapeGrammarState(ldk);
         }
 
         public void DoProductions(int count)
         {
-            for(int i = 0; i<count; i++)
+            for(int i = 0; i < count; i++)
             {
                 var applicable = Productions.Where(production => production.CanBeApplied(ShapeGrammarState));
                 ShapeGrammarState.ApplyProduction(applicable.GetRandom());

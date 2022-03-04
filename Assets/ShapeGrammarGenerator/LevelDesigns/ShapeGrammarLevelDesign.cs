@@ -16,13 +16,13 @@ namespace ShapeGrammar
 
         public override LevelElement CreateLevel()
         {
-            var pr = new Productions();
+            var pr = new Productions(ldk);
             var productionList = new List<Production>()
             {
                 pr.CreateNewHouse()
             };
-            var shapeGrammar = new ShapeGrammar(productionList);
-            shapeGrammar.DoProductions(0);
+            var shapeGrammar = new ShapeGrammar(productionList, ldk);
+            shapeGrammar.DoProductions(5);
             var level = shapeGrammar.ShapeGrammarState.WorldState.Added;
 
 

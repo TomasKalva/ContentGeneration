@@ -94,7 +94,12 @@ namespace ShapeGrammar
             return new LevelGroupElement(Grid, AreaType.House, foundation, room, roof);
         }
 
-        public LevelElement Foundation(LevelElement toBeFounded) => qc.MoveDownUntilGround(toBeFounded.CubeGroup().MoveBy(Vector3Int.down)).LevelElement(AreaType.Foundation);
+        public LevelElement Foundation(LevelElement toBeFounded) => 
+            qc.MoveDownUntilGround(
+                toBeFounded.CubeGroup()
+                    .CubeGroupLayer(Vector3Int.down)
+                    .MoveBy(Vector3Int.down))
+            .LevelElement(AreaType.Foundation);
 
         public CubeGroup Platform(Box2Int areaXZ, int posY) => qc.GetPlatform(areaXZ, posY);
 

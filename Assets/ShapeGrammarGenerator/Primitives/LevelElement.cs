@@ -20,7 +20,7 @@ namespace ShapeGrammar
             AreaType = areaType;
         }
 
-        public static LevelElement Empty(Grid grid) => new LevelGroupElement(grid, AreaType.None);
+        public static LevelElement Empty(Grid grid) => new LevelGeometryElement(grid, AreaType.None, new CubeGroup(grid, new List<Cube>()));
 
         #region Collection methods
         public IEnumerable<LevelElement> WithAreaType(AreaType areaType) => Where(g => g.AreaType == areaType).LevelElements.ToList();
@@ -235,7 +235,7 @@ namespace ShapeGrammar
         
         public override LevelGroupElement Merge(params LevelElement[] les)
         {
-            return new LevelGroupElement(Grid, AreaType, les.Concat(LevelElements).ToList());
+            return new LevelGroupElement(Grid, AreaType, LevelElements.Concat(les).ToList());
         }
 
         public override LevelElement Symmetrize(FaceHor faceHor)
