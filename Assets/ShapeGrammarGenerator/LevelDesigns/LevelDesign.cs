@@ -97,7 +97,7 @@ namespace ShapeGrammar
 
                     // wall
                     var wallTop = island.ExtrudeHor(true, false).Minus(island).MoveBy(Vector3Int.up).LevelElement(AreaType.WallTop);
-                    var foundation = ldk.sgShapes.Foundation(wallTop).LevelElement(AreaType.Foundation);
+                    var foundation = ldk.sgShapes.Foundation(wallTop);
                     return new LevelGroupElement(ldk.grid, AreaType.None, island.LevelElement(AreaType.Garden), foundation, wallTop);
                 };
 
@@ -126,7 +126,7 @@ namespace ShapeGrammar
                 var pathMaker = LinearCurveDesign(start, length / 3);
                 var first = pathMaker(addingState);
                 var branches = pathMaker(first);
-                branches = pathMaker(branches.SetElement(first.Current));
+                branches = pathMaker(branches.SetElement(first.Last));
                 return branches;
             };
         }

@@ -39,6 +39,12 @@ namespace ShapeGrammar
             return MoveLevelGroup(levelGroupElement, (moved, le) => le.NotIntersecting(moved), moves => moves.FirstOrDefault());
         }
 
+        public LevelElement MoveToNotOverlap(LevelElement fixedElement, LevelElement moved)
+        {
+            var bothMoved = MoveLevelGroup(fixedElement.Merge(moved), (moved, le) => le.NotIntersecting(moved), moves => moves.FirstOrDefault());
+            return bothMoved.LevelElements[1];
+        }
+
         public LevelGroupElement MoveToIntersect(LevelGroupElement levelGroupElement)
         {
             return MoveLevelGroup(levelGroupElement, 

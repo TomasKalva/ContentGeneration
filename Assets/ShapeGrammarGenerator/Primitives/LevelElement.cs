@@ -20,6 +20,8 @@ namespace ShapeGrammar
             AreaType = areaType;
         }
 
+        public static LevelElement Empty(Grid grid) => new LevelGroupElement(grid, AreaType.None);
+
         #region Collection methods
         public IEnumerable<LevelElement> WithAreaType(AreaType areaType) => Where(g => g.AreaType == areaType).LevelElements.ToList();
 

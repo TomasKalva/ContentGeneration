@@ -34,7 +34,7 @@ namespace ShapeGrammar
             pathCubes = Thicken(pathCubes, thickness, area1.Merge(area2).CubeGroup());
 
             var path = pathCubes.LevelElement(AreaType.Path);
-            var foundation = sgShapes.Foundation(path).LevelElement(AreaType.Foundation);
+            var foundation = sgShapes.Foundation(path);
 
             return path.Merge(foundation);
         }

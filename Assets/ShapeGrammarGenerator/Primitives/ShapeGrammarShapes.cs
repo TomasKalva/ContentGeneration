@@ -22,15 +22,15 @@ namespace ShapeGrammar
             pl = new Placement(grid);
         }
 
-        public CubeGroup Room(Box3Int roomArea) => qc.GetBox(roomArea);
+        public LevelElement Room(Box3Int roomArea) => qc.GetBox(roomArea).LevelElement(AreaType.Room);
 
         public CubeGroup FlatRoof(Box2Int areaXZ, int posY) => qc.GetPlatform(areaXZ, posY);
 
         public LevelGroupElement SimpleHouseWithFoundation(Box2Int areaXZ, int posY)
         {
-            var room = Room(areaXZ.InflateY(posY, posY + 2)).LevelElement(AreaType.Room);
+            var room = Room(areaXZ.InflateY(posY, posY + 2));
             var roof = FlatRoof(areaXZ, posY + 2).LevelElement(AreaType.Roof);
-            var foundation = Foundation(room).LevelElement(AreaType.Foundation);
+            var foundation = Foundation(room);
             var house = new LevelGroupElement(Grid, AreaType.House, foundation, room, roof);
             return house;
         }
@@ -41,7 +41,7 @@ namespace ShapeGrammar
                 .LevelElement(AreaType.Room);
                 //.SplitRel(Vector3Int.up, AreaType.Room, 0.3f, 0.7f);
             var roof = room.CubeGroup().ExtrudeVer(Vector3Int.up, 1, false).LevelElement(AreaType.Roof);
-            var foundation = Foundation(room).LevelElement(AreaType.Foundation);
+            var foundation = Foundation(room);
             var house = new LevelGroupElement(Grid, AreaType.House, foundation, room, roof);
             return house;
         }
@@ -90,11 +90,11 @@ namespace ShapeGrammar
         {
             var roof = house.CubeGroupMaxLayer(Vector3Int.up).LevelElement(AreaType.Roof);
             var room = house.Minus(roof.CubeGroup()).LevelElement(AreaType.Room);
-            var foundation = Foundation(room).LevelElement(AreaType.Foundation);
+            var foundation = Foundation(room);
             return new LevelGroupElement(Grid, AreaType.House, foundation, room, roof);
         }
 
-        public CubeGroup Foundation(LevelElement toBeFounded) => qc.MoveDownUntilGround(toBeFounded.CubeGroup().MoveBy(Vector3Int.down));
+        public LevelElement Foundation(LevelElement toBeFounded) => qc.MoveDownUntilGround(toBeFounded.CubeGroup().MoveBy(Vector3Int.down)).LevelElement(AreaType.Foundation);
 
         public CubeGroup Platform(Box2Int areaXZ, int posY) => qc.GetPlatform(areaXZ, posY);
 
@@ -138,7 +138,7 @@ namespace ShapeGrammar
         {
             var insideCg = inside.CubeGroup();
             var wallTop = insideCg.ExtrudeHor(true, false).Minus(insideCg).MoveBy(height * Vector3Int.up).LevelElement(AreaType.WallTop);
-            var wall = Foundation(wallTop).LevelElement(AreaType.Wall);
+            var wall = Foundation(wallTop);
             return new LevelGroupElement(inside.Grid, AreaType.None, wall, wallTop);
         }
     }

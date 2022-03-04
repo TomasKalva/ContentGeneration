@@ -95,7 +95,7 @@ namespace ShapeGrammar
 
             // wall
             var wallTop = island.ExtrudeHor(true, false).Minus(island).MoveBy(Vector3Int.up).LevelElement(AreaType.WallTop);
-            var foundation = sgShapes.Foundation(wallTop).LevelElement(AreaType.Foundation);
+            var foundation = sgShapes.Foundation(wallTop);
             var total = new LevelGroupElement(grid, AreaType.None, island.LevelElement(AreaType.Garden), foundation, wallTop);
 
             total.ApplyGrammarStyleRules(houseStyleRules);
@@ -244,7 +244,7 @@ namespace ShapeGrammar
         public void TestingPaths()
         {
             // testing paths
-            var box = sgShapes.Room(new Box3Int(new Vector3Int(0, 0, 0), new Vector3Int(10, 10, 10)));
+            var box = qc.GetBox(new Box3Int(new Vector3Int(0, 0, 0), new Vector3Int(10, 10, 10)));
             var start = box.CubeGroupLayer(Vector3Int.left);
             var end = box.CubeGroupLayer(Vector3Int.right);
             Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.StairsNeighbors(), box);

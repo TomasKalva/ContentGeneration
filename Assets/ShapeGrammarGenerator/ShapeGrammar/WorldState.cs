@@ -11,22 +11,22 @@ namespace ShapeGrammar
         public delegate WorldState ChangeWorld(WorldState state);
 
         public LevelGroupElement Added { get; }
-        public LevelElement Current { get; }
-        Grid Grid { get; }
+        public LevelElement Last { get; }
+        public Grid Grid { get; }
         public delegate LevelElement TransformPushed(LevelElement levelElement);
         public TransformPushed AfterPushed { get; }
 
         public WorldState(LevelElement last, Grid grid, TransformPushed afterPushed)
         {
             Added = new LevelGroupElement(grid, AreaType.None);
-            Current = last;
+            Last = last;
             AfterPushed = afterPushed;
         }
 
         public WorldState(LevelGroupElement added, LevelElement last, Grid grid, TransformPushed afterPushed)
         {
             Added = added;
-            Current = last;
+            Last = last;
             AfterPushed = afterPushed;
         }
 
@@ -37,7 +37,7 @@ namespace ShapeGrammar
             {
                 var newState = adder(addingState);
 
-                return newState.Current == null ? addingState : newState;
+                return newState.Last == null ? addingState : newState;
             });
         }
 
@@ -85,7 +85,7 @@ namespace ShapeGrammar
 
         public WorldState ChangeAdded(LevelGroupElement newAdded)
         {
-            return new WorldState(newAdded, Current, Grid, AfterPushed);
+            return new WorldState(newAdded, Last, Grid, AfterPushed);
         }
     }
 }

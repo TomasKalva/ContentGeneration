@@ -68,6 +68,8 @@ public struct Box2Int : IEnumerable<Vector2Int>
         this.rightTop = rightTop;
     }
 
+    public Box2Int(int left, int bottom, int width, int height) : this (new Vector2Int(left, bottom), new Vector2Int(left + width, bottom + height)) { }
+
     public Box2Int Padding(Vector2Int border)
     {
         return new Box2Int(leftBottom + border, rightTop - border);
