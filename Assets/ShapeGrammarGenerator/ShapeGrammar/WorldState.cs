@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ShapeGrammar
 {
-    class WorldState
+    public class WorldState
     {
         public delegate WorldState ChangeWorld(WorldState state);
 

@@ -19,6 +19,7 @@ namespace ShapeGrammar
         public Paths paths { get; }
         public Transformations tr { get; }
         public StyleRules houseStyleRules { get; }
+        public WorldChanging wc { get; }
 
         public LevelDevelopmentKit(ShapeGrammarObjectStyle defaultHouseStyle, ShapeGrammarObjectStyle gardenStyle)
         {
@@ -44,6 +45,7 @@ namespace ShapeGrammar
                 new StyleRule(g => g.WithAreaType(AreaType.Platform), g => g.SetGrammarStyle(sgStyles.PlatformStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Debug), g => g.SetGrammarStyle(sgStyles.RoomStyle))
             );
+            wc = new WorldChanging(this);
         }
     }
 

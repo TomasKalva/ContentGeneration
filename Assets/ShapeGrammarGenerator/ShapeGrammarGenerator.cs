@@ -60,7 +60,7 @@ namespace ShapeGrammar
             stopwatch.Start();
 
             var examples = new Examples(DefaultHouseStyle, GardenStyle);
-            var levelRoot = examples.Island();
+            var levelRoot = examples.CurveDesign();
             examples.grid.Generate(worldScale, parent);
 
             stopwatch.Stop();
@@ -74,11 +74,11 @@ namespace ShapeGrammar
                 .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor)).GetRandom();
             world.AddInteractiveObject(interactiveObjects.Grave(), GridToWorld(goodGraveCube.Position));
             
-            /*
+            
             var allEnemies = libraries.Enemies.AllAgents();
             var enemyCubes = levelRoot.CubeGroup().WithFloor().Cubes.Shuffle().Take(10);
             enemyCubes.ForEach(cube => world.AddEnemy(allEnemies.GetRandom()(), GridToWorld(cube.Position)));
-            */
+            
 
             var itemCubes = levelRoot.CubeGroup().WithFloor().Cubes.Shuffle().Take(10);
             itemCubes.ForEach(cube => world.AddItem(libraries.Items.Physical(libraries.Items.Mace()), GridToWorld(cube.Position)));
@@ -87,6 +87,8 @@ namespace ShapeGrammar
             world.AddInteractiveObject(interactiveObjects.AscensionKiln(), GridToWorld(kilnCube.Position));
             
         }
+        /*
+         For profiling
 
         bool generated = false;
 
@@ -108,6 +110,7 @@ namespace ShapeGrammar
             stopwatch.Stop();
             Debug.Log(stopwatch.ElapsedMilliseconds);
         }
+        */
 
         Vector3 GridToWorld(Vector3 pos)
         {
