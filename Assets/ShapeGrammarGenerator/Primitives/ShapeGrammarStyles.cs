@@ -32,6 +32,14 @@ namespace ShapeGrammar
             return roomArea;
         }
 
+        public CubeGroup ColonnadeStyle(CubeGroup colonadeArea)
+        {
+            var floorPart = colonadeArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Floor).Cubes();
+            floorPart.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Railing);
+            colonadeArea.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.Pillar);
+            return colonadeArea;
+        }
+
         public CubeGroup PlainRoomStyle(CubeGroup roomArea)
         {
             roomArea.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Wall);

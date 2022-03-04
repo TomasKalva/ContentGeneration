@@ -48,6 +48,8 @@ namespace ShapeGrammar
             Cubes = cubes.Distinct().ToList();
         }
 
+        public bool NotTaken() => Cubes.All(cube => !cube.Changed);
+
         public CubeGroup CubeGroupLayer(Vector3Int dir)
         {
             return new CubeGroup(Grid, Cubes.Where(cube => !Cubes.Contains(Grid[cube.Position + dir])).ToList());

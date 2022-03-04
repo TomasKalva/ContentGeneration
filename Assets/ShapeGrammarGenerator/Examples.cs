@@ -43,7 +43,8 @@ namespace ShapeGrammar
                 new StyleRule(g => g.WithAreaType(AreaType.Empty), g => g.SetGrammarStyle(sgStyles.EmptyStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Inside), g => g.SetGrammarStyle(sgStyles.RoomStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Platform), g => g.SetGrammarStyle(sgStyles.PlatformStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.Debug), g => g.SetGrammarStyle(sgStyles.RoomStyle))
+                new StyleRule(g => g.WithAreaType(AreaType.Debug), g => g.SetGrammarStyle(sgStyles.RoomStyle)),
+                new StyleRule(g => g.WithAreaType(AreaType.Colonnade), g => g.SetGrammarStyle(sgStyles.ColonnadeStyle))
             );
             wc = new WorldChanging(this);
         }

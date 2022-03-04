@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace ShapeGrammar
 {
@@ -28,9 +29,19 @@ namespace ShapeGrammar
             LevelElement = levelElement;
             Derived = new List<Node>();
         }
-    }
 
-    
+        public IEnumerable<Node> AllNodes()
+        {
+            return Derived.Any() ?
+                Derived.SelectMany(node => node.AllNodes()).Prepend(this) :
+                new[] { this };
+        }
+
+        public bool HasActiveSymbols(params Symbol[] symbols)
+        {
+            return symbols.All(symbol => Symbols.Contains(symbol));
+        }
+    }
 
     public class Production
     {
@@ -75,22 +86,34 @@ namespace ShapeGrammar
                 });
         }
 
-
-        /*
         public Production ExtrudeTerrace()
         {
             return new Production(
-                state => true,
+                state => state.WithActiveSymbols(sym.Room) != null,
                 state =>
                 {
+                    var room = state.WithActiveSymbols(sym.Room);
+                    var terraces =
+                    // for give parametrization
+                        ExtensionMethods.HorizontalDirections().Shuffle()
+                        .Select(dir => room.LevelElement.CubeGroup()
+                    
+                    // create a new object
+                        .ExtrudeDir(dir, 2).LevelElement(AreaType.Colonnade))
+                    
+                    // fail if no such object exists
+                        .Where(le => le.CubeGroup().NotTaken());
+                    if (!terraces.Any())
+                        return null;
 
-                    var house = state.
-                    var room = ldk.sgShapes.Room(new Box2Int(0, 0, 5, 5).InflateY(5, 5));
-                    var movedRoom = ldk.pl.MoveToNotOverlap(state.WorldState.Added, room);
-                    var foundation = ldk.sgShapes.Foundation(movedRoom);
-                    return new[] { room.GrammarNode(), foundation.GrammarNode() };
+                    // and modify the dag
+                    var terrace = terraces.FirstOrDefault();
+                    return new[]
+                    {
+                        state.Add(room).SetTo(terrace.GrammarNode(sym.Terrace)),
+                    };
                 });
-        }*/
+        }
     }
 
     public abstract class Operation 
@@ -171,11 +194,21 @@ namespace ShapeGrammar
             Applied = new List<Operation>();
         }
 
-        public void ApplyProduction(Production production)
+        public bool ApplyProduction(Production production)
         {
             var operations = production.ExpandNewNodes(this);
+            if (operations == null)
+                return false;
+
             operations.ForEach(operation => operation.ChangeState(this));
             Applied.AddRange(operations);
+            return true;
+        }
+
+        public Node WithActiveSymbols(params Symbol[] symbols)
+        {
+            var nodes = Root.AllNodes().Where(node => node.HasActiveSymbols(symbols));
+            return nodes.GetRandom();
         }
 
         #region Operation factories

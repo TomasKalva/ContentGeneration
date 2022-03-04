@@ -19,7 +19,8 @@ namespace ShapeGrammar
             var pr = new Productions(ldk);
             var productionList = new List<Production>()
             {
-                pr.CreateNewHouse()
+                pr.CreateNewHouse(),
+                pr.ExtrudeTerrace()
             };
             var shapeGrammar = new ShapeGrammar(productionList, ldk);
             shapeGrammar.DoProductions(5);

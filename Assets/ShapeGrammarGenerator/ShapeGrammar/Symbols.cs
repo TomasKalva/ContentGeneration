@@ -15,6 +15,7 @@ namespace ShapeGrammar
         public Symbol CreateFrom(params Node[] from) => new CreateFrom("CreateFrom", from.ToList());
         public Symbol FloorGiver(Node giveTo) => new FloorGiver("FloorGiver", giveTo);
         public Symbol Room { get; } = new Symbol("Room");
+        public Symbol Terrace { get; } = new Symbol("Terrace");
         public Symbol Foundation { get; } = new Symbol("Foundation");
     }
 
