@@ -23,6 +23,10 @@ PrefabInstance:
       propertyPath: myRenderer
       value: 
       objectReference: {fileID: 233549851543945951}
+    - target: {fileID: 533700495570473798, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
+      propertyPath: m_UpdateMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 533700495570473802, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
       propertyPath: m_Name
       value: Player
@@ -30,6 +34,10 @@ PrefabInstance:
     - target: {fileID: 533700495570473802, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 533700495570473803, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
+      propertyPath: movingPlatformMask.m_Bits
+      value: 8192
       objectReference: {fileID: 0}
     - target: {fileID: 533700495570473804, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
       propertyPath: m_Mass

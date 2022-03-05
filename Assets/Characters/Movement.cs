@@ -19,6 +19,9 @@ public class Movement : MonoBehaviour {
 	[SerializeField]
 	LayerMask probeMask = -1, stairsMask = -1;
 
+	[SerializeField]
+	LayerMask movingPlatformMask;
+
 	public Rigidbody body;
 
 	public Vector3 velocity;
@@ -141,8 +144,8 @@ public class Movement : MonoBehaviour {
 			AdjustVelocity();
 		}
 
-
 		PreventWallCollision();
+		SnapToGround();
 
 		foreach(var constraint in Constraints)
         {
@@ -169,6 +172,15 @@ public class Movement : MonoBehaviour {
 
 		ClearState();
 	}
+	
+	void SnapToGround()
+    {
+		if(Physics.Raycast(transform.position, -upAxis, out var hit, 1.2f, movingPlatformMask, QueryTriggerInteraction.Ignore))
+        {
+			Debug.Log("Snapping to ground");
+			velocity += -1f * upAxis;
+        }
+    }
 
 	void ClearState () {
 		groundContactCount = steepContactCount = 0;

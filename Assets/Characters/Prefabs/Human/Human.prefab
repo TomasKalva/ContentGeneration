@@ -198,6 +198,10 @@ PrefabInstance:
       propertyPath: maxSpeed
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 533700495570473803, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
+      propertyPath: movingPlatformMask.m_Bits
+      value: 8192
+      objectReference: {fileID: 0}
     - target: {fileID: 533700495570473807, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
       propertyPath: m_RootOrder
       value: 0
