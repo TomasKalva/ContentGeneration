@@ -1,3 +1,4 @@
+using Animancer;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,74 +7,79 @@ using UnityEngine.VFX;
 public class Elevator : MonoBehaviour
 {
     [SerializeField]
-    Rigidbody elevatorPlatform;
+    AnimancerComponent animancer;
 
     [SerializeField]
-    ColliderDetector onPlatformDetector;
+    AnimationClip up;
 
-    public float Max_height { get; set; }
-    float Height 
-    {
-        get => elevatorPlatform.transform.localPosition.y; 
-        /*set
+    [SerializeField]
+    AnimationClip down;
+
+    [SerializeField]
+    ClipTransition moveUp;
+
+    [SerializeField]
+    ClipTransition moveDown;
+
+    [SerializeField]
+    Transform shaft;
+
+    [SerializeField]
+    Transform movingPlatform;
+
+    float _maxHeight;
+    public float MaxHeight 
+    { 
+        get => _maxHeight;
+        set
         {
-            _height = value;
-            elevatorPlatform.localPosition = new Vector3(0f, _height, 0f);
-        } */
+            _maxHeight = value;
+            var relPlatformSpeed = platformSpeed / transform.localScale.y;
+            var scale = 1f / MaxHeight;
+            moveUp.Speed = scale * relPlatformSpeed;
+            moveDown.Speed = scale * relPlatformSpeed;
+            movingPlatform.localScale = new Vector3(1f, scale, 1f);
+            shaft.localScale = new Vector3(1f, MaxHeight, 1f);
+        } 
     }
-    //bool movingUp;
-    float movementSpeed = 1f;
 
-    bool IsUp => Height >= Max_height;
-    bool IsDown => Height <= 0f;
-    int timeSpentMoving = 0;
+    float platformSpeed = 1f;
+
+
+    bool IsUp { get; set; }
+    bool IsDown => !IsUp && !IsMoving;
+    bool IsMoving { get; set; }
 
     public void Move()
     {
         Debug.Log("Elevator moving");
         if (IsUp)
         {
-            //movingUp = false;
-            elevatorPlatform.velocity = movementSpeed * Vector3.down;
-            timeSpentMoving = 1;
+            IsMoving = true;
+            animancer.Play(moveDown).Events.OnEnd += () =>
+            {
+                IsUp = false;
+                IsMoving = false;
+                animancer.Play(down);
+            };
         }
 
         if (IsDown)
         {
-            //movingUp = true;
-            elevatorPlatform.velocity = movementSpeed * Vector3.up;
-            timeSpentMoving = 1;
-        }
-    }
-
-    private void FixedUpdate()
-    {
-        if (timeSpentMoving > 2)
-        {
-
-            /*
-            var speed = movingUp ? movementSpeed : -movementSpeed;
-            var positionChange = speed * Time.fixedDeltaTime;
-            Height = Mathf.Clamp(Height + positionChange, 0f, Max_height);
-
-            if (onPlatformDetector.Triggered)
+            IsMoving = true;
+            animancer.Play(moveUp).Events.OnEnd += () =>
             {
-                Debug.Log($"Moving {onPlatformDetector.other.name} on elevator");
-                onPlatformDetector.other.transform.position += 0.5f * positionChange * Vector3.up;
-            }*/
-
-            if(IsUp || IsDown)
-            {
-                timeSpentMoving = 0;
-                //elevatorPlatform.velocity = Vector3.zero;
-            }
+                IsUp = true;
+                IsMoving = false;
+                animancer.Play(up);
+            };
         }
-
-        timeSpentMoving += timeSpentMoving > 0 ? 1 : 0;
     }
 
     public void SetIsUp(bool isUp)
     {
-        elevatorPlatform.transform.localPosition = isUp ? Max_height * Vector3.up : Vector3.zero;
+        animancer.Play(isUp ? up : down);
+        IsUp = isUp;
+        IsMoving = false;
     }
 }

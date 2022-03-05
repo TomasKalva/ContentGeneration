@@ -24,7 +24,7 @@ namespace Assets.InteractiveObject
         protected override void AfterObjectSet()
         {
             Elevator = Object.GetComponent<Elevator>();
-            Elevator.Max_height = Height;
+            Elevator.MaxHeight = Height;
             Elevator.SetIsUp(Up);
         }
 
