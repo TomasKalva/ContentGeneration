@@ -1,5 +1,6 @@
 using Assets.InteractiveObject;
 using ContentGeneration.Assets.UI.Model;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -29,6 +30,12 @@ public class InteractiveObjects : ScriptableObject
     [SerializeField]
     InteractiveObject ascensionKilnPrefab;
 
+    [SerializeField]
+    Transform elevatorPrefab;
+
+    [SerializeField]
+    InteractiveObject leverPrefab;
+
     public InteractiveObject Grave()
     {
         var state = new Grave()
@@ -55,6 +62,32 @@ public class InteractiveObjects : ScriptableObject
             InteractionDescription = "Increase will"
         };
         var obj = Instantiate(ascensionKilnPrefab);
+        obj.State = state;
+
+        return obj;
+    }
+
+    public Transform Elevator(float height, bool up)
+    {
+        var state = new ElevatorState(height, up);
+        var obj = Instantiate(elevatorPrefab);
+        state.Object = obj;
+
+        var lever = Lever(state.Activate);
+        var leverSlot = obj.FindRecursive("LeverSlot");
+        lever.transform.SetParent(leverSlot, Vector3.zero);
+        return obj;
+    }
+
+    public InteractiveObject Lever(Action onPulled)
+    {
+        var state = new Lever(onPulled)
+        {
+            Name = "Lever",
+            MessageOnInteract = "Pulled",
+            InteractionDescription = "Pull lever"
+        };
+        var obj = Instantiate(leverPrefab);
         obj.State = state;
 
         return obj;

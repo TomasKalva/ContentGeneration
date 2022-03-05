@@ -315,6 +315,14 @@ namespace ShapeGrammar
             return house;
         }
 
+        public LevelElement DebugPlatform()
+        {
+            var platform = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 1)).SetAreaType(AreaType.Platform);
+
+            platform.ApplyGrammarStyleRules(houseStyleRules);
+            return platform;
+        }
+
         public void CompositeHouse()
         {
             var house = sgShapes.CompositeHouse(/*new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)),*/ 6);

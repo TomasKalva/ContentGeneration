@@ -748,3 +748,34 @@ static class ExtensionMethods
         return s > 0 && s < 1 && t > 0 && t < 1;
     }
 }
+
+public static class TransformExtensions
+{
+    public static Transform FindRecursive(this Transform self, string exactName) => self.FindRecursive(child => child.name == exactName);
+
+    public static Transform FindRecursive(this Transform self, Func<Transform, bool> selector)
+    {
+        foreach (Transform child in self)
+        {
+            if (selector(child))
+            {
+                return child;
+            }
+
+            var finding = child.FindRecursive(selector);
+
+            if (finding != null)
+            {
+                return finding;
+            }
+        }
+
+        return null;
+    }
+
+    public static void SetParent(this Transform self, Transform parent, Vector3 localPosition)
+    {
+        self.SetParent(parent);
+        self.localPosition = localPosition;
+    }
+}

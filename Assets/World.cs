@@ -50,10 +50,9 @@ public class World : MonoBehaviour
         interactiveObject.transform.position = position;
     }
 
-    public void AddObject(GameObject objectPrefab, Vector3 position)
+    public void AddObject(Transform obj, Vector3 position)
     {
-        var obj = Instantiate(objectPrefab);
-        obj.transform.position = position;
+        obj.position = position;
     }
 
     public void OnPlayerDeath()

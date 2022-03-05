@@ -10,6 +10,22 @@ using System.Collections.ObjectModel;
 
 namespace ContentGeneration.Assets.UI.Model
 {
+    public class ObjectState
+    {
+        Transform _object;
+        public Transform Object 
+        { 
+            get => _object;
+            set
+            {
+                _object = value;
+                AfterObjectSet();
+            }
+        }
+
+        protected virtual void AfterObjectSet() { }
+    }
+
     public class InteractiveObjectState : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
