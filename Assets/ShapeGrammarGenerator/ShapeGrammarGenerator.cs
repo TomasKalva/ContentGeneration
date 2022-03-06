@@ -74,7 +74,7 @@ namespace ShapeGrammar
                 .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor)).GetRandom();
             world.AddInteractiveObject(interactiveObjects.Grave(), GridToWorld(goodGraveCube.Position));
 
-            var elevator = libraries.InteractiveObjects.Elevator(10, false);
+            var elevator = libraries.InteractiveObjects.Elevator(1 * worldScale, false);
             world.AddObject(elevator, Vector3.zero);
 
             /*            

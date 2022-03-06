@@ -43,7 +43,7 @@ public class Elevator : MonoBehaviour
         } 
     }
 
-    float platformSpeed = 1f;
+    float platformSpeed = .8f;
 
 
     bool IsUp { get; set; }
