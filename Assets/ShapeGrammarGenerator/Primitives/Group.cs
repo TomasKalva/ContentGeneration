@@ -245,6 +245,22 @@ namespace ShapeGrammar
         {
             return BoundaryFacesH(ExtensionMethods.HorizontalDirections().ToArray());
         }
+
+        public FaceHorGroup InsideFacesH()
+        {
+            return new FaceHorGroup(Grid, FacesH(ExtensionMethods.HorizontalDirections().ToArray()).Facets.SetMinus(AllBoundaryFacesH().Facets).ToList());
+        }
+
+        public FaceHorGroup NeighborsInGroupH(CubeGroup cubes)
+        {
+            var cubesSet = new HashSet<Cube>(Cubes);
+            var facesH = from cube in cubes.Cubes
+                   from neighbor in cube.NeighborsHor()
+                   where cubesSet.Contains(neighbor)
+                   select cube.FacesHor(neighbor.Position - cube.Position);
+            return new FaceHorGroup(Grid, facesH.ToList());
+        }
+
         #endregion
 
         #region FacesV

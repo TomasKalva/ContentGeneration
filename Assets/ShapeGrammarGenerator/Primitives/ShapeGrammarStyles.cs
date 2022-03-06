@@ -166,7 +166,7 @@ namespace ShapeGrammar
             verTop.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Nothing);
 
             // empty horizontal faces between cubes
-            var horFacesInside = path.FacesH(ExtensionMethods.HorizontalDirections().ToArray()).Facets.SetMinus(path.AllBoundaryFacesH().Facets);
+            var horFacesInside = path.InsideFacesH().Facets;
             horFacesInside.ForEach(faceH =>
             {
                 //faceH.FaceType = FACE_HOR.Door;
@@ -217,9 +217,16 @@ namespace ShapeGrammar
             var bottom = elevatorShaftArea.CubeGroupMaxLayer(Vector3Int.down).Cubes.Skip(1).First().Position;
             var height = elevatorShaftArea.Extents().y;
 
-            var shaftCubes = elevatorShaftArea.Cubes.Skip(1).Reverse().Skip(1).Reverse();
-            var shaftFloors = new FaceVerGroup(GridView, shaftCubes.Select2((_, topCube) => topCube.FacesVer(Vector3Int.down)).ToList());
+            var shaftCubes = elevatorShaftArea.Cubes.Skip(1).Reverse().Skip(1).Reverse().ToCubeGroup(GridView);
+            var shaftFloors = new FaceVerGroup(GridView, shaftCubes.Cubes.Select2((_, topCube) => topCube.FacesVer(Vector3Int.down)).ToList());
             shaftFloors.Fill(FACE_VER.Nothing).SetStyle(DefaultHouseStyle);
+
+            shaftCubes.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Wall);
+            var doorCubes = new CubeGroup(GridView, new List<Cube>() 
+            {
+                elevatorShaftArea.Cubes.First(), elevatorShaftArea.Cubes.Last() 
+            });
+            doorCubes.NeighborsInGroupH(elevatorShaftArea).SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Door);
 
             var elevator = lib.InteractiveObjects.Elevator((height - 1), false);
             elevator.transform.position = (Vector3)bottom * 2.8f;
