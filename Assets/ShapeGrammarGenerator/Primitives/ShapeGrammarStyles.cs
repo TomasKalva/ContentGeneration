@@ -210,5 +210,22 @@ namespace ShapeGrammar
             return path;
         }
 
+        public CubeGroup ElevatorStyle(CubeGroup elevatorShaftArea, Libraries lib)
+        {
+            // assumes that first and last move are horizontal, vertical shaft inbetween
+
+            var bottom = elevatorShaftArea.CubeGroupMaxLayer(Vector3Int.down).Cubes.Skip(1).First().Position;
+            var height = elevatorShaftArea.Extents().y;
+
+            var shaftCubes = elevatorShaftArea.Cubes.Skip(1).Reverse().Skip(1).Reverse();
+            var shaftFloors = new FaceVerGroup(GridView, shaftCubes.Select2((_, topCube) => topCube.FacesVer(Vector3Int.down)).ToList());
+            shaftFloors.Fill(FACE_VER.Nothing).SetStyle(DefaultHouseStyle);
+
+            var elevator = lib.InteractiveObjects.Elevator((height - 1), false);
+            elevator.transform.position = (Vector3)bottom * 2.8f;
+
+            return elevatorShaftArea;
+        }
+
     }
 }

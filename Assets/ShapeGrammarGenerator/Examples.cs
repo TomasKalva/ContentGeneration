@@ -21,7 +21,7 @@ namespace ShapeGrammar
         public StyleRules houseStyleRules { get; }
         public WorldChanging wc { get; }
 
-        public LevelDevelopmentKit(ShapeGrammarObjectStyle defaultHouseStyle, ShapeGrammarObjectStyle gardenStyle)
+        public LevelDevelopmentKit(ShapeGrammarObjectStyle defaultHouseStyle, ShapeGrammarObjectStyle gardenStyle, Libraries lib)
         {
             DefaultHouseStyle = defaultHouseStyle;
             grid = new Grid(new Vector3Int(20, 10, 20));
@@ -44,7 +44,8 @@ namespace ShapeGrammar
                 new StyleRule(g => g.WithAreaType(AreaType.Inside), g => g.SetGrammarStyle(sgStyles.RoomStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Platform), g => g.SetGrammarStyle(sgStyles.PlatformStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Debug), g => g.SetGrammarStyle(sgStyles.RoomStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.Colonnade), g => g.SetGrammarStyle(sgStyles.ColonnadeStyle))
+                new StyleRule(g => g.WithAreaType(AreaType.Colonnade), g => g.SetGrammarStyle(sgStyles.ColonnadeStyle)),
+                new StyleRule(g => g.WithAreaType(AreaType.Elevator), g => g.SetGrammarStyle(area => sgStyles.ElevatorStyle(area, lib)))
             );
             wc = new WorldChanging(this);
         }
@@ -52,7 +53,7 @@ namespace ShapeGrammar
 
     public class Examples : LevelDevelopmentKit
     {
-        public Examples(ShapeGrammarObjectStyle defaultHouseStyle, ShapeGrammarObjectStyle gardenStyle) : base(defaultHouseStyle, gardenStyle)
+        public Examples(ShapeGrammarObjectStyle defaultHouseStyle, ShapeGrammarObjectStyle gardenStyle, Libraries lib) : base(defaultHouseStyle, gardenStyle, lib)
         { }
         
         public void IslandAndHouses()
@@ -321,6 +322,21 @@ namespace ShapeGrammar
 
             platform.ApplyGrammarStyleRules(houseStyleRules);
             return platform;
+        }
+
+        public LevelElement ElevatorTest()
+        {
+            var bottomPlatform = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 5)).SetAreaType(AreaType.Platform);
+            var topPlatform = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(5, 10)).SetAreaType(AreaType.Platform);
+
+            bottomPlatform.ApplyGrammarStyleRules(houseStyleRules);
+            topPlatform.ApplyGrammarStyleRules(houseStyleRules);
+
+            var path = paths.WalkableElevator(bottomPlatform, topPlatform);
+
+            path.ApplyGrammarStyleRules(houseStyleRules);
+
+            return topPlatform;
         }
 
         public void CompositeHouse()

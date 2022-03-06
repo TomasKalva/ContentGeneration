@@ -58,6 +58,22 @@ namespace ShapeGrammar
             return pathCubes.LevelElement(AreaType.Path);
         }
 
+        public LevelGeometryElement WalkableElevator(LevelElement area1, LevelElement area2)
+        {
+            var starting = area1.CubeGroup().WithFloor();
+            var ending = area2.CubeGroup().WithFloor();
+
+            Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.ElevatorNeighbors(area1.CubeGroup(), area2.CubeGroup()), area1.Merge(area2).CubeGroup());
+            var pathCubes = ConnectByPath(starting, ending, neighbors);
+
+            if (pathCubes == null)
+            {
+                return null;
+            }
+
+            return pathCubes.LevelElement(AreaType.Elevator);
+        }
+
         /// <summary>
         /// Path doesn't go through the starting group.
         /// </summary>

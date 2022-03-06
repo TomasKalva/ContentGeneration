@@ -59,8 +59,8 @@ namespace ShapeGrammar
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 
-            var examples = new Examples(DefaultHouseStyle, GardenStyle);
-            var levelRoot = examples.DebugPlatform();
+            var examples = new Examples(DefaultHouseStyle, GardenStyle, libraries);
+            var levelRoot = examples.ElevatorTest();
             examples.grid.Generate(worldScale, parent);
 
             stopwatch.Stop();

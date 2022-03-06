@@ -69,6 +69,22 @@ namespace ShapeGrammar
             };
             return NotRepeatingCubes(repeatingCubesNeighbors);
         }
+
+        public static Neighbors<PathNode> ElevatorNeighbors(CubeGroup start, CubeGroup end)
+        {
+            var horizontal = HorizontalNeighbors();
+            var vertical = VerticalNeighbors();
+            var endSet = new HashSet<Cube>(end.Cubes);
+            Neighbors<PathNode> repeatingCubesNeighbors = pathNode =>
+            {
+                return pathNode.prev == null ?
+                            horizontal(pathNode) : // horizontal node at start
+                            endSet.Contains(pathNode.cube) ?
+                                horizontal(pathNode).Where(node => endSet.Contains(node.cube)) : // one last horizontal move when reaching the end
+                                vertical(pathNode); //otherwise move vertically
+            };
+            return NotRepeatingCubes(repeatingCubesNeighbors);
+        }
         #endregion
 
         // Helper variable

@@ -177,7 +177,7 @@ public class Movement : MonoBehaviour {
     {
 		if(Physics.Raycast(transform.position, -upAxis, out var hit, 1.2f, movingPlatformMask, QueryTriggerInteraction.Ignore))
         {
-			Debug.Log("Snapping to ground");
+			//Debug.Log("Snapping to ground");
 			velocity += -1f * upAxis;
         }
     }
