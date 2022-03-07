@@ -365,7 +365,7 @@ namespace ShapeGrammar
             bottomPlatform.ApplyGrammarStyleRules(houseStyleRules);
             topPlatform.ApplyGrammarStyleRules(houseStyleRules);
 
-            var path = con.ConnectByWallStairsIn(bottomPlatform, topPlatform);
+            var path = con.ConnectByWallStairsOut(bottomPlatform, topPlatform);
 
             path.ApplyGrammarStyleRules(houseStyleRules);
 
