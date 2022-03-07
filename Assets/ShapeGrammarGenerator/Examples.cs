@@ -327,7 +327,7 @@ namespace ShapeGrammar
             return platform;
         }
 
-        public LevelElement ElevatorTest()
+        public LevelElement ConnectByElevator()
         {
             var bottomPlatform = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 5)).SetAreaType(AreaType.Platform);
             var topPlatform = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(5, 10)).SetAreaType(AreaType.Platform);
@@ -335,7 +335,7 @@ namespace ShapeGrammar
             bottomPlatform.ApplyGrammarStyleRules(houseStyleRules);
             topPlatform.ApplyGrammarStyleRules(houseStyleRules);
 
-            var path = paths.WalkableElevator(bottomPlatform, topPlatform);
+            var path = con.ConnectElevator(bottomPlatform, topPlatform);
 
             path.ApplyGrammarStyleRules(houseStyleRules);
 

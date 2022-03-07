@@ -38,13 +38,6 @@ namespace ShapeGrammar
             return boundaryWall.ExtrudeHor(false);
         }
 
-        CubeGroup WallSpaceOutside(LevelElement le)
-        {
-            var inside = le.CubeGroup();
-            var boundaryWall = inside.AllBoundaryFacesH().Where(face => face.FaceType == FACE_HOR.Wall).CubeGroup();
-            return boundaryWall.ExtrudeHor(true).Cubes.SetMinus(inside.Cubes).ToCubeGroup(le.Grid);
-        }
-
         public LevelGeometryElement ConnectByWallStairsIn(LevelElement le1, LevelElement le2)
         {
             var space1 = WallSpaceInside(le1);
@@ -54,6 +47,13 @@ namespace ShapeGrammar
             return path != null ? path.LevelElement(AreaType.Path) : null;
         }
 
+        CubeGroup WallSpaceOutside(LevelElement le)
+        {
+            var inside = le.CubeGroup();
+            var boundaryWall = inside.AllBoundaryFacesH().Where(face => face.FaceType == FACE_HOR.Wall).CubeGroup();
+            return boundaryWall.ExtrudeHor(true).Cubes.SetMinus(inside.Cubes).ToCubeGroup(le.Grid);
+        }
+
         public LevelGeometryElement ConnectByWallStairsOut(LevelElement le1, LevelElement le2)
         {
             var start = le1.CubeGroup().ExtrudeHor(outside: false).WithFloor();
@@ -61,8 +61,16 @@ namespace ShapeGrammar
             var searchSpace = WallSpaceOutside(le1).Merge(WallSpaceOutside(le2)).Merge(start).Merge(end);
             Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.StairsNeighbors(), searchSpace);
             var path = paths.ConnectByPath(start, end, neighbors);
-
             return path != null ? path.LevelElement(AreaType.Path) : null;
+        }
+
+        public LevelGeometryElement ConnectElevator(LevelElement le1, LevelElement le2)
+        {
+            var space1 = le1.CubeGroup();
+            var space2 = le2.CubeGroup();
+            Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.ElevatorNeighbors(space1, space2), space1.Merge(space2));
+            var path = paths.ConnectByPath(space1.WithFloor(), space2.WithFloor(), neighbors);
+            return path != null ? path.LevelElement(AreaType.Elevator) : null;
         }
     }
 }
