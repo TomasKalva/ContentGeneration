@@ -20,6 +20,7 @@ namespace ShapeGrammar
         public Transformations tr { get; }
         public StyleRules houseStyleRules { get; }
         public WorldChanging wc { get; }
+        public Connections con { get; }
 
         public LevelDevelopmentKit(ShapeGrammarObjectStyle defaultHouseStyle, ShapeGrammarObjectStyle gardenStyle, Libraries lib)
         {
@@ -30,6 +31,7 @@ namespace ShapeGrammar
             sgShapes = new ShapeGrammarShapes(grid);
             pl = new Placement(grid);
             paths = new Paths(grid);
+            con = new Connections(grid);
             tr = new Transformations(this);
             houseStyleRules = new StyleRules(
                 new StyleRule(g => g.WithAreaType(AreaType.Room), g => g.SetGrammarStyle(sgStyles.PlainRoomStyle)),
@@ -45,7 +47,8 @@ namespace ShapeGrammar
                 new StyleRule(g => g.WithAreaType(AreaType.Platform), g => g.SetGrammarStyle(sgStyles.PlatformStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Debug), g => g.SetGrammarStyle(sgStyles.RoomStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Colonnade), g => g.SetGrammarStyle(sgStyles.ColonnadeStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.Elevator), g => g.SetGrammarStyle(area => sgStyles.ElevatorStyle(area, lib)))
+                new StyleRule(g => g.WithAreaType(AreaType.Elevator), g => g.SetGrammarStyle(area => sgStyles.ElevatorStyle(area, lib))),
+                new StyleRule(g => g.WithAreaType(AreaType.Door), g => g.SetGrammarStyle(sgStyles.DoorStyle))
             );
             wc = new WorldChanging(this);
         }
@@ -337,6 +340,21 @@ namespace ShapeGrammar
             path.ApplyGrammarStyleRules(houseStyleRules);
 
             return topPlatform;
+        }
+
+        public LevelElement ConnectByDoor()
+        {
+            var room1 = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 5)).SetAreaType(AreaType.Room);
+            var room2 = sgShapes.Room(new Box2Int(new Vector2Int(4, 0), new Vector2Int(8, 4)).InflateY(0, 5)).SetAreaType(AreaType.Room);
+
+            room1.ApplyGrammarStyleRules(houseStyleRules);
+            room2.ApplyGrammarStyleRules(houseStyleRules);
+
+            var connection = con.ConnectByDoor(room1, room2);
+
+            connection.ApplyGrammarStyleRules(houseStyleRules);
+
+            return room2;
         }
 
         public void CompositeHouse()

@@ -234,5 +234,14 @@ namespace ShapeGrammar
             return elevatorShaftArea;
         }
 
+        public CubeGroup DoorStyle(CubeGroup doorFromFirst)
+        {
+            Debug.Assert(doorFromFirst.Cubes.Count() == 2);
+
+            doorFromFirst.Cubes.First().Group().NeighborsInGroupH(doorFromFirst).SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Door);
+
+            return doorFromFirst;
+        }
+
     }
 }
