@@ -332,7 +332,7 @@ namespace ShapeGrammar
             Facets = facets;
         }
 
-        public CubeGroup Cubes()
+        public CubeGroup CubeGroup()
         {
             return new CubeGroup(Grid, Facets.Select(face => face.MyCube).ToList());
         }

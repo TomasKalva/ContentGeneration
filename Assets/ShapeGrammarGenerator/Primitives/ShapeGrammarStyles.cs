@@ -34,7 +34,7 @@ namespace ShapeGrammar
 
         public CubeGroup ColonnadeStyle(CubeGroup colonadeArea)
         {
-            var floorPart = colonadeArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Floor).Cubes();
+            var floorPart = colonadeArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Floor).CubeGroup();
             floorPart.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Railing);
             colonadeArea.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.Pillar);
             return colonadeArea;
@@ -67,7 +67,7 @@ namespace ShapeGrammar
 
         public CubeGroup FlatRoofStyle(CubeGroup roofArea)
         {
-            var floorParth = roofArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Floor).Cubes();
+            var floorParth = roofArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Floor).CubeGroup();
             floorParth.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Railing);
             floorParth.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.RailingPillar);
             return roofArea;
@@ -75,7 +75,7 @@ namespace ShapeGrammar
 
         public CubeGroup PlainFlatRoofStyle(CubeGroup roofArea)
         {
-            var floorParth = roofArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Floor).Cubes();
+            var floorParth = roofArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Floor).CubeGroup();
             return roofArea;
         }
 

@@ -357,6 +357,21 @@ namespace ShapeGrammar
             return room2;
         }
 
+        public LevelElement ConnectByStairs()
+        {
+            var bottomPlatform = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 5));
+            var topPlatform = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(5, 10));
+
+            bottomPlatform.ApplyGrammarStyleRules(houseStyleRules);
+            topPlatform.ApplyGrammarStyleRules(houseStyleRules);
+
+            var path = con.ConnectByWallStairsIn(bottomPlatform, topPlatform);
+
+            path.ApplyGrammarStyleRules(houseStyleRules);
+
+            return topPlatform;
+        }
+
         public void CompositeHouse()
         {
             var house = sgShapes.CompositeHouse(/*new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)),*/ 6);
