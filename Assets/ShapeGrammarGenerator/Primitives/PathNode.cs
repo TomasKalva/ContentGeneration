@@ -70,7 +70,7 @@ namespace ShapeGrammar
             return NotRepeatingCubes(repeatingCubesNeighbors);
         }
 
-        public static Neighbors<PathNode> ElevatorNeighbors(CubeGroup start, CubeGroup end)
+        public static Neighbors<PathNode> ElevatorNeighbors(CubeGroup end)
         {
             var horizontal = HorizontalNeighbors();
             var vertical = VerticalNeighbors();
@@ -82,6 +82,26 @@ namespace ShapeGrammar
                             endSet.Contains(pathNode.cube) ?
                                 horizontal(pathNode).Where(node => endSet.Contains(node.cube)) : // one last horizontal move when reaching the end
                                 vertical(pathNode); //otherwise move vertically
+            };
+            return NotRepeatingCubes(repeatingCubesNeighbors);
+        }
+
+        public static Neighbors<PathNode> BalconyStairsBalconyNeighbors(CubeGroup start, CubeGroup end, CubeGroup balcony1, CubeGroup balcony2)
+        {
+            var horizontal = HorizontalNeighbors();
+            var vertical = VerticalNeighbors();
+            var balconySet1 = new HashSet<Cube>(balcony1.Cubes);
+            var balconySet2 = new HashSet<Cube>(balcony2.Cubes);
+            var stairsNeighbors = StairsNeighbors();
+            Neighbors<PathNode> repeatingCubesNeighbors = pathNode =>
+            {
+                // return only horizontal directions for 1st node
+                return pathNode.prev == null || balconySet2.Contains(pathNode.cube) ?
+                            horizontal(pathNode) :
+                            balconySet1.Contains(pathNode.cube) ?
+                                horizontal(pathNode).Concat(stairsNeighbors(pathNode)) :
+                                stairsNeighbors(pathNode)
+                                    .Where(nextNode => !balconySet2.Contains(nextNode.cube) || nextNode.prevVerMove == 0);// move to the second balcony horizontaly
             };
             return NotRepeatingCubes(repeatingCubesNeighbors);
         }

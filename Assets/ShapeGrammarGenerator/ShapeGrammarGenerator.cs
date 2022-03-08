@@ -60,7 +60,7 @@ namespace ShapeGrammar
             stopwatch.Start();
 
             var examples = new Examples(DefaultHouseStyle, GardenStyle, libraries);
-            var levelRoot = examples.ConnectByElevator();
+            var levelRoot = examples.ConnectByOutsideStairs();
             examples.grid.Generate(worldScale, parent);
 
             stopwatch.Stop();
@@ -73,10 +73,11 @@ namespace ShapeGrammar
             var goodGraveCube = levelRoot.CubeGroup().WithFloor().Cubes
                 .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor)).GetRandom();
             world.AddInteractiveObject(interactiveObjects.Grave(), GridToWorld(goodGraveCube.Position));
-
+            
+            /*
             var elevator = libraries.InteractiveObjects.Elevator(1 * worldScale, false);
             world.AddObject(elevator.Object, Vector3.zero);
-
+            */
             /*            
             var allEnemies = libraries.Enemies.AllAgents();
             var enemyCubes = levelRoot.CubeGroup().WithFloor().Cubes.Shuffle().Take(10);

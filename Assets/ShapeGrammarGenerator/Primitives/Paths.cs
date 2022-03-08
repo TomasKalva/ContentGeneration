@@ -63,7 +63,7 @@ namespace ShapeGrammar
             var starting = area1.CubeGroup().WithFloor();
             var ending = area2.CubeGroup().WithFloor();
 
-            Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.ElevatorNeighbors(area1.CubeGroup(), area2.CubeGroup()), area1.Merge(area2).CubeGroup());
+            Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.ElevatorNeighbors(area2.CubeGroup()), area1.Merge(area2).CubeGroup());
             var pathCubes = ConnectByPath(starting, ending, neighbors);
 
             if (pathCubes == null)

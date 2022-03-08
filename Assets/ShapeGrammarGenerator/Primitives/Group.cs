@@ -82,7 +82,7 @@ namespace ShapeGrammar
         {
             if(areaType == null)
             {
-                // AreaType.None is not a constant so can't be a default value
+                // AreaType.None is not a constant so it can't be a default value
                 areaType = AreaType.None;
             }
             return new LevelGeometryElement(Grid, areaType, this);

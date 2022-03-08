@@ -335,7 +335,7 @@ namespace ShapeGrammar
             bottomPlatform.ApplyGrammarStyleRules(houseStyleRules);
             topPlatform.ApplyGrammarStyleRules(houseStyleRules);
 
-            var path = con.ConnectElevator(bottomPlatform, topPlatform);
+            var path = con.ConnectByElevator(bottomPlatform, topPlatform);
 
             path.ApplyGrammarStyleRules(houseStyleRules);
 
@@ -364,12 +364,30 @@ namespace ShapeGrammar
 
             bottomPlatform.ApplyGrammarStyleRules(houseStyleRules);
             topPlatform.ApplyGrammarStyleRules(houseStyleRules);
-
-            var path = con.ConnectByWallStairsOut(bottomPlatform, topPlatform);
+            
+            var path = con.ConnectByWallStairsOut(bottomPlatform, topPlatform, LevelElement.Empty(grid));
 
             path.ApplyGrammarStyleRules(houseStyleRules);
-
+            
             return topPlatform;
+        }
+
+        public LevelElement ConnectByOutsideStairs()
+        {
+            var room1 = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 5) + new Vector3Int(0, 2, 0));
+            var room2 = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 5) + new Vector3Int(8, 4, 0));
+
+            room1.ApplyGrammarStyleRules(houseStyleRules);
+            room2.ApplyGrammarStyleRules(houseStyleRules);
+
+            var foundation = sgShapes.Foundation(room1.Merge(room2));
+            foundation.ApplyGrammarStyleRules(houseStyleRules);
+
+            var path = con.ConnectByBalconyStairsOutside(room1, room2, foundation);
+
+            path.ApplyGrammarStyleRules(houseStyleRules);
+            
+            return room1.Merge(room2).Merge(path).Merge(foundation);
         }
 
         public void CompositeHouse()

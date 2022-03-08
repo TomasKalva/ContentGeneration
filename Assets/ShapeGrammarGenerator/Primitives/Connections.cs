@@ -54,23 +54,44 @@ namespace ShapeGrammar
             return boundaryWall.ExtrudeHor(true).Cubes.SetMinus(inside.Cubes).ToCubeGroup(le.Grid);
         }
 
-        public LevelGeometryElement ConnectByWallStairsOut(LevelElement le1, LevelElement le2)
+        CubeGroup RoomEdgesWithFloor(LevelElement le)
         {
-            var start = le1.CubeGroup().ExtrudeHor(outside: false).WithFloor();
-            var end = le2.CubeGroup().ExtrudeHor(outside: false).WithFloor();
+            return le.CubeGroup().ExtrudeHor(outside: false).WithFloor();
+        }
+
+        public LevelGeometryElement ConnectByWallStairsOut(LevelElement le1, LevelElement le2, LevelElement notIntersecting)
+        {
+            var start = RoomEdgesWithFloor(le1);
+            var end = RoomEdgesWithFloor(le2);
             var searchSpace = WallSpaceOutside(le1).Merge(WallSpaceOutside(le2)).Merge(start).Merge(end);
-            Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.StairsNeighbors(), searchSpace);
+            Neighbors<PathNode> neighbors = PathNode.NotIn(PathNode.BoundedBy(PathNode.StairsNeighbors(), searchSpace), notIntersecting.CubeGroup().Minus(end));
             var path = paths.ConnectByPath(start, end, neighbors);
             return path != null ? path.LevelElement(AreaType.Path) : null;
         }
 
-        public LevelGeometryElement ConnectElevator(LevelElement le1, LevelElement le2)
+        public LevelGeometryElement ConnectByElevator(LevelElement le1, LevelElement le2)
         {
             var space1 = le1.CubeGroup();
             var space2 = le2.CubeGroup();
-            Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.ElevatorNeighbors(space1, space2), space1.Merge(space2));
+            Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.ElevatorNeighbors(space2), space1.Merge(space2));
             var path = paths.ConnectByPath(space1.WithFloor(), space2.WithFloor(), neighbors);
             return path != null ? path.LevelElement(AreaType.Elevator) : null;
+        }
+
+        public LevelGeometryElement ConnectByBalconyStairsOutside(LevelElement le1, LevelElement le2, LevelElement notIntersecting)
+        {
+            var start = RoomEdgesWithFloor(le1);
+            var end = RoomEdgesWithFloor(le2);
+
+            var balconySpaceStart = WallSpaceOutside(le1);
+            var balconySpaceEnd = WallSpaceOutside(le2);
+
+            Neighbors<PathNode> neighbors = 
+                PathNode.NotIn(
+                        PathNode.BalconyStairsBalconyNeighbors(start, end, balconySpaceStart, balconySpaceEnd), 
+                notIntersecting.CubeGroup().Minus(end));
+            var path = paths.ConnectByPath(start, end, neighbors);
+            return path != null ? path.LevelElement(AreaType.Path) : null;
         }
     }
 }
