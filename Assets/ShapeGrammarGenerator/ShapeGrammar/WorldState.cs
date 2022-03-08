@@ -12,18 +12,18 @@ namespace ShapeGrammar
 
         public LevelGroupElement Added { get; }
         public LevelElement Last { get; }
-        public Grid Grid { get; }
+        public Grid<Cube> Grid { get; }
         public delegate LevelElement TransformPushed(LevelElement levelElement);
         public TransformPushed AfterPushed { get; }
 
-        public WorldState(LevelElement last, Grid grid, TransformPushed afterPushed)
+        public WorldState(LevelElement last, Grid<Cube> grid, TransformPushed afterPushed)
         {
             Added = new LevelGroupElement(grid, AreaType.None);
             Last = last;
             AfterPushed = afterPushed;
         }
 
-        public WorldState(LevelGroupElement added, LevelElement last, Grid grid, TransformPushed afterPushed)
+        public WorldState(LevelGroupElement added, LevelElement last, Grid<Cube> grid, TransformPushed afterPushed)
         {
             Added = added;
             Last = last;

@@ -4,18 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using static ShapeGrammar.Grid;
 
 namespace ShapeGrammar
 {
 
     public class ShapeGrammarShapes
     {
-        Grid Grid { get; }
+        Grid<Cube> Grid { get; }
         QueryContext qc { get; }
         Placement pl { get; }
 
-        public ShapeGrammarShapes(Grid grid)
+        public ShapeGrammarShapes(Grid<Cube> grid)
         {
             Grid = grid;
             qc = new QueryContext(grid);

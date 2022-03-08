@@ -5,18 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using static ShapeGrammar.Grid;
 
 namespace ShapeGrammar
 {
     public class ShapeGrammarStyles
     {
-        Grid GridView { get; }
+        Grid<Cube> GridView { get; }
         QueryContext QC { get; }
         ShapeGrammarObjectStyle DefaultHouseStyle { get; }
         ShapeGrammarObjectStyle DefaultGardenStyle { get; }
 
-        public ShapeGrammarStyles(Grid gridView, ShapeGrammarObjectStyle defaultHouseStyle, ShapeGrammarObjectStyle gardenStyle)
+        public ShapeGrammarStyles(Grid<Cube> gridView, ShapeGrammarObjectStyle defaultHouseStyle, ShapeGrammarObjectStyle gardenStyle)
         {
             GridView = gridView;
             QC = new QueryContext(GridView);

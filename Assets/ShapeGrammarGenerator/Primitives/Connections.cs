@@ -9,11 +9,11 @@ namespace ShapeGrammar
 {
     public class Connections
     {
-        Grid Grid { get; }
+        Grid<Cube> Grid { get; }
         ShapeGrammarShapes sgShapes { get; }
         Paths paths { get; }
 
-        public Connections(Grid grid)
+        public Connections(Grid<Cube> grid)
         {
             Grid = grid;
             sgShapes = new ShapeGrammarShapes(grid);

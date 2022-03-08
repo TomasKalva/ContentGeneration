@@ -25,12 +25,12 @@ static class ExtensionMethods
         return enumerable.ElementAt(i);
     }
 
-    public static CubeGroup ToCubeGroup(this IEnumerable<Cube> enumerable, ShapeGrammar.Grid grid)
+    public static CubeGroup ToCubeGroup(this IEnumerable<Cube> enumerable, ShapeGrammar.Grid<Cube> grid)
     {
         return enumerable.ToList().ToCubeGroup(grid);
     }
 
-    public static CubeGroup ToCubeGroup(this List<Cube> list, ShapeGrammar.Grid grid)
+    public static CubeGroup ToCubeGroup(this List<Cube> list, ShapeGrammar.Grid<Cube> grid)
     {
         return new CubeGroup(grid, list);
     }
@@ -40,17 +40,17 @@ static class ExtensionMethods
         return new CubeGroup(enumerable.FirstOrDefault().Grid, enumerable.SelectMany(cg => cg.Cubes).ToList());
     }
 
-    public static LevelGroupElement ToLevelGroupElement(this IEnumerable<CubeGroup> enumerable, ShapeGrammar.Grid grid)
+    public static LevelGroupElement ToLevelGroupElement(this IEnumerable<CubeGroup> enumerable, ShapeGrammar.Grid<Cube> grid)
     {
         return enumerable.Select(g => new LevelGeometryElement(g.Grid, AreaType.None, g)).ToLevelGroupElement(grid);
     }
 
-    public static LevelGroupElement ToLevelGroupElement(this IEnumerable<LevelElement> enumerable, ShapeGrammar.Grid grid)
+    public static LevelGroupElement ToLevelGroupElement(this IEnumerable<LevelElement> enumerable, ShapeGrammar.Grid<Cube> grid)
     {
         return enumerable.ToList().ToLevelGroupElement(grid);
     }
 
-    public static LevelGroupElement ToLevelGroupElement(this List<LevelElement> list, ShapeGrammar.Grid grid)
+    public static LevelGroupElement ToLevelGroupElement(this List<LevelElement> list, ShapeGrammar.Grid<Cube> grid)
     {
         return new LevelGroupElement(grid, AreaType.None, list);
     }

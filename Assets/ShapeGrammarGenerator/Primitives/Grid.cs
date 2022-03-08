@@ -9,7 +9,108 @@ using UnityEngine.Profiling;
 
 namespace ShapeGrammar
 {
-    public class Grid : IEnumerable<Cube>
+
+    public class Grid<T> : IEnumerable<T>
+    {
+        Vector3Int sizes;
+
+        Dictionary<Vector3Int, T[,,]> chunks;
+
+        public int Width => sizes.x;
+        public int Height => sizes.y;
+        public int Depth => sizes.z;
+
+        public bool ValidCoords(Vector3Int coords) => chunks.ContainsKey(GetChunkCoords(coords));
+
+        public Vector3Int Sizes => sizes;
+
+        public delegate T ItemConstructor(Grid<T> grid, Vector3Int position);
+        ItemConstructor Constr { get; }
+
+        public T this[int x, int y, int z]
+        {
+            get => GetItem(new Vector3Int(x, y, z));
+            set => SetItem(new Vector3Int(x, y, z), value);
+        }
+
+        public T this[Vector3Int coords]
+        {
+            get => GetItem(coords);
+            set => SetItem(coords, value);
+        }
+
+        Vector3Int TryCreateChunk(Vector3Int coords)
+        {
+            var chunkCoords = GetChunkCoords(coords);
+            if (!ValidCoords(coords))
+            {
+                CreateChunk(chunkCoords);
+            }
+            return chunkCoords;
+        }
+
+        T GetItem(Vector3Int coords)
+        {
+            Profiler.BeginSample("GetCube");
+            var chunkCoords = TryCreateChunk(coords);
+            var localCoords = coords.Mod(sizes);
+            var cube = chunks[chunkCoords][localCoords.x, localCoords.y, localCoords.z];
+            Debug.Assert(cube != null, $"chunks[{chunkCoords}][{localCoords}] is null");
+            Profiler.EndSample();
+            return cube;
+        }
+
+        void SetItem(Vector3Int coords, T item)
+        {
+            var chunkCoords = TryCreateChunk(coords);
+            var localCoords = coords.Mod(sizes);
+            chunks[chunkCoords][localCoords.x, localCoords.y, localCoords.z] = item;
+        }
+
+        Vector3Int GetChunkCoords(Vector3Int coords) => coords.Div(sizes);
+
+        void CreateChunk(Vector3Int chunkCoords)
+        {
+            var chunk = new T[sizes.x, sizes.y, sizes.z];
+            var lbb = chunkCoords * sizes;
+            foreach (var c in new Box3Int(Vector3Int.zero, sizes))
+            {
+                chunk[c.x, c.y, c.z] = Constr(this, lbb + c);
+            }
+            chunks.Add(chunkCoords, chunk);
+        }
+
+
+        public Grid(Vector3Int sizes, ItemConstructor constructor)
+        {
+            this.sizes = sizes;
+            chunks = new Dictionary<Vector3Int, T[,,]>();
+            Constr = constructor;
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            foreach (var chunk in chunks.Values)
+            {
+                foreach (var item in chunk)
+                {
+                    yield return item;
+                }
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public void Generate(float cubeSide, Transform parent)
+        {
+            ((IEnumerable<Cube>)this).ForEach(item => item.Generate(cubeSide, parent));
+        }
+    }
+    /*
+    public class Grid<T>: IEnumerable<Cube>
     {
         Vector3Int sizes;
 
@@ -108,13 +209,14 @@ namespace ShapeGrammar
             ((IEnumerable<Cube>)this).ForEach(cube => cube.Generate(cubeSide, parent));
         }
     }
+    */
 
     public class QueryContext
     {
-        Grid QueriedGrid { get; }
+        Grid<Cube> QueriedGrid { get; }
         Placement pl { get; }
 
-        public QueryContext(Grid queriedGrid)
+        public QueryContext(Grid<Cube> queriedGrid)
         {
             QueriedGrid = queriedGrid;
             pl = new Placement(queriedGrid);

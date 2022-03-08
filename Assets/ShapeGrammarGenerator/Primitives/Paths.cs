@@ -9,10 +9,10 @@ namespace ShapeGrammar
 {
     public class Paths
     {
-        Grid Grid { get; }
+        Grid<Cube> Grid { get; }
         ShapeGrammarShapes sgShapes { get; }
 
-        public Paths(Grid grid)
+        public Paths(Grid<Cube> grid)
         {
             Grid = grid;
             sgShapes = new ShapeGrammarShapes(grid);

@@ -5,16 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using Grid = ShapeGrammar.Grid;
 
 namespace ShapeGrammar
 {
 
     public class Group
     {
-        public Grid Grid { get; }
+        public Grid<Cube> Grid { get; }
 
-        public Group(Grid grid)
+        public Group(Grid<Cube> grid)
         {
             Grid = grid;
         }
@@ -49,14 +48,14 @@ namespace ShapeGrammar
         /// </summary>
         Constructor Constr { get; set; }
 
-        public CubeGroup(Grid grid,List<Cube> cubes) : base(grid)
+        public CubeGroup(Grid<Cube> grid,List<Cube> cubes) : base(grid)
         {
             //Debug.Assert(cubes.Any());
             Cubes = cubes.Distinct().ToList();
             OpNew();
         }
 
-        CubeGroup(Grid grid, List<Cube> cubes, Constructor constr) : this(grid, cubes)
+        CubeGroup(Grid<Cube> grid, List<Cube> cubes, Constructor constr) : this(grid, cubes)
         {
             Constr = constr;
         }
@@ -373,7 +372,7 @@ namespace ShapeGrammar
     {
         public List<FacetT> Facets { get; }
 
-        public FacetGroup(Grid grid, List<FacetT> facets) : base(grid)
+        public FacetGroup(Grid<Cube> grid, List<FacetT> facets) : base(grid)
         {
             Facets = facets;
         }
@@ -414,7 +413,7 @@ namespace ShapeGrammar
 
     public class FaceHorGroup : FacetGroup<FaceHor>
     {
-        public FaceHorGroup(Grid grid, List<FaceHor> faces) : base(grid, faces)
+        public FaceHorGroup(Grid<Cube> grid, List<FaceHor> faces) : base(grid, faces)
         {
         }
 
@@ -460,7 +459,7 @@ namespace ShapeGrammar
 
     public class FaceVerGroup : FacetGroup<FaceVer>
     {
-        public FaceVerGroup(Grid grid, List<FaceVer> faces) : base(grid, faces)
+        public FaceVerGroup(Grid<Cube> grid, List<FaceVer> faces) : base(grid, faces)
         {
         }
 
@@ -483,7 +482,7 @@ namespace ShapeGrammar
 
     public class CornerGroup : FacetGroup<Corner>
     {
-        public CornerGroup(Grid grid, List<Corner> faces) : base(grid, faces)
+        public CornerGroup(Grid<Cube> grid, List<Corner> faces) : base(grid, faces)
         {
         }
 

@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static ShapeGrammar.Grid;
 using System.Linq;
 using Assets.Util;
 

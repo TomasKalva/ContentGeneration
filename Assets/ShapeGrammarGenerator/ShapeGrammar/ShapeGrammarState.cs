@@ -143,14 +143,14 @@ namespace ShapeGrammar
                         roomCubeGroup
 
                         // create a new object
-                        .ExtrudeDir(dir, 1)
+                        .CubeGroupMaxLayer(dir)
                         .OpAdd()
                         .ExtrudeHor().ExtrudeHor().Minus(roomCubeGroup)
 
                         .LevelElement(AreaType.Yard))
 
                         // fail if no such object exists
-                        .Where(le => le.CubeGroup().NotTaken());
+                        .Where(le => le.CubeGroup().NotTaken() && state.CanBeFounded(le));
                     if (!courtyards.Any())
                         return null;
 
@@ -256,7 +256,7 @@ namespace ShapeGrammar
 
         public ShapeGrammarState(LevelDevelopmentKit ldk)
         {
-            var grid = new Grid(new UnityEngine.Vector3Int(20, 20, 20));
+            var grid = ldk.grid;
             var empty = LevelElement.Empty(grid); new LevelGeometryElement(grid, AreaType.None, new CubeGroup(grid, new List<Cube>()));
             Root = new Node(empty, new HashSet<Symbol>());
             WorldState = new WorldState(empty, grid, le => le.ApplyGrammarStyleRules(ldk.houseStyleRules)).TryPush(empty);
@@ -278,6 +278,11 @@ namespace ShapeGrammar
         {
             var nodes = Root.AllNodes().Where(node => node.HasActiveSymbols(symbols));
             return nodes.GetRandom();
+        }
+
+        public bool CanBeFounded(LevelElement le)
+        {
+            return true;
         }
 
         #region Operation factories

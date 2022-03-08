@@ -10,7 +10,7 @@ namespace ShapeGrammar
 {
     public class Cube
     {
-        public Grid Grid { get; }
+        public Grid<Cube> Grid { get; }
         public Vector3Int Position { get; }
         public Dictionary<Vector3Int, Facet> Facets { get; }
         public FaceHor FacesHor(Vector3Int dir) => Facets[dir] as FaceHor;
@@ -21,7 +21,7 @@ namespace ShapeGrammar
         public bool Changed { get; set; }
         public ShapeGrammarObjectStyle Style { get; set; }
 
-        public Cube(Grid grid, Vector3Int position)
+        public Cube(Grid<Cube> grid, Vector3Int position)
         {
             Grid = grid;
             Position = position;

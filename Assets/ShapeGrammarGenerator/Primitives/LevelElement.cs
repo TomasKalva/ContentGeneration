@@ -9,18 +9,18 @@ namespace ShapeGrammar
 {
     public abstract class LevelElement
     {
-        public Grid Grid { get; }
+        public Grid<Cube> Grid { get; }
         public AreaType AreaType { get; set; }
 
         public abstract List<Cube> Cubes();
 
-        public LevelElement(Grid grid, AreaType areaType)
+        public LevelElement(Grid<Cube> grid, AreaType areaType)
         {
             Grid = grid;
             AreaType = areaType;
         }
 
-        public static LevelElement Empty(Grid grid) => new LevelGeometryElement(grid, AreaType.None, new CubeGroup(grid, new List<Cube>()));
+        public static LevelElement Empty(Grid<Cube> grid) => new LevelGeometryElement(grid, AreaType.None, new CubeGroup(grid, new List<Cube>()));
 
         #region Collection methods
         public IEnumerable<LevelElement> WithAreaType(AreaType areaType) => Where(g => g.AreaType == areaType).LevelElements.ToList();
@@ -167,12 +167,12 @@ namespace ShapeGrammar
 
         public override List<Cube> Cubes() => LevelElements.SelectMany(le => le.Cubes()).ToList();
 
-        public LevelGroupElement(Grid grid, AreaType areaType, params LevelElement[] levelElements) : base(grid, areaType)
+        public LevelGroupElement(Grid<Cube> grid, AreaType areaType, params LevelElement[] levelElements) : base(grid, areaType)
         {
             LevelElements = levelElements.ToList();
         }
 
-        public LevelGroupElement(Grid grid, AreaType areaType, List<LevelElement> levelElements) : base(grid, areaType)
+        public LevelGroupElement(Grid<Cube> grid, AreaType areaType, List<LevelElement> levelElements) : base(grid, areaType)
         {
             LevelElements = levelElements.ToList();
         }
@@ -276,7 +276,7 @@ namespace ShapeGrammar
 
         public override List<Cube> Cubes() => Group.Cubes;
 
-        public LevelGeometryElement(Grid grid, AreaType areaType, CubeGroup group) : base(grid, areaType)
+        public LevelGeometryElement(Grid<Cube> grid, AreaType areaType, CubeGroup group) : base(grid, areaType)
         {
             Group = group;
         }

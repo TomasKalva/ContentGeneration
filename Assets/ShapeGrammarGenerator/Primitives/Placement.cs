@@ -9,9 +9,9 @@ namespace ShapeGrammar
 {
     public class Placement
     {
-        Grid Grid { get; }
+        Grid<Cube> Grid { get; }
 
-        public Placement(Grid grid)
+        public Placement(Grid<Cube> grid)
         {
             Grid = grid;
         }

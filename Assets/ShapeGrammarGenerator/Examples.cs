@@ -11,7 +11,7 @@ namespace ShapeGrammar
     {
         public ShapeGrammarObjectStyle DefaultHouseStyle { get; }
         public ShapeGrammarObjectStyle GardenStyle { get; }
-        public Grid grid { get; }
+        public Grid<Cube> grid { get; }
         public QueryContext qc { get; }
         public ShapeGrammarStyles sgStyles { get; }
         public ShapeGrammarShapes sgShapes { get; }
@@ -25,7 +25,7 @@ namespace ShapeGrammar
         public LevelDevelopmentKit(ShapeGrammarObjectStyle defaultHouseStyle, ShapeGrammarObjectStyle gardenStyle, Libraries lib)
         {
             DefaultHouseStyle = defaultHouseStyle;
-            grid = new Grid(new Vector3Int(20, 10, 20));
+            grid = new Grid<Cube>(new Vector3Int(20, 10, 20), (grid, pos) => new Cube(grid, pos));
             qc = new QueryContext(grid);
             sgStyles = new ShapeGrammarStyles(grid, DefaultHouseStyle, gardenStyle);
             sgShapes = new ShapeGrammarShapes(grid);
