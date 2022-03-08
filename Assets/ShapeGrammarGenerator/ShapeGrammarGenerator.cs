@@ -60,7 +60,7 @@ namespace ShapeGrammar
             stopwatch.Start();
 
             var examples = new Examples(DefaultHouseStyle, GardenStyle, libraries);
-            var levelRoot = examples.ConnectByOutsideStairs();
+            var levelRoot = examples.ConnectByBridge();
             examples.grid.Generate(worldScale, parent);
 
             stopwatch.Stop();

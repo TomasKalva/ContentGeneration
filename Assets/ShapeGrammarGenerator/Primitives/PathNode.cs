@@ -22,6 +22,13 @@ namespace ShapeGrammar
             return pathNode => pathNode.cube.NeighborsVer().Select(c => new PathNode(pathNode, c));
         }
 
+        public static Neighbors<PathNode> StraightHorizontalNeighbors()
+        {
+            return pathNode => pathNode.prev == null ?
+                pathNode.cube.NeighborsHor().Select(c => new PathNode(pathNode, c)) :
+                new PathNode(pathNode, pathNode.cube.Grid[2 * pathNode.cube.Position - pathNode.prev.cube.Position]).ToEnumerable();
+        }
+
         public static Neighbors<PathNode> DirectionNeighbors(params Vector3Int[] directions)
         {
             return pathNode => pathNode.cube.NeighborsDirections(directions).Select(c => new PathNode(pathNode, c));

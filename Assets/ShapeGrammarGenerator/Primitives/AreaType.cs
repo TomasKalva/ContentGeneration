@@ -27,6 +27,7 @@ namespace ShapeGrammar
         public static AreaType Colonnade { get; } = new AreaType("Colonnade");
         public static AreaType Elevator { get; } = new AreaType("Elevator");
         public static AreaType Door { get; } = new AreaType("Door");
+        public static AreaType Bridge { get; } = new AreaType("Bridge");
 
         public static HashSet<AreaType> ConnectableByStairs { get; }
 

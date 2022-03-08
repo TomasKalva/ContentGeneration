@@ -48,7 +48,8 @@ namespace ShapeGrammar
                 new StyleRule(g => g.WithAreaType(AreaType.Debug), g => g.SetGrammarStyle(sgStyles.RoomStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Colonnade), g => g.SetGrammarStyle(sgStyles.ColonnadeStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Elevator), g => g.SetGrammarStyle(area => sgStyles.ElevatorStyle(area, lib))),
-                new StyleRule(g => g.WithAreaType(AreaType.Door), g => g.SetGrammarStyle(sgStyles.DoorStyle))
+                new StyleRule(g => g.WithAreaType(AreaType.Door), g => g.SetGrammarStyle(sgStyles.DoorStyle)),
+                new StyleRule(g => g.WithAreaType(AreaType.Bridge), g => g.SetGrammarStyle(sgStyles.StairsPathStyle))
             );
             wc = new WorldChanging(this);
         }
@@ -387,6 +388,24 @@ namespace ShapeGrammar
 
             path.ApplyGrammarStyleRules(houseStyleRules);
             
+            return room1.Merge(room2).Merge(path).Merge(foundation);
+        }
+
+        public LevelElement ConnectByBridge()
+        {
+            var room1 = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 5) + new Vector3Int(0, 4, 0));
+            var room2 = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 5) + new Vector3Int(8, 4, 0));
+
+            room1.ApplyGrammarStyleRules(houseStyleRules);
+            room2.ApplyGrammarStyleRules(houseStyleRules);
+
+            var foundation = sgShapes.Foundation(room1.Merge(room2));
+            foundation.ApplyGrammarStyleRules(houseStyleRules);
+
+            var path = con.ConnectByBridge(room1, room2, foundation);
+
+            path.ApplyGrammarStyleRules(houseStyleRules);
+
             return room1.Merge(room2).Merge(path).Merge(foundation);
         }
 
