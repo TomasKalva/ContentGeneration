@@ -119,8 +119,46 @@ namespace ShapeGrammar
                     var roof = lge.LevelElements[0].SetAreaType(AreaType.Roof).GrammarNode(sym.Roof);
                     return new[]
                     {
-                        state.Add(room).SetTo(roof),
-                        state.Add(terrace).SetTo(terrace),
+                        state.Add(room).SetTo(terrace),
+                        state.Add(terrace).SetTo(roof),
+                    };
+                });
+        }
+
+        public Production ExtrudeCourtyard()
+        {
+            return new Production(
+                state => state.WithActiveSymbols(sym.Room) != null,
+                state =>
+                {
+                    var room = state.WithActiveSymbols(sym.Room);
+                    var roomCubeGroup = room.LevelElement.CubeGroup();
+
+                    var courtyards =
+                    // for give parametrization
+                        ExtensionMethods.HorizontalDirections().Shuffle()
+                        .Select(dir =>
+
+                        // access the object
+                        roomCubeGroup
+
+                        // create a new object
+                        .ExtrudeDir(dir, 1)
+                        .OpAdd()
+                        .ExtrudeHor().ExtrudeHor().Minus(roomCubeGroup)
+
+                        .LevelElement(AreaType.Yard))
+
+                        // fail if no such object exists
+                        .Where(le => le.CubeGroup().NotTaken());
+                    if (!courtyards.Any())
+                        return null;
+
+                    // and modify the dag
+                    var courtyardSpace = courtyards.FirstOrDefault().GrammarNode(sym.Courtyard);
+                    return new[]
+                    {
+                        state.Add(room).SetTo(courtyardSpace),
                     };
                 });
         }
@@ -144,7 +182,7 @@ namespace ShapeGrammar
                 }
                 );
         }*/
-        
+
     }
 
     public abstract class Operation 

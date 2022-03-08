@@ -17,6 +17,7 @@ namespace ShapeGrammar
         public Symbol Room { get; } = new Symbol("Room");
         public Symbol Terrace { get; } = new Symbol("Terrace");
         public Symbol Roof { get; } = new Symbol("Roof");
+        public Symbol Courtyard { get; } = new Symbol("Courtyard");
         public Symbol Foundation { get; } = new Symbol("Foundation");
     }
 

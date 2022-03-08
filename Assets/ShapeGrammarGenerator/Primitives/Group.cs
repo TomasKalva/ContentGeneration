@@ -42,10 +42,53 @@ namespace ShapeGrammar
         public int LengthY() => ExtentsDir(Vector3Int.up);
         public int LengthZ() => ExtentsDir(Vector3Int.forward);
 
+        public delegate CubeGroup Constructor(CubeGroup existing, List<Cube> newCubes);
+
+        /// <summary>
+        /// Used by mainly extruding operations to construct a new cube group.
+        /// </summary>
+        Constructor Constr { get; set; }
+
         public CubeGroup(Grid grid,List<Cube> cubes) : base(grid)
         {
             //Debug.Assert(cubes.Any());
             Cubes = cubes.Distinct().ToList();
+            OpNew();
+        }
+
+        CubeGroup(Grid grid, List<Cube> cubes, Constructor constr) : this(grid, cubes)
+        {
+            Constr = constr;
+        }
+
+        public CubeGroup OpAdd()
+        {
+            CubeGroup add(CubeGroup existing, List<Cube> newCubes)
+            {
+                return new CubeGroup(Grid, existing.Cubes.Concat(newCubes).ToList(), add);
+            }
+            Constr = add;
+            return this;
+        }
+
+        public CubeGroup OpSub()
+        {
+            CubeGroup sub(CubeGroup existing, List<Cube> newCubes)
+            {
+                return new CubeGroup(Grid, existing.Cubes.SetMinus(newCubes).ToList(), sub);
+            }
+            Constr = sub;
+            return this;
+        }
+
+        public CubeGroup OpNew()
+        {
+            CubeGroup @new(CubeGroup existing, List<Cube> newCubes)
+            {
+                return new CubeGroup(Grid, newCubes, @new);
+            }
+            Constr = @new;
+            return this;
         }
 
         public bool NotTaken() => Cubes.All(cube => !cube.Changed);
@@ -69,7 +112,7 @@ namespace ShapeGrammar
         public CubeGroup MoveBy(Vector3Int offset)
         {
             var movedCubes = Cubes.SelectNN(cube => cube.MoveBy(offset));
-            return new CubeGroup(Grid, movedCubes.ToList());
+            return Constr(this, movedCubes.ToList());
         }
 
         public CubeGroup MoveInDirUntil(Vector3Int dir, Func<Cube, bool> stopPred)
@@ -130,7 +173,7 @@ namespace ShapeGrammar
             int dir = outside ? 1 : -1;
             var faceCubes = AllBoundaryFacesH().Extrude(dir, takeChanged).Cubes;
             var cornerCubes = AllBoundaryCorners().Extrude(dir, takeChanged).Cubes;
-            return new CubeGroup(Grid, faceCubes.Concat(cornerCubes).Distinct().ToList());
+            return Constr(this, faceCubes.Concat(cornerCubes).Distinct().ToList());
         }
 
         public CubeGroup ExtrudeHorOut(int dist, bool takeChanged = true)
@@ -140,21 +183,24 @@ namespace ShapeGrammar
             {
                 totalGroup = totalGroup.ExtrudeHor(true, takeChanged);
             }
-            return totalGroup.Minus(this);
+            return Constr(this, totalGroup.Cubes.SetMinus(Cubes).ToList());
         }
 
         public CubeGroup ExtrudeVer(Vector3Int dir, int dist, bool takeChanged = true)
         {
             var upCubes = BoundaryFacesV(dir).Extrude(dist, takeChanged).Cubes;
-            return new CubeGroup(Grid, upCubes.ToList());
+            return Constr(this, upCubes.ToList());
         }
 
         public CubeGroup ExtrudeAll(bool outside = true, bool takeChanged = true)
         {
+            var currentConstr = Constr;
+            OpNew();
             var sides = ExtrudeHor(outside, takeChanged).Cubes;
             var up = ExtrudeVer(Vector3Int.up, 1, takeChanged).Cubes;
             var down = ExtrudeVer(Vector3Int.down, 1, takeChanged).Cubes;
-            return new CubeGroup(Grid, sides.Concat(up.Concat(down)).ToList());
+            Constr = currentConstr;
+            return Constr(this, sides.Concat(up.Concat(down)).ToList());
         }
 
         public CubeGroup ExtrudeDir(Vector3Int dir, int dist = 1, bool takeChanged = true)
@@ -162,7 +208,7 @@ namespace ShapeGrammar
             var extruded = dir.y == 0 ?
                 BoundaryFacesH(dir).Extrude(dist, takeChanged) :
                 BoundaryFacesV(dir).Extrude(dist, takeChanged);
-            return extruded;
+            return Constr(this, extruded.Cubes);
         }
 
         public CubeGroup WithFloor() => Where(cube => cube.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor);
