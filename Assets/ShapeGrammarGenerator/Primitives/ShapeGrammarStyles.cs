@@ -213,10 +213,11 @@ namespace ShapeGrammar
         {
             // assumes that first and last move are horizontal, vertical shaft inbetween
 
-            var bottom = elevatorShaftArea.CubeGroupMaxLayer(Vector3Int.down).Cubes.Skip(1).First().Position;
+            var shaftCubes = elevatorShaftArea.Cubes.Skip(1).Reverse().Skip(1).Reverse().ToCubeGroup(GridView);
+
+            var bottom = shaftCubes.Cubes.ArgMin(cube => cube.Position.y).Position;
             var height = elevatorShaftArea.Extents().y;
 
-            var shaftCubes = elevatorShaftArea.Cubes.Skip(1).Reverse().Skip(1).Reverse().ToCubeGroup(GridView);
             
             // remove floor from shaft
             var shaftFloors = new FaceVerGroup(GridView, shaftCubes.Cubes.Select2((_, topCube) => topCube.FacesVer(Vector3Int.down)).ToList());
@@ -251,6 +252,7 @@ namespace ShapeGrammar
             Debug.Assert(doorFromFirst.Cubes.Count() == 2);
 
             doorFromFirst.Cubes.First().Group().NeighborsInGroupH(doorFromFirst).SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Door);
+            doorFromFirst.Cubes.Skip(1).First().Group().NeighborsInGroupH(doorFromFirst).SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Nothing);
 
             return doorFromFirst;
         }

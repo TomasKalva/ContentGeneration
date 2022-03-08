@@ -45,6 +45,7 @@ namespace ShapeGrammar
 
         /// <summary>
         /// Used by mainly extruding operations to construct a new cube group.
+        /// todo: make all operations preserve Constr
         /// </summary>
         Constructor Constr { get; set; }
 
@@ -136,7 +137,7 @@ namespace ShapeGrammar
         /// Includes first and last element.
         /// </summary>
         public CubeGroup Where3Cycle(Func<Cube, Cube, Cube, bool> pred) => new CubeGroup(Grid, Cubes.Where3(pred).Prepend(Cubes.FirstOrDefault()).Append(Cubes.LastOrDefault()).ToList());
-        public CubeGroup Minus(CubeGroup group) => new CubeGroup(Grid, Cubes.Except(group.Cubes).ToList());
+        public CubeGroup Minus(CubeGroup group) => new CubeGroup(Grid, Cubes.Except(group.Cubes).ToList(), Constr);
 
         public IEnumerable<Vector3Int> MinkowskiMinus(CubeGroup grp) => 
             (from cube1 in Cubes 

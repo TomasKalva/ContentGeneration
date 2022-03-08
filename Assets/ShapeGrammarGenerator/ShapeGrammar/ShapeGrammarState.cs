@@ -75,7 +75,7 @@ namespace ShapeGrammar
                 state =>
                 {
                     var root = state.Root;
-                    var room = ldk.sgShapes.Room(new Box2Int(0, 0, 5, 5).InflateY(5, 10));
+                    var room = ldk.sgShapes.Room(new Box2Int(0, 0, 5, 5).InflateY(8, 10));
                     var movedRoom = ldk.pl.MoveToNotOverlap(state.WorldState.Added, room);
                     var foundation = ldk.sgShapes.Foundation(movedRoom);
                     return new[]
@@ -125,7 +125,7 @@ namespace ShapeGrammar
                 });
         }
 
-        public Production ExtrudeCourtyard()
+        public Production CourtyardFromRoom()
         {
             return new Production(
                 state => state.WithActiveSymbols(sym.Room) != null,
@@ -139,10 +139,8 @@ namespace ShapeGrammar
                         ExtensionMethods.HorizontalDirections().Shuffle()
                         .Select(dir =>
 
-                        // access the object
-                        roomCubeGroup
-
                         // create a new object
+                        roomCubeGroup
                         .CubeGroupMaxLayer(dir)
                         .OpAdd()
                         .ExtrudeHor().ExtrudeHor().Minus(roomCubeGroup)
@@ -154,11 +152,65 @@ namespace ShapeGrammar
                     if (!courtyards.Any())
                         return null;
 
+                    var courtyard = courtyards.FirstOrDefault().GrammarNode(sym.Courtyard);
+
+                    //room.LevelElement.ApplyGrammarStyleRules(ldk.houseStyleRules);
+                    courtyard.LevelElement.ApplyGrammarStyleRules(ldk.houseStyleRules);
+                    var door = ldk.con.ConnectByDoor(room.LevelElement, courtyard.LevelElement).GrammarNode();
+
                     // and modify the dag
-                    var courtyardSpace = courtyards.FirstOrDefault().GrammarNode(sym.Courtyard);
+                    var foundation = ldk.sgShapes.Foundation(courtyard.LevelElement).GrammarNode(sym.Available);
                     return new[]
                     {
-                        state.Add(room).SetTo(courtyardSpace),
+                        state.Add(room).SetTo(courtyard),
+                        state.Add(courtyard).SetTo(foundation),
+                        state.Add(room, courtyard).SetTo(door),
+                    };
+                });
+        }
+
+        public Production CourtyardFromCourtyardCorner()
+        {
+            return new Production(
+                state => state.WithActiveSymbols(sym.Courtyard) != null,
+                state =>
+                {
+                    var courtyard = state.WithActiveSymbols(sym.Courtyard);
+                    var courtyardGroup = courtyard.LevelElement.CubeGroup();
+                    var corners = courtyardGroup.AllSpecialCorners().CubeGroup().Where(cube => cube.Position.y >= 4);
+                    if (!corners.Cubes.Any())
+                        return null;
+
+                    var startCube = corners.CubeGroupMaxLayer(Vector3Int.down).Cubes.GetRandom().Group();
+
+                    var newCourtyardLe =
+                        startCube
+                        .OpAdd()
+                            .ExtrudeHor().Minus(courtyardGroup)
+                            .ExtrudeHor().Minus(courtyardGroup)
+                            .ExtrudeVer(Vector3Int.up, 2)
+                        .OpNew()
+                            .MoveBy(2 * Vector3Int.down)
+                        .LevelElement(AreaType.Yard);
+                    if (!newCourtyardLe.CubeGroup().NotTaken() || !state.CanBeFounded(newCourtyardLe))
+                        return null;
+
+                    // floor doesn't exist yet...
+                    //courtyard.LevelElement.ApplyGrammarStyleRules(ldk.houseStyleRules);
+                    newCourtyardLe.ApplyGrammarStyleRules(ldk.houseStyleRules);
+                    
+                    // connecting by elevator always succeeds
+                    var path = ldk.con.ConnectByElevator(courtyard.LevelElement, newCourtyardLe);
+
+                    // and modify the dag
+                    var newCourtyardNode = newCourtyardLe.GrammarNode(sym.Courtyard);
+                    var foundation = ldk.sgShapes.Foundation(newCourtyardNode.LevelElement).GrammarNode(sym.Available);
+                    var pathNode = path.GrammarNode();
+                    return new[]
+                    {
+                        state.Add(courtyard).SetTo(newCourtyardNode),
+                        state.Add(newCourtyardNode).SetTo(foundation),
+                        state.Add(courtyard, newCourtyardNode).SetTo(pathNode),
                     };
                 });
         }

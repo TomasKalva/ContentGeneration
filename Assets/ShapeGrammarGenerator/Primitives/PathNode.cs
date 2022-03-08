@@ -86,9 +86,7 @@ namespace ShapeGrammar
             {
                 return pathNode.prev == null ?
                             horizontal(pathNode) : // horizontal node at start
-                            endSet.Contains(pathNode.cube) ?
-                                horizontal(pathNode).Where(node => endSet.Contains(node.cube)) : // one last horizontal move when reaching the end
-                                vertical(pathNode); //otherwise move vertically
+                            vertical(pathNode).Concat(horizontal(pathNode).Where(node => endSet.Contains(node.cube))); // one last horizontal move when reaching the end
             };
             return NotRepeatingCubes(repeatingCubesNeighbors);
         }

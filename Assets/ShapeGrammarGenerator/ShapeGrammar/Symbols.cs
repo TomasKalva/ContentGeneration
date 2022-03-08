@@ -10,7 +10,7 @@ namespace ShapeGrammar
     {
         public Symbol BrokenFloor { get; } = new Symbol("BrokenFloor");
         public Symbol ConnectTo(Node to) => new ConnectTo("ConnectTo", to);
-        public Symbol NotTaken { get; } = new Symbol("NotTaken");
+        public Symbol Available { get; } = new Symbol("NotTaken");
         public Symbol ExtrudeUp { get; } = new Symbol("ExtrudeUp");
         public Symbol CreateFrom(params Node[] from) => new CreateFrom("CreateFrom", from.ToList());
         public Symbol FloorGiver(Node giveTo) => new FloorGiver("FloorGiver", giveTo);
