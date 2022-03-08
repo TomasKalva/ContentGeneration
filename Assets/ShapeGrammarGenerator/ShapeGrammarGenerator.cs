@@ -75,7 +75,7 @@ namespace ShapeGrammar
             world.AddInteractiveObject(interactiveObjects.Grave(), GridToWorld(goodGraveCube.Position));
 
             var elevator = libraries.InteractiveObjects.Elevator(1 * worldScale, false);
-            world.AddObject(elevator, Vector3.zero);
+            world.AddObject(elevator.Object, Vector3.zero);
 
             /*            
             var allEnemies = libraries.Enemies.AllAgents();

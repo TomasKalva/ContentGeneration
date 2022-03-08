@@ -23,7 +23,7 @@ public class InteractiveObjects : ScriptableObject
         Selection.activeObject = asset;
     }
 #endif
-
+    // todo: first return only state of the object, once the world is created, instantiate gameObject from prefab
     [SerializeField]
     InteractiveObject gravePrefab;
 
@@ -67,7 +67,7 @@ public class InteractiveObjects : ScriptableObject
         return obj;
     }
 
-    public Transform Elevator(float height, bool up)
+    public ElevatorState Elevator(float height, bool up)
     {
         var state = new ElevatorState(height, up);
         var obj = Instantiate(elevatorPrefab);
@@ -76,7 +76,7 @@ public class InteractiveObjects : ScriptableObject
         var lever = Lever(state.Activate);
         var leverSlot = obj.FindRecursive("LeverSlot");
         lever.transform.SetParent(leverSlot, Vector3.zero);
-        return obj;
+        return state;
     }
 
     public InteractiveObject Lever(Action onPulled)

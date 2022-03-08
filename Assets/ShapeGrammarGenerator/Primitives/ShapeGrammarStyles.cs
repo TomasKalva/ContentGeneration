@@ -218,18 +218,31 @@ namespace ShapeGrammar
             var height = elevatorShaftArea.Extents().y;
 
             var shaftCubes = elevatorShaftArea.Cubes.Skip(1).Reverse().Skip(1).Reverse().ToCubeGroup(GridView);
+            
+            // remove floor from shaft
             var shaftFloors = new FaceVerGroup(GridView, shaftCubes.Cubes.Select2((_, topCube) => topCube.FacesVer(Vector3Int.down)).ToList());
             shaftFloors.Fill(FACE_VER.Nothing).SetStyle(DefaultHouseStyle);
 
+            // wall
             shaftCubes.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Wall);
+            
+            // doors
             var doorCubes = new CubeGroup(GridView, new List<Cube>() 
             {
                 elevatorShaftArea.Cubes.First(), elevatorShaftArea.Cubes.Last() 
             });
             doorCubes.NeighborsInGroupH(elevatorShaftArea).SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Door);
 
+            // elevator
             var elevator = lib.InteractiveObjects.Elevator((height - 1), false);
-            elevator.transform.position = (Vector3)bottom * 2.8f;
+            elevator.Object.transform.position = (Vector3)bottom * 2.8f;
+            
+            // levers
+            doorCubes.Cubes.ForEach(cube =>
+            {
+                var lever = lib.InteractiveObjects.Lever(elevator.Activate);
+                lever.transform.position = (Vector3)cube.Position * 2.8f;
+            });
 
             return elevatorShaftArea;
         }
