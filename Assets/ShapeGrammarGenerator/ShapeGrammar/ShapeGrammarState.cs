@@ -211,6 +211,11 @@ namespace ShapeGrammar
         }
 
         public abstract void ChangeState(ShapeGrammarState grammarState);
+
+        protected void AddToFoundation(ShapeGrammarState grammarState, LevelElement le)
+        {
+            le.Cubes().ForEach(cube => grammarState.OffersFoundation[new Vector3Int(cube.Position.x, 0, cube.Position.z)] = false);
+        }
     }
 
     public class AddNew : Operation
@@ -220,6 +225,7 @@ namespace ShapeGrammar
             AddIntoDag();
             var lge = To.Select(node => node.LevelElement).ToLevelGroupElement(grammarState.WorldState.Grid);
             grammarState.WorldState = grammarState.WorldState.TryPush(lge);
+            AddToFoundation(grammarState, lge);
         }
     }
 
@@ -231,6 +237,7 @@ namespace ShapeGrammar
             From.ForEach(node => node.LevelElement = LevelElement.Empty(grammarState.WorldState.Grid));
             var lge = To.Select(node => node.LevelElement).ToLevelGroupElement(grammarState.WorldState.Grid);
             grammarState.WorldState = grammarState.WorldState.TryPush(lge);
+            AddToFoundation(grammarState, lge);
         }
     }
 
@@ -249,6 +256,7 @@ namespace ShapeGrammar
         /// </summary>
         public WorldState WorldState { get; set; }
 
+        public Grid<bool> OffersFoundation { get; }
 
         public Mode Mode { get; set; }
 
@@ -260,6 +268,7 @@ namespace ShapeGrammar
             var empty = LevelElement.Empty(grid); new LevelGeometryElement(grid, AreaType.None, new CubeGroup(grid, new List<Cube>()));
             Root = new Node(empty, new HashSet<Symbol>());
             WorldState = new WorldState(empty, grid, le => le.ApplyGrammarStyleRules(ldk.houseStyleRules)).TryPush(empty);
+            OffersFoundation = new Grid<bool>(new Vector3Int(10, 1, 10), (_1, _2) => true);
             Applied = new List<Operation>();
         }
 
@@ -282,7 +291,7 @@ namespace ShapeGrammar
 
         public bool CanBeFounded(LevelElement le)
         {
-            return true;
+            return le.Cubes().All(cube => OffersFoundation[new Vector3Int(cube.Position.x, 0, cube.Position.z)]);
         }
 
         #region Operation factories
