@@ -194,20 +194,21 @@ namespace ShapeGrammar
                     if (!corners.Cubes.Any())
                         return null;
 
-                    var startCube = corners.CubeGroupMaxLayer(Vector3Int.down).Cubes.GetRandom().Group();
-
-                    var newCourtyardLe =
-                        startCube
+                    var newCourtyards = corners.CubeGroupMaxLayer(Vector3Int.down).Cubes
+                        .Select(startCube =>
+                        startCube.Group()
                         .OpAdd()
                             .ExtrudeHor().Minus(courtyardGroup)
                             .ExtrudeHor().Minus(courtyardGroup)
                             .ExtrudeVer(Vector3Int.up, 2)
                         .OpNew()
                             .MoveBy(2 * Vector3Int.down)
-                        .LevelElement(AreaType.Yard);
-                    if (!newCourtyardLe.CubeGroup().NotTaken() || !state.CanBeFounded(newCourtyardLe))
+                        .LevelElement(AreaType.Yard))
+                        .Where(le => le.CubeGroup().NotTaken() && state.CanBeFounded(le)); ;
+                    if (!newCourtyards.Any())
                         return null;
 
+                    var newCourtyardLe = newCourtyards.FirstOrDefault();
                     // floor doesn't exist yet...
                     newCourtyardLe.ApplyGrammarStyleRules(ldk.houseStyleRules);
                     
@@ -482,8 +483,12 @@ namespace ShapeGrammar
         {
             for(int i = 0; i < count; i++)
             {
-                var applicable = Productions.Where(production => production.CanBeApplied(ShapeGrammarState));
-                ShapeGrammarState.ApplyProduction(applicable.GetRandom());
+                var applicable = Productions.Where(production => production.CanBeApplied(ShapeGrammarState)).Shuffle();
+                var applied = applicable.DoUntilSuccess(prod => ShapeGrammarState.ApplyProduction(prod));
+                if (!applied)
+                {
+                    Debug.Log($"Can't apply any productions {i}");
+                }
             }
         }
     }

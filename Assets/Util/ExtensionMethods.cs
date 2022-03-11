@@ -9,6 +9,16 @@ using UnityEngine;
 
 static class ExtensionMethods
 {
+    public static bool DoUntilSuccess<T>(this IEnumerable<T> enumerable, Func<T, bool> operation)
+    {
+        foreach(var item in enumerable)
+        {
+            if (operation(item))
+                return true;
+        }
+        return false;
+    }
+
     public static T GetRandom<T>(this List<T> list)
     {
         var count = list.Count;

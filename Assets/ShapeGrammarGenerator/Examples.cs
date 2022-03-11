@@ -50,7 +50,7 @@ namespace ShapeGrammar
                 new StyleRule(g => g.WithAreaType(AreaType.Colonnade), g => g.SetGrammarStyle(sgStyles.ColonnadeStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Elevator), g => g.SetGrammarStyle(area => sgStyles.ElevatorStyle(area, lib))),
                 new StyleRule(g => g.WithAreaType(AreaType.Door), g => g.SetGrammarStyle(sgStyles.DoorStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.Bridge), g => g.SetGrammarStyle(sgStyles.StairsPathStyle))
+                new StyleRule(g => g.WithAreaType(AreaType.Bridge), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle))
             );
             wc = new WorldChanging(this);
         }
