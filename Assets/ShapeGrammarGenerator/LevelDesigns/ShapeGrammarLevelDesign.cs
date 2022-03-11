@@ -20,12 +20,15 @@ namespace ShapeGrammar
             var productionList = new List<Production>()
             {
                 pr.CourtyardFromRoom(),
-                pr.CourtyardFromCourtyardCorner()
+                pr.CourtyardFromCourtyardCorner(),
+                pr.BridgeFromCourtyard()
                 //pr.ExtrudeRoof()
             };
             var shapeGrammar = new ShapeGrammar(productionList, ldk);
             shapeGrammar.ShapeGrammarState.ApplyProduction(pr.CreateNewHouse());
             shapeGrammar.DoProductions(15);
+            shapeGrammar.ShapeGrammarState.Print(new PrintingState()).Show();
+
             var level = shapeGrammar.ShapeGrammarState.WorldState.Added;
 
 

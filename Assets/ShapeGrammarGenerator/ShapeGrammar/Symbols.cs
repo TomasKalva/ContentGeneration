@@ -10,7 +10,6 @@ namespace ShapeGrammar
     {
         public Symbol BrokenFloor { get; } = new Symbol("BrokenFloor");
         public Symbol ConnectTo(Node to) => new ConnectTo("ConnectTo", to);
-        public Symbol Available { get; } = new Symbol("NotTaken");
         public Symbol ExtrudeUp { get; } = new Symbol("ExtrudeUp");
         public Symbol CreateFrom(params Node[] from) => new CreateFrom("CreateFrom", from.ToList());
         public Symbol FloorGiver(Node giveTo) => new FloorGiver("FloorGiver", giveTo);
@@ -19,15 +18,21 @@ namespace ShapeGrammar
         public Symbol Roof { get; } = new Symbol("Roof");
         public Symbol Courtyard { get; } = new Symbol("Courtyard");
         public Symbol Foundation { get; } = new Symbol("Foundation");
+        public Symbol Bridge { get; } = new Symbol("Bridge");
     }
 
-    public class Symbol
+    public class Symbol : Printable
     {
         public string Name { get; }
 
         public Symbol(string name)
         {
             Name = name;
+        }
+
+        public PrintingState Print(PrintingState state)
+        {
+            return state.Print(Name);
         }
     }
 

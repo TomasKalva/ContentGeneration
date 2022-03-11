@@ -77,7 +77,8 @@ namespace ShapeGrammar
             var elevator = libraries.InteractiveObjects.Elevator(1 * worldScale, false);
             world.AddObject(elevator.Object, Vector3.zero);
             */
-            /*            
+            
+            /*        
             var allEnemies = libraries.Enemies.AllAgents();
             var enemyCubes = levelRoot.CubeGroup().WithFloor().Cubes.Shuffle().Take(10);
             enemyCubes.ForEach(cube => world.AddEnemy(allEnemies.GetRandom()(), GridToWorld(cube.Position)));

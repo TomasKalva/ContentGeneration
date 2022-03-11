@@ -15,7 +15,7 @@ namespace ShapeGrammar
         }
     }
 
-    public class Node
+    public class Node : Printable
     {
         public HashSet<Symbol> Symbols { get; }
 
@@ -41,6 +41,14 @@ namespace ShapeGrammar
         {
             return symbols.All(symbol => Symbols.Contains(symbol));
         }
+
+        public PrintingState Print(PrintingState state)
+        {
+            state.Print("{");
+            Symbols.ForEach(symbol => symbol.Print(state));
+            state.Print("}");
+            return state;
+        }
     }
 
     public class Production
@@ -48,11 +56,13 @@ namespace ShapeGrammar
         public delegate bool Condition(ShapeGrammarState shapeGrammarState);
         public delegate IEnumerable<Operation> Effect(ShapeGrammarState shapeGrammarState);
 
+        public string Name { get; }
         public Condition CanBeApplied { get; }
         public Effect ExpandNewNodes { get; }
 
-        public Production(Condition canBeApplied, Effect effect)
+        public Production(string name, Condition canBeApplied, Effect effect)
         {
+            Name = name;
             CanBeApplied = canBeApplied;
             ExpandNewNodes = effect;
         }
@@ -71,17 +81,18 @@ namespace ShapeGrammar
         public Production CreateNewHouse()
         {
             return new Production(
+                "CreateNewHouse",
                 state => true,
                 state =>
                 {
                     var root = state.Root;
                     var room = ldk.sgShapes.Room(new Box2Int(0, 0, 5, 5).InflateY(8, 10));
-                    var movedRoom = ldk.pl.MoveToNotOverlap(state.WorldState.Added, room);
-                    var foundation = ldk.sgShapes.Foundation(movedRoom);
+                    var movedRoom = ldk.pl.MoveToNotOverlap(state.WorldState.Added, room).GrammarNode(sym.Room);
+                    var foundation = ldk.sgShapes.Foundation(movedRoom.LevelElement).GrammarNode(sym.Foundation);
                     return new[]
                     {
-                        state.Add(root).SetTo(movedRoom.GrammarNode(sym.Room)),
-                        state.Add(root).SetTo(foundation.GrammarNode(sym.Foundation))
+                        state.Add(root).SetTo(movedRoom),
+                        state.Add(movedRoom).SetTo(foundation)
                     };
                 });
         }
@@ -89,6 +100,7 @@ namespace ShapeGrammar
         public Production ExtrudeTerrace()
         {
             return new Production(
+                "ExtrudeTerrace",
                 state => state.WithActiveSymbols(sym.Room) != null,
                 state =>
                 {
@@ -128,6 +140,7 @@ namespace ShapeGrammar
         public Production CourtyardFromRoom()
         {
             return new Production(
+                "CourtyardFromRoom",
                 state => state.WithActiveSymbols(sym.Room) != null,
                 state =>
                 {
@@ -154,12 +167,11 @@ namespace ShapeGrammar
 
                     var courtyard = courtyards.FirstOrDefault().GrammarNode(sym.Courtyard);
 
-                    //room.LevelElement.ApplyGrammarStyleRules(ldk.houseStyleRules);
                     courtyard.LevelElement.ApplyGrammarStyleRules(ldk.houseStyleRules);
                     var door = ldk.con.ConnectByDoor(room.LevelElement, courtyard.LevelElement).GrammarNode();
 
                     // and modify the dag
-                    var foundation = ldk.sgShapes.Foundation(courtyard.LevelElement).GrammarNode(sym.Available);
+                    var foundation = ldk.sgShapes.Foundation(courtyard.LevelElement).GrammarNode(sym.Foundation);
                     return new[]
                     {
                         state.Add(room).SetTo(courtyard),
@@ -172,6 +184,7 @@ namespace ShapeGrammar
         public Production CourtyardFromCourtyardCorner()
         {
             return new Production(
+                "CourtyardFromCourtyardCorner",
                 state => state.WithActiveSymbols(sym.Courtyard) != null,
                 state =>
                 {
@@ -196,7 +209,6 @@ namespace ShapeGrammar
                         return null;
 
                     // floor doesn't exist yet...
-                    //courtyard.LevelElement.ApplyGrammarStyleRules(ldk.houseStyleRules);
                     newCourtyardLe.ApplyGrammarStyleRules(ldk.houseStyleRules);
                     
                     // connecting by elevator always succeeds
@@ -204,13 +216,53 @@ namespace ShapeGrammar
 
                     // and modify the dag
                     var newCourtyardNode = newCourtyardLe.GrammarNode(sym.Courtyard);
-                    var foundation = ldk.sgShapes.Foundation(newCourtyardNode.LevelElement).GrammarNode(sym.Available);
+                    var foundation = ldk.sgShapes.Foundation(newCourtyardNode.LevelElement).GrammarNode(sym.Foundation);
                     var pathNode = path.GrammarNode();
                     return new[]
                     {
                         state.Add(courtyard).SetTo(newCourtyardNode),
                         state.Add(newCourtyardNode).SetTo(foundation),
                         state.Add(courtyard, newCourtyardNode).SetTo(pathNode),
+                    };
+                });
+        }
+
+        public Production BridgeFromCourtyard()
+        {
+            return new Production(
+                "BridgeFromCourtyard",
+                state => state.WithActiveSymbols(sym.Courtyard) != null,
+                state =>
+                {
+                    var courtyard = state.WithActiveSymbols(sym.Courtyard);
+                    var courtyardCubeGroup = courtyard.LevelElement.CubeGroup();
+
+                    var bridges =
+                    // for give parametrization
+                        ExtensionMethods.HorizontalDirections().Shuffle()
+                        .Select(dir =>
+
+                        // create a new object
+                        courtyardCubeGroup
+                        .ExtrudeDir(dir, 3)
+
+                        .LevelElement(AreaType.Bridge))
+
+                        // fail if no such object exists
+                        .Where(le => le.CubeGroup().NotTaken() && state.CanBeFounded(le));
+                    if (!bridges.Any())
+                        return null;
+
+                    var bridge = bridges.FirstOrDefault().GrammarNode(sym.Bridge);
+
+                    bridge.LevelElement.ApplyGrammarStyleRules(ldk.houseStyleRules);
+
+                    // and modify the dag
+                    var foundation = ldk.sgShapes.Foundation(bridge.LevelElement).GrammarNode(sym.Foundation);
+                    return new[]
+                    {
+                        state.Add(courtyard).SetTo(bridge),
+                        state.Add(bridge).SetTo(foundation),
                     };
                 });
         }
@@ -237,7 +289,7 @@ namespace ShapeGrammar
 
     }
 
-    public abstract class Operation 
+    public abstract class Operation : Printable
     {
         public IEnumerable<Node> From { get; set; }
         public IEnumerable<Node> To { get; set; }
@@ -268,6 +320,17 @@ namespace ShapeGrammar
         {
             le.Cubes().ForEach(cube => grammarState.OffersFoundation[new Vector3Int(cube.Position.x, 0, cube.Position.z)] = false);
         }
+
+        public abstract PrintingState Print(PrintingState state);
+
+        public PrintingState PrintNodes(PrintingState state)
+        {
+            state.Print("\tFrom: ");
+            From.ForEach(from => from.Print(state));
+            state.Print("\tTo: ");
+            To.ForEach(to => to.Print(state));
+            return state;
+        }
     }
 
     public class AddNew : Operation
@@ -278,6 +341,13 @@ namespace ShapeGrammar
             var lge = To.Select(node => node.LevelElement).ToLevelGroupElement(grammarState.WorldState.Grid);
             grammarState.WorldState = grammarState.WorldState.TryPush(lge);
             AddToFoundation(grammarState, lge);
+        }
+
+        public override PrintingState Print(PrintingState state)
+        {
+            state.PrintIndent("Add");
+            PrintNodes(state);
+            return state;
         }
     }
 
@@ -291,6 +361,13 @@ namespace ShapeGrammar
             grammarState.WorldState = grammarState.WorldState.TryPush(lge);
             AddToFoundation(grammarState, lge);
         }
+
+        public override PrintingState Print(PrintingState state)
+        {
+            state.PrintLine("Replace");
+            PrintNodes(state);
+            return state;
+        }
     }
 
     public enum Mode
@@ -299,7 +376,7 @@ namespace ShapeGrammar
         Test
     }
 
-    public class ShapeGrammarState
+    public class ShapeGrammarState : Printable
     {
         public Node Root { get; }
 
@@ -312,7 +389,19 @@ namespace ShapeGrammar
 
         public Mode Mode { get; set; }
 
-        List<Operation> Applied { get; }
+        struct AppliedProduction
+        {
+            public string Name { get; }
+            public List<Operation> Operations { get; }
+
+            public AppliedProduction(string name, List<Operation> operations)
+            {
+                Name = name;
+                Operations = operations;
+            }
+        }
+
+        List<AppliedProduction> Applied { get; }
 
         public ShapeGrammarState(LevelDevelopmentKit ldk)
         {
@@ -321,7 +410,7 @@ namespace ShapeGrammar
             Root = new Node(empty, new HashSet<Symbol>());
             WorldState = new WorldState(empty, grid, le => le.ApplyGrammarStyleRules(ldk.houseStyleRules)).TryPush(empty);
             OffersFoundation = new Grid<bool>(new Vector3Int(10, 1, 10), (_1, _2) => true);
-            Applied = new List<Operation>();
+            Applied = new List<AppliedProduction>();
         }
 
         public bool ApplyProduction(Production production)
@@ -331,7 +420,7 @@ namespace ShapeGrammar
                 return false;
 
             operations.ForEach(operation => operation.ChangeState(this));
-            Applied.AddRange(operations);
+            Applied.Add(new AppliedProduction(production.Name, operations.ToList()));
             return true;
         }
 
@@ -362,7 +451,19 @@ namespace ShapeGrammar
                 From = from,
             };
         }
+
         #endregion
+
+        public PrintingState Print(PrintingState state)
+        {
+            Applied.ForEach(appliedPr =>
+            {
+                state.PrintLine(appliedPr.Name).ChangeIndent(1);
+                appliedPr.Operations.ForEach(op => op.Print(state).PrintLine());
+                state.ChangeIndent(-1);
+            });
+            return state;
+        }
     }
 
     public class ShapeGrammar
