@@ -73,8 +73,10 @@ namespace ShapeGrammar
         {
             var space1 = le1.CubeGroup();
             var space2 = le2.CubeGroup();
-            Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.ElevatorNeighbors(space2), space1.Merge(space2));
-            var path = paths.ConnectByPath(space1.WithFloor(), space2.WithFloor(), neighbors);
+            var start = space1.WithFloor();
+            var end = space2.WithFloor();
+            Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.ElevatorNeighbors(end), space1.Merge(space2));
+            var path = paths.ConnectByPath(start, end, neighbors);
             return path != null ? path.LevelElement(AreaType.Elevator) : null;
         }
 
