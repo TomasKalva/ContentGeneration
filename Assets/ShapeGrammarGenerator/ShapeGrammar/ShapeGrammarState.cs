@@ -15,44 +15,6 @@ namespace ShapeGrammar
         }
     }
 
-    public class ProdParamsManager
-    {
-        List<Symbol[]> ParametersSymbols { get; }
-        HashSet<ProdParams> Failed { get; }
-        
-        public ProdParamsManager()
-        {
-            ParametersSymbols = new List<Symbol[]>();
-        }
-
-        public IEnumerable<ProdParams> GetParams(ShapeGrammarState state)
-        {
-            //todo: filter failed
-            var parameterNodes = ParametersSymbols.Select(symbol => state.WithActiveSymbols(symbol));
-            var parameterNodesSequences = parameterNodes.CartesianProduct();
-            return parameterNodesSequences.Select(parSeq => new ProdParams(parSeq.ToArray()));
-        }
-
-        public ProdParamsManager AddNodeSymbols(params Symbol[] nodeSymbols)
-        {
-            ParametersSymbols.Add(nodeSymbols);
-            return this;
-        }
-    }
-
-    public class ProdParams
-    {
-        Node[] parameters;
-
-        public ProdParams(Node[] parameters)
-        {
-            this.parameters = parameters;
-        }
-
-        public Node Param => parameters.First();
-        public static void Deconstruct(out Node par1) { par1 = null; }
-    }
-
     public class Node : Printable
     {
         public HashSet<Symbol> Symbols { get; }
@@ -91,27 +53,36 @@ namespace ShapeGrammar
 
     public class Production
     {
-        public delegate bool Condition(ShapeGrammarState shapeGrammarState);
         public delegate IEnumerable<Operation> Effect(ShapeGrammarState shapeGrammarState, ProdParams prodParams);
 
         public string Name { get; }
-        public Condition CanBeApplied { get; }
         Effect ExpandNewNodes { get; }
 
         public ProdParamsManager ProdParamsManager { get; }
 
-        public Production(string name, ProdParamsManager ppm, Condition canBeApplied, Effect effect)
+        public Production(string name, ProdParamsManager ppm, Effect effect)
         {
             Name = name;
             ProdParamsManager = ppm;
-            CanBeApplied = canBeApplied;
             ExpandNewNodes = effect;
         }
 
-        public IEnumerable<Operation> Apply(ShapeGrammarState shapeGrammarState)
+        public IEnumerable<Operation> TryApply(ShapeGrammarState shapeGrammarState)
         {
             var parameters = ProdParamsManager.GetParams(shapeGrammarState).Shuffle();
-            return parameters.DoUntilSuccess(pp => ExpandNewNodes(shapeGrammarState, pp), result => result != null);
+            foreach(var pp in parameters)
+            {
+                var ops = ExpandNewNodes(shapeGrammarState, pp);
+                if(ops == null)
+                {
+                    ProdParamsManager.Failed.Add(pp);
+                }
+                else
+                {
+                    return ops;
+                }
+            }
+            return null;
         }
     }
 
@@ -130,7 +101,6 @@ namespace ShapeGrammar
             return new Production(
                 "CreateNewHouse",
                 new ProdParamsManager(),
-                state => true,
                 (state, pp) =>
                 {
                     var root = state.Root;
@@ -150,7 +120,6 @@ namespace ShapeGrammar
             return new Production(
                 "ExtrudeTerrace",
                 new ProdParamsManager().AddNodeSymbols(sym.Room),
-                state => state.WithActiveSymbols(sym.Room) != null,
                 (state, pp) =>
                 {
                     var room = pp.Param;
@@ -192,7 +161,6 @@ namespace ShapeGrammar
             return new Production(
                 "CourtyardFromRoom",
                 new ProdParamsManager().AddNodeSymbols(sym.Room),
-                state => state.WithActiveSymbols(sym.Room) != null,
                 (state, pp) =>
                 {
                     var room = pp.Param;
@@ -238,17 +206,16 @@ namespace ShapeGrammar
             return new Production(
                 "CourtyardFromCourtyardCorner",
                 new ProdParamsManager().AddNodeSymbols(sym.Courtyard),
-                state => state.WithActiveSymbols(sym.Courtyard) != null,
                 (state, pp) =>
                 {
                     var courtyard = pp.Param;
                     //var courtyard = state.WithActiveSymbols(sym.Courtyard);
                     var courtyardGroup = courtyard.LevelElement.CubeGroup();
-                    var corners = courtyardGroup.AllSpecialCorners().CubeGroup().Where(cube => cube.Position.y >= 4);
+                    var corners = courtyardGroup.AllSpecialCorners().CubeGroup().CubeGroupMaxLayer(Vector3Int.down).Where(cube => cube.Position.y >= 4);
                     if (!corners.Cubes.Any())
                         return null;
 
-                    var newCourtyards = corners.CubeGroupMaxLayer(Vector3Int.down).Cubes
+                    var newCourtyards = corners.Cubes
                         .Select(startCube =>
                         startCube.Group()
                         .OpAdd()
@@ -287,7 +254,6 @@ namespace ShapeGrammar
             return new Production(
                 "BridgeFromCourtyard",
                 new ProdParamsManager().AddNodeSymbols(sym.Courtyard),
-                state => state.WithActiveSymbols(sym.Courtyard) != null,
                 (state, pp) =>
                 {
                     var courtyard = pp.Param;
@@ -464,7 +430,7 @@ namespace ShapeGrammar
 
         public bool ApplyProduction(Production production)
         {
-            var operations = production.Apply(this);
+            var operations = production.TryApply(this);
             if (operations == null)
                 return false;
 
@@ -530,7 +496,7 @@ namespace ShapeGrammar
         {
             for(int i = 0; i < count; i++)
             {
-                var applicable = Productions.Where(production => production.CanBeApplied(ShapeGrammarState)).Shuffle();
+                var applicable = Productions;//.Where(production => production.CanBeApplied(ShapeGrammarState)).Shuffle();
                 var applied = applicable.DoUntilSuccess(prod => ShapeGrammarState.ApplyProduction(prod), x => x);
                 if (!applied)
                 {
