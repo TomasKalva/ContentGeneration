@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace ShapeGrammar
 {
@@ -18,7 +19,7 @@ namespace ShapeGrammar
         public Symbol Roof { get; } = new Symbol("Roof");
         public Symbol Courtyard { get; } = new Symbol("Courtyard");
         public Symbol Foundation { get; } = new Symbol("Foundation");
-        public Symbol Bridge { get; } = new Symbol("Bridge");
+        public Symbol Bridge(Vector3Int direction) => new Bridge("Bridge", direction);
     }
 
     public class Symbol : Printable
@@ -63,6 +64,16 @@ namespace ShapeGrammar
         public FloorGiver(string name, Node giveTo) : base(name)
         {
             GiveTo = giveTo;
+        }
+    }
+
+    public class Bridge : Symbol
+    {
+        public Vector3Int Direction { get; }
+
+        public Bridge(string name, Vector3Int direction) : base(name)
+        {
+            Direction = direction;
         }
     }
 }
