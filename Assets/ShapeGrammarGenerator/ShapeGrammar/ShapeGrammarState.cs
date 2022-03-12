@@ -15,6 +15,44 @@ namespace ShapeGrammar
         }
     }
 
+    public class ProdParamsManager
+    {
+        List<Symbol[]> ParametersSymbols { get; }
+        HashSet<ProdParams> Failed { get; }
+        
+        public ProdParamsManager()
+        {
+            ParametersSymbols = new List<Symbol[]>();
+        }
+
+        public IEnumerable<ProdParams> GetParams(ShapeGrammarState state)
+        {
+            //todo: filter failed
+            var parameterNodes = ParametersSymbols.Select(symbol => state.WithActiveSymbols(symbol));
+            var parameterNodesSequences = parameterNodes.CartesianProduct();
+            return parameterNodesSequences.Select(parSeq => new ProdParams(parSeq.ToArray()));
+        }
+
+        public ProdParamsManager AddNodeSymbols(params Symbol[] nodeSymbols)
+        {
+            ParametersSymbols.Add(nodeSymbols);
+            return this;
+        }
+    }
+
+    public class ProdParams
+    {
+        Node[] parameters;
+
+        public ProdParams(Node[] parameters)
+        {
+            this.parameters = parameters;
+        }
+
+        public Node Param => parameters.First();
+        public static void Deconstruct(out Node par1) { par1 = null; }
+    }
+
     public class Node : Printable
     {
         public HashSet<Symbol> Symbols { get; }
@@ -54,17 +92,26 @@ namespace ShapeGrammar
     public class Production
     {
         public delegate bool Condition(ShapeGrammarState shapeGrammarState);
-        public delegate IEnumerable<Operation> Effect(ShapeGrammarState shapeGrammarState);
+        public delegate IEnumerable<Operation> Effect(ShapeGrammarState shapeGrammarState, ProdParams prodParams);
 
         public string Name { get; }
         public Condition CanBeApplied { get; }
-        public Effect ExpandNewNodes { get; }
+        Effect ExpandNewNodes { get; }
 
-        public Production(string name, Condition canBeApplied, Effect effect)
+        public ProdParamsManager ProdParamsManager { get; }
+
+        public Production(string name, ProdParamsManager ppm, Condition canBeApplied, Effect effect)
         {
             Name = name;
+            ProdParamsManager = ppm;
             CanBeApplied = canBeApplied;
             ExpandNewNodes = effect;
+        }
+
+        public IEnumerable<Operation> Apply(ShapeGrammarState shapeGrammarState)
+        {
+            var parameters = ProdParamsManager.GetParams(shapeGrammarState).Shuffle();
+            return parameters.DoUntilSuccess(pp => ExpandNewNodes(shapeGrammarState, pp), result => result != null);
         }
     }
 
@@ -82,8 +129,9 @@ namespace ShapeGrammar
         {
             return new Production(
                 "CreateNewHouse",
+                new ProdParamsManager(),
                 state => true,
-                state =>
+                (state, pp) =>
                 {
                     var root = state.Root;
                     var room = ldk.sgShapes.Room(new Box2Int(0, 0, 5, 5).InflateY(8, 10));
@@ -101,10 +149,12 @@ namespace ShapeGrammar
         {
             return new Production(
                 "ExtrudeTerrace",
+                new ProdParamsManager().AddNodeSymbols(sym.Room),
                 state => state.WithActiveSymbols(sym.Room) != null,
-                state =>
+                (state, pp) =>
                 {
-                    var room = state.WithActiveSymbols(sym.Room);
+                    var room = pp.Param;
+                    //var room = state.WithActiveSymbols(sym.Room);
                     if (room.LevelElement.CubeGroup().LengthY() <= 1)
                         return null;
 
@@ -141,10 +191,12 @@ namespace ShapeGrammar
         {
             return new Production(
                 "CourtyardFromRoom",
+                new ProdParamsManager().AddNodeSymbols(sym.Room),
                 state => state.WithActiveSymbols(sym.Room) != null,
-                state =>
+                (state, pp) =>
                 {
-                    var room = state.WithActiveSymbols(sym.Room);
+                    var room = pp.Param;
+                    //var room = state.WithActiveSymbols(sym.Room);
                     var roomCubeGroup = room.LevelElement.CubeGroup();
 
                     var courtyards =
@@ -185,10 +237,12 @@ namespace ShapeGrammar
         {
             return new Production(
                 "CourtyardFromCourtyardCorner",
+                new ProdParamsManager().AddNodeSymbols(sym.Courtyard),
                 state => state.WithActiveSymbols(sym.Courtyard) != null,
-                state =>
+                (state, pp) =>
                 {
-                    var courtyard = state.WithActiveSymbols(sym.Courtyard);
+                    var courtyard = pp.Param;
+                    //var courtyard = state.WithActiveSymbols(sym.Courtyard);
                     var courtyardGroup = courtyard.LevelElement.CubeGroup();
                     var corners = courtyardGroup.AllSpecialCorners().CubeGroup().Where(cube => cube.Position.y >= 4);
                     if (!corners.Cubes.Any())
@@ -232,10 +286,12 @@ namespace ShapeGrammar
         {
             return new Production(
                 "BridgeFromCourtyard",
+                new ProdParamsManager().AddNodeSymbols(sym.Courtyard),
                 state => state.WithActiveSymbols(sym.Courtyard) != null,
-                state =>
+                (state, pp) =>
                 {
-                    var courtyard = state.WithActiveSymbols(sym.Courtyard);
+                    var courtyard = pp.Param;
+                    //var courtyard = state.WithActiveSymbols(sym.Courtyard);
                     var courtyardCubeGroup = courtyard.LevelElement.CubeGroup();
 
                     var bridges =
@@ -371,12 +427,6 @@ namespace ShapeGrammar
         }
     }
 
-    public enum Mode
-    {
-        Sequence, 
-        Test
-    }
-
     public class ShapeGrammarState : Printable
     {
         public Node Root { get; }
@@ -387,8 +437,6 @@ namespace ShapeGrammar
         public WorldState WorldState { get; set; }
 
         public Grid<bool> OffersFoundation { get; }
-
-        public Mode Mode { get; set; }
 
         struct AppliedProduction
         {
@@ -416,7 +464,7 @@ namespace ShapeGrammar
 
         public bool ApplyProduction(Production production)
         {
-            var operations = production.ExpandNewNodes(this);
+            var operations = production.Apply(this);
             if (operations == null)
                 return false;
 
@@ -425,10 +473,9 @@ namespace ShapeGrammar
             return true;
         }
 
-        public Node WithActiveSymbols(params Symbol[] symbols)
+        public IEnumerable<Node> WithActiveSymbols(params Symbol[] symbols)
         {
-            var nodes = Root.AllNodes().Where(node => node.HasActiveSymbols(symbols));
-            return nodes.GetRandom();
+            return Root.AllNodes().Where(node => node.HasActiveSymbols(symbols));
         }
 
         public bool CanBeFounded(LevelElement le)
@@ -484,7 +531,7 @@ namespace ShapeGrammar
             for(int i = 0; i < count; i++)
             {
                 var applicable = Productions.Where(production => production.CanBeApplied(ShapeGrammarState)).Shuffle();
-                var applied = applicable.DoUntilSuccess(prod => ShapeGrammarState.ApplyProduction(prod));
+                var applied = applicable.DoUntilSuccess(prod => ShapeGrammarState.ApplyProduction(prod), x => x);
                 if (!applied)
                 {
                     Debug.Log($"Can't apply any productions {i}");

@@ -9,14 +9,33 @@ using UnityEngine;
 
 static class ExtensionMethods
 {
-    public static bool DoUntilSuccess<T>(this IEnumerable<T> enumerable, Func<T, bool> operation)
+    // from https://ericlippert.com/2010/06/28/computing-a-cartesian-product-with-linq/
+    public static IEnumerable<IEnumerable<T>> CartesianProduct<T>(this IEnumerable<IEnumerable<T>> sequences)
+    {// base case: 
+        IEnumerable<IEnumerable<T>> result = new[] { Enumerable.Empty<T>() };
+        foreach (var sequence in sequences)
+        {
+            // don't close over the loop variable (fixed in C# 5 BTW)
+            var s = sequence;
+            // recursive case: use SelectMany to build 
+            // the new product out of the old one 
+            result =
+              from seq in result
+              from item in s
+              select seq.Append(item);
+        }
+        return result;
+    }
+
+    public static U DoUntilSuccess<T, U>(this IEnumerable<T> enumerable, Func<T, U> operation, Func<U, bool> success)
     {
         foreach(var item in enumerable)
         {
-            if (operation(item))
-                return true;
+            var result = operation(item);
+            if (success(result))
+                return result;
         }
-        return false;
+        return default;
     }
 
     public static T GetRandom<T>(this List<T> list)
