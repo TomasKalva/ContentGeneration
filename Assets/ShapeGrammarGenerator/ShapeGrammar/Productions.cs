@@ -213,6 +213,42 @@ namespace ShapeGrammar
                 });
         }
 
+        public Production ExtendBridge()
+        {
+            return new Production(
+                "BridgeFromBridge",
+                new ProdParamsManager().AddNodeSymbols(sym.Bridge()),
+                (state, pp) =>
+                {
+                    var bridge = pp.Param;
+                    var courtyardCubeGroup = bridge.LevelElement.CubeGroup();
+
+                    var dir = bridge.GetSymbol<Bridge>().Direction;
+                    var maybeNewBridge =
+                        // create a new object
+                        courtyardCubeGroup
+                        .ExtrudeDir(dir, 3)
+                        .LevelElement(AreaType.Bridge).GrammarNode(sym.Bridge(dir)).ToEnumerable()
+
+                        // fail if no such object exists
+                        .Where(gn => gn.LevelElement.CubeGroup().NotTaken() && state.CanBeFounded(gn.LevelElement));
+                    if (!maybeNewBridge.Any())
+                        return null;
+
+                    var newBbridge = maybeNewBridge.FirstOrDefault();
+
+                    newBbridge.LevelElement.ApplyGrammarStyleRules(ldk.houseStyleRules);
+
+                    // and modify the dag
+                    var foundation = ldk.sgShapes.Foundation(newBbridge.LevelElement).GrammarNode(sym.Foundation);
+                    return new[]
+                    {
+                        state.Add(bridge).SetTo(newBbridge),
+                        state.Add(newBbridge).SetTo(foundation),
+                    };
+                });
+        }
+
         /*
         public Production ExtrudeRoof()
         {

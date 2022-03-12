@@ -51,6 +51,11 @@ namespace ShapeGrammar
             state.Print("}");
             return state;
         }
+
+        public SymbolT GetSymbol<SymbolT>() where SymbolT : Symbol
+        {
+            return Symbols.SelectNN(symbol => symbol as SymbolT).FirstOrDefault();
+        }
     }
 
     public class Production

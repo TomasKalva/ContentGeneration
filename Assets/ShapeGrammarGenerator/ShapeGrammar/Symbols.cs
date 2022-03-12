@@ -19,7 +19,7 @@ namespace ShapeGrammar
         public Symbol Roof { get; } = new Symbol("Roof");
         public Symbol Courtyard { get; } = new Symbol("Courtyard");
         public Symbol Foundation { get; } = new Symbol("Foundation");
-        public Symbol Bridge(Vector3Int direction) => new Bridge("Bridge", direction);
+        public Symbol Bridge(Vector3Int direction = default) => new Bridge("Bridge", direction);
     }
 
     public class Symbol : Printable
