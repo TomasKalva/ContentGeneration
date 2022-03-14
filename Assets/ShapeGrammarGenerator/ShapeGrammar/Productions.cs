@@ -227,7 +227,7 @@ namespace ShapeGrammar
                     var maybeNewBridge =
                         // create a new object
                         courtyardCubeGroup
-                        .ExtrudeDir(dir, 3)
+                        .ExtrudeDir(dir, 4)
                         .LevelElement(AreaType.Bridge).GrammarNode(sym.Bridge(dir)).ToEnumerable()
 
                         // fail if no such object exists

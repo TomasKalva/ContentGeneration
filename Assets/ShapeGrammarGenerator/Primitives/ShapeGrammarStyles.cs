@@ -42,6 +42,7 @@ namespace ShapeGrammar
         public CubeGroup PlainRoomStyle(CubeGroup roomArea)
         {
             roomArea.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Wall);
+            roomArea.AllSpecialCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.Pillar);
             roomArea.CubeGroupMaxLayer(Vector3Int.down).BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Floor);
             return roomArea;
         }
@@ -50,6 +51,14 @@ namespace ShapeGrammar
         {
             roomArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Floor);
             //roomArea.AllBoundaryCorners().SetStyle(ObjectStyle).Fill(CORNER.Pillar);
+            return roomArea;
+        }
+
+        public CubeGroup BridgeStyle(CubeGroup roomArea)
+        {
+            roomArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Floor);
+            roomArea.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Open);
+            roomArea.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.Nothing);
             return roomArea;
         }
 
@@ -81,7 +90,7 @@ namespace ShapeGrammar
         public CubeGroup FoundationStyle(CubeGroup foundationArea)
         {
             foundationArea.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Wall);
-            //foundationArea.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.Pillar);
+            foundationArea.AllSpecialCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.Pillar);
             return foundationArea;
         }
 
@@ -225,7 +234,8 @@ namespace ShapeGrammar
 
             // wall
             shaftCubes.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Wall);
-            
+            shaftCubes.AllSpecialCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.Pillar);
+
             // doors
             var doorCubes = new CubeGroup(GridView, new List<Cube>() 
             {

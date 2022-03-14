@@ -159,6 +159,7 @@ namespace ShapeGrammar
         Window,
         Wall,
         Door,
+        Open,
         Special
     }
 
