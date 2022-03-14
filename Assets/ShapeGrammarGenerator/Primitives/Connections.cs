@@ -104,5 +104,16 @@ namespace ShapeGrammar
             var path = paths.ConnectByPath(space1.WithFloor(), space2.WithFloor(), neighbors);
             return path != null ? path.LevelElement(AreaType.Bridge) : null;
         }
+
+        public LevelGeometryElement ConnectByStairsInside(LevelElement le1, LevelElement le2)
+        {
+            var space1 = le1.CubeGroup();
+            var space2 = le2.CubeGroup();
+            var start = space1.WithFloor();
+            var end = space2.WithFloor();
+            Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.StairsNeighbors(), space1.Merge(space2));
+            var path = paths.ConnectByPath(start, end, neighbors);
+            return path != null ? path.LevelElement(AreaType.Path) : null;
+        }
     }
 }

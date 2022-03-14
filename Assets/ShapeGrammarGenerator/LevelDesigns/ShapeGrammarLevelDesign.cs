@@ -22,11 +22,13 @@ namespace ShapeGrammar
                 pr.CourtyardFromRoom(),
                 pr.CourtyardFromCourtyardCorner(),
                 pr.BridgeFromCourtyard(),
-                pr.ExtendBridge()
+                pr.ExtendBridge(),
+                pr.CourtyardFromBridge(),
+                pr.HouseFromCourtyard()
             };
             var shapeGrammar = new ShapeGrammar(productionList, ldk);
             shapeGrammar.ShapeGrammarState.ApplyProduction(pr.CreateNewHouse());
-            shapeGrammar.DoProductions(15);
+            shapeGrammar.DoProductions(30);
             shapeGrammar.ShapeGrammarState.Print(new PrintingState()).Show();
 
             var level = shapeGrammar.ShapeGrammarState.WorldState.Added;

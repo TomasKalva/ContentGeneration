@@ -277,7 +277,7 @@ namespace ShapeGrammar
         {
             for(int i = 0; i < count; i++)
             {
-                var applicable = Productions;//.Where(production => production.CanBeApplied(ShapeGrammarState)).Shuffle();
+                var applicable = Productions.Shuffle();//.Where(production => production.CanBeApplied(ShapeGrammarState)).Shuffle();
                 var applied = applicable.DoUntilSuccess(prod => ShapeGrammarState.ApplyProduction(prod), x => x);
                 if (!applied)
                 {

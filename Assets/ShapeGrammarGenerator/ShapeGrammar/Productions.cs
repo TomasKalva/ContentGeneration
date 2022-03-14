@@ -153,7 +153,7 @@ namespace ShapeGrammar
                     newCourtyardLe.ApplyGrammarStyleRules(ldk.houseStyleRules);
 
                     // connecting by elevator always succeeds
-                    var path = ldk.con.ConnectByElevator(courtyard.LevelElement, newCourtyardLe);
+                    var path = ldk.con.ConnectByStairsInside(courtyard.LevelElement, newCourtyardLe);
 
                     // and modify the dag
                     var newCourtyardNode = newCourtyardLe.GrammarNode(sym.Courtyard);
@@ -245,6 +245,85 @@ namespace ShapeGrammar
                     {
                         state.Add(bridge).SetTo(newBbridge),
                         state.Add(newBbridge).SetTo(foundation),
+                    };
+                });
+        }
+
+        public Production CourtyardFromBridge()
+        {
+            return new Production(
+                "CourtyardFromBridge",
+                new ProdParamsManager().AddNodeSymbols(sym.Bridge()),
+                (state, pp) =>
+                {
+                    var bridge = pp.Param;
+                    var courtyardCubeGroup = bridge.LevelElement.CubeGroup();
+
+                    var dir = bridge.GetSymbol<Bridge>().Direction;
+                    var maybeNewCourtyard =
+                        // create a new object
+                        courtyardCubeGroup
+                        .ExtrudeDir(dir, 4)
+                        .OpAdd()
+                            .ExtrudeDir(dir.OrthogonalHorizontalDirs().First(), 1)
+                            .ExtrudeDir(dir.OrthogonalHorizontalDirs().Last(), 1)
+                        .OpNew()
+                        .LevelElement(AreaType.Yard).GrammarNode(sym.Courtyard).ToEnumerable()
+
+                        // fail if no such object exists
+                        .Where(gn => gn.LevelElement.CubeGroup().NotTaken() && state.CanBeFounded(gn.LevelElement));
+                    if (!maybeNewCourtyard.Any())
+                        return null;
+
+                    var newCourtyard = maybeNewCourtyard.FirstOrDefault();
+
+                    newCourtyard.LevelElement.ApplyGrammarStyleRules(ldk.houseStyleRules);
+
+                    // and modify the dag
+                    var foundation = ldk.sgShapes.Foundation(newCourtyard.LevelElement).GrammarNode(sym.Foundation);
+                    return new[]
+                    {
+                        state.Add(bridge).SetTo(newCourtyard),
+                        state.Add(newCourtyard).SetTo(foundation),
+                    };
+                });
+        }
+
+        public Production HouseFromCourtyard()
+        {
+            return new Production(
+                "HouseFromCourtyard",
+                new ProdParamsManager().AddNodeSymbols(sym.Courtyard),
+                (state, pp) =>
+                {
+                    var courtyard = pp.Param;
+                    var courtyardCubeGroup = courtyard.LevelElement.CubeGroup();
+
+                    var newHouses =
+                        ExtensionMethods.HorizontalDirections().Shuffle()
+                        .Select(dir =>
+                        // create a new object
+                        courtyardCubeGroup
+                        .ExtrudeDir(dir, 4)
+                        .LevelElement(AreaType.Room).GrammarNode(sym.Room))
+
+                        // fail if no such object exists
+                        .Where(gn => gn.LevelElement.CubeGroup().NotTaken() && state.CanBeFounded(gn.LevelElement));
+                    if (!newHouses.Any())
+                        return null;
+
+                    var newHouse = newHouses.FirstOrDefault();
+
+                    newHouse.LevelElement.ApplyGrammarStyleRules(ldk.houseStyleRules);
+                    var door = ldk.con.ConnectByDoor(newHouse.LevelElement, courtyard.LevelElement).GrammarNode();
+
+                    // and modify the dag
+                    var foundation = ldk.sgShapes.Foundation(newHouse.LevelElement).GrammarNode(sym.Foundation);
+                    return new[]
+                    {
+                        state.Add(courtyard).SetTo(newHouse),
+                        state.Add(newHouse).SetTo(foundation),
+                        state.Add(newHouse, courtyard).SetTo(door),
                     };
                 });
         }
