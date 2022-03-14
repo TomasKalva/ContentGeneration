@@ -105,13 +105,16 @@ namespace ShapeGrammar
             return path != null ? path.LevelElement(AreaType.Bridge) : null;
         }
 
-        public LevelGeometryElement ConnectByStairsInside(LevelElement le1, LevelElement le2)
+        public LevelGeometryElement ConnectByStairsInside(LevelElement le1, LevelElement le2, LevelElement bounds = null)
         {
+            if (bounds == null)
+                bounds = LevelElement.Empty(Grid);
+
             var space1 = le1.CubeGroup();
             var space2 = le2.CubeGroup();
             var start = space1.WithFloor();
             var end = space2.WithFloor();
-            Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.StairsNeighbors(), space1.Merge(space2));
+            Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.StairsNeighbors(), space1.Merge(space2).Merge(bounds.CubeGroup()));
             var path = paths.ConnectByPath(start, end, neighbors);
             return path != null ? path.LevelElement(AreaType.Path) : null;
         }

@@ -62,6 +62,13 @@ namespace ShapeGrammar
             return roomArea;
         }
 
+        public CubeGroup NoFloor(CubeGroup roomArea)
+        {
+            roomArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Nothing);
+            return roomArea;
+        }
+
+
         public CubeGroup EmptyStyle(CubeGroup emptyArea)
         {
             return emptyArea;

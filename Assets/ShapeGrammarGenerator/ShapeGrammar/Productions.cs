@@ -342,31 +342,39 @@ namespace ShapeGrammar
                         ExtensionMethods.HorizontalDirections().Shuffle()
                         .Select(dir =>
                         // create a new object
-                        roomCubeGroup
+                        (dir, roomCubeGroup
                         .ExtrudeDir(dir, 6)
                         .LevelElement(AreaType.Room)
-                        .GrammarNode(sym.Room))
+                        .GrammarNode(sym.Room)))
                         // fail if no such object exists
-                        .Where(gn => gn.LevelElement.CubeGroup().NotTaken() && state.CanBeFounded(gn.LevelElement));
+                        .Where(dirNode => dirNode.Item2.LevelElement.CubeGroup().NotTaken() && state.CanBeFounded(dirNode.Item2.LevelElement));
 
                     if (!newHouses.Any())
                         return null;
 
-                    var newHouse = newHouses.FirstOrDefault();
+                    var parametrizedHouse = newHouses.FirstOrDefault();
+                    var newHouse = parametrizedHouse.Item2;
 
                     newHouse.LevelElement.ApplyGrammarStyleRules(ldk.houseStyleRules);
+                    var dir = parametrizedHouse.Item1;
 
+                    (LevelElement, LevelElement, LevelElement) startMiddleEnd()
+                    {
+                        var startMiddleEnd = newHouse.LevelElement
+                            .Split(dir, AreaType.None, 1)
+                            .ReplaceLeafsGrp(1,
+                                large => large.Split(-dir, AreaType.None, 1))
+                            .ReplaceLeafsGrp(2,
+                                middle => middle.SetAreaType(AreaType.Colonnade));
+                        var les = startMiddleEnd.Leafs().ToList();
+                        return (les[0], les[2], les[1]);
+                    }
+                    var (start, middle, end) = startMiddleEnd();
 
-                    var newHouseInsides = newHouse.LevelElement
-                        .Split(Vector3Int.left, AreaType.None, 1)
-                        .ReplaceLeafsGrp(1,
-                            large => large.Split(-Vector3Int.left, AreaType.None, 1))
-                        .ReplaceLeafsGrp(2,
-                            middle => middle.SetAreaType(AreaType.Colonnade)).GrammarNode();
+                    var middleGn = middle.SetAreaType(AreaType.NoFloor).GrammarNode();
+                    var path = ldk.con.ConnectByStairsInside(start, end, newHouse.LevelElement);
 
-                    Debug.Log(newHouseInsides.LevelElement.Leafs().Count());
-
-                    var door = ldk.con.ConnectByDoor(newHouse.LevelElement, room.LevelElement).GrammarNode();
+                    var door = ldk.con.ConnectByDoor(room.LevelElement, start).GrammarNode();
 
                     // and modify the dag
                     var foundation = ldk.sgShapes.Foundation(newHouse.LevelElement).GrammarNode(sym.Foundation);
@@ -375,7 +383,8 @@ namespace ShapeGrammar
                         state.Add(room).SetTo(newHouse),
                         state.Add(newHouse).SetTo(foundation),
                         state.Add(newHouse, room).SetTo(door),
-                        state.Replace(newHouse).SetTo(newHouseInsides),
+                        state.Replace(newHouse).SetTo(start.GrammarNode(), middleGn, end.GrammarNode()),
+                        state.Add(middleGn).SetTo(path.GrammarNode())
                     };
                 });
         }

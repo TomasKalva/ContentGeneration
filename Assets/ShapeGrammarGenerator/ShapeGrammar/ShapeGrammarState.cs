@@ -162,7 +162,7 @@ namespace ShapeGrammar
             AddIntoDag();
             From.ForEach(node => node.LevelElement = LevelElement.Empty(grammarState.WorldState.Grid));
             var lge = To.Select(node => node.LevelElement).ToLevelGroupElement(grammarState.WorldState.Grid);
-            grammarState.WorldState = grammarState.WorldState.TryPush(lge);
+            grammarState.WorldState = grammarState.WorldState.ChangeAll(To.Select<Node, WorldState.ChangeWorld>(gn => ws => ws.TryPush(gn.LevelElement)));
             AddToFoundation(grammarState, lge);
         }
 
