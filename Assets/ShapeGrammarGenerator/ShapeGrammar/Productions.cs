@@ -377,14 +377,21 @@ namespace ShapeGrammar
                     var door = ldk.con.ConnectByDoor(room.LevelElement, start).GrammarNode();
 
                     // and modify the dag
-                    var foundation = ldk.sgShapes.Foundation(newHouse.LevelElement).GrammarNode(sym.Foundation);
+                    var foundation = ldk.sgShapes.Foundation(newHouse.LevelElement).GrammarNode();
+                    var startFoundation = ldk.sgShapes.Foundation(start).GrammarNode();
+                    var endFoundation = ldk.sgShapes.Foundation(end).GrammarNode();
                     return new[]
                     {
                         state.Add(room).SetTo(newHouse),
+
                         state.Add(newHouse).SetTo(foundation),
+                        state.Add(foundation).SetTo(startFoundation),
+                        state.Add(foundation).SetTo(endFoundation),
+
+
                         state.Add(newHouse, room).SetTo(door),
                         state.Replace(newHouse).SetTo(start.GrammarNode(), middleGn, end.GrammarNode()),
-                        state.Add(middleGn).SetTo(path.GrammarNode())
+                        state.Replace(middleGn).SetTo(path.GrammarNode())
                     };
                 });
         }

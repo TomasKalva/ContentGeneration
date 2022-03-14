@@ -23,7 +23,6 @@ namespace ShapeGrammar
 
         public IEnumerable<ProdParams> GetParams(ShapeGrammarState state)
         {
-            //todo: filter failed
             var parameterNodes = ParametersSymbols.Select(symbol => state.WithActiveSymbols(symbol));
             var parameterNodesSequences = parameterNodes.CartesianProduct();
             var prodPars = parameterNodesSequences.Select(parSeq => new ProdParams(parSeq.ToArray()))

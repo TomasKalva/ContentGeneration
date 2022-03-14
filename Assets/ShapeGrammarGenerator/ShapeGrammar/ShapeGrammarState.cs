@@ -222,7 +222,7 @@ namespace ShapeGrammar
 
         public IEnumerable<Node> WithActiveSymbols(params Symbol[] symbols)
         {
-            return Root.AllNodes().Where(node => node.HasActiveSymbols(symbols));
+            return Root.AllNodes().Where(node => node.LevelElement.Cubes().Any() && node.HasActiveSymbols(symbols));
         }
 
         public bool CanBeFounded(LevelElement le)
@@ -241,7 +241,7 @@ namespace ShapeGrammar
 
         public Operation Replace(params Node[] from)
         {
-            return new AddNew()
+            return new Replace()
             {
                 From = from,
             };
