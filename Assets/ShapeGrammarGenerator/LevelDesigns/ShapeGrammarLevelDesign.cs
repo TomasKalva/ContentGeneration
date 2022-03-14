@@ -19,12 +19,14 @@ namespace ShapeGrammar
             var pr = new Productions(ldk);
             var productionList = new List<Production>()
             {
+                /*
                 pr.CourtyardFromRoom(),
                 pr.CourtyardFromCourtyardCorner(),
                 pr.BridgeFromCourtyard(),
                 pr.ExtendBridge(),
                 pr.CourtyardFromBridge(),
-                pr.HouseFromCourtyard()
+                pr.HouseFromCourtyard(),*/
+                pr.ExtendHouse()
             };
             var shapeGrammar = new ShapeGrammar(productionList, ldk);
             shapeGrammar.ShapeGrammarState.ApplyProduction(pr.CreateNewHouse());

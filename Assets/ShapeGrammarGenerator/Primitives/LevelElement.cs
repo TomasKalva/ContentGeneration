@@ -206,7 +206,11 @@ namespace ShapeGrammar
         public override CubeGroup CubeGroup() => new CubeGroup(Grid, Cubes());
 
         public LevelGroupElement ReplaceLeafsGrp(Func<LevelGeometryElement, bool> cond, Func<LevelGeometryElement, LevelElement> replaceF) => (LevelGroupElement)ReplaceLeafs(cond, replaceF);
-        public LevelGroupElement ReplaceLeafsGrp(int index, Func<LevelGeometryElement, LevelElement> replaceF) => (LevelGroupElement)ReplaceLeafs(le => le == Leafs().ElementAt(index), replaceF);
+        public LevelGroupElement ReplaceLeafsGrp(int index, Func<LevelGeometryElement, LevelElement> replaceF)
+        {
+            var toReplace = Leafs().ElementAt(index);
+            return (LevelGroupElement)ReplaceLeafs(le => le == toReplace, replaceF);
+        }
         public LevelGroupElement ReplaceLeafsGrp(LevelGeometryElement replacedElement, Func<LevelGeometryElement, LevelElement> replaceF) => (LevelGroupElement)ReplaceLeafs(le => le == replacedElement, replaceF);
 
         public override LevelElement ReplaceLeafs(Func<LevelGeometryElement, bool> cond, Func<LevelGeometryElement, LevelElement> replaceF)

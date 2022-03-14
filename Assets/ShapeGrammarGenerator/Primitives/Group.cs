@@ -234,7 +234,8 @@ namespace ShapeGrammar
             var split = from cube in Cubes
                    group cube by dists.IndexOfInterval((cube.Position.Dot(dir) - min)) into splitGroup
                    select splitGroup.AsEnumerable().ToCubeGroup(Grid);
-            return Vector3Int.one.Dot(dir) > 0 ? split : split.Reverse();
+            split = split.OrderBy(cg => cg.Cubes.First().Position.Dot(dir));
+            return Vector3Int.one.Dot(dir) > 0 ? split : split;
         }
 
         /// <summary>

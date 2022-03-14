@@ -328,6 +328,58 @@ namespace ShapeGrammar
                 });
         }
 
+        public Production ExtendHouse()
+        {
+            return new Production(
+                "ExtendHouse",
+                new ProdParamsManager().AddNodeSymbols(sym.Room),
+                (state, pp) =>
+                {
+                    var room = pp.Param;
+                    var roomCubeGroup = room.LevelElement.CubeGroup();
+
+                    var newHouses =
+                        ExtensionMethods.HorizontalDirections().Shuffle()
+                        .Select(dir =>
+                        // create a new object
+                        roomCubeGroup
+                        .ExtrudeDir(dir, 6)
+                        .LevelElement(AreaType.Room)
+                        .GrammarNode(sym.Room))
+                        // fail if no such object exists
+                        .Where(gn => gn.LevelElement.CubeGroup().NotTaken() && state.CanBeFounded(gn.LevelElement));
+
+                    if (!newHouses.Any())
+                        return null;
+
+                    var newHouse = newHouses.FirstOrDefault();
+
+                    newHouse.LevelElement.ApplyGrammarStyleRules(ldk.houseStyleRules);
+
+
+                    var newHouseInsides = newHouse.LevelElement
+                        .Split(Vector3Int.left, AreaType.None, 1)
+                        .ReplaceLeafsGrp(1,
+                            large => large.Split(-Vector3Int.left, AreaType.None, 1))
+                        .ReplaceLeafsGrp(2,
+                            middle => middle.SetAreaType(AreaType.Colonnade)).GrammarNode();
+
+                    Debug.Log(newHouseInsides.LevelElement.Leafs().Count());
+
+                    var door = ldk.con.ConnectByDoor(newHouse.LevelElement, room.LevelElement).GrammarNode();
+
+                    // and modify the dag
+                    var foundation = ldk.sgShapes.Foundation(newHouse.LevelElement).GrammarNode(sym.Foundation);
+                    return new[]
+                    {
+                        state.Add(room).SetTo(newHouse),
+                        state.Add(newHouse).SetTo(foundation),
+                        state.Add(newHouse, room).SetTo(door),
+                        state.Replace(newHouse).SetTo(newHouseInsides),
+                    };
+                });
+        }
+
         /*
         public Production ExtrudeRoof()
         {
