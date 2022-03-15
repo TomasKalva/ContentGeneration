@@ -26,7 +26,9 @@ namespace ShapeGrammar
                 pr.ExtendBridge(),
                 pr.CourtyardFromBridge(),
                 pr.HouseFromCourtyard(),
-                pr.ExtendHouse()
+                pr.ExtendHouse(ldk.tr.GetFloorConnector(lge => ldk.tr.SplittingFloorPlan(lge, 2))),
+                pr.AddNextFloor(),
+                pr.GardenFromCourtyard()
             };
             var shapeGrammar = new ShapeGrammar(productionList, ldk);
             shapeGrammar.ShapeGrammarState.ApplyProduction(pr.CreateNewHouse());

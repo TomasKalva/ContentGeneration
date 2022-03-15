@@ -16,6 +16,10 @@ namespace ShapeGrammar
             this.ldk = ldk;
         }
 
+        public delegate LevelElement FloorConnector(LevelGeometryElement start, LevelGeometryElement middle, LevelGeometryElement end);
+        public delegate LevelGroupElement FloorPartitioner(LevelGeometryElement floor);
+        public delegate LevelGroupElement Picker(LevelGroupElement levelElement);
+
         public LevelGroupElement SubdivideRoom(LevelGeometryElement box, Vector3Int horDir, float width)
         {
 
@@ -31,8 +35,6 @@ namespace ShapeGrammar
             return ldk.qc.RecursivelySplitXZ(box, maxRoomSize).Leafs().ToLevelGroupElement(box.Grid);
         }
 
-        public delegate LevelGroupElement Picker(LevelGroupElement levelElement);
-
         public Picker PickWithChance(float pickProb)
         {
             return lge =>
@@ -43,6 +45,15 @@ namespace ShapeGrammar
         {
             return lge =>
                 lge.LevelElements.Shuffle().Select((le, i) => i >= dropCount ? le : le.SetAreaType(AreaType.Empty)).ToLevelGroupElement(lge.Grid);
+        }
+
+        public Picker DropUntilDisconnected(LevelElement start, LevelElement middle, LevelElement end)
+        {
+            return lge =>
+            {
+                var path = ldk.con.ConnectByStairsInside(start, end, middle).CubeGroup();
+                return lge.Leafs().Where(le => le.CubeGroup().Intersects(path)).ToLevelGroupElement(lge.Grid);
+            };
         }
 
         public LevelGroupElement PickAndConnect(LevelGroupElement floorPlan, Picker picker)
@@ -64,11 +75,20 @@ namespace ShapeGrammar
             return houseFloors;
         }
 
-        public LevelElement BrokenFloor(LevelGeometryElement box)
+        public LevelGroupElement BrokenFloor(LevelGeometryElement box)
         {
             var floorPlan = SplittingFloorPlan(box, 3);
-            var partlyBrokenFloor = PickAndConnect(floorPlan, Dropper(2)).ReplaceLeafs(le => le.AreaType != AreaType.Empty, le => le.SetAreaType(AreaType.Platform));
+            var partlyBrokenFloor = PickAndConnect(floorPlan, Dropper(2)).ReplaceLeafsGrp(le => le.AreaType != AreaType.Empty, le => le.SetAreaType(AreaType.Platform));
             return partlyBrokenFloor;
+        }
+
+        public FloorConnector GetFloorConnector(FloorPartitioner partitioner) 
+        {
+            return (start, middle, end) => 
+            {
+                Picker picker = DropUntilDisconnected(start, middle, end);
+                return PickAndConnect(partitioner(middle), picker).Leafs().Where(le => le.AreaType != AreaType.Empty).ToLevelGroupElement(start.Grid);
+            };
         }
     }
 }

@@ -100,6 +100,8 @@ namespace ShapeGrammar
                     .MoveBy(Vector3Int.down))
             .LevelElement(AreaType.Foundation);
 
+        public LevelElement CliffFoundation(LevelElement toBeFounded) => Foundation(toBeFounded).SetAreaType(AreaType.CliffFoundation);
+
         public CubeGroup Platform(Box2Int areaXZ, int posY) => qc.GetPlatform(areaXZ, posY);
 
         public CubeGroup BalconyOne(CubeGroup house)

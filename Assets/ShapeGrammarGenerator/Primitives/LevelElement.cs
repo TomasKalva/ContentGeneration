@@ -29,6 +29,7 @@ namespace ShapeGrammar
         public LevelGroupElement WhereGeom(Func<LevelElement, bool> cond) => Leafs().Where(g => cond(g)).ToLevelGroupElement(Grid);
 
         public abstract LevelElement ReplaceLeafs(Func<LevelGeometryElement, bool> cond, Func<LevelGeometryElement, LevelElement> replaceF);
+        public LevelGeometryElement MapGeom(Func<CubeGroup, CubeGroup> f) => new LevelGeometryElement(Grid, AreaType, f(CubeGroup()));
 
         #endregion
 

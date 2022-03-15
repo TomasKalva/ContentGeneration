@@ -14,6 +14,7 @@ namespace ShapeGrammar
         public static AreaType OpenRoom { get; } = new AreaType("OpenRoom");
         public static AreaType Roof { get; } = new AreaType("Roof");
         public static AreaType Foundation { get; } = new AreaType("Foundation");
+        public static AreaType CliffFoundation { get; } = new AreaType("CliffFoundation");
         public static AreaType Balcony { get; } = new AreaType("Balcony");
         public static AreaType House { get; } = new AreaType("House");
         public static AreaType WallTop { get; } = new AreaType("WallTop");

@@ -14,12 +14,13 @@ namespace ShapeGrammar
         public Symbol ExtrudeUp { get; } = new Symbol("ExtrudeUp");
         public Symbol CreateFrom(params Node[] from) => new CreateFrom("CreateFrom", from.ToList());
         public Symbol FloorGiver(Node giveTo) => new FloorGiver("FloorGiver", giveTo);
-        public Symbol Room { get; } = new Symbol("Room");
+        public Symbol Room(bool plain = true) => new Room("Room", plain);
         public Symbol Terrace { get; } = new Symbol("Terrace");
         public Symbol Roof { get; } = new Symbol("Roof");
         public Symbol Courtyard { get; } = new Symbol("Courtyard");
         public Symbol Foundation { get; } = new Symbol("Foundation");
         public Symbol Bridge(Vector3Int direction = default) => new Bridge("Bridge", direction);
+        public Symbol Garden { get; } = new Symbol("Garden");
     }
 
     public class Symbol : Printable
@@ -74,6 +75,16 @@ namespace ShapeGrammar
         public Bridge(string name, Vector3Int direction) : base(name)
         {
             Direction = direction;
+        }
+    }
+
+    public class Room : Symbol
+    {
+        public bool Plain { get; set; }
+
+        public Room(string name, bool plain = true) : base(name)
+        {
+            Plain = plain;
         }
     }
 }

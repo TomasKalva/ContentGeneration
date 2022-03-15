@@ -76,7 +76,10 @@ namespace ShapeGrammar
 
         public CubeGroup GardenStyle(CubeGroup roomArea)
         {
-            roomArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultGardenStyle).Fill(FACE_VER.Floor);
+            var floorParth = roomArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultGardenStyle).Fill(FACE_VER.Floor).CubeGroup();
+
+            floorParth.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Railing);
+            floorParth.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.RailingPillar);
             return roomArea;
         }
 
@@ -98,6 +101,13 @@ namespace ShapeGrammar
         {
             foundationArea.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Wall);
             foundationArea.AllSpecialCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.Pillar);
+            return foundationArea;
+        }
+
+        public CubeGroup CliffFoundationStyle(CubeGroup foundationArea)
+        {
+            foundationArea.AllBoundaryFacesH().SetStyle(DefaultGardenStyle).Fill(FACE_HOR.Wall);
+            foundationArea.AllSpecialCorners().SetStyle(DefaultGardenStyle).Fill(CORNER.Pillar);
             return foundationArea;
         }
 
