@@ -55,7 +55,7 @@ namespace ShapeGrammar
             }
             //world.AddEnemy(libraries.Enemies.MayanSwordsman(), new Vector3(0, 1, 0));
             //world.AddEnemy(libraries.Enemies.DragonMan(), new Vector3(0, 1, 0));
-            //UnityEngine.Random.InitState(19);
+            UnityEngine.Random.InitState(19);
 
             worldScale = 2.8f;
 

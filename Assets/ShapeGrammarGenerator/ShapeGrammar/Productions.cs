@@ -95,9 +95,10 @@ namespace ShapeGrammar
 
                         // create a new object
                         roomCubeGroup
-                        .CubeGroupMaxLayer(dir)
+                        .CubeGroupMaxLayer(Vector3Int.left)
                         .OpAdd()
                         .ExtrudeHor().ExtrudeHor().Minus(roomCubeGroup)
+                        .OpNew()
 
                         .LE(AreaType.Yard))
 
@@ -329,37 +330,37 @@ namespace ShapeGrammar
                 });
         }
 
-        public Production RoomNextToCourtyard(Func<LevelElement> buildingF)
+        public Production RoomNextTo(Symbol nextToWhat, Func<LevelElement> roomF)
         {
             return new Production(
-                "BuildingNextToCourtyard",
-                new ProdParamsManager().AddNodeSymbols(sym.Courtyard),
+                $"RoomNextTo{nextToWhat.Name}",
+                new ProdParamsManager().AddNodeSymbols(nextToWhat),
                 (state, pp) =>
                 {
-                    var courtyard = pp.Param;
-                    var courtyardCG = courtyard.LE.CG();
+                    var what = pp.Param;
+                    var whatCG = what.LE.CG();
 
-                    var newBuilding = buildingF();
-                    var newBuildingAtGround = newBuilding.MoveBottomTo(0);
-                    var validNewBuilding = ldk.pl.MoveNearXZ(courtyard.LE.MoveBottomTo(0), newBuildingAtGround, state.VerticallyTaken);
-                    if (validNewBuilding == null)
+                    var newRoom = roomF();
+                    var newRoomAtGround = newRoom.MoveBottomTo(0);
+                    var validNewRoom = ldk.pl.MoveNearXZ(what.LE.MoveBottomTo(0), newRoomAtGround, state.VerticallyTaken);
+                    if (validNewRoom == null)
                         return null;
                     
 
-                    var newBuildingGN = validNewBuilding.MoveBottomTo(courtyardCG.LeftBottomBack().y).GrammarNode(sym.Room());
+                    var newRoomGN = validNewRoom.MoveBottomTo(whatCG.LeftBottomBack().y).GrammarNode(sym.Room());
                     
-                    newBuildingGN.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
-                    /*
-                    var door = ldk.con.ConnectByDoor(newBuildingGN.LE, courtyard.LE).GrammarNode();
+                    newRoomGN.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
+                    
+                    var door = ldk.con.ConnectByDoor(newRoomGN.LE, what.LE).GrammarNode();
 
                     // and modify the dag
-                    var foundation = ldk.sgShapes.Foundation(newBuildingGN.LE).GrammarNode(sym.Foundation);*/
+                    var foundation = ldk.sgShapes.Foundation(newRoomGN.LE).GrammarNode(sym.Foundation);
                     return new[]
                     {
-                        state.Add(courtyard).SetTo(newBuildingGN),/*
-                        state.Add(newBuildingGN).SetTo(foundation),
-                        state.Add(newBuildingGN, courtyard).SetTo(door),
-                        */
+                        state.Add(what).SetTo(newRoomGN),
+                        state.Add(newRoomGN).SetTo(foundation),
+                        state.Add(newRoomGN, what).SetTo(door),
+                        
                     };
                 });
         }
@@ -415,9 +416,9 @@ namespace ShapeGrammar
                     var door = ldk.con.ConnectByDoor(room.LE, start).GrammarNode();
 
                     // and modify the dag
-                    var foundation = ldk.sgShapes.Foundation(newHouse.LE).GrammarNode();
-                    var startFoundation = ldk.sgShapes.Foundation(start).GrammarNode();
-                    var endFoundation = ldk.sgShapes.Foundation(end).GrammarNode();
+                    var foundation = ldk.sgShapes.Foundation(newHouse.LE).GrammarNode(sym.Foundation);
+                    var startFoundation = ldk.sgShapes.Foundation(start).GrammarNode(sym.Foundation);
+                    var endFoundation = ldk.sgShapes.Foundation(end).GrammarNode(sym.Foundation);
                     return new[]
                     {
                         state.Add(room).SetTo(newHouse),
@@ -491,7 +492,7 @@ namespace ShapeGrammar
                             .MapGeom(cg => cg
                                 .SplitToConnected().ArgMax(cg => cg.Cubes.Count)
                                 .OpAdd().ExtrudeVer(Vector3Int.up, 3))
-                            .GrammarNode()
+                            .GrammarNode(sym.Garden)
                         )
                         //todo: remove cubes that can't be founded directly instead of asking about the whole group at the end
                         .Where(garden => garden.LE.Cubes().Count() >= 8 && state.CanBeFounded(garden.LE));
@@ -503,7 +504,7 @@ namespace ShapeGrammar
 
                     garden.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
 
-                    var cliffFoundation = ldk.sgShapes.CliffFoundation(garden.LE).GrammarNode();
+                    var cliffFoundation = ldk.sgShapes.CliffFoundation(garden.LE).GrammarNode(sym.Foundation);
                     var stairs = ldk.con.ConnectByElevator(courtyard.LE, garden.LE).GrammarNode();
 
                     return new[]

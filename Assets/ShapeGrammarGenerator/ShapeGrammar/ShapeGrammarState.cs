@@ -143,6 +143,11 @@ namespace ShapeGrammar
         public override void ChangeState(ShapeGrammarState grammarState)
         {
             AddIntoDag();
+            foreach(var node in To)
+            {
+                if (node.LE == null)
+                    ;
+            }
             var lge = To.Select(node => node.LE).ToLevelGroupElement(grammarState.WorldState.Grid);
             grammarState.WorldState = grammarState.WorldState.TryPush(lge);
             AddToFoundation(grammarState, lge);
@@ -204,7 +209,7 @@ namespace ShapeGrammar
         public ShapeGrammarState(LevelDevelopmentKit ldk)
         {
             var grid = ldk.grid;
-            var empty = LevelElement.Empty(grid); new LevelGeometryElement(grid, AreaType.None, new CubeGroup(grid, new List<Cube>()));
+            var empty = LevelElement.Empty(grid);
             Root = new Node(empty, new List<Symbol>());
             WorldState = new WorldState(empty, grid, le => le.ApplyGrammarStyleRules(ldk.houseStyleRules)).TryPush(empty);
             OffersFoundation = new Grid<bool>(new Vector3Int(10, 1, 10), (_1, _2) => true);

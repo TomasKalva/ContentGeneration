@@ -104,7 +104,7 @@ namespace ShapeGrammar
 
         public IEnumerable<Vector3Int> MovesNearXZ(LevelElement nearThis)
         {
-            var intersectNear = nearThis.CG().MinkowskiMinus(CG().AllBoundaryFacesH().Extrude(1, false));
+            var intersectNear = nearThis.CG().MinkowskiMinus(CG().AllBoundaryFacesH().Extrude(1)).Where(move => move.y == 0);
             var intersect = MovesToIntersect(nearThis);
             return intersectNear.SetMinus(intersect);
         }
@@ -191,6 +191,7 @@ namespace ShapeGrammar
         public LevelGroupElement(Grid<Cube> grid, AreaType areaType, List<LevelElement> levelElements) : base(grid, areaType)
         {
             Debug.Assert(grid != null, $"{AreaType.Name}");
+            Debug.Assert(levelElements.All(le => le != null), $"{AreaType.Name}");
             LevelElements = levelElements.ToList();
         }
 
