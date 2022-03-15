@@ -14,7 +14,7 @@ namespace ShapeGrammar
         public Symbol ExtrudeUp { get; } = new Symbol("ExtrudeUp");
         public Symbol CreateFrom(params Node[] from) => new CreateFrom("CreateFrom", from.ToList());
         public Symbol FloorGiver(Node giveTo) => new FloorGiver("FloorGiver", giveTo);
-        public Symbol Room(bool plain = true) => new Room("Room", plain);
+        public Symbol Room(bool plain = true, int floor = 0) => new Room("Room", plain, floor);
         public Symbol Terrace { get; } = new Symbol("Terrace");
         public Symbol Roof { get; } = new Symbol("Roof");
         public Symbol Courtyard { get; } = new Symbol("Courtyard");
@@ -81,10 +81,12 @@ namespace ShapeGrammar
     public class Room : Symbol
     {
         public bool Plain { get; set; }
+        public int Floor { get; set; }
 
-        public Room(string name, bool plain = true) : base(name)
+        public Room(string name, bool plain, int floor) : base(name)
         {
             Plain = plain;
+            Floor = floor;
         }
     }
 }

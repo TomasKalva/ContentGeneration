@@ -217,7 +217,7 @@ namespace ShapeGrammar
         public Production ExtendBridge()
         {
             return new Production(
-                "BridgeFromBridge",
+                "ExtendBridge",
                 new ProdParamsManager().AddNodeSymbols(sym.Bridge()),
                 (state, pp) =>
                 {
@@ -333,7 +333,8 @@ namespace ShapeGrammar
         {
             return new Production(
                 "ExtendHouse",
-                new ProdParamsManager().AddNodeSymbols(sym.Room()),
+                new ProdParamsManager()
+                    .AddNodeSymbols(sym.Room()),
                 (state, pp) =>
                 {
                     var room = pp.Param;
@@ -404,28 +405,22 @@ namespace ShapeGrammar
                 "AddNextFloor",
                 new ProdParamsManager()
                     .AddNodeSymbols(sym.Room())
-                    .SetCondition((state, pp) => pp.Param.GetSymbol<Room>().Plain),
+                    .SetCondition((state, pp) => pp.Param.GetSymbol<Room>().Plain && pp.Param.GetSymbol<Room>().Floor <= 1),
                 (state, pp) =>
                 {
                     var room = pp.Param;
                     var roomCubeGroup = room.LevelElement.CubeGroup();
+                    var roomSymbol = room.GetSymbol<Room>();
 
                     var maybeNextFloor =
-                        // create a new object
-                        roomCubeGroup
-                        .ExtrudeDir(Vector3Int.up, 2)
-                        .LevelElement(AreaType.Room)
-                        .GrammarNode(sym.Room()).ToEnumerable()
-                        // fail if no such object exists
+                        roomCubeGroup.ExtrudeDir(Vector3Int.up, 2).LevelElement(AreaType.Room).GrammarNode(sym.Room(true, roomSymbol.Floor + 1)).ToEnumerable()
                         .Where(floor => floor.LevelElement.CubeGroup().AreAllNotTaken());
 
                     if (!maybeNextFloor.Any())
                         return null;
 
                     var nextFloor = maybeNextFloor.FirstOrDefault();
-
                     nextFloor.LevelElement.ApplyGrammarStyleRules(ldk.houseStyleRules);
-
 
                     var stairs = ldk.con.ConnectByWallStairsIn(room.LevelElement, nextFloor.LevelElement).GrammarNode();
 

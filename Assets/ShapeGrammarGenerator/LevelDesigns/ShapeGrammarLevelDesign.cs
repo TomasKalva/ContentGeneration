@@ -19,7 +19,6 @@ namespace ShapeGrammar
             var pr = new Productions(ldk);
             var productionList = new List<Production>()
             {
-                
                 pr.CourtyardFromRoom(),
                 pr.CourtyardFromCourtyardCorner(),
                 pr.BridgeFromCourtyard(),
