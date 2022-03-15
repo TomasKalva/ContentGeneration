@@ -22,6 +22,8 @@ public struct Box3Int : IEnumerable<Vector3Int>
         return new Box3Int(leftBottomBack + border, rightTopFront - border);
     }
 
+    public Box3Int(int left, int bottom, int back, int width, int height, int depth) : this(new Vector3Int(left, bottom, back), new Vector3Int(left + width, bottom + height, back + depth)) { }
+
     public IEnumerator<Vector3Int> GetEnumerator()
     {
         for (int i = leftBottomBack.x; i < rightTopFront.x; i++)

@@ -51,22 +51,22 @@ namespace ShapeGrammar
         {
             return lge =>
             {
-                var path = ldk.con.ConnectByStairsInside(start, end, middle).CubeGroup();
-                return lge.Leafs().Where(le => le.CubeGroup().Intersects(path)).ToLevelGroupElement(lge.Grid);
+                var path = ldk.con.ConnectByStairsInside(start, end, middle).CG();
+                return lge.Leafs().Where(le => le.CG().Intersects(path)).ToLevelGroupElement(lge.Grid);
             };
         }
 
         public LevelGroupElement PickAndConnect(LevelGroupElement floorPlan, Picker picker)
         {
             var picked = picker(floorPlan);
-            var nonEmpty = picked.NonEmpty().CubeGroup().SplitToConnected().ToLevelGroupElement(floorPlan.Grid);
-            var empty = picked.Empty().CubeGroup().SplitToConnected().ToLevelGroupElement(floorPlan.Grid).ReplaceLeafs(_ => true, le => le.SetAreaType(AreaType.Empty));
+            var nonEmpty = picked.NonEmpty().CG().SplitToConnected().ToLevelGroupElement(floorPlan.Grid);
+            var empty = picked.Empty().CG().SplitToConnected().ToLevelGroupElement(floorPlan.Grid).ReplaceLeafs(_ => true, le => le.SetAreaType(AreaType.Empty));
             return nonEmpty.Merge(empty);
         }
 
         public LevelGroupElement FloorHouse(LevelGeometryElement box, Func<LevelGeometryElement, LevelElement> floorCreator, params int[] floors)
         {
-            var floorBox = box.CubeGroup().CubeGroupMaxLayer(Vector3Int.down);
+            var floorBox = box.CG().CubeGroupMaxLayer(Vector3Int.down);
             var house = box;
             var allFloors = house.Split(Vector3Int.up, AreaType.None, floors);
             var houseFloors = allFloors.ReplaceLeafsGrp(le => le != allFloors.Leafs().ElementAt(0), le => floorCreator(le))

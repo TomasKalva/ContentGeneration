@@ -73,7 +73,7 @@ namespace ShapeGrammar
 
             Debug.Log("Generating world");
 
-            var goodGraveCube = levelRoot.CubeGroup().WithFloor().Cubes
+            var goodGraveCube = levelRoot.CG().WithFloor().Cubes
                 .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor)).GetRandom();
             world.AddInteractiveObject(interactiveObjects.Grave(), GridToWorld(goodGraveCube.Position));
             
@@ -88,7 +88,7 @@ namespace ShapeGrammar
             enemyCubes.ForEach(cube => world.AddEnemy(allEnemies.GetRandom()(), GridToWorld(cube.Position)));
             */
 
-            var itemCubes = levelRoot.CubeGroup().WithFloor().Cubes.Shuffle().Take(10);
+            var itemCubes = levelRoot.CG().WithFloor().Cubes.Shuffle().Take(10);
             itemCubes.ForEach(cube => world.AddItem(libraries.Items.Physical(libraries.Items.Mace()), GridToWorld(cube.Position)));
 
             var kilnCube = goodGraveCube.NeighborsHor().GetRandom();

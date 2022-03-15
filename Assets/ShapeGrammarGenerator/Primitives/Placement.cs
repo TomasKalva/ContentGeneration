@@ -63,6 +63,14 @@ namespace ShapeGrammar
                 moves => moves.GetRandom());
         }
 
+        public LevelElement MoveNearXZ(LevelElement fixedElement, LevelElement toMove, LevelElement notIntersect)
+        {
+
+            var movesNear = toMove.MovesNearXZ(fixedElement);
+            var movesNotIntersecting = toMove.Moves(movesNear, notIntersect.ToEnumerable());
+            return movesNotIntersecting.Any() ? toMove.MoveBy(movesNotIntersecting.GetRandom()) : null;
+        }
+
         public LevelGroupElement SurroundWith(LevelElement levelElement, LevelGroupElement surroundings)
         {
             return MoveLevelGroup(surroundings,

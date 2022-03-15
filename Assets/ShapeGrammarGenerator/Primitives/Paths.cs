@@ -20,8 +20,8 @@ namespace ShapeGrammar
 
         public LevelGroupElement WalkableWallPathH(LevelElement area1, LevelElement area2, int thickness)
         {
-            var starting = area1.CubeGroup().WithFloor();
-            var ending = area2.CubeGroup().WithFloor();
+            var starting = area1.CG().WithFloor();
+            var ending = area2.CG().WithFloor();
 
             Neighbors<PathNode> neighbors = PathNode.HorizontalNeighbors();
             var pathCubes = ConnectByPathFS(starting, ending, neighbors);
@@ -31,9 +31,9 @@ namespace ShapeGrammar
                 return null;
             }
 
-            pathCubes = Thicken(pathCubes, thickness, area1.Merge(area2).CubeGroup());
+            pathCubes = Thicken(pathCubes, thickness, area1.Merge(area2).CG());
 
-            var path = pathCubes.LevelElement(AreaType.Path);
+            var path = pathCubes.LE(AreaType.Path);
             var foundation = sgShapes.Foundation(path);
 
             return path.Merge(foundation);
@@ -41,10 +41,10 @@ namespace ShapeGrammar
 
         public LevelGeometryElement PathH(LevelElement area1, LevelElement area2, int thickness, LevelElement notIntersecting)
         {
-            var starting = area1.CubeGroup();
-            var ending = area2.CubeGroup();
+            var starting = area1.CG();
+            var ending = area2.CG();
 
-            Neighbors<PathNode> neighbors = PathNode.NotIn(PathNode.HorizontalNeighbors(), notIntersecting.CubeGroup());
+            Neighbors<PathNode> neighbors = PathNode.NotIn(PathNode.HorizontalNeighbors(), notIntersecting.CG());
             var pathCubes = ConnectByPathFS(starting, ending, neighbors);
 
             if (pathCubes == null)
@@ -52,18 +52,18 @@ namespace ShapeGrammar
                 return null;
             }
 
-            var surrounding = notIntersecting.Merge(area2).CubeGroup();
+            var surrounding = notIntersecting.Merge(area2).CG();
             pathCubes = Thicken(pathCubes, thickness, surrounding).Minus(surrounding);
 
-            return pathCubes.LevelElement(AreaType.Path);
+            return pathCubes.LE(AreaType.Path);
         }
 
         public LevelGeometryElement WalkableElevator(LevelElement area1, LevelElement area2)
         {
-            var starting = area1.CubeGroup().WithFloor();
-            var ending = area2.CubeGroup().WithFloor();
+            var starting = area1.CG().WithFloor();
+            var ending = area2.CG().WithFloor();
 
-            Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.ElevatorNeighbors(area2.CubeGroup()), area1.Merge(area2).CubeGroup());
+            Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.ElevatorNeighbors(area2.CG()), area1.Merge(area2).CG());
             var pathCubes = ConnectByPath(starting, ending, neighbors);
 
             if (pathCubes == null)
@@ -71,7 +71,7 @@ namespace ShapeGrammar
                 return null;
             }
 
-            return pathCubes.LevelElement(AreaType.Elevator);
+            return pathCubes.LE(AreaType.Elevator);
         }
 
         /// <summary>

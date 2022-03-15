@@ -20,7 +20,7 @@ namespace ShapeGrammar
         List<Symbol> Symbols { get; }
         HashSet<string> SymbolNames { get; }
 
-        public LevelElement LevelElement { get; set; }
+        public LevelElement LE { get; set; }
 
         public List<Node> Derived { get; set; }
 
@@ -28,7 +28,7 @@ namespace ShapeGrammar
         {
             Symbols = symbols;
             SymbolNames = symbols.Select(sym => sym.Name).ToHashSet();
-            LevelElement = levelElement;
+            LE = levelElement;
             Derived = new List<Node>();
         }
 
@@ -123,6 +123,7 @@ namespace ShapeGrammar
         protected void AddToFoundation(ShapeGrammarState grammarState, LevelElement le)
         {
             le.Cubes().ForEach(cube => grammarState.OffersFoundation[new Vector3Int(cube.Position.x, 0, cube.Position.z)] = false);
+            grammarState.VerticallyTaken = grammarState.VerticallyTaken.Merge(le.ProjectToY(0));
         }
 
         public abstract PrintingState Print(PrintingState state);
@@ -142,7 +143,7 @@ namespace ShapeGrammar
         public override void ChangeState(ShapeGrammarState grammarState)
         {
             AddIntoDag();
-            var lge = To.Select(node => node.LevelElement).ToLevelGroupElement(grammarState.WorldState.Grid);
+            var lge = To.Select(node => node.LE).ToLevelGroupElement(grammarState.WorldState.Grid);
             grammarState.WorldState = grammarState.WorldState.TryPush(lge);
             AddToFoundation(grammarState, lge);
         }
@@ -160,9 +161,9 @@ namespace ShapeGrammar
         public override void ChangeState(ShapeGrammarState grammarState)
         {
             AddIntoDag();
-            From.ForEach(node => node.LevelElement = LevelElement.Empty(grammarState.WorldState.Grid));
-            var lge = To.Select(node => node.LevelElement).ToLevelGroupElement(grammarState.WorldState.Grid);
-            grammarState.WorldState = grammarState.WorldState.ChangeAll(To.Select<Node, WorldState.ChangeWorld>(gn => ws => ws.TryPush(gn.LevelElement)));
+            From.ForEach(node => node.LE = LevelElement.Empty(grammarState.WorldState.Grid));
+            var lge = To.Select(node => node.LE).ToLevelGroupElement(grammarState.WorldState.Grid);
+            grammarState.WorldState = grammarState.WorldState.ChangeAll(To.Select<Node, WorldState.ChangeWorld>(gn => ws => ws.TryPush(gn.LE)));
             AddToFoundation(grammarState, lge);
         }
 
@@ -184,6 +185,7 @@ namespace ShapeGrammar
         public WorldState WorldState { get; set; }
 
         public Grid<bool> OffersFoundation { get; }
+        public LevelElement VerticallyTaken { get; set; }
 
         struct AppliedProduction
         {
@@ -206,6 +208,7 @@ namespace ShapeGrammar
             Root = new Node(empty, new List<Symbol>());
             WorldState = new WorldState(empty, grid, le => le.ApplyGrammarStyleRules(ldk.houseStyleRules)).TryPush(empty);
             OffersFoundation = new Grid<bool>(new Vector3Int(10, 1, 10), (_1, _2) => true);
+            VerticallyTaken = LevelElement.Empty(grid);
             Applied = new List<AppliedProduction>();
         }
 
@@ -222,7 +225,7 @@ namespace ShapeGrammar
 
         public IEnumerable<Node> WithActiveSymbols(params Symbol[] symbols)
         {
-            return Root.AllNodes().Where(node => node.LevelElement.Cubes().Any() && node.HasActiveSymbols(symbols));
+            return Root.AllNodes().Where(node => node.LE.Cubes().Any() && node.HasActiveSymbols(symbols));
         }
 
         public bool CanBeFounded(LevelElement le)

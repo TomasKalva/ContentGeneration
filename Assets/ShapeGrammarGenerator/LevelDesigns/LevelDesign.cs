@@ -37,13 +37,13 @@ namespace ShapeGrammar
                 Func<LevelElement> smallBox = () =>
                 {
                     var smallDistr = new SlopeDistr(center: 5, width: 3, rightness: 0.3f);
-                    return ldk.sgShapes.TurnIntoHouse(ldk.qc.GetFlatBox(ExtensionMethods.RandomBox(smallDistr, smallDistr)).CubeGroup().ExtrudeVer(Vector3Int.up, 6));
+                    return ldk.sgShapes.TurnIntoHouse(ldk.qc.GetFlatBox(ExtensionMethods.RandomBox(smallDistr, smallDistr)).CG().ExtrudeVer(Vector3Int.up, 6));
                 };
 
                 Func<LevelElement> largeBox = () =>
                 {
                     var largeDistr = new SlopeDistr(center: 8, width: 3, rightness: 0.3f);
-                    return ldk.sgShapes.TurnIntoHouse(ldk.qc.GetFlatBox(ExtensionMethods.RandomBox(largeDistr, largeDistr)).CubeGroup().ExtrudeVer(Vector3Int.up, 6));
+                    return ldk.sgShapes.TurnIntoHouse(ldk.qc.GetFlatBox(ExtensionMethods.RandomBox(largeDistr, largeDistr)).CG().ExtrudeVer(Vector3Int.up, 6));
                 };
 
                 Func<LevelElement> balconyTower = () =>
@@ -77,17 +77,17 @@ namespace ShapeGrammar
                     var surrounded = new LevelGroupElement(ldk.grid, AreaType.None);
 
                     // Create ground layout of the tower
-                    var yard = ldk.qc.GetBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)).InflateY(0, 1)).LevelElement(AreaType.Garden);
+                    var yard = ldk.qc.GetBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)).InflateY(0, 1)).LE(AreaType.Garden);
 
                     var boxSequence = ExtensionMethods.BoxSequence(() => ExtensionMethods.RandomBox(new Vector2Int(3, 3), new Vector2Int(7, 7)));
                     var houses = ldk.qc.FlatBoxes(boxSequence, 6).Select(le => le.SetAreaType(AreaType.House));
 
                     houses = ldk.pl.SurroundWith(yard, houses);
-                    houses = houses.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => ldk.sgShapes.SimpleHouseWithFoundation(g.CubeGroup(), 3));
+                    houses = houses.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => ldk.sgShapes.SimpleHouseWithFoundation(g.CG(), 3));
 
                     var wall = ldk.sgShapes.WallAround(yard, 2).Minus(houses);
 
-                    surrounded = surrounded.AddAll(yard.CubeGroup().ExtrudeVer(Vector3Int.up, 2).Merge(yard.CubeGroup()).LevelElement(AreaType.Garden), houses, wall);
+                    surrounded = surrounded.AddAll(yard.CG().ExtrudeVer(Vector3Int.up, 2).Merge(yard.CG()).LE(AreaType.Garden), houses, wall);
                     return surrounded;
                 };
 
@@ -96,9 +96,9 @@ namespace ShapeGrammar
                     var island = ldk.sgShapes.IslandExtrudeIter(ldk.grid[0, 0, 0].Group(), 13, 0.3f);
 
                     // wall
-                    var wallTop = island.ExtrudeHor(true, false).Minus(island).MoveBy(Vector3Int.up).LevelElement(AreaType.WallTop);
+                    var wallTop = island.ExtrudeHor(true, false).Minus(island).MoveBy(Vector3Int.up).LE(AreaType.WallTop);
                     var foundation = ldk.sgShapes.Foundation(wallTop);
-                    return new LevelGroupElement(ldk.grid, AreaType.None, island.LevelElement(AreaType.Garden), foundation, wallTop);
+                    return new LevelGroupElement(ldk.grid, AreaType.None, island.LE(AreaType.Garden), foundation, wallTop);
                 };
 
                 var wc = ldk.wc;
@@ -135,7 +135,7 @@ namespace ShapeGrammar
         {
             int length = 6;
 
-            var start = ldk.qc.GetBox(new Box3Int(Vector3Int.zero, Vector3Int.one)).ExtrudeVer(Vector3Int.up, 10).LevelElement();
+            var start = ldk.qc.GetBox(new Box3Int(Vector3Int.zero, Vector3Int.one)).ExtrudeVer(Vector3Int.up, 10).LE();
             WorldState state = new WorldState(start, ldk.grid, le => le.ApplyGrammarStyleRules(ldk.houseStyleRules)/*.MoveBy((heightDistr.Sample() - le.CubeGroup().CubeGroupMaxLayer(Vector3Int.down).Cubes.FirstOrDefault().Position.y)* Vector3Int.up)*/);
             
 

@@ -130,7 +130,7 @@ namespace ShapeGrammar
         public LevelGeometryElement GetFlatBox(Box2Int box, int y = 0)
         {
             var cubes = (box.InflateY(0, 1) + y * Vector3Int.up).Select(i => QueriedGrid[i]).ToList();
-            return new CubeGroup(QueriedGrid, cubes).LevelElement(AreaType.None);
+            return new CubeGroup(QueriedGrid, cubes).LE(AreaType.None);
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace ShapeGrammar
         /// </summary>
         LevelElement RecursivelySplitXZImpl(LevelGeometryElement levelElement, int maxSide)
         {
-            var cubeGroup = levelElement.CubeGroup();
+            var cubeGroup = levelElement.CG();
             var lengthX = cubeGroup.LengthX();
             var lengthZ = cubeGroup.LengthZ();
             if (Mathf.Max(lengthX, lengthZ) <= maxSide)
@@ -189,7 +189,7 @@ namespace ShapeGrammar
 
         LevelElement RecursivelySplitImpl(LevelGeometryElement levelElement, int maxSide)
         {
-            var cubeGroup = levelElement.CubeGroup();
+            var cubeGroup = levelElement.CG();
             var maxLengthDir = ExtensionMethods.PositiveDirections().ArgMax(dir => cubeGroup.ExtentsDir(dir));
             var maxLength = cubeGroup.ExtentsDir(maxLengthDir);
             if (maxLength <= maxSide)
@@ -217,13 +217,13 @@ namespace ShapeGrammar
 
         public LevelGroupElement LiftRandomly(LevelGroupElement lge, Func<int> liftingF)
         {
-            var newGroups = lge.LevelElements.Select(g => new CubeGroup(g.Grid, g.MoveBy(Vector3Int.up * liftingF()).Cubes().ToList()).LevelElement(g.AreaType));
+            var newGroups = lge.LevelElements.Select(g => new CubeGroup(g.Grid, g.MoveBy(Vector3Int.up * liftingF()).Cubes().ToList()).LE(g.AreaType));
             return new LevelGroupElement(lge.Grid, lge.AreaType, newGroups.ToList<LevelElement>());
         }
 
         public LevelGroupElement RaiseRandomly(LevelGroupElement lge, Func<int> liftingF)
         {
-            var newGroups = lge.LevelElements.Select(g => new CubeGroup(g.Grid, g.Cubes().Concat(g.CubeGroup().ExtrudeVer(Vector3Int.up, liftingF()).Cubes).ToList()).LevelElement(g.AreaType));
+            var newGroups = lge.LevelElements.Select(g => new CubeGroup(g.Grid, g.Cubes().Concat(g.CG().ExtrudeVer(Vector3Int.up, liftingF()).Cubes).ToList()).LE(g.AreaType));
             return new LevelGroupElement(lge.Grid, lge.AreaType, newGroups.ToList<LevelElement>());
         }
 
@@ -296,7 +296,7 @@ namespace ShapeGrammar
                 }
                 groups = newGroups;
             }
-            return new LevelGroupElement(QueriedGrid, AreaType.None, groups.Select(g => g.LevelElement()).ToList<LevelElement>());
+            return new LevelGroupElement(QueriedGrid, AreaType.None, groups.Select(g => g.LE()).ToList<LevelElement>());
         }
     }
 

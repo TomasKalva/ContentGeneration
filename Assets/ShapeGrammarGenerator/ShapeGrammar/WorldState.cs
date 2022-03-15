@@ -18,6 +18,7 @@ namespace ShapeGrammar
 
         public WorldState(LevelElement last, Grid<Cube> grid, TransformPushed afterPushed)
         {
+            Grid = grid;
             Added = new LevelGroupElement(grid, AreaType.None);
             Last = last;
             AfterPushed = afterPushed;
@@ -25,6 +26,7 @@ namespace ShapeGrammar
 
         public WorldState(LevelGroupElement added, LevelElement last, Grid<Cube> grid, TransformPushed afterPushed)
         {
+            Grid = grid;
             Added = added;
             Last = last;
             AfterPushed = afterPushed;

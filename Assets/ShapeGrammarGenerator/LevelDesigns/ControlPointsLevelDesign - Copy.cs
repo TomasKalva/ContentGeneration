@@ -22,7 +22,7 @@ namespace ShapeGrammar
             var yard = ldk.qc.GetBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(30, 30)).InflateY(0, 1));
 
             var controlPoints = ControlPoints(yard, 10);
-            var controlLine = ConnectByLine(controlPoints).LevelElement(AreaType.Debug);
+            var controlLine = ConnectByLine(controlPoints).LE(AreaType.Debug);
 
             var smallDistr = new SlopeDistr(center: 6, width: 3, rightness: 0.3f);
             //var boxSequence = ExtensionMethods.BoxSequence(() => ExtensionMethods.RandomBox(new Vector2Int(3, 3), new Vector2Int(8, 8)));
@@ -43,7 +43,7 @@ namespace ShapeGrammar
                 },
                 moves => moves.GetRandom());
 
-            houses = houses.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => ldk.sgShapes.SimpleHouseWithFoundation(g.CubeGroup(), UnityEngine.Random.Range(3, 7)));
+            houses = houses.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => ldk.sgShapes.SimpleHouseWithFoundation(g.CG(), UnityEngine.Random.Range(3, 7)));
 
             root = root.AddAll(/*controlLine, controlPoints.MoveBy(Vector3Int.up).LevelElement(AreaType.Debug),*/ houses);
             root.ApplyGrammarStyleRules(ldk.houseStyleRules);

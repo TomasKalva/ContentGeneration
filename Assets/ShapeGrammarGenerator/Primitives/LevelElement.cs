@@ -29,7 +29,7 @@ namespace ShapeGrammar
         public LevelGroupElement WhereGeom(Func<LevelElement, bool> cond) => Leafs().Where(g => cond(g)).ToLevelGroupElement(Grid);
 
         public abstract LevelElement ReplaceLeafs(Func<LevelGeometryElement, bool> cond, Func<LevelGeometryElement, LevelElement> replaceF);
-        public LevelGeometryElement MapGeom(Func<CubeGroup, CubeGroup> f) => new LevelGeometryElement(Grid, AreaType, f(CubeGroup()));
+        public LevelGeometryElement MapGeom(Func<CubeGroup, CubeGroup> f) => new LevelGeometryElement(Grid, AreaType, f(CG()));
 
         #endregion
 
@@ -40,6 +40,16 @@ namespace ShapeGrammar
         public LevelElement MoveBy(Vector3Int offset)
         {
             return MoveByImpl(offset);
+        }
+
+        public LevelElement MoveBottomTo(int yPosition)
+        {
+            var cg = CG();
+            if (!cg.Cubes.Any())
+                return this;
+
+            var bottom = cg.LeftBottomBack().y;
+            return MoveBy((yPosition - bottom) * Vector3Int.up);
         }
 
         public abstract IEnumerable<LevelElement> Flatten();
@@ -54,7 +64,7 @@ namespace ShapeGrammar
 
         public LevelElement SetGrammarStyle(StyleSetter styleSetter)
         {
-            styleSetter(CubeGroup());
+            styleSetter(CG());
             return this;
         }
 
@@ -64,7 +74,7 @@ namespace ShapeGrammar
             return this;
         }
 
-        public abstract CubeGroup CubeGroup();
+        public abstract CubeGroup CG();
 
         #region Movement
         /// <summary>
@@ -72,14 +82,14 @@ namespace ShapeGrammar
         /// </summary>
         public IEnumerable<Vector3Int> MovesToIntersect(LevelElement toIntersect)
         {
-            return toIntersect.CubeGroup().MinkowskiMinus(CubeGroup());
+            return toIntersect.CG().MinkowskiMinus(CG());
         }
 
         public IEnumerable<Vector3Int> MovesToBeInside(LevelElement bounding)
         {
             var intersectBounding = MovesToIntersect(bounding);
 
-            var border = bounding.CubeGroup().ExtrudeAll().LevelElement(AreaType.None);
+            var border = bounding.CG().ExtrudeAll().LE(AreaType.None);
             var intersectBorder = MovesToIntersect(border);
             return intersectBounding.SetMinus(intersectBorder);
         }
@@ -94,14 +104,14 @@ namespace ShapeGrammar
 
         public IEnumerable<Vector3Int> MovesNearXZ(LevelElement nearThis)
         {
-            var intersectNear = nearThis.CubeGroup().MinkowskiMinus(CubeGroup().AllBoundaryFacesH().Extrude(1, false));
+            var intersectNear = nearThis.CG().MinkowskiMinus(CG().AllBoundaryFacesH().Extrude(1, false));
             var intersect = MovesToIntersect(nearThis);
             return intersectNear.SetMinus(intersect);
         }
 
         public IEnumerable<Vector3Int> MovesToPartlyIntersectXZ(LevelElement partlyIntersectThis)
         {
-            var intersectNear = partlyIntersectThis.CubeGroup().MinkowskiMinus(CubeGroup().AllBoundaryFacesH().Extrude(1, false));
+            var intersectNear = partlyIntersectThis.CG().MinkowskiMinus(CG().AllBoundaryFacesH().Extrude(1, false));
             var intersect = MovesToIntersect(partlyIntersectThis);
             return intersectNear.SetIntersect(intersect);
         }
@@ -111,8 +121,8 @@ namespace ShapeGrammar
         /// </summary>
         public IEnumerable<Vector3Int> MovesInDistanceXZ(LevelElement toThis, int dist)
         {
-            var intersectClose = toThis.CubeGroup().MinkowskiMinus(CubeGroup().AllBoundaryFacesH().Extrude(dist, false));
-            var intersectNear = toThis.CubeGroup().MinkowskiMinus(CubeGroup().AllBoundaryFacesH().Extrude(dist + 1, false));
+            var intersectClose = toThis.CG().MinkowskiMinus(CG().AllBoundaryFacesH().Extrude(dist, false));
+            var intersectNear = toThis.CG().MinkowskiMinus(CG().AllBoundaryFacesH().Extrude(dist + 1, false));
             return intersectNear.SetMinus(intersectClose);
         }
 
@@ -144,8 +154,13 @@ namespace ShapeGrammar
 
         public IEnumerable<LevelElement> NeighborsInDirection(Vector3Int dir, IEnumerable<LevelElement> possibleNeighbors)
         {
-            var cubesInDir = CubeGroup().ExtrudeDir(dir);
-            return possibleNeighbors.Where(le => le.CubeGroup().Intersects(cubesInDir));
+            var cubesInDir = CG().ExtrudeDir(dir);
+            return possibleNeighbors.Where(le => le.CG().Intersects(cubesInDir));
+        }
+
+        public LevelGeometryElement ProjectToY(int y)
+        {
+            return new LevelGeometryElement(Grid, AreaType.None, Cubes().Select(cube => Grid[cube.Position.x, y, cube.Position.z]).Distinct().ToList().ToCubeGroup(Grid));
         }
 
         public abstract LevelElement Symmetrize(FaceHor faceHor);
@@ -175,6 +190,7 @@ namespace ShapeGrammar
 
         public LevelGroupElement(Grid<Cube> grid, AreaType areaType, List<LevelElement> levelElements) : base(grid, areaType)
         {
+            Debug.Assert(grid != null, $"{AreaType.Name}");
             LevelElements = levelElements.ToList();
         }
 
@@ -204,7 +220,7 @@ namespace ShapeGrammar
         public LevelGroupElement Select(Func<LevelElement, LevelElement> selector) => new LevelGroupElement(Grid, AreaType, LevelElements.Select(selector).ToList());
 
 
-        public override CubeGroup CubeGroup() => new CubeGroup(Grid, Cubes());
+        public override CubeGroup CG() => new CubeGroup(Grid, Cubes());
 
         public LevelGroupElement ReplaceLeafsGrp(Func<LevelGeometryElement, bool> cond, Func<LevelGeometryElement, LevelElement> replaceF) => (LevelGroupElement)ReplaceLeafs(cond, replaceF);
         public LevelGroupElement ReplaceLeafsGrp(int index, Func<LevelGeometryElement, LevelElement> replaceF)
@@ -283,6 +299,7 @@ namespace ShapeGrammar
 
         public LevelGeometryElement(Grid<Cube> grid, AreaType areaType, CubeGroup group) : base(grid, areaType)
         {
+            Debug.Assert(grid != null, $"{AreaType.Name}");
             Group = group;
         }
 
@@ -300,7 +317,7 @@ namespace ShapeGrammar
             return (LevelGeometryElement)MoveByImpl(offset);
         }
 
-        public override CubeGroup CubeGroup() => Group;
+        public override CubeGroup CG() => Group;
 
         public override LevelElement ReplaceLeafs(Func<LevelGeometryElement, bool> cond, Func<LevelGeometryElement, LevelElement> replaceF)
         {
@@ -310,12 +327,12 @@ namespace ShapeGrammar
         public override LevelElement Minus(LevelElement levelElement)
         {
             // todo: don't materialize levelElement.CubeGroup() for every leaf
-            return new LevelGeometryElement(Grid, AreaType, Group.Minus(levelElement.CubeGroup()));
+            return new LevelGeometryElement(Grid, AreaType, Group.Minus(levelElement.CG()));
         }
 
         public override LevelElement MinusInPlace(LevelElement levelElement)
         {
-            Group = Group.Minus(levelElement.CubeGroup());
+            Group = Group.Minus(levelElement.CG());
             return this;
         }
 

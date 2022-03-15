@@ -122,7 +122,7 @@ namespace ShapeGrammar
             return new CubeGroup(Grid, validCubes.ToList());
         }
 
-        public LevelGeometryElement LevelElement(AreaType areaType = null)
+        public LevelGeometryElement LE(AreaType areaType = null)
         {
             if(areaType == null)
             {
@@ -380,7 +380,7 @@ namespace ShapeGrammar
             Facets = facets;
         }
 
-        public CubeGroup CubeGroup()
+        public CubeGroup CG()
         {
             return new CubeGroup(Grid, Facets.Select(face => face.MyCube).ToList());
         }

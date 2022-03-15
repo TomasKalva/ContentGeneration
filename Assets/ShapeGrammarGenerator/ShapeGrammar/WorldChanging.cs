@@ -61,8 +61,8 @@ namespace ShapeGrammar
 
                 var area = element.MoveBy(possibleMoves.GetRandom());
                 var start = worldState.Last.WhereGeom(le => le.AreaType != AreaType.Path);
-                var pathCG = ldk.paths.PathH(start, area, 2, worldState.Added).CubeGroup();
-                var path = pathCG.ExtrudeVer(Vector3Int.up, 2).Merge(pathCG).LevelElement(AreaType.Platform);
+                var pathCG = ldk.paths.PathH(start, area, 2, worldState.Added).CG();
+                var path = pathCG.ExtrudeVer(Vector3Int.up, 2).Merge(pathCG).LE(AreaType.Platform);
                 var newElement = new LevelGroupElement(worldState.Last.Grid, AreaType.None, path, area);
                 return worldState.TryPush(newElement);
             };
@@ -73,7 +73,7 @@ namespace ShapeGrammar
             return (worldState) =>
             {
                 var room = worldState.Added.Nonterminals(AreaType.Room)
-                    .Where(room => room.CubeGroup().Extents().AtLeast(new Vector3Int(3, 2, 3)))
+                    .Where(room => room.CG().Extents().AtLeast(new Vector3Int(3, 2, 3)))
                     .FirstOrDefault();
                 if (room == null)
                     return worldState;
@@ -88,7 +88,7 @@ namespace ShapeGrammar
             return (worldState) =>
             {
                 var room = worldState.Added.Nonterminals(AreaType.Room)
-                    .Where(room => room.CubeGroup().Extents().AtLeast(new Vector3Int(5, 5, 5)))
+                    .Where(room => room.CG().Extents().AtLeast(new Vector3Int(5, 5, 5)))
                     .FirstOrDefault();
                 if (room == null)
                     return worldState;
@@ -103,10 +103,10 @@ namespace ShapeGrammar
         {
             // find two areas with floor next to each other
             // calculation is done eagerly and in advance, so it doesn't react on changes of geometry
-            var elementsWithFloor = levelGeometry.Leafs().Where(le => AreaType.CanBeConnectedByStairs(le.AreaType) && le.CubeGroup().WithFloor().Cubes.Any()).ToList();
+            var elementsWithFloor = levelGeometry.Leafs().Where(le => AreaType.CanBeConnectedByStairs(le.AreaType) && le.CG().WithFloor().Cubes.Any()).ToList();
             var closeElementsWithFloor = elementsWithFloor
                 .Select2Distinct((el1, el2) => new { el1, el2 })
-                .Where(pair => pair.el1.CubeGroup().ExtrudeAll().Intersects(pair.el2.CubeGroup())).ToList();
+                .Where(pair => pair.el1.CG().ExtrudeAll().Intersects(pair.el2.CG())).ToList();
 
             return (worldState) =>
             {
@@ -115,15 +115,15 @@ namespace ShapeGrammar
                 if (closePair == null)
                     return worldState;
 
-                var searchSpace = new CubeGroup(ldk.grid, closePair.el1.CubeGroup().Merge(closePair.el2.CubeGroup()).Cubes);
+                var searchSpace = new CubeGroup(ldk.grid, closePair.el1.CG().Merge(closePair.el2.CG()).Cubes);
                 Neighbors<PathNode> neighborNodes = PathNode.BoundedBy(PathNode.StairsNeighbors(), searchSpace);
-                var newPath = ldk.paths.ConnectByPath(closePair.el1.CubeGroup().WithFloor(), closePair.el2.CubeGroup().WithFloor(), neighborNodes);
+                var newPath = ldk.paths.ConnectByPath(closePair.el1.CG().WithFloor(), closePair.el2.CG().WithFloor(), neighborNodes);
 
                 if (newPath == null)
                     return worldState;
 
                 connectednessGraph.Connect(closePair.el1, closePair.el2);
-                return worldState.TryPushIntersecting(newPath.LevelElement(AreaType.Path));
+                return worldState.TryPushIntersecting(newPath.LE(AreaType.Path));
             };
         }
     }
