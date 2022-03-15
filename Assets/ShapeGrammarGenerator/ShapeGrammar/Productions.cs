@@ -291,6 +291,7 @@ namespace ShapeGrammar
                 });
         }
 
+        /*
         public Production HouseFromCourtyard()
         {
             return new Production(
@@ -328,7 +329,7 @@ namespace ShapeGrammar
                         state.Add(newHouse, courtyard).SetTo(door),
                     };
                 });
-        }
+        }*/
 
         public Production RoomNextTo(Symbol nextToWhat, Func<LevelElement> roomF)
         {
@@ -352,6 +353,7 @@ namespace ShapeGrammar
                     newRoomGN.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
                     
                     var door = ldk.con.ConnectByDoor(newRoomGN.LE, what.LE).GrammarNode();
+                    Debug.Assert(door != null);
 
                     // and modify the dag
                     var foundation = ldk.sgShapes.Foundation(newRoomGN.LE).GrammarNode(sym.Foundation);

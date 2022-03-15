@@ -20,23 +20,23 @@ namespace ShapeGrammar
             var productionList = new List<Production>()
             {
                 pr.CourtyardFromRoom(),
-                /*pr.CourtyardFromCourtyardCorner(),
+                pr.CourtyardFromCourtyardCorner(),
                 pr.BridgeFromCourtyard(),
                 pr.ExtendBridge(),
                 pr.CourtyardFromBridge(),
-                pr.HouseFromCourtyard(),
                 pr.ExtendHouse(ldk.tr.GetFloorConnector(lge => ldk.tr.SplittingFloorPlan(lge, 2))),
-                pr.AddNextFloor(),*/
+                pr.AddNextFloor(),
                 pr.GardenFromCourtyard(),
-                //pr.RoomNextTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
+                pr.RoomNextTo(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
+                pr.RoomNextTo(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 4, 2, 5))),
                 pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             };
             var shapeGrammar = new ShapeGrammar(productionList, ldk);
             shapeGrammar.ShapeGrammarState.ApplyProduction(pr.CreateNewHouse());
-            shapeGrammar.DoProductions(10);
+            shapeGrammar.DoProductions(30);
             shapeGrammar.ShapeGrammarState.Print(new PrintingState()).Show();
 
-            shapeGrammar.ShapeGrammarState.VerticallyTaken.SetAreaType(AreaType.Garden).ApplyGrammarStyleRules(ldk.houseStyleRules);
+            //shapeGrammar.ShapeGrammarState.VerticallyTaken.SetAreaType(AreaType.Garden).ApplyGrammarStyleRules(ldk.houseStyleRules);
 
             var level = shapeGrammar.ShapeGrammarState.WorldState.Added;
 

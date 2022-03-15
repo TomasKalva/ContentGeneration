@@ -115,6 +115,10 @@ namespace ShapeGrammar
         public Operation SetTo(params Node[] to)
         {
             To = to;
+            foreach(var node in to)
+            {
+                Debug.Assert(node.LE != null, $"Level element of created node is null!");
+            }
             return this;
         }
 
@@ -143,11 +147,6 @@ namespace ShapeGrammar
         public override void ChangeState(ShapeGrammarState grammarState)
         {
             AddIntoDag();
-            foreach(var node in To)
-            {
-                if (node.LE == null)
-                    ;
-            }
             var lge = To.Select(node => node.LE).ToLevelGroupElement(grammarState.WorldState.Grid);
             grammarState.WorldState = grammarState.WorldState.TryPush(lge);
             AddToFoundation(grammarState, lge);
