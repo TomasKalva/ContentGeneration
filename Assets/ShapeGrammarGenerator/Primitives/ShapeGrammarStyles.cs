@@ -274,6 +274,26 @@ namespace ShapeGrammar
             return elevatorShaftArea;
         }
 
+        public CubeGroup FallStyle(CubeGroup fallArea)
+        {
+            // assumes that first and last move are horizontal, vertical shaft inbetween
+
+            var shaftCubes = fallArea.Cubes.Skip(1).Reverse().Skip(1).Reverse().ToCubeGroup(GridView);
+
+            // remove floor from the fall area
+            var shaftFloors = new FaceVerGroup(GridView, shaftCubes.Cubes.Select2((c1, c2) => (c1.Position.y > c2.Position.y ? c1 : c2).FacesVer(Vector3Int.down)).ToList());
+            shaftFloors.Fill(FACE_VER.Nothing).SetStyle(DefaultHouseStyle);
+
+            // no walls between horizontal
+            var horCubes = new CubeGroup(GridView, new List<Cube>()
+            {
+                fallArea.Cubes.First(), fallArea.Cubes.Last()
+            });
+            horCubes.NeighborsInGroupH(fallArea).SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Nothing);
+
+            return fallArea;
+        }
+
         public CubeGroup DoorStyle(CubeGroup doorFromFirst)
         {
             Debug.Assert(doorFromFirst.Cubes.Count() == 2);

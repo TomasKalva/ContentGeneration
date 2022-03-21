@@ -12,8 +12,8 @@ namespace ShapeGrammar
         public Symbol BrokenFloor { get; } = new Symbol("BrokenFloor");
         public Symbol ConnectTo(Node to) => new ConnectTo("ConnectTo", to);
         public Symbol ExtrudeUp { get; } = new Symbol("ExtrudeUp");
-        public Symbol CreateFrom(params Node[] from) => new CreateFrom("CreateFrom", from.ToList());
-        public Symbol FloorGiver(Node giveTo) => new FloorGiver("FloorGiver", giveTo);
+        //public Symbol CreateFrom(params Node[] from) => new CreateFrom("CreateFrom", from.ToList());
+        //public Symbol FloorGiver(Node giveTo) => new FloorGiver("FloorGiver", giveTo);
         public Symbol Room(bool plain = true, int floor = 0) => new Room("Room", plain, floor);
         public Symbol Terrace { get; } = new Symbol("Terrace");
         public Symbol Roof { get; } = new Symbol("Roof");

@@ -95,7 +95,7 @@ namespace ShapeGrammar
 
                         // create a new object
                         roomCubeGroup
-                        .CubeGroupMaxLayer(Vector3Int.left)
+                        .CubeGroupMaxLayer(dir)
                         .OpAdd()
                         .ExtrudeHor().ExtrudeHor().Minus(roomCubeGroup)
                         .OpNew()
@@ -342,6 +342,7 @@ namespace ShapeGrammar
                     var whatCG = what.LE.CG();
 
                     var newRoom = roomF();
+                    //
                     var newRoomAtGround = newRoom.MoveBottomTo(0);
                     var validNewRoom = ldk.pl.MoveNearXZ(what.LE.MoveBottomTo(0), newRoomAtGround, state.VerticallyTaken);
                     if (validNewRoom == null)
@@ -349,6 +350,7 @@ namespace ShapeGrammar
                     
 
                     var newRoomGN = validNewRoom.MoveBottomTo(whatCG.LeftBottomBack().y).GrammarNode(sym.Room());
+                    //
                     
                     newRoomGN.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
                     
@@ -363,6 +365,76 @@ namespace ShapeGrammar
                         state.Add(newRoomGN).SetTo(foundation),
                         state.Add(newRoomGN, what).SetTo(door),
                         
+                    };
+
+                    /*
+                    Maybe clearer syntax that requires more helper methods
+
+                    Linq:
+
+                    from obj in createObject(roomF(), sym.Room())
+                    from movedObj in moveNear(what)
+                    from _ in placeObjToWorld(movedObj)
+                    from door in connect(ldk.con.ConnectByDoor(obj, what))
+                    from foundation in foundation(obj)
+                    from _2 in placeObjToWorld(door)
+                    from _3 in placeObjToWorld(foundation)
+                    select null
+
+                    Ideal syntax:
+
+                    obj <- createObject(roomF(), sym.Room())
+                    movedObj <- moveNear(what)
+                    placeObjToWorld(movedObj)
+                    door <- connect(ldk.con.ConnectByDoor(obj, what))
+                    foundation <- foundation(obj)
+                    placeObjToWorld(door)
+                    placeObjToWorld(foundation)
+                    */
+                });
+        }
+
+        public Production RoomFallDown(Symbol nextToWhat, Func<LevelElement> roomF)
+        {
+            return new Production(
+                $"RoomNextTo{nextToWhat.Name}",
+                new ProdParamsManager().AddNodeSymbols(nextToWhat),
+                (state, pp) =>
+                {
+                    var what = pp.Param;
+                    var whatCG = what.LE.CG();
+
+                    var newRoom = roomF();
+                    //
+                    var newRoomAtGround = newRoom.MoveBottomTo(0);
+                    var validNewRoom = ldk.pl.MoveNearXZ(what.LE.MoveBottomTo(0), newRoomAtGround, state.VerticallyTaken);
+                    if (validNewRoom == null)
+                        return null;
+
+
+                    var newRoomGN = validNewRoom.MoveBottomTo(whatCG.LeftBottomBack().y).GrammarNode(sym.Room(false, 1));
+                    //
+
+                    newRoomGN.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
+
+                    var door = ldk.con.ConnectByDoor(newRoomGN.LE, what.LE).GrammarNode();
+                    Debug.Assert(door != null);
+
+                    // and modify the dag
+
+                    var bottomRoom = newRoomGN.LE.CG().ExtrudeVer(Vector3Int.down, 2).LE(AreaType.Room).GrammarNode(sym.Room(false, 0));
+                    bottomRoom.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
+
+                    var fall = ldk.con.ConnectByFall(newRoomGN.LE, bottomRoom.LE).GrammarNode();
+                    var foundation = ldk.sgShapes.Foundation(bottomRoom.LE).GrammarNode(sym.Foundation);
+                    return new[]
+                    {
+                        state.Add(what).SetTo(newRoomGN),
+                        state.Add(newRoomGN).SetTo(bottomRoom),
+                        state.Add(bottomRoom).SetTo(foundation),
+                        state.Add(newRoomGN, what).SetTo(door),
+                        state.Add(newRoomGN, bottomRoom).SetTo(fall),
+
                     };
                 });
         }

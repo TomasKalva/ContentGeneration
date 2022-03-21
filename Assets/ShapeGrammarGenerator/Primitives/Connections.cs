@@ -80,6 +80,17 @@ namespace ShapeGrammar
             return path != null ? path.LE(AreaType.Elevator) : null;
         }
 
+        public LevelGeometryElement ConnectByFall(LevelElement from, LevelElement to)
+        {
+            var space1 = from.CG();
+            var space2 = to.CG();
+            var start = space1.WithFloor();
+            var end = space2.WithFloor();
+            Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.ElevatorNeighbors(end), space1.Merge(space2));
+            var path = paths.ConnectByPath(start, end, neighbors);
+            return path != null ? path.LE(AreaType.Fall) : null;
+        }
+
         public LevelGeometryElement ConnectByBalconyStairsOutside(LevelElement le1, LevelElement le2, LevelElement notIntersecting)
         {
             var start = RoomEdgesWithFloor(le1);
