@@ -117,7 +117,7 @@ namespace ShapeGrammar
             var space2 = le2.CG();
             Neighbors<PathNode> neighbors = PathNode.NotIn(PathNode.StraightHorizontalNeighbors(), notIntersecting.CG());
             var path = paths.ConnectByPath(space1.WithFloor(), space2.WithFloor(), neighbors);
-            return path != null ? path.LE(AreaType.Bridge) : null;
+            return path != null ? path.LE(AreaType.Path) : null;
         }
 
         public LevelGeometryElement ConnectByStairsInside(LevelElement le1, LevelElement le2, LevelElement bounds = null)

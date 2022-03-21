@@ -406,6 +406,84 @@ namespace ShapeGrammar
                 });
         }
 
+        public Production ExtendBridgeTo(Symbol from, Func<LevelElement> toF)
+        {
+            return new Production(
+                $"ExtendBridgeTo",
+                new ProdParamsManager().AddNodeSymbols(from),
+                (state, pp) =>
+                {
+                    var what = pp.Param;
+                    var whatCG = what.LE.CG();
+
+                    var newRoom = toF();
+                    var newRoomAtGround = newRoom.MoveBottomTo(0);
+
+                    var newRooms = ExtensionMethods.HorizontalDirections().Shuffle()
+                        .Select(dir =>
+                        {
+                            var boundingBox = whatCG.CubeGroupMaxLayer(Vector3Int.down).ExtrudeDir(dir, 10, false).LE().MoveBottomTo(0);
+
+                            var validMoves = newRoomAtGround.MovesToIntersect(boundingBox).Where(move => move.y == 0);
+                            validMoves = newRoomAtGround.Moves(validMoves, state.VerticallyTaken.ToEnumerable());
+                            if (!validMoves.Any())
+                                return null;
+
+                            var newRoomGN = newRoomAtGround.MoveBy(validMoves.GetRandom()).MoveBottomTo(whatCG.LeftBottomBack().y).GrammarNode(sym.Room());
+                            return newRoomGN;
+                        })
+                        .Where(node => node != null);
+
+                    if (!newRooms.Any())
+                        return null;
+
+                    var newRoomGN = newRooms.First();
+
+                    newRoomGN.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
+
+                    var bridge = ldk.con.ConnectByBridge(what.LE, newRoomGN.LE, state.WorldState.Added).GrammarNode();
+                    Debug.Assert(bridge != null);
+                    //var door = ldk.con.ConnectByDoor(newRoomGN.LE, what.LE).GrammarNode();
+                    //Debug.Assert(door != null);
+
+                    // and modify the dag
+                    var foundation = ldk.sgShapes.Foundation(newRoomGN.LE).GrammarNode(sym.Foundation);
+                    var reservation = newRoomGN.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GrammarNode(sym.RoomReservation(newRoomGN));
+                    return new[]
+                    {
+                        state.Add(what).SetTo(newRoomGN),
+                        state.Add(newRoomGN).SetTo(foundation),
+                        state.Add(newRoomGN).SetTo(reservation),
+                        state.Add(what, newRoomGN).SetTo(bridge),
+                    };
+
+                    /*
+                    Maybe clearer syntax that requires more helper methods
+
+                    Linq:
+
+                    from obj in createObject(roomF(), sym.Room())
+                    from movedObj in moveNear(what)
+                    from _ in placeObjToWorld(movedObj)
+                    from door in connect(ldk.con.ConnectByDoor(obj, what))
+                    from foundation in foundation(obj)
+                    from _2 in placeObjToWorld(door)
+                    from _3 in placeObjToWorld(foundation)
+                    select null
+
+                    Ideal syntax:
+
+                    obj <- createObject(roomF(), sym.Room())
+                    movedObj <- moveNear(what)
+                    placeObjToWorld(movedObj)
+                    door <- connect(ldk.con.ConnectByDoor(obj, what))
+                    foundation <- foundation(obj)
+                    placeObjToWorld(door)
+                    placeObjToWorld(foundation)
+                    */
+                });
+        }
+
         public Production RoomFallDown(Symbol nextToWhat, Func<LevelElement> roomFromToF)
         {
             return new Production(
@@ -671,6 +749,8 @@ namespace ShapeGrammar
                     };
                 });
         }
+
+
 
         /*
         public Production ExtrudeRoof()
