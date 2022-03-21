@@ -15,6 +15,10 @@ namespace ShapeGrammar
         //public Symbol CreateFrom(params Node[] from) => new CreateFrom("CreateFrom", from.ToList());
         //public Symbol FloorGiver(Node giveTo) => new FloorGiver("FloorGiver", giveTo);
         public Symbol Room(bool plain = true, int floor = 0) => new Room("Room", plain, floor);
+        /// <summary>
+        /// Serves as a space that can be turned into another part of a building or in a roof.
+        /// </summary>
+        public Symbol RoomReservation(Node roomBelow) => new RoomReservation("RoomReservation", roomBelow);
         public Symbol Terrace { get; } = new Symbol("Terrace");
         public Symbol Roof { get; } = new Symbol("Roof");
         public Symbol Courtyard { get; } = new Symbol("Courtyard");
@@ -87,6 +91,16 @@ namespace ShapeGrammar
         {
             Plain = plain;
             Floor = floor;
+        }
+    }
+
+    public class RoomReservation : Symbol
+    {
+        public Node RoomBelow { get; }
+
+        public RoomReservation(string name, Node roomBelow) : base(name)
+        {
+            RoomBelow = roomBelow;
         }
     }
 }

@@ -91,7 +91,7 @@ namespace ShapeGrammar
             return this;
         }
 
-        public bool AreAllNotTaken() => Cubes.All(cube => !cube.Changed);
+        public bool AllAreNotTaken() => Cubes.All(cube => !cube.Changed);
         public CubeGroup NotTaken() => Cubes.Where(cube => !cube.Changed).ToCubeGroup(Grid);
 
         public CubeGroup CubeGroupLayer(Vector3Int dir)

@@ -29,10 +29,12 @@ namespace ShapeGrammar
                     var room = ldk.sgShapes.Room(new Box2Int(0, 0, 5, 5).InflateY(8, 10));
                     var movedRoom = ldk.pl.MoveToNotOverlap(state.WorldState.Added, room).GrammarNode(sym.Room());
                     var foundation = ldk.sgShapes.Foundation(movedRoom.LE).GrammarNode(sym.Foundation);
+                    var reservation = movedRoom.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GrammarNode(sym.RoomReservation(movedRoom));
                     return new[]
                     {
                         state.Add(root).SetTo(movedRoom),
-                        state.Add(movedRoom).SetTo(foundation)
+                        state.Add(movedRoom).SetTo(foundation),
+                        state.Add(movedRoom).SetTo(reservation)
                     };
                 });
         }
@@ -61,7 +63,7 @@ namespace ShapeGrammar
                         .ExtrudeDir(dir, 2).LE(AreaType.Colonnade))
 
                         // fail if no such object exists
-                        .Where(le => le.CG().AreAllNotTaken());
+                        .Where(le => le.CG().AllAreNotTaken());
                     if (!terraces.Any())
                         return null;
 
@@ -103,7 +105,7 @@ namespace ShapeGrammar
                         .LE(AreaType.Yard))
 
                         // fail if no such object exists
-                        .Where(le => le.CG().AreAllNotTaken() && state.CanBeFounded(le));
+                        .Where(le => le.CG().AllAreNotTaken() && state.CanBeFounded(le));
                     if (!courtyards.Any())
                         return null;
 
@@ -146,7 +148,7 @@ namespace ShapeGrammar
                         .OpNew()
                             .MoveBy(2 * Vector3Int.down)
                         .LE(AreaType.Yard))
-                        .Where(le => le.CG().AreAllNotTaken() && state.CanBeFounded(le)); ;
+                        .Where(le => le.CG().AllAreNotTaken() && state.CanBeFounded(le)); ;
                     if (!newCourtyards.Any())
                         return null;
 
@@ -197,7 +199,7 @@ namespace ShapeGrammar
                         .LE(AreaType.Bridge).GrammarNode(sym.Bridge(dir)))
 
                         // fail if no such object exists
-                        .Where(gn => gn.LE.CG().AreAllNotTaken() && state.CanBeFounded(gn.LE));
+                        .Where(gn => gn.LE.CG().AllAreNotTaken() && state.CanBeFounded(gn.LE));
                     if (!bridges.Any())
                         return null;
 
@@ -233,7 +235,7 @@ namespace ShapeGrammar
                         .LE(AreaType.Bridge).GrammarNode(sym.Bridge(dir)).ToEnumerable()
 
                         // fail if no such object exists
-                        .Where(gn => gn.LE.CG().AreAllNotTaken() && state.CanBeFounded(gn.LE));
+                        .Where(gn => gn.LE.CG().AllAreNotTaken() && state.CanBeFounded(gn.LE));
                     if (!maybeNewBridge.Any())
                         return null;
 
@@ -273,7 +275,7 @@ namespace ShapeGrammar
                         .LE(AreaType.Yard).GrammarNode(sym.Courtyard).ToEnumerable()
 
                         // fail if no such object exists
-                        .Where(gn => gn.LE.CG().AreAllNotTaken() && state.CanBeFounded(gn.LE));
+                        .Where(gn => gn.LE.CG().AllAreNotTaken() && state.CanBeFounded(gn.LE));
                     if (!maybeNewCourtyard.Any())
                         return null;
 
@@ -359,10 +361,12 @@ namespace ShapeGrammar
 
                     // and modify the dag
                     var foundation = ldk.sgShapes.Foundation(newRoomGN.LE).GrammarNode(sym.Foundation);
+                    var reservation = newRoomGN.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GrammarNode(sym.RoomReservation(newRoomGN));
                     return new[]
                     {
                         state.Add(what).SetTo(newRoomGN),
                         state.Add(newRoomGN).SetTo(foundation),
+                        state.Add(newRoomGN).SetTo(reservation),
                         state.Add(newRoomGN, what).SetTo(door),
                         
                     };
@@ -427,11 +431,13 @@ namespace ShapeGrammar
 
                     var fall = ldk.con.ConnectByFall(newRoomGN.LE, bottomRoom.LE).GrammarNode();
                     var foundation = ldk.sgShapes.Foundation(bottomRoom.LE).GrammarNode(sym.Foundation);
+                    var reservation = newRoomGN.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GrammarNode(sym.RoomReservation(newRoomGN));
                     return new[]
                     {
                         state.Add(what).SetTo(newRoomGN),
                         state.Add(newRoomGN).SetTo(bottomRoom),
                         state.Add(bottomRoom).SetTo(foundation),
+                        state.Add(bottomRoom).SetTo(reservation),
                         state.Add(newRoomGN, what).SetTo(door),
                         state.Add(newRoomGN, bottomRoom).SetTo(fall),
 
@@ -476,8 +482,8 @@ namespace ShapeGrammar
                     newRoomGN.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
                     var foundation = ldk.sgShapes.Foundation(newRoomGN.LE).GrammarNode(sym.Foundation);
 
-                    var stairs = ldk.con.ConnectByBalconyStairsOutside(from.LE, newRoomGN.LE, state.WorldState.Added).GrammarNode();
-                    Debug.Assert(stairs != null);
+                    //var stairs = ldk.con.ConnectByBalconyStairsOutside(from.LE, newRoomGN.LE, state.WorldState.Added).GrammarNode();
+                    //Debug.Assert(stairs != null);
 
                     // and modify the dag
 
@@ -485,12 +491,14 @@ namespace ShapeGrammar
                     var fall = ldk.con.ConnectByFall(newRoomGN.LE, to.LE).GrammarNode();
                     Debug.Assert(fall != null);
 
+                    var reservation = newRoomGN.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GrammarNode(sym.RoomReservation(newRoomGN));
                     return new[]
                     {
                         state.Add(from).SetTo(newRoomGN),
                         state.Add(newRoomGN).SetTo(foundation),
+                        state.Add(newRoomGN).SetTo(reservation),
                         state.Add(newRoomGN, to).SetTo(fall),
-                        state.Add(newRoomGN, from).SetTo(stairs),
+                        //state.Add(newRoomGN, from).SetTo(stairs),
                     };
                 });
         }
@@ -515,7 +523,7 @@ namespace ShapeGrammar
                         .LE(AreaType.Room)
                         .GrammarNode(sym.Room(false))))
                         // fail if no such object exists
-                        .Where(dirNode => dirNode.Item2.LE.CG().AreAllNotTaken() && state.CanBeFounded(dirNode.Item2.LE));
+                        .Where(dirNode => dirNode.Item2.LE.CG().AllAreNotTaken() && state.CanBeFounded(dirNode.Item2.LE));
 
                     if (!newHouses.Any())
                         return null;
@@ -545,6 +553,7 @@ namespace ShapeGrammar
 
                     var door = ldk.con.ConnectByDoor(room.LE, start).GrammarNode();
 
+                    var reservation = newHouse.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GrammarNode(sym.RoomReservation(newHouse));
                     // and modify the dag
                     var foundation = ldk.sgShapes.Foundation(newHouse.LE).GrammarNode(sym.Foundation);
                     var startFoundation = ldk.sgShapes.Foundation(start).GrammarNode(sym.Foundation);
@@ -557,6 +566,7 @@ namespace ShapeGrammar
                         state.Add(foundation).SetTo(startFoundation),
                         state.Add(foundation).SetTo(endFoundation),
 
+                        state.Add(newHouse).SetTo(reservation),
 
                         state.Add(newHouse, room).SetTo(door),
                         state.Add(newHouse).SetTo(start.GrammarNode(), middleGn, end.GrammarNode()),
@@ -570,31 +580,37 @@ namespace ShapeGrammar
             return new Production(
                 "AddNextFloor",
                 new ProdParamsManager()
-                    .AddNodeSymbols(sym.Room())
-                    .SetCondition((state, pp) => pp.Param.GetSymbol<Room>().Plain && pp.Param.GetSymbol<Room>().Floor <= 1),
+                    .AddNodeSymbols(sym.RoomReservation(null))
+                    .SetCondition((state, pp) =>
+                    {
+                        var roomBelow = pp.Param.GetSymbol<RoomReservation>().RoomBelow.GetSymbol<Room>();
+                        return roomBelow.Plain && roomBelow.Floor <= 1;
+                    })
+                    ,
                 (state, pp) =>
                 {
-                    var room = pp.Param;
-                    var roomCubeGroup = room.LE.CG();
-                    var roomSymbol = room.GetSymbol<Room>();
+                    var roomReservation = pp.Param;
+                    var roomBelow = roomReservation.GetSymbol<RoomReservation>().RoomBelow;
+                    var nextFloor = roomReservation.LE.SetAreaType(AreaType.Room).GrammarNode(sym.Room(true, roomBelow.GetSymbol<Room>().Floor + 1));
 
-                    var maybeNextFloor =
-                        roomCubeGroup.ExtrudeDir(Vector3Int.up, 2).LE(AreaType.Room).GrammarNode(sym.Room(true, roomSymbol.Floor + 1)).ToEnumerable()
-                        .Where(floor => floor.LE.CG().AreAllNotTaken());
+                    var maybeNewReservation =
+                        nextFloor.LE.CG().ExtrudeDir(Vector3Int.up, 2).LE(AreaType.Room).GrammarNode(sym.RoomReservation(nextFloor)).ToEnumerable()
+                        .Where(floor => floor.LE.CG().AllAreNotTaken());
 
-                    if (!maybeNextFloor.Any())
+                    if (!maybeNewReservation.Any())
                         return null;
-
-                    var nextFloor = maybeNextFloor.FirstOrDefault();
+                    
+                    var newReservation = maybeNewReservation.FirstOrDefault();
                     nextFloor.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
 
-                    var stairs = ldk.con.ConnectByWallStairsIn(room.LE, nextFloor.LE).GrammarNode();
+                    var stairs = ldk.con.ConnectByWallStairsIn(roomBelow.LE, nextFloor.LE).GrammarNode();
 
                     // and modify the dag
                     return new[]
                     {
-                        state.Add(room).SetTo(nextFloor),
-                        state.Add(room, nextFloor).SetTo(stairs),
+                        state.Replace(roomReservation).SetTo(nextFloor),
+                        state.Add(roomBelow, nextFloor).SetTo(stairs),
+                        state.Add(nextFloor).SetTo(newReservation),
                     };
                 });
         }
