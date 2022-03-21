@@ -481,9 +481,11 @@ namespace ShapeGrammar
 
                     newRoomGN.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
                     var foundation = ldk.sgShapes.Foundation(newRoomGN.LE).GrammarNode(sym.Foundation);
+                    var reservation = newRoomGN.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GrammarNode(sym.RoomReservation(newRoomGN));
 
-                    //var stairs = ldk.con.ConnectByBalconyStairsOutside(from.LE, newRoomGN.LE, state.WorldState.Added).GrammarNode();
-                    //Debug.Assert(stairs != null);
+                    // might fail in some rare cases => todo: add a teleporter connection in case it fails
+                    var stairs = ldk.con.ConnectByBalconyStairsOutside(from.LE, newRoomGN.LE, state.WorldState.Added.Merge(foundation.LE).Merge(reservation.LE)).GrammarNode();
+                    Debug.Assert(stairs != null);
 
                     // and modify the dag
 
@@ -491,14 +493,13 @@ namespace ShapeGrammar
                     var fall = ldk.con.ConnectByFall(newRoomGN.LE, to.LE).GrammarNode();
                     Debug.Assert(fall != null);
 
-                    var reservation = newRoomGN.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GrammarNode(sym.RoomReservation(newRoomGN));
                     return new[]
                     {
                         state.Add(from).SetTo(newRoomGN),
                         state.Add(newRoomGN).SetTo(foundation),
                         state.Add(newRoomGN).SetTo(reservation),
                         state.Add(newRoomGN, to).SetTo(fall),
-                        //state.Add(newRoomGN, from).SetTo(stairs),
+                        state.Add(newRoomGN, from).SetTo(stairs),
                     };
                 });
         }
@@ -594,7 +595,7 @@ namespace ShapeGrammar
                     var nextFloor = roomReservation.LE.SetAreaType(AreaType.Room).GrammarNode(sym.Room(true, roomBelow.GetSymbol<Room>().Floor + 1));
 
                     var maybeNewReservation =
-                        nextFloor.LE.CG().ExtrudeDir(Vector3Int.up, 2).LE(AreaType.Room).GrammarNode(sym.RoomReservation(nextFloor)).ToEnumerable()
+                        nextFloor.LE.CG().ExtrudeDir(Vector3Int.up, 2).LE(AreaType.RoomReservation).GrammarNode(sym.RoomReservation(nextFloor)).ToEnumerable()
                         .Where(floor => floor.LE.CG().AllAreNotTaken());
 
                     if (!maybeNewReservation.Any())

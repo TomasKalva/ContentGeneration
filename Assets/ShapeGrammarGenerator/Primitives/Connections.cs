@@ -102,10 +102,10 @@ namespace ShapeGrammar
             var notIntersectingCG = notIntersecting.CG().Minus(end);
             Neighbors<PathNode> neighbors = 
                 PathNode.NotIn(
-                    PathNode.NotAbove(
+                    //PathNode.NotAbove(
                         PathNode.BalconyStairsBalconyNeighbors(start, end, balconySpaceStart, balconySpaceEnd),
-                        notIntersectingCG),
-                    start.Merge(end).ExtrudeVer(Vector3Int.down, 1).Merge(notIntersectingCG)
+                        notIntersectingCG
+                    //start.Merge(end).ExtrudeVer(Vector3Int.down, 1).Merge(notIntersectingCG)
                 );
             var path = paths.ConnectByPath(start, end, neighbors);
             return path != null ? path.LE(AreaType.Path) : null;
