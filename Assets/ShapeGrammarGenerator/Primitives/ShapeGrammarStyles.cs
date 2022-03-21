@@ -202,9 +202,11 @@ namespace ShapeGrammar
             {
                 //faceH.FaceType = FACE_HOR.Door;
                 //return;
-
                 var otherFace = faceH.OtherFacet();
-                if(faceH.FaceType == FACE_HOR.Door || otherFace.FaceType == FACE_HOR.Door)
+
+                faceH.Style = DefaultHouseStyle;
+                otherFace.Style = DefaultHouseStyle;
+                if (faceH.FaceType == FACE_HOR.Door || otherFace.FaceType == FACE_HOR.Door)
                 {
                     return;
                 }
