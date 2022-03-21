@@ -67,6 +67,13 @@ namespace ShapeGrammar
         }
 
         public Node Param => Parameters.First();
-        public static void Deconstruct(out Node par1) { par1 = null; }
+        public void Deconstruct(out Node par1, out Node par2) 
+        {
+            if (Parameters.Length < 2)
+                throw new InvalidOperationException($"Not enough parameters, expected 2, actual {Parameters.Length}");
+
+            par1 = Parameters[0];
+            par2 = Parameters[1];
+        }
     }
 }

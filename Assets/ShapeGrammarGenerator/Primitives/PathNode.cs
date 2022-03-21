@@ -61,6 +61,26 @@ namespace ShapeGrammar
             };
         }
 
+        public static Neighbors<PathNode> NotAbove(Neighbors<PathNode> neighbors, CubeGroup forbiddenCubes)
+        {
+            var forbiddenSet = new Dictionary<Vector2Int, int>();
+            forbiddenCubes.Cubes.ForEach(cube =>
+            {
+                var yExists = forbiddenSet.TryGetValue(cube.Position.XZ(), out var max);
+                var newY = cube.Position.y;
+                forbiddenSet.TryAdd(cube.Position.XZ(), yExists ? Mathf.Max(newY, max) : newY);
+            });
+            return pathNode =>
+            {
+                return neighbors(pathNode).Where(neighbor =>
+                {
+                    var pos = neighbor.cube.Position;
+                    var yExists = forbiddenSet.TryGetValue(pos.XZ(), out var y);
+                    return !yExists || pos.y < y;
+                });
+            };
+        }
+
         public static Neighbors<PathNode> StairsNeighbors()
         {
             var horizontal = HorizontalNeighbors();

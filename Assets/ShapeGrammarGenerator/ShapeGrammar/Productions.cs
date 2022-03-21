@@ -394,7 +394,7 @@ namespace ShapeGrammar
                 });
         }
 
-        public Production RoomFallDown(Symbol nextToWhat, Func<LevelElement> roomF)
+        public Production RoomFallDown(Symbol nextToWhat, Func<LevelElement> roomFromToF)
         {
             return new Production(
                 $"RoomNextTo{nextToWhat.Name}",
@@ -404,7 +404,7 @@ namespace ShapeGrammar
                     var what = pp.Param;
                     var whatCG = what.LE.CG();
 
-                    var newRoom = roomF();
+                    var newRoom = roomFromToF();
                     //
                     var newRoomAtGround = newRoom.MoveBottomTo(0);
                     var validNewRoom = ldk.pl.MoveNearXZ(what.LE.MoveBottomTo(0), newRoomAtGround, state.VerticallyTaken);
@@ -435,6 +435,62 @@ namespace ShapeGrammar
                         state.Add(newRoomGN, what).SetTo(door),
                         state.Add(newRoomGN, bottomRoom).SetTo(fall),
 
+                    };
+                });
+        }
+
+        /// <summary>
+        /// to has to have height at least 2
+        /// </summary>
+        public Production TowerFallDown(Symbol from, Func<LevelElement> roomFromF)
+        {
+            return new Production(
+                $"RoomNextTo{from.Name}",
+                new ProdParamsManager()
+                    .AddNodeSymbols(from)
+                    .AddNodeSymbols(sym.Room())
+                    .SetCondition((state, pp) => 
+                    {
+                        var (from, to) = pp;
+                        return
+                            to.GetSymbol<Room>().Plain &&
+                            from.LE.CG().MinkowskiMinus(to.LE.CG()).Min(v => v.Sum(x => Mathf.Abs(x))) < 5;
+                    }),
+                (state, pp) =>
+                {
+                    var (from, to) = pp;
+                    var fromCG = from.LE.CG();
+                    var toCG = to.LE.CG();
+
+                    var newRoom = roomFromF();
+                    //
+                    var newRoomAtGround = newRoom.MoveBottomTo(0);
+                    var validNewRoom = ldk.pl.MoveNearXZ(to.LE.MoveBottomTo(0), newRoomAtGround, state.VerticallyTaken);
+                    if (validNewRoom == null)
+                        return null;
+
+
+                    var newRoomGN = validNewRoom.MoveBottomTo(toCG.LeftBottomBack().y + 1).GrammarNode(sym.Room(false, 1));
+                    //
+
+                    newRoomGN.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
+                    var foundation = ldk.sgShapes.Foundation(newRoomGN.LE).GrammarNode(sym.Foundation);
+
+                    var stairs = ldk.con.ConnectByBalconyStairsOutside(from.LE, newRoomGN.LE, state.WorldState.Added).GrammarNode();
+                    Debug.Assert(stairs != null);
+
+                    // and modify the dag
+
+
+                    var fall = ldk.con.ConnectByFall(newRoomGN.LE, to.LE).GrammarNode();
+                    Debug.Assert(fall != null);
+
+                    return new[]
+                    {
+                        state.Add(from).SetTo(newRoomGN),
+                        state.Add(newRoomGN).SetTo(foundation),
+                        state.Add(newRoomGN, to).SetTo(fall),
+                        state.Add(newRoomGN, from).SetTo(stairs),
                     };
                 });
         }

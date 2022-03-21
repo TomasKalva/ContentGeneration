@@ -99,10 +99,14 @@ namespace ShapeGrammar
             var balconySpaceStart = WallSpaceOutside(le1);
             var balconySpaceEnd = WallSpaceOutside(le2);
 
+            var notIntersectingCG = notIntersecting.CG().Minus(end);
             Neighbors<PathNode> neighbors = 
                 PathNode.NotIn(
-                        PathNode.BalconyStairsBalconyNeighbors(start, end, balconySpaceStart, balconySpaceEnd), 
-                notIntersecting.CG().Minus(end));
+                    PathNode.NotAbove(
+                        PathNode.BalconyStairsBalconyNeighbors(start, end, balconySpaceStart, balconySpaceEnd),
+                        notIntersectingCG),
+                    start.Merge(end).ExtrudeVer(Vector3Int.down, 1).Merge(notIntersectingCG)
+                );
             var path = paths.ConnectByPath(start, end, neighbors);
             return path != null ? path.LE(AreaType.Path) : null;
         }

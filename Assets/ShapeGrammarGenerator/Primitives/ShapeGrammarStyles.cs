@@ -285,11 +285,7 @@ namespace ShapeGrammar
             shaftFloors.Fill(FACE_VER.Nothing).SetStyle(DefaultHouseStyle);
 
             // no walls between horizontal
-            var horCubes = new CubeGroup(GridView, new List<Cube>()
-            {
-                fallArea.Cubes.First(), fallArea.Cubes.Last()
-            });
-            horCubes.NeighborsInGroupH(fallArea).SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Nothing);
+            var horFacesInside = fallArea.InsideFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Nothing);
 
             return fallArea;
         }
