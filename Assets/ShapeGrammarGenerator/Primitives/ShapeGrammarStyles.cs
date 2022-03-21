@@ -39,6 +39,12 @@ namespace ShapeGrammar
             return colonadeArea;
         }
 
+        public CubeGroup ReservationHighlighterStyle(CubeGroup colonadeArea)
+        {
+            colonadeArea.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.Pillar);
+            return colonadeArea;
+        }
+
         public CubeGroup PlainRoomStyle(CubeGroup roomArea)
         {
             roomArea.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Wall);

@@ -187,18 +187,24 @@ namespace ShapeGrammar
                     // for give parametrization
                         ExtensionMethods.HorizontalDirections().Shuffle()
                         .Select(dir =>
+                        {
+                            var orthDir = dir.OrthogonalHorizontalDirs().First();
+                            var width = courtyardCubeGroup.ExtentsDir(orthDir);
+                            var bridgeWidth = 3;
+                            var shrinkL = (int)Mathf.Floor((width - bridgeWidth) / 2f);
+                            var shrinkR = (int)Mathf.Ceil((width - bridgeWidth) / 2f);
+                            // create a new object
+                            return courtyardCubeGroup
+                                .ExtrudeDir(dir, 4)
+                                .OpSub()
+                                    .ExtrudeDir(orthDir, -shrinkL)
+                                    .ExtrudeDir(-orthDir, -shrinkR)
+                                .OpNew()
 
-                        // create a new object
-                        courtyardCubeGroup
-                        .ExtrudeDir(dir, 3)
-                        .OpSub()
-                            .ExtrudeDir(dir.OrthogonalHorizontalDirs().First(), -1)
-                            .ExtrudeDir(dir.OrthogonalHorizontalDirs().Last(), -1)
-                        .OpNew()
-
-                        .LE(AreaType.Bridge).GrammarNode(sym.Bridge(dir)))
-
+                                .LE(AreaType.Bridge).GrammarNode(sym.Bridge(dir));
+                        })
                         // fail if no such object exists
+                        .Where(gn => gn.LE.Cubes().Any())
                         .Where(gn => gn.LE.CG().AllAreNotTaken() && state.CanBeFounded(gn.LE));
                     if (!bridges.Any())
                         return null;
@@ -207,8 +213,10 @@ namespace ShapeGrammar
 
                     bridge.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
 
+                    var brDir = bridge.GetSymbol<Bridge>().Direction;
+
                     // and modify the dag
-                    var foundation = ldk.sgShapes.Foundation(bridge.LE).GrammarNode(sym.Foundation);
+                    var foundation = ldk.sgShapes.BridgeFoundation(bridge.LE, brDir).GrammarNode(sym.Foundation);
                     return new[]
                     {
                         state.Add(courtyard).SetTo(bridge),
@@ -239,16 +247,16 @@ namespace ShapeGrammar
                     if (!maybeNewBridge.Any())
                         return null;
 
-                    var newBbridge = maybeNewBridge.FirstOrDefault();
+                    var newBridge = maybeNewBridge.FirstOrDefault();
 
-                    newBbridge.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
+                    newBridge.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
 
                     // and modify the dag
-                    var foundation = ldk.sgShapes.Foundation(newBbridge.LE).GrammarNode(sym.Foundation);
+                    var foundation = ldk.sgShapes.BridgeFoundation(newBridge.LE, dir).GrammarNode(sym.Foundation);
                     return new[]
                     {
-                        state.Add(bridge).SetTo(newBbridge),
-                        state.Add(newBbridge).SetTo(foundation),
+                        state.Add(bridge).SetTo(newBridge),
+                        state.Add(newBridge).SetTo(foundation),
                     };
                 });
         }
@@ -554,6 +562,7 @@ namespace ShapeGrammar
 
                     var door = ldk.con.ConnectByDoor(room.LE, start).GrammarNode();
 
+                    //todo: test if the reservation is ok
                     var reservation = newHouse.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GrammarNode(sym.RoomReservation(newHouse));
                     // and modify the dag
                     var foundation = ldk.sgShapes.Foundation(newHouse.LE).GrammarNode(sym.Foundation);

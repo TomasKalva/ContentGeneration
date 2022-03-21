@@ -100,6 +100,32 @@ namespace ShapeGrammar
                     .MoveBy(Vector3Int.down))
             .LE(AreaType.Foundation);
 
+        public LevelElement BridgeFoundation(LevelElement bridgeBeFounded, Vector3Int bridgeDirection)
+        {
+            var foundation = qc.MoveDownUntilGround(
+                bridgeBeFounded.CG()
+                    .CubeGroupLayer(Vector3Int.down)
+                    .MoveBy(Vector3Int.down));
+            var topBottom = foundation.Split(Vector3Int.down, 2);
+            var top = topBottom.ElementAt(0);
+            if(topBottom.Count() == 2)
+            {
+                var bottom = topBottom.ElementAt(1);
+                var bottomHole = bottom.OpSub()
+                    .ExtrudeDir(bridgeDirection, -1)
+                    .ExtrudeDir(-bridgeDirection, -1)
+                    .OpNew();
+                return new LevelGroupElement(Grid, AreaType.None,
+                    top.LE(AreaType.Room),
+                    bottom.Minus(bottomHole).LE(AreaType.Foundation)
+                    );
+            }
+            else
+            {
+                return top.LE(AreaType.Room);
+            }
+        }
+
         public LevelElement CliffFoundation(LevelElement toBeFounded) => Foundation(toBeFounded).SetAreaType(AreaType.CliffFoundation);
 
         public CubeGroup Platform(Box2Int areaXZ, int posY) => qc.GetPlatform(areaXZ, posY);
