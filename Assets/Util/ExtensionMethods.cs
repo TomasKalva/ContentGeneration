@@ -54,6 +54,13 @@ static class ExtensionMethods
         return enumerable.ElementAt(i);
     }
 
+    public static IEnumerable<T> Evaluate<T>(this IEnumerable<T> enumerable)
+    {
+        var list = new List<T>(enumerable.Count());
+        list.AddRange(enumerable);
+        return list;
+    }
+
     public static CubeGroup ToCubeGroup(this IEnumerable<Cube> enumerable, ShapeGrammar.Grid<Cube> grid)
     {
         return enumerable.ToList().ToCubeGroup(grid);

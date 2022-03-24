@@ -26,7 +26,7 @@ namespace ShapeGrammar
                 pr.CourtyardFromBridge(),
                 pr.ExtendHouse(ldk.tr.GetFloorConnector(lge => ldk.tr.SplittingFloorPlan(lge, 2))),
                 pr.AddNextFloor(),
-                pr.GardenFromCourtyard(),
+                //pr.GardenFromCourtyard(),
                 //pr.RoomNextTo(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
                 //pr.RoomNextTo(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 4, 2, 5))),
                 //pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
@@ -36,15 +36,23 @@ namespace ShapeGrammar
                 //pr.TowerFallDown(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
                 pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             };
+            var lowGarden = new List<Production>()
+            {
+                pr.GardenFromCourtyard(),
+                //pr.ExtendBridgeTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
+                pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
+            };
             var grammarState = new ShapeGrammarState(ldk);
-            grammarState.ApplyProduction(pr.CreateNewHouse());
-            var shapeGrammar = new ShapeGrammar(productionList, grammarState, 30);
-            var newState = shapeGrammar.Evaluate();
-            newState.Print(new PrintingState()).Show();
+            var newNodes = grammarState.ApplyProduction(pr.CreateNewHouse());
+            var shapeGrammar = new ShapeGrammar(productionList, 20);
+            var gardenGrammar = new ShapeGrammar(lowGarden, 10);
+            shapeGrammar.Evaluate(grammarState);
+            gardenGrammar.Evaluate(grammarState);
+            grammarState.Print(new PrintingState()).Show();
 
             //shapeGrammar.ShapeGrammarState.VerticallyTaken.SetAreaType(AreaType.Garden).ApplyGrammarStyleRules(ldk.houseStyleRules);
 
-            var level = newState.WorldState.Added;
+            var level = grammarState.WorldState.Added;
 
 
             return level;

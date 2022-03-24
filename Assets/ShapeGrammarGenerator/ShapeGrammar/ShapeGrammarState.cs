@@ -39,7 +39,7 @@ namespace ShapeGrammar
                 new[] { this };
         }
 
-        public bool HasActiveSymbols(params Symbol[] symbols)
+        public bool HasSymbols(params Symbol[] symbols)
         {
             return symbols.All(symbol => SymbolNames.Contains(symbol.Name));
         }
@@ -122,7 +122,7 @@ namespace ShapeGrammar
             return this;
         }
 
-        public abstract void ChangeState(ShapeGrammarState grammarState);
+        public abstract IEnumerable<Node> ChangeState(ShapeGrammarState grammarState);
 
         protected void AddToFoundation(ShapeGrammarState grammarState, LevelElement le)
         {
@@ -144,12 +144,13 @@ namespace ShapeGrammar
 
     public class AddNew : Operation
     {
-        public override void ChangeState(ShapeGrammarState grammarState)
+        public override IEnumerable<Node> ChangeState(ShapeGrammarState grammarState)
         {
             AddIntoDag();
             var lge = To.Select(node => node.LE).ToLevelGroupElement(grammarState.WorldState.Grid);
             grammarState.WorldState = grammarState.WorldState.TryPush(lge);
             AddToFoundation(grammarState, lge);
+            return To;
         }
 
         public override PrintingState Print(PrintingState state)
@@ -162,13 +163,14 @@ namespace ShapeGrammar
 
     public class Replace : Operation
     {
-        public override void ChangeState(ShapeGrammarState grammarState)
+        public override IEnumerable<Node> ChangeState(ShapeGrammarState grammarState)
         {
             AddIntoDag();
             From.ForEach(node => node.LE = LevelElement.Empty(grammarState.WorldState.Grid));
             var lge = To.Select(node => node.LE).ToLevelGroupElement(grammarState.WorldState.Grid);
             grammarState.WorldState = grammarState.WorldState.ChangeAll(To.Select<Node, WorldState.ChangeWorld>(gn => ws => ws.TryPush(gn.LE)));
             AddToFoundation(grammarState, lge);
+            return To;
         }
 
         public override PrintingState Print(PrintingState state)
@@ -190,6 +192,7 @@ namespace ShapeGrammar
 
         public Grid<bool> OffersFoundation { get; }
         public LevelElement VerticallyTaken { get; set; }
+        public IEnumerable<Node> ActiveNodes { get; set; }
 
         struct AppliedProduction
         {
@@ -214,22 +217,23 @@ namespace ShapeGrammar
             OffersFoundation = new Grid<bool>(new Vector3Int(10, 1, 10), (_1, _2) => true);
             VerticallyTaken = LevelElement.Empty(grid);
             Applied = new List<AppliedProduction>();
+            ActiveNodes = Root.AllNodes();
         }
 
-        public bool ApplyProduction(Production production)
+        public IEnumerable<Node> ApplyProduction(Production production)
         {
             var operations = production.TryApply(this);
             if (operations == null)
-                return false;
+                return null;
 
-            operations.ForEach(operation => operation.ChangeState(this));
+            var newNodes = operations.SelectMany(operation => operation.ChangeState(this)).Evaluate();
             Applied.Add(new AppliedProduction(production.Name, operations.ToList()));
-            return true;
+            return newNodes;
         }
 
-        public IEnumerable<Node> WithActiveSymbols(params Symbol[] symbols)
+        public IEnumerable<Node> ActiveWithSymbols(params Symbol[] symbols)
         {
-            return Root.AllNodes().Where(node => node.LE.Cubes().Any() && node.HasActiveSymbols(symbols));
+            return ActiveNodes.Where(node => node.LE.Cubes().Any() && node.HasSymbols(symbols));
         }
 
         public bool CanBeFounded(LevelElement le)
@@ -272,39 +276,72 @@ namespace ShapeGrammar
     {
         protected List<Production> Productions { get; }
 
-        protected ShapeGrammarState ShapeGrammarState { get; }
-
-        protected GrammarEvaluator(List<Production> productions, ShapeGrammarState shapeGrammarState)
+        protected GrammarEvaluator(List<Production> productions)
         {
             Productions = productions;
-            ShapeGrammarState = shapeGrammarState;
         }
 
-        public abstract ShapeGrammarState Evaluate();
+        public abstract void Evaluate(ShapeGrammarState shapeGrammarState);
     }
 
     public class ShapeGrammar : GrammarEvaluator
     {
         int Count { get; }
 
-        public ShapeGrammar(List<Production> productions, ShapeGrammarState shapeGrammarState, int count) : base(productions, shapeGrammarState)
+        public ShapeGrammar(List<Production> productions, int count) : base(productions)
         {
             Count = count;
         }
 
-        public override ShapeGrammarState Evaluate()
+        public override void Evaluate(ShapeGrammarState shapeGrammarState)
         {
             for (int i = 0; i < Count; i++)
             {
+                shapeGrammarState.ActiveNodes = shapeGrammarState.Root.AllNodes();
                 var applicable = Productions.Shuffle();
-                var applied = applicable.DoUntilSuccess(prod => ShapeGrammarState.ApplyProduction(prod), x => x);
-                if (!applied)
+                var newNodes = applicable.DoUntilSuccess(prod => shapeGrammarState.ApplyProduction(prod), x => x != null);
+                if (newNodes == null)
                 {
                     Debug.Log($"Can't apply any productions {i}");
+                    return;
                 }
             }
+        }
+    }
 
-            return ShapeGrammarState;
+    public class BranchGrammarEvaluator : GrammarEvaluator
+    {
+        int Count { get; }
+        Symbol StartSymbol { get; }
+
+        public BranchGrammarEvaluator(List<Production> productions, int count, Symbol startSymbol) : base(productions)
+        {
+            Count = count;
+            StartSymbol = startSymbol;
+        }
+
+        public override void Evaluate(ShapeGrammarState shapeGrammarState)
+        {
+            var createdByThis = new Stack<Node>();
+            var validStarts = shapeGrammarState.Root.AllNodes().Where(node => node.HasSymbols(StartSymbol));
+            if (!validStarts.Any())
+            {
+                throw new InvalidOperationException($"No node with symbol {StartSymbol} exists!");
+            }
+            createdByThis.Push(validStarts.GetRandom());
+
+            for (int i = 0; i < Count; i++)
+            {
+                shapeGrammarState.ActiveNodes = createdByThis.Reverse();
+                var applicable = Productions.Shuffle();
+                var newNodes = applicable.DoUntilSuccess(prod => shapeGrammarState.ApplyProduction(prod), x => x != null);
+                if (newNodes == null)
+                {
+                    Debug.Log($"Can't apply any productions {i}");
+                    return;
+                }
+                newNodes.ForEach(newNode => createdByThis.Push(newNode));
+            }
         }
     }
 }
