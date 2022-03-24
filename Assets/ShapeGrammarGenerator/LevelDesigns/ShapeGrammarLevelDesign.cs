@@ -32,8 +32,8 @@ namespace ShapeGrammar
                 //pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
 
                 // these productions make the world untraversable
-                //pr.RoomFallDown(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-                //pr.TowerFallDown(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
+                pr.RoomFallDown(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
+                pr.TowerFallDown(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
                 pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             };
             var lowGarden = new List<Production>()
@@ -47,7 +47,7 @@ namespace ShapeGrammar
             var shapeGrammar = new ShapeGrammar(productionList, 20);
             var gardenGrammar = new ShapeGrammar(lowGarden, 10);
             shapeGrammar.Evaluate(grammarState);
-            gardenGrammar.Evaluate(grammarState);
+            //gardenGrammar.Evaluate(grammarState);
             grammarState.Print(new PrintingState()).Show();
 
             //shapeGrammar.ShapeGrammarState.VerticallyTaken.SetAreaType(AreaType.Garden).ApplyGrammarStyleRules(ldk.houseStyleRules);

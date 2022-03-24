@@ -189,7 +189,7 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
     /// <summary>
     /// Starting vertices have to be disjoint with the vertices reachable by path, because they have distance 0!
     /// </summary>
-    public IEnumerable<EdgeT> EdgeAStar(IEnumerable<VertexT> starting, Func<VertexT, VertexT, float> dist, Func<VertexT, float> distTodistToHeuristics, IEqualityComparer<VertexT> comparer)
+    public IEnumerable<EdgeT> EdgeAStar(IEnumerable<VertexT> starting, Func<VertexT, VertexT, float> dist, Func<VertexT, float> distTodistToHeuristics, IEqualityComparer<VertexT> comparer, int maxIterations = int.MaxValue)
     {
         var found = new HashSet<VertexT>(comparer);
         var distFrom = new Dictionary<VertexT, float>(comparer);
@@ -207,10 +207,15 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
             }
         });
 
-
+        var i = 0;
         while (fringe.Any())
         {
             var edge = fringe.RemoveMin().Value;
+            
+            if(i++ >= maxIterations)
+            {
+                throw new InvalidOperationException($"Can't find path within {maxIterations} iterations");
+            }
             if (found.Contains(edge.To))
                 continue;
 
@@ -228,12 +233,12 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
     /// <summary>
     /// Starting vertices have to be disjoint with the vertices reachable by path, because they have distance 0!
     /// </summary>
-    public IEnumerable<VertexT> FindPath(IEnumerable<VertexT> starting, Func<VertexT, bool> isGoal, Func<VertexT, VertexT, float> dist, Func<VertexT, float> distToHeuristics, IEqualityComparer<VertexT> comparer)
+    public IEnumerable<VertexT> FindPath(IEnumerable<VertexT> starting, Func<VertexT, bool> isGoal, Func<VertexT, VertexT, float> dist, Func<VertexT, float> distToHeuristics, IEqualityComparer<VertexT> comparer, int maxIterations = int.MaxValue)
     {
         var prev = new Dictionary<VertexT, VertexT>(comparer);
         starting.ForEach(startV => prev.Add(startV, null));
 
-        foreach (var edge in EdgeAStar(starting, dist, distToHeuristics, comparer))
+        foreach (var edge in EdgeAStar(starting, dist, distToHeuristics, comparer, maxIterations))
         {
             if (prev.ContainsKey(edge.To))
                 continue;

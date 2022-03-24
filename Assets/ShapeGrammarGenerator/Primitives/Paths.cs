@@ -118,7 +118,8 @@ namespace ShapeGrammar
                 pn => goal.Contains(pn.cube) && pn.prevVerMove == 0,
                 (pn0, pn1) => (pn0.cube.Position - pn1.cube.Position).sqrMagnitude,
                 pn => (pn.cube.Position - heuristicsV.Position).Sum(x => Mathf.Abs(x)),
-                PathNode.Comparer);
+                PathNode.Comparer,
+                10_000);
 
             var pathCubes = path == null ? starting.GetRandom().cube.Group().Cubes : path.Select(pn => pn.cube).ToList();
             // drop first and last element

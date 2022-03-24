@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,7 +36,7 @@ namespace ShapeGrammar
         public IEnumerable<Node> AllNodes()
         {
             return Derived.Any() ?
-                Derived.SelectMany(node => node.AllNodes()).Prepend(this) :
+                Derived.SelectMany(node => node.AllNodes()).Prepend(this).Distinct() :
                 new[] { this };
         }
 
@@ -77,8 +78,10 @@ namespace ShapeGrammar
         public IEnumerable<Operation> TryApply(ShapeGrammarState shapeGrammarState)
         {
             var parameters = ProdParamsManager.GetParams(shapeGrammarState).Shuffle();
+            int triedParameters = 0;
             foreach(var pp in parameters)
             {
+                triedParameters++;
                 var ops = ExpandNewNodes(shapeGrammarState, pp);
                 if(ops == null)
                 {
@@ -89,6 +92,7 @@ namespace ShapeGrammar
                     return ops;
                 }
             }
+            UnityEngine.Debug.Log(triedParameters);
             return null;
         }
     }
@@ -117,7 +121,7 @@ namespace ShapeGrammar
             To = to;
             foreach(var node in to)
             {
-                Debug.Assert(node.LE != null, $"Level element of created node is null!");
+                UnityEngine.Debug.Assert(node.LE != null, $"Level element of created node is null!");
             }
             return this;
         }
@@ -295,16 +299,33 @@ namespace ShapeGrammar
 
         public override void Evaluate(ShapeGrammarState shapeGrammarState)
         {
+            var sw = new Stopwatch();
             for (int i = 0; i < Count; i++)
             {
+                //sw.Start();
                 shapeGrammarState.ActiveNodes = shapeGrammarState.Root.AllNodes();
                 var applicable = Productions.Shuffle();
-                var newNodes = applicable.DoUntilSuccess(prod => shapeGrammarState.ApplyProduction(prod), x => x != null);
+                Production activeProduction = null;
+                int tried = 0;
+                var newNodes = applicable.DoUntilSuccess(prod => 
+                {
+                    activeProduction = prod;
+                    tried++;
+                    sw.Start();
+                    var applied = shapeGrammarState.ApplyProduction(prod);
+                    sw.Stop();
+                    UnityEngine.Debug.Log($"{prod.Name} took {sw.ElapsedMilliseconds}ms it was {(applied == null ? "fail":"success")}");
+                    sw.Reset();
+                    return applied;
+                }, x => x != null);
                 if (newNodes == null)
                 {
-                    Debug.Log($"Can't apply any productions {i}");
+                    UnityEngine.Debug.Log($"Can't apply any productions {i}");
                     return;
                 }
+                /*sw.Stop();
+                UnityEngine.Debug.Log($"{activeProduction.Name} took {sw.ElapsedMilliseconds}ms after trying {tried} rules");
+                sw.Reset();*/
             }
         }
     }
@@ -337,7 +358,7 @@ namespace ShapeGrammar
                 var newNodes = applicable.DoUntilSuccess(prod => shapeGrammarState.ApplyProduction(prod), x => x != null);
                 if (newNodes == null)
                 {
-                    Debug.Log($"Can't apply any productions {i}");
+                    UnityEngine.Debug.Log($"Can't apply any productions {i}");
                     return;
                 }
                 newNodes.ForEach(newNode => createdByThis.Push(newNode));
