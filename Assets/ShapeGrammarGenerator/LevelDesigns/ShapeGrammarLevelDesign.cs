@@ -49,7 +49,8 @@ namespace ShapeGrammar
             shapeGrammar.Evaluate(grammarState);
             //gardenGrammar.Evaluate(grammarState);
             grammarState.Print(new PrintingState()).Show();
-
+            
+            grammarState.Stats.Print();
             //shapeGrammar.ShapeGrammarState.VerticallyTaken.SetAreaType(AreaType.Garden).ApplyGrammarStyleRules(ldk.houseStyleRules);
 
             var level = grammarState.WorldState.Added;

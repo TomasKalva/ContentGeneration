@@ -75,10 +75,10 @@ namespace ShapeGrammar
             ExpandNewNodes = effect;
         }
 
-        public IEnumerable<Operation> TryApply(ShapeGrammarState shapeGrammarState)
+        public IEnumerable<Operation> TryApply(ShapeGrammarState shapeGrammarState, out int triedParameters)
         {
             var parameters = ProdParamsManager.GetParams(shapeGrammarState).Shuffle();
-            int triedParameters = 0;
+            triedParameters = 0;
             foreach(var pp in parameters)
             {
                 triedParameters++;
@@ -92,7 +92,6 @@ namespace ShapeGrammar
                     return ops;
                 }
             }
-            UnityEngine.Debug.Log(triedParameters);
             return null;
         }
     }
@@ -198,19 +197,60 @@ namespace ShapeGrammar
         public LevelElement VerticallyTaken { get; set; }
         public IEnumerable<Node> ActiveNodes { get; set; }
 
-        struct AppliedProduction
+        public class GrammarStats
         {
-            public string Name { get; }
-            public List<Operation> Operations { get; }
-
-            public AppliedProduction(string name, List<Operation> operations)
+            public class ProductionInstance : Printable
             {
-                Name = name;
-                Operations = operations;
+                public string Name { get; }
+                public long TimeMs { get; }
+                public List<Operation> Operations { get; }
+                public int TriedParameters { get; }
+                public bool Applied => Operations != null;
+
+                public ProductionInstance(string name, List<Operation> operations, long timeMs, int triedParameters)
+                {
+                    Name = name;
+                    TimeMs = timeMs;
+                    Operations = operations;
+                    TriedParameters = triedParameters;
+                }
+
+                public PrintingState Print(PrintingState state)
+                {
+                    state.PrintLine($"{(Applied  ? "Success:" : "Fail:\t")}\t{TimeMs}ms\t\t{TriedParameters} pars\t{Name}");
+                    return state;
+                }
+            }
+
+
+            public List<ProductionInstance> ProductionInstances { get; }
+            public IEnumerable<ProductionInstance> AppliedProductions() => ProductionInstances.Where(production => production.Applied);
+
+            public GrammarStats()
+            {
+                ProductionInstances = new List<ProductionInstance>();
+                ProductionInstances = new List<ProductionInstance>();
+            }
+
+            public void AddApplied(string name, IEnumerable<Operation> operations, long timeMs, int triedParameters)
+            {
+                ProductionInstances.Add(new ProductionInstance(name, operations.ToList(), timeMs, triedParameters));
+            }
+
+            public void AddFailed(string name, long timeMs, int triedParameters)
+            {
+                ProductionInstances.Add(new ProductionInstance(name, null, timeMs, triedParameters));
+            }
+
+            public void Print()
+            {
+                var printingState = new PrintingState();
+                ProductionInstances.ForEach(p => p.Print(printingState));
+                printingState.Show();
             }
         }
 
-        List<AppliedProduction> Applied { get; }
+        public GrammarStats Stats { get; }
 
         public ShapeGrammarState(LevelDevelopmentKit ldk)
         {
@@ -220,19 +260,29 @@ namespace ShapeGrammar
             WorldState = new WorldState(empty, grid, le => le.ApplyGrammarStyleRules(ldk.houseStyleRules)).TryPush(empty);
             OffersFoundation = new Grid<bool>(new Vector3Int(10, 1, 10), (_1, _2) => true);
             VerticallyTaken = LevelElement.Empty(grid);
-            Applied = new List<AppliedProduction>();
+            Stats = new GrammarStats();
             ActiveNodes = Root.AllNodes();
         }
 
         public IEnumerable<Node> ApplyProduction(Production production)
         {
-            var operations = production.TryApply(this);
-            if (operations == null)
-                return null;
+            var sw = new Stopwatch();
+            sw.Start();
+            var operations = production.TryApply(this, out int triedParameters);
+            sw.Stop();
+            var elapsedMs = sw.ElapsedMilliseconds;
 
-            var newNodes = operations.SelectMany(operation => operation.ChangeState(this)).Evaluate();
-            Applied.Add(new AppliedProduction(production.Name, operations.ToList()));
-            return newNodes;
+            if (operations == null)
+            {
+                Stats.AddFailed(production.Name, elapsedMs, triedParameters);
+                return null;
+            }
+            else
+            {
+                var newNodes = operations.SelectMany(operation => operation.ChangeState(this)).Evaluate();
+                Stats.AddApplied(production.Name, operations.ToList(), elapsedMs, triedParameters);
+                return newNodes;
+            }
         }
 
         public IEnumerable<Node> ActiveWithSymbols(params Symbol[] symbols)
@@ -266,7 +316,7 @@ namespace ShapeGrammar
 
         public PrintingState Print(PrintingState state)
         {
-            Applied.ForEach(appliedPr =>
+            Stats.AppliedProductions().ForEach(appliedPr =>
             {
                 state.PrintLine(appliedPr.Name).ChangeIndent(1);
                 appliedPr.Operations.ForEach(op => op.Print(state).PrintLine());
@@ -299,33 +349,16 @@ namespace ShapeGrammar
 
         public override void Evaluate(ShapeGrammarState shapeGrammarState)
         {
-            var sw = new Stopwatch();
             for (int i = 0; i < Count; i++)
             {
-                //sw.Start();
                 shapeGrammarState.ActiveNodes = shapeGrammarState.Root.AllNodes();
                 var applicable = Productions.Shuffle();
-                Production activeProduction = null;
-                int tried = 0;
-                var newNodes = applicable.DoUntilSuccess(prod => 
-                {
-                    activeProduction = prod;
-                    tried++;
-                    sw.Start();
-                    var applied = shapeGrammarState.ApplyProduction(prod);
-                    sw.Stop();
-                    UnityEngine.Debug.Log($"{prod.Name} took {sw.ElapsedMilliseconds}ms it was {(applied == null ? "fail":"success")}");
-                    sw.Reset();
-                    return applied;
-                }, x => x != null);
+                var newNodes = applicable.DoUntilSuccess(prod => shapeGrammarState.ApplyProduction(prod), x => x != null);
                 if (newNodes == null)
                 {
                     UnityEngine.Debug.Log($"Can't apply any productions {i}");
                     return;
                 }
-                /*sw.Stop();
-                UnityEngine.Debug.Log($"{activeProduction.Name} took {sw.ElapsedMilliseconds}ms after trying {tried} rules");
-                sw.Reset();*/
             }
         }
     }
