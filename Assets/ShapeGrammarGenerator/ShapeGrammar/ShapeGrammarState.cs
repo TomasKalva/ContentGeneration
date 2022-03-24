@@ -268,29 +268,43 @@ namespace ShapeGrammar
         }
     }
 
-    public class ShapeGrammar
+    public abstract class GrammarEvaluator
     {
-        public List<Production> Productions { get; }
+        protected List<Production> Productions { get; }
 
-        public ShapeGrammarState ShapeGrammarState { get; }
+        protected ShapeGrammarState ShapeGrammarState { get; }
 
-        public ShapeGrammar(List<Production> productions, LevelDevelopmentKit ldk)
+        protected GrammarEvaluator(List<Production> productions, ShapeGrammarState shapeGrammarState)
         {
             Productions = productions;
-            ShapeGrammarState = new ShapeGrammarState(ldk);
+            ShapeGrammarState = shapeGrammarState;
         }
 
-        public void DoProductions(int count)
+        public abstract ShapeGrammarState Evaluate();
+    }
+
+    public class ShapeGrammar : GrammarEvaluator
+    {
+        int Count { get; }
+
+        public ShapeGrammar(List<Production> productions, ShapeGrammarState shapeGrammarState, int count) : base(productions, shapeGrammarState)
         {
-            for(int i = 0; i < count; i++)
+            Count = count;
+        }
+
+        public override ShapeGrammarState Evaluate()
+        {
+            for (int i = 0; i < Count; i++)
             {
-                var applicable = Productions.Shuffle();//.Where(production => production.CanBeApplied(ShapeGrammarState)).Shuffle();
+                var applicable = Productions.Shuffle();
                 var applied = applicable.DoUntilSuccess(prod => ShapeGrammarState.ApplyProduction(prod), x => x);
                 if (!applied)
                 {
                     Debug.Log($"Can't apply any productions {i}");
                 }
             }
+
+            return ShapeGrammarState;
         }
     }
 }

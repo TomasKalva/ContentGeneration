@@ -32,18 +32,19 @@ namespace ShapeGrammar
                 //pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
 
                 // these productions make the world untraversable
-                pr.RoomFallDown(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-                pr.TowerFallDown(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
+                //pr.RoomFallDown(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
+                //pr.TowerFallDown(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
                 pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             };
-            var shapeGrammar = new ShapeGrammar(productionList, ldk);
-            shapeGrammar.ShapeGrammarState.ApplyProduction(pr.CreateNewHouse());
-            shapeGrammar.DoProductions(30);
-            shapeGrammar.ShapeGrammarState.Print(new PrintingState()).Show();
+            var grammarState = new ShapeGrammarState(ldk);
+            grammarState.ApplyProduction(pr.CreateNewHouse());
+            var shapeGrammar = new ShapeGrammar(productionList, grammarState, 30);
+            var newState = shapeGrammar.Evaluate();
+            newState.Print(new PrintingState()).Show();
 
             //shapeGrammar.ShapeGrammarState.VerticallyTaken.SetAreaType(AreaType.Garden).ApplyGrammarStyleRules(ldk.houseStyleRules);
 
-            var level = shapeGrammar.ShapeGrammarState.WorldState.Added;
+            var level = newState.WorldState.Added;
 
 
             return level;
