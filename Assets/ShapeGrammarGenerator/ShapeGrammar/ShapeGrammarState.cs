@@ -367,26 +367,29 @@ namespace ShapeGrammar
     {
         int Count { get; }
         Symbol StartSymbol { get; }
+        Production StartProduction { get; }
 
-        public BranchGrammarEvaluator(List<Production> productions, int count, Symbol startSymbol) : base(productions)
+        public BranchGrammarEvaluator(Production startProduction, List<Production> productions, int count, Symbol startSymbol) : base(productions)
         {
             Count = count;
             StartSymbol = startSymbol;
+            StartProduction = startProduction;
         }
 
         public override void Evaluate(ShapeGrammarState shapeGrammarState)
         {
-            var createdByThis = new Stack<Node>();
-            var validStarts = shapeGrammarState.Root.AllNodes().Where(node => node.HasSymbols(StartSymbol));
-            if (!validStarts.Any())
+            var createdByThis = new List<Node>();
+            var startNodes = shapeGrammarState.ApplyProduction(StartProduction);
+            if (startNodes == null)
             {
-                throw new InvalidOperationException($"No node with symbol {StartSymbol} exists!");
+                UnityEngine.Debug.Log($"Can't apply start production {StartProduction.Name}");
+                return;
             }
-            createdByThis.Push(validStarts.GetRandom());
+            startNodes.ForEach(stNode => createdByThis.Add(stNode));
 
             for (int i = 0; i < Count; i++)
             {
-                shapeGrammarState.ActiveNodes = createdByThis.Reverse();
+                shapeGrammarState.ActiveNodes = createdByThis;
                 var applicable = Productions.Shuffle();
                 var newNodes = applicable.DoUntilSuccess(prod => shapeGrammarState.ApplyProduction(prod), x => x != null);
                 if (newNodes == null)
@@ -394,7 +397,8 @@ namespace ShapeGrammar
                     UnityEngine.Debug.Log($"Can't apply any productions {i}");
                     return;
                 }
-                newNodes.ForEach(newNode => createdByThis.Push(newNode));
+                createdByThis = newNodes.ToList();
+                //newNodes.ForEach(newNode => createdByThis.Push(newNode));
             }
         }
     }

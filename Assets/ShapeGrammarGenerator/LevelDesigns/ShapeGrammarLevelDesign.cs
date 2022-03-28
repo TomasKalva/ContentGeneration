@@ -38,16 +38,17 @@ namespace ShapeGrammar
             };
             var lowGarden = new List<Production>()
             {
-                pr.GardenFromCourtyard(),
-                //pr.ExtendBridgeTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
+                //pr.GardenFromCourtyard(),
+                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
+                //pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(Grid.Group.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
                 pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             };
             var grammarState = new ShapeGrammarState(ldk);
             var newNodes = grammarState.ApplyProduction(pr.CreateNewHouse());
             var shapeGrammar = new ShapeGrammar(productionList, 20);
-            var gardenGrammar = new ShapeGrammar(lowGarden, 10);
+            var gardenGrammar = new BranchGrammarEvaluator(pr.GardenFromCourtyard(), lowGarden, 10, pr.sym.Courtyard);
             shapeGrammar.Evaluate(grammarState);
-            //gardenGrammar.Evaluate(grammarState);
+            gardenGrammar.Evaluate(grammarState);
             grammarState.Print(new PrintingState()).Show();
             
             grammarState.Stats.Print();
