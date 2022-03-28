@@ -21,6 +21,8 @@ namespace ShapeGrammar
 
     public class CubeGroup : Group
     {
+        public static CubeGroup Zero(Grid<Cube> grid) => new CubeGroup(grid, grid[0, 0, 0].ToEnumerable().ToList());
+
         public virtual List<Cube> Cubes { get; }
 
         public Vector3Int LeftBottomBack() => new Vector3Int(

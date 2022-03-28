@@ -34,18 +34,21 @@ namespace ShapeGrammar
                 // these productions make the world untraversable
                 pr.RoomFallDown(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
                 pr.TowerFallDown(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
+                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
+
+
+                pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             };
             var lowGarden = new List<Production>()
             {
                 //pr.GardenFromCourtyard(),
                 pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-                //pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(Grid.Group.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
+                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden)),
                 pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             };
             var grammarState = new ShapeGrammarState(ldk);
             var newNodes = grammarState.ApplyProduction(pr.CreateNewHouse());
-            var shapeGrammar = new ShapeGrammar(productionList, 20);
+            var shapeGrammar = new ShapeGrammar(productionList, 10);
             var gardenGrammar = new BranchGrammarEvaluator(pr.GardenFromCourtyard(), lowGarden, 10, pr.sym.Courtyard);
             shapeGrammar.Evaluate(grammarState);
             gardenGrammar.Evaluate(grammarState);

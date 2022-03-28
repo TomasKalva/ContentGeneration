@@ -443,8 +443,6 @@ namespace ShapeGrammar
 
                     var bridge = ldk.con.ConnectByBridge(what.LE, newRoomGN.LE, state.WorldState.Added).GrammarNode();
                     Debug.Assert(bridge != null);
-                    //var door = ldk.con.ConnectByDoor(newRoomGN.LE, what.LE).GrammarNode();
-                    //Debug.Assert(door != null);
 
                     // and modify the dag
                     var foundation = ldk.sgShapes.Foundation(newRoomGN.LE).GrammarNode(sym.Foundation);
@@ -456,31 +454,6 @@ namespace ShapeGrammar
                         state.Add(newRoomGN).SetTo(reservation),
                         state.Add(what, newRoomGN).SetTo(bridge),
                     };
-
-                    /*
-                    Maybe clearer syntax that requires more helper methods
-
-                    Linq:
-
-                    from obj in createObject(roomF(), sym.Room())
-                    from movedObj in moveNear(what)
-                    from _ in placeObjToWorld(movedObj)
-                    from door in connect(ldk.con.ConnectByDoor(obj, what))
-                    from foundation in foundation(obj)
-                    from _2 in placeObjToWorld(door)
-                    from _3 in placeObjToWorld(foundation)
-                    select null
-
-                    Ideal syntax:
-
-                    obj <- createObject(roomF(), sym.Room())
-                    movedObj <- moveNear(what)
-                    placeObjToWorld(movedObj)
-                    door <- connect(ldk.con.ConnectByDoor(obj, what))
-                    foundation <- foundation(obj)
-                    placeObjToWorld(door)
-                    placeObjToWorld(foundation)
-                    */
                 });
         }
 
