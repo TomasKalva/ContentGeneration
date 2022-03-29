@@ -23,7 +23,8 @@ namespace ShapeGrammar
 
         public LevelElement LE { get; set; }
 
-        public List<Node> Derived { get; set; }
+        public List<Node> Derived { get; }
+        public List<Node> DerivedFrom { get; }
 
         public Node(LevelElement levelElement, List<Symbol> symbols)
         {
@@ -31,12 +32,20 @@ namespace ShapeGrammar
             SymbolNames = symbols.Select(sym => sym.Name).ToHashSet();
             LE = levelElement;
             Derived = new List<Node>();
+            DerivedFrom = new List<Node>();
         }
 
-        public IEnumerable<Node> AllNodes()
+        public IEnumerable<Node> AllDerived()
         {
             return Derived.Any() ?
-                Derived.SelectMany(node => node.AllNodes()).Prepend(this).Distinct() :
+                Derived.SelectMany(node => node.AllDerived()).Prepend(this).Distinct() :
+                new[] { this };
+        }
+
+        public IEnumerable<Node> AllDerivedFrom()
+        {
+            return DerivedFrom.Any() ?
+                DerivedFrom.SelectMany(node => node.AllDerivedFrom()).Prepend(this).Distinct() :
                 new[] { this };
         }
 
@@ -57,6 +66,22 @@ namespace ShapeGrammar
         {
             return Symbols.SelectNN(symbol => symbol as SymbolT).FirstOrDefault();
         }
+
+        public void AddDerived(Node derived)
+        {
+            Derived.Add(derived);
+            derived.DerivedFrom.Add(this);
+        }
+
+        public void AddSymbol(Symbol symbol)
+        {
+            Symbols.Add(symbol);
+        }
+
+        public void RemoveSymbolByName(Symbol symbol)
+        {
+            Symbols.RemoveAll(s => s.Name == symbol.Name);
+        }
     }
 
     public abstract class Operation : Printable
@@ -68,7 +93,11 @@ namespace ShapeGrammar
         {
             foreach(var from in From)
             {
-                from.Derived.AddRange(To);
+                foreach (var to in To)
+                {
+                    from.AddDerived(to);
+                    //from.Derived.AddRange(To);
+                }
             }
         }
 
@@ -225,7 +254,7 @@ namespace ShapeGrammar
             OffersFoundation = new Grid<bool>(new Vector3Int(10, 1, 10), (_1, _2) => true);
             VerticallyTaken = LevelElement.Empty(grid);
             Stats = new GrammarStats();
-            ActiveNodes = Root.AllNodes();
+            ActiveNodes = Root.AllDerived();
         }
 
         public IEnumerable<Node> ApplyProduction(Production production)

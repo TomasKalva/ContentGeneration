@@ -25,6 +25,10 @@ namespace ShapeGrammar
         public Symbol Foundation { get; } = new Symbol("Foundation");
         public Symbol Bridge(Vector3Int direction = default) => new Bridge("Bridge", direction);
         public Symbol Garden { get; } = new Symbol("Garden");
+
+        public Symbol StartMarker { get; } = new Marker("Start");
+        public Symbol EndMarker { get; } = new Marker("End");
+        public Symbol ReturnToMarker { get; } = new Marker("End");
     }
 
     public class Symbol : Printable
@@ -39,6 +43,13 @@ namespace ShapeGrammar
         public PrintingState Print(PrintingState state)
         {
             return state.Print(Name);
+        }
+    }
+
+    public class Marker : Symbol
+    {
+        public Marker(string name) : base(name)
+        {
         }
     }
 

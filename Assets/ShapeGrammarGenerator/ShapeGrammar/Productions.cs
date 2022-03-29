@@ -512,19 +512,20 @@ namespace ShapeGrammar
         /// <summary>
         /// to has to have height at least 2
         /// </summary>
-        public Production TowerFallDown(Symbol from, Func<LevelElement> roomFromF)
+        public Production TowerFallDown(Symbol from, Symbol to, Func<LevelElement> roomFromF)
         {
             return new Production(
                 $"RoomNextTo{from.Name}",
                 new ProdParamsManager()
                     .AddNodeSymbols(from)
-                    .AddNodeSymbols(sym.Room())
+                    .AddNodeSymbols(to)
                     .SetCondition((state, pp) => 
                     {
                         var (from, to) = pp;
                         return
-                            to.GetSymbol<Room>().Plain &&
-                            from.LE.CG().MinkowskiMinus(to.LE.CG()).Min(v => v.Sum(x => Mathf.Abs(x))) < 5;
+                            to.GetSymbol<Room>().Plain
+                            //&& from.LE.CG().MinkowskiMinus(to.LE.CG()).Min(v => v.AbsSum()) < 5
+                            ;
                     }),
                 (state, pp) =>
                 {

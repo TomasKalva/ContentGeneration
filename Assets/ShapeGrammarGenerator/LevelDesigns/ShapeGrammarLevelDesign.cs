@@ -35,7 +35,7 @@ namespace ShapeGrammar
 
                 // these productions make the world untraversable
                 pr.RoomFallDown(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-                pr.TowerFallDown(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
+                pr.TowerFallDown(pr.sym.Courtyard, pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
                 pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
 
 
@@ -59,31 +59,50 @@ namespace ShapeGrammar
                 //pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             };
 
+            var connectBack = new List<Production>()
+            {
+                pr.TowerFallDown(pr.sym.StartMarker, pr.sym.EndMarker, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
+            };
+
             var newNodes = grammarState.ApplyProduction(pr.CreateNewHouse());
             var shapeGrammar = new RandomGrammarEvaluator(productionList, 10);
 
 
             var gardenGrammar =
                 new GrammarEvaluatorSequence()
-                    .AppendBranch(
+                    /*
+                    .SetStartHandler(
+                        state => state.LastCreated.SelectMany(node => node.Parents()).Distinct().ForEach(parent => parent.AddSymbol(pr.sym.ReturnToMarker))
+                    )*/
+                    .AppendLinear(
                         pr.GardenFromCourtyard().ToEnumerable().ToList(),
                         1, pr.sym.Courtyard
                     )
-                    .AppendBranch(
+                    .AppendLinear(
                         lowGarden,
                         1, pr.sym.Courtyard,
                         state => state.LastCreated
                     )
-                    .AppendBranch(
+                    .AppendLinear(
                         targetedLowGarden,
                         10, pr.sym.Courtyard,
                         state => state.LastCreated
                     )
-                    .AppendBranch(
+                    /*.AppendStartEnd(
+                        pr.sym,
+                        connectBack,
+                        state => state.LastCreated,
+                        state => state.MainPath && BeforeThis
+                    )*/
+                    .AppendLinear(
                         pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))).ToEnumerable().ToList(),
                         1, pr.sym.Courtyard,
                         state => state.LastCreated
-                    );
+                    )
+                    .SetStartHandler(
+                        state => state.Root.AllDerived().ForEach(parent => parent.RemoveSymbolByName(pr.sym.ReturnToMarker))
+                    )
+                    ;
 
             shapeGrammar.Evaluate(grammarState);
             gardenGrammar.Evaluate(grammarState);
