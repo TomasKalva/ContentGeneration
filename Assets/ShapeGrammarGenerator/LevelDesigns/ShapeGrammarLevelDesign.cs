@@ -48,9 +48,8 @@ namespace ShapeGrammar
             };
             var grammarState = new ShapeGrammarState(ldk);
             var newNodes = grammarState.ApplyProduction(pr.CreateNewHouse());
-            var shapeGrammar = new ShapeGrammar(productionList, 10);
+            var shapeGrammar = new RandomGrammarEvaluator(productionList, 10);
 
-            //var gardenBranch = new 
             var gardenGrammar =
                 new GrammarEvaluatorSequence()
                     .AppendBranch(
@@ -59,7 +58,12 @@ namespace ShapeGrammar
                     )
                     .AppendBranch(
                         lowGarden,
-                        10, pr.sym.Courtyard,
+                        5, pr.sym.Courtyard,
+                        state => state.LastCreated
+                    )
+                    .AppendBranch(
+                        lowGarden,
+                        5, pr.sym.Courtyard,
                         state => state.LastCreated
                     )
                     .AppendBranch(
@@ -67,12 +71,7 @@ namespace ShapeGrammar
                         1, pr.sym.Courtyard,
                         state => state.LastCreated
                     );
-                /*new BranchGrammarEvaluator(
-                pr.GardenFromCourtyard(), 
-                lowGarden, 
-                pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-                state => state.Root.AllNodes(),
-                10, pr.sym.Courtyard);*/
+
             shapeGrammar.Evaluate(grammarState);
             gardenGrammar.Evaluate(grammarState);
             grammarState.Print(new PrintingState()).Show();

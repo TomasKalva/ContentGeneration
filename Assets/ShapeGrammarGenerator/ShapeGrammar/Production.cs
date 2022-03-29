@@ -76,4 +76,41 @@ namespace ShapeGrammar
             par2 = Parameters[1];
         }
     }
+
+    public class Production
+    {
+        public delegate IEnumerable<Operation> Effect(ShapeGrammarState shapeGrammarState, ProdParams prodParams);
+
+        public string Name { get; }
+        Effect ExpandNewNodes { get; }
+
+        public ProdParamsManager ProdParamsManager { get; }
+
+        public Production(string name, ProdParamsManager ppm, Effect effect)
+        {
+            Name = name;
+            ProdParamsManager = ppm;
+            ExpandNewNodes = effect;
+        }
+
+        public IEnumerable<Operation> TryApply(ShapeGrammarState shapeGrammarState, out int triedParameters)
+        {
+            var parameters = ProdParamsManager.GetParams(shapeGrammarState).Shuffle();
+            triedParameters = 0;
+            foreach (var pp in parameters)
+            {
+                triedParameters++;
+                var ops = ExpandNewNodes(shapeGrammarState, pp);
+                if (ops == null)
+                {
+                    ProdParamsManager.Failed.Add(pp);
+                }
+                else
+                {
+                    return ops;
+                }
+            }
+            return null;
+        }
+    }
 }

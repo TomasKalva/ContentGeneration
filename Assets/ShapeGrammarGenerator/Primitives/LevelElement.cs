@@ -77,6 +77,17 @@ namespace ShapeGrammar
         public abstract CubeGroup CG();
 
         #region Movement
+
+        public class LEMoves
+        {
+            public IEnumerable<Vector3Int> Ms { get; }
+
+            public LEMoves(IEnumerable<Vector3Int> ms)
+            {
+                Ms = ms;
+            }
+        }
+
         /// <summary>
         /// Moves of this level element to intersect the argument element.
         /// </summary>
