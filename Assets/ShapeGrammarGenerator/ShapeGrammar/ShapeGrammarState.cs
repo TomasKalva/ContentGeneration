@@ -195,6 +195,7 @@ namespace ShapeGrammar
 
         public Grid<bool> OffersFoundation { get; }
         public LevelElement VerticallyTaken { get; set; }
+        public IEnumerable<Node> LastCreated { get; private set; }
         public IEnumerable<Node> ActiveNodes { get; set; }
 
         public class GrammarStats
@@ -281,6 +282,7 @@ namespace ShapeGrammar
             {
                 var newNodes = operations.SelectMany(operation => operation.ChangeState(this)).Evaluate();
                 Stats.AddApplied(production.Name, operations.ToList(), elapsedMs, triedParameters);
+                LastCreated = newNodes;
                 return newNodes;
             }
         }
@@ -328,13 +330,6 @@ namespace ShapeGrammar
 
     public abstract class GrammarEvaluator
     {
-        protected List<Production> Productions { get; }
-
-        protected GrammarEvaluator(List<Production> productions)
-        {
-            Productions = productions;
-        }
-
         public abstract void Evaluate(ShapeGrammarState shapeGrammarState);
 
         protected IEnumerable<Node> Produce(ShapeGrammarState state, IEnumerable<Production> applicableProductions, string errorMsg = null)
@@ -351,10 +346,12 @@ namespace ShapeGrammar
 
     public class ShapeGrammar : GrammarEvaluator
     {
+        List<Production> Productions { get; }
         int Count { get; }
 
-        public ShapeGrammar(List<Production> productions, int count) : base(productions)
+        public ShapeGrammar(List<Production> productions, int count)
         {
+            Productions = productions;
             Count = count;
         }
 
@@ -373,25 +370,24 @@ namespace ShapeGrammar
 
     public class BranchGrammarEvaluator : GrammarEvaluator
     {
+        List<Production> Productions { get; }
         int Count { get; }
         Symbol StartSymbol { get; }
-        Production StartProduction { get; }
-        Production EndProduction { get; }
-        NodesQuery EndNodesQuery { get; }
+        NodesQuery NodesQuery { get; }
 
-        public BranchGrammarEvaluator(Production startProduction, List<Production> middleProductions, Production endProduction, NodesQuery endNodesQuery, int count, Symbol startSymbol) : base(middleProductions)
+        public BranchGrammarEvaluator(List<Production> productions, int count, Symbol startSymbol, NodesQuery nodesQuery = null)
         {
+            Productions = productions;
             Count = count;
             StartSymbol = startSymbol;
-            StartProduction = startProduction;
-            EndProduction = endProduction;
-            EndNodesQuery = endNodesQuery;
+            NodesQuery = nodesQuery ?? (state => state.Root.AllNodes());
         }
 
         public override void Evaluate(ShapeGrammarState shapeGrammarState)
         {
-            var createdByThis = new List<Node>();
-            var endActive = EndNodesQuery(shapeGrammarState);
+            /*
+             * var createdByThis = new List<Node>();
+            var endActive = NodesQuery(shapeGrammarState);
 
             var startNodes = shapeGrammarState.ApplyProduction(StartProduction);
             if (startNodes == null)
@@ -400,24 +396,48 @@ namespace ShapeGrammar
                 return;
             }
             startNodes.ForEach(stNode => createdByThis.Add(stNode));
-
+            */
             for (int i = 0; i < Count; i++)
             {
-                shapeGrammarState.ActiveNodes = createdByThis;
+                shapeGrammarState.ActiveNodes = NodesQuery(shapeGrammarState);
                 var applicable = Productions.Shuffle();
                 var newNodes = Produce(shapeGrammarState, applicable);
-                createdByThis = newNodes.ToList();
+                //createdByThis = newNodes.ToList();
                 //newNodes.ForEach(newNode => createdByThis.Push(newNode));
             }
 
-
+            /*
             shapeGrammarState.ActiveNodes = endActive;
             var endNodes = shapeGrammarState.ApplyProduction(EndProduction);
             if (endNodes == null)
             {
                 UnityEngine.Debug.Log($"Can't apply start production {EndProduction.Name}");
                 return;
-            }
+            }*/
+        }
+    }
+
+    public class GrammarEvaluatorSequence : GrammarEvaluator
+    {
+
+        IEnumerable<GrammarEvaluator> EvaluatorSequence { get; }
+
+        private GrammarEvaluatorSequence(IEnumerable<GrammarEvaluator> evaluatorSequence)
+        {
+            EvaluatorSequence = evaluatorSequence;
+        }
+
+        public GrammarEvaluatorSequence()
+        {
+            EvaluatorSequence = new GrammarEvaluator[0] { };
+        }
+
+        public GrammarEvaluatorSequence Append(GrammarEvaluator evaluator) => new GrammarEvaluatorSequence(EvaluatorSequence.Append(evaluator));
+        public GrammarEvaluatorSequence AppendBranch(List<Production> productions, int count, Symbol startSymbol, NodesQuery nodesQuery = null)
+            => Append(new BranchGrammarEvaluator(productions, count, startSymbol, nodesQuery));
+        public override void Evaluate(ShapeGrammarState shapeGrammarState)
+        {
+            EvaluatorSequence.ForEach(evaluator => evaluator.Evaluate(shapeGrammarState));
         }
     }
 }
