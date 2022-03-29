@@ -91,15 +91,18 @@ namespace ShapeGrammar
 
             LEMoves Merge(IEnumerable<Vector3Int> newMoves) => new LEMoves(LE, Ms.SetIntersect(newMoves));
 
+            public LEMoves Where(Func<Vector3Int, bool> filter) => new LEMoves(LE, Ms.Where(filter));
+            public LEMoves XZ() => Where(m => m.y == 0);
+
             public LEMoves Intersect(LevelElement toIntersect)
             {
                 return Merge(LE.MovesToIntersect(toIntersect).Ms);
             }
 
-            public LEMoves DontIntersect(IEnumerable<LevelElement> toNotIntersect)
+            public LEMoves DontIntersect(LevelElement toNotIntersect)
             {
                 var moves = new HashSet<Vector3Int>(Ms);
-                toNotIntersect.ForEach(le => Intersect(le).Ms.ForEach(v => moves.Remove(v)));
+                Intersect(toNotIntersect).Ms.ForEach(v => moves.Remove(v));
                 return new LEMoves(LE, moves);
             }
 
@@ -124,6 +127,15 @@ namespace ShapeGrammar
             public LEMoves MovesInDistanceXZ(LevelElement toThis, int dist)
             {
                 return Merge(LE.MovesInDistanceXZ(toThis, dist).Ms);
+            }
+
+            public LevelElement TryMove()
+            {
+                if (!Ms.Any())
+                    return null;
+
+                var move = Ms.GetRandom();
+                return LE.MoveBy(move);
             }
         }
 

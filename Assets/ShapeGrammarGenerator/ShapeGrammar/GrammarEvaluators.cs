@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using static ShapeGrammar.LevelElement;
 
 namespace ShapeGrammar
 {
@@ -97,10 +98,34 @@ namespace ShapeGrammar
         }
     }
 
-    public class PathGuide
+    public abstract class PathGuide
     {
-        Func<ShapeGrammarState, Vector3Int> TargetF;
-        
+        public abstract LEMoves SelectMove(ShapeGrammarState state, LEMoves moves);
+    }
 
+    public class RandomPathGuide : PathGuide
+    {
+        public override LEMoves SelectMove(ShapeGrammarState state, LEMoves moves)
+        {
+            return moves;
+        }
+    }
+
+    public class PointPathGuide : PathGuide
+    {
+        Func<ShapeGrammarState, Vector3Int> TargetF { get; }
+
+        public PointPathGuide(Func<ShapeGrammarState, Vector3Int> targetF)
+        {
+            TargetF = targetF;
+        }
+
+        public override LEMoves SelectMove(ShapeGrammarState state, LEMoves moves)
+        {
+            var targetPoint = TargetF(state);
+            var leCenter = Vector3Int.FloorToInt(moves.LE.CG().Center());
+            var bestMove = moves.Ms.ArgMin(m => ((leCenter + m) - targetPoint).AbsSum());
+            return new LEMoves(moves.LE, bestMove.ToEnumerable());
+        }
     }
 }

@@ -43,6 +43,13 @@ namespace ShapeGrammar
         public int LengthY() => ExtentsDir(Vector3Int.up);
         public int LengthZ() => ExtentsDir(Vector3Int.forward);
 
+        public Vector3 Center()
+        {
+            var sum = Cubes.Aggregate(Vector3Int.zero, (total, c) => total + c.Position);
+            var count = Cubes.Count;
+            return sum / count;
+        }
+
         public delegate CubeGroup Constructor(CubeGroup existing, List<Cube> newCubes);
 
         /// <summary>

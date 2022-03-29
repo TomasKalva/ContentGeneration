@@ -406,8 +406,9 @@ namespace ShapeGrammar
                 });
         }
 
-        public Production ExtendBridgeTo(Symbol from, Func<LevelElement> toF)
+        public Production ExtendBridgeTo(Symbol from, Func<LevelElement> toF, PathGuide pathGuide = null)
         {
+            pathGuide = pathGuide ?? new RandomPathGuide();
             return new Production(
                 $"ExtendBridgeTo",
                 new ProdParamsManager().AddNodeSymbols(from),
@@ -420,19 +421,26 @@ namespace ShapeGrammar
                     var newRoomAtGround = newRoom.MoveBottomTo(0);
 
                     var newRooms = ExtensionMethods.HorizontalDirections().Shuffle()
-                        .Select(dir =>
+                        .SelectNN(dir =>
                         {
-                            var boundingBox = whatCG.CubeGroupMaxLayer(Vector3Int.down).ExtrudeDir(dir, 10, false).LE().MoveBottomTo(0);
-
-                            var validMoves = newRoomAtGround.MovesToIntersect(boundingBox).Ms.Where(move => move.y == 0);
-                            validMoves = newRoomAtGround.DontIntersect(validMoves, state.VerticallyTaken.ToEnumerable()).Ms;
-                            if (!validMoves.Any())
+                            var boundingBox = whatCG.CubeGroupMaxLayer(Vector3Int.down).ExtrudeDir(dir, 10, false).LE();
+                            if (boundingBox.CG().Intersects(state.WorldState.Added.CG()))
                                 return null;
 
-                            var newRoomGN = newRoomAtGround.MoveBy(validMoves.GetRandom()).MoveBottomTo(whatCG.LeftBottomBack().y).GrammarNode(sym.Room());
-                            return newRoomGN;
+                            return boundingBox.MoveBottomTo(0);
+
                         })
-                        .Where(node => node != null);
+                        .SelectNN(boundingBox =>
+                        {
+                            //var boundingBox = whatCG.CubeGroupMaxLayer(Vector3Int.down).ExtrudeDir(dir, 10, false).LE().MoveBottomTo(0);
+
+                            var validMoves = newRoomAtGround
+                                .MovesToIntersect(boundingBox).XZ()
+                                .DontIntersect(state.VerticallyTaken);
+                            var moved = pathGuide.SelectMove(state, validMoves).TryMove();
+                            return moved;
+                        })
+                        .Select(newRoomDown => newRoomDown.MoveBottomTo(whatCG.LeftBottomBack().y).GrammarNode(sym.Room()));
 
                     if (!newRooms.Any())
                         return null;
