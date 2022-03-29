@@ -336,6 +336,17 @@ namespace ShapeGrammar
         }
 
         public abstract void Evaluate(ShapeGrammarState shapeGrammarState);
+
+        protected IEnumerable<Node> Produce(ShapeGrammarState state, IEnumerable<Production> applicableProductions, string errorMsg = null)
+        {
+            var newNodes = applicableProductions.DoUntilSuccess(prod => state.ApplyProduction(prod), x => x != null);
+            if (newNodes == null)
+            {
+                UnityEngine.Debug.Log(errorMsg ?? $"Can't apply any productions");
+                return null;
+            }
+            return newNodes;
+        }
     }
 
     public class ShapeGrammar : GrammarEvaluator
@@ -353,32 +364,35 @@ namespace ShapeGrammar
             {
                 shapeGrammarState.ActiveNodes = shapeGrammarState.Root.AllNodes();
                 var applicable = Productions.Shuffle();
-                var newNodes = applicable.DoUntilSuccess(prod => shapeGrammarState.ApplyProduction(prod), x => x != null);
-                if (newNodes == null)
-                {
-                    UnityEngine.Debug.Log($"Can't apply any productions {i}");
-                    return;
-                }
+                Produce(shapeGrammarState, applicable);
             }
         }
     }
+
+    public delegate IEnumerable<Node> NodesQuery(ShapeGrammarState state);
 
     public class BranchGrammarEvaluator : GrammarEvaluator
     {
         int Count { get; }
         Symbol StartSymbol { get; }
         Production StartProduction { get; }
+        Production EndProduction { get; }
+        NodesQuery EndNodesQuery { get; }
 
-        public BranchGrammarEvaluator(Production startProduction, List<Production> productions, int count, Symbol startSymbol) : base(productions)
+        public BranchGrammarEvaluator(Production startProduction, List<Production> middleProductions, Production endProduction, NodesQuery endNodesQuery, int count, Symbol startSymbol) : base(middleProductions)
         {
             Count = count;
             StartSymbol = startSymbol;
             StartProduction = startProduction;
+            EndProduction = endProduction;
+            EndNodesQuery = endNodesQuery;
         }
 
         public override void Evaluate(ShapeGrammarState shapeGrammarState)
         {
             var createdByThis = new List<Node>();
+            var endActive = EndNodesQuery(shapeGrammarState);
+
             var startNodes = shapeGrammarState.ApplyProduction(StartProduction);
             if (startNodes == null)
             {
@@ -391,14 +405,18 @@ namespace ShapeGrammar
             {
                 shapeGrammarState.ActiveNodes = createdByThis;
                 var applicable = Productions.Shuffle();
-                var newNodes = applicable.DoUntilSuccess(prod => shapeGrammarState.ApplyProduction(prod), x => x != null);
-                if (newNodes == null)
-                {
-                    UnityEngine.Debug.Log($"Can't apply any productions {i}");
-                    return;
-                }
+                var newNodes = Produce(shapeGrammarState, applicable);
                 createdByThis = newNodes.ToList();
                 //newNodes.ForEach(newNode => createdByThis.Push(newNode));
+            }
+
+
+            shapeGrammarState.ActiveNodes = endActive;
+            var endNodes = shapeGrammarState.ApplyProduction(EndProduction);
+            if (endNodes == null)
+            {
+                UnityEngine.Debug.Log($"Can't apply start production {EndProduction.Name}");
+                return;
             }
         }
     }
