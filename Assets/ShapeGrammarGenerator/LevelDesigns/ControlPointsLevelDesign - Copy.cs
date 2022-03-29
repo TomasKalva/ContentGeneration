@@ -37,8 +37,8 @@ namespace ShapeGrammar
                 {
                     //var prev = moved.Any() ? moved.FirstOrDefault() : controlPoints.Cubes.FirstOrDefault().Group().LevelElement();
                     //var movesToPrev = le.MovesNearXZ(prev);
-                    var movesOnLine = le.MovesToIntersect(controlLine);
-                    var possibleMoves = le.Moves(/*movesToPrev.SetIntersect(*/movesOnLine/*)*/, moved);
+                    var movesOnLine = le.MovesToIntersect(controlLine).Ms;
+                    var possibleMoves = le.DontIntersect(/*movesToPrev.SetIntersect(*/movesOnLine/*)*/, moved).Ms;
                     return possibleMoves;
                 },
                 moves => moves.GetRandom());

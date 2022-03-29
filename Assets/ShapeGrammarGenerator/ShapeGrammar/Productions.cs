@@ -424,8 +424,8 @@ namespace ShapeGrammar
                         {
                             var boundingBox = whatCG.CubeGroupMaxLayer(Vector3Int.down).ExtrudeDir(dir, 10, false).LE().MoveBottomTo(0);
 
-                            var validMoves = newRoomAtGround.MovesToIntersect(boundingBox).Where(move => move.y == 0);
-                            validMoves = newRoomAtGround.Moves(validMoves, state.VerticallyTaken.ToEnumerable());
+                            var validMoves = newRoomAtGround.MovesToIntersect(boundingBox).Ms.Where(move => move.y == 0);
+                            validMoves = newRoomAtGround.DontIntersect(validMoves, state.VerticallyTaken.ToEnumerable()).Ms;
                             if (!validMoves.Any())
                                 return null;
 

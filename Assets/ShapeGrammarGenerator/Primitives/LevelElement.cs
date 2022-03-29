@@ -80,77 +80,109 @@ namespace ShapeGrammar
 
         public class LEMoves
         {
+            public LevelElement LE { get; }
             public IEnumerable<Vector3Int> Ms { get; }
 
-            public LEMoves(IEnumerable<Vector3Int> ms)
+            public LEMoves(LevelElement le, IEnumerable<Vector3Int> ms)
             {
+                LE = le;
                 Ms = ms;
+            }
+
+            LEMoves Merge(IEnumerable<Vector3Int> newMoves) => new LEMoves(LE, Ms.SetIntersect(newMoves));
+
+            public LEMoves Intersect(LevelElement toIntersect)
+            {
+                return Merge(LE.MovesToIntersect(toIntersect).Ms);
+            }
+
+            public LEMoves DontIntersect(IEnumerable<LevelElement> toNotIntersect)
+            {
+                var moves = new HashSet<Vector3Int>(Ms);
+                toNotIntersect.ForEach(le => Intersect(le).Ms.ForEach(v => moves.Remove(v)));
+                return new LEMoves(LE, moves);
+            }
+
+            public LEMoves MovesNearXZ(LevelElement nearThis)
+            {
+                return Merge(LE.MovesNearXZ(nearThis).Ms);
+            }
+
+            public LEMoves BeInside(LevelElement bounding)
+            {
+                return Merge(LE.MovesToBeInside(bounding).Ms);
+            }
+
+            public LEMoves PartlyIntersectXZ(LevelElement toPartlyIntersect)
+            {
+                return Merge(LE.MovesToPartlyIntersectXZ(toPartlyIntersect).Ms);
+            }
+
+            /// <summary>
+            /// Dist should be at least 1.
+            /// </summary>
+            public LEMoves MovesInDistanceXZ(LevelElement toThis, int dist)
+            {
+                return Merge(LE.MovesInDistanceXZ(toThis, dist).Ms);
             }
         }
 
         /// <summary>
         /// Moves of this level element to intersect the argument element.
         /// </summary>
-        public IEnumerable<Vector3Int> MovesToIntersect(LevelElement toIntersect)
+        public LEMoves MovesToIntersect(LevelElement toIntersect)
         {
-            return toIntersect.CG().MinkowskiMinus(CG());
+            return new LEMoves(this, toIntersect.CG().MinkowskiMinus(CG()));
         }
 
-        public IEnumerable<Vector3Int> MovesToBeInside(LevelElement bounding)
+        public LEMoves MovesToBeInside(LevelElement bounding)
         {
-            var intersectBounding = MovesToIntersect(bounding);
+            var intersectBounding = MovesToIntersect(bounding).Ms;
 
             var border = bounding.CG().ExtrudeAll().LE(AreaType.None);
-            var intersectBorder = MovesToIntersect(border);
-            return intersectBounding.SetMinus(intersectBorder);
+            var intersectBorder = MovesToIntersect(border).Ms;
+            return new LEMoves(this, intersectBounding.SetMinus(intersectBorder));
         }
 
-        public IEnumerable<Vector3Int> Moves(IEnumerable<Vector3Int> possibleMoves, IEnumerable<LevelElement> toNotIntersect)
+        public LEMoves DontIntersect(IEnumerable<Vector3Int> possibleMoves, IEnumerable<LevelElement> toNotIntersect)
         {
-            
             var moves = new HashSet<Vector3Int>(possibleMoves);
-            toNotIntersect.ForEach(le => MovesToIntersect(le).ForEach(v => moves.Remove(v)));
-            return moves;
+            toNotIntersect.ForEach(le => MovesToIntersect(le).Ms.ForEach(v => moves.Remove(v)));
+            return new LEMoves(this, moves);
         }
 
-        public IEnumerable<Vector3Int> MovesNearXZ(LevelElement nearThis)
+        public LEMoves MovesNearXZ(LevelElement nearThis)
         {
             var intersectNear = nearThis.CG().MinkowskiMinus(CG().AllBoundaryFacesH().Extrude(1)).Where(move => move.y == 0);
-            var intersect = MovesToIntersect(nearThis);
-            return intersectNear.SetMinus(intersect);
+            var intersect = MovesToIntersect(nearThis).Ms;
+            return new LEMoves(this, intersectNear.SetMinus(intersect));
         }
 
-        public IEnumerable<Vector3Int> MovesToPartlyIntersectXZ(LevelElement partlyIntersectThis)
+        public LEMoves MovesToPartlyIntersectXZ(LevelElement partlyIntersectThis)
         {
             var intersectNear = partlyIntersectThis.CG().MinkowskiMinus(CG().AllBoundaryFacesH().Extrude(1, false));
-            var intersect = MovesToIntersect(partlyIntersectThis);
-            return intersectNear.SetIntersect(intersect);
+            var intersect = MovesToIntersect(partlyIntersectThis).Ms;
+            return new LEMoves(this, intersectNear.SetIntersect(intersect));
         }
 
         /// <summary>
         /// Dist should be at least 1.
         /// </summary>
-        public IEnumerable<Vector3Int> MovesInDistanceXZ(LevelElement toThis, int dist)
+        public LEMoves MovesInDistanceXZ(LevelElement toThis, int dist)
         {
-            var intersectClose = toThis.CG().MinkowskiMinus(CG().AllBoundaryFacesH().Extrude(dist, false));
-            var intersectNear = toThis.CG().MinkowskiMinus(CG().AllBoundaryFacesH().Extrude(dist + 1, false));
-            return intersectNear.SetMinus(intersectClose);
+            var intersectClose = toThis.CG().MinkowskiMinus(CG().AllBoundaryFacesH().Extrude(dist, false)).Where(move => move.y == 0);
+            var intersectNear = toThis.CG().MinkowskiMinus(CG().AllBoundaryFacesH().Extrude(dist + 1, false)).Where(move => move.y == 0);
+            return new LEMoves(this, intersectNear.SetMinus(intersectClose));
         }
 
         /// <summary>
         /// Returns all (infinitely many) possible moves so that this doesn't intersect toNotIntersect.
         /// </summary>
-        public IEnumerable<Vector3Int> NotIntersecting(IEnumerable<LevelElement> toNotIntersect)
+        public LEMoves NotIntersecting(IEnumerable<LevelElement> toNotIntersect)
         {
             var forbiddenMoves = new HashSet<Vector3Int>();
-            toNotIntersect.ForEach(le => MovesToIntersect(le).ForEach(v => forbiddenMoves.Add(v)));
-            foreach (var move in ExtensionMethods.AllVectorsXZ())
-            {
-                if (!forbiddenMoves.Contains(move))
-                {
-                    yield return move;
-                }
-            }
+            toNotIntersect.ForEach(le => MovesToIntersect(le).Ms.ForEach(v => forbiddenMoves.Add(v)));
+            return new LEMoves(this, ExtensionMethods.AllVectorsXZ().Where(move => !forbiddenMoves.Contains(move)));
         }
 
         #endregion

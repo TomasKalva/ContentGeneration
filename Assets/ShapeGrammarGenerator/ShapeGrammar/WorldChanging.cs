@@ -22,7 +22,7 @@ namespace ShapeGrammar
             return (worldState) =>
             {
                 var element = elementF();
-                var possibleMoves = element.Moves(element.MovesNearXZ(worldState.Last).Where(m => m.y == 0), worldState.Added.LevelElements);
+                var possibleMoves = element.DontIntersect(element.MovesNearXZ(worldState.Last).Ms.Where(m => m.y == 0), worldState.Added.LevelElements).Ms;
                 var movedElement = possibleMoves.Any() ? element.MoveBy(possibleMoves.GetRandom()) : null;
                 return worldState.TryPush(movedElement);
             };
@@ -33,7 +33,7 @@ namespace ShapeGrammar
             return (worldState) =>
             {
                 var element = elementF();
-                var possibleMoves = element.Moves(element.MovesNearXZ(worldState.Last).Where(m => m.y == 0), worldState.Added.LevelElements);
+                var possibleMoves = element.DontIntersect(element.MovesNearXZ(worldState.Last).Ms.Where(m => m.y == 0), worldState.Added.LevelElements).Ms;
                 var movedElement = possibleMoves.Any() ? element.MoveBy(possibleMoves.GetRandom()) : null;
                 return worldState.TryPush(movedElement);
             };
@@ -44,7 +44,7 @@ namespace ShapeGrammar
             return (worldState) =>
             {
                 var element = elementF();
-                var possibleMoves = element.Moves(element.MovesToPartlyIntersectXZ(worldState.Last.Where(le => le.AreaType != AreaType.Path)).Where(m => m.y == 0), worldState.Added.LevelElements.Others(worldState.Last));
+                var possibleMoves = element.DontIntersect(element.MovesToPartlyIntersectXZ(worldState.Last.Where(le => le.AreaType != AreaType.Path)).Ms.Where(m => m.y == 0), worldState.Added.LevelElements.Others(worldState.Last)).Ms;
                 var movedElement = possibleMoves.Any() ? element.MoveBy(possibleMoves.GetRandom()).Minus(worldState.Last) : null;
                 return worldState.TryPush(movedElement);
             };
@@ -55,7 +55,7 @@ namespace ShapeGrammar
             return (worldState) =>
             {
                 var element = elementF();
-                var possibleMoves = element.Moves(element.MovesInDistanceXZ(worldState.Last, 5).Where(m => m.y == 0), worldState.Added.LevelElements);
+                var possibleMoves = element.DontIntersect(element.MovesInDistanceXZ(worldState.Last, 5).Ms.Where(m => m.y == 0), worldState.Added.LevelElements).Ms;
                 if (!possibleMoves.Any())
                     return worldState;
 
