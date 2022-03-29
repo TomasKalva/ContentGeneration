@@ -420,7 +420,7 @@ namespace ShapeGrammar
                     var newRoom = toF();
                     var newRoomAtGround = newRoom.MoveBottomTo(0);
 
-                    var newRooms = ExtensionMethods.HorizontalDirections().Shuffle()
+                    var newRooms = pathGuide.SelectDirections(what.LE)
                         .SelectNN(dir =>
                         {
                             var boundingBox = whatCG.CubeGroupMaxLayer(Vector3Int.down).ExtrudeDir(dir, 10, false).LE();
@@ -434,7 +434,7 @@ namespace ShapeGrammar
                             var validMoves = newRoomAtGround
                                 .MovesToIntersect(boundingBox).XZ()
                                 .DontIntersect(state.VerticallyTaken);
-                            var moved = pathGuide.SelectMove(state, validMoves).TryMove();
+                            var moved = pathGuide.SelectMove(validMoves).TryMove();
                             return moved;
                         })
                         .Select(newRoomDown => newRoomDown.MoveBottomTo(whatCG.LeftBottomBack().y).GrammarNode(sym.Room()));

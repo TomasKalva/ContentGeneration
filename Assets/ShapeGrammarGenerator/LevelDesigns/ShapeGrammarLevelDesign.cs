@@ -17,6 +17,8 @@ namespace ShapeGrammar
         public override LevelElement CreateLevel()
         {
             var pr = new Productions(ldk);
+            var grammarState = new ShapeGrammarState(ldk);
+
             var productionList = new List<Production>()
             {
                 pr.CourtyardFromRoom(),
@@ -47,7 +49,7 @@ namespace ShapeGrammar
                 pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             };
 
-            var guideBack = new PointPathGuide(state => new Vector3Int(0, 0, 50));
+            var guideBack = new PointPathGuide(grammarState, state => new Vector3Int(0, 0, 50));
 
             var targetedLowGarden = new List<Production>()
             {
@@ -57,7 +59,6 @@ namespace ShapeGrammar
                 //pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             };
 
-            var grammarState = new ShapeGrammarState(ldk);
             var newNodes = grammarState.ApplyProduction(pr.CreateNewHouse());
             var shapeGrammar = new RandomGrammarEvaluator(productionList, 10);
 

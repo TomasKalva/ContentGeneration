@@ -100,35 +100,51 @@ namespace ShapeGrammar
 
     public abstract class PathGuide
     {
-        public abstract LEMoves SelectMove(ShapeGrammarState state, LEMoves moves);
+        public abstract LEMoves SelectMove(LEMoves moves);
+        public abstract IEnumerable<Vector3Int> SelectDirections(LevelElement currentElement);
     }
 
     public class RandomPathGuide : PathGuide
     {
-        public override LEMoves SelectMove(ShapeGrammarState state, LEMoves moves)
+        public override LEMoves SelectMove(LEMoves moves)
         {
             return moves;
+        }
+
+        public override IEnumerable<Vector3Int> SelectDirections(LevelElement currentElement)
+        {
+            return ExtensionMethods.HorizontalDirections().Shuffle();
         }
     }
 
     public class PointPathGuide : PathGuide
     {
+        ShapeGrammarState ShapeGrammarState { get; }
         Func<ShapeGrammarState, Vector3Int> TargetF { get; }
 
-        public PointPathGuide(Func<ShapeGrammarState, Vector3Int> targetF)
+        public PointPathGuide(ShapeGrammarState shapeGrammarState, Func<ShapeGrammarState, Vector3Int> targetF)
         {
+            ShapeGrammarState = shapeGrammarState;
             TargetF = targetF;
         }
 
-        public override LEMoves SelectMove(ShapeGrammarState state, LEMoves moves)
+        public override LEMoves SelectMove(LEMoves moves)
         {
             if (!moves.Ms.Any())
                 return moves;
 
-            var targetPoint = TargetF(state);
+            var targetPoint = TargetF(ShapeGrammarState);
             var leCenter = Vector3Int.FloorToInt(moves.LE.CG().Center());
             var bestMove = moves.Ms.ArgMin(m => ((leCenter + m) - targetPoint).AbsSum());
             return new LEMoves(moves.LE, bestMove.ToEnumerable());
+        }
+
+        public override IEnumerable<Vector3Int> SelectDirections(LevelElement currentElement)
+        {
+            var target = TargetF(ShapeGrammarState);
+            var currentCenter = currentElement.CG().Center();
+            
+            return ExtensionMethods.HorizontalDirections().OrderBy(dir => ((currentCenter + dir) - target).sqrMagnitude);
         }
     }
 }
