@@ -122,6 +122,9 @@ namespace ShapeGrammar
 
         public override LEMoves SelectMove(ShapeGrammarState state, LEMoves moves)
         {
+            if (!moves.Ms.Any())
+                return moves;
+
             var targetPoint = TargetF(state);
             var leCenter = Vector3Int.FloorToInt(moves.LE.CG().Center());
             var bestMove = moves.Ms.ArgMin(m => ((leCenter + m) - targetPoint).AbsSum());

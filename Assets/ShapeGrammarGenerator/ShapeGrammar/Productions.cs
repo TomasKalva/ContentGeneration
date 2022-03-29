@@ -408,7 +408,7 @@ namespace ShapeGrammar
 
         public Production ExtendBridgeTo(Symbol from, Func<LevelElement> toF, PathGuide pathGuide = null)
         {
-            pathGuide = pathGuide ?? new RandomPathGuide();
+            pathGuide ??= new RandomPathGuide();
             return new Production(
                 $"ExtendBridgeTo",
                 new ProdParamsManager().AddNodeSymbols(from),
@@ -428,12 +428,9 @@ namespace ShapeGrammar
                                 return null;
 
                             return boundingBox.MoveBottomTo(0);
-
                         })
                         .SelectNN(boundingBox =>
                         {
-                            //var boundingBox = whatCG.CubeGroupMaxLayer(Vector3Int.down).ExtrudeDir(dir, 10, false).LE().MoveBottomTo(0);
-
                             var validMoves = newRoomAtGround
                                 .MovesToIntersect(boundingBox).XZ()
                                 .DontIntersect(state.VerticallyTaken);

@@ -47,14 +47,14 @@ namespace ShapeGrammar
                 pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             };
 
-            var guideBack = new PointPathGuide(state => Vector3Int.zero);
+            var guideBack = new PointPathGuide(state => new Vector3Int(0, 0, 50));
 
             var targetedLowGarden = new List<Production>()
             {
                 //pr.GardenFromCourtyard(),
-                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden)),
-                pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
+                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), guideBack),
+                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden), guideBack),
+                //pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             };
 
             var grammarState = new ShapeGrammarState(ldk);
@@ -70,12 +70,12 @@ namespace ShapeGrammar
                     )
                     .AppendBranch(
                         lowGarden,
-                        5, pr.sym.Courtyard,
+                        1, pr.sym.Courtyard,
                         state => state.LastCreated
                     )
                     .AppendBranch(
-                        lowGarden,
-                        5, pr.sym.Courtyard,
+                        targetedLowGarden,
+                        10, pr.sym.Courtyard,
                         state => state.LastCreated
                     )
                     .AppendBranch(
