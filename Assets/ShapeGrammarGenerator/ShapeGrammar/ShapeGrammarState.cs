@@ -56,8 +56,8 @@ namespace ShapeGrammar
 
         public PrintingState Print(PrintingState state)
         {
-            state.Print("{");
-            Symbols.ForEach(symbol => symbol.Print(state));
+            state.Print("{ ");
+            Symbols.ForEach(symbol => symbol.Print(state).Print(", "));
             state.Print("}");
             return state;
         }
@@ -76,11 +76,13 @@ namespace ShapeGrammar
         public void AddSymbol(Symbol symbol)
         {
             Symbols.Add(symbol);
+            SymbolNames.Add(symbol.Name);
         }
 
         public void RemoveSymbolByName(Symbol symbol)
         {
             Symbols.RemoveAll(s => s.Name == symbol.Name);
+            SymbolNames.Remove(symbol.Name);
         }
     }
 
@@ -281,7 +283,12 @@ namespace ShapeGrammar
 
         public IEnumerable<Node> ActiveWithSymbols(params Symbol[] symbols)
         {
-            return ActiveNodes.Where(node => node.LE.Cubes().Any() && node.HasSymbols(symbols));
+            return ActiveNodes.Where(node => node.LE.Cubes().Any() && node.HasSymbols(symbols)).ToList();
+        }
+
+        public IEnumerable<Node> WithSymbols(params Symbol[] symbols)
+        {
+            return Root.AllDerived().Where(node => node.LE.Cubes().Any() && node.HasSymbols(symbols));
         }
 
         public bool CanBeFounded(LevelElement le)
@@ -317,6 +324,17 @@ namespace ShapeGrammar
                 state.ChangeIndent(-1);
             });
             return state;
+        }
+
+        public void ShowAllNodes()
+        {
+            var printingState = new PrintingState();
+            Root.AllDerived().ForEach(node =>
+            {
+                node.Print(printingState);
+                printingState.PrintLine();
+            });
+            printingState.Show();
         }
     }
 }

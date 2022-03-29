@@ -10,8 +10,14 @@ namespace ShapeGrammar
 {
     public abstract class GrammarEvaluator
     {
-        Action<ShapeGrammarState> StartHandler { get; set; }
-        Action<ShapeGrammarState> EndHandler { get; set; }
+        protected Action<ShapeGrammarState> StartHandler { get; set; }
+        protected Action<ShapeGrammarState> EndHandler { get; set; }
+
+        public GrammarEvaluator()
+        {
+            StartHandler = EndHandler = _ => { } ;
+        }
+
         public abstract void Evaluate(ShapeGrammarState shapeGrammarState);
 
         protected IEnumerable<Node> Produce(ShapeGrammarState state, IEnumerable<Production> applicableProductions, string errorMsg = null)
@@ -25,17 +31,6 @@ namespace ShapeGrammar
             return newNodes;
         }
 
-        public GrammarEvaluator SetStartHandler(Action<ShapeGrammarState> handler)
-        {
-            StartHandler = handler;
-            return this;
-        }
-
-        public GrammarEvaluator SetEndHandler(Action<ShapeGrammarState> handler)
-        {
-            EndHandler = handler;
-            return this;
-        }
     }
 
     public class RandomGrammarEvaluator : GrammarEvaluator
@@ -110,8 +105,12 @@ namespace ShapeGrammar
             var startNodes = StartQuery(shapeGrammarState);
             var endNodes = EndQuery(shapeGrammarState);
 
+            startNodes = endNodes = shapeGrammarState.Root.AllDerived();
+
             startNodes.ForEach(node => node.AddSymbol(Sym.StartMarker));
             endNodes.ForEach(node => node.AddSymbol(Sym.EndMarker));
+
+            shapeGrammarState.ShowAllNodes();
 
             var applicable = Productions.Shuffle();
             var newNodes = Produce(shapeGrammarState, applicable);
@@ -124,26 +123,39 @@ namespace ShapeGrammar
     public class GrammarEvaluatorSequence : GrammarEvaluator
     {
 
-        IEnumerable<GrammarEvaluator> EvaluatorSequence { get; }
-
-        private GrammarEvaluatorSequence(IEnumerable<GrammarEvaluator> evaluatorSequence)
-        {
-            EvaluatorSequence = evaluatorSequence;
-        }
+        List<GrammarEvaluator> EvaluatorSequence { get; }
 
         public GrammarEvaluatorSequence()
         {
-            EvaluatorSequence = new GrammarEvaluator[0] { };
+            EvaluatorSequence = new List<GrammarEvaluator>();
         }
 
-        public GrammarEvaluatorSequence Append(GrammarEvaluator evaluator) => new GrammarEvaluatorSequence(EvaluatorSequence.Append(evaluator));
+        public GrammarEvaluatorSequence Add(GrammarEvaluator evaluator)
+        {
+            EvaluatorSequence.Add(evaluator);
+            return this;
+        }
         public GrammarEvaluatorSequence AppendLinear(List<Production> productions, int count, Symbol startSymbol, NodesQuery nodesQuery = null)
-            => Append(new LinearGrammarEvaluator(productions, count, startSymbol, nodesQuery));
+            => Add(new LinearGrammarEvaluator(productions, count, startSymbol, nodesQuery));
         public GrammarEvaluatorSequence AppendStartEnd(Symbols symbols, List<Production> productions, NodesQuery startQuery, NodesQuery endQuery)
-            => Append(new StartEndGrammarEvaluator(symbols, productions, startQuery, endQuery));
+            => Add(new StartEndGrammarEvaluator(symbols, productions, startQuery, endQuery));
         public override void Evaluate(ShapeGrammarState shapeGrammarState)
         {
+            StartHandler(shapeGrammarState);
             EvaluatorSequence.ForEach(evaluator => evaluator.Evaluate(shapeGrammarState));
+            EndHandler(shapeGrammarState);
+        }
+
+        public GrammarEvaluatorSequence SetStartHandler(Action<ShapeGrammarState> handler)
+        {
+            StartHandler = handler;
+            return this;
+        }
+
+        public GrammarEvaluatorSequence SetEndHandler(Action<ShapeGrammarState> handler)
+        {
+            EndHandler = handler;
+            return this;
         }
     }
 

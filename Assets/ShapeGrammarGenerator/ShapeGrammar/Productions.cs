@@ -517,13 +517,13 @@ namespace ShapeGrammar
             return new Production(
                 $"RoomNextTo{from.Name}",
                 new ProdParamsManager()
-                    .AddNodeSymbols(from)
-                    .AddNodeSymbols(to)
+                    .AddNodeSymbols(from, sym.Garden)
+                    .AddNodeSymbols(to, sym.Room())
                     .SetCondition((state, pp) => 
                     {
                         var (from, to) = pp;
-                        return
-                            to.GetSymbol<Room>().Plain
+                        return true
+                            //to.GetSymbol<Room>().Plain
                             //&& from.LE.CG().MinkowskiMinus(to.LE.CG()).Min(v => v.AbsSum()) < 5
                             ;
                     }),
