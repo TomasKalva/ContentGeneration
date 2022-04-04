@@ -105,12 +105,10 @@ namespace ShapeGrammar
             var startNodes = StartQuery(shapeGrammarState);
             var endNodes = EndQuery(shapeGrammarState);
 
-            startNodes = endNodes = shapeGrammarState.Root.AllDerived();
+            //startNodes = endNodes = shapeGrammarState.Root.AllDerived();
 
             startNodes.ForEach(node => node.AddSymbol(Sym.StartMarker));
             endNodes.ForEach(node => node.AddSymbol(Sym.EndMarker));
-
-            shapeGrammarState.ShowAllNodes();
 
             var applicable = Productions.Shuffle();
             var newNodes = Produce(shapeGrammarState, applicable);

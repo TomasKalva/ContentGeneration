@@ -82,11 +82,11 @@ namespace ShapeGrammar
             world.AddObject(elevator.Object, Vector3.zero);
             */
             
-            /*
+            
             var allEnemies = libraries.Enemies.AllAgents();
             var enemyCubes = levelRoot.CG().WithFloor().Cubes.Shuffle().Take(10);
             enemyCubes.ForEach(cube => world.AddEnemy(allEnemies.GetRandom()(), GridToWorld(cube.Position)));
-            */
+            
 
             var itemCubes = levelRoot.CG().WithFloor().Cubes.Shuffle().Take(10);
             itemCubes.ForEach(cube => world.AddItem(libraries.Items.Physical(libraries.Items.Mace()), GridToWorld(cube.Position)));
