@@ -96,18 +96,11 @@ namespace ShapeGrammar
 
         public IEnumerable<Operation> TryApply(ShapeGrammarState shapeGrammarState, out int triedParameters)
         {
-            var sw = new System.Diagnostics.Stopwatch();
-            sw.Start();
             var parameters = ProdParamsManager.GetParams(shapeGrammarState).Shuffle();
-            //var count = parameters.Count();
-            //sw.Stop();
             triedParameters = 0;
             foreach (var pp in parameters)
             {
                 triedParameters++;
-                Debug.Log($"Finding parameter {triedParameters} took {sw.ElapsedMilliseconds}ms");
-                shapeGrammarState.Root.AllDerived().ToList();
-                Debug.Log($"Finding all derived from root took {sw.ElapsedMilliseconds}ms");
                 var ops = ExpandNewNodes(shapeGrammarState, pp);
                 if (ops == null)
                 {

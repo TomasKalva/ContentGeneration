@@ -105,6 +105,9 @@ namespace ShapeGrammar
         }
     }
 
+    /// <summary>
+    /// Evaluates all productions with extra start and end symbols in the queried nodes.
+    /// </summary>
     public class StartEndGrammarEvaluator : GrammarEvaluator
     {
         List<Production> Productions { get; }

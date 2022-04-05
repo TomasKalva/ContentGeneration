@@ -49,7 +49,15 @@ namespace ShapeGrammar
                 pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             };
 
-            var guideBack = new PointPathGuide(grammarState, state => new Vector3Int(0, 0, 50));
+            var guideToPoint = new PointPathGuide(grammarState, state => new Vector3Int(0, 0, 50));
+            var guideBack = new PointPathGuide(grammarState, 
+                state =>
+                {
+                    var returnToNodes = state.WithSymbols(pr.sym.ReturnToMarker);
+                    var currentNodesCenter = state.LastCreated.Select(node => node.LE).ToLevelGroupElement(ldk.grid).CG().Center();
+                    var targetPoint = returnToNodes.SelectMany(n => n.LE.Cubes()).ArgMin(cube => (cube.Position - currentNodesCenter).AbsSum()).Position;
+                    return Vector3Int.RoundToInt(targetPoint);
+                });
 
             var targetedLowGarden = new List<Production>()
             {
@@ -75,34 +83,34 @@ namespace ShapeGrammar
 
             var gardenGrammar =
                 new GrammarEvaluatorSequence()
-                    /*.SetStartHandler(
+                    .SetStartHandler(
                         state =>
                         {
                             var allParents = state.LastCreated.SelectMany(node => node.AllDerivedFrom()).Distinct();
                             allParents.ForEach(parent => parent.AddSymbol(pr.sym.ReturnToMarker));
-                            //allParents.ForEach(n => Debug.Log("parent"));
+                            allParents.ForEach(n => Debug.Log("parent"));
                         }
-                    )*/
+                    )
                     .AppendLinear(
                         pr.GardenFromCourtyard().ToEnumerable().ToList(),
                         1, pr.sym.Courtyard
                     )
-                    /*.AppendLinear(
-                        lowGarden,
-                        1, pr.sym.Courtyard,
-                        state => state.LastCreated
-                    )*/
                     .AppendLinear(
-                        targetedLowGarden,
-                        10, pr.sym.Courtyard,
+                        lowGarden,
+                        5, pr.sym.Courtyard,
                         state => state.LastCreated
                     )
-                    /*.AppendStartEnd(
+                    .AppendLinear(
+                        targetedLowGarden,
+                        5, pr.sym.Courtyard,
+                        state => state.LastCreated
+                    )
+                    .AppendStartEnd(
                         pr.sym,
                         connectBack,
                         state => state.LastCreated,
                         state => state.WithSymbols(pr.sym.ReturnToMarker)
-                    )*/
+                    )
                     /*.AppendLinear(
                         pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))).ToEnumerable().ToList(),
                         1, pr.sym.Courtyard,

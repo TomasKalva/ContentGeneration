@@ -674,7 +674,17 @@ static class ExtensionMethods
         return f(v.x) + f(v.y) + f(v.z);
     }
 
+    public static float Sum(this Vector3 v, Func<float, float> f)
+    {
+        return f(v.x) + f(v.y) + f(v.z);
+    }
+
     public static int AbsSum(this Vector3Int v)
+    {
+        return v.Sum(c => Mathf.Abs(c));
+    }
+
+    public static float AbsSum(this Vector3 v)
     {
         return v.Sum(c => Mathf.Abs(c));
     }
