@@ -25,6 +25,10 @@ namespace ShapeGrammar
 
         public List<Node> Derived { get; }
         public List<Node> DerivedFrom { get; }
+        /// <summary>
+        /// Nothing can be derived from terminal nodes.
+        /// </summary>
+        public bool Terminal => !LE.Cubes().Any();
 
         public Node(LevelElement levelElement, List<Symbol> symbols)
         {
@@ -283,7 +287,7 @@ namespace ShapeGrammar
 
         public IEnumerable<Node> ActiveWithSymbols(params Symbol[] symbols)
         {
-            return ActiveNodes.Where(node => node.LE.Cubes().Any() && node.HasSymbols(symbols)).ToList();
+            return ActiveNodes.Where(node => !node.Terminal && node.HasSymbols(symbols)).ToList();
         }
 
         public IEnumerable<Node> WithSymbols(params Symbol[] symbols)

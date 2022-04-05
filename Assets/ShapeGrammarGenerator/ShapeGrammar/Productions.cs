@@ -729,6 +729,24 @@ namespace ShapeGrammar
                 });
         }
 
+        public Production AddRoof()
+        {
+            return new Production(
+                "AddRoof",
+                new ProdParamsManager()
+                    .AddNodeSymbols(sym.RoomReservation(null)),
+                (state, pp) =>
+                {
+                    var roomReservation = pp.Param;
+                    var roof = roomReservation.LE.SetAreaType(AreaType.Roof).GrammarNode(sym.Roof);
+
+                    // and modify the dag
+                    return new[]
+                    {
+                        state.Replace(roomReservation).SetTo(roof),
+                    };
+                });
+        }
 
 
         /*

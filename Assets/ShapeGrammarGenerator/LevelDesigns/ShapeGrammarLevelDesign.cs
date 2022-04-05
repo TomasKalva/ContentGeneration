@@ -64,6 +64,11 @@ namespace ShapeGrammar
                 pr.TowerFallDown(pr.sym.StartMarker, pr.sym.EndMarker, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
             };
 
+            var roofs = new List<Production>()
+            {
+                pr.AddRoof(),
+            };
+
             var newNodes = grammarState.ApplyProduction(pr.CreateNewHouse());
             var shapeGrammar = new RandomGrammarEvaluator(productionList, 10);
 
@@ -108,8 +113,11 @@ namespace ShapeGrammar
                     )
                     ;
 
+            var roofGrammar = new AllGrammarEvaluator(roofs);
+
             shapeGrammar.Evaluate(grammarState);
             gardenGrammar.Evaluate(grammarState);
+            roofGrammar.Evaluate(grammarState);
             grammarState.Print(new PrintingState()).Show();
             
             grammarState.Stats.Print();

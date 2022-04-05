@@ -55,6 +55,28 @@ namespace ShapeGrammar
         }
     }
 
+    public class AllGrammarEvaluator : GrammarEvaluator
+    {
+        List<Production> Productions { get; }
+
+        public AllGrammarEvaluator(List<Production> productions)
+        {
+            Productions = productions;
+        }
+
+        public override void Evaluate(ShapeGrammarState shapeGrammarState)
+        {
+            IEnumerable<Node> newNodes = null;
+            do
+            {
+                shapeGrammarState.ActiveNodes = shapeGrammarState.Root.AllDerived();
+                var applicable = Productions.Shuffle();
+                newNodes = Produce(shapeGrammarState, applicable);
+            }
+            while (newNodes != null);
+        }
+    }
+
     public delegate IEnumerable<Node> NodesQuery(ShapeGrammarState state);
 
     public class LinearGrammarEvaluator : GrammarEvaluator
