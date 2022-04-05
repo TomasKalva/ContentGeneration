@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace ShapeGrammar
 {
@@ -23,7 +24,7 @@ namespace ShapeGrammar
 
         public IEnumerable<ProdParams> GetParams(ShapeGrammarState state)
         {
-            var parameterNodes = ParametersSymbols.Select(symbols => state.ActiveWithSymbols(symbols)).ToList();
+            var parameterNodes = ParametersSymbols.Select(symbols => state.ActiveWithSymbols(symbols));
             var parameterNodesSequences = parameterNodes.CartesianProduct();
             var prodPars = parameterNodesSequences.Select(parSeq => new ProdParams(parSeq.ToArray()))
                 .Where(prodPar => !Failed.Contains(prodPar))
@@ -95,11 +96,18 @@ namespace ShapeGrammar
 
         public IEnumerable<Operation> TryApply(ShapeGrammarState shapeGrammarState, out int triedParameters)
         {
+            var sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
             var parameters = ProdParamsManager.GetParams(shapeGrammarState).Shuffle();
+            //var count = parameters.Count();
+            //sw.Stop();
             triedParameters = 0;
             foreach (var pp in parameters)
             {
                 triedParameters++;
+                Debug.Log($"Finding parameter {triedParameters} took {sw.ElapsedMilliseconds}ms");
+                shapeGrammarState.Root.AllDerived().ToList();
+                Debug.Log($"Finding all derived from root took {sw.ElapsedMilliseconds}ms");
                 var ops = ExpandNewNodes(shapeGrammarState, pp);
                 if (ops == null)
                 {

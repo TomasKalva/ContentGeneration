@@ -45,7 +45,7 @@ namespace ShapeGrammar
             {
                 //pr.GardenFromCourtyard(),
                 pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden)),
+                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden), addFloorAbove: false),
                 pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             };
 
@@ -55,7 +55,7 @@ namespace ShapeGrammar
             {
                 //pr.GardenFromCourtyard(),
                 pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), guideBack),
-                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden), guideBack),
+                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden), guideBack, addFloorAbove: false),
                 pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             };
 
@@ -117,6 +117,7 @@ namespace ShapeGrammar
 
             shapeGrammar.Evaluate(grammarState);
             gardenGrammar.Evaluate(grammarState);
+            //shapeGrammar.Evaluate(grammarState);
             roofGrammar.Evaluate(grammarState);
             grammarState.Print(new PrintingState()).Show();
             

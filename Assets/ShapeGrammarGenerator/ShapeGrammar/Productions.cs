@@ -406,7 +406,7 @@ namespace ShapeGrammar
                 });
         }
 
-        public Production ExtendBridgeTo(Symbol from, Func<LevelElement> toF, PathGuide pathGuide = null)
+        public Production ExtendBridgeTo(Symbol from, Func<LevelElement> toF, PathGuide pathGuide = null, bool addFloorAbove = true)
         {
             pathGuide ??= new RandomPathGuide();
             return new Production(
@@ -451,14 +451,26 @@ namespace ShapeGrammar
 
                     // and modify the dag
                     var foundation = ldk.sgShapes.Foundation(newRoomGN.LE).GrammarNode(sym.Foundation);
-                    var reservation = newRoomGN.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GrammarNode(sym.RoomReservation(newRoomGN));
-                    return new[]
+                    if (addFloorAbove)
                     {
+                        var reservation = newRoomGN.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GrammarNode(sym.RoomReservation(newRoomGN));
+                        return new[]
+                        {
                         state.Add(what).SetTo(newRoomGN),
                         state.Add(newRoomGN).SetTo(foundation),
                         state.Add(newRoomGN).SetTo(reservation),
                         state.Add(what, newRoomGN).SetTo(bridge),
-                    };
+                        };
+                    }
+                    else
+                    {
+                        return new[]
+                        {
+                        state.Add(what).SetTo(newRoomGN),
+                        state.Add(newRoomGN).SetTo(foundation),
+                        state.Add(what, newRoomGN).SetTo(bridge),
+                        };
+                    }
                 });
         }
 

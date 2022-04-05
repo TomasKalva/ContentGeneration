@@ -28,7 +28,7 @@ namespace ShapeGrammar
         /// <summary>
         /// Nothing can be derived from terminal nodes.
         /// </summary>
-        public bool Terminal => !LE.Cubes().Any();
+        public bool Terminal { get; set; }
 
         public Node(LevelElement levelElement, List<Symbol> symbols)
         {
@@ -37,13 +37,29 @@ namespace ShapeGrammar
             LE = levelElement;
             Derived = new List<Node>();
             DerivedFrom = new List<Node>();
+            Terminal = false;
         }
 
         public IEnumerable<Node> AllDerived()
         {
-            return Derived.Any() ?
+            var fringe = new Queue<Node>();
+            var found = new HashSet<Node>();
+            fringe.Enqueue(this);
+
+            while(fringe.Any())
+            {
+                var node = fringe.Dequeue();
+                if (found.Contains(node))
+                    continue;
+
+                found.Add(node);
+                node.Derived.ForEach(child => fringe.Enqueue(child));
+            }
+            return found;
+            /*return Derived.Any() ?
                 Derived.SelectMany(node => node.AllDerived()).Prepend(this).Distinct() :
                 new[] { this };
+            */
         }
 
         public IEnumerable<Node> AllDerivedFrom()
@@ -167,7 +183,11 @@ namespace ShapeGrammar
         public override IEnumerable<Node> ChangeState(ShapeGrammarState grammarState)
         {
             AddIntoDag();
-            From.ForEach(node => node.LE = LevelElement.Empty(grammarState.WorldState.Grid));
+            From.ForEach(node =>
+            {
+                node.LE = LevelElement.Empty(grammarState.WorldState.Grid);
+                node.Terminal = true;
+            });
             var lge = To.Select(node => node.LE).ToLevelGroupElement(grammarState.WorldState.Grid);
             grammarState.WorldState = grammarState.WorldState.ChangeAll(To.Select<Node, WorldState.ChangeWorld>(gn => ws => ws.TryPush(gn.LE)));
             AddToFoundation(grammarState, lge);
@@ -287,7 +307,7 @@ namespace ShapeGrammar
 
         public IEnumerable<Node> ActiveWithSymbols(params Symbol[] symbols)
         {
-            return ActiveNodes.Where(node => !node.Terminal && node.HasSymbols(symbols)).ToList();
+            return ActiveNodes.Where(node => !node.Terminal && node.HasSymbols(symbols));
         }
 
         public IEnumerable<Node> WithSymbols(params Symbol[] symbols)
