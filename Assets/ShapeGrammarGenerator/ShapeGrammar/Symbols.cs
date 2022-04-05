@@ -29,6 +29,7 @@ namespace ShapeGrammar
         public Symbol StartMarker { get; } = new Marker("Start");
         public Symbol EndMarker { get; } = new Marker("End");
         public Symbol ReturnToMarker { get; } = new Marker("ReturnToMarker");
+        public Symbol FullFloorMarker { get; } = new Marker("FullFloor");
     }
 
     public class Symbol : Printable

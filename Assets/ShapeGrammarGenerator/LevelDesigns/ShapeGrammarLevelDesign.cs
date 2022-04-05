@@ -35,9 +35,8 @@ namespace ShapeGrammar
 
                 // these productions make the world untraversable
                 pr.RoomFallDown(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-                pr.TowerFallDown(pr.sym.Courtyard, pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
+                //pr.TowerFallDown(pr.sym.Courtyard, pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
                 pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-
 
                 pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             };
@@ -111,11 +110,6 @@ namespace ShapeGrammar
                         state => state.LastCreated,
                         state => state.WithSymbols(pr.sym.ReturnToMarker)
                     )
-                    /*.AppendLinear(
-                        pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))).ToEnumerable().ToList(),
-                        1, pr.sym.Courtyard,
-                        state => state.LastCreated
-                    )*/
                     .SetEndHandler(
                         state => state.Root.AllDerived().ForEach(parent => parent.RemoveSymbolByName(pr.sym.ReturnToMarker))
                     )

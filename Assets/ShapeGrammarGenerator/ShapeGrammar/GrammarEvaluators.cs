@@ -20,12 +20,12 @@ namespace ShapeGrammar
 
         public abstract void Evaluate(ShapeGrammarState shapeGrammarState);
 
-        protected IEnumerable<Node> Produce(ShapeGrammarState state, IEnumerable<Production> applicableProductions, string errorMsg = null)
+        protected IEnumerable<Node> Produce(ShapeGrammarState state, IEnumerable<Production> applicableProductions, string failedMsg = null)
         {
             var newNodes = applicableProductions.DoUntilSuccess(prod => state.ApplyProduction(prod), x => x != null);
             if (newNodes == null)
             {
-                UnityEngine.Debug.Log(errorMsg ?? $"Can't apply any productions");
+                UnityEngine.Debug.Log(failedMsg ?? $"Can't apply any productions");
                 return null;
             }
             return newNodes;
@@ -71,7 +71,7 @@ namespace ShapeGrammar
             {
                 shapeGrammarState.ActiveNodes = shapeGrammarState.Root.AllDerived();
                 var applicable = Productions.Shuffle();
-                newNodes = Produce(shapeGrammarState, applicable);
+                newNodes = Produce(shapeGrammarState, applicable, "Roofs done");
             }
             while (newNodes != null);
         }

@@ -113,6 +113,7 @@ namespace ShapeGrammar
 
         public static Neighbors<PathNode> BalconyStairsBalconyNeighbors(CubeGroup start, CubeGroup end, CubeGroup balcony1, CubeGroup balcony2)
         {
+            //todo: make sure that the path is always valid - problems with returning to the balcony space
             var horizontal = HorizontalNeighbors();
             var vertical = VerticalNeighbors();
             var balconySet1 = new HashSet<Cube>(balcony1.Cubes);
