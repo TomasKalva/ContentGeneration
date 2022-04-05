@@ -356,5 +356,10 @@ namespace ShapeGrammar
             });
             printingState.Show();
         }
+
+        public void ShowVerticallyTaken(StyleRules houseStyleRules)
+        {
+            VerticallyTaken.SetAreaType(AreaType.Garden).ApplyGrammarStyleRules(houseStyleRules);
+        }
     }
 }

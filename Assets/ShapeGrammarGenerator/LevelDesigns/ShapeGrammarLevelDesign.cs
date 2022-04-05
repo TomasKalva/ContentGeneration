@@ -14,11 +14,8 @@ namespace ShapeGrammar
         {
         }
 
-        public override LevelElement CreateLevel()
+        public List<Production> TestingProductions(Productions pr)
         {
-            var pr = new Productions(ldk);
-            var grammarState = new ShapeGrammarState(ldk);
-
             var productionList = new List<Production>()
             {
                 pr.CourtyardFromRoom(),
@@ -40,13 +37,38 @@ namespace ShapeGrammar
 
                 pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             };
-            var lowGarden = new List<Production>()
+            return productionList;
+        }
+
+        public List<Production> Garden(Productions pr)
+        {
+            return new List<Production>()
             {
                 //pr.GardenFromCourtyard(),
                 pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
                 pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden), addFloorAbove: false),
                 pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             };
+        }
+
+        public List<Production> GuidedGarden(Productions pr, PathGuide guide)
+        {
+            return new List<Production>()
+            {
+                //pr.GardenFromCourtyard(),
+                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), guide),
+                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden), guide, addFloorAbove: false),
+                pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
+            };
+        }
+
+        public override LevelElement CreateLevel()
+        {
+            var pr = new Productions(ldk);
+            var grammarState = new ShapeGrammarState(ldk);
+
+            var productionList = TestingProductions(pr);
+            var lowGarden = Garden(pr);
 
             var guideToPoint = new PointPathGuide(grammarState, state => new Vector3Int(0, 0, 50));
             var guideBack = new PointPathGuide(grammarState, 
@@ -58,13 +80,7 @@ namespace ShapeGrammar
                     return Vector3Int.RoundToInt(targetPoint);
                 });
 
-            var targetedLowGarden = new List<Production>()
-            {
-                //pr.GardenFromCourtyard(),
-                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), guideBack),
-                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden), guideBack, addFloorAbove: false),
-                pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
-            };
+            var targetedLowGarden = GuidedGarden(pr, guideBack);
 
             var connectBack = new List<Production>()
             {
@@ -76,7 +92,6 @@ namespace ShapeGrammar
                 pr.AddRoof(),
             };
 
-            var newNodes = grammarState.ApplyProduction(pr.CreateNewHouse());
             var shapeGrammar = new RandomGrammarEvaluator(productionList, 10);
 
 
@@ -112,23 +127,21 @@ namespace ShapeGrammar
                     )
                     .SetEndHandler(
                         state => state.Root.AllDerived().ForEach(parent => parent.RemoveSymbolByName(pr.sym.ReturnToMarker))
-                    )
-                    ;
+                    );
 
             var roofGrammar = new AllGrammarEvaluator(roofs);
 
+            var newNodes = grammarState.ApplyProduction(pr.CreateNewHouse());
             shapeGrammar.Evaluate(grammarState);
             gardenGrammar.Evaluate(grammarState);
-            //shapeGrammar.Evaluate(grammarState);
             roofGrammar.Evaluate(grammarState);
+
+
             grammarState.Print(new PrintingState()).Show();
-            
             grammarState.Stats.Print();
-            //shapeGrammar.ShapeGrammarState.VerticallyTaken.SetAreaType(AreaType.Garden).ApplyGrammarStyleRules(ldk.houseStyleRules);
+            grammarState.ShowVerticallyTaken(ldk.houseStyleRules);
 
             var level = grammarState.WorldState.Added;
-
-
             return level;
         }
     }
