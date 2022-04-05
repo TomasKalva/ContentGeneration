@@ -308,5 +308,18 @@ namespace ShapeGrammar
             return doorFromFirst;
         }
 
+
+        public CubeGroup RoofStyle(CubeGroup roofArea, Libraries lib)
+        {
+            var extents = roofArea.Extents();
+            var roof = lib.InteractiveObjects.Roof(extents);
+
+            var halfExtents = ((Vector3)extents) / 2f;
+            var lbb = roofArea.LeftBottomBack();
+            var center = new Vector3(lbb.x + halfExtents.x - 0.5f, lbb.y, lbb.z + halfExtents.z - 0.5f);
+
+            roof.position = center * 2.8f;
+            return roofArea;
+        }
     }
 }

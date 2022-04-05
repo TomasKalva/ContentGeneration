@@ -71,7 +71,7 @@ namespace ShapeGrammar
                     var terraceSpace = terraces.FirstOrDefault();
                     var lge = terraceSpace.Split(Vector3Int.down, AreaType.None, 1);
                     var terrace = lge.LevelElements[1].SetAreaType(AreaType.Colonnade).GrammarNode(sym.Terrace);
-                    var roof = lge.LevelElements[0].SetAreaType(AreaType.Roof).GrammarNode(sym.Roof);
+                    var roof = lge.LevelElements[0].SetAreaType(AreaType.FlatRoof).GrammarNode(sym.Roof);
                     return new[]
                     {
                         state.Add(room).SetTo(terrace),

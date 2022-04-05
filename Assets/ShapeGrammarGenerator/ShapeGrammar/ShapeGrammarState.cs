@@ -56,10 +56,6 @@ namespace ShapeGrammar
                 node.Derived.ForEach(child => fringe.Enqueue(child));
             }
             return found;
-            /*return Derived.Any() ?
-                Derived.SelectMany(node => node.AllDerived()).Prepend(this).Distinct() :
-                new[] { this };
-            */
         }
 
         public IEnumerable<Node> AllDerivedFrom()

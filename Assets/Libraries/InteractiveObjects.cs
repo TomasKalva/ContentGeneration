@@ -36,6 +36,9 @@ public class InteractiveObjects : ScriptableObject
     [SerializeField]
     InteractiveObject leverPrefab;
 
+    [SerializeField]
+    Transform roof;
+
     public InteractiveObject Grave()
     {
         var state = new Grave()
@@ -89,6 +92,14 @@ public class InteractiveObjects : ScriptableObject
         };
         var obj = Instantiate(leverPrefab);
         obj.State = state;
+
+        return obj;
+    }
+
+    public Transform Roof(Vector3 extents)
+    {
+        var obj = Instantiate(roof);
+        obj.transform.localScale = Vector3.Scale(obj.transform.localScale, extents);
 
         return obj;
     }

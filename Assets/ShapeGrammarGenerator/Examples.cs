@@ -35,9 +35,10 @@ namespace ShapeGrammar
             tr = new Transformations(this);
             houseStyleRules = new StyleRules(
                 new StyleRule(g => g.WithAreaType(AreaType.Room), g => g.SetGrammarStyle(sgStyles.PlainRoomStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.RoomReservation), g => g.SetGrammarStyle(sgStyles.ReservationHighlighterStyle)),
+                new StyleRule(g => g.WithAreaType(AreaType.RoomReservation), g => g.SetGrammarStyle(sgStyles.EmptyStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.OpenRoom), g => g.SetGrammarStyle(sgStyles.OpenRoomStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.Roof), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
+                new StyleRule(g => g.WithAreaType(AreaType.FlatRoof), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
+                new StyleRule(g => g.WithAreaType(AreaType.Roof), g => g.SetGrammarStyle(area => sgStyles.RoofStyle(area, lib))),
                 new StyleRule(g => g.WithAreaType(AreaType.Foundation), g => g.SetGrammarStyle(sgStyles.FoundationStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Path), g => g.SetGrammarStyle(sgStyles.StairsPathStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Garden), g => g.SetGrammarStyle(sgStyles.GardenStyle)),
@@ -183,7 +184,7 @@ namespace ShapeGrammar
 
             // add paths between floors
             var floors = tower.WithAreaType(AreaType.Room);
-            var floorsAndRoof = floors.Concat(tower.WithAreaType(AreaType.Roof));
+            var floorsAndRoof = floors.Concat(tower.WithAreaType(AreaType.FlatRoof));
             floors.ForEach(floor =>
             {
                 var upperFloor = floor.NeighborsInDirection(Vector3Int.up, floorsAndRoof).FirstOrDefault();

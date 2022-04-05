@@ -13,6 +13,7 @@ namespace ShapeGrammar
         public static AreaType Room { get; } = new AreaType("Room");
         public static AreaType RoomReservation { get; } = new AreaType("RoomReservation");
         public static AreaType OpenRoom { get; } = new AreaType("OpenRoom");
+        public static AreaType FlatRoof { get; } = new AreaType("FlatRoof");
         public static AreaType Roof { get; } = new AreaType("Roof");
         public static AreaType Foundation { get; } = new AreaType("Foundation");
         public static AreaType CliffFoundation { get; } = new AreaType("CliffFoundation");
@@ -42,7 +43,7 @@ namespace ShapeGrammar
             {
                 Room,
                 OpenRoom,
-                Roof,
+                FlatRoof,
                 WallTop,
                 Garden,
                 Platform
