@@ -53,6 +53,7 @@ namespace ShapeGrammar
             if (Failed) 
                 return this;
 
+            ApplyStyles();
             path = pathFinder();
             Debug.Assert(path != null);
             CurrentNodes = path.ToEnumerable();
@@ -64,7 +65,7 @@ namespace ShapeGrammar
         /// Used, because path finding requires information about floor...
         /// Maybe just assume that entire bottom layer is filled with floor to get rid of this call.
         /// </summary>
-        public ProductionProgram ApplyStyles(params Node[] from)
+        ProductionProgram ApplyStyles()
         {
             if (Failed)
                 return this;
@@ -91,7 +92,7 @@ namespace ShapeGrammar
             if (Failed)
                 return this;
 
-            CurrentNodes = CurrentNodes.Select(node => ldk.sgShapes.Foundation(node.LE).GrammarNode(pr.sym.Foundation));
+            CurrentNodes = CurrentNodes.Select(node => ldk.sgShapes.Foundation(node.LE).GN(pr.sym.Foundation));
             return this;
         }
 

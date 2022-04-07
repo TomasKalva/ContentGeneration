@@ -10,7 +10,7 @@ namespace ShapeGrammar
 {
     public static class ShapeGrammarExtensions
     {
-        public static Node GrammarNode(this LevelElement le, params Symbol[] symbols)
+        public static Node GN(this LevelElement le, params Symbol[] symbols)
         {
             return new Node(le, symbols.ToList());
         }
