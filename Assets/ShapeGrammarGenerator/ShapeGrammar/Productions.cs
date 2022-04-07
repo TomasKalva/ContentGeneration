@@ -482,6 +482,21 @@ namespace ShapeGrammar
                         state.Add(newHouse).SetTo(start.GN(), middleGn, end.GN()),
                         state.Replace(middleGn).SetTo(path.GN())
                     });
+                    /*
+                    return state.NewProgram()
+                        .SelectOne(
+                            state.NewProgram()
+                                .Directional(ExtensionMethods.HorizontalDirections().Shuffle(),
+                                    dir =>
+                                        roomCubeGroup
+                                        .ExtrudeDir(dir, 6)
+                                        .LE(AreaType.Room)
+                                        .GN(sym.DirectedRoom(0, dir))
+                                )
+                                .NotTaken()
+                                .CanBeFounded(),
+                            out var newRoom
+                        )*/
                 });
         }
 
@@ -501,27 +516,21 @@ namespace ShapeGrammar
                 {
                     var roomReservation = pp.Param;
                     var roomBelow = roomReservation.GetSymbol<RoomReservation>().RoomBelow;
-                    var nextFloor = roomReservation.LE.SetAreaType(AreaType.Room).GN(sym.Room(true, roomBelow.GetSymbol<Room>().Floor + 1), sym.FullFloorMarker);
 
-                    var maybeNewReservation =
-                        nextFloor.LE.CG().ExtrudeDir(Vector3Int.up, 2).LE(AreaType.RoomReservation).GN(sym.RoomReservation(nextFloor)).ToEnumerable()
-                        .Where(floor => floor.LE.CG().AllAreNotTaken());
+                    return state.NewProgram()
+                        .Set(() => roomReservation.LE.SetAreaType(AreaType.Room)
+                            .GN(
+                                sym.Room(true, roomBelow.GetSymbol<Room>().Floor + 1),
+                                sym.FullFloorMarker),
+                                out var nextFloor
+                        )
+                        .ReplaceNodes(roomReservation)
 
-                    if (!maybeNewReservation.Any())
-                        return null;
-                    
-                    var newReservation = maybeNewReservation.FirstOrDefault();
-                    nextFloor.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
+                        .RoomReserveUpward(2)
+                        .PlaceNodes(nextFloor)
 
-                    var stairs = ldk.con.ConnectByWallStairsIn(roomBelow.LE, nextFloor.LE).GN();
-
-                    // and modify the dag
-                    return state.NewProgramBadMethodDestroyItASAP(new[]
-                    {
-                        state.Replace(roomReservation).SetTo(nextFloor),
-                        state.Add(roomBelow, nextFloor).SetTo(stairs),
-                        state.Add(nextFloor).SetTo(newReservation),
-                    });
+                        .FindPath(() => ldk.con.ConnectByWallStairsIn(roomBelow.LE, nextFloor.LE).GN(), out var stairs)
+                        .PlaceNodes(roomBelow, nextFloor);
                 });
         }
 

@@ -90,6 +90,19 @@ namespace ShapeGrammar
             return this;
         }
 
+        public ProductionProgram ReplaceNodes(params Node[] from)
+        {
+            if (Failed)
+                return this;
+
+            if (!CurrentNodes.Any())
+                return SetFailed(true);
+
+            var op = State.Replace(from).SetTo(CurrentNodes.ToArray());
+            AppliedOperations.Add(op);
+            return this;
+        }
+
         public ProductionProgram Found() => Found(out var _);
 
         /// <summary>
