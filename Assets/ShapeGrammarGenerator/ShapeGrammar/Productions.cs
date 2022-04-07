@@ -230,46 +230,6 @@ namespace ShapeGrammar
                 });
         }
 
-        /*
-        public Production HouseFromCourtyard()
-        {
-            return new Production(
-                "HouseFromCourtyard",
-                new ProdParamsManager().AddNodeSymbols(sym.Courtyard),
-                (state, pp) =>
-                {
-                    var courtyard = pp.Param;
-                    var courtyardCubeGroup = courtyard.LE.CG();
-
-                    var newHouses =
-                        ExtensionMethods.HorizontalDirections().Shuffle()
-                        .Select(dir =>
-                        // create a new object
-                        courtyardCubeGroup
-                        .ExtrudeDir(dir, 4)
-                        .LE(AreaType.Room).GrammarNode(sym.Room()))
-
-                        // fail if no such object exists
-                        .Where(gn => gn.LE.CG().AreAllNotTaken() && state.CanBeFounded(gn.LE));
-                    if (!newHouses.Any())
-                        return null;
-
-                    var newHouse = newHouses.FirstOrDefault();
-
-                    newHouse.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
-                    var door = ldk.con.ConnectByDoor(newHouse.LE, courtyard.LE).GrammarNode();
-
-                    // and modify the dag
-                    var foundation = ldk.sgShapes.Foundation(newHouse.LE).GrammarNode(sym.Foundation);
-                    return new[]
-                    {
-                        state.Add(courtyard).SetTo(newHouse),
-                        state.Add(newHouse).SetTo(foundation),
-                        state.Add(newHouse, courtyard).SetTo(door),
-                    };
-                });
-        }*/
-
         public Production RoomNextTo(Symbol nextToWhat, Func<LevelElement> roomF)
         {
             return new Production(
@@ -280,58 +240,30 @@ namespace ShapeGrammar
                     var what = pp.Param;
                     var whatCG = what.LE.CG();
 
-                    var newRoom = roomF();
-                    //
-                    var newRoomAtGround = newRoom.MoveBottomTo(0);
-                    var validNewRoom = ldk.pl.MoveNearXZ(what.LE.MoveBottomTo(0), newRoomAtGround, state.VerticallyTaken);
-                    if (validNewRoom == null)
-                        return null;
-                    
-
-                    var newRoomGN = validNewRoom.MoveBottomTo(whatCG.LeftBottomBack().y).GN(sym.Room(), sym.FullFloorMarker);
-                    //
-                    
-                    newRoomGN.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
-                    
-                    var door = ldk.con.ConnectByDoor(newRoomGN.LE, what.LE).GN();
-                    Debug.Assert(door != null);
-
-                    // and modify the dag
-                    var foundation = ldk.sgShapes.Foundation(newRoomGN.LE).GN(sym.Foundation);
-                    var reservation = newRoomGN.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GN(sym.RoomReservation(newRoomGN));
-                    return state.NewProgramBadMethodDestroyItASAP(new[]
-                    {
-                        state.Add(what).SetTo(newRoomGN),
-                        state.Add(newRoomGN).SetTo(foundation),
-                        state.Add(newRoomGN).SetTo(reservation),
-                        state.Add(newRoomGN, what).SetTo(door),
-                        
-                    });
-
-                    /*
-                    Maybe clearer syntax that requires more helper methods
-
-                    Linq:
-
-                    from obj in createObject(roomF(), sym.Room())
-                    from movedObj in moveNear(what)
-                    from _ in placeObjToWorld(movedObj)
-                    from door in connect(ldk.con.ConnectByDoor(obj, what))
-                    from foundation in foundation(obj)
-                    from _2 in placeObjToWorld(door)
-                    from _3 in placeObjToWorld(foundation)
-                    select null
-
-                    Ideal syntax:
-
-                    obj <- createObject(roomF(), sym.Room())
-                    movedObj <- moveNear(what)
-                    placeObjToWorld(movedObj)
-                    door <- connect(ldk.con.ConnectByDoor(obj, what))
-                    foundation <- foundation(obj)
-                    placeObjToWorld(door)
-                    placeObjToWorld(foundation)
-                    */
+                    return state.NewProgram()
+                        .SelectOne(
+                            state.NewProgram()
+                                .Set(() => roomF().GN())
+                                .Change(roomAtGround => 
+                                    ldk.pl.MoveNearXZ(
+                                        what.LE.MoveBottomTo(0), 
+                                        roomAtGround.LE.MoveBottomTo(0), 
+                                        state.VerticallyTaken).GN())
+                                .Change(validNewRoom => validNewRoom.LE.MoveBottomTo(whatCG.LeftBottomBack().y).GN(sym.Room(), sym.FullFloorMarker)),
+                            out var newRoom
+                            )
+                        .PlaceNodes(what)
+                        .Found()
+                        .PlaceNodes(newRoom)
+                        .SelectOne(
+                            state.NewProgram()
+                                .Set(() => newRoom.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GN(sym.RoomReservation(newRoom)))
+                                .NotTaken(),
+                            out var reservation
+                            )
+                        .PlaceNodes(newRoom)
+                        .FindPath(() => ldk.con.ConnectByDoor(newRoom.LE, what.LE).GN(), out var door)
+                        .PlaceNodes(newRoom, what);
                 });
         }
 
