@@ -39,47 +39,6 @@ namespace ShapeGrammar
                 });
         }
 
-        public Production ExtrudeTerrace()
-        {
-            return new Production(
-                "ExtrudeTerrace",
-                new ProdParamsManager().AddNodeSymbols(sym.Room()),
-                (state, pp) =>
-                {
-                    var room = pp.Param;
-                    //var room = state.WithActiveSymbols(sym.Room);
-                    if (room.LE.CG().LengthY() <= 1)
-                        return null;
-
-                    var terraces =
-                    // for give parametrization
-                        ExtensionMethods.HorizontalDirections().Shuffle()
-                        .Select(dir =>
-
-                        // access the object
-                        room.LE.CG()
-
-                        // create a new object
-                        .ExtrudeDir(dir, 2).LE(AreaType.Colonnade))
-
-                        // fail if no such object exists
-                        .Where(le => le.CG().AllAreNotTaken());
-                    if (!terraces.Any())
-                        return null;
-
-                    // and modify the dag
-                    var terraceSpace = terraces.FirstOrDefault();
-                    var lge = terraceSpace.Split(Vector3Int.down, AreaType.None, 1);
-                    var terrace = lge.LevelElements[1].SetAreaType(AreaType.Colonnade).GrammarNode(sym.Terrace, sym.FullFloorMarker);
-                    var roof = lge.LevelElements[0].SetAreaType(AreaType.FlatRoof).GrammarNode(sym.Roof);
-                    return new[]
-                    {
-                        state.Add(room).SetTo(terrace),
-                        state.Add(terrace).SetTo(roof),
-                    };
-                });
-        }
-
         public Production CourtyardFromRoom()
         {
             return new Production(
@@ -90,39 +49,6 @@ namespace ShapeGrammar
                     var room = pp.Param;
                     var roomCubeGroup = room.LE.CG();
 
-                    /*var courtyards =
-                    // for give parametrization
-                        ExtensionMethods.HorizontalDirections().Shuffle()
-                        .Select(dir =>
-
-                        // create a new object
-                        roomCubeGroup
-                        .CubeGroupMaxLayer(dir)
-                        .OpAdd()
-                        .ExtrudeHor().ExtrudeHor().Minus(roomCubeGroup)
-                        .OpNew()
-
-                        .LE(AreaType.Yard))
-
-                        // fail if no such object exists
-                        .Where(le => le.CG().AllAreNotTaken() && state.CanBeFounded(le));
-                    if (!courtyards.Any())
-                        return null;
-
-                    var courtyard = courtyards.FirstOrDefault().GrammarNode(sym.Courtyard, sym.FullFloorMarker);
-
-                    courtyard.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
-                    var door = ldk.con.ConnectByDoor(room.LE, courtyard.LE).GrammarNode();
-
-                    // and modify the dag
-                    var foundation = ldk.sgShapes.Foundation(courtyard.LE).GrammarNode(sym.Foundation);
-                    return new[]
-                    {
-                        state.Add(room).SetTo(courtyard),
-                        state.Add(courtyard).SetTo(foundation),
-                        state.Add(room, courtyard).SetTo(door),
-                    };*/
-                    
                     // Reduces number of characters (withou spaces) from ~800 to ~480, from 34 lines to 22
                     return state.NewProgram()
                         .SelectOne(
@@ -145,7 +71,7 @@ namespace ShapeGrammar
                         .PlaceNode(room)
                         .FindPath(() => ldk.con.ConnectByDoor(room.LE, courtyard.LE).GrammarNode(), out var door)
                         .PlaceNode(room, courtyard)
-                        .Found(courtyard, out var foundation)
+                        .Found()
                         .PlaceNode(courtyard)
                         .AppliedOperations;
                      
@@ -460,8 +386,8 @@ namespace ShapeGrammar
                     var what = pp.Param;
                     var whatCG = what.LE.CG();
 
-                    var newRoom = toF();
-                    var newRoomAtGround = newRoom.MoveBottomTo(0);
+                    var createdRoom = toF();
+                    var newRoomAtGround = createdRoom.MoveBottomTo(0);
 
                     var newRooms = pathGuide.SelectDirections(what.LE)
                         .SelectNN(dir =>
@@ -514,44 +440,41 @@ namespace ShapeGrammar
                         state.Add(what, newRoomGN).SetTo(bridge),
                         };
                     }
-                    /*
+                    
                     // reduced from 1450 to 1050 characters, from 80 lines to 34 lines
-                     state.NewProgram()
+                    /* return state.NewProgram()
                         .SelectOne(
                             state.NewProgram()
                                 .Directional(pathGuide.SelectDirections(what.LE),
-                                    dir =>
-                                        var boundingBox = whatCG.CubeGroupMaxLayer(Vector3Int.down).ExtrudeDir(dir, 10, false).LE();
-                                        if (boundingBox.CG().Intersects(state.WorldState.Added.CG()))
-                                            return null;
-
-                                        return boundingBox.MoveBottomTo(0);
+                                    dir => whatCG.CubeGroupMaxLayer(Vector3Int.down).ExtrudeDir(dir, 10, false).LE().GrammarNode()
                                 )
                                 .DontIntersectAdded()
-                                .Change(boundingBox => boundingBox.MoveBottomTo(0))
+                                .Change(boundingBox => boundingBox.LE.MoveBottomTo(0).GrammarNode())
                                 .Change(boundingBox =>
                                     {
-                                        var validMoves = newRoomAtGround
-                                            .MovesToIntersect(boundingBox).XZ()
+                                        var validMoves = createdRoom.MoveBottomTo(0)
+                                            .MovesToIntersect(boundingBox.LE).XZ()
                                             .DontIntersect(state.VerticallyTaken);
-                                        return pathGuide.SelectMove(validMoves).TryMove();
+                                        return pathGuide.SelectMove(validMoves).TryMove().GrammarNode();
                                     })
                                 .Change(
-                                    newRoomDown => newRoomDown.MoveBottomTo(whatCG.LeftBottomBack().y).GrammarNode(sym.Room(), sym.FullFloorMarker)
-                                )
+                                    newRoomDown => newRoomDown.LE.MoveBottomTo(whatCG.LeftBottomBack().y).GrammarNode(sym.Room(), sym.FullFloorMarker)
+                                ),
                                 out var newRoom
                         )
                         .PlaceNode(what)
-                        .If(addFloorAbove)
-                            .Set(newRoom.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GrammarNode(sym.RoomReservation(newRoomGN))
-                            .NotTaken()
-                            .PlaceNode(newRoom)
-                        .EndIf()
-                        .FindPath(() => ldk.con.ConnectByBridge(what.LE, newRoomGN.LE, state.WorldState.Added).GrammarNode(), out var bridge)
-                        .PlaceNode(what, newRoomGN)
-                        .Found(newRoomGN, out var foundation)
-                        .PlaceNode(newRoomGN)
-                     */
+                        .ApplyOperationsIf(addFloorAbove,
+                            () => state.NewProgram()
+                                .Set(newRoom.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GrammarNode(sym.RoomReservation(newRoom)))
+                                .NotTaken()
+                                .PlaceNode(newRoom)
+                        )
+                        .FindPath(() => ldk.con.ConnectByBridge(what.LE, newRoom.LE, state.WorldState.Added).GrammarNode(), out var bridge)
+                        .PlaceNode(what, newRoom)
+                        .Found(newRoom, out var foundation)
+                        .PlaceNode(newRoom)
+                        .AppliedOperations;*/
+                     
                 });
         }
 

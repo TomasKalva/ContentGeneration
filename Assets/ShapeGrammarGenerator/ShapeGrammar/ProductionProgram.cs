@@ -14,6 +14,7 @@ namespace ShapeGrammar
         ShapeGrammarState State { get; }
         bool Failed { get; set; }
 
+
         ProductionProgram SetFailed(bool value)
         {
             Failed = value;
@@ -65,13 +66,12 @@ namespace ShapeGrammar
             return this;
         }
 
-        public ProductionProgram Found(Node what, out Node foundation)
+        public ProductionProgram Found()
         {
-            foundation = null;
             if (Failed)
                 return this;
 
-            foundation = ldk.sgShapes.Foundation(what.LE).GrammarNode(pr.sym.Foundation);
+            CurrentNodes = CurrentNodes.Select(node => ldk.sgShapes.Foundation(node.LE).GrammarNode(pr.sym.Foundation));
             return this;
         }
 
@@ -101,10 +101,46 @@ namespace ShapeGrammar
             CurrentNodes = CurrentNodes.Where(node => State.CanBeFounded(node.LE));
             return this;
         }
-        /*
-        public ProductionProgram GetDirection(PathGuide pathGuide)
+
+        public ProductionProgram DontIntersectAdded()
         {
-            Directions = pathGuide.SelectDirections()
-        }*/
+            if (Failed)
+                return this;
+
+            CurrentNodes = CurrentNodes.Where(node => node.LE.CG().Intersects(State.WorldState.Added.CG()));
+            return this;
+        }
+
+        public ProductionProgram Change(Func<Node, Node> changer)
+        {
+            if (Failed)
+                return this;
+
+            CurrentNodes = CurrentNodes.Select(changer);
+            return this;
+        }
+
+        public ProductionProgram ApplyOperationsIf(bool condition, Func<ProductionProgram> programF)
+        {
+            if (Failed)
+                return this;
+
+            if (condition)
+            {
+                var program = programF();
+                AppliedOperations.AddRange(program.AppliedOperations);
+                Failed = program.Failed;
+            }
+            return this;
+        }
+
+        public ProductionProgram Set(params Node[] nodes)
+        {
+            if (Failed)
+                return this;
+
+            CurrentNodes = nodes;
+            return this;
+        }
     }
 }
