@@ -244,24 +244,30 @@ namespace ShapeGrammar
                         .SelectOne(
                             state.NewProgram()
                                 .Set(() => roomF().GN())
-                                .Change(roomAtGround => 
+                                .Change(newRoom => 
                                     ldk.pl.MoveNearXZ(
                                         what.LE.MoveBottomTo(0), 
-                                        roomAtGround.LE.MoveBottomTo(0), 
+                                        newRoom.LE.MoveBottomTo(0), 
                                         state.VerticallyTaken).GN())
                                 .Change(validNewRoom => validNewRoom.LE.MoveBottomTo(whatCG.LeftBottomBack().y).GN(sym.Room(), sym.FullFloorMarker)),
                             out var newRoom
                             )
                         .PlaceNodes(what)
+
                         .Found()
                         .PlaceNodes(newRoom)
+
+                        .Set(() => newRoom)
+                        .ReserveUpward(2)
+                        /*
                         .SelectOne(
                             state.NewProgram()
                                 .Set(() => newRoom.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GN(sym.RoomReservation(newRoom)))
                                 .NotTaken(),
                             out var reservation
-                            )
+                            )*/
                         .PlaceNodes(newRoom)
+
                         .FindPath(() => ldk.con.ConnectByDoor(newRoom.LE, what.LE).GN(), out var door)
                         .PlaceNodes(newRoom, what);
                 });
@@ -306,8 +312,10 @@ namespace ShapeGrammar
                         .PlaceNodes(newRoom)
                         .ApplyOperationsIf(addFloorAbove,
                             () => state.NewProgram()
-                                .Set(() => newRoom.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GN(sym.RoomReservation(newRoom)))
-                                .NotTaken()
+                                .Set(() => newRoom)
+                                .ReserveUpward(2)
+                                //.Set(() => newRoom.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GN(sym.RoomReservation(newRoom)))
+                                //.NotTaken()
                                 .PlaceNodes(newRoom)
                         )
                         .FindPath(() => ldk.con.ConnectByBridge(what.LE, newRoom.LE, state.WorldState.Added).GN(), out var bridge)
@@ -360,6 +368,18 @@ namespace ShapeGrammar
                         state.Add(newRoomGN, bottomRoom).SetTo(fall),
 
                     });
+                    /*
+                    return state.NewProgram()
+                        .SelectOne(
+                            state.NewProgram()
+                                .Set(() => roomFromToF().GN())
+                                .Change(newRoom => ldk.pl.MoveNearXZ(what.LE.MoveBottomTo(0), newRoom.LE.MoveBottomTo(0), state.VerticallyTaken).GN())
+                                .Change(newRoomAtGround => newRoomAtGround.LE.MoveBottomTo(whatCG.LeftBottomBack().y).GN(sym.Room(false, 1), sym.FullFloorMarker))
+                                ,
+                            out var newRoom0
+                        )
+                        .PlaceNodes(what)
+                        .*/
                 });
         }
 

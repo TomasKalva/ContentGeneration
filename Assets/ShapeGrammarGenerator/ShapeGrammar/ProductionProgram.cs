@@ -99,6 +99,23 @@ namespace ShapeGrammar
             return this;
         }
 
+        public ProductionProgram ReserveUpward(int height)
+        {
+            if (Failed)
+                return this;
+
+            CurrentNodes = CurrentNodes
+                .Select(node =>
+                    State.NewProgram()
+                        .Set(() => node.LE.CG().ExtrudeVer(Vector3Int.up, height).LE(AreaType.RoomReservation).GN(pr.sym.RoomReservation(node)))
+                        .NotTaken()
+                )
+                .Where(prog => !prog.Failed)
+                .SelectMany(prog => prog.CurrentNodes);
+            return this;
+            
+        }
+
         public ProductionProgram Directional(IEnumerable<Vector3Int> directions, Func<Vector3Int, Node> nodeCreator)
         {
             if (Failed)
