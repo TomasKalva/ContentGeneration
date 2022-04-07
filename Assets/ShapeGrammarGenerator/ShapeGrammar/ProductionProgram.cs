@@ -11,15 +11,11 @@ namespace ShapeGrammar
     {
         public static LevelDevelopmentKit ldk { get; set; }
         public static Productions pr { get; set; }
+        public static StyleRules StyleRules { get; set; }
+
+
         ShapeGrammarState State { get; }
         bool Failed { get; set; }
-
-
-        ProductionProgram SetFailed(bool value)
-        {
-            Failed = value;
-            return this;
-        }
 
         IEnumerable<Node> CurrentNodes { get; set; }
         public List<Operation> AppliedOperations { get; }
@@ -28,6 +24,12 @@ namespace ShapeGrammar
         {
             AppliedOperations = new List<Operation>();
             this.State = state;
+        }
+
+        ProductionProgram SetFailed(bool value)
+        {
+            Failed = value;
+            return this;
         }
 
         public ProductionProgram SelectOne(ProductionProgram program, out Node result)
@@ -53,10 +55,28 @@ namespace ShapeGrammar
 
             path = pathFinder();
             Debug.Assert(path != null);
+            CurrentNodes = path.ToEnumerable();
+
             return this;
         }
 
-        public ProductionProgram PlaceNode(params Node[] from)
+        /// <summary>
+        /// Used, because path finding requires information about floor...
+        /// Maybe just assume that entire bottom layer is filled with floor to get rid of this call.
+        /// </summary>
+        public ProductionProgram ApplyStyles(params Node[] from)
+        {
+            if (Failed)
+                return this;
+
+            foreach(var node in AppliedOperations.SelectMany(op => op.To))
+            {
+                node.LE.ApplyGrammarStyleRules(StyleRules);
+            }
+            return this;
+        }
+
+        public ProductionProgram PlaceNodes(params Node[] from)
         {
             if (Failed)
                 return this;

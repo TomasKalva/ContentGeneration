@@ -68,11 +68,12 @@ namespace ShapeGrammar
                                 .CanBeFounded(),
                             out var courtyard
                         )
-                        .PlaceNode(room)
-                        .FindPath(() => ldk.con.ConnectByDoor(room.LE, courtyard.LE).GrammarNode(), out var door)
-                        .PlaceNode(room, courtyard)
+                        .PlaceNodes(room)
                         .Found()
-                        .PlaceNode(courtyard)
+                        .PlaceNodes(courtyard)
+                        .ApplyStyles()
+                        .FindPath(() => ldk.con.ConnectByDoor(room.LE, courtyard.LE).GrammarNode(), out var door)
+                        .PlaceNodes(room, courtyard)
                         .AppliedOperations;
                      
                 });
@@ -462,19 +463,19 @@ namespace ShapeGrammar
                                 ),
                                 out var newRoom
                         )
-                        .PlaceNode(what)
+                        .PlaceNodes(what)
+                        .Found()
+                        .PlaceNodes(newRoom)
                         .ApplyOperationsIf(addFloorAbove,
                             () => state.NewProgram()
                                 .Set(newRoom.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GrammarNode(sym.RoomReservation(newRoom)))
                                 .NotTaken()
-                                .PlaceNode(newRoom)
+                                .PlaceNodes(newRoom)
                         )
                         .FindPath(() => ldk.con.ConnectByBridge(what.LE, newRoom.LE, state.WorldState.Added).GrammarNode(), out var bridge)
-                        .PlaceNode(what, newRoom)
-                        .Found(newRoom, out var foundation)
-                        .PlaceNode(newRoom)
-                        .AppliedOperations;*/
-                     
+                        .PlaceNodes(what, newRoom)
+                        .AppliedOperations;
+                     */
                 });
         }
 
