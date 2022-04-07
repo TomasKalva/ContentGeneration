@@ -164,6 +164,13 @@ namespace ShapeGrammar
             return this;
         }
 
+        public ProductionProgram Set(Func<Node> nodesF, out Node result)
+        {
+            Set(() => nodesF().ToEnumerable());
+            result = CurrentNodes.First();
+            return this;
+        }
+
         public ProductionProgram Set(Func<Node> nodesF)
         {
             return Set(() => nodesF().ToEnumerable());

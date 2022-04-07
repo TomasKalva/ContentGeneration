@@ -177,46 +177,27 @@ namespace ShapeGrammar
                 {
                     var bridge = pp.Param;
                     var courtyardCubeGroup = bridge.LE.CG();
-
-                    var dir = bridge.GetSymbol<Bridge>().Direction;
-                    var maybeNewBridge =
-                        // create a new object
-                        courtyardCubeGroup
-                        .ExtrudeDir(dir, 4)
-                        .LE(AreaType.Bridge).GN(sym.Bridge(dir), sym.FullFloorMarker).ToEnumerable()
-
-                        // fail if no such object exists
-                        .Where(gn => gn.LE.CG().AllAreNotTaken() && state.CanBeFounded(gn.LE));
-                    if (!maybeNewBridge.Any())
-                        return null;
-
-                    var newBridge = maybeNewBridge.FirstOrDefault();
-
-                    newBridge.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
-
-                    // and modify the dag
-                    var foundation = ldk.sgShapes.BridgeFoundation(newBridge.LE, dir).GN(sym.Foundation);
-                    return new[]
-                    {
-                        state.Add(bridge).SetTo(newBridge),
-                        state.Add(newBridge).SetTo(foundation),
-                    };
-
-                    /*
-                    // Incredible simplification :O
                     
-                    state.NewProgram()
-                        .Set(courtyardCubeGroup
+                    var dir = bridge.GetSymbol<Bridge>().Direction;
+                    // Incredible simplification :O
+
+                    return state.NewProgram()
+                        .Set(() => courtyardCubeGroup
                             .ExtrudeDir(dir, 4)
-                            .LE(AreaType.Bridge).GrammarNode(sym.Bridge(dir), sym.FullFloorMarker).ToEnumerable(),
+                            .LE(AreaType.Bridge).GN(sym.Bridge(dir), sym.FullFloorMarker),
                             out var newBridge
                         )
                         .NotTaken()
                         .CanBeFounded()
-                        .PlaceNode(bridge)
-                        .Found(courtyard, out var foundation)
-                        .PlaceNode(newBridge)
-                     */
+                        .PlaceNodes(bridge)
+                        .Found()
+                        .Set(() => ldk.sgShapes.BridgeFoundation(
+                            newBridge.LE,
+                            newBridge.GetSymbol<Bridge>().Direction
+                            ).GN(sym.Foundation))
+                        .PlaceNodes(newBridge)
+                        .AppliedOperations;
+                     
                 });
         }
 
