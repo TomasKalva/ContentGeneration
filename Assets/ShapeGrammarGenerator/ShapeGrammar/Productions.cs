@@ -12,10 +12,12 @@ namespace ShapeGrammar
     {
         public LevelDevelopmentKit ldk { get; }
         public Symbols sym { get; } = new Symbols();
+        public ProductionProgram proc { get; }
 
         public Productions(LevelDevelopmentKit ldk)
         {
             this.ldk = ldk;
+            proc = new ProductionProgram(ldk);
         }
 
         public Production CreateNewHouse()
@@ -122,6 +124,32 @@ namespace ShapeGrammar
                         state.Add(courtyard).SetTo(foundation),
                         state.Add(room, courtyard).SetTo(door),
                     };
+                    /*
+                    // Reduces number of characters (withou spaces) from ~800 to ~480, from 34 lines to 22
+                    state.NewProgram()
+                        .SelectOne(
+                            state.NewProgram()
+                                .Directional(pathGuide.SelectDirections(room),
+                                    dir =>
+                                        roomCubeGroup
+                                        .CubeGroupMaxLayer(dir)
+                                        .OpAdd()
+                                            .ExtrudeHor().ExtrudeHor().Minus(roomCubeGroup)
+                                        .OpNew()
+
+                                        .LE(AreaType.Yard)
+                                        .GrammarNode(sym.Courtyard, sym.FullFloorMarker)
+                                )
+                                .NotTaken()
+                                .CanBeFounded(),
+                            out var courtyard
+                        )
+                        .PlaceNode(room)
+                        .FindPath(() => ldk.con.ConnectByDoor(room.LE, courtyard.LE).GrammarNode(), out var door)
+                        .PlaceNode(room, courtyard)
+                        .Found(courtyard, out var foundation)
+                        .PlaceNode(courtyard)
+                     */
                 });
         }
 
@@ -258,6 +286,22 @@ namespace ShapeGrammar
                         state.Add(bridge).SetTo(newBridge),
                         state.Add(newBridge).SetTo(foundation),
                     };
+
+                    /*
+                    // Incredible simplification :O
+                    
+                    state.NewProgram()
+                        .Set(courtyardCubeGroup
+                            .ExtrudeDir(dir, 4)
+                            .LE(AreaType.Bridge).GrammarNode(sym.Bridge(dir), sym.FullFloorMarker).ToEnumerable(),
+                            out var newBridge
+                        )
+                        .NotTaken()
+                        .CanBeFounded()
+                        .PlaceNode(bridge)
+                        .Found(courtyard, out var foundation)
+                        .PlaceNode(newBridge)
+                     */
                 });
         }
 
@@ -471,6 +515,44 @@ namespace ShapeGrammar
                         state.Add(what, newRoomGN).SetTo(bridge),
                         };
                     }
+                    /*
+                    // reduced from 1450 to 1050 characters, from 80 lines to 34 lines
+                     state.NewProgram()
+                        .SelectOne(
+                            state.NewProgram()
+                                .Directional(pathGuide.SelectDirections(what.LE),
+                                    dir =>
+                                        var boundingBox = whatCG.CubeGroupMaxLayer(Vector3Int.down).ExtrudeDir(dir, 10, false).LE();
+                                        if (boundingBox.CG().Intersects(state.WorldState.Added.CG()))
+                                            return null;
+
+                                        return boundingBox.MoveBottomTo(0);
+                                )
+                                .DontIntersectAdded()
+                                .Change(boundingBox => boundingBox.MoveBottomTo(0))
+                                .Change(boundingBox =>
+                                    {
+                                        var validMoves = newRoomAtGround
+                                            .MovesToIntersect(boundingBox).XZ()
+                                            .DontIntersect(state.VerticallyTaken);
+                                        return pathGuide.SelectMove(validMoves).TryMove();
+                                    })
+                                .Change(
+                                    newRoomDown => newRoomDown.MoveBottomTo(whatCG.LeftBottomBack().y).GrammarNode(sym.Room(), sym.FullFloorMarker)
+                                )
+                                out var newRoom
+                        )
+                        .PlaceNode(what)
+                        .If(addFloorAbove)
+                            .Set(newRoom.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GrammarNode(sym.RoomReservation(newRoomGN))
+                            .NotTaken()
+                            .PlaceNode(newRoom)
+                        .EndIf()
+                        .FindPath(() => ldk.con.ConnectByBridge(what.LE, newRoomGN.LE, state.WorldState.Added).GrammarNode(), out var bridge)
+                        .PlaceNode(what, newRoomGN)
+                        .Found(newRoomGN, out var foundation)
+                        .PlaceNode(newRoomGN)
+                     */
                 });
         }
 

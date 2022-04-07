@@ -139,7 +139,7 @@ namespace ShapeGrammar
 
             grammarState.Print(new PrintingState()).Show();
             grammarState.Stats.Print();
-            grammarState.ShowVerticallyTaken(ldk.houseStyleRules);
+            //grammarState.ShowVerticallyTaken(ldk.houseStyleRules);
 
             var level = grammarState.WorldState.Added;
             return level;
