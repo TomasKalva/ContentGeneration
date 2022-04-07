@@ -80,7 +80,7 @@ namespace ShapeGrammar
 
     public class Production
     {
-        public delegate IEnumerable<Operation> Effect(ShapeGrammarState shapeGrammarState, ProdParams prodParams);
+        public delegate ProductionProgram Effect(ShapeGrammarState shapeGrammarState, ProdParams prodParams);
 
         public string Name { get; }
         Effect ExpandNewNodes { get; }
@@ -101,14 +101,14 @@ namespace ShapeGrammar
             foreach (var pp in parameters)
             {
                 triedParameters++;
-                var ops = ExpandNewNodes(shapeGrammarState, pp);
-                if (ops == null)
+                var programState = ExpandNewNodes(shapeGrammarState, pp);
+                if (programState == null || programState.Failed)
                 {
                     ProdParamsManager.Failed.Add(pp);
                 }
                 else
                 {
-                    return ops;
+                    return programState.AppliedOperations;
                 }
             }
             return null;

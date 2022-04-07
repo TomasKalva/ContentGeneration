@@ -321,6 +321,13 @@ namespace ShapeGrammar
             return new ProductionProgram(this);
         }
 
+        public ProductionProgram NewProgramBadMethodDestroyItASAP(Operation[] operations)
+        {
+            var prog = new ProductionProgram(this);
+            prog.AppliedOperations = operations.ToList();
+            return prog;
+        }
+
         #region Operation factories
         public Operation Add(params Node[] from)
         {

@@ -15,10 +15,10 @@ namespace ShapeGrammar
 
 
         ShapeGrammarState State { get; }
-        bool Failed { get; set; }
+        public bool Failed { get; private set; }
 
         IEnumerable<Node> CurrentNodes { get; set; }
-        public List<Operation> AppliedOperations { get; }
+        public List<Operation> AppliedOperations { get; set; }
 
         public ProductionProgram(ShapeGrammarState state)
         {

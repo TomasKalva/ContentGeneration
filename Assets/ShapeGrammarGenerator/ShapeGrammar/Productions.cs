@@ -30,12 +30,14 @@ namespace ShapeGrammar
                     var movedRoom = ldk.pl.MoveToNotOverlap(state.WorldState.Added, room).GN(sym.Room(), sym.FullFloorMarker);
                     var foundation = ldk.sgShapes.Foundation(movedRoom.LE).GN(sym.Foundation);
                     var reservation = movedRoom.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GN(sym.RoomReservation(movedRoom));
-                    return new[]
+
+
+                    return state.NewProgramBadMethodDestroyItASAP(new[]
                     {
                         state.Add(root).SetTo(movedRoom),
                         state.Add(movedRoom).SetTo(foundation),
                         state.Add(movedRoom).SetTo(reservation)
-                    };
+                    });
                 });
         }
 
@@ -72,8 +74,7 @@ namespace ShapeGrammar
                         .Found()
                         .PlaceNodes(courtyard)
                         .FindPath(() => ldk.con.ConnectByDoor(room.LE, courtyard.LE).GN(), out var door)
-                        .PlaceNodes(room, courtyard)
-                        .AppliedOperations;
+                        .PlaceNodes(room, courtyard);
                      
                 });
         }
@@ -116,8 +117,7 @@ namespace ShapeGrammar
                         .Found()
                         .PlaceNodes(newCourtyard)
                         .FindPath(() => ldk.con.ConnectByStairsInside(courtyard.LE, newCourtyard.LE).GN(), out var p)
-                        .PlaceNodes(courtyard, newCourtyard)
-                        .AppliedOperations;
+                        .PlaceNodes(courtyard, newCourtyard);
                 });
         }
 
@@ -163,8 +163,7 @@ namespace ShapeGrammar
                             bridge.LE,
                             bridge.GetSymbol<Bridge>().Direction
                             ).GN(sym.Foundation))
-                        .PlaceNodes(bridge)
-                        .AppliedOperations;
+                        .PlaceNodes(bridge);
                 });
         }
 
@@ -195,8 +194,7 @@ namespace ShapeGrammar
                             newBridge.LE,
                             newBridge.GetSymbol<Bridge>().Direction
                             ).GN(sym.Foundation))
-                        .PlaceNodes(newBridge)
-                        .AppliedOperations;
+                        .PlaceNodes(newBridge);
                      
                 });
         }
@@ -227,8 +225,7 @@ namespace ShapeGrammar
                         .CanBeFounded()
                         .PlaceNodes(bridge)
                         .Found()
-                        .PlaceNodes(newCourtyard)
-                        .AppliedOperations;
+                        .PlaceNodes(newCourtyard);
                     
                 });
         }
@@ -302,14 +299,14 @@ namespace ShapeGrammar
                     // and modify the dag
                     var foundation = ldk.sgShapes.Foundation(newRoomGN.LE).GN(sym.Foundation);
                     var reservation = newRoomGN.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GN(sym.RoomReservation(newRoomGN));
-                    return new[]
+                    return state.NewProgramBadMethodDestroyItASAP(new[]
                     {
                         state.Add(what).SetTo(newRoomGN),
                         state.Add(newRoomGN).SetTo(foundation),
                         state.Add(newRoomGN).SetTo(reservation),
                         state.Add(newRoomGN, what).SetTo(door),
                         
-                    };
+                    });
 
                     /*
                     Maybe clearer syntax that requires more helper methods
@@ -382,8 +379,7 @@ namespace ShapeGrammar
                                 .PlaceNodes(newRoom)
                         )
                         .FindPath(() => ldk.con.ConnectByBridge(what.LE, newRoom.LE, state.WorldState.Added).GN(), out var bridge)
-                        .PlaceNodes(what, newRoom)
-                        .AppliedOperations;
+                        .PlaceNodes(what, newRoom);
                      
                 });
         }
@@ -422,7 +418,7 @@ namespace ShapeGrammar
                     var fall = ldk.con.ConnectByFall(newRoomGN.LE, bottomRoom.LE).GN();
                     var foundation = ldk.sgShapes.Foundation(bottomRoom.LE).GN(sym.Foundation);
                     var reservation = newRoomGN.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GN(sym.RoomReservation(newRoomGN));
-                    return new[]
+                    return state.NewProgramBadMethodDestroyItASAP(new[]
                     {
                         state.Add(what).SetTo(newRoomGN),
                         state.Add(newRoomGN).SetTo(bottomRoom),
@@ -431,7 +427,7 @@ namespace ShapeGrammar
                         state.Add(newRoomGN, what).SetTo(door),
                         state.Add(newRoomGN, bottomRoom).SetTo(fall),
 
-                    };
+                    });
                 });
         }
 
@@ -488,14 +484,14 @@ namespace ShapeGrammar
                     var fall = ldk.con.ConnectByFall(newRoomGN.LE, to.LE).GN();
                     Debug.Assert(fall != null);
 
-                    return new[]
+                    return state.NewProgramBadMethodDestroyItASAP(new[]
                     {
                         state.Add(from).SetTo(newRoomGN),
                         state.Add(newRoomGN).SetTo(foundation),
                         state.Add(newRoomGN).SetTo(reservation),
                         state.Add(newRoomGN, to).SetTo(fall),
                         state.Add(newRoomGN, from).SetTo(stairs),
-                    };
+                    });
                 });
         }
 
@@ -555,7 +551,7 @@ namespace ShapeGrammar
                     var foundation = ldk.sgShapes.Foundation(newHouse.LE).GN(sym.Foundation);
                     var startFoundation = ldk.sgShapes.Foundation(start).GN(sym.Foundation);
                     var endFoundation = ldk.sgShapes.Foundation(end).GN(sym.Foundation);
-                    return new[]
+                    return state.NewProgramBadMethodDestroyItASAP(new[]
                     {
                         state.Add(room).SetTo(newHouse),
 
@@ -568,7 +564,7 @@ namespace ShapeGrammar
                         state.Add(newHouse, room).SetTo(door),
                         state.Add(newHouse).SetTo(start.GN(), middleGn, end.GN()),
                         state.Replace(middleGn).SetTo(path.GN())
-                    };
+                    });
                 });
         }
 
@@ -603,12 +599,12 @@ namespace ShapeGrammar
                     var stairs = ldk.con.ConnectByWallStairsIn(roomBelow.LE, nextFloor.LE).GN();
 
                     // and modify the dag
-                    return new[]
+                    return state.NewProgramBadMethodDestroyItASAP(new[]
                     {
                         state.Replace(roomReservation).SetTo(nextFloor),
                         state.Add(roomBelow, nextFloor).SetTo(stairs),
                         state.Add(nextFloor).SetTo(newReservation),
-                    };
+                    });
                 });
         }
 
@@ -650,12 +646,12 @@ namespace ShapeGrammar
                     var cliffFoundation = ldk.sgShapes.CliffFoundation(garden.LE).GN(sym.Foundation);
                     var stairs = ldk.con.ConnectByElevator(courtyard.LE, garden.LE).GN();
 
-                    return new[]
+                    return state.NewProgramBadMethodDestroyItASAP(new[]
                     {
                         state.Add(courtyard).SetTo(garden),
                         state.Add(garden).SetTo(cliffFoundation),
                         state.Add(garden, courtyard).SetTo(stairs),
-                    };
+                    });
                 });
         }
 
@@ -671,10 +667,10 @@ namespace ShapeGrammar
                     var roof = roomReservation.LE.SetAreaType(AreaType.Roof).GN(sym.Roof);
 
                     // and modify the dag
-                    return new[]
+                    return state.NewProgramBadMethodDestroyItASAP(new[]
                     {
                         state.Replace(roomReservation).SetTo(roof),
-                    };
+                    });
                 });
         }
 
