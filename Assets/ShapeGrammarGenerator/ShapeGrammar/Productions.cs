@@ -249,12 +249,14 @@ namespace ShapeGrammar
                         .SelectOne(
                             state.NewProgram()
                                 .Set(() => roomF().GN())
-                                .Change(newRoom => 
+                                .MoveNearTo(what)
+                                /*.Change(newRoom => 
                                     ldk.pl.MoveNearXZ(
                                         what.LE.MoveBottomTo(0), 
                                         newRoom.LE.MoveBottomTo(0), 
                                         state.VerticallyTaken)?.GN())
-                                .Change(validNewRoom => validNewRoom.LE.MoveBottomTo(whatCG.LeftBottomBack().y).GN(sym.Room(), sym.FullFloorMarker)),
+                                .Change(validNewRoom => validNewRoom.LE.MoveBottomTo(whatCG.LeftBottomBack().y)*/
+                                .Change(node => node.LE.GN(sym.Room(), sym.FullFloorMarker)),
                             out var newRoom
                             )
                         .PlaceNodes(what)
@@ -337,11 +339,13 @@ namespace ShapeGrammar
                         .SelectOne(
                             state.NewProgram()
                                 .Set(() => roomFromToF().GN())
-                                .Change(newRoom => ldk.pl.MoveNearXZ(
+                                .MoveNearTo(what)
+                                /*.Change(newRoom => ldk.pl.MoveNearXZ(
                                     what.LE.MoveBottomTo(0), 
                                     newRoom.LE.MoveBottomTo(0), 
                                     state.VerticallyTaken)?.GN())
-                                .Change(newRoomAtGround => newRoomAtGround.LE.MoveBottomTo(whatCG.LeftBottomBack().y).GN(sym.Room(false, 1), sym.FullFloorMarker))
+                                .Change(newRoomAtGround => newRoomAtGround.LE.MoveBottomTo(whatCG.LeftBottomBack().y)*/
+                                .Change(node => node.LE.GN(sym.Room(false, 1), sym.FullFloorMarker))
                                 ,
                             out var newRoom
                         )

@@ -211,5 +211,15 @@ namespace ShapeGrammar
             CurrentNodes = nodesF();
             return this;
         }
+
+        public ProductionProgram MoveNearTo(Node nearWhat)
+        {
+            Change(node => ldk.pl.MoveNearXZ(
+                                    nearWhat.LE.MoveBottomTo(0),
+                                    node.LE.MoveBottomTo(0),
+                                    State.VerticallyTaken)?.GN())
+            .Change(validNewRoom => validNewRoom.LE.MoveBottomTo(nearWhat.LE.CG().LeftBottomBack().y).GN());
+            return this;
+        }
     }
 }
