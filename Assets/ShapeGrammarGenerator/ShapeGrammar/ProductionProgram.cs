@@ -123,6 +123,15 @@ namespace ShapeGrammar
             return this;
         }
 
+        public ProductionProgram NonEmpty()
+        {
+            if (Failed)
+                return this;
+
+            CurrentNodes = CurrentNodes.Where(node => node.LE.Cubes().Any());
+            return this;
+        }
+
         public ProductionProgram DontIntersectAdded()
         {
             if (Failed)
@@ -155,12 +164,17 @@ namespace ShapeGrammar
             return this;
         }
 
-        public ProductionProgram Set(params Node[] nodes)
+        public ProductionProgram Set(Func<Node> nodesF)
+        {
+            return Set(() => nodesF().ToEnumerable());
+        }
+
+        public ProductionProgram Set(Func<IEnumerable<Node>> nodesF)
         {
             if (Failed)
                 return this;
 
-            CurrentNodes = nodes;
+            CurrentNodes = nodesF();
             return this;
         }
     }

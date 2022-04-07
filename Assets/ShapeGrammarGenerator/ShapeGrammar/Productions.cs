@@ -92,11 +92,11 @@ namespace ShapeGrammar
                         .SelectOne(
                             state.NewProgram()
                                 .Set(
-                                    courtyardGroup
+                                    () => courtyardGroup
                                         .AllSpecialCorners().CG()
                                         .CubeGroupMaxLayer(Vector3Int.down)
                                         .Where(cube => cube.Position.y >= 4)
-                                        .Cubes.Select(cube => cube.Group().LE().GN()).ToArray()
+                                        .Cubes.Select(cube => cube.Group().LE().GN())
                                 )
                                 .Change(startCube =>
                                     startCube.LE.CG()
@@ -129,48 +129,42 @@ namespace ShapeGrammar
                 (state, pp) =>
                 {
                     var courtyard = pp.Param;
-                    //var courtyard = state.WithActiveSymbols(sym.Courtyard);
-                    var courtyardCubeGroup = courtyard.LE.CG();
+                    var courtyardCG = courtyard.LE.CG();
+                    
+                    return state.NewProgram()
+                        .SelectOne(
+                            state.NewProgram()
+                                .Directional(ExtensionMethods.HorizontalDirections().Shuffle(),
+                                    dir =>
+                                    {
+                                        var orthDir = dir.OrthogonalHorizontalDirs().First();
+                                        var width = courtyardCG.ExtentsDir(orthDir);
+                                        var bridgeWidth = 3;
+                                        var shrinkL = (int)Mathf.Floor((width - bridgeWidth) / 2f);
+                                        var shrinkR = (int)Mathf.Ceil((width - bridgeWidth) / 2f);
 
-                    var bridges =
-                    // for give parametrization
-                        ExtensionMethods.HorizontalDirections().Shuffle()
-                        .Select(dir =>
-                        {
-                            var orthDir = dir.OrthogonalHorizontalDirs().First();
-                            var width = courtyardCubeGroup.ExtentsDir(orthDir);
-                            var bridgeWidth = 3;
-                            var shrinkL = (int)Mathf.Floor((width - bridgeWidth) / 2f);
-                            var shrinkR = (int)Mathf.Ceil((width - bridgeWidth) / 2f);
-                            // create a new object
-                            return courtyardCubeGroup
-                                .ExtrudeDir(dir, 4)
-                                .OpSub()
-                                    .ExtrudeDir(orthDir, -shrinkL)
-                                    .ExtrudeDir(-orthDir, -shrinkR)
-                                .OpNew()
+                                        return courtyardCG
+                                            .ExtrudeDir(dir, 4)
+                                            .OpSub()
+                                                .ExtrudeDir(orthDir, -shrinkL)
+                                                .ExtrudeDir(-orthDir, -shrinkR)
+                                            .OpNew()
 
-                                .LE(AreaType.Bridge).GN(sym.Bridge(dir), sym.FullFloorMarker);
-                        })
-                        // fail if no such object exists
-                        .Where(gn => gn.LE.Cubes().Any())
-                        .Where(gn => gn.LE.CG().AllAreNotTaken() && state.CanBeFounded(gn.LE));
-                    if (!bridges.Any())
-                        return null;
-
-                    var bridge = bridges.FirstOrDefault();
-
-                    bridge.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
-
-                    var brDir = bridge.GetSymbol<Bridge>().Direction;
-
-                    // and modify the dag
-                    var foundation = ldk.sgShapes.BridgeFoundation(bridge.LE, brDir).GN(sym.Foundation);
-                    return new[]
-                    {
-                        state.Add(courtyard).SetTo(bridge),
-                        state.Add(bridge).SetTo(foundation),
-                    };
+                                            .LE(AreaType.Bridge).GN(sym.Bridge(dir), sym.FullFloorMarker);
+                                    }
+                                )
+                                .NonEmpty()
+                                .NotTaken()
+                                .CanBeFounded(),
+                            out var bridge
+                        )
+                        .PlaceNodes(courtyard)
+                        .Set(() => ldk.sgShapes.BridgeFoundation(
+                            bridge.LE,
+                            bridge.GetSymbol<Bridge>().Direction
+                            ).GN(sym.Foundation))
+                        .PlaceNodes(bridge)
+                        .AppliedOperations;
                 });
         }
 
@@ -410,7 +404,7 @@ namespace ShapeGrammar
                         .PlaceNodes(newRoom)
                         .ApplyOperationsIf(addFloorAbove,
                             () => state.NewProgram()
-                                .Set(newRoom.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GN(sym.RoomReservation(newRoom)))
+                                .Set(() => newRoom.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GN(sym.RoomReservation(newRoom)))
                                 .NotTaken()
                                 .PlaceNodes(newRoom)
                         )

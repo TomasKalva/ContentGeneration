@@ -96,7 +96,7 @@ namespace ShapeGrammar
                 pr.AddRoof(),
             };
 
-            var shapeGrammar = new RandomGrammarEvaluator(productionList, 10);
+            var shapeGrammar = new RandomGrammarEvaluator(productionList, 30);
 
 
             var gardenGrammar =
@@ -137,7 +137,7 @@ namespace ShapeGrammar
 
             var newNodes = grammarState.ApplyProduction(pr.CreateNewHouse());
             shapeGrammar.Evaluate(grammarState);
-            gardenGrammar.Evaluate(grammarState);
+            //gardenGrammar.Evaluate(grammarState);
             roofGrammar.Evaluate(grammarState);
 
 
