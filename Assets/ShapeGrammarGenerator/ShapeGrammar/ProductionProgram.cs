@@ -90,17 +90,30 @@ namespace ShapeGrammar
             return this;
         }
 
-        public ProductionProgram Found()
+        public ProductionProgram Found() => Found(out var _);
+
+        /// <summary>
+        /// Returned node is not in derivation. It is just a container of newly created level elements.
+        /// </summary>
+        public ProductionProgram Found(out Node foundation)
         {
+            foundation = null;
             if (Failed)
                 return this;
 
             CurrentNodes = CurrentNodes.Select(node => ldk.sgShapes.Foundation(node.LE).GN(pr.sym.Foundation));
+            foundation = CurrentNodes.Select(node => node.LE).ToLevelGroupElement(ldk.grid).GN();
             return this;
         }
 
-        public ProductionProgram RoomReserveUpward(int height)
+        public ProductionProgram RoomReserveUpward(int height) => RoomReserveUpward(height, out var _);
+
+        /// <summary>
+        /// Returned node is not in derivation. It is just a container of newly created level elements.
+        /// </summary>
+        public ProductionProgram RoomReserveUpward(int height, out Node reservation)
         {
+            reservation = null;
             if (Failed)
                 return this;
 
@@ -112,6 +125,8 @@ namespace ShapeGrammar
                 )
                 .Where(prog => !prog.Failed)
                 .SelectMany(prog => prog.CurrentNodes);
+
+            reservation = CurrentNodes.Select(node => node.LE).ToLevelGroupElement(ldk.grid).GN();
             return this;
             
         }

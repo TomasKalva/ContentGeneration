@@ -93,6 +93,7 @@ namespace ShapeGrammar
 
         public LevelGeometryElement ConnectByBalconyStairsOutside(LevelElement le1, LevelElement le2, LevelElement notIntersecting)
         {
+            // todo: the path can moved through both start and end so it isn't connected just by balconies, maybe fix this
             var start = RoomEdgesWithFloor(le1);
             var end = RoomEdgesWithFloor(le2);
 

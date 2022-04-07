@@ -250,12 +250,6 @@ namespace ShapeGrammar
                             state.NewProgram()
                                 .Set(() => roomF().GN())
                                 .MoveNearTo(what)
-                                /*.Change(newRoom => 
-                                    ldk.pl.MoveNearXZ(
-                                        what.LE.MoveBottomTo(0), 
-                                        newRoom.LE.MoveBottomTo(0), 
-                                        state.VerticallyTaken)?.GN())
-                                .Change(validNewRoom => validNewRoom.LE.MoveBottomTo(whatCG.LeftBottomBack().y)*/
                                 .Change(node => node.LE.GN(sym.Room(), sym.FullFloorMarker)),
                             out var newRoom
                             )
@@ -340,11 +334,6 @@ namespace ShapeGrammar
                             state.NewProgram()
                                 .Set(() => roomFromToF().GN())
                                 .MoveNearTo(what)
-                                /*.Change(newRoom => ldk.pl.MoveNearXZ(
-                                    what.LE.MoveBottomTo(0), 
-                                    newRoom.LE.MoveBottomTo(0), 
-                                    state.VerticallyTaken)?.GN())
-                                .Change(newRoomAtGround => newRoomAtGround.LE.MoveBottomTo(whatCG.LeftBottomBack().y)*/
                                 .Change(node => node.LE.GN(sym.Room(false, 1), sym.FullFloorMarker))
                                 ,
                             out var newRoom
@@ -397,43 +386,29 @@ namespace ShapeGrammar
                     var fromCG = from.LE.CG();
                     var toCG = to.LE.CG();
 
-                    var newRoom = roomFromF();
-                    //
-                    var newRoomAtGround = newRoom.MoveBottomTo(0);
-                    var validNewRoom = ldk.pl.MoveNearXZ(to.LE.MoveBottomTo(0), newRoomAtGround, state.VerticallyTaken);
-                    if (validNewRoom == null)
-                        return null;
+                    return state.NewProgram()
+                        .SelectOne(
+                            state.NewProgram()
+                                .Set(() => roomFromF().GN())
+                                .MoveNearTo(to)
+                                .Change(node => node.LE.MoveBy(Vector3Int.up).GN(sym.Room(false, 1), sym.FullFloorMarker))
+                                ,
+                            out var newRoom
+                        )
+                        .PlaceNodes(from)
 
+                        .Found(out var foundation)
+                        .PlaceNodes(newRoom)
 
-                    var newRoomGN = validNewRoom.MoveBottomTo(toCG.LeftBottomBack().y + 1).GN(sym.Room(false, 1), sym.FullFloorMarker);
+                        .Set(() => newRoom)
+                        .RoomReserveUpward(2, out var reservation)
+                        .PlaceNodes(newRoom)
 
-                    //
+                        .FindPath(() => ldk.con.ConnectByBalconyStairsOutside(from.LE, newRoom.LE, state.WorldState.Added.Merge(foundation.LE).Merge(reservation.LE)).GN(), out var stairs)
+                        .PlaceNodes(newRoom, from)
 
-                    newRoomGN.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
-                    var foundation = ldk.sgShapes.Foundation(newRoomGN.LE).GN(sym.Foundation);
-                    var reservation = newRoomGN.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GN(sym.RoomReservation(newRoomGN));
-
-                    from.Print(new PrintingState()).Show();
-                    
-
-                    // might fail in some rare cases => todo: add a teleporter connection in case it fails
-                    var stairs = ldk.con.ConnectByBalconyStairsOutside(from.LE, newRoomGN.LE, state.WorldState.Added.Merge(foundation.LE).Merge(reservation.LE)).GN();
-                    Debug.Assert(stairs != null);
-
-                    // and modify the dag
-
-
-                    var fall = ldk.con.ConnectByFall(newRoomGN.LE, to.LE).GN();
-                    Debug.Assert(fall != null);
-
-                    return state.NewProgramBadMethodDestroyItASAP(new[]
-                    {
-                        state.Add(from).SetTo(newRoomGN),
-                        state.Add(newRoomGN).SetTo(foundation),
-                        state.Add(newRoomGN).SetTo(reservation),
-                        state.Add(newRoomGN, to).SetTo(fall),
-                        state.Add(newRoomGN, from).SetTo(stairs),
-                    });
+                        .FindPath(() => ldk.con.ConnectByFall(newRoom.LE, to.LE).GN(), out var fall)
+                        .PlaceNodes(newRoom, to);
                 });
         }
 
