@@ -316,6 +316,11 @@ namespace ShapeGrammar
             return le.Cubes().All(cube => OffersFoundation[new Vector3Int(cube.Position.x, 0, cube.Position.z)]);
         }
 
+        public ProductionProgram NewProgram()
+        {
+            return new ProductionProgram(this);
+        }
+
         #region Operation factories
         public Operation Add(params Node[] from)
         {
@@ -335,6 +340,7 @@ namespace ShapeGrammar
 
         #endregion
 
+        #region Visualization
         public PrintingState Print(PrintingState state)
         {
             Stats.AppliedProductions().ForEach(appliedPr =>
@@ -361,5 +367,6 @@ namespace ShapeGrammar
         {
             VerticallyTaken.SetAreaType(AreaType.Garden).ApplyGrammarStyleRules(houseStyleRules);
         }
+        #endregion
     }
 }

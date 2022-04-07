@@ -65,6 +65,8 @@ namespace ShapeGrammar
         public override LevelElement CreateLevel()
         {
             var pr = new Productions(ldk);
+            ProductionProgram.pr = pr;
+            ProductionProgram.ldk = ldk;
             var grammarState = new ShapeGrammarState(ldk);
 
             var productionList = TestingProductions(pr);

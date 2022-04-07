@@ -12,12 +12,10 @@ namespace ShapeGrammar
     {
         public LevelDevelopmentKit ldk { get; }
         public Symbols sym { get; } = new Symbols();
-        public ProductionProgram proc { get; }
 
         public Productions(LevelDevelopmentKit ldk)
         {
             this.ldk = ldk;
-            proc = new ProductionProgram(ldk);
         }
 
         public Production CreateNewHouse()
@@ -92,7 +90,7 @@ namespace ShapeGrammar
                     var room = pp.Param;
                     var roomCubeGroup = room.LE.CG();
 
-                    var courtyards =
+                    /*var courtyards =
                     // for give parametrization
                         ExtensionMethods.HorizontalDirections().Shuffle()
                         .Select(dir =>
@@ -123,13 +121,13 @@ namespace ShapeGrammar
                         state.Add(room).SetTo(courtyard),
                         state.Add(courtyard).SetTo(foundation),
                         state.Add(room, courtyard).SetTo(door),
-                    };
-                    /*
+                    };*/
+                    
                     // Reduces number of characters (withou spaces) from ~800 to ~480, from 34 lines to 22
-                    state.NewProgram()
+                    return state.NewProgram()
                         .SelectOne(
                             state.NewProgram()
-                                .Directional(pathGuide.SelectDirections(room),
+                                .Directional(ExtensionMethods.HorizontalDirections().Shuffle(),
                                     dir =>
                                         roomCubeGroup
                                         .CubeGroupMaxLayer(dir)
@@ -149,7 +147,8 @@ namespace ShapeGrammar
                         .PlaceNode(room, courtyard)
                         .Found(courtyard, out var foundation)
                         .PlaceNode(courtyard)
-                     */
+                        .AppliedOperations;
+                     
                 });
         }
 
