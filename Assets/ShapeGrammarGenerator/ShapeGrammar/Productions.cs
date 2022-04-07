@@ -388,7 +388,7 @@ namespace ShapeGrammar
                     var whatCG = what.LE.CG();
 
                     var createdRoom = toF();
-                    var newRoomAtGround = createdRoom.MoveBottomTo(0);
+                    /*var newRoomAtGround = createdRoom.MoveBottomTo(0);
 
                     var newRooms = pathGuide.SelectDirections(what.LE)
                         .SelectNN(dir =>
@@ -440,10 +440,10 @@ namespace ShapeGrammar
                         state.Add(newRoomGN).SetTo(foundation),
                         state.Add(what, newRoomGN).SetTo(bridge),
                         };
-                    }
+                    }*/
                     
                     // reduced from 1450 to 1050 characters, from 80 lines to 34 lines
-                    /* return state.NewProgram()
+                    return state.NewProgram()
                         .SelectOne(
                             state.NewProgram()
                                 .Directional(pathGuide.SelectDirections(what.LE),
@@ -456,7 +456,7 @@ namespace ShapeGrammar
                                         var validMoves = createdRoom.MoveBottomTo(0)
                                             .MovesToIntersect(boundingBox.LE).XZ()
                                             .DontIntersect(state.VerticallyTaken);
-                                        return pathGuide.SelectMove(validMoves).TryMove().GrammarNode();
+                                        return pathGuide.SelectMove(validMoves).TryMove()?.GrammarNode();
                                     })
                                 .Change(
                                     newRoomDown => newRoomDown.LE.MoveBottomTo(whatCG.LeftBottomBack().y).GrammarNode(sym.Room(), sym.FullFloorMarker)
@@ -472,10 +472,11 @@ namespace ShapeGrammar
                                 .NotTaken()
                                 .PlaceNodes(newRoom)
                         )
+                        .ApplyStyles()
                         .FindPath(() => ldk.con.ConnectByBridge(what.LE, newRoom.LE, state.WorldState.Added).GrammarNode(), out var bridge)
                         .PlaceNodes(what, newRoom)
                         .AppliedOperations;
-                     */
+                     
                 });
         }
 

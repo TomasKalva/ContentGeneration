@@ -127,7 +127,7 @@ namespace ShapeGrammar
             if (Failed)
                 return this;
 
-            CurrentNodes = CurrentNodes.Where(node => node.LE.CG().Intersects(State.WorldState.Added.CG()));
+            CurrentNodes = CurrentNodes.Where(node => !node.LE.CG().Intersects(State.WorldState.Added.CG()));
             return this;
         }
 
@@ -136,7 +136,7 @@ namespace ShapeGrammar
             if (Failed)
                 return this;
 
-            CurrentNodes = CurrentNodes.Select(changer);
+            CurrentNodes = CurrentNodes.SelectNN(changer);
             return this;
         }
 
