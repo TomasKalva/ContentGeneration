@@ -548,7 +548,7 @@ namespace ShapeGrammar
                     var possibleStartCubes = courtyardCubeGroup.CubeGroupMaxLayer(Vector3Int.down).ExtrudeHor().MoveBy(3 * Vector3Int.down).NotTaken();
                     if (!possibleStartCubes.Cubes.Any())
                         return null;
-
+                    
                     var gardens =
                         ExtensionMethods.HorizontalDirections().Shuffle()
                         .Select(dir =>
@@ -578,6 +578,31 @@ namespace ShapeGrammar
                         state.Add(garden).SetTo(cliffFoundation),
                         state.Add(garden, courtyard).SetTo(stairs),
                     });
+                    /*
+                    return state.NewProgram()
+                        .SelectOne(
+                            state.NewProgram()
+                                //.Set(() => courtyardCubeGroup.CubeGroupMaxLayer(Vector3Int.down).ExtrudeHor().MoveBy(3 * Vector3Int.down).LE().GN())
+                                .Directional(ExtensionMethods.HorizontalDirections().Shuffle(),
+                                    dir =>
+                                        ldk.sgShapes.IslandExtrudeIter(possibleStartCubes.CubeGroupMaxLayer(dir), 3, 0.7f)
+                                            .LE(AreaType.Garden).Minus(state.WorldState.Added)
+                                            .MapGeom(cg => cg
+                                                .SplitToConnected().ArgMax(cg => cg.Cubes.Count)
+                                                .OpAdd().ExtrudeVer(Vector3Int.up, 3))
+                                            .GN(sym.Garden, sym.FullFloorMarker)
+                                )
+                                .Where(garden => garden.LE.Cubes().Count() >= 8)
+                                .CanBeFounded(),
+                            out var garden
+                        )
+                        .PlaceNodes(courtyard)
+                        
+                        .Set(() => ldk.sgShapes.CliffFoundation(garden.LE).GN(sym.Foundation))
+                        .PlaceNodes(garden)
+
+                        .FindPath(() => ldk.con.ConnectByElevator(courtyard.LE, garden.LE).GN(), out var elevator)
+                        .PlaceNodes(garden, courtyard)*/
                 });
         }
 

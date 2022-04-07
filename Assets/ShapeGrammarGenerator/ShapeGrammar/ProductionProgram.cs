@@ -162,32 +162,20 @@ namespace ShapeGrammar
             return this;
         }
 
-        public ProductionProgram CanBeFounded()
+        public ProductionProgram Where(Func<Node, bool> condition)
         {
             if (Failed)
                 return this;
 
-            CurrentNodes = CurrentNodes.Where(node => State.CanBeFounded(node.LE));
+            CurrentNodes = CurrentNodes.Where(condition);
             return this;
         }
 
-        public ProductionProgram NonEmpty()
-        {
-            if (Failed)
-                return this;
+        public ProductionProgram CanBeFounded() => Where(node => State.CanBeFounded(node.LE));
 
-            CurrentNodes = CurrentNodes.Where(node => node.LE.Cubes().Any());
-            return this;
-        }
+        public ProductionProgram NonEmpty() => Where(node => node.LE.Cubes().Any());
 
-        public ProductionProgram DontIntersectAdded()
-        {
-            if (Failed)
-                return this;
-
-            CurrentNodes = CurrentNodes.Where(node => !node.LE.CG().Intersects(State.WorldState.Added.CG()));
-            return this;
-        }
+        public ProductionProgram DontIntersectAdded() => Where(node => !node.LE.CG().Intersects(State.WorldState.Added.CG()));
 
         public ProductionProgram Change(Func<Node, Node> changer)
         {
