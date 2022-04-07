@@ -209,35 +209,27 @@ namespace ShapeGrammar
                 (state, pp) =>
                 {
                     var bridge = pp.Param;
-                    var courtyardCubeGroup = bridge.LE.CG();
-
+                    var bridgeCubeGroup = bridge.LE.CG();
                     var dir = bridge.GetSymbol<Bridge>().Direction;
-                    var maybeNewCourtyard =
-                        // create a new object
-                        courtyardCubeGroup
-                        .ExtrudeDir(dir, 4)
-                        .OpAdd()
-                            .ExtrudeDir(dir.OrthogonalHorizontalDirs().First(), 1)
-                            .ExtrudeDir(dir.OrthogonalHorizontalDirs().Last(), 1)
-                        .OpNew()
-                        .LE(AreaType.Yard).GN(sym.Courtyard, sym.FullFloorMarker).ToEnumerable()
 
-                        // fail if no such object exists
-                        .Where(gn => gn.LE.CG().AllAreNotTaken() && state.CanBeFounded(gn.LE));
-                    if (!maybeNewCourtyard.Any())
-                        return null;
-
-                    var newCourtyard = maybeNewCourtyard.FirstOrDefault();
-
-                    newCourtyard.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
-
-                    // and modify the dag
-                    var foundation = ldk.sgShapes.Foundation(newCourtyard.LE).GN(sym.Foundation);
-                    return new[]
-                    {
-                        state.Add(bridge).SetTo(newCourtyard),
-                        state.Add(newCourtyard).SetTo(foundation),
-                    };
+                    return state.NewProgram()
+                        .Set(
+                            () => bridgeCubeGroup
+                            .ExtrudeDir(dir, 4)
+                            .OpAdd()
+                                .ExtrudeDir(dir.OrthogonalHorizontalDirs().First(), 1)
+                                .ExtrudeDir(dir.OrthogonalHorizontalDirs().Last(), 1)
+                            .OpNew()
+                            .LE(AreaType.Yard).GN(sym.Courtyard, sym.FullFloorMarker),
+                            out var newCourtyard
+                        )
+                        .NotTaken()
+                        .CanBeFounded()
+                        .PlaceNodes(bridge)
+                        .Found()
+                        .PlaceNodes(newCourtyard)
+                        .AppliedOperations;
+                    
                 });
         }
 

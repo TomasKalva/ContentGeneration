@@ -82,6 +82,9 @@ namespace ShapeGrammar
             if (Failed)
                 return this;
 
+            if (!CurrentNodes.Any())
+                return SetFailed(true);
+
             var op = State.Add(from).SetTo(CurrentNodes.ToArray());
             AppliedOperations.Add(op);
             return this;
