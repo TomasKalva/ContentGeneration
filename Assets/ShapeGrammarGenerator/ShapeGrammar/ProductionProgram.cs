@@ -99,7 +99,7 @@ namespace ShapeGrammar
             return this;
         }
 
-        public ProductionProgram ReserveUpward(int height)
+        public ProductionProgram RoomReserveUpward(int height)
         {
             if (Failed)
                 return this;
@@ -186,6 +186,10 @@ namespace ShapeGrammar
 
         public ProductionProgram Set(Func<Node> nodesF, out Node result)
         {
+            result = null;
+            if (Failed)
+                return this;
+
             Set(() => nodesF().ToEnumerable());
             result = CurrentNodes.First();
             return this;
@@ -193,6 +197,9 @@ namespace ShapeGrammar
 
         public ProductionProgram Set(Func<Node> nodesF)
         {
+            if (Failed)
+                return this;
+
             return Set(() => nodesF().ToEnumerable());
         }
 

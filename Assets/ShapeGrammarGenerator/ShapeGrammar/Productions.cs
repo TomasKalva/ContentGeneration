@@ -71,8 +71,10 @@ namespace ShapeGrammar
                             out var courtyard
                         )
                         .PlaceNodes(room)
+
                         .Found()
                         .PlaceNodes(courtyard)
+
                         .FindPath(() => ldk.con.ConnectByDoor(room.LE, courtyard.LE).GN(), out var door)
                         .PlaceNodes(room, courtyard);
                      
@@ -114,8 +116,10 @@ namespace ShapeGrammar
                             out var newCourtyard
                         )
                         .PlaceNodes(courtyard)
+
                         .Found()
                         .PlaceNodes(newCourtyard)
+
                         .FindPath(() => ldk.con.ConnectByStairsInside(courtyard.LE, newCourtyard.LE).GN(), out var p)
                         .PlaceNodes(courtyard, newCourtyard);
                 });
@@ -159,6 +163,7 @@ namespace ShapeGrammar
                             out var bridge
                         )
                         .PlaceNodes(courtyard)
+
                         .Set(() => ldk.sgShapes.BridgeFoundation(
                             bridge.LE,
                             bridge.GetSymbol<Bridge>().Direction
@@ -178,7 +183,6 @@ namespace ShapeGrammar
                     var courtyardCubeGroup = bridge.LE.CG();
                     
                     var dir = bridge.GetSymbol<Bridge>().Direction;
-                    // Incredible simplification :O
 
                     return state.NewProgram()
                         .Set(() => courtyardCubeGroup
@@ -189,7 +193,7 @@ namespace ShapeGrammar
                         .NotTaken()
                         .CanBeFounded()
                         .PlaceNodes(bridge)
-                        .Found()
+
                         .Set(() => ldk.sgShapes.BridgeFoundation(
                             newBridge.LE,
                             newBridge.GetSymbol<Bridge>().Direction
@@ -224,6 +228,7 @@ namespace ShapeGrammar
                         .NotTaken()
                         .CanBeFounded()
                         .PlaceNodes(bridge)
+
                         .Found()
                         .PlaceNodes(newCourtyard);
                     
@@ -248,7 +253,7 @@ namespace ShapeGrammar
                                     ldk.pl.MoveNearXZ(
                                         what.LE.MoveBottomTo(0), 
                                         newRoom.LE.MoveBottomTo(0), 
-                                        state.VerticallyTaken).GN())
+                                        state.VerticallyTaken)?.GN())
                                 .Change(validNewRoom => validNewRoom.LE.MoveBottomTo(whatCG.LeftBottomBack().y).GN(sym.Room(), sym.FullFloorMarker)),
                             out var newRoom
                             )
@@ -258,14 +263,7 @@ namespace ShapeGrammar
                         .PlaceNodes(newRoom)
 
                         .Set(() => newRoom)
-                        .ReserveUpward(2)
-                        /*
-                        .SelectOne(
-                            state.NewProgram()
-                                .Set(() => newRoom.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GN(sym.RoomReservation(newRoom)))
-                                .NotTaken(),
-                            out var reservation
-                            )*/
+                        .RoomReserveUpward(2)
                         .PlaceNodes(newRoom)
 
                         .FindPath(() => ldk.con.ConnectByDoor(newRoom.LE, what.LE).GN(), out var door)
@@ -308,16 +306,17 @@ namespace ShapeGrammar
                                 out var newRoom
                         )
                         .PlaceNodes(what)
+
                         .Found()
                         .PlaceNodes(newRoom)
+
                         .ApplyOperationsIf(addFloorAbove,
                             () => state.NewProgram()
                                 .Set(() => newRoom)
-                                .ReserveUpward(2)
-                                //.Set(() => newRoom.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GN(sym.RoomReservation(newRoom)))
-                                //.NotTaken()
+                                .RoomReserveUpward(2)
                                 .PlaceNodes(newRoom)
                         )
+
                         .FindPath(() => ldk.con.ConnectByBridge(what.LE, newRoom.LE, state.WorldState.Added).GN(), out var bridge)
                         .PlaceNodes(what, newRoom);
                      
@@ -334,52 +333,39 @@ namespace ShapeGrammar
                     var what = pp.Param;
                     var whatCG = what.LE.CG();
 
-                    var newRoom = roomFromToF();
-                    //
-                    var newRoomAtGround = newRoom.MoveBottomTo(0);
-                    var validNewRoom = ldk.pl.MoveNearXZ(what.LE.MoveBottomTo(0), newRoomAtGround, state.VerticallyTaken);
-                    if (validNewRoom == null)
-                        return null;
-
-
-                    var newRoomGN = validNewRoom.MoveBottomTo(whatCG.LeftBottomBack().y).GN(sym.Room(false, 1), sym.FullFloorMarker);
-                    //
-
-                    newRoomGN.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
-
-                    var door = ldk.con.ConnectByDoor(newRoomGN.LE, what.LE).GN();
-                    Debug.Assert(door != null);
-
-                    // and modify the dag
-
-                    var bottomRoom = newRoomGN.LE.CG().ExtrudeVer(Vector3Int.down, 2).LE(AreaType.Room).GN(sym.Room(false, 0), sym.FullFloorMarker);
-                    bottomRoom.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
-
-                    var fall = ldk.con.ConnectByFall(newRoomGN.LE, bottomRoom.LE).GN();
-                    var foundation = ldk.sgShapes.Foundation(bottomRoom.LE).GN(sym.Foundation);
-                    var reservation = newRoomGN.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GN(sym.RoomReservation(newRoomGN));
-                    return state.NewProgramBadMethodDestroyItASAP(new[]
-                    {
-                        state.Add(what).SetTo(newRoomGN),
-                        state.Add(newRoomGN).SetTo(bottomRoom),
-                        state.Add(bottomRoom).SetTo(foundation),
-                        state.Add(bottomRoom).SetTo(reservation),
-                        state.Add(newRoomGN, what).SetTo(door),
-                        state.Add(newRoomGN, bottomRoom).SetTo(fall),
-
-                    });
-                    /*
                     return state.NewProgram()
                         .SelectOne(
                             state.NewProgram()
                                 .Set(() => roomFromToF().GN())
-                                .Change(newRoom => ldk.pl.MoveNearXZ(what.LE.MoveBottomTo(0), newRoom.LE.MoveBottomTo(0), state.VerticallyTaken).GN())
+                                .Change(newRoom => ldk.pl.MoveNearXZ(
+                                    what.LE.MoveBottomTo(0), 
+                                    newRoom.LE.MoveBottomTo(0), 
+                                    state.VerticallyTaken)?.GN())
                                 .Change(newRoomAtGround => newRoomAtGround.LE.MoveBottomTo(whatCG.LeftBottomBack().y).GN(sym.Room(false, 1), sym.FullFloorMarker))
                                 ,
-                            out var newRoom0
+                            out var newRoom
                         )
                         .PlaceNodes(what)
-                        .*/
+                        
+                        .RoomReserveUpward(2)
+                        .PlaceNodes(what)
+                        
+                        .Set(() =>
+                            newRoom.LE.CG().ExtrudeVer(Vector3Int.down, 2).LE(AreaType.Room).GN(sym.Room(false, 0), sym.FullFloorMarker),
+                            out var bottomRoom
+                        )
+                        .PlaceNodes(newRoom)
+                        
+                        .Found()
+                        .PlaceNodes(bottomRoom)
+
+                        .FindPath(() => ldk.con.ConnectByDoor(newRoom.LE, what.LE).GN(), out var door)
+                        .PlaceNodes(newRoom, what)
+
+                        // The door doesn't get overwritten by apply style only because it has higher priority, which doesn't feel robust enough
+                        .FindPath(() => ldk.con.ConnectByFall(newRoom.LE, bottomRoom.LE).GN(), out var fall)
+                        .PlaceNodes(newRoom, bottomRoom);
+
                 });
         }
 
