@@ -27,6 +27,13 @@ namespace ShapeGrammar
         public Symbol Bridge(Vector3Int direction = default) => new Bridge("Bridge", direction);
         public Symbol Garden { get; } = new Symbol("Garden");
 
+        #region Graveyard
+        public Symbol Park { get; } = new Symbol("Graveyard");
+        public Symbol ChapelEntrance { get; } = new Symbol("ChapelEntrance");
+        public Symbol ChurchHall { get; } = new Symbol("ChurchHall");
+        public Symbol ChurchRoom { get; } = new Symbol("ChurchRoom");
+        #endregion
+
         public Symbol StartMarker { get; } = new Marker("Start");
         public Symbol EndMarker { get; } = new Marker("End");
         public Symbol ReturnToMarker { get; } = new Marker("ReturnToMarker");

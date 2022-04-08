@@ -133,6 +133,8 @@ namespace ShapeGrammar
             return new CubeGroup(QueriedGrid, cubes).LE(AreaType.None);
         }
 
+        public LevelGeometryElement GetFlatBox(int width, int depth) => GetFlatBox(new Box2Int(0, 0, width, depth), 0);
+
         /// <summary>
         /// Returns shapes whose cubes that overlap are cut out.
         /// </summary>

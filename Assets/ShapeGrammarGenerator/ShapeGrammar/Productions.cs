@@ -646,5 +646,72 @@ namespace ShapeGrammar
                 );
         }*/
 
+        #region Graveyard
+
+
+        public Production ParkNextTo(Symbol nextToWhat, Func<LevelElement> parkF)
+        {
+            return new Production(
+                $"ParkNextTo{nextToWhat.Name}",
+                new ProdParamsManager().AddNodeSymbols(nextToWhat),
+                (state, pp) =>
+                {
+                    var what = pp.Param;
+                    var whatCG = what.LE.CG();
+
+                    return state.NewProgram()
+                        .SelectOne(
+                            state.NewProgram()
+                                .Set(() => parkF().SetAreaType(AreaType.Garden).GN())
+                                .MoveNearTo(what)
+                                .Change(node => node.LE.GN(sym.Park, sym.FullFloorMarker)),
+                            out var newPark
+                            )
+                        .PlaceNodes(what)
+
+                        .Found()
+                        .PlaceNodes(newPark)
+
+                        //Replace with open connection
+                        .FindPath(() => ldk.con.ConnectByDoor(newPark.LE, what.LE).GN(), out var door)
+                        .PlaceNodes(newPark, what);
+                });
+        }
+
+        public Production DownwardPark(Symbol nextToWhat, int downAmount, Func<LevelElement> parkF)
+        {
+            return new Production(
+                $"DownwardPark_{nextToWhat.Name}",
+                new ProdParamsManager().AddNodeSymbols(nextToWhat)
+                    .SetCondition((state, pp) => pp.Param.LE.CG().LeftBottomBack().y > downAmount + 1),
+                (state, pp) =>
+                {
+                    var what = pp.Param;
+                    var whatCG = what.LE.CG();
+
+                    return state.NewProgram()
+                        .SelectOne(
+                            state.NewProgram()
+                                .Set(() => parkF().GN())
+                                .MoveNearTo(what)
+                                .Change(park => 
+                                    park.LE
+                                        .MoveBy(downAmount * Vector3Int.down).CG()
+                                        .OpAdd().ExtrudeVer(Vector3Int.up, downAmount).OpNew()
+                                        .LE(AreaType.Garden).GN())
+                                .Change(node => node.LE.GN(sym.Park, sym.FullFloorMarker)),
+                            out var newPark
+                            )
+                        .PlaceNodes(what)
+
+                        .Found()
+                        .PlaceNodes(newPark)
+
+                        //Replace with open connection
+                        .FindPath(() => ldk.con.ConnectByStairsInside(newPark.LE, what.LE).GN(), out var stairs)
+                        .PlaceNodes(newPark, what);
+                });
+        }
+        #endregion
     }
 }
