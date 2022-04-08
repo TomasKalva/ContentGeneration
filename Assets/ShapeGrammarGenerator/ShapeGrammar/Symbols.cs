@@ -19,7 +19,7 @@ namespace ShapeGrammar
         /// <summary>
         /// Serves as a space that can be turned into another part of a building or in a roof.
         /// </summary>
-        public Symbol UpwardReservation(Node roomBelow) => new RoomReservation("RoomReservation", roomBelow);
+        public Symbol UpwardReservation(Node roomBelow) => new UpwardReservation("RoomReservation", roomBelow);
         public Symbol Terrace { get; } = new Symbol("Terrace");
         public Symbol Roof { get; } = new Symbol("Roof");
         public Symbol Courtyard { get; } = new Symbol("Courtyard");
@@ -30,8 +30,8 @@ namespace ShapeGrammar
         #region Graveyard
         public Symbol Park { get; } = new Symbol("Graveyard");
         public Symbol ChapelEntrance { get; } = new Symbol("ChapelEntrance");
-        public Symbol ChurchHall { get; } = new Symbol("ChurchHall");
-        public Symbol ChurchRoom { get; } = new Symbol("ChurchRoom");
+        public Symbol ChapelHall(Vector3Int direction) => new ChapelHall("ChapelHall", direction);
+        public Symbol ChapelRoom { get; } = new Symbol("ChapelRoom");
         #endregion
 
         public Symbol StartMarker { get; } = new Marker("Start");
@@ -52,6 +52,16 @@ namespace ShapeGrammar
         public PrintingState Print(PrintingState state)
         {
             return state.Print(Name);
+        }
+    }
+
+    public class ChapelHall : Symbol
+    {
+        public Vector3Int Direction { get; }
+        
+        public ChapelHall(string name, Vector3Int direction) : base(name)
+        {
+            Direction = direction;
         }
     }
 
@@ -124,11 +134,11 @@ namespace ShapeGrammar
         }
     }
 
-    public class RoomReservation : Symbol
+    public class UpwardReservation : Symbol
     {
         public Node RoomBelow { get; }
 
-        public RoomReservation(string name, Node roomBelow) : base(name)
+        public UpwardReservation(string name, Node roomBelow) : base(name)
         {
             RoomBelow = roomBelow;
         }

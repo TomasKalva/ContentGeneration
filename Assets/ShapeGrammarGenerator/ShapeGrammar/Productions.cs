@@ -508,14 +508,14 @@ namespace ShapeGrammar
                     .AddNodeSymbols(sym.UpwardReservation(null))
                     .SetCondition((state, pp) =>
                     {
-                        var roomBelow = pp.Param.GetSymbol<RoomReservation>().RoomBelow.GetSymbol<Room>();
+                        var roomBelow = pp.Param.GetSymbol<UpwardReservation>().RoomBelow.GetSymbol<Room>();
                         return roomBelow.Plain && roomBelow.Floor <= 1;
                     })
                     ,
                 (state, pp) =>
                 {
                     var roomReservation = pp.Param;
-                    var roomBelow = roomReservation.GetSymbol<RoomReservation>().RoomBelow;
+                    var roomBelow = roomReservation.GetSymbol<UpwardReservation>().RoomBelow;
 
                     return state.NewProgram()
                         .Set(() => roomReservation.LE.SetAreaType(AreaType.Room)
@@ -745,11 +745,11 @@ namespace ShapeGrammar
                 });
         }
 
-        public Production ChapelHall(int length, PathGuide pathGuilde)
+        public Production ChapelHall(Symbol extendFrom, int length, PathGuide pathGuilde)
         {
             return new Production(
                 $"ChapelHall",
-                new ProdParamsManager().AddNodeSymbols(sym.ChapelEntrance),
+                new ProdParamsManager().AddNodeSymbols(extendFrom),
                 (state, pp) =>
                 {
                     var entrance = pp.Param;
@@ -760,7 +760,7 @@ namespace ShapeGrammar
                             state.NewProgram()
                                 .Directional(pathGuilde.SelectDirections(entrance.LE),
                                     dir =>
-                                        entrance.LE.CG().ExtrudeDir(dir, length).LE(AreaType.Room).GN(sym.ChurchHall)
+                                        entrance.LE.CG().ExtrudeDir(dir, length).LE(AreaType.Room).GN(sym.ChapelHall(dir))
                                 )
                                 .NotTaken()
                                 .CanBeFounded(),
@@ -775,9 +775,38 @@ namespace ShapeGrammar
                         .ReserveUpward(2)
                         .PlaceNodes(newChapelHall)
 
-                        //Replace with open connection
                         .FindPath(() => ldk.con.ConnectByDoor(newChapelHall.LE, entrance.LE).GN(), out var door)
                         .PlaceNodes(newChapelHall, entrance);
+                });
+        }
+
+        public Production ChapelRoom(int extrusionLength)
+        {
+            return new Production(
+                $"ChapelRoom",
+                new ProdParamsManager().AddNodeSymbols(sym.ChapelHall(default)),
+                (state, pp) =>
+                {
+                    var hall = pp.Param;
+
+                    return state.NewProgram()
+                        .Set(() => hall)
+                        .Change(h => h.LE.CG()
+                            .ExtrudeDir(hall.GetSymbol<ChapelHall>().Direction, extrusionLength).LE(AreaType.Room).GN(sym.ChapelRoom))
+                        .NotTaken()
+                        .CanBeFounded()
+                        .CurrentFirst(out var newRoom)
+                        .PlaceNodes(hall)
+                        
+                        .Found()
+                        .PlaceNodes(newRoom)
+
+                        .Set(() => newRoom)
+                        .ReserveUpward(4)
+                        .PlaceNodes(newRoom)
+                        
+                        .FindPath(() => ldk.con.ConnectByDoor(newRoom.LE, hall.LE).GN(), out var door)
+                        .PlaceNodes(newRoom, hall);
                 });
         }
         #endregion

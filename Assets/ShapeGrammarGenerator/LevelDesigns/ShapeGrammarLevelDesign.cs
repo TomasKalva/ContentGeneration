@@ -74,7 +74,9 @@ namespace ShapeGrammar
                 pr.DownwardPark(pr.sym.Park, 1, () => ldk.qc.GetFlatBox(3, 3)),
                 pr.DownwardPark(pr.sym.Park, 1, () => ldk.qc.GetFlatBox(5, 4)),
                 pr.ChapelNextTo(pr.sym.Park, () => ldk.qc.GetFlatBox(3, 3, 2)),
-                pr.ChapelHall(6, guideRandomly),
+                pr.ChapelHall(pr.sym.ChapelEntrance, 6, guideRandomly),
+                pr.ChapelHall(pr.sym.ChapelRoom, 6, guideRandomly),
+                pr.ChapelRoom(3),
 
 
             };
@@ -152,7 +154,7 @@ namespace ShapeGrammar
                         state => state.Root.AllDerived().ForEach(parent => parent.RemoveSymbolByName(pr.sym.ReturnToMarker))
                     );
 
-            var graveyardGrammar = new RandomGrammarEvaluator(Graveyard(pr), 20);
+            var graveyardGrammar = new RandomGrammarEvaluator(Graveyard(pr), 40);
 
             var roofGrammar = new AllGrammarEvaluator(roofs);
 

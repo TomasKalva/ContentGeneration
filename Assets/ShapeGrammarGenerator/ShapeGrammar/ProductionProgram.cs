@@ -17,7 +17,7 @@ namespace ShapeGrammar
         ShapeGrammarState State { get; }
         public bool Failed { get; private set; }
 
-        IEnumerable<Node> CurrentNodes { get; set; }
+        List<Node> CurrentNodes { get; set; }
         public List<Operation> AppliedOperations { get; set; }
 
         public ProductionProgram(ShapeGrammarState state)
@@ -42,7 +42,7 @@ namespace ShapeGrammar
                 return SetFailed(true);
 
             var node = program.CurrentNodes.GetRandom();
-            CurrentNodes = node.ToEnumerable();
+            CurrentNodes = node.ToEnumerable().ToList();
             result = node;
             return this;
         }
@@ -56,7 +56,7 @@ namespace ShapeGrammar
             ApplyStyles();
             path = pathFinder();
             Debug.Assert(path != null);
-            CurrentNodes = path.ToEnumerable();
+            CurrentNodes = path.ToEnumerable().ToList();
 
             return this;
         }
@@ -114,7 +114,7 @@ namespace ShapeGrammar
             if (Failed)
                 return this;
 
-            CurrentNodes = CurrentNodes.Select(node => ldk.sgShapes.Foundation(node.LE).GN(pr.sym.Foundation));
+            CurrentNodes = CurrentNodes.Select(node => ldk.sgShapes.Foundation(node.LE).GN(pr.sym.Foundation)).ToList();
             foundation = CurrentNodes.Select(node => node.LE).ToLevelGroupElement(ldk.grid).GN();
             return this;
         }
@@ -130,14 +130,18 @@ namespace ShapeGrammar
             if (Failed)
                 return this;
 
-            CurrentNodes = CurrentNodes
+            var reservations = CurrentNodes
                 .Select(node =>
                     State.NewProgram()
                         .Set(() => node.LE.CG().ExtrudeVer(Vector3Int.up, height).LE(AreaType.Reservation).GN(pr.sym.UpwardReservation(node)))
                         .NotTaken()
-                )
+                );
+            if (reservations.Any(prog => prog.Failed))
+                return SetFailed(true);
+
+            CurrentNodes = reservations
                 .Where(prog => !prog.Failed)
-                .SelectMany(prog => prog.CurrentNodes);
+                .SelectMany(prog => prog.CurrentNodes).ToList();
 
             reservation = CurrentNodes.Select(node => node.LE).ToLevelGroupElement(ldk.grid).GN();
             return this;
@@ -149,7 +153,7 @@ namespace ShapeGrammar
             if (Failed)
                 return this;
 
-            CurrentNodes = directions.Select(dir => nodeCreator(dir));
+            CurrentNodes = directions.Select(dir => nodeCreator(dir)).ToList();
             return this;
         }
 
@@ -158,7 +162,7 @@ namespace ShapeGrammar
             if (Failed)
                 return this;
 
-            CurrentNodes = CurrentNodes.Where(node => node.LE.CG().AllAreNotTaken());
+            CurrentNodes = CurrentNodes.Where(node => node.LE.CG().AllAreNotTaken()).ToList();
             return this;
         }
 
@@ -167,7 +171,7 @@ namespace ShapeGrammar
             if (Failed)
                 return this;
 
-            CurrentNodes = CurrentNodes.Where(condition);
+            CurrentNodes = CurrentNodes.Where(condition).ToList();
             return this;
         }
 
@@ -182,7 +186,21 @@ namespace ShapeGrammar
             if (Failed)
                 return this;
 
-            CurrentNodes = CurrentNodes.SelectNN(changer);
+            CurrentNodes = CurrentNodes.SelectNN(changer).ToList();
+            return this;
+        }
+
+        public ProductionProgram CurrentFirst(out Node first)
+        {
+            first = null;
+            if (Failed)
+                return this;
+
+            Debug.Log($"Current nodes count: {CurrentNodes.Count()}");
+            first = CurrentNodes.FirstOrDefault();
+            if (first == null)
+                return SetFailed(true);
+
             return this;
         }
 
@@ -224,7 +242,7 @@ namespace ShapeGrammar
             if (Failed)
                 return this;
 
-            CurrentNodes = nodesF();
+            CurrentNodes = nodesF().ToList();
             return this;
         }
 

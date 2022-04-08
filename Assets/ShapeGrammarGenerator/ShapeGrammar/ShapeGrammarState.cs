@@ -221,18 +221,20 @@ namespace ShapeGrammar
                 public List<Operation> Operations { get; }
                 public int TriedParameters { get; }
                 public bool Applied => Operations != null;
+                public int NumAddedNodes { get; }
 
-                public ProductionInstance(string name, List<Operation> operations, long timeMs, int triedParameters)
+                public ProductionInstance(string name, List<Operation> operations, long timeMs, int triedParameters, int numAddedNodes)
                 {
                     Name = name;
                     TimeMs = timeMs;
                     Operations = operations;
                     TriedParameters = triedParameters;
+                    NumAddedNodes = numAddedNodes;
                 }
 
                 public PrintingState Print(PrintingState state)
                 {
-                    state.PrintLine($"{(Applied  ? "Success:" : "Fail:\t")}\t{TimeMs}ms\t\t{TriedParameters} pars\t{Name}");
+                    state.PrintLine($"{(Applied  ? "Success:" : "Fail:\t")}\t{TimeMs}ms\t\t{TriedParameters} pars\t\t{NumAddedNodes} added\t\t{Name}");
                     return state;
                 }
             }
@@ -247,14 +249,14 @@ namespace ShapeGrammar
                 ProductionInstances = new List<ProductionInstance>();
             }
 
-            public void AddApplied(string name, IEnumerable<Operation> operations, long timeMs, int triedParameters)
+            public void AddApplied(string name, IEnumerable<Operation> operations, long timeMs, int triedParameters, int numAddedNodes)
             {
-                ProductionInstances.Add(new ProductionInstance(name, operations.ToList(), timeMs, triedParameters));
+                ProductionInstances.Add(new ProductionInstance(name, operations.ToList(), timeMs, triedParameters, numAddedNodes));
             }
 
             public void AddFailed(string name, long timeMs, int triedParameters)
             {
-                ProductionInstances.Add(new ProductionInstance(name, null, timeMs, triedParameters));
+                ProductionInstances.Add(new ProductionInstance(name, null, timeMs, triedParameters, 0));
             }
 
             public void Print()
@@ -294,8 +296,10 @@ namespace ShapeGrammar
             }
             else
             {
+                var dagBeforeCount = Root.AllDerived().Count();
                 var newNodes = operations.SelectMany(operation => operation.ChangeState(this)).Evaluate();
-                Stats.AddApplied(production.Name, operations.ToList(), elapsedMs, triedParameters);
+                var dagAfterCount = Root.AllDerived().Count();
+                Stats.AddApplied(production.Name, operations.ToList(), elapsedMs, triedParameters, dagAfterCount - dagBeforeCount);
                 LastCreated = newNodes;
                 return newNodes;
             }
