@@ -17,6 +17,9 @@ namespace ShapeGrammar
         ShapeGrammarState State { get; }
         public bool Failed { get; private set; }
 
+        /// <summary>
+        /// Not IEnumerable to prevent multiple evaluations.
+        /// </summary>
         List<Node> CurrentNodes { get; set; }
         public List<Operation> AppliedOperations { get; set; }
 
@@ -196,9 +199,19 @@ namespace ShapeGrammar
             if (Failed)
                 return this;
 
-            Debug.Log($"Current nodes count: {CurrentNodes.Count()}");
             first = CurrentNodes.FirstOrDefault();
             if (first == null)
+                return SetFailed(true);
+
+            return this;
+        }
+
+        public ProductionProgram Condition(Func<bool> condF)
+        {
+            if (Failed)
+                return this;
+
+            if (!condF())
                 return SetFailed(true);
 
             return this;

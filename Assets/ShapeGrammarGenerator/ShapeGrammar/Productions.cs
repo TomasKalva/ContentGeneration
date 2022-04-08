@@ -509,7 +509,7 @@ namespace ShapeGrammar
                     .SetCondition((state, pp) =>
                     {
                         var roomBelow = pp.Param.GetSymbol<UpwardReservation>().RoomBelow.GetSymbol<Room>();
-                        return roomBelow.Plain && roomBelow.Floor <= 1;
+                        return roomBelow != null && roomBelow.Plain && roomBelow.Floor <= 1;
                     })
                     ,
                 (state, pp) =>
@@ -615,7 +615,7 @@ namespace ShapeGrammar
                 (state, pp) =>
                 {
                     var roomReservation = pp.Param;
-                    var roof = roomReservation.LE.SetAreaType(AreaType.Roof).GN(sym.Roof);
+                    var roof = roomReservation.LE.SetAreaType(AreaType.GableRoof).GN(sym.Roof);
 
                     // and modify the dag
                     return state.NewProgramBadMethodDestroyItASAP(new[]
@@ -735,8 +735,7 @@ namespace ShapeGrammar
                         .Found()
                         .PlaceNodes(newChapelEntrance)
 
-                        .Set(() => newChapelEntrance)
-                        .ReserveUpward(2)
+                        .Set(() => newChapelEntrance.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.CrossRoof).GN(sym.Roof))
                         .PlaceNodes(newChapelEntrance)
 
                         //Replace with open connection
@@ -802,11 +801,77 @@ namespace ShapeGrammar
                         .PlaceNodes(newRoom)
 
                         .Set(() => newRoom)
-                        .ReserveUpward(4)
+                        .ReserveUpward(2)
                         .PlaceNodes(newRoom)
                         
                         .FindPath(() => ldk.con.ConnectByDoor(newRoom.LE, hall.LE).GN(), out var door)
                         .PlaceNodes(newRoom, hall);
+                });
+        }
+
+        public Production ChapelNextFloor(int nextFloorHeight)
+        {
+            return new Production(
+                $"ChapelNextFloor",
+                new ProdParamsManager()
+                    .AddNodeSymbols(sym.UpwardReservation(default))
+                    .SetCondition((state, pp) =>
+                    {
+                        var roomBelow = pp.Param.GetSymbol<UpwardReservation>().RoomBelow.GetSymbol<ChapelRoom>();
+                        return roomBelow != null;
+                    }),
+                (state, pp) =>
+                {
+                    var reservation = pp.Param;
+                    var reservationCG = reservation.LE.CG();
+                    var resHeight = reservationCG.Extents().y;
+                    var toExtrude = nextFloorHeight - resHeight;
+                    var roomBelow = pp.Param.GetSymbol<UpwardReservation>().RoomBelow;
+
+                    return state.NewProgram()
+                        .Condition(() => toExtrude >= 0)
+                        .Set(() => reservation)
+                        .Change(res => res.LE.CG()
+                            .ExtrudeDir(Vector3Int.up, toExtrude).LE().GN())
+                        .NotTaken()
+                        .Change(extr => extr.LE.CG().Merge(reservationCG).LE(AreaType.Room).GN(sym.ChapelRoom))
+                        .CurrentFirst(out var nextFloor)
+                        .ReplaceNodes(reservation)
+
+                        .ReserveUpward(2)
+                        .PlaceNodes(nextFloor)
+
+                        .FindPath(() => ldk.con.ConnectByStairsInside(nextFloor.LE, roomBelow.LE).GN(), out var stairs)
+                        .PlaceNodes(nextFloor, reservation);
+                });
+        }
+
+        public Production ChapelTowerRoof(int roofHeight)
+        {
+            return new Production(
+                $"ChapelNextFloor",
+                new ProdParamsManager()
+                    .AddNodeSymbols(sym.UpwardReservation(default))
+                    .SetCondition((state, pp) =>
+                    {
+                        var roomBelow = pp.Param.GetSymbol<UpwardReservation>().RoomBelow.GetSymbol<ChapelRoom>();
+                        return roomBelow != null;
+                    }),
+                (state, pp) =>
+                {
+                    var reservation = pp.Param;
+                    var roomBelow = pp.Param.GetSymbol<UpwardReservation>().RoomBelow;
+
+                    return state.NewProgram()
+                        .Set(() => reservation.LE.SetAreaType(AreaType.Colonnade).GN(sym.ChapelTowerTop))
+                        .CurrentFirst(out var towerTop)
+                        .ReplaceNodes(reservation)
+
+                        .Change(towerTop => towerTop.LE.CG().ExtrudeVer(Vector3Int.up, roofHeight).LE(AreaType.PointyRoof).GN(sym.Roof))
+                        .PlaceNodes(towerTop)
+
+                        .FindPath(() => ldk.con.ConnectByStairsInside(towerTop.LE, roomBelow.LE).GN(), out var stairs)
+                        .PlaceNodes(towerTop, reservation);
                 });
         }
         #endregion

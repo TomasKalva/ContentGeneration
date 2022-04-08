@@ -309,7 +309,7 @@ namespace ShapeGrammar
         }
 
 
-        public CubeGroup RoofStyle(CubeGroup roofArea, Libraries lib)
+        CubeGroup RoofStyle(CubeGroup roofArea, Func<Vector3, Transform> roofF)
         {
             var extents = roofArea.Extents();
             var halfExtents = ((Vector3)extents) / 2f;
@@ -320,7 +320,7 @@ namespace ShapeGrammar
                 rot = 90;
             }
 
-            var roof = lib.InteractiveObjects.Roof(extents);
+            var roof = roofF(extents); 
 
             var lbb = roofArea.LeftBottomBack();
             var center = new Vector3(lbb.x + halfExtents.x - 0.5f, lbb.y, lbb.z + halfExtents.z - 0.5f);
@@ -328,6 +328,21 @@ namespace ShapeGrammar
             roof.position = center * 2.8f;
             roof.rotation = Quaternion.Euler(0, rot, 0);
             return roofArea;
+        }
+
+        public CubeGroup GableRoofStyle(CubeGroup roofArea, Libraries lib)
+        {
+            return RoofStyle(roofArea, lib.InteractiveObjects.GableRoof);
+        }
+
+        public CubeGroup PointyRoofStyle(CubeGroup roofArea, Libraries lib)
+        {
+            return RoofStyle(roofArea, lib.InteractiveObjects.PointyRoof);
+        }
+
+        public CubeGroup CrossRoofStyle(CubeGroup roofArea, Libraries lib)
+        {
+            return RoofStyle(roofArea, lib.InteractiveObjects.CrossRoof);
         }
     }
 }

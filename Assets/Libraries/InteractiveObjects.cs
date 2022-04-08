@@ -37,7 +37,16 @@ public class InteractiveObjects : ScriptableObject
     InteractiveObject leverPrefab;
 
     [SerializeField]
-    Transform roof;
+    Transform gableRoof;
+
+    [SerializeField]
+    Transform pointyRoof;
+
+    [SerializeField]
+    Transform crossRoof;
+
+    [SerializeField]
+    Transform oneDirectionRoof;
 
     public InteractiveObject Grave()
     {
@@ -96,11 +105,37 @@ public class InteractiveObjects : ScriptableObject
         return obj;
     }
 
-    public Transform Roof(Vector3 extents)
+    #region Roofs
+    public Transform GableRoof(Vector3 extents)
     {
-        var obj = Instantiate(roof);
+        var obj = Instantiate(gableRoof);
         obj.transform.localScale = Vector3.Scale(obj.transform.localScale, extents);
 
         return obj;
     }
+
+    public Transform PointyRoof(Vector3 extents)
+    {
+        var obj = Instantiate(pointyRoof);
+        obj.transform.localScale = Vector3.Scale(obj.transform.localScale, extents);
+
+        return obj;
+    }
+
+    public Transform CrossRoof(Vector3 extents)
+    {
+        var obj = Instantiate(crossRoof);
+        obj.transform.localScale = Vector3.Scale(obj.transform.localScale, extents);
+
+        return obj;
+    }
+
+    public Transform OneDirectionRoof(Vector3 extents)
+    {
+        var obj = Instantiate(oneDirectionRoof);
+        obj.transform.localScale = Vector3.Scale(obj.transform.localScale, extents);
+
+        return obj;
+    }
+    #endregion
 }

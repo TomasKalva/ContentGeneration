@@ -77,8 +77,16 @@ namespace ShapeGrammar
                 pr.ChapelHall(pr.sym.ChapelEntrance, 6, guideRandomly),
                 pr.ChapelHall(pr.sym.ChapelRoom, 6, guideRandomly),
                 pr.ChapelRoom(3),
+                pr.ChapelNextFloor(3),
+            };
+        }
 
-
+        public List<Production> GraveyardPostprocess(Productions pr)
+        {
+            var guideRandomly = new RandomPathGuide();
+            return new List<Production>()
+            {
+                pr.ChapelTowerRoof(3),
             };
         }
 
@@ -155,6 +163,7 @@ namespace ShapeGrammar
                     );
 
             var graveyardGrammar = new RandomGrammarEvaluator(Graveyard(pr), 40);
+            var graveyardPostprocess = new AllGrammarEvaluator(GraveyardPostprocess(pr));
 
             var roofGrammar = new AllGrammarEvaluator(roofs);
 
@@ -162,6 +171,7 @@ namespace ShapeGrammar
             shapeGrammar.Evaluate(grammarState);
             //gardenGrammar.Evaluate(grammarState);
             graveyardGrammar.Evaluate(grammarState);
+            graveyardPostprocess.Evaluate(grammarState);
             roofGrammar.Evaluate(grammarState);
 
 

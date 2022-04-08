@@ -16,4 +16,7 @@ MonoBehaviour:
   ascensionKilnPrefab: {fileID: 5741530064482036920, guid: ca3cbaa14f69d5e438f2eb8efdaf8d01, type: 3}
   elevatorPrefab: {fileID: 4952832786636561311, guid: 0783a69bb021e44449b8f8b915521928, type: 3}
   leverPrefab: {fileID: 7574195711915010851, guid: 5c75e850f8b169349838bd995a630aff, type: 3}
-  roof: {fileID: 7911588637246309289, guid: de186beae02a2da48acf935e96f699b8, type: 3}
+  gableRoof: {fileID: 7911588637246309289, guid: de186beae02a2da48acf935e96f699b8, type: 3}
+  pointyRoof: {fileID: 2348562934469788231, guid: f3aab967e0176cd4d9fff34e02c4dd0b, type: 3}
+  crossRoof: {fileID: 4832564369100202858, guid: f44c4b75be3442740b29bff3b5efe341, type: 3}
+  oneDirectionRoof: {fileID: 1869265423960982062, guid: 2d193beea0c28e34fad31b323d2e1022, type: 3}
