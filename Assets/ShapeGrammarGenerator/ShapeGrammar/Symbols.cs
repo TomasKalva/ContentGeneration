@@ -19,7 +19,7 @@ namespace ShapeGrammar
         /// <summary>
         /// Serves as a space that can be turned into another part of a building or in a roof.
         /// </summary>
-        public Symbol RoomReservation(Node roomBelow) => new RoomReservation("RoomReservation", roomBelow);
+        public Symbol UpwardReservation(Node roomBelow) => new RoomReservation("RoomReservation", roomBelow);
         public Symbol Terrace { get; } = new Symbol("Terrace");
         public Symbol Roof { get; } = new Symbol("Roof");
         public Symbol Courtyard { get; } = new Symbol("Courtyard");

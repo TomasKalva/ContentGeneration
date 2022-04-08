@@ -29,7 +29,7 @@ namespace ShapeGrammar
                     var room = ldk.sgShapes.Room(new Box2Int(0, 0, 5, 5).InflateY(8, 10));
                     var movedRoom = ldk.pl.MoveToNotOverlap(state.WorldState.Added, room).GN(sym.Room(), sym.FullFloorMarker);
                     var foundation = ldk.sgShapes.Foundation(movedRoom.LE).GN(sym.Foundation);
-                    var reservation = movedRoom.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GN(sym.RoomReservation(movedRoom));
+                    var reservation = movedRoom.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.Reservation).GN(sym.UpwardReservation(movedRoom));
 
 
                     return state.NewProgramBadMethodDestroyItASAP(new[]
@@ -259,7 +259,7 @@ namespace ShapeGrammar
                         .PlaceNodes(newRoom)
 
                         .Set(() => newRoom)
-                        .RoomReserveUpward(2)
+                        .ReserveUpward(2)
                         .PlaceNodes(newRoom)
 
                         .FindPath(() => ldk.con.ConnectByDoor(newRoom.LE, what.LE).GN(), out var door)
@@ -309,7 +309,7 @@ namespace ShapeGrammar
                         .ApplyOperationsIf(addFloorAbove,
                             () => state.NewProgram()
                                 .Set(() => newRoom)
-                                .RoomReserveUpward(2)
+                                .ReserveUpward(2)
                                 .PlaceNodes(newRoom)
                         )
 
@@ -340,7 +340,7 @@ namespace ShapeGrammar
                         )
                         .PlaceNodes(what)
                         
-                        .RoomReserveUpward(2)
+                        .ReserveUpward(2)
                         .PlaceNodes(what)
                         
                         .Set(() =>
@@ -401,7 +401,7 @@ namespace ShapeGrammar
                         .PlaceNodes(newRoom)
 
                         .Set(() => newRoom)
-                        .RoomReserveUpward(2, out var reservation)
+                        .ReserveUpward(2, out var reservation)
                         .PlaceNodes(newRoom)
 
                         .FindPath(() => ldk.con.ConnectByBalconyStairsOutside(from.LE, newRoom.LE, state.WorldState.Added.Merge(foundation.LE).Merge(reservation.LE)).GN(), out var stairs)
@@ -463,7 +463,7 @@ namespace ShapeGrammar
                     var door = ldk.con.ConnectByDoor(room.LE, start).GN();
 
                     //todo: test if the reservation is ok
-                    var reservation = newHouse.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.RoomReservation).GN(sym.RoomReservation(newHouse));
+                    var reservation = newHouse.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.Reservation).GN(sym.UpwardReservation(newHouse));
                     // and modify the dag
                     var foundation = ldk.sgShapes.Foundation(newHouse.LE).GN(sym.Foundation);
                     var startFoundation = ldk.sgShapes.Foundation(start).GN(sym.Foundation);
@@ -505,7 +505,7 @@ namespace ShapeGrammar
             return new Production(
                 "AddNextFloor",
                 new ProdParamsManager()
-                    .AddNodeSymbols(sym.RoomReservation(null))
+                    .AddNodeSymbols(sym.UpwardReservation(null))
                     .SetCondition((state, pp) =>
                     {
                         var roomBelow = pp.Param.GetSymbol<RoomReservation>().RoomBelow.GetSymbol<Room>();
@@ -526,7 +526,7 @@ namespace ShapeGrammar
                         )
                         .ReplaceNodes(roomReservation)
 
-                        .RoomReserveUpward(2)
+                        .ReserveUpward(2)
                         .PlaceNodes(nextFloor)
 
                         .FindPath(() => ldk.con.ConnectByWallStairsIn(roomBelow.LE, nextFloor.LE).GN(), out var stairs)
@@ -611,7 +611,7 @@ namespace ShapeGrammar
             return new Production(
                 "AddRoof",
                 new ProdParamsManager()
-                    .AddNodeSymbols(sym.RoomReservation(null)),
+                    .AddNodeSymbols(sym.UpwardReservation(null)),
                 (state, pp) =>
                 {
                     var roomReservation = pp.Param;
@@ -707,9 +707,77 @@ namespace ShapeGrammar
                         .Found()
                         .PlaceNodes(newPark)
 
-                        //Replace with open connection
                         .FindPath(() => ldk.con.ConnectByStairsInside(newPark.LE, what.LE).GN(), out var stairs)
                         .PlaceNodes(newPark, what);
+                });
+        }
+
+        public Production ChapelNextTo(Symbol nextToWhat, Func<LevelElement> parkF)
+        {
+            return new Production(
+                $"ChapelNextTo{nextToWhat.Name}",
+                new ProdParamsManager().AddNodeSymbols(nextToWhat),
+                (state, pp) =>
+                {
+                    var what = pp.Param;
+                    var whatCG = what.LE.CG();
+
+                    return state.NewProgram()
+                        .SelectOne(
+                            state.NewProgram()
+                                .Set(() => parkF().GN())
+                                .MoveNearTo(what)
+                                .Change(node => node.LE.SetAreaType(AreaType.Room).GN(sym.ChapelEntrance, sym.FullFloorMarker)),
+                            out var newChapelEntrance
+                            )
+                        .PlaceNodes(what)
+
+                        .Found()
+                        .PlaceNodes(newChapelEntrance)
+
+                        .Set(() => newChapelEntrance)
+                        .ReserveUpward(2)
+                        .PlaceNodes(newChapelEntrance)
+
+                        //Replace with open connection
+                        .FindPath(() => ldk.con.ConnectByDoor(newChapelEntrance.LE, what.LE).GN(), out var door)
+                        .PlaceNodes(newChapelEntrance, what);
+                });
+        }
+
+        public Production ChapelHall(int length, PathGuide pathGuilde)
+        {
+            return new Production(
+                $"ChapelHall",
+                new ProdParamsManager().AddNodeSymbols(sym.ChapelEntrance),
+                (state, pp) =>
+                {
+                    var entrance = pp.Param;
+                    var whatCG = entrance.LE.CG();
+
+                    return state.NewProgram()
+                        .SelectOne(
+                            state.NewProgram()
+                                .Directional(pathGuilde.SelectDirections(entrance.LE),
+                                    dir =>
+                                        entrance.LE.CG().ExtrudeDir(dir, length).LE(AreaType.Room).GN(sym.ChurchHall)
+                                )
+                                .NotTaken()
+                                .CanBeFounded(),
+                            out var newChapelHall
+                            )
+                        .PlaceNodes(entrance)
+
+                        .Found()
+                        .PlaceNodes(newChapelHall)
+
+                        .Set(() => newChapelHall)
+                        .ReserveUpward(2)
+                        .PlaceNodes(newChapelHall)
+
+                        //Replace with open connection
+                        .FindPath(() => ldk.con.ConnectByDoor(newChapelHall.LE, entrance.LE).GN(), out var door)
+                        .PlaceNodes(newChapelHall, entrance);
                 });
         }
         #endregion

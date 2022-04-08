@@ -312,13 +312,21 @@ namespace ShapeGrammar
         public CubeGroup RoofStyle(CubeGroup roofArea, Libraries lib)
         {
             var extents = roofArea.Extents();
+            var halfExtents = ((Vector3)extents) / 2f;
+            var rot = 0;
+            if (extents.x > extents.z)
+            {
+                extents = new Vector3Int(extents.z, extents.y, extents.x);
+                rot = 90;
+            }
+
             var roof = lib.InteractiveObjects.Roof(extents);
 
-            var halfExtents = ((Vector3)extents) / 2f;
             var lbb = roofArea.LeftBottomBack();
             var center = new Vector3(lbb.x + halfExtents.x - 0.5f, lbb.y, lbb.z + halfExtents.z - 0.5f);
 
             roof.position = center * 2.8f;
+            roof.rotation = Quaternion.Euler(0, rot, 0);
             return roofArea;
         }
     }

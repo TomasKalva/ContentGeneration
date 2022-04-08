@@ -119,12 +119,12 @@ namespace ShapeGrammar
             return this;
         }
 
-        public ProductionProgram RoomReserveUpward(int height) => RoomReserveUpward(height, out var _);
+        public ProductionProgram ReserveUpward(int height) => ReserveUpward(height, out var _);
 
         /// <summary>
         /// Returned node is not in derivation. It is just a container of newly created level elements.
         /// </summary>
-        public ProductionProgram RoomReserveUpward(int height, out Node reservation)
+        public ProductionProgram ReserveUpward(int height, out Node reservation)
         {
             reservation = null;
             if (Failed)
@@ -133,7 +133,7 @@ namespace ShapeGrammar
             CurrentNodes = CurrentNodes
                 .Select(node =>
                     State.NewProgram()
-                        .Set(() => node.LE.CG().ExtrudeVer(Vector3Int.up, height).LE(AreaType.RoomReservation).GN(pr.sym.RoomReservation(node)))
+                        .Set(() => node.LE.CG().ExtrudeVer(Vector3Int.up, height).LE(AreaType.Reservation).GN(pr.sym.UpwardReservation(node)))
                         .NotTaken()
                 )
                 .Where(prog => !prog.Failed)

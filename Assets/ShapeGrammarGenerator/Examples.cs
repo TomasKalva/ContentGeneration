@@ -35,7 +35,7 @@ namespace ShapeGrammar
             tr = new Transformations(this);
             houseStyleRules = new StyleRules(
                 new StyleRule(g => g.WithAreaType(AreaType.Room), g => g.SetGrammarStyle(sgStyles.PlainRoomStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.RoomReservation), g => g.SetGrammarStyle(sgStyles.EmptyStyle)),
+                new StyleRule(g => g.WithAreaType(AreaType.Reservation), g => g.SetGrammarStyle(sgStyles.EmptyStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.OpenRoom), g => g.SetGrammarStyle(sgStyles.OpenRoomStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.FlatRoof), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Roof), g => g.SetGrammarStyle(area => sgStyles.RoofStyle(area, lib))),

@@ -64,6 +64,7 @@ namespace ShapeGrammar
 
         public List<Production> Graveyard(Productions pr)
         {
+            var guideRandomly = new RandomPathGuide();
             return new List<Production>()
             {
                 //pr.GardenFromCourtyard(),
@@ -72,6 +73,8 @@ namespace ShapeGrammar
                 pr.ParkNextTo(pr.sym.Courtyard, () => ldk.qc.GetFlatBox(3, 3)),
                 pr.DownwardPark(pr.sym.Park, 1, () => ldk.qc.GetFlatBox(3, 3)),
                 pr.DownwardPark(pr.sym.Park, 1, () => ldk.qc.GetFlatBox(5, 4)),
+                pr.ChapelNextTo(pr.sym.Park, () => ldk.qc.GetFlatBox(3, 3, 2)),
+                pr.ChapelHall(6, guideRandomly),
 
 
             };
@@ -89,6 +92,7 @@ namespace ShapeGrammar
             var productionList = TestingProductions(pr);
             var lowGarden = Garden(pr);
 
+            var guideRandomly = new RandomPathGuide();
             var guideToPoint = new PointPathGuide(grammarState, state => new Vector3Int(0, 0, 50));
             var guideBack = new PointPathGuide(grammarState, 
                 state =>
