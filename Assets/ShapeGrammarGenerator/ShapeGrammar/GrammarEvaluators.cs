@@ -79,14 +79,14 @@ namespace ShapeGrammar
 
     public delegate IEnumerable<Node> NodesQuery(ShapeGrammarState state);
 
-    public class LinearGrammarEvaluator : GrammarEvaluator
+    public class CustomGrammarEvaluator : GrammarEvaluator
     {
         List<Production> Productions { get; }
         int Count { get; }
         Symbol StartSymbol { get; }
         NodesQuery NodesQuery { get; }
 
-        public LinearGrammarEvaluator(List<Production> productions, int count, Symbol startSymbol, NodesQuery nodesQuery = null)
+        public CustomGrammarEvaluator(List<Production> productions, int count, Symbol startSymbol, NodesQuery nodesQuery = null)
         {
             Productions = productions;
             Count = count;
@@ -159,7 +159,7 @@ namespace ShapeGrammar
             return this;
         }
         public GrammarEvaluatorSequence AppendLinear(List<Production> productions, int count, Symbol startSymbol, NodesQuery nodesQuery = null)
-            => Add(new LinearGrammarEvaluator(productions, count, startSymbol, nodesQuery));
+            => Add(new CustomGrammarEvaluator(productions, count, startSymbol, nodesQuery));
         public GrammarEvaluatorSequence AppendStartEnd(Symbols symbols, List<Production> productions, NodesQuery startQuery, NodesQuery endQuery)
             => Add(new StartEndGrammarEvaluator(symbols, productions, startQuery, endQuery));
         public override void Evaluate(ShapeGrammarState shapeGrammarState)

@@ -238,7 +238,7 @@ namespace ShapeGrammar
             towers.ForEach2Cycle((t1, t2) => paths.WalkableWallPathH(t1, t2, 3).ApplyGrammarStyleRules(houseStyleRules));
         }
 
-        public void Surrounded()
+        public LevelElement Surrounded()
         {
             var root = new LevelGroupElement(grid, AreaType.WorldRoot);
 
@@ -256,6 +256,8 @@ namespace ShapeGrammar
 
             root = root.AddAll(yard, houses, wall);
             root.ApplyGrammarStyleRules(houseStyleRules);
+
+            return root;
         }
 
         public void TestingPaths()

@@ -125,7 +125,7 @@ namespace ShapeGrammar
                 pr.AddRoof(),
             };
 
-            var shapeGrammar = new RandomGrammarEvaluator(productionList, 5);
+            //var shapeGrammar = new CustomGrammarEvaluator(productionList, 20, null, state => state.LastCreated);
 
 
             var gardenGrammar =
@@ -162,14 +162,15 @@ namespace ShapeGrammar
                         state => state.Root.AllDerived().ForEach(parent => parent.RemoveSymbolByName(pr.sym.ReturnToMarker))
                     );
 
-            var graveyardGrammar = new RandomGrammarEvaluator(Graveyard(pr), 40);
+            var shapeGrammar = new RandomGrammarEvaluator(productionList, 20);
+            var graveyardGrammar = new RandomGrammarEvaluator(Graveyard(pr), 10);
             var graveyardPostprocess = new AllGrammarEvaluator(GraveyardPostprocess(pr));
 
             var roofGrammar = new AllGrammarEvaluator(roofs);
 
             var newNodes = grammarState.ApplyProduction(pr.CreateNewHouse());
             shapeGrammar.Evaluate(grammarState);
-            //gardenGrammar.Evaluate(grammarState);
+            gardenGrammar.Evaluate(grammarState);
             graveyardGrammar.Evaluate(grammarState);
             graveyardPostprocess.Evaluate(grammarState);
             roofGrammar.Evaluate(grammarState);
