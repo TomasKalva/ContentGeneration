@@ -49,13 +49,13 @@ namespace ShapeGrammar
 
         public override void Generate(World world)
         {
-            if (Application.isEditor)
+            /*if (Application.isEditor)
             {
                 UnityEditor.SceneView.FocusWindowIfItsOpen(typeof(UnityEditor.SceneView));
-            }
+            }*/
             //world.AddEnemy(libraries.Enemies.MayanSwordsman(), new Vector3(0, 1, 0));
             //world.AddEnemy(libraries.Enemies.DragonMan(), new Vector3(0, 1, 0));
-            //UnityEngine.Random.InitState(44);
+            //UnityEngine.Random.InitState(42);
 
             worldScale = 2.8f;
 
@@ -88,10 +88,11 @@ namespace ShapeGrammar
             var enemyCubes = levelRoot.CG().WithFloor().Cubes.Shuffle().Take(10);
             enemyCubes.ForEach(cube => world.AddEnemy(allEnemies.GetRandom()(), GridToWorld(cube.Position)));
             
-            /*
+
+            
             var itemCubes = levelRoot.CG().WithFloor().Cubes.Shuffle().Take(10);
-            itemCubes.ForEach(cube => world.AddItem(libraries.Items.Physical(libraries.Items.Mace()), GridToWorld(cube.Position)));
-            */
+            itemCubes.ForEach(cube => world.AddItem(libraries.Items.Physical(libraries.Items.Scythe()), GridToWorld(cube.Position)));
+            
             var kilnCube = goodGraveCube.NeighborsHor().GetRandom();
             world.AddInteractiveObject(interactiveObjects.AscensionKiln(), GridToWorld(kilnCube.Position));
             

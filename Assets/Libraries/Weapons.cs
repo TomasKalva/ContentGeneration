@@ -76,7 +76,7 @@ public class Weapons : ScriptableObject
     public Weapon Scythe()
     {
         var scythe = Instantiate(this.scythe);
-        scythe.Damage = 19f;
+        scythe.Damage = 30f;
         return scythe;
     }
 
@@ -90,7 +90,7 @@ public class Weapons : ScriptableObject
     public Weapon Katana()
     {
         var katana = Instantiate(this.katana);
-        katana.Damage = 10f;
+        katana.Damage = 19f;
         return katana;
     }
 }

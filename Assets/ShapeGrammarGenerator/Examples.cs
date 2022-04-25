@@ -156,9 +156,9 @@ namespace ShapeGrammar
             return town;
         }
 
-        public void NonOverlappingTown()
+        public LevelElement NonOverlappingTown()
         {
-            var flatBoxes = qc.FlatBoxes(3, 8, 8);
+            var flatBoxes = qc.FlatBoxes(3, 8, 20);
             var bounds = qc.GetFlatBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)));
             var town = pl.MoveToNotOverlap(flatBoxes);// qc.GetOverlappingBoxes(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)), 8));
             //var town = qc.GetNonOverlappingBoxes(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)), 8);
@@ -166,6 +166,8 @@ namespace ShapeGrammar
             town = qc.RaiseRandomly(town, intSeq.Sample);
             town = town.Select(le => sgShapes.TurnIntoHouse(le.CG()));// le.SetAreaType(AreaType.Room));
             town.ApplyGrammarStyleRules(houseStyleRules);
+
+            return town;
         }
 
         public void RemovingOverlap()
@@ -203,7 +205,7 @@ namespace ShapeGrammar
             return tower;
         }
 
-        public void TwoConnectedTowers()
+        public LevelElement TwoConnectedTowers()
         {
             // Create ground layout of the tower
             var towerLayout = qc.GetBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 1));
@@ -214,15 +216,17 @@ namespace ShapeGrammar
             var tower2 = tower.MoveBy(new Vector3Int(20, 0, 10)).ApplyGrammarStyleRules(houseStyleRules);
 
             // Create path between the towers
-            paths.WalkableWallPathH(tower, tower2, 1).ApplyGrammarStyleRules(houseStyleRules);
+            var path = paths.WalkableWallPathH(tower, tower2, 1).ApplyGrammarStyleRules(houseStyleRules);
 
             // Add balcony to one of the towers
             // house rules are applied to the entire house again...
             // todo: apply them only to the parts that were added
             sgShapes.AddBalcony(tower).ApplyGrammarStyleRules(houseStyleRules);
+
+            return tower.Merge(tower2, path);
         }
 
-        public void ManyConnectedTowers()
+        public LevelElement ManyConnectedTowers()
         {
             // Create ground layout of the tower
             var towerLayout = qc.GetBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 1));
@@ -235,7 +239,9 @@ namespace ShapeGrammar
                 .MoveBy(Vector3Int.RoundToInt(10f * new Vector3(Mathf.Cos(angle(i)), 0f, Mathf.Sin(angle(i))))));
 
             towers.ForEach(tower => tower.ApplyGrammarStyleRules(houseStyleRules));
-            towers.ForEach2Cycle((t1, t2) => paths.WalkableWallPathH(t1, t2, 3).ApplyGrammarStyleRules(houseStyleRules));
+            towers.ForEach2Cycle((t1, t2) => paths.WalkableWallPathH(t1, t2, 1).ApplyGrammarStyleRules(houseStyleRules));
+
+            return towers.ToLevelGroupElement(grid);
         }
 
         public LevelElement Surrounded()
@@ -373,7 +379,7 @@ namespace ShapeGrammar
             return room2;
         }
 
-        public LevelElement ConnectByStairs()
+        public LevelElement ConnectByWallStairs()
         {
             var bottomPlatform = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 5));
             var topPlatform = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(5, 10));

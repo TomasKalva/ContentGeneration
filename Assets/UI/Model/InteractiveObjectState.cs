@@ -12,6 +12,7 @@ namespace ContentGeneration.Assets.UI.Model
 {
     public class ObjectState
     {
+#if NOESIS
         Transform _object;
         public Transform Object 
         { 
@@ -22,6 +23,7 @@ namespace ContentGeneration.Assets.UI.Model
                 AfterObjectSet();
             }
         }
+#endif
 
         protected virtual void AfterObjectSet() { }
     }

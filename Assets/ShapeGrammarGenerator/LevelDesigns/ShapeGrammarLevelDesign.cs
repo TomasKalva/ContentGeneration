@@ -14,81 +14,7 @@ namespace ShapeGrammar
         {
         }
 
-        public List<Production> TestingProductions(Productions pr)
-        {
-            var productionList = new List<Production>()
-            {
-                pr.CourtyardFromRoom(),
-                //pr.CourtyardFromCourtyardCorner(),
-                pr.BridgeFromCourtyard(),
-                pr.ExtendBridge(),
-                pr.CourtyardFromBridge(),
-                //pr.ExtendHouse(ldk.tr.GetFloorConnector(lge => ldk.tr.SplittingFloorPlan(lge, 2))),
-                pr.AddNextFloor(),
-                //pr.GardenFromCourtyard(),
-                pr.RoomNextTo(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-                //pr.RoomNextTo(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 4, 2, 5))),
-                //pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
 
-                // these productions make the world untraversable
-                pr.RoomFallDown(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-                //pr.TowerFallDown(pr.sym.Courtyard, pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-
-                //pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
-            };
-            return productionList;
-        }
-
-        public List<Production> Garden(Productions pr)
-        {
-            return new List<Production>()
-            {
-                //pr.GardenFromCourtyard(),
-                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden), addFloorAbove: false),
-                pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
-            };
-        }
-
-        public List<Production> GuidedGarden(Productions pr, PathGuide guide)
-        {
-            return new List<Production>()
-            {
-                //pr.GardenFromCourtyard(),
-                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), guide),
-                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden), guide, addFloorAbove: false),
-                pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
-            };
-        }
-
-        public List<Production> Graveyard(Productions pr)
-        {
-            var guideRandomly = new RandomPathGuide();
-            return new List<Production>()
-            {
-                //pr.GardenFromCourtyard(),
-                //pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-                //pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden), addFloorAbove: false),
-                pr.ParkNextTo(pr.sym.Courtyard, () => ldk.qc.GetFlatBox(3, 3)),
-                pr.DownwardPark(pr.sym.Park, 1, () => ldk.qc.GetFlatBox(3, 3)),
-                pr.DownwardPark(pr.sym.Park, 1, () => ldk.qc.GetFlatBox(5, 4)),
-                pr.ChapelNextTo(pr.sym.Park, () => ldk.qc.GetFlatBox(3, 3, 2)),
-                pr.ChapelHall(pr.sym.ChapelEntrance, 6, guideRandomly),
-                pr.ChapelHall(pr.sym.ChapelRoom, 6, guideRandomly),
-                pr.ChapelRoom(3),
-                pr.ChapelNextFloor(3),
-            };
-        }
-
-        public List<Production> GraveyardPostprocess(Productions pr)
-        {
-            var guideRandomly = new RandomPathGuide();
-            return new List<Production>()
-            {
-                pr.ChapelTowerRoof(3),
-            };
-        }
 
         public override LevelElement CreateLevel()
         {
@@ -98,63 +24,47 @@ namespace ShapeGrammar
             ProductionProgram.StyleRules = ldk.houseStyleRules;
 
             var grammarState = new ShapeGrammarState(ldk);
-
-            var productionList = TestingProductions(pr);
-            var lowGarden = Garden(pr);
+            var prL = new ProductionLists(ldk);
 
             var guideRandomly = new RandomPathGuide();
             var guideToPoint = new PointPathGuide(grammarState, state => new Vector3Int(0, 0, 50));
             var guideBack = new PointPathGuide(grammarState, 
                 state =>
                 {
+                    // todo: fix null reference exception
                     var returnToNodes = state.WithSymbols(pr.sym.ReturnToMarker);
                     var currentNodesCenter = state.LastCreated.Select(node => node.LE).ToLevelGroupElement(ldk.grid).CG().Center();
                     var targetPoint = returnToNodes.SelectMany(n => n.LE.Cubes()).ArgMin(cube => (cube.Position - currentNodesCenter).AbsSum()).Position;
                     return Vector3Int.RoundToInt(targetPoint);
                 });
 
-            var targetedLowGarden = GuidedGarden(pr, guideBack);
-
-            var connectBack = new List<Production>()
-            {
-                pr.TowerFallDown(pr.sym.StartMarker, pr.sym.EndMarker, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-            };
-
-            var roofs = new List<Production>()
-            {
-                pr.AddRoof(),
-            };
+            var targetedLowGarden = prL.GuidedGarden(pr, guideBack);
 
             //var shapeGrammar = new CustomGrammarEvaluator(productionList, 20, null, state => state.LastCreated);
 
 
             var gardenGrammar =
-                new GrammarEvaluatorSequence()
+                new GrammarSequence()
                     .SetStartHandler(
-                        state =>
-                        {
-                            var allParents = state.LastCreated.SelectMany(node => node.AllDerivedFrom()).Distinct();
-                            allParents.ForEach(parent => parent.AddSymbol(pr.sym.ReturnToMarker));
-                            allParents.ForEach(n => Debug.Log("parent"));
-                        }
+                        state =>state
+                            .LastCreated.SelectMany(node => node.AllDerivedFrom()).Distinct()
+                            .ForEach(parent => parent.AddSymbol(pr.sym.ReturnToMarker))
                     )
                     .AppendLinear(
-                        pr.GardenFromCourtyard().ToEnumerable().ToList(),
+                        new ProductionList(pr.GardenFromCourtyard()),
                         1, pr.sym.Courtyard
                     )
                     .AppendLinear(
-                        lowGarden,
-                        5, pr.sym.Courtyard,
-                        state => state.LastCreated
+                        prL.Garden(pr),
+                        5, pr.sym.Courtyard
                     )
                     .AppendLinear(
                         targetedLowGarden,
-                        5, pr.sym.Courtyard,
-                        state => state.LastCreated
+                        5, pr.sym.Courtyard
                     )
                     .AppendStartEnd(
                         pr.sym,
-                        connectBack,
+                        prL.ConnectBack(pr),
                         state => state.LastCreated,
                         state => state.WithSymbols(pr.sym.ReturnToMarker)
                     )
@@ -162,17 +72,19 @@ namespace ShapeGrammar
                         state => state.Root.AllDerived().ForEach(parent => parent.RemoveSymbolByName(pr.sym.ReturnToMarker))
                     );
 
-            var shapeGrammar = new RandomGrammarEvaluator(productionList, 20);
-            var graveyardGrammar = new RandomGrammarEvaluator(Graveyard(pr), 10);
-            var graveyardPostprocess = new AllGrammarEvaluator(GraveyardPostprocess(pr));
-
-            var roofGrammar = new AllGrammarEvaluator(roofs);
+            var shapeGrammar = new RandomGrammar(prL.TestingProductions(pr), 20);
+            var graveyardGrammar = new RandomGrammar(prL.Graveyard(pr), 10);
+            var graveyardPostprocessGrammar = new AllGrammar(prL.GraveyardPostprocess(pr));
+            var roofGrammar = new AllGrammar(prL.Roofs(pr));
 
             var newNodes = grammarState.ApplyProduction(pr.CreateNewHouse());
             shapeGrammar.Evaluate(grammarState);
+
             gardenGrammar.Evaluate(grammarState);
-            graveyardGrammar.Evaluate(grammarState);
-            graveyardPostprocess.Evaluate(grammarState);
+
+            //graveyardGrammar.Evaluate(grammarState);
+            //graveyardPostprocessGrammar.Evaluate(grammarState);
+
             roofGrammar.Evaluate(grammarState);
 
 

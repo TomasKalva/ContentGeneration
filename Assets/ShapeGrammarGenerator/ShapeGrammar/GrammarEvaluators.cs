@@ -8,12 +8,22 @@ using static ShapeGrammar.LevelElement;
 
 namespace ShapeGrammar
 {
-    public abstract class GrammarEvaluator
+    public class ProductionList
+    {
+        public Production[] Get { get; }
+
+        public ProductionList(params Production[] productions)
+        {
+            Get = productions;
+        }
+    }
+
+    public abstract class Grammar
     {
         protected Action<ShapeGrammarState> StartHandler { get; set; }
         protected Action<ShapeGrammarState> EndHandler { get; set; }
 
-        public GrammarEvaluator()
+        public Grammar()
         {
             StartHandler = EndHandler = _ => { } ;
         }
@@ -33,12 +43,12 @@ namespace ShapeGrammar
 
     }
 
-    public class RandomGrammarEvaluator : GrammarEvaluator
+    public class RandomGrammar : Grammar
     {
-        List<Production> Productions { get; }
+        ProductionList Productions { get; }
         int Count { get; }
 
-        public RandomGrammarEvaluator(List<Production> productions, int count)
+        public RandomGrammar(ProductionList productions, int count)
         {
             Productions = productions;
             Count = count;
@@ -49,17 +59,17 @@ namespace ShapeGrammar
             for (int i = 0; i < Count; i++)
             {
                 shapeGrammarState.ActiveNodes = shapeGrammarState.Root.AllDerived();
-                var applicable = Productions.Shuffle();
+                var applicable = Productions.Get.Shuffle();
                 Produce(shapeGrammarState, applicable);
             }
         }
     }
 
-    public class AllGrammarEvaluator : GrammarEvaluator
+    public class AllGrammar : Grammar
     {
-        List<Production> Productions { get; }
+        ProductionList Productions { get; }
 
-        public AllGrammarEvaluator(List<Production> productions)
+        public AllGrammar(ProductionList productions)
         {
             Productions = productions;
         }
@@ -70,7 +80,7 @@ namespace ShapeGrammar
             do
             {
                 shapeGrammarState.ActiveNodes = shapeGrammarState.Root.AllDerived();
-                var applicable = Productions.Shuffle();
+                var applicable = Productions.Get.Shuffle();
                 newNodes = Produce(shapeGrammarState, applicable, "Roofs done");
             }
             while (newNodes != null);
@@ -79,14 +89,14 @@ namespace ShapeGrammar
 
     public delegate IEnumerable<Node> NodesQuery(ShapeGrammarState state);
 
-    public class CustomGrammarEvaluator : GrammarEvaluator
+    public class CustomGrammar : Grammar
     {
-        List<Production> Productions { get; }
+        ProductionList Productions { get; }
         int Count { get; }
         Symbol StartSymbol { get; }
         NodesQuery NodesQuery { get; }
 
-        public CustomGrammarEvaluator(List<Production> productions, int count, Symbol startSymbol, NodesQuery nodesQuery = null)
+        public CustomGrammar(ProductionList productions, int count, Symbol startSymbol, NodesQuery nodesQuery = null)
         {
             Productions = productions;
             Count = count;
@@ -99,7 +109,7 @@ namespace ShapeGrammar
             for (int i = 0; i < Count; i++)
             {
                 shapeGrammarState.ActiveNodes = NodesQuery(shapeGrammarState);
-                var applicable = Productions.Shuffle();
+                var applicable = Productions.Get.Shuffle();
                 var newNodes = Produce(shapeGrammarState, applicable);
             }
         }
@@ -108,14 +118,14 @@ namespace ShapeGrammar
     /// <summary>
     /// Evaluates all productions with extra start and end symbols in the queried nodes.
     /// </summary>
-    public class StartEndGrammarEvaluator : GrammarEvaluator
+    public class StartEndGrammar : Grammar
     {
-        List<Production> Productions { get; }
+        ProductionList Productions { get; }
         NodesQuery StartQuery { get; }
         NodesQuery EndQuery { get; }
         Symbols Sym { get; }
 
-        public StartEndGrammarEvaluator(Symbols symbols, List<Production> productions, NodesQuery startQuery, NodesQuery endQuery)
+        public StartEndGrammar(Symbols symbols, ProductionList productions, NodesQuery startQuery, NodesQuery endQuery)
         {
             Sym = symbols;
             Productions = productions;
@@ -135,7 +145,7 @@ namespace ShapeGrammar
             startNodes.ForEach(node => node.AddSymbol(Sym.StartMarker));
             endNodes.ForEach(node => node.AddSymbol(Sym.EndMarker));
 
-            var applicable = Productions.Shuffle();
+            var applicable = Productions.Get.Shuffle();
             var newNodes = Produce(shapeGrammarState, applicable);
             
             startNodes.ForEach(node => node.RemoveSymbolByName(Sym.StartMarker));
@@ -143,25 +153,25 @@ namespace ShapeGrammar
         }
     }
 
-    public class GrammarEvaluatorSequence : GrammarEvaluator
+    public class GrammarSequence : Grammar
     {
 
-        List<GrammarEvaluator> EvaluatorSequence { get; }
+        List<Grammar> EvaluatorSequence { get; }
 
-        public GrammarEvaluatorSequence()
+        public GrammarSequence()
         {
-            EvaluatorSequence = new List<GrammarEvaluator>();
+            EvaluatorSequence = new List<Grammar>();
         }
 
-        public GrammarEvaluatorSequence Add(GrammarEvaluator evaluator)
+        public GrammarSequence Add(Grammar evaluator)
         {
             EvaluatorSequence.Add(evaluator);
             return this;
         }
-        public GrammarEvaluatorSequence AppendLinear(List<Production> productions, int count, Symbol startSymbol, NodesQuery nodesQuery = null)
-            => Add(new CustomGrammarEvaluator(productions, count, startSymbol, nodesQuery));
-        public GrammarEvaluatorSequence AppendStartEnd(Symbols symbols, List<Production> productions, NodesQuery startQuery, NodesQuery endQuery)
-            => Add(new StartEndGrammarEvaluator(symbols, productions, startQuery, endQuery));
+        public GrammarSequence AppendLinear(ProductionList productions, int count, Symbol startSymbol)
+            => Add(new CustomGrammar(productions, count, startSymbol, state => state.LastCreated));
+        public GrammarSequence AppendStartEnd(Symbols symbols, ProductionList productions, NodesQuery startQuery, NodesQuery endQuery)
+            => Add(new StartEndGrammar(symbols, productions, startQuery, endQuery));
         public override void Evaluate(ShapeGrammarState shapeGrammarState)
         {
             StartHandler(shapeGrammarState);
@@ -169,13 +179,13 @@ namespace ShapeGrammar
             EndHandler(shapeGrammarState);
         }
 
-        public GrammarEvaluatorSequence SetStartHandler(Action<ShapeGrammarState> handler)
+        public GrammarSequence SetStartHandler(Action<ShapeGrammarState> handler)
         {
             StartHandler = handler;
             return this;
         }
 
-        public GrammarEvaluatorSequence SetEndHandler(Action<ShapeGrammarState> handler)
+        public GrammarSequence SetEndHandler(Action<ShapeGrammarState> handler)
         {
             EndHandler = handler;
             return this;
