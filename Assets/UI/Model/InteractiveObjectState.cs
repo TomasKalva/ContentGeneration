@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System;
 using System.Collections.ObjectModel;
+using ShapeGrammar;
 
 namespace ContentGeneration.Assets.UI.Model
 {
@@ -99,9 +100,21 @@ namespace ContentGeneration.Assets.UI.Model
         }
 #endif
 
+#if NOESIS
+        GeometryMaker GeometryMaker { get; }
+        
+        public void MakeGeometry()
+        {
+            InteractiveObject = GeometryMaker.CreateGeometry().gameObject.AddComponent<InteractiveObject>();
+        }
+#endif
+
         public InteractiveObjectState()
         {
             InteractOptions = new InteractOptions();
+            Name = "Name";
+            MessageOnInteract = "MessageOnInteract";
+            InteractionDescription = "InteractionDescription";
         }
     }
 

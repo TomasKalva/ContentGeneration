@@ -295,6 +295,12 @@ namespace ShapeGrammar
             return ShapeGrammarLevelDesign.CreateLevel();
         }
 
+        public LevelElement LanguageDesign(Libraries lib)
+        {
+            var LanguageLevelDesign = new LanguageLevelDesign(this, lib);
+            return LanguageLevelDesign.CreateLevel();
+        }
+
         public void SplitRoom()
         {
             var houseBox = qc.GetFlatBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 8)), 0);

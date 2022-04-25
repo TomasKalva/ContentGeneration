@@ -63,7 +63,7 @@ namespace ShapeGrammar
             stopwatch.Start();
 
             var examples = new Examples(DefaultHouseStyle, GardenStyle, libraries);
-            var levelRoot = examples.ShapeGrammarDesign();
+            var levelRoot = examples.LanguageDesign(libraries);
             examples.grid.Generate(worldScale, parent);
 
             stopwatch.Stop();

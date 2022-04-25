@@ -40,6 +40,14 @@ namespace ShapeGrammar
             );
         }
 
+        public ProductionList CreateNewHouse(Productions pr)
+        {
+            return new ProductionList
+            (
+                pr.CreateNewHouse()
+            );
+        }
+
         public ProductionList Garden(Productions pr)
         {
             return new ProductionList
