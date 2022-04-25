@@ -75,7 +75,7 @@ namespace ShapeGrammar
                         .Found()
                         .PlaceNodes(courtyard)
 
-                        .FindPath(() => ldk.con.ConnectByDoor(room.LE, courtyard.LE).GN(), out var door)
+                        .FindPath(() => ldk.con.ConnectByDoor(room.LE, courtyard.LE).GN(sym.ConnectionMarker), out var door)
                         .PlaceNodes(room, courtyard);
                      
                 });
@@ -120,7 +120,7 @@ namespace ShapeGrammar
                         .Found()
                         .PlaceNodes(newCourtyard)
 
-                        .FindPath(() => ldk.con.ConnectByStairsInside(courtyard.LE, newCourtyard.LE).GN(), out var p)
+                        .FindPath(() => ldk.con.ConnectByStairsInside(courtyard.LE, newCourtyard.LE).GN(sym.ConnectionMarker), out var p)
                         .PlaceNodes(courtyard, newCourtyard);
                 });
         }
@@ -262,7 +262,7 @@ namespace ShapeGrammar
                         .ReserveUpward(2)
                         .PlaceNodes(newRoom)
 
-                        .FindPath(() => ldk.con.ConnectByDoor(newRoom.LE, what.LE).GN(), out var door)
+                        .FindPath(() => ldk.con.ConnectByDoor(newRoom.LE, what.LE).GN(sym.ConnectionMarker), out var door)
                         .PlaceNodes(newRoom, what);
                 });
         }
@@ -313,7 +313,7 @@ namespace ShapeGrammar
                                 .PlaceNodes(newRoom)
                         )
 
-                        .FindPath(() => ldk.con.ConnectByBridge(what.LE, newRoom.LE, state.WorldState.Added).GN(), out var bridge)
+                        .FindPath(() => ldk.con.ConnectByBridge(what.LE, newRoom.LE, state.WorldState.Added).GN(sym.ConnectionMarker), out var bridge)
                         .PlaceNodes(what, newRoom);
                      
                 });
@@ -352,7 +352,7 @@ namespace ShapeGrammar
                         .Found()
                         .PlaceNodes(bottomRoom)
 
-                        .FindPath(() => ldk.con.ConnectByDoor(newRoom.LE, what.LE).GN(), out var door)
+                        .FindPath(() => ldk.con.ConnectByDoor(newRoom.LE, what.LE).GN(sym.ConnectionMarker), out var door)
                         .PlaceNodes(newRoom, what)
 
                         // The door doesn't get overwritten by apply style only because it has higher priority, which doesn't feel robust enough
@@ -404,7 +404,7 @@ namespace ShapeGrammar
                         .ReserveUpward(2, out var reservation)
                         .PlaceNodes(newRoom)
 
-                        .FindPath(() => ldk.con.ConnectByBalconyStairsOutside(from.LE, newRoom.LE, state.WorldState.Added.Merge(foundation.LE).Merge(reservation.LE)).GN(), out var stairs)
+                        .FindPath(() => ldk.con.ConnectByBalconyStairsOutside(from.LE, newRoom.LE, state.WorldState.Added.Merge(foundation.LE).Merge(reservation.LE)).GN(sym.ConnectionMarker), out var stairs)
                         .PlaceNodes(newRoom, from)
 
                         .FindPath(() => ldk.con.ConnectByFall(newRoom.LE, to.LE).GN(), out var fall)
@@ -529,7 +529,7 @@ namespace ShapeGrammar
                         .ReserveUpward(2)
                         .PlaceNodes(nextFloor)
 
-                        .FindPath(() => ldk.con.ConnectByWallStairsIn(roomBelow.LE, nextFloor.LE).GN(), out var stairs)
+                        .FindPath(() => ldk.con.ConnectByWallStairsIn(roomBelow.LE, nextFloor.LE).GN(sym.ConnectionMarker), out var stairs)
                         .PlaceNodes(roomBelow, nextFloor);
                 });
         }
@@ -570,7 +570,7 @@ namespace ShapeGrammar
                     garden.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
 
                     var cliffFoundation = ldk.sgShapes.CliffFoundation(garden.LE).GN(sym.Foundation);
-                    var stairs = ldk.con.ConnectByElevator(courtyard.LE, garden.LE).GN();
+                    var stairs = ldk.con.ConnectByElevator(courtyard.LE, garden.LE).GN(sym.ConnectionMarker);
 
                     return state.NewProgramBadMethodDestroyItASAP(new[]
                     {
@@ -673,7 +673,7 @@ namespace ShapeGrammar
                         .PlaceNodes(newPark)
 
                         //Replace with open connection
-                        .FindPath(() => ldk.con.ConnectByDoor(newPark.LE, what.LE).GN(), out var door)
+                        .FindPath(() => ldk.con.ConnectByDoor(newPark.LE, what.LE).GN(sym.ConnectionMarker), out var door)
                         .PlaceNodes(newPark, what);
                 });
         }
@@ -707,7 +707,7 @@ namespace ShapeGrammar
                         .Found()
                         .PlaceNodes(newPark)
 
-                        .FindPath(() => ldk.con.ConnectByStairsInside(newPark.LE, what.LE).GN(), out var stairs)
+                        .FindPath(() => ldk.con.ConnectByStairsInside(newPark.LE, what.LE).GN(sym.ConnectionMarker), out var stairs)
                         .PlaceNodes(newPark, what);
                 });
         }
@@ -739,7 +739,7 @@ namespace ShapeGrammar
                         .PlaceNodes(newChapelEntrance)
 
                         //Replace with open connection
-                        .FindPath(() => ldk.con.ConnectByDoor(newChapelEntrance.LE, what.LE).GN(), out var door)
+                        .FindPath(() => ldk.con.ConnectByDoor(newChapelEntrance.LE, what.LE).GN(sym.ConnectionMarker), out var door)
                         .PlaceNodes(newChapelEntrance, what);
                 });
         }
@@ -759,7 +759,7 @@ namespace ShapeGrammar
                             state.NewProgram()
                                 .Directional(pathGuilde.SelectDirections(entrance.LE),
                                     dir =>
-                                        entrance.LE.CG().ExtrudeDir(dir, length).LE(AreaType.Room).GN(sym.ChapelHall(dir))
+                                        entrance.LE.CG().ExtrudeDir(dir, length).LE(AreaType.Room).GN(sym.ChapelHall(dir), sym.FullFloorMarker)
                                 )
                                 .NotTaken()
                                 .CanBeFounded(),
@@ -774,7 +774,7 @@ namespace ShapeGrammar
                         .ReserveUpward(2)
                         .PlaceNodes(newChapelHall)
 
-                        .FindPath(() => ldk.con.ConnectByDoor(newChapelHall.LE, entrance.LE).GN(), out var door)
+                        .FindPath(() => ldk.con.ConnectByDoor(newChapelHall.LE, entrance.LE).GN(sym.ConnectionMarker), out var door)
                         .PlaceNodes(newChapelHall, entrance);
                 });
         }
@@ -791,7 +791,7 @@ namespace ShapeGrammar
                     return state.NewProgram()
                         .Set(() => hall)
                         .Change(h => h.LE.CG()
-                            .ExtrudeDir(hall.GetSymbol<ChapelHall>().Direction, extrusionLength).LE(AreaType.Room).GN(sym.ChapelRoom))
+                            .ExtrudeDir(hall.GetSymbol<ChapelHall>().Direction, extrusionLength).LE(AreaType.Room).GN(sym.ChapelRoom, sym.FullFloorMarker))
                         .NotTaken()
                         .CanBeFounded()
                         .CurrentFirst(out var newRoom)
@@ -804,7 +804,7 @@ namespace ShapeGrammar
                         .ReserveUpward(2)
                         .PlaceNodes(newRoom)
                         
-                        .FindPath(() => ldk.con.ConnectByDoor(newRoom.LE, hall.LE).GN(), out var door)
+                        .FindPath(() => ldk.con.ConnectByDoor(newRoom.LE, hall.LE).GN(sym.ConnectionMarker), out var door)
                         .PlaceNodes(newRoom, hall);
                 });
         }
@@ -834,14 +834,14 @@ namespace ShapeGrammar
                         .Change(res => res.LE.CG()
                             .ExtrudeDir(Vector3Int.up, toExtrude).LE().GN())
                         .NotTaken()
-                        .Change(extr => extr.LE.CG().Merge(reservationCG).LE(AreaType.Room).GN(sym.ChapelRoom))
+                        .Change(extr => extr.LE.CG().Merge(reservationCG).LE(AreaType.Room).GN(sym.ChapelRoom, sym.FullFloorMarker))
                         .CurrentFirst(out var nextFloor)
                         .ReplaceNodes(reservation)
 
                         .ReserveUpward(2)
                         .PlaceNodes(nextFloor)
 
-                        .FindPath(() => ldk.con.ConnectByStairsInside(nextFloor.LE, roomBelow.LE).GN(), out var stairs)
+                        .FindPath(() => ldk.con.ConnectByStairsInside(nextFloor.LE, roomBelow.LE).GN(sym.ConnectionMarker), out var stairs)
                         .PlaceNodes(nextFloor, reservation);
                 });
         }
@@ -863,14 +863,14 @@ namespace ShapeGrammar
                     var roomBelow = pp.Param.GetSymbol<UpwardReservation>().RoomBelow;
 
                     return state.NewProgram()
-                        .Set(() => reservation.LE.SetAreaType(AreaType.Colonnade).GN(sym.ChapelTowerTop))
+                        .Set(() => reservation.LE.SetAreaType(AreaType.Colonnade).GN(sym.ChapelTowerTop, sym.FullFloorMarker))
                         .CurrentFirst(out var towerTop)
                         .ReplaceNodes(reservation)
 
                         .Change(towerTop => towerTop.LE.CG().ExtrudeVer(Vector3Int.up, roofHeight).LE(AreaType.PointyRoof).GN(sym.Roof))
                         .PlaceNodes(towerTop)
 
-                        .FindPath(() => ldk.con.ConnectByStairsInside(towerTop.LE, roomBelow.LE).GN(), out var stairs)
+                        .FindPath(() => ldk.con.ConnectByStairsInside(towerTop.LE, roomBelow.LE).GN(sym.ConnectionMarker), out var stairs)
                         .PlaceNodes(towerTop, reservation);
                 });
         }
