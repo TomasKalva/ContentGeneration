@@ -8,24 +8,34 @@ using UnityEngine;
 
 namespace ShapeGrammar
 {
-    class LDLanguage : 
-        LevelLanguage<LDLanguage>, 
-        BrothersLanguage<LDLanguage>,
-        FarmersLanguage<LDLanguage>
+    class LDLanguage :
+        ILDLanguageImpl
     {
         protected ShapeGrammarState GrammarState { get; }
         protected LevelDevelopmentKit Ldk { get; }
         protected Libraries Lib { get; }
 
-        ShapeGrammarState ILDLanguage<LDLanguage>.GrammarState => GrammarState;
-        LevelDevelopmentKit ILDLanguage<LDLanguage>.Ldk => Ldk;
-        Libraries ILDLanguage<LDLanguage>.Lib => Lib;
+        ShapeGrammarState ILDLanguage.GrammarState => GrammarState;
+        LevelDevelopmentKit ILDLanguage.Ldk => Ldk;
+        Libraries ILDLanguage.Lib => Lib;
 
         public LDLanguage(ShapeGrammarState grammarState, LevelDevelopmentKit ldk, Libraries lib)
         {
             GrammarState = grammarState;
             Ldk = ldk;
             Lib = lib;
+        }
+    }
+
+    interface ILDLanguageImpl : 
+        LevelLanguage, 
+        BrothersLanguage,
+        FarmersLanguage
+    {
+        public void Level()
+        {
+            LevelStart(out var area);
+            FarmerBranch(0);
         }
     }
 
@@ -83,42 +93,38 @@ namespace ShapeGrammar
 
     #endregion
 
-    interface ILDLanguage<LanguageUserT>
+    interface ILDLanguage
     {
         protected ShapeGrammarState GrammarState { get; }
         protected LevelDevelopmentKit Ldk { get; }
         protected Libraries Lib { get; }
-        protected LanguageUserT This => (LanguageUserT)this;
     }
 
     #region Language tools
 
-    interface IEnvironmentCreator<LanguageUserT> : ILDLanguage<LanguageUserT>
+    interface IEnvironmentCreator : ILDLanguage
     {
-        public LanguageUserT AddLine(ProductionList productions, int count)
+        public void AddLine(ProductionList productions, int count)
         {
             var linearGrammar = new CustomGrammar(productions, count, null, state => state.LastCreated);
             linearGrammar.Evaluate(GrammarState);
-            return This;
         }
 
-        public LanguageUserT AddOne(ProductionList productions, out Area one)
+        public void AddOne(ProductionList productions, out Area one)
         {
             var grammar = new RandomGrammar(productions, 1);
             grammar.Evaluate(GrammarState);
             one = null;
-            return This;
         }
 
-        public LanguageUserT AddRandom(ProductionList productions, int count)
+        public void AddRandom(ProductionList productions, int count)
         {
             var grammar = new RandomGrammar(productions, count);
             grammar.Evaluate(GrammarState);
-            return This;
         }
     }
 
-    interface IProductions<LanguageUserT> : ILDLanguage<LanguageUserT>
+    interface IProductions : ILDLanguage
     {
         protected ProductionLists PrL => new ProductionLists(Ldk);
         protected Productions Pr => new Productions(Ldk);
@@ -132,7 +138,7 @@ namespace ShapeGrammar
         public ProductionList Roofs() => PrL.Roofs(Pr);
     }
 
-    interface IInteractiveObjects<LanguageUserT> : ILDLanguage<LanguageUserT>
+    interface IInteractiveObjects : ILDLanguage
     {
         public GeometryMaker Geometry(Transform prefab)
         {
@@ -156,52 +162,46 @@ namespace ShapeGrammar
     /// Conatains declaration of all data members of LDLanguage, so that the
     /// module sub-languages can use them.
     /// </summary>
-
-    interface LevelLanguage<LanguageUserT> 
-        : ILDLanguage<LanguageUserT>,
-            IEnvironmentCreator<LanguageUserT>,
-            IProductions<LanguageUserT>
+    interface LevelLanguage 
+        : ILDLanguage,
+            IEnvironmentCreator,
+            IProductions
     {
-        public LanguageUserT LevelStart(out Area area)
+        public void LevelStart(out Area area)
         {
             AddOne(CreateNewHouse(), out area);
-            return This;
         }
 
-        public LanguageUserT LevelPathSegment()
+        public void LevelPathSegment()
         {
 
-            return This;
         }
 
-        public LanguageUserT LevelEnd()
+        public void LevelEnd()
         {
 
-            return This;
         }
     }
 
-    interface BrothersLanguage<LanguageUserT> : ILDLanguage<LanguageUserT>
+    interface BrothersLanguage : ILDLanguage
     {
-        public LanguageUserT ThymeTea()
+        public void ThymeTea()
         {
 
-            return This;
         }
 
-        public LanguageUserT GiftOfHope()
+        public void GiftOfHope()
         {
 
-            return This;
         }
     }
 
-    interface FarmersLanguage<LanguageUserT> 
-        : IEnvironmentCreator<LanguageUserT>,
-          IProductions<LanguageUserT>,
-          IInteractiveObjects<LanguageUserT>
+    interface FarmersLanguage 
+        : IEnvironmentCreator,
+          IProductions,
+          IInteractiveObjects
     {
-        public LanguageUserT FarmerBranch(int progress)
+        public void FarmerBranch(int progress)
         {
             AddLine(Garden(), 2);
             AddOne(Garden(), out var farmer_area);
@@ -218,7 +218,6 @@ namespace ShapeGrammar
             //    );
             AddRandom(Garden(), 5);
 
-            return This;
         }
     }
 

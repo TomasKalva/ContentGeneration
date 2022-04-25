@@ -73,7 +73,11 @@ namespace ShapeGrammar
                     );
 
             var shapeGrammar = new RandomGrammar(prL.TestingProductions(pr), 20);
-            var graveyardGrammar = new RandomGrammar(prL.Graveyard(pr), 10);
+            var randGardenGrammar = new RandomGrammar(prL.Garden(pr), 1);
+
+            var newNodes = grammarState.ApplyProduction(pr.CreateNewHouse());
+            randGardenGrammar.Evaluate(grammarState);
+            /*var graveyardGrammar = new RandomGrammar(prL.Graveyard(pr), 10);
             var graveyardPostprocessGrammar = new AllGrammar(prL.GraveyardPostprocess(pr));
             var roofGrammar = new AllGrammar(prL.Roofs(pr));
 
@@ -81,12 +85,13 @@ namespace ShapeGrammar
             shapeGrammar.Evaluate(grammarState);
 
             gardenGrammar.Evaluate(grammarState);
+            
 
             //graveyardGrammar.Evaluate(grammarState);
             //graveyardPostprocessGrammar.Evaluate(grammarState);
 
             roofGrammar.Evaluate(grammarState);
-
+            */
 
             grammarState.Print(new PrintingState()).Show();
             grammarState.Stats.Print();
