@@ -140,7 +140,6 @@ public class InteractiveObjects : ScriptableObject
     }
     #endregion
 
-
     public GeometryMaker Geometry(Transform prefab)
     {
         return new GeometryMaker(() => GameObject.Instantiate(prefab));
@@ -151,6 +150,7 @@ public class InteractiveObjects : ScriptableObject
         var newInteractiveObject = new InteractiveObjectState()
         {
             Name = name,
+            GeometryMaker = geometryMaker
         };
         return newInteractiveObject;
     }

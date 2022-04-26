@@ -20,16 +20,19 @@ namespace ShapeGrammar
         public override LevelElement CreateLevel()
         {
             var grammarState = new ShapeGrammarState(ldk);
+            var languageState = new LanguageState(grammarState);
             var gr = new Grammars(ldk);
             var sym = new Symbols();
-            var env = new Environments(grammarState, sym);
+            var env = new Environments(languageState, sym);
             ProductionProgram.pr = new Productions(ldk, sym);
             ProductionProgram.ldk = ldk;
             ProductionProgram.StyleRules = ldk.houseStyleRules;
 
-            MyLanguage language = new MyLanguage(new LanguageParams(ldk, lib, gr, new LanguageState(grammarState), env));
+            MyLanguage language = new MyLanguage(new LanguageParams(ldk, lib, gr, languageState, env));
 
             language.MyLevel();
+
+            language.Instantiate();
             //((FarmersLanguage < LDLanguage > )language).FarmerBranch(0);
 
             grammarState.Print(new PrintingState()).Show();

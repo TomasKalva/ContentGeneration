@@ -101,7 +101,7 @@ namespace ContentGeneration.Assets.UI.Model
 #endif
 
 #if NOESIS
-        GeometryMaker GeometryMaker { get; }
+        public GeometryMaker GeometryMaker { get; set; }
         
         public void MakeGeometry()
         {

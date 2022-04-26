@@ -60,6 +60,8 @@ namespace ShapeGrammar
                     //Player.AddSpirit(10 * progress);
                 })*/
                 );
+            UnityEngine.Debug.Log($"{farmer_area.InteractiveObjectStates.Count}");
+            UnityEngine.Debug.Log($"Is farmer area in state: {State.TraversableAreas.Contains(farmer_area)}");
             Env.AddRandom(Gr.PrL.Garden(), 5, out var garden);
 
         }

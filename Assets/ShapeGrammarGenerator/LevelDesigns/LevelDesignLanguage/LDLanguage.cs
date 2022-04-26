@@ -41,6 +41,12 @@ namespace ShapeGrammar
             Env = languageParams.Env;
             L = Languages.Get(languageParams);
         }
+
+        public void Instantiate()
+        {
+            UnityEngine.Debug.Log($"Traversable areas total: {State.TraversableAreas.Count}");
+            State.TraversableAreas.ForEach(area => area.InstantiateAll());
+        }
     }
 
     class LanguageParams
@@ -69,6 +75,8 @@ namespace ShapeGrammar
         public void MyLevel()
         {
             L.LevelLanguage.LevelStart(out var startArea);
+            Debug.Log($"Start area in traversable: {State.TraversableAreas.Contains(startArea)}");
+            Debug.Log($"Start area in traversable: {State.TraversableAreas.Count}");
             L.FarmersLanguage.FarmerBranch(0);
         }
     }
@@ -78,12 +86,14 @@ namespace ShapeGrammar
     class Area
     {
         public Node Node { get; }
-        List<InteractiveObjectState> InteractiveObjectStates { get; }
+        public List<InteractiveObjectState> InteractiveObjectStates { get; }
+        public string DeubgMsg { get; }
 
-        public Area(Node node)
+        public Area(Node node, string debugMsg)
         {
             Node = node;
             InteractiveObjectStates = new List<InteractiveObjectState>();
+            DeubgMsg = debugMsg;
         }
 
         public void AddInteractiveObject(InteractiveObjectState interactiveObject)
@@ -93,6 +103,7 @@ namespace ShapeGrammar
 
         public void InstantiateAll()
         {
+            Debug.Log($"Interactive object states: {InteractiveObjectStates.Count}");
             foreach(var ios in InteractiveObjectStates)
             {
                 ios.MakeGeometry();
@@ -192,34 +203,45 @@ namespace ShapeGrammar
 
     class Environments
     {
-        ShapeGrammarState GrammarState { get; }
+        LanguageState LanguageState { get; }
         Symbols Sym { get; }
 
-        public Environments(ShapeGrammarState grammarState, Symbols sym)
+        public Environments(LanguageState languageState, Symbols sym)
         {
-            GrammarState = grammarState;
+            LanguageState = languageState;
             Sym = sym;
+        }
+
+        IEnumerable<Area> GenerateAndTakeTraversable(Grammar grammar)
+        {
+            var traversable = grammar.Evaluate(LanguageState.GrammarState)
+                                .Where(node => node.HasSymbols(Sym.FullFloorMarker))
+                                .Select(node => new Area(node, "Debugging"))
+                                .ToList();
+            LanguageState.TraversableAreas.AddRange(traversable);
+            Debug.Log($"Number of traversable: {traversable.Count()}, total: {LanguageState.TraversableAreas.Count}");
+            Debug.Log($"Contains new first added: {LanguageState.TraversableAreas.Contains(traversable.First())}");
+            return traversable;
         }
 
         public void AddLine(ProductionList productions, int count, out LinearPath linearPath)
         {
             var linearGrammar = new CustomGrammar(productions, count, null, state => state.LastCreated);
-            var traversableNodes = linearGrammar.Evaluate(GrammarState).Where(node => node.HasSymbols(Sym.FullFloorMarker));
-            linearPath = new LinearPath(traversableNodes.Select(node => new Area(node)).ToList());
+            var traversable = GenerateAndTakeTraversable(linearGrammar);
+            linearPath = new LinearPath(traversable.ToList());
         }
 
         public void AddOne(ProductionList productions, out Area one)
         {
             var grammar = new RandomGrammar(productions, 1);
-            var traversable = grammar.Evaluate(GrammarState).Where(node => node.HasSymbols(Sym.FullFloorMarker)).First();
-            one = new Area(traversable);
+            one = GenerateAndTakeTraversable(grammar).First();
         }
 
         public void AddRandom(ProductionList productions, int count, out Branching branching)
         {
             var grammar = new RandomGrammar(productions, count);
-            var traversableNodes = grammar.Evaluate(GrammarState).Where(node => node.HasSymbols(Sym.FullFloorMarker));
-            branching = new Branching(traversableNodes.Select(node => new Area(node)).ToList());
+            var traversableNodes = GenerateAndTakeTraversable(grammar);
+            branching = new Branching(traversableNodes.ToList());
         }
     }
 
