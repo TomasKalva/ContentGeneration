@@ -101,11 +101,8 @@ namespace ContentGeneration.Assets.UI.Model
 #endif
 
 #if NOESIS
-        public GeometryMaker GeometryMaker { get; set; }
-        
-        public void MakeGeometry()
+        public virtual void MakeGeometry()
         {
-            InteractiveObject = GeometryMaker.CreateGeometry().gameObject.AddComponent<InteractiveObject>();
         }
 #endif
 
@@ -116,6 +113,34 @@ namespace ContentGeneration.Assets.UI.Model
             MessageOnInteract = "MessageOnInteract";
             InteractionDescription = "InteractionDescription";
         }
+    }
+
+    public class InteractiveObjectState<T> : InteractiveObjectState where T : InteractiveObject
+    {
+#if NOESIS
+        public T IntObj { get; private set; }
+
+        Action<InteractiveObjectState<T>> ActionOnInteract { get; set; }
+
+        public GeometryMaker<T> GeometryMaker { get; set; }
+
+        public override void MakeGeometry()
+        {
+            InteractiveObject = IntObj = GeometryMaker.CreateGeometry();//.gameObject.AddComponent<InteractiveObject>();
+        }
+
+        public override void Interact(Agent agent)
+        {
+        }
+
+        public InteractiveObjectState<T> SetInteract(string message, Action<InteractiveObjectState<T>> onInteract)
+        {
+            MessageOnInteract = message;
+            ActionOnInteract = onInteract;
+            return this;
+        }
+#endif
+
     }
 
     public class InteractOptions : INotifyPropertyChanged

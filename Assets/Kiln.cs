@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
-public class Kiln : MonoBehaviour
+public class Kiln : InteractiveObject
 {
     [SerializeField]
     VisualEffect fire;

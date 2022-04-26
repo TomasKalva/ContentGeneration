@@ -36,7 +36,7 @@ public class Door : InteractiveObject
     }
 }
 
-public class DoorState : InteractiveObjectState
+public class DoorState : InteractiveObjectState<Door>
 {
     Door Door => InteractiveObject.GetComponentInChildren<Door>();
 

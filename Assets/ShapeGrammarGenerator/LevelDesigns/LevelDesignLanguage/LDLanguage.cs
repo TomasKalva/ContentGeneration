@@ -75,8 +75,6 @@ namespace ShapeGrammar
         public void MyLevel()
         {
             L.LevelLanguage.LevelStart(out var startArea);
-            Debug.Log($"Start area in traversable: {State.TraversableAreas.Contains(startArea)}");
-            Debug.Log($"Start area in traversable: {State.TraversableAreas.Count}");
             L.FarmersLanguage.FarmerBranch(0);
         }
     }
@@ -103,7 +101,6 @@ namespace ShapeGrammar
 
         public void InstantiateAll()
         {
-            Debug.Log($"Interactive object states: {InteractiveObjectStates.Count}");
             foreach(var ios in InteractiveObjectStates)
             {
                 ios.MakeGeometry();
@@ -148,17 +145,17 @@ namespace ShapeGrammar
 
     }
 
-    public class GeometryMaker
+    public class GeometryMaker<T> where T : MonoBehaviour
     {
-        Transform geometry;
-        Func<Transform> GeometryF { get; }
+        T geometry;
+        Func<T> GeometryF { get; }
 
-        public GeometryMaker(Func<Transform> geometryF)
+        public GeometryMaker(Func<T> geometryF)
         {
             GeometryF = geometryF;
         }
 
-        public Transform CreateGeometry()
+        public T CreateGeometry()
         {
             geometry = GeometryF();
             return geometry;
@@ -219,8 +216,6 @@ namespace ShapeGrammar
                                 .Select(node => new Area(node, "Debugging"))
                                 .ToList();
             LanguageState.TraversableAreas.AddRange(traversable);
-            Debug.Log($"Number of traversable: {traversable.Count()}, total: {LanguageState.TraversableAreas.Count}");
-            Debug.Log($"Contains new first added: {LanguageState.TraversableAreas.Contains(traversable.First())}");
             return traversable;
         }
 
@@ -273,6 +268,7 @@ namespace ShapeGrammar
         public ProductionList Roofs() => PrL.Roofs(Pr);
     }*/
 
+    /*
     class InteractiveObjects
     {
         public GeometryMaker Geometry(Transform prefab)
@@ -288,7 +284,7 @@ namespace ShapeGrammar
             };
             return newInteractiveObject;
         }
-    }
+    }*/
 
     #endregion
 }

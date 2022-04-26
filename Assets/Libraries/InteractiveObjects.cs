@@ -140,14 +140,26 @@ public class InteractiveObjects : ScriptableObject
     }
     #endregion
 
-    public GeometryMaker Geometry(Transform prefab)
+    public GeometryMaker<InteractiveObjectT> Geometry<InteractiveObjectT>(Transform prefab) where InteractiveObjectT : InteractiveObject
     {
-        return new GeometryMaker(() => GameObject.Instantiate(prefab));
+        return new GeometryMaker<InteractiveObjectT>(
+            () =>
+            {
+                var newObj = GameObject.Instantiate(prefab);
+                var comp = newObj.GetComponentInChildren<InteractiveObjectT>();
+                if (comp == null)
+                {
+                    Debug.Log($"Adding component {typeof(InteractiveObjectT)}");
+                    comp = newObj.gameObject.AddComponent<InteractiveObjectT>();
+                }
+                return comp;
+            }
+        );
     }
 
-    public InteractiveObjectState NewInteractiveObject(string name, GeometryMaker geometryMaker)
+    public InteractiveObjectState<T> NewInteractiveObject<T>(string name, GeometryMaker<T> geometryMaker) where T : InteractiveObject
     {
-        var newInteractiveObject = new InteractiveObjectState()
+        var newInteractiveObject = new InteractiveObjectState<T>()
         {
             Name = name,
             GeometryMaker = geometryMaker

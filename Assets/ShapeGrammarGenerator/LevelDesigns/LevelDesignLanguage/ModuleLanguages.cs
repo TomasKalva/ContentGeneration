@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace ShapeGrammar
 {
@@ -50,18 +51,17 @@ namespace ShapeGrammar
             Env.AddLine(Gr.PrL.Garden(), 2, out var path_to_farmer);
             Env.AddOne(Gr.PrL.Garden(), out var farmer_area);
             farmer_area.AddInteractiveObject(
-                Lib.InteractiveObjects.NewInteractiveObject("Farmer", Lib.InteractiveObjects.Geometry(Lib.Objects.farmer))
+                Lib.InteractiveObjects.NewInteractiveObject("Farmer", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
+
             //.Show("Bring me apples")
-            /*.SetInteract("Give apples",
-                () =>
+                .SetInteract("Apples given",
+                (farmer) =>
                 {
                     Debug.Log("Interacting with farmer");
                     //Levels().Next().AddPossibleBranch(FarmerBranch(progress + 1);
                     //Player.AddSpirit(10 * progress);
-                })*/
+                })
                 );
-            UnityEngine.Debug.Log($"{farmer_area.InteractiveObjectStates.Count}");
-            UnityEngine.Debug.Log($"Is farmer area in state: {State.TraversableAreas.Contains(farmer_area)}");
             Env.AddRandom(Gr.PrL.Garden(), 5, out var garden);
 
         }
