@@ -18,13 +18,13 @@ namespace ShapeGrammar
 
         public override LevelElement CreateLevel()
         {
-            var pr = new Productions(ldk);
+            var pr = new Productions(ldk, new Symbols());
             ProductionProgram.pr = pr;
             ProductionProgram.ldk = ldk;
             ProductionProgram.StyleRules = ldk.houseStyleRules;
 
             var grammarState = new ShapeGrammarState(ldk);
-            var prL = new ProductionLists(ldk);
+            var prL = new ProductionLists(ldk, pr);
 
             var guideRandomly = new RandomPathGuide();
             var guideToPoint = new PointPathGuide(grammarState, state => new Vector3Int(0, 0, 50));
@@ -38,7 +38,7 @@ namespace ShapeGrammar
                     return Vector3Int.RoundToInt(targetPoint);
                 });
 
-            var targetedLowGarden = prL.GuidedGarden(pr, guideBack);
+            var targetedLowGarden = prL.GuidedGarden(guideBack);
 
             //var shapeGrammar = new CustomGrammarEvaluator(productionList, 20, null, state => state.LastCreated);
 
@@ -55,7 +55,7 @@ namespace ShapeGrammar
                         1, pr.sym.Courtyard
                     )
                     .AppendLinear(
-                        prL.Garden(pr),
+                        prL.Garden(),
                         5, pr.sym.Courtyard
                     )
                     .AppendLinear(
@@ -64,7 +64,7 @@ namespace ShapeGrammar
                     )
                     .AppendStartEnd(
                         pr.sym,
-                        prL.ConnectBack(pr),
+                        prL.ConnectBack(),
                         state => state.LastCreated,
                         state => state.WithSymbols(pr.sym.ReturnToMarker)
                     )
@@ -72,8 +72,8 @@ namespace ShapeGrammar
                         state => state.Root.AllDerived().ForEach(parent => parent.RemoveSymbolByName(pr.sym.ReturnToMarker))
                     );
 
-            var shapeGrammar = new RandomGrammar(prL.TestingProductions(pr), 20);
-            var randGardenGrammar = new RandomGrammar(prL.Garden(pr), 1);
+            var shapeGrammar = new RandomGrammar(prL.TestingProductions(), 20);
+            var randGardenGrammar = new RandomGrammar(prL.Garden(), 1);
 
             var newNodes = grammarState.ApplyProduction(pr.CreateNewHouse());
             randGardenGrammar.Evaluate(grammarState);

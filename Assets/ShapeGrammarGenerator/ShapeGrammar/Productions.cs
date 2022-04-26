@@ -11,11 +11,12 @@ namespace ShapeGrammar
     public class Productions
     {
         public LevelDevelopmentKit ldk { get; }
-        public Symbols sym { get; } = new Symbols();
+        public Symbols sym { get; }
 
-        public Productions(LevelDevelopmentKit ldk)
+        public Productions(LevelDevelopmentKit ldk, Symbols sym)
         {
             this.ldk = ldk;
+            this.sym = sym;
         }
 
         public Production CreateNewHouse()

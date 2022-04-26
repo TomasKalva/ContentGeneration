@@ -379,5 +379,7 @@ namespace ShapeGrammar
             VerticallyTaken.SetAreaType(AreaType.Garden).ApplyGrammarStyleRules(houseStyleRules);
         }
         #endregion
+
+
     }
 }

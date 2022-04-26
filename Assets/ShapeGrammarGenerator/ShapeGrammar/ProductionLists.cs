@@ -9,13 +9,15 @@ namespace ShapeGrammar
     public class ProductionLists
     {
         LevelDevelopmentKit ldk { get; }
+        Productions pr { get; }
 
-        public ProductionLists(LevelDevelopmentKit ldk)
+        public ProductionLists(LevelDevelopmentKit ldk, Productions pr)
         {
             this.ldk = ldk;
+            this.pr = pr;
         }
 
-        public ProductionList TestingProductions(Productions pr)
+        public ProductionList TestingProductions()
         {
             return new ProductionList
             (
@@ -40,7 +42,7 @@ namespace ShapeGrammar
             );
         }
 
-        public ProductionList CreateNewHouse(Productions pr)
+        public ProductionList CreateNewHouse()
         {
             return new ProductionList
             (
@@ -48,7 +50,7 @@ namespace ShapeGrammar
             );
         }
 
-        public ProductionList Garden(Productions pr)
+        public ProductionList Garden()
         {
             return new ProductionList
             (
@@ -59,7 +61,7 @@ namespace ShapeGrammar
             );
         }
 
-        public ProductionList GuidedGarden(Productions pr, PathGuide guide)
+        public ProductionList GuidedGarden(PathGuide guide)
         {
             return new ProductionList
             (
@@ -70,7 +72,7 @@ namespace ShapeGrammar
             );
         }
 
-        public ProductionList Graveyard(Productions pr)
+        public ProductionList Graveyard()
         {
             var guideRandomly = new RandomPathGuide();
             return new ProductionList 
@@ -89,7 +91,7 @@ namespace ShapeGrammar
             );
         }
 
-        public ProductionList GraveyardPostprocess(Productions pr)
+        public ProductionList GraveyardPostprocess()
         {
             var guideRandomly = new RandomPathGuide();
             return new ProductionList
@@ -98,7 +100,7 @@ namespace ShapeGrammar
             );
         }
 
-        public ProductionList ConnectBack(Productions pr)
+        public ProductionList ConnectBack()
         {
             return new ProductionList
             (
@@ -106,7 +108,7 @@ namespace ShapeGrammar
             );
         }
 
-        public ProductionList Roofs(Productions pr)
+        public ProductionList Roofs()
         {
             return new ProductionList
             (
