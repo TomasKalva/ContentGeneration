@@ -8,10 +8,21 @@ using UnityEngine;
 
 namespace ShapeGrammar
 {
-    abstract class LDLanguage
+    class LanguageState
     {
         public ShapeGrammarState GrammarState { get; }
+        public List<Area> TraversableAreas { get; }
 
+        public LanguageState(ShapeGrammarState grammarState)
+        {
+            GrammarState = grammarState;
+            TraversableAreas = new List<Area>();
+        }
+    }
+
+    abstract class LDLanguage
+    {
+        public LanguageState State { get; }
 
         public LevelDevelopmentKit Ldk { get; }
         public Libraries Lib { get; }
@@ -25,7 +36,8 @@ namespace ShapeGrammar
             Lib = languageParams.Lib;
             Gr = languageParams.Gr;
 
-            GrammarState = languageParams.GrammarState;
+            State = languageParams.LanguageState;
+
             Env = languageParams.Env;
             L = Languages.Get(languageParams);
         }
@@ -33,18 +45,19 @@ namespace ShapeGrammar
 
     class LanguageParams
     {
+        public LanguageState LanguageState { get; }
+
         public LevelDevelopmentKit Ldk { get; }
         public Libraries Lib { get; }
         public Grammars Gr { get; }
-        public ShapeGrammarState GrammarState { get; }
         public Environments Env { get; }
 
-        public LanguageParams(LevelDevelopmentKit ldk, Libraries lib, Grammars gr, ShapeGrammarState grammarState, Environments env)
+        public LanguageParams(LevelDevelopmentKit ldk, Libraries lib, Grammars gr, LanguageState languageState, Environments env)
         {
             Ldk = ldk;
             Lib = lib;
             Gr = gr;
-            GrammarState = grammarState;
+            LanguageState = languageState;
             Env = env;
         }
     }
@@ -64,7 +77,14 @@ namespace ShapeGrammar
 
     class Area
     {
+        public Node Node { get; }
         List<InteractiveObjectState> InteractiveObjectStates { get; }
+
+        public Area(Node node)
+        {
+            Node = node;
+            InteractiveObjectStates = new List<InteractiveObjectState>();
+        }
 
         public void AddInteractiveObject(InteractiveObjectState interactiveObject)
         {
@@ -85,6 +105,28 @@ namespace ShapeGrammar
 
     }
 
+    class LinearPath
+    {
+        public List<Area> Areas { get; }
+
+        public LinearPath(List<Area> areas)
+        {
+            Areas = areas;
+        }
+
+        public Area LastArea() => Areas.LastOrDefault();
+    }
+
+    class Branching
+    {
+        public List<Area> Areas { get; }
+
+        public Branching(List<Area> areas)
+        {
+            Areas = areas;
+        }
+    }
+
     class Enemy
     {
 
@@ -95,7 +137,7 @@ namespace ShapeGrammar
 
     }
 
-    class GeometryMaker
+    public class GeometryMaker
     {
         Transform geometry;
         Func<Transform> GeometryF { get; }
@@ -113,13 +155,6 @@ namespace ShapeGrammar
     }
 
     #endregion
-
-    interface ILDLanguage
-    {
-        protected ShapeGrammarState GrammarState { get; }
-        protected LevelDevelopmentKit Ldk { get; }
-        protected Libraries Lib { get; }
-    }
 
     class Languages
     {
@@ -158,29 +193,33 @@ namespace ShapeGrammar
     class Environments
     {
         ShapeGrammarState GrammarState { get; }
+        Symbols Sym { get; }
 
-        public Environments(ShapeGrammarState grammarState)
+        public Environments(ShapeGrammarState grammarState, Symbols sym)
         {
             GrammarState = grammarState;
+            Sym = sym;
         }
 
-        public void AddLine(ProductionList productions, int count)
+        public void AddLine(ProductionList productions, int count, out LinearPath linearPath)
         {
             var linearGrammar = new CustomGrammar(productions, count, null, state => state.LastCreated);
-            linearGrammar.Evaluate(GrammarState);
+            var traversableNodes = linearGrammar.Evaluate(GrammarState).Where(node => node.HasSymbols(Sym.FullFloorMarker));
+            linearPath = new LinearPath(traversableNodes.Select(node => new Area(node)).ToList());
         }
 
         public void AddOne(ProductionList productions, out Area one)
         {
             var grammar = new RandomGrammar(productions, 1);
-            grammar.Evaluate(GrammarState);
-            one = null;
+            var traversable = grammar.Evaluate(GrammarState).Where(node => node.HasSymbols(Sym.FullFloorMarker)).First();
+            one = new Area(traversable);
         }
 
-        public void AddRandom(ProductionList productions, int count)
+        public void AddRandom(ProductionList productions, int count, out Branching branching)
         {
             var grammar = new RandomGrammar(productions, count);
-            grammar.Evaluate(GrammarState);
+            var traversableNodes = grammar.Evaluate(GrammarState).Where(node => node.HasSymbols(Sym.FullFloorMarker));
+            branching = new Branching(traversableNodes.Select(node => new Area(node)).ToList());
         }
     }
 
@@ -212,7 +251,7 @@ namespace ShapeGrammar
         public ProductionList Roofs() => PrL.Roofs(Pr);
     }*/
 
-    interface IInteractiveObjects : ILDLanguage
+    class InteractiveObjects
     {
         public GeometryMaker Geometry(Transform prefab)
         {
@@ -230,68 +269,4 @@ namespace ShapeGrammar
     }
 
     #endregion
-
-    #region Module languages
-    class LevelLanguage : LDLanguage
-    {
-        public LevelLanguage(LanguageParams tools) : base(tools) { }
-
-        public void LevelStart(out Area area)
-        {
-            Env.AddOne(Gr.PrL.CreateNewHouse(), out area);
-        }
-
-        public void LevelPathSegment()
-        {
-
-        }
-
-        public void LevelEnd()
-        {
-
-        }
-    }
-
-    class BrothersLanguage : LDLanguage
-    {
-        public BrothersLanguage(LanguageParams tools) : base(tools) { }
-
-        public void ThymeTea()
-        {
-
-        }
-
-        public void GiftOfHope()
-        {
-
-        }
-    }
-
-    class FarmersLanguage 
-        : LDLanguage
-    {
-        public FarmersLanguage(LanguageParams tools) : base(tools) {}
-
-        public void FarmerBranch(int progress)
-        {
-            Env.AddLine(Gr.PrL.Garden(), 2);
-            Env.AddOne(Gr.PrL.Garden(), out var farmer_area);
-            //farmer_area.AddInteractiveObject(
-            //    NewInteractiveObject("Farmer", Geometry(Lib.Objects.farmer))
-                    //.Show("Bring me apples")
-                    /*.SetInteract("Give apples",
-                        () =>
-                        {
-                            Debug.Log("Interacting with farmer");
-                            //Levels().Next().AddPossibleBranch(FarmerBranch(progress + 1);
-                            //Player.AddSpirit(10 * progress);
-                        })*/
-            //    );
-            Env.AddRandom(Gr.PrL.Garden(), 5);
-
-        }
-    }
-
-    #endregion
-
 }

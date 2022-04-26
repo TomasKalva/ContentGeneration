@@ -21,12 +21,13 @@ namespace ShapeGrammar
         {
             var grammarState = new ShapeGrammarState(ldk);
             var gr = new Grammars(ldk);
-            var env = new Environments(grammarState);
-            ProductionProgram.pr = new Productions(ldk, new Symbols());
+            var sym = new Symbols();
+            var env = new Environments(grammarState, sym);
+            ProductionProgram.pr = new Productions(ldk, sym);
             ProductionProgram.ldk = ldk;
             ProductionProgram.StyleRules = ldk.houseStyleRules;
 
-            MyLanguage language = new MyLanguage(new LanguageParams(ldk, lib, gr, grammarState, env));
+            MyLanguage language = new MyLanguage(new LanguageParams(ldk, lib, gr, new LanguageState(grammarState), env));
 
             language.MyLevel();
             //((FarmersLanguage < LDLanguage > )language).FarmerBranch(0);

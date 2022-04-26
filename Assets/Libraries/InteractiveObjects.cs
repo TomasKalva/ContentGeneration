@@ -1,5 +1,6 @@
 using Assets.InteractiveObject;
 using ContentGeneration.Assets.UI.Model;
+using ShapeGrammar;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -138,4 +139,19 @@ public class InteractiveObjects : ScriptableObject
         return obj;
     }
     #endregion
+
+
+    public GeometryMaker Geometry(Transform prefab)
+    {
+        return new GeometryMaker(() => GameObject.Instantiate(prefab));
+    }
+
+    public InteractiveObjectState NewInteractiveObject(string name, GeometryMaker geometryMaker)
+    {
+        var newInteractiveObject = new InteractiveObjectState()
+        {
+            Name = name,
+        };
+        return newInteractiveObject;
+    }
 }

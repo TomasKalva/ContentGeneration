@@ -22,13 +22,18 @@ namespace ShapeGrammar
     {
         protected Action<ShapeGrammarState> StartHandler { get; set; }
         protected Action<ShapeGrammarState> EndHandler { get; set; }
+        protected List<Node> CreatedNodes { get; }
 
         public Grammar()
         {
             StartHandler = EndHandler = _ => { } ;
+            CreatedNodes = new List<Node>();
         }
 
-        public abstract void Evaluate(ShapeGrammarState shapeGrammarState);
+        /// <summary>
+        /// Returns all created nodes.
+        /// </summary>
+        public abstract IEnumerable<Node> Evaluate(ShapeGrammarState shapeGrammarState);
 
         protected IEnumerable<Node> Produce(ShapeGrammarState state, IEnumerable<Production> applicableProductions, string failedMsg = null)
         {
@@ -38,6 +43,7 @@ namespace ShapeGrammar
                 UnityEngine.Debug.Log(failedMsg ?? $"Can't apply any productions");
                 return null;
             }
+            CreatedNodes.AddRange(newNodes);
             return newNodes;
         }
 
@@ -54,7 +60,7 @@ namespace ShapeGrammar
             Count = count;
         }
 
-        public override void Evaluate(ShapeGrammarState shapeGrammarState)
+        public override IEnumerable<Node> Evaluate(ShapeGrammarState shapeGrammarState)
         {
             for (int i = 0; i < Count; i++)
             {
@@ -62,6 +68,7 @@ namespace ShapeGrammar
                 var applicable = Productions.Get.Shuffle();
                 Produce(shapeGrammarState, applicable);
             }
+            return CreatedNodes;
         }
     }
 
@@ -74,7 +81,7 @@ namespace ShapeGrammar
             Productions = productions;
         }
 
-        public override void Evaluate(ShapeGrammarState shapeGrammarState)
+        public override IEnumerable<Node> Evaluate(ShapeGrammarState shapeGrammarState)
         {
             IEnumerable<Node> newNodes = null;
             do
@@ -84,6 +91,7 @@ namespace ShapeGrammar
                 newNodes = Produce(shapeGrammarState, applicable, "Roofs done");
             }
             while (newNodes != null);
+            return CreatedNodes;
         }
     }
 
@@ -104,7 +112,7 @@ namespace ShapeGrammar
             NodesQuery = nodesQuery ?? (state => state.Root.AllDerived());
         }
 
-        public override void Evaluate(ShapeGrammarState shapeGrammarState)
+        public override IEnumerable<Node> Evaluate(ShapeGrammarState shapeGrammarState)
         {
             for (int i = 0; i < Count; i++)
             {
@@ -112,6 +120,7 @@ namespace ShapeGrammar
                 var applicable = Productions.Get.Shuffle();
                 var newNodes = Produce(shapeGrammarState, applicable);
             }
+            return CreatedNodes;
         }
     }
 
@@ -133,7 +142,7 @@ namespace ShapeGrammar
             EndQuery = endQuery;
         }
 
-        public override void Evaluate(ShapeGrammarState shapeGrammarState)
+        public override IEnumerable<Node> Evaluate(ShapeGrammarState shapeGrammarState)
         {
             shapeGrammarState.ActiveNodes = shapeGrammarState.Root.AllDerived();
 
@@ -150,6 +159,8 @@ namespace ShapeGrammar
             
             startNodes.ForEach(node => node.RemoveSymbolByName(Sym.StartMarker));
             endNodes.ForEach(node => node.RemoveSymbolByName(Sym.EndMarker));
+
+            return CreatedNodes;
         }
     }
 
@@ -172,11 +183,12 @@ namespace ShapeGrammar
             => Add(new CustomGrammar(productions, count, startSymbol, state => state.LastCreated));
         public GrammarSequence AppendStartEnd(Symbols symbols, ProductionList productions, NodesQuery startQuery, NodesQuery endQuery)
             => Add(new StartEndGrammar(symbols, productions, startQuery, endQuery));
-        public override void Evaluate(ShapeGrammarState shapeGrammarState)
+        public override IEnumerable<Node> Evaluate(ShapeGrammarState shapeGrammarState)
         {
             StartHandler(shapeGrammarState);
-            EvaluatorSequence.ForEach(evaluator => evaluator.Evaluate(shapeGrammarState));
+            var createdNodes = EvaluatorSequence.SelectMany(evaluator => evaluator.Evaluate(shapeGrammarState)).Evaluate();
             EndHandler(shapeGrammarState);
+            return createdNodes;
         }
 
         public GrammarSequence SetStartHandler(Action<ShapeGrammarState> handler)
