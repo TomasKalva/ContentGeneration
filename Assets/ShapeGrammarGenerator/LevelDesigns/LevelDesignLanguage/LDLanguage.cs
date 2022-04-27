@@ -103,11 +103,15 @@ namespace ShapeGrammar
             InteractiveObjectStates.Add(interactiveObject);
         }
 
-        public void InstantiateAll()
+        public virtual void InstantiateAll()
         {
-            foreach(var ios in InteractiveObjectStates)
+            var flooredCubes = new Stack<Cube>(Node.LE.CG().WithFloor().Cubes.Shuffle());
+
+            foreach (var ios in InteractiveObjectStates)
             {
                 ios.MakeGeometry();
+                // todo: Create tool for placement of real assets, so that magic numbers aren't needed
+                ios.InteractiveObject.transform.position = 2.8f * (Vector3)flooredCubes.Pop().Position ;
             }
         }
     }
