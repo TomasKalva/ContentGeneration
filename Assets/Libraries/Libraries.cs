@@ -27,6 +27,5 @@ public class Libraries : ScriptableObject
     public InteractiveObjects InteractiveObjects;
     public Modules Modules;
     public Objects Objects;
-    public PhysicalItems PhysicalItems;
     public Weapons Weapons;
 }

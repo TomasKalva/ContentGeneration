@@ -75,7 +75,7 @@ public class GridWorldGenerator : WorldGenerator
                 area.AddCharacter(new CharacterWorldObject(libraries.Enemies.MayanThrower()));
                 area.AddCharacter(new CharacterWorldObject(libraries.Enemies.MayanSwordsman()));
                 //area.AddCharacter(new CharacterWorldObject(libraries.Enemies.MayanSwordsman()));
-                area.AddItem(new ItemWorldObject(physicalItems.BlueIchorEssence()));
+                //area.AddItem(new ItemWorldObject(physicalItems.BlueIchorEssence()));
             }
             area.PlaceObjects(moduleGrid, libraries);
         }

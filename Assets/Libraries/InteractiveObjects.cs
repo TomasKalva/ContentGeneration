@@ -170,9 +170,8 @@ public class InteractiveObjects : ScriptableObject
         return newInteractiveObjectState;
     }
 
-    public InteractiveObjectState Item(ItemState itemState)
+    public InteractiveObjectState<InteractiveObject> Item(ItemState itemState)
     {
-        //var physicalItem = Instantiate(physicalItemPrefab);
         var physicalItemState = new PhysicalItemState()
         {
             Name = itemState.Name,

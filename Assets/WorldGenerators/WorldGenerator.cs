@@ -10,9 +10,6 @@ public class WorldGenerator : MonoBehaviour
     protected Enemies enemies;
 
     [SerializeField]
-    protected PhysicalItems physicalItems;
-
-    [SerializeField]
     protected Items items;
 
     [SerializeField]
