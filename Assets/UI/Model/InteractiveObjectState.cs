@@ -1,13 +1,13 @@
 ﻿#if UNITY_5_3_OR_NEWER
 #define NOESIS
 using UnityEngine;
+using ShapeGrammar;
 #endif
 using ContentGeneration.Assets.UI.Util;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System;
 using System.Collections.ObjectModel;
-using ShapeGrammar;
 
 namespace ContentGeneration.Assets.UI.Model
 {
@@ -63,6 +63,9 @@ namespace ContentGeneration.Assets.UI.Model
         [SerializeField]
 #endif
         private string _messageOnInteract;
+        /// <summary>
+        /// D E P R E C A T E D, handle messaging manually
+        /// </summary>
         public string MessageOnInteract
         {
             get { return _messageOnInteract; }
@@ -115,33 +118,56 @@ namespace ContentGeneration.Assets.UI.Model
         }
     }
 
-    public class InteractiveObjectState<T> : InteractiveObjectState where T : InteractiveObject
-    {
 #if NOESIS
-        public T IntObj { get; private set; }
+    public class InteractiveObjectState<InteractiveObjectT> : InteractiveObjectState where InteractiveObjectT : InteractiveObject
+    {
+        InteractiveObjectT _intObjT;
+        public InteractiveObjectT IntObj 
+        { 
+            get => _intObjT; 
+            private set
+            {
+                _intObjT = value;
+                InteractiveObject = value;
+            } 
+        }
 
-        Action<InteractiveObjectState<T>> ActionOnInteract { get; set; }
+        Action<InteractiveObjectState<InteractiveObjectT>, PlayerCharacterState> ActionOnInteract { get; set; }
 
-        public GeometryMaker<T> GeometryMaker { get; set; }
+        public GeometryMaker<InteractiveObjectT> GeometryMaker { get; set; }
 
         public override void MakeGeometry()
         {
-            InteractiveObject = IntObj = GeometryMaker.CreateGeometry();//.gameObject.AddComponent<InteractiveObject>();
+            IntObj = GeometryMaker.CreateGeometry();
         }
 
         public override void Interact(Agent agent)
         {
+            if (ActionOnInteract != null)
+            {
+                // We assume that only the player can interact with this object
+                ActionOnInteract(this, (PlayerCharacterState)agent.CharacterState);
+            }
         }
 
-        public InteractiveObjectState<T> SetInteract(string message, Action<InteractiveObjectState<T>> onInteract)
+        #region Api
+
+        public InteractiveObjectState<InteractiveObjectT> Interact(Action<InteractiveObjectState<InteractiveObjectT>, PlayerCharacterState> onInteract)
         {
-            MessageOnInteract = message;
+            MessageOnInteract = "";
             ActionOnInteract = onInteract;
             return this;
         }
-#endif
 
+        public InteractiveObjectState<InteractiveObjectT> Description(string description)
+        {
+            InteractionDescription = description;
+            return this;
+        }
+
+        #endregion
     }
+#endif
 
     public class InteractOptions : INotifyPropertyChanged
     {

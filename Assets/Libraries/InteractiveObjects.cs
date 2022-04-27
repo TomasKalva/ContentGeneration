@@ -157,9 +157,9 @@ public class InteractiveObjects : ScriptableObject
         );
     }
 
-    public InteractiveObjectState<T> NewInteractiveObject<T>(string name, GeometryMaker<T> geometryMaker) where T : InteractiveObject
+    public InteractiveObjectState<InteractiveObjectT> NewInteractiveObject<InteractiveObjectT>(string name, GeometryMaker<InteractiveObjectT> geometryMaker) where InteractiveObjectT : InteractiveObject
     {
-        var newInteractiveObject = new InteractiveObjectState<T>()
+        var newInteractiveObject = new InteractiveObjectState<InteractiveObjectT>()
         {
             Name = name,
             GeometryMaker = geometryMaker

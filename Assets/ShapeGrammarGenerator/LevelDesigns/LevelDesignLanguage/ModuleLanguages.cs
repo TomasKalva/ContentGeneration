@@ -50,17 +50,23 @@ namespace ShapeGrammar
         {
             Env.AddLine(Gr.PrL.Garden(), 2, out var path_to_farmer);
             Env.AddOne(Gr.PrL.Garden(), out var farmer_area);
+            var applesGiven = false;
             farmer_area.AddInteractiveObject(
                 Lib.InteractiveObjects.NewInteractiveObject("Farmer", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
-
-            //.Show("Bring me apples")
-                .SetInteract("Apples given",
-                (farmer) =>
-                {
-                    Debug.Log("Interacting with farmer");
-                    //Levels().Next().AddPossibleBranch(FarmerBranch(progress + 1);
-                    //Player.AddSpirit(10 * progress);
-                })
+                    .Description("Bring me apples")
+                    .Interact(
+                        (farmer, player) =>
+                        {
+                            if (!applesGiven)
+                            {
+                                Msg.Say("Apples given");
+                                farmer.Description("Thanks for the apples, mate");
+                                applesGiven = true;
+                                //Levels().Next().AddPossibleBranch(FarmerBranch(progress + 1);
+                                player.Spirit += 10 * (1 + progress);
+                            }
+                        }
+                    )
                 );
             Env.AddRandom(Gr.PrL.Garden(), 5, out var garden);
 

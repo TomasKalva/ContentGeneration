@@ -1,4 +1,5 @@
 ﻿using ContentGeneration.Assets.UI.Model;
+using ContentGeneration.Assets.UI.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +30,7 @@ namespace ShapeGrammar
         public Grammars Gr { get; }
         public Languages L { get; }
         public Environments Env { get; }
+        public MsgPrinter Msg { get; }
 
         public LDLanguage(LanguageParams languageParams)
         {
@@ -39,6 +41,8 @@ namespace ShapeGrammar
             State = languageParams.LanguageState;
 
             Env = languageParams.Env;
+            Msg = new MsgPrinter();
+
             L = Languages.Get(languageParams);
         }
 
@@ -237,6 +241,13 @@ namespace ShapeGrammar
             var grammar = new RandomGrammar(productions, count);
             var traversableNodes = GenerateAndTakeTraversable(grammar);
             branching = new Branching(traversableNodes.ToList());
+        }
+    }
+    class MsgPrinter
+    {
+        public void Say(string message)
+        {
+            GameViewModel.ViewModel.Message = message;
         }
     }
 

@@ -67,6 +67,20 @@ namespace ContentGeneration.Assets.UI.Model
             set { _properties = value; OnPropertyChanged(this); }
         }
 
+#if NOESIS
+        [SerializeField]
+#endif
+        private float _spirit;
+        public float Spirit
+        {
+            get { return _spirit; }
+            set
+            {
+                _spirit = value;
+                OnPropertyChanged(this);
+            }
+        }
+
         public PlayerInventory PlayerInventory => (PlayerInventory)Inventory;
 
         public PlayerCharacterState()
