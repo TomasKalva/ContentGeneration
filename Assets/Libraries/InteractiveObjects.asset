@@ -20,3 +20,4 @@ MonoBehaviour:
   pointyRoof: {fileID: 2348562934469788231, guid: f3aab967e0176cd4d9fff34e02c4dd0b, type: 3}
   crossRoof: {fileID: 4832564369100202858, guid: f44c4b75be3442740b29bff3b5efe341, type: 3}
   oneDirectionRoof: {fileID: 1869265423960982062, guid: 2d193beea0c28e34fad31b323d2e1022, type: 3}
+  physicalItemPrefab: {fileID: 5493687118069396730, guid: 11441b73fa9c64b41b699592cf5aaf4e, type: 3}

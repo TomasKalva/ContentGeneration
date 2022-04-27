@@ -72,6 +72,7 @@ namespace ShapeGrammar
             Env.AddRandom(Gr.PrL.Garden(), 5, out var garden);
             garden.Areas.ForEach(area =>
                 area.AddInteractiveObject(
+                    // todo: Turn this dirty liar into an actual apple - manually created item in this method
                     Lib.InteractiveObjects.Item(Lib.Items.FreeWill())
                         .Description("I am an apple")
 
