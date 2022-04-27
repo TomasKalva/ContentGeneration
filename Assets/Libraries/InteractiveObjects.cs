@@ -49,6 +49,9 @@ public class InteractiveObjects : ScriptableObject
     [SerializeField]
     Transform oneDirectionRoof;
 
+    [SerializeField]
+    Transform physicalItemPrefab;
+
     public InteractiveObject Grave()
     {
         var state = new Grave()
@@ -159,11 +162,25 @@ public class InteractiveObjects : ScriptableObject
 
     public InteractiveObjectState<InteractiveObjectT> NewInteractiveObject<InteractiveObjectT>(string name, GeometryMaker<InteractiveObjectT> geometryMaker) where InteractiveObjectT : InteractiveObject
     {
-        var newInteractiveObject = new InteractiveObjectState<InteractiveObjectT>()
+        var newInteractiveObjectState = new InteractiveObjectState<InteractiveObjectT>()
         {
             Name = name,
             GeometryMaker = geometryMaker
         };
-        return newInteractiveObject;
+        return newInteractiveObjectState;
+    }
+
+    public InteractiveObjectState Item(ItemState itemState)
+    {
+        //var physicalItem = Instantiate(physicalItemPrefab);
+        var physicalItemState = new PhysicalItemState()
+        {
+            Name = itemState.Name,
+            MessageOnInteract = "Item picked up",
+            InteractionDescription = "Pick up item",
+            Item = itemState,
+            GeometryMaker = Geometry<InteractiveObject>(physicalItemPrefab)
+        };
+        return physicalItemState;
     }
 }

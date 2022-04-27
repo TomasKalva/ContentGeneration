@@ -89,13 +89,11 @@ namespace ShapeGrammar
     {
         public Node Node { get; }
         public List<InteractiveObjectState> InteractiveObjectStates { get; }
-        public string DeubgMsg { get; }
 
         public Area(Node node, string debugMsg)
         {
             Node = node;
             InteractiveObjectStates = new List<InteractiveObjectState>();
-            DeubgMsg = debugMsg;
         }
 
         public void AddInteractiveObject(InteractiveObjectState interactiveObject)

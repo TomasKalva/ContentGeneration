@@ -62,14 +62,21 @@ namespace ShapeGrammar
                                 Msg.Say("Apples given");
                                 farmer.Description("Thanks for the apples, mate");
                                 applesGiven = true;
-                                //Levels().Next().AddPossibleBranch(FarmerBranch(progress + 1);
+
                                 player.Spirit += 10 * (1 + progress);
+                                //Levels().Next().AddPossibleBranch(FarmerBranch(progress + 1);
                             }
                         }
                     )
                 );
             Env.AddRandom(Gr.PrL.Garden(), 5, out var garden);
+            garden.Areas.ForEach(area =>
+                area.AddInteractiveObject(
+                    Lib.InteractiveObjects.NewInteractiveObject("Apple", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
+                        .Description("I am an apple")
 
+                )
+            );
         }
     }
 }

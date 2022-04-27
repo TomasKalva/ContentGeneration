@@ -91,7 +91,7 @@ namespace ShapeGrammar
 
             
             var itemCubes = levelRoot.CG().WithFloor().Cubes.Shuffle().Take(10);
-            itemCubes.ForEach(cube => world.AddItem(libraries.Items.Physical(libraries.Items.Scythe()), GridToWorld(cube.Position)));
+            itemCubes.ForEach(cube => world.AddItem(libraries.InteractiveObjects.Item(libraries.Items.Scythe()).MakeGeometry(), GridToWorld(cube.Position)));
             
             var kilnCube = goodGraveCube.NeighborsHor().GetRandom();
             world.AddInteractiveObject(interactiveObjects.AscensionKiln(), GridToWorld(kilnCube.Position));

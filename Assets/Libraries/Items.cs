@@ -25,9 +25,6 @@ public class Items : ScriptableObject
     [SerializeField]
     Weapons weapons;
 
-    [SerializeField]
-    InteractiveObject physicalItemPrefab;
-
     public ItemState BlueIchorEssence() => new BlueIchorEssence();
     public ItemState RedIchorEssence() => new RedIchorEssence();
     public ItemState FreeWill() => new FreeWill();
@@ -40,17 +37,4 @@ public class Items : ScriptableObject
     public ItemState Mace() => new WeaponItem("Mace", "Mace", weapons.Mace().transform);
     public ItemState Katana() => new WeaponItem("Katana", "Katana", weapons.Katana().transform);
 
-    public InteractiveObject Physical(ItemState itemState)
-    {
-        var physicalItem = Instantiate(physicalItemPrefab);
-        var physicalItemState = new PhysicalItemState() 
-        { 
-            Name = itemState.Name, 
-            MessageOnInteract = "Item picked up", 
-            InteractionDescription = "Pick up item", 
-            InteractiveObject = physicalItem 
-        };
-        physicalItemState.Item = itemState;
-        return physicalItem;
-    }
 }

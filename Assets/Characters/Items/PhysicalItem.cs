@@ -35,7 +35,7 @@ public void PickUpItem(Agent agent)
 }
 */
 
-public class PhysicalItemState : InteractiveObjectState
+public class PhysicalItemState : InteractiveObjectState<InteractiveObject>
 {
     public ItemState Item { get; set; }
     bool beingPickeUp = false;

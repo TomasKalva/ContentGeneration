@@ -104,8 +104,9 @@ namespace ContentGeneration.Assets.UI.Model
 #endif
 
 #if NOESIS
-        public virtual void MakeGeometry()
+        public virtual InteractiveObject MakeGeometry()
         {
+            throw new InvalidOperationException("Geometry can be made only for generic variant of this class");
         }
 #endif
 
@@ -113,8 +114,8 @@ namespace ContentGeneration.Assets.UI.Model
         {
             InteractOptions = new InteractOptions();
             Name = "Name";
-            MessageOnInteract = "MessageOnInteract";
-            InteractionDescription = "InteractionDescription";
+            MessageOnInteract = "";
+            InteractionDescription = "";
         }
     }
 
@@ -136,9 +137,10 @@ namespace ContentGeneration.Assets.UI.Model
 
         public GeometryMaker<InteractiveObjectT> GeometryMaker { get; set; }
 
-        public override void MakeGeometry()
+        public override InteractiveObject MakeGeometry()
         {
             IntObj = GeometryMaker.CreateGeometry();
+            return IntObj;
         }
 
         public override void Interact(Agent agent)
