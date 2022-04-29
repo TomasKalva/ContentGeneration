@@ -54,10 +54,10 @@ namespace ShapeGrammar
                 Lib.Items.NewItem("Earthen apple", "An apple produced by the earth itself.")
                     .OnUse(ch =>
                     {
-                        ch.Properties.Spirit += 10;
-                        // consume the item
-                        //ch.Inventory.DropItem()
+                        ch.Prop.Spirit += 10;
+                        // todo: consume the item
                     })
+                    .SetConsumable()
                 
                 );
             var applesGiven = false;
@@ -67,13 +67,14 @@ namespace ShapeGrammar
                     .Interact(
                         (farmer, player) =>
                         {
-                            if (!applesGiven && player.Inventory.HasItems("Earthen apple", 3, out var apples))
+                            if (!applesGiven && player.Inventory.HasItems("Earthen apple", 3, out var desiredApples))
                             {
+                                player.Inventory.RemoveItems(desiredApples);
                                 Msg.Say("Apples given");
                                 farmer.Description("Thanks for the apples, mate");
                                 applesGiven = true;
 
-                                player.Properties.Spirit += 10 * (1 + progress);
+                                player.Prop.Spirit += 10 * (1 + progress);
                                 //Levels().Next().AddPossibleBranch(FarmerBranch(progress + 1);
                             }
                         }

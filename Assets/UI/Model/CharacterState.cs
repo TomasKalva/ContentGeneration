@@ -51,7 +51,7 @@ namespace ContentGeneration.Assets.UI.Model
         [SerializeField]
 #endif
         private CharacterProperties _properties;
-        public CharacterProperties Properties
+        public CharacterProperties Prop
         {
             get { return _properties; }
             set { _properties = value; OnPropertyChanged(this); }
@@ -72,8 +72,8 @@ namespace ContentGeneration.Assets.UI.Model
             Posture = 10f;
             Inventory = new EnemyInventory(this);
             DamageTaken = new DamageTaken(2f);
-            Properties = new CharacterProperties();
-            Properties.Character = this;
+            Prop = new CharacterProperties();
+            Prop.Character = this;
         }
 
         /// <summary>

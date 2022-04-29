@@ -52,6 +52,14 @@ namespace ContentGeneration.Assets.UI.Model
             set { realObject = value; PropertyChanged.OnPropertyChanged(this); }
         }
 #endif
+
+        bool IsConsumable { get; set; }
+        public ItemState SetConsumable()
+        {
+            IsConsumable = true;
+            return this;
+        }
+
         public ItemState()
         {
             Name = "";
@@ -68,7 +76,14 @@ namespace ContentGeneration.Assets.UI.Model
         public CharacterAction OnUseDelegate { get; protected set; }
         public ItemState OnUse(CharacterAction characterAction)
         {
-            OnUseDelegate = characterAction;
+            OnUseDelegate = character =>
+            {
+                characterAction(character);
+                if (IsConsumable)
+                {
+                    character.Inventory.RemoveItem(this);
+                }
+            };
             return this;
             //Debug.Log($"Using {Name}");
         }

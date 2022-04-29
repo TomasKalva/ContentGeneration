@@ -259,6 +259,25 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
+
+        public void RemoveItems(IEnumerable<ItemState> items)
+        {
+            items.ForEach(item => RemoveItem(item));
+        }
+
+        public void RemoveItem(ItemState item)
+        {
+            var itemSlot = AllSlots().Where(slot => slot.Item == item);
+            if (itemSlot.Any())
+            {
+                itemSlot.First().Item = null;
+            }
+            else
+            {
+                Debug.LogError("Item doesn't exist");
+            }
+        }
+
         bool MoveFromSlotToSlots(InventorySlot from, IEnumerable<InventorySlot> to)
         {
             var newSlot = AvailableSlot(to);

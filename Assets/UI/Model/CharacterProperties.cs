@@ -34,6 +34,7 @@ namespace ContentGeneration.Assets.UI.Model
                 Poise = Poise;
                 Strength = Strength;
                 Dexterity = Dexterity;
+                Spirit = Spirit;
 
                 PropertyChanged.OnPropertyChanged(this); 
             }
