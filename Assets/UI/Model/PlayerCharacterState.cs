@@ -29,6 +29,10 @@ namespace ContentGeneration.Assets.UI.Model
         {
             get { return _currentInteractiveObject; }
             set { 
+                if(_currentInteractiveObject != null && value == null)
+                {
+                    _currentInteractiveObject.State.PlayerLeft();
+                }
                 _currentInteractiveObject = value;
                 CurrentInteractiveObjectState = value ? value.State : null;
                 OnPropertyChanged(this);

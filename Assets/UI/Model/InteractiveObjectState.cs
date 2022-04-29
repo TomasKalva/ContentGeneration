@@ -100,6 +100,10 @@ namespace ContentGeneration.Assets.UI.Model
         {
             //InteractOptions.DoOption(agent, this, optionIndex);
         }
+
+        public virtual void PlayerLeft()
+        {
+        }
 #endif
 
 #if NOESIS
@@ -173,6 +177,11 @@ namespace ContentGeneration.Assets.UI.Model
         public override void OptionalInteract(Agent agent, int optionIndex)
         {
             InteractOptions?.DoOption(agent, this, optionIndex);
+        }
+
+        public override void PlayerLeft()
+        {
+            Interaction?.Reset(this);
         }
 
         #region Api
@@ -258,107 +267,5 @@ namespace ContentGeneration.Assets.UI.Model
             Index = index;
         }
 #endif
-    }
-
-    /// <summary>
-    /// Expression that defines how InteractiveObjects act
-    /// </summary>
-    public abstract class Interaction<InteractiveObjectT> where InteractiveObjectT : InteractiveObject
-    {
-        public abstract void Enter(InteractiveObjectState<InteractiveObjectT> ios);
-    }
-
-    public class InteractionWithOptions<InteractiveObjectT> : Interaction<InteractiveObjectT> where InteractiveObjectT : InteractiveObject
-    {
-        string Message { get; }
-        InteractOptions<InteractiveObjectT> InteractOptions { get; }
-
-        public InteractionWithOptions(string message, InteractOptions<InteractiveObjectT> interactOptions)
-        {
-            Message = message;
-            InteractOptions = interactOptions;
-        }
-
-        public override void Enter(InteractiveObjectState<InteractiveObjectT> ios)
-        {
-            ios.InteractOptions = InteractOptions;
-            ios.InteractionDescription = Message;
-        }
-    }
-    public class FastInteraction<InteractiveObjectT> : Interaction<InteractiveObjectT> where InteractiveObjectT : InteractiveObject
-    {
-        string InteractionDescription { get; }
-        InteractionDelegate<InteractiveObjectT> ActionOnInteract { get; set; }
-
-        public FastInteraction(string interactionDescription, InteractionDelegate<InteractiveObjectT> actionOnInteract)
-        {
-            InteractionDescription = interactionDescription;
-            ActionOnInteract = actionOnInteract;
-        }
-
-        public override void Enter(InteractiveObjectState<InteractiveObjectT> ios)
-        {
-            ios.InteractOptions = null;
-            ios.InteractionDescription = InteractionDescription;
-            ios.ActionOnInteract = ActionOnInteract;
-        }
-    }
-
-    public class InteractionSequence<InteractiveObjectT> : Interaction<InteractiveObjectT> where InteractiveObjectT : InteractiveObject
-    {
-        List<Interaction<InteractiveObjectT>> States { get; }
-        int CurrentState { get; set; }
-
-        public InteractionSequence()
-        {
-            States = new List<Interaction<InteractiveObjectT>>();
-            CurrentState = 0;
-        }
-
-        public void TryMoveNext(InteractiveObjectState<InteractiveObjectT> ios)
-        {
-            CurrentState = Math.Min(CurrentState + 1, States.Count - 1);
-            States[CurrentState].Enter(ios);
-        }
-
-        public InteractionSequence<InteractiveObjectT> Say(string message)
-        {
-            States.Add(
-                new InteractionWithOptions<InteractiveObjectT>(
-                    message,
-                    new InteractOptions<InteractiveObjectT>()
-                        .AddOption("<nod>", (ios, _1) =>
-                        {
-                            TryMoveNext(ios);
-                        }))
-                );
-            return this;
-        }
-
-        public InteractionSequence<InteractiveObjectT> Decision(string message, params InteractOption<InteractiveObjectT>[] options)
-        {
-            States.Add(
-                new InteractionWithOptions<InteractiveObjectT>(
-                    message,
-                    new InteractOptions<InteractiveObjectT>(options))
-                );
-            return this;
-        }
-
-        public InteractionSequence<InteractiveObjectT> Act(string interactionDescription, InteractionDelegate<InteractiveObjectT> actionOnInteract)
-        {
-            States.Add(
-                new FastInteraction<InteractiveObjectT>(
-                    interactionDescription,
-                    actionOnInteract
-                    )
-                );
-            return this;
-        }
-
-        public override void Enter(InteractiveObjectState<InteractiveObjectT> ios)
-        {
-            States[CurrentState].Enter(ios);
-        }
     }
 }
