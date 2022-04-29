@@ -63,6 +63,7 @@ namespace ShapeGrammar
                             .Say("My name is Ted")
                             .Say("I a farmer")
                             .Say("I desire nourishment")
+                            .Act("Confirm your understanding", (ios, _) => ios.Interaction.TryMoveNext(ios))
                             .Decision("Would you mind sharing some apples?",
                             new InteractOption<InteractiveObject>("Give apples",
                                 (farmer, player) =>

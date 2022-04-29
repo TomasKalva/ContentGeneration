@@ -134,18 +134,17 @@ namespace ContentGeneration.Assets.UI.Model
             } 
         }
 
-        InteractionDelegate<InteractiveObjectT> ActionOnInteract { get; set; }
+        public InteractionDelegate<InteractiveObjectT> ActionOnInteract { get; set; }
 
         private InteractOptions<InteractiveObjectT> _interactOptions;
-
         public InteractOptions<InteractiveObjectT> InteractOptions
         {
             get { return _interactOptions; }
             set { _interactOptions = value; OnPropertyChanged(this); }
         }
 
-        Interaction<InteractiveObjectT> _interaction;
-        public Interaction<InteractiveObjectT> Interaction 
+        InteractionSequence<InteractiveObjectT> _interaction;
+        public InteractionSequence<InteractiveObjectT> Interaction 
         { 
             get => _interaction; 
             set
@@ -271,8 +270,8 @@ namespace ContentGeneration.Assets.UI.Model
 
     public class InteractionWithOptions<InteractiveObjectT> : Interaction<InteractiveObjectT> where InteractiveObjectT : InteractiveObject
     {
-        public string Message { get; }
-        public InteractOptions<InteractiveObjectT> InteractOptions { get; }
+        string Message { get; }
+        InteractOptions<InteractiveObjectT> InteractOptions { get; }
 
         public InteractionWithOptions(string message, InteractOptions<InteractiveObjectT> interactOptions)
         {
@@ -286,16 +285,40 @@ namespace ContentGeneration.Assets.UI.Model
             ios.InteractionDescription = Message;
         }
     }
+    public class FastInteraction<InteractiveObjectT> : Interaction<InteractiveObjectT> where InteractiveObjectT : InteractiveObject
+    {
+        string InteractionDescription { get; }
+        InteractionDelegate<InteractiveObjectT> ActionOnInteract { get; set; }
+
+        public FastInteraction(string interactionDescription, InteractionDelegate<InteractiveObjectT> actionOnInteract)
+        {
+            InteractionDescription = interactionDescription;
+            ActionOnInteract = actionOnInteract;
+        }
+
+        public override void Enter(InteractiveObjectState<InteractiveObjectT> ios)
+        {
+            ios.InteractOptions = null;
+            ios.InteractionDescription = InteractionDescription;
+            ios.ActionOnInteract = ActionOnInteract;
+        }
+    }
 
     public class InteractionSequence<InteractiveObjectT> : Interaction<InteractiveObjectT> where InteractiveObjectT : InteractiveObject
     {
-        List<InteractionWithOptions<InteractiveObjectT>> States { get; }
+        List<Interaction<InteractiveObjectT>> States { get; }
         int CurrentState { get; set; }
 
         public InteractionSequence()
         {
-            States = new List<InteractionWithOptions<InteractiveObjectT>>();
+            States = new List<Interaction<InteractiveObjectT>>();
             CurrentState = 0;
+        }
+
+        public void TryMoveNext(InteractiveObjectState<InteractiveObjectT> ios)
+        {
+            CurrentState = Math.Min(CurrentState + 1, States.Count - 1);
+            States[CurrentState].Enter(ios);
         }
 
         public InteractionSequence<InteractiveObjectT> Say(string message)
@@ -306,9 +329,7 @@ namespace ContentGeneration.Assets.UI.Model
                     new InteractOptions<InteractiveObjectT>()
                         .AddOption("<nod>", (ios, _1) =>
                         {
-                            CurrentState = Math.Min(CurrentState + 1, States.Count - 1);
-                            var nextState = States[CurrentState];
-                            nextState.Enter(ios);
+                            TryMoveNext(ios);
                         }))
                 );
             return this;
@@ -320,6 +341,17 @@ namespace ContentGeneration.Assets.UI.Model
                 new InteractionWithOptions<InteractiveObjectT>(
                     message,
                     new InteractOptions<InteractiveObjectT>(options))
+                );
+            return this;
+        }
+
+        public InteractionSequence<InteractiveObjectT> Act(string interactionDescription, InteractionDelegate<InteractiveObjectT> actionOnInteract)
+        {
+            States.Add(
+                new FastInteraction<InteractiveObjectT>(
+                    interactionDescription,
+                    actionOnInteract
+                    )
                 );
             return this;
         }
