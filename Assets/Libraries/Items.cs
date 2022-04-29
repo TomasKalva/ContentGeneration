@@ -37,4 +37,12 @@ public class Items : ScriptableObject
     public ItemState Mace() => new WeaponItem("Mace", "Mace", weapons.Mace().transform);
     public ItemState Katana() => new WeaponItem("Katana", "Katana", weapons.Katana().transform);
 
+    public ItemState NewItem(string name, string description) => 
+        new ItemState() 
+        { 
+            Name = name, 
+            Description = description, 
+            // todo: add some default object model
+            RealObject = weapons.Katana().transform 
+        };
 }

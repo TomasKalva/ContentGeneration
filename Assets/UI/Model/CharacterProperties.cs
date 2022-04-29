@@ -127,5 +127,19 @@ namespace ContentGeneration.Assets.UI.Model
                 PropertyChanged.OnPropertyChanged(this); 
             }
         }
+
+#if NOESIS
+        [SerializeField]
+#endif
+        private float _spirit;
+        public float Spirit
+        {
+            get { return _spirit; }
+            set
+            {
+                _spirit = value;
+                PropertyChanged.OnPropertyChanged(this);
+            }
+        }
     }
 }

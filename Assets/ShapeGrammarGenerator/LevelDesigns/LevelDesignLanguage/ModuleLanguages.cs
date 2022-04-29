@@ -48,36 +48,45 @@ namespace ShapeGrammar
 
         public void FarmerBranch(int progress)
         {
-            Env.AddLine(Gr.PrL.Garden(), 2, out var path_to_farmer);
+            //Env.AddLine(Gr.PrL.Garden(), 2, out var path_to_farmer);
             Env.AddOne(Gr.PrL.Garden(), out var farmer_area);
+            var apples = Enumerable.Range(0, 5).Select(_ => 
+                Lib.Items.NewItem("Earthen apple", "An apple produced by the earth itself.")
+                    .OnUse(ch =>
+                    {
+                        ch.Properties.Spirit += 10;
+                        // consume the item
+                        //ch.Inventory.DropItem()
+                    })
+                
+                );
             var applesGiven = false;
             farmer_area.AddInteractiveObject(
                 Lib.InteractiveObjects.NewInteractiveObject("Farmer", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
-                    .Description("Bring me apples")
+                    .Description("I desire nourishment.")
                     .Interact(
                         (farmer, player) =>
                         {
-                            if (!applesGiven)
+                            if (!applesGiven && player.Inventory.HasItems("Earthen apple", 3, out var apples))
                             {
                                 Msg.Say("Apples given");
                                 farmer.Description("Thanks for the apples, mate");
                                 applesGiven = true;
 
-                                player.Spirit += 10 * (1 + progress);
+                                player.Properties.Spirit += 10 * (1 + progress);
                                 //Levels().Next().AddPossibleBranch(FarmerBranch(progress + 1);
                             }
                         }
                     )
                 );
-            Env.AddRandom(Gr.PrL.Garden(), 5, out var garden);
-            garden.Areas.ForEach(area =>
-                area.AddInteractiveObject(
-                    // todo: Turn this dirty liar into an actual apple - manually created item in this method
-                    Lib.InteractiveObjects.Item(Lib.Items.FreeWill())
-                        .Description("I am an apple")
-
-                )
+            //Env.AddRandom(Gr.PrL.Garden(), 5, out var garden);
+            //garden.Areas.ForEach(area =>
+            apples.ForEach(apple =>
+                farmer_area.AddInteractiveObject(
+                        Lib.InteractiveObjects.Item(apple)
+                    )
             );
+            //);
         }
     }
 }

@@ -207,7 +207,7 @@ public class Enemies : ScriptableObject
         var character = dragonMan.CharacterState;
 
         // properties
-        character.Health = 150f;
+        character.Health = 40f;
         character.Will = 20f;
         character.Posture = 10f;
 

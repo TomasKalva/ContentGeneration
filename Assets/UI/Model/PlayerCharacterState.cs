@@ -57,30 +57,6 @@ namespace ContentGeneration.Assets.UI.Model
             set { _targetedEnemy = value; OnPropertyChanged(this); }
         }
 
-#if NOESIS
-        [SerializeField]
-#endif
-        private CharacterProperties _properties;
-        public CharacterProperties Properties
-        {
-            get { return _properties; }
-            set { _properties = value; OnPropertyChanged(this); }
-        }
-
-#if NOESIS
-        [SerializeField]
-#endif
-        private float _spirit;
-        public float Spirit
-        {
-            get { return _spirit; }
-            set
-            {
-                _spirit = value;
-                OnPropertyChanged(this);
-            }
-        }
-
         public PlayerInventory PlayerInventory => (PlayerInventory)Inventory;
 
         public PlayerCharacterState()
@@ -89,7 +65,6 @@ namespace ContentGeneration.Assets.UI.Model
 
 #if NOESIS
             InteractingWithUI = false;
-            //Properties.Character = this;
 #else
             InteractingWithUI = true;
 #endif

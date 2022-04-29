@@ -24,8 +24,8 @@ namespace ContentGeneration.Assets.UI.Model
 #endif
         string _name;
 
-        public string Name 
-        { 
+        public string Name
+        {
             get => _name;
             set { _name = value; PropertyChanged.OnPropertyChanged(this); }
         }
@@ -45,35 +45,63 @@ namespace ContentGeneration.Assets.UI.Model
         [SerializeField]
         Transform realObject;
 
+
         public Transform RealObject
         {
             get => realObject;
             set { realObject = value; PropertyChanged.OnPropertyChanged(this); }
         }
 #endif
-
-        public virtual void OnUse(CharacterState character)
+        public ItemState()
         {
+            Name = "";
+            Description = "";
+            OnUseDelegate = _ => { };
+            OnDropDelegate = _ => { };
+            OnEquipDelegate = _ => { };
+            OnUnequipDelegate = _ => { };
+            OnUpdateDelegate = _ => { };
+        }
+
+        public delegate void CharacterAction(CharacterState state);
+
+        public CharacterAction OnUseDelegate { get; protected set; }
+        public ItemState OnUse(CharacterAction characterAction)
+        {
+            OnUseDelegate = characterAction;
+            return this;
             //Debug.Log($"Using {Name}");
         }
 
-        public virtual void OnDrop(CharacterState character)
+        public CharacterAction OnDropDelegate { get; protected set; }
+        public ItemState OnDrop(CharacterAction characterAction)
         {
+            OnDropDelegate = characterAction;
+            return this;
             //Debug.Log($"Dropping {Name}");
         }
 
-        public virtual void OnEquip(CharacterState character)
+        public CharacterAction OnEquipDelegate { get; protected set; }
+        public ItemState OnEquip(CharacterAction characterAction)
         {
+            OnEquipDelegate = characterAction;
+            return this;
             //Debug.Log($"Equipping {Name}");
         }
 
-        public virtual void OnUnequip(CharacterState character)
+        public CharacterAction OnUnequipDelegate { get; protected set; }
+        public ItemState OnUnequip(CharacterAction characterAction)
         {
+            OnUnequipDelegate = characterAction;
+            return this;
             //Debug.Log($"Unequipping {Name}");
         }
 
-        public virtual void OnUpdate(CharacterState character)
+        public CharacterAction OnUpdateDelegate { get; protected set; }
+        public ItemState OnUpdate(CharacterAction characterAction)
         {
+            OnUpdateDelegate = characterAction;
+            return this;
             //Debug.Log($"Updating {Name}");
         }
     }

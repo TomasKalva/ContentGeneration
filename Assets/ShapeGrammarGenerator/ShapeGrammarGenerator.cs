@@ -76,14 +76,14 @@ namespace ShapeGrammar
             var goodGraveCube = levelRoot.CG().WithFloor().Cubes
                 .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor)).GetRandom();
             world.AddInteractiveObject(interactiveObjects.Grave(), GridToWorld(goodGraveCube.Position));
-            
+
             /*
             var elevator = libraries.InteractiveObjects.Elevator(1 * worldScale, false);
             world.AddObject(elevator.Object, Vector3.zero);
             */
-            
-            
-            
+
+
+            /*
             var allEnemies = libraries.Enemies.AllAgents();
             var enemyCubes = levelRoot.CG().WithFloor().Cubes.Shuffle().Take(10);
             enemyCubes.ForEach(cube => world.AddEnemy(allEnemies.GetRandom()(), GridToWorld(cube.Position)));
@@ -92,7 +92,8 @@ namespace ShapeGrammar
             
             var itemCubes = levelRoot.CG().WithFloor().Cubes.Shuffle().Take(10);
             itemCubes.ForEach(cube => world.AddItem(libraries.InteractiveObjects.Item(libraries.Items.Scythe()).MakeGeometry(), GridToWorld(cube.Position)));
-            
+            */
+
             var kilnCube = goodGraveCube.NeighborsHor().GetRandom();
             world.AddInteractiveObject(interactiveObjects.AscensionKiln(), GridToWorld(kilnCube.Position));
             

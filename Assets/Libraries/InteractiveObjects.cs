@@ -175,7 +175,7 @@ public class InteractiveObjects : ScriptableObject
         var physicalItemState = new PhysicalItemState()
         {
             Name = itemState.Name,
-            MessageOnInteract = "Item picked up",
+            MessageOnInteract = $"Picked up {itemState.Name}",
             InteractionDescription = "Pick up item",
             Item = itemState,
             GeometryMaker = Geometry<InteractiveObject>(physicalItemPrefab)

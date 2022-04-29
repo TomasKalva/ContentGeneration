@@ -13,11 +13,11 @@ public class WeaponItem : ItemState
         Name = name;
         Description = description;
         RealObject = realObject;
-    }
-
-    public override void OnUse(CharacterState character)
-    {
-        Debug.Log($"{Name} is being used");
-        character.SetItemToSlot(SlotType.RightWeapon, this);
+        OnUseDelegate =
+            character =>
+            {
+                Debug.Log($"{Name} is being used");
+                character.SetItemToSlot(SlotType.RightWeapon, this);
+            };
     }
 }

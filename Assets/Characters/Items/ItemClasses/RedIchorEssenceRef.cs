@@ -13,9 +13,4 @@ public class RedIchorEssence : ItemState
         Name = "Red Ichor Essence";
         Description = "Super ichor";
     }
-
-    public override void OnUpdate(CharacterState character)
-    {
-        character.Will += ExtensionMethods.PerFixedSecond(2f);
-    }
 }

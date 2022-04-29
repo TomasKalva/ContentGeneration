@@ -210,7 +210,7 @@ namespace ContentGeneration.Assets.UI.Model
                 slot.Item = item;
                 if (slot.SlotType != SlotType.Passive)
                 {
-                    item.OnEquip(character);
+                    item?.OnEquipDelegate(character);
                 }
                 return slot;
             }
@@ -246,7 +246,7 @@ namespace ContentGeneration.Assets.UI.Model
             var item = itemSlot.Item;
             if (MoveFromSlotToSlots(itemSlot, ActiveSlots))
             {
-                item?.OnEquip(character);
+                item?.OnEquipDelegate(character);
             }
         }
 
@@ -255,7 +255,7 @@ namespace ContentGeneration.Assets.UI.Model
             var item = itemSlot.Item;
             if (MoveFromSlotToSlots(itemSlot, PassiveSlots))
             {
-                item?.OnUnequip(character);
+                item?.OnUnequipDelegate(character);
             }
         }
 
@@ -275,9 +275,25 @@ namespace ContentGeneration.Assets.UI.Model
             var activeItems = from slot in ActiveSlots where slot.Item != null select slot.Item;
             foreach (var item in activeItems)
             {
-                item.OnUpdate(character);
+                item.OnUpdateDelegate(character);
             }
         }
+#if NOESIS
+        public bool HasItems(string name, int count, out IEnumerable<ItemState> foundItems)
+        {
+            foundItems = AllSlots().SelectNN(slot => slot.Item).Where(item => item.Name == name);
+            if(foundItems.Count() >= count)
+            {
+                foundItems = foundItems.Take(count);
+                return true;
+            }
+            else
+            {
+                foundItems = null;
+                return false;
+            }
+        }
+#endif
     }
 
     public class PlayerInventory : Inventory
@@ -389,7 +405,7 @@ namespace ContentGeneration.Assets.UI.Model
             if (Active)
                 return;
 
-            SelectedSlot.Item?.OnUse(character);
+            SelectedSlot.Item?.OnUseDelegate(character);
         }
 
         public void DropItem()
@@ -397,7 +413,7 @@ namespace ContentGeneration.Assets.UI.Model
             if (!Active)
                 return;
 
-            CursorSlot.Item?.OnDrop(character);
+            CursorSlot.Item?.OnDropDelegate(character);
             CursorSlot.Item = null;
         }
 

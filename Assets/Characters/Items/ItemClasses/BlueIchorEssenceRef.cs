@@ -13,9 +13,4 @@ public class BlueIchorEssence : ItemState
         Name = "Blue Ichor Essence";
         Description = "Very blue";
     }
-
-    public override void OnUpdate(CharacterState character)
-    {
-        character.Will += ExtensionMethods.PerFixedSecond(2f);
-    }
 }
