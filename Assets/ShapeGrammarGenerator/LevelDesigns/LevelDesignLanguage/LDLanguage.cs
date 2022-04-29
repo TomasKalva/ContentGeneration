@@ -247,7 +247,7 @@ namespace ShapeGrammar
     }
     class MsgPrinter
     {
-        public void Say(string message)
+        public void Show(string message)
         {
             GameViewModel.ViewModel.Message = message;
         }

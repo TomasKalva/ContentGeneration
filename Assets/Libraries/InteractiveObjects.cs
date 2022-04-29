@@ -59,7 +59,7 @@ public class InteractiveObjects : ScriptableObject
             Name = "Grave",
             MessageOnInteract = "Grave chosen",
             InteractionDescription = "Choose Grave",
-            InteractOptions = new InteractOptions()
+            InteractOptions = new InteractOptions<InteractiveObjectState>()
                 .AddOption("Take candle", agent => Debug.Log("Taking candle"))
                 .AddOption("Put candle", agent => Debug.Log("Putting candle"))
         };

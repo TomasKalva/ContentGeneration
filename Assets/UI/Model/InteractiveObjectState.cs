@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
 
 namespace ContentGeneration.Assets.UI.Model
 {
@@ -83,9 +84,9 @@ namespace ContentGeneration.Assets.UI.Model
             set { _interactionDescription = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
-        private InteractOptions _interactOptions;
+        private InteractOptions<InteractiveObjectState> _interactOptions;
 
-        public InteractOptions InteractOptions
+        public InteractOptions<InteractiveObjectState> InteractOptions
         {
             get { return _interactOptions; }
             set { _interactOptions = value; PropertyChanged.OnPropertyChanged(this); }
@@ -112,7 +113,7 @@ namespace ContentGeneration.Assets.UI.Model
 
         public InteractiveObjectState()
         {
-            InteractOptions = new InteractOptions();
+            InteractOptions = new InteractOptions<InteractiveObjectState>();
             Name = "Name";
             MessageOnInteract = "";
             InteractionDescription = "";
@@ -133,7 +134,9 @@ namespace ContentGeneration.Assets.UI.Model
             } 
         }
 
-        Action<InteractiveObjectState<InteractiveObjectT>, PlayerCharacterState> ActionOnInteract { get; set; }
+        public delegate void InteractionDelegate(InteractiveObjectState<InteractiveObjectT> interactiveObject, PlayerCharacterState playerCharacter);
+
+        InteractionDelegate ActionOnInteract { get; set; }
 
         public GeometryMaker<InteractiveObjectT> GeometryMaker { get; set; }
 
@@ -154,7 +157,7 @@ namespace ContentGeneration.Assets.UI.Model
 
         #region Api
 
-        public InteractiveObjectState<InteractiveObjectT> Interact(Action<InteractiveObjectState<InteractiveObjectT>, PlayerCharacterState> onInteract)
+        public InteractiveObjectState<InteractiveObjectT> Interact(InteractionDelegate onInteract)
         {
             MessageOnInteract = "";
             ActionOnInteract = onInteract;
@@ -168,24 +171,27 @@ namespace ContentGeneration.Assets.UI.Model
         }
 
         #endregion
+
+
     }
 #endif
 
-    public class InteractOptions : INotifyPropertyChanged
+    public class InteractOptions<InteractiveObjectStateT> : INotifyPropertyChanged where InteractiveObjectStateT : InteractiveObjectState
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private ObservableCollection<InteractOption> _options;
+        ObservableCollection<InteractOption<InteractiveObjectStateT>> _options;
 
-        public ObservableCollection<InteractOption> Options
+        public ObservableCollection<InteractOption<InteractiveObjectStateT>> Options
         {
             get { return _options; }
             set { _options = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
-        public InteractOptions()
+        public InteractOptions(params InteractOption<InteractiveObjectStateT>[] options)
         {
-            Options = new ObservableCollection<InteractOption>();
+            Options = new ObservableCollection<InteractOption<InteractiveObjectStateT>>();
+            options.ForEach(option => Options.Add(option));
         }
 
 #if NOESIS
@@ -197,16 +203,16 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
-        public InteractOptions AddOption(string description, Action<Agent> action)
+        public InteractOptions<InteractiveObjectStateT> AddOption(string description, Action<Agent> action)
         {
             int index = Options.Count + 1;
-            Options.Add(new InteractOption(description, action, index));
+            Options.Add(new InteractOption<InteractiveObjectStateT>(description, action, index));
             return this;
         }
 #endif
     }
 
-    public class InteractOption
+    public class InteractOption<InteractiveObjectStateT> where InteractiveObjectStateT : InteractiveObjectState
     {
         public string Description { get; }
 #if NOESIS
@@ -222,5 +228,46 @@ namespace ContentGeneration.Assets.UI.Model
             Index = index;
         }
 #endif
+    }
+
+    public class Interaction<InteractiveObjectStateT> where InteractiveObjectStateT : InteractiveObjectState
+    {
+        public string Message { get; }
+        public InteractOptions<InteractiveObjectStateT> InteractOptions { get; }
+
+        public Interaction(string message, InteractOptions<InteractiveObjectStateT> interactOptions)
+        {
+            Message = message;
+            InteractOptions = interactOptions;
+        }
+
+        //public void Enter(InteractiveObject)
+    }
+
+    public class ComplexInteraction<InteractiveObjectStateT> where InteractiveObjectStateT : InteractiveObjectState
+    {
+        List<Interaction<InteractiveObjectStateT>> States { get; } 
+        int CurrentState { get; set; }
+
+        public ComplexInteraction<InteractiveObjectStateT> Say(string message)
+        {
+            States.Add(
+                new Interaction<InteractiveObjectStateT>(
+                    message,
+                    new InteractOptions<InteractiveObjectStateT>()
+                        .AddOption("Ok", _ => CurrentState++))
+                );
+            return this;
+        }
+
+        public ComplexInteraction<InteractiveObjectStateT> Decision(string message, params InteractOption<InteractiveObjectStateT>[] options)
+        {
+            States.Add(
+                new Interaction<InteractiveObjectStateT>(
+                    message,
+                    new InteractOptions<InteractiveObjectStateT>(options))
+                );
+            return this;
+        }
     }
 }

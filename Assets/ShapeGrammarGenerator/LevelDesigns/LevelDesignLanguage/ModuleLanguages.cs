@@ -52,13 +52,8 @@ namespace ShapeGrammar
             Env.AddOne(Gr.PrL.Garden(), out var farmer_area);
             var apples = Enumerable.Range(0, 5).Select(_ => 
                 Lib.Items.NewItem("Earthen apple", "An apple produced by the earth itself.")
-                    .OnUse(ch =>
-                    {
-                        ch.Prop.Spirit += 10;
-                        // todo: consume the item
-                    })
+                    .OnUse(ch => ch.Prop.Spirit += 10 )
                     .SetConsumable()
-                
                 );
             var applesGiven = false;
             farmer_area.AddInteractiveObject(
@@ -70,7 +65,7 @@ namespace ShapeGrammar
                             if (!applesGiven && player.Inventory.HasItems("Earthen apple", 3, out var desiredApples))
                             {
                                 player.Inventory.RemoveItems(desiredApples);
-                                Msg.Say("Apples given");
+                                Msg.Show("Apples given");
                                 farmer.Description("Thanks for the apples, mate");
                                 applesGiven = true;
 
@@ -80,6 +75,38 @@ namespace ShapeGrammar
                         }
                     )
                 );
+
+            /*
+            farmer.MonologInteraction(
+                new MonologInteractOptions() 
+                    .Say("My name is Ted")
+                    .Say("I a farmer")
+                    .Say("I desire nourishment")
+                    .Decision("Would you mind sharing some apples?",
+                        new Option("Give apples", 
+                            (farmer, player) =>
+                            {
+                                if (player.Inventory.HasItems("Earthen apple", 3, out var desiredApples))
+                                {
+                                    player.Inventory.RemoveItems(desiredApples);
+                                    Msg.Show("Apples given");
+                                    
+                                    // moves farmer to another state
+                                    farmer.MonologInteraction(
+                                        new MonologInteractionOptions()
+                                            .Say("Thanks for the apples, mate")
+                                    );
+                                    applesGiven = true;
+                            
+                                    player.Prop.Spirit += 10 * (1 + progress);
+                                    //Levels().Next().AddPossibleBranch(FarmerBranch(progress + 1);
+                                }
+                            }
+                        )
+                    )
+                )
+
+             */
             //Env.AddRandom(Gr.PrL.Garden(), 5, out var garden);
             //garden.Areas.ForEach(area =>
             apples.ForEach(apple =>
