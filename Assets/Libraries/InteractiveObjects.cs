@@ -59,9 +59,9 @@ public class InteractiveObjects : ScriptableObject
             Name = "Grave",
             MessageOnInteract = "Grave chosen",
             InteractionDescription = "Choose Grave",
-            InteractOptions = new InteractOptions<InteractiveObjectState>()
-                .AddOption("Take candle", agent => Debug.Log("Taking candle"))
-                .AddOption("Put candle", agent => Debug.Log("Putting candle"))
+            InteractOptions = new InteractOptions<InteractiveObject>()
+                .AddOption("Take candle", (grave, player) => Debug.Log("Taking candle"))
+                .AddOption("Put candle", (grave, player) => Debug.Log("Putting candle"))
         };
         var obj = Instantiate(gravePrefab);
         obj.State = state;

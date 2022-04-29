@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ContentGeneration.Assets.UI.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -55,9 +56,41 @@ namespace ShapeGrammar
                     .OnUse(ch => ch.Prop.Spirit += 10 )
                     .SetConsumable()
                 );
-            var applesGiven = false;
             farmer_area.AddInteractiveObject(
                 Lib.InteractiveObjects.NewInteractiveObject("Farmer", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
+                    .SetInteraction(
+                        new InteractionSequence<InteractiveObject>()
+                            .Say("My name is Ted")
+                            .Say("I a farmer")
+                            .Say("I desire nourishment")
+                            .Decision("Would you mind sharing some apples?",
+                            new InteractOption<InteractiveObject>("Give apples",
+                                (farmer, player) =>
+                                {
+                                    if (player.Inventory.HasItems("Earthen apple", 3, out var desiredApples))
+                                    {
+                                        player.Inventory.RemoveItems(desiredApples);
+                                        Msg.Show("Apples given");
+
+                                        // moves farmer to another state
+                                        farmer.SetInteraction(
+                                            new InteractionSequence<InteractiveObject>()
+                                                .Say("Thanks for the apples, mate")
+                                        );
+
+                                        player.Prop.Spirit += 10 * (1 + progress);
+                                        //Levels().Next().AddPossibleBranch(FarmerBranch(progress + 1);
+                                    }
+                                    else
+                                    {
+                                        Msg.Show("Not enough apples");
+                                    }
+                                }
+                            , 0)
+                        )
+                    )
+                
+                    /*
                     .Description("I desire nourishment.")
                     .Interact(
                         (farmer, player) =>
@@ -73,7 +106,7 @@ namespace ShapeGrammar
                                 //Levels().Next().AddPossibleBranch(FarmerBranch(progress + 1);
                             }
                         }
-                    )
+                    )*/
                 );
 
             /*
