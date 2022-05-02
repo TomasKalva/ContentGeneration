@@ -13259,7 +13259,6 @@ GameObject:
   - component: {fileID: 7465914728098360250}
   - component: {fileID: 7465914728098360251}
   - component: {fileID: 7465914728098360252}
-  - component: {fileID: 7465914728098360248}
   - component: {fileID: 7465914728098360247}
   - component: {fileID: 958852462359189586}
   - component: {fileID: 4191301710070580148}
@@ -13329,6 +13328,9 @@ MonoBehaviour:
   stairsMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  movingPlatformMask:
+    serializedVersion: 2
+    m_Bits: 0
   body: {fileID: 0}
   velocity: {x: 0, y: 0, z: 0}
   direction: {x: 0, y: 0}
@@ -13362,18 +13364,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Animator: {fileID: 294663286266388263}
   _ActionOnDisable: 0
---- !u!114 &7465914728098360248
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7465914728098359872}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c1ca6a87ecf97d43bed157c7760b7c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!136 &7465914728098360247
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -17213,6 +17203,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}
+--- !u!4 &5151155491971333750 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8254846310209840316, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}
+  m_PrefabInstance: {fileID: 3887607426626656970}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5151155491971333745 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8254846310209840315, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}
@@ -17224,11 +17219,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4b1d4dfc7fe70746971ef0676f31c76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &5151155491971333750 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8254846310209840316, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}
-  m_PrefabInstance: {fileID: 3887607426626656970}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4743224433215940301
 PrefabInstance:
   m_ObjectHideFlags: 0

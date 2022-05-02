@@ -40,10 +40,10 @@ public class Enemies : ScriptableObject
         /*Human,
         Sculpture,
         MayanThrower,
-        MayanSwordsman,*/
-        SkinnyWoman,
-        /*DragonMan,
-        Dog,*/
+        MayanSwordsman,
+        SkinnyWoman,*/
+        DragonMan,
+        /*Dog,*/
     };
 
     void AddDefaultBehaviors(Behaviors behaviors)
@@ -176,37 +176,30 @@ public class Enemies : ScriptableObject
 
         return skinnyWoman;
     }
-    /*
-    public Agent DragonMan()
+    
+    public CharacterState DragonMan()
     {
-        var dragonMan = Instantiate(dragonManPrefab);
-        var character = dragonMan.CharacterState;
+        var dragonMan = new CharacterState();
+        dragonMan.GeometryMaker = Geometry<Agent>(dragonManPrefab);
 
         // properties
-        character.Health = 40f;
-        character.Will = 20f;
-        character.Posture = 10f;
+        dragonMan.Health = 40f;
+        dragonMan.Will = 20f;
+        dragonMan.Posture = 10f;
 
         // inventory
-        character.SetItemToSlot(SlotType.Active, new FreeWill());
-        character.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanSword());
-        character.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanSword());
+        dragonMan.SetItemToSlot(SlotType.Active, new FreeWill());
+        dragonMan.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanSword());
+        dragonMan.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanSword());
 
         // behaviors
         var behaviors = dragonMan.Behaviors;
-        var controller = dragonMan.GetComponent<DragonManController>();
 
         AddDefaultBehaviors(behaviors);
 
-        behaviors.AddBehavior(new DetectorBehavior(dragonMan.Slash, controller.slashDetector));
-        behaviors.AddBehavior(new DetectorBehavior(dragonMan.FlapWings, controller.castDetector));
-        behaviors.AddBehavior(new DetectorBehavior(dragonMan.SpitFire, controller.spitFireDetector));
-
-        dragonMan.acting.MyReset();
-
         return dragonMan;
     }
-
+    /*
     public Agent Dog()
     {
         var dog = Instantiate(dogPrefab);
