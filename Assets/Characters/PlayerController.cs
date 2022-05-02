@@ -78,16 +78,20 @@ public class PlayerController : MonoBehaviour
 		lockOnTarget = null;
 
 		var viewModel = camera.GetComponent<ViewModel>();
+		//myAgent.CharacterState = viewModel.PlayerState;
 		if (viewModel.PlayerState != null)
         {
 			// already spawned before
-			myAgent.GetComponent<CharacterRef>().CharacterState = viewModel.PlayerState;
+			//myAgent.GetComponent<CharacterRef>().CharacterState = viewModel.PlayerState;
+			myAgent.CharacterState = viewModel.PlayerState;
 			viewModel.PlayerState.Reset();
         }
         else
 		{
 			// first spawn
 			viewModel.PlayerState = PlayerCharacterState;
+			//viewModel.PlayerState = new PlayerCharacterState();
+			//myAgent.CharacterState = viewModel.PlayerState;
 			//PlayerCharacterState.SpawnPoint = GameObject.FindGameObjectWithTag("DefaultSpawnPoint").GetComponent<Bonfire>();
 		}
 

@@ -35,7 +35,7 @@ public class Enemies : ScriptableObject
     public DragonManAgent dragonManPrefab;
     public DogAgent dogPrefab;
 
-    public IEnumerable<Func<Agent>> AllAgents () => new List<Func<Agent>>()
+    public IEnumerable<Func<CharacterState>> AllAgents () => new List<Func<CharacterState>>()
     {
         Human,
         /*Sculpture,
@@ -54,23 +54,23 @@ public class Enemies : ScriptableObject
         behaviors.AddBehavior(new Awareness(10, new Vector2(3.0f, 5.0f), 5f, 15f));
     }
 
-    public Agent Human()
+    public CharacterState Human()
     {
-        var human = Instantiate(humanPrefab);
-        var character = human.CharacterState;
+        var human = new CharacterState();
+        human.GeometryMaker = Geometry<Agent>(humanPrefab);
 
         // properties
-        character.Health = 40f;
-        character.Will = 20f;
-        character.Posture = 10f;
+        human.Health = 40f;
+        human.Will = 20f;
+        human.Posture = 10f;
 
         // inventory
-        character.SetItemToSlot(SlotType.Active, new FreeWill());
-        character.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanKnife());
-        character.SetItemToSlot(SlotType.RightWeapon, libraries.Items.Scythe());
+        human.SetItemToSlot(SlotType.Active, new FreeWill());
+        human.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanKnife());
+        human.SetItemToSlot(SlotType.RightWeapon, libraries.Items.Scythe());
 
         // behaviors
-        var behaviors = character.Behaviors;
+        var behaviors = human.Behaviors;
         //var controller = human.GetComponent<HumanController>();
 
         AddDefaultBehaviors(behaviors);

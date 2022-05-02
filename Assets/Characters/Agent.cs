@@ -46,11 +46,20 @@ public class Agent : MonoBehaviour
 	public CharacterRef characterRef;
 	public Renderer myRenderer;
 
-	public CharacterState CharacterState
-	{
+	CharacterState _characterState;
+	public CharacterState CharacterState 
+	{ 
+		get => _characterState;
+        set
+        {
+			_characterState = value;
+			_characterState.Agent = this;
+        } 
+	}
+	/*{
 		get => characterRef.CharacterState;
 		set => characterRef.CharacterState = value;
-	}
+	}*/
 
 	public bool CanMove { get; set; } = true;
 

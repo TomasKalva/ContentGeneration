@@ -86,7 +86,7 @@ namespace ShapeGrammar
             
             var allEnemies = libraries.Enemies.AllAgents();
             var enemyCubes = levelRoot.CG().WithFloor().Cubes.Shuffle().Take(5);
-            enemyCubes.ForEach(cube => world.AddEnemy(allEnemies.GetRandom()(), GridToWorld(cube.Position)));
+            enemyCubes.ForEach(cube => world.AddEnemy(allEnemies.GetRandom()().MakeGeometry(), GridToWorld(cube.Position)));
             
 
             

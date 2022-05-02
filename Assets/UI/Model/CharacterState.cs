@@ -2,6 +2,7 @@
 #define NOESIS
 using UnityEngine;
 using UnityEditor;
+using ShapeGrammar;
 #endif
 using ContentGeneration.Assets.UI.Util;
 using System.ComponentModel;
@@ -19,6 +20,15 @@ namespace ContentGeneration.Assets.UI.Model
 
 #if NOESIS
         public Behaviors Behaviors { get; set; }
+
+        public GeometryMaker<Agent> GeometryMaker { get; set; }
+
+        public Agent MakeGeometry()
+        {
+            var agent = GeometryMaker.CreateGeometry();
+            agent.CharacterState = this;
+            return agent;
+        }
 #endif
 
 #if NOESIS
