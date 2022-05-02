@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class HumanAgent : Agent
 {
+
     public Act Backstep()
     {
         return acting.SelectAct("Backstep");

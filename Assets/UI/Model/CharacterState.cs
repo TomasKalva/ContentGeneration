@@ -18,6 +18,10 @@ namespace ContentGeneration.Assets.UI.Model
         public event PropertyChangedEventHandler PropertyChanged;
 
 #if NOESIS
+        public Behaviors Behaviors { get; set; }
+#endif
+
+#if NOESIS
         [SerializeField]
 #endif
         private FloatRange _health;
@@ -74,6 +78,7 @@ namespace ContentGeneration.Assets.UI.Model
             DamageTaken = new DamageTaken(2f);
             Prop = new CharacterProperties();
             Prop.Character = this;
+            Behaviors = new Behaviors();
         }
 
         /// <summary>

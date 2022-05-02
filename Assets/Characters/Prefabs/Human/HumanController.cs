@@ -8,6 +8,11 @@ public class HumanController : EnemyController<HumanAgent>
 	[SerializeField]
 	public ColliderDetector attackArea;
 
+	public override void AddBehaviors()
+	{
+		agent.CharacterState.Behaviors.AddBehavior(new DetectorBehavior(agent.Attack, attackArea));
+	}
+
 	protected override void UpdateController(Vector2 movementDirection)
 	{
 		// check if my attack hits enemy

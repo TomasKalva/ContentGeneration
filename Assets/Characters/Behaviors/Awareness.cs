@@ -34,7 +34,7 @@ public class Awareness : Behavior
 
     bool BreakAwareness(Agent agent)
 	{
-        return (!LowWill || agent.CharacterState.Will > RequiredWill) && (agent.Behaviors.BehaviorPossible(agent, 4) || Vector3.Distance(agent.transform.position, TargetPoint) > maxDistance);
+        return (!LowWill || agent.CharacterState.Will > RequiredWill) && (agent.CharacterState.Behaviors.BehaviorPossible(agent, 4) || Vector3.Distance(agent.transform.position, TargetPoint) > maxDistance);
 	}
 
     public override bool CanEnter(Agent agent)

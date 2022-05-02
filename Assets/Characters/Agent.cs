@@ -45,7 +45,6 @@ public class Agent : MonoBehaviour
 	public AnimancerComponent animancerAnimator;
 	public CharacterRef characterRef;
 	public Renderer myRenderer;
-	public Behaviors Behaviors { get; set; }
 
 	public CharacterState CharacterState
 	{

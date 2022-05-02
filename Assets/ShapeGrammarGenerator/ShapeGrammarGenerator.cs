@@ -83,13 +83,13 @@ namespace ShapeGrammar
             */
 
 
-            /*
+            
             var allEnemies = libraries.Enemies.AllAgents();
-            var enemyCubes = levelRoot.CG().WithFloor().Cubes.Shuffle().Take(10);
+            var enemyCubes = levelRoot.CG().WithFloor().Cubes.Shuffle().Take(5);
             enemyCubes.ForEach(cube => world.AddEnemy(allEnemies.GetRandom()(), GridToWorld(cube.Position)));
             
 
-            */
+            
             var itemCubes = levelRoot.CG().WithFloor().Cubes.Shuffle().Take(10);
             itemCubes.ForEach(cube => world.AddItem(libraries.InteractiveObjects.Item(libraries.Items.Scythe()).MakeGeometry(), GridToWorld(cube.Position)));
             

@@ -28,9 +28,16 @@ public abstract class EnemyController<AgentT> : MonoBehaviour where AgentT : Age
 	void Awake()
 	{
 		agent = GetComponent<AgentT>();
-		agent.Behaviors = new Behaviors();
 		World.OnCreated += OnWorldCreated;
 	}
+
+    private void Start()
+    {
+		AddBehaviors();
+		agent.acting.MyReset();
+	}
+
+    public virtual void AddBehaviors() { }
 
 	void OnWorldCreated()
 	{
@@ -56,7 +63,7 @@ public abstract class EnemyController<AgentT> : MonoBehaviour where AgentT : Age
 
 		UpdateController(movementDirection);
 		*/
-		agent.Behaviors.UpdateBehavior(agent);
+		agent.CharacterState?.Behaviors.UpdateBehavior(agent);
 
 		agent.UpdateAgent();
 	}

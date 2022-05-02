@@ -38,12 +38,12 @@ public class Enemies : ScriptableObject
     public IEnumerable<Func<Agent>> AllAgents () => new List<Func<Agent>>()
     {
         Human,
-        Sculpture,
+        /*Sculpture,
         MayanThrower,
         MayanSwordsman,
         SkinnyWoman,
         DragonMan,
-        Dog,
+        Dog,*/
     };
 
     void AddDefaultBehaviors(Behaviors behaviors)
@@ -70,18 +70,18 @@ public class Enemies : ScriptableObject
         character.SetItemToSlot(SlotType.RightWeapon, libraries.Items.Scythe());
 
         // behaviors
-        var behaviors = human.Behaviors;
-        var controller = human.GetComponent<HumanController>();
+        var behaviors = character.Behaviors;
+        //var controller = human.GetComponent<HumanController>();
 
         AddDefaultBehaviors(behaviors);
 
-        behaviors.AddBehavior(new DetectorBehavior(human.Attack, controller.attackArea));
+        //behaviors.AddBehavior(new DetectorBehavior(human.Attack, controller.attackArea));
 
-        human.acting.MyReset();
+        //human.acting.MyReset();
 
         return human;
     }
-
+    /*
     public Agent Sculpture()
     {
         var sculpture = Instantiate(sculpturePrefab);
@@ -189,8 +189,8 @@ public class Enemies : ScriptableObject
         character.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanSword());
 
         // behaviors
-        var behaviors = skinnyWoman.Behaviors;
-        var controller = skinnyWoman.GetComponent<SkinnyWomanController>();
+        //var behaviors = skinnyWoman.Behaviors;
+        //var controller = skinnyWoman.GetComponent<SkinnyWomanController>();
 
         AddDefaultBehaviors(behaviors);
 
@@ -261,6 +261,7 @@ public class Enemies : ScriptableObject
 
         return dog;
     }
+    */
 
     public GeometryMaker<AgentT> Geometry<AgentT>(AgentT prefab) where AgentT : Agent
     {
