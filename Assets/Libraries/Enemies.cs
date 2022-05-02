@@ -41,9 +41,9 @@ public class Enemies : ScriptableObject
         Sculpture,
         MayanThrower,
         MayanSwordsman,
-        SkinnyWoman,*/
-        DragonMan,
-        /*Dog,*/
+        SkinnyWoman,
+        DragonMan,*/
+        Dog,
     };
 
     void AddDefaultBehaviors(Behaviors behaviors)
@@ -199,38 +199,30 @@ public class Enemies : ScriptableObject
 
         return dragonMan;
     }
-    /*
-    public Agent Dog()
+    
+    public CharacterState Dog()
     {
-        var dog = Instantiate(dogPrefab);
-        var character = dog.CharacterState;
+        var dog = new CharacterState();
+        dog.GeometryMaker = Geometry<Agent>(dogPrefab);
 
         // properties
-        character.Health = 50f;
-        character.Will = 20f;
-        character.Posture = 10f;
+        dog.Health = 50f;
+        dog.Will = 20f;
+        dog.Posture = 10f;
 
         // inventory
-        character.SetItemToSlot(SlotType.Active, new FreeWill());
-        character.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanSword());
+        dog.SetItemToSlot(SlotType.Active, new FreeWill());
+        dog.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanSword());
         //character.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanSword());
 
         // behaviors
         var behaviors = dog.Behaviors;
-        var controller = dog.GetComponent<DogController>();
 
         AddDefaultBehaviors(behaviors);
 
-        behaviors.AddBehavior(new DetectorBehavior(dog.DashForward, controller.dashForwardDetector));
-        behaviors.AddBehavior(new DetectorBehavior(dog.LeftSlash, controller.slashDetector));
-        behaviors.AddBehavior(new DetectorBehavior(dog.RightSlash, controller.slashDetector));
-
-        dog.acting.MyReset();
-
         return dog;
     }
-    */
-
+    
     public GeometryMaker<AgentT> Geometry<AgentT>(AgentT prefab) where AgentT : Agent
     {
         return new GeometryMaker<AgentT>(

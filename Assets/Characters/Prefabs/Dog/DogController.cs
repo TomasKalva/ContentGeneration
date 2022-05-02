@@ -11,7 +11,10 @@ public class DogController : EnemyController<DogAgent>
 	[SerializeField]
 	public ColliderDetector slashDetector;
 
-	private void Start()
-	{
-	}
+    public override void AddBehaviors(Behaviors behaviors)
+    {
+        behaviors.AddBehavior(new DetectorBehavior(agent.DashForward, dashForwardDetector));
+        behaviors.AddBehavior(new DetectorBehavior(agent.LeftSlash, slashDetector));
+        behaviors.AddBehavior(new DetectorBehavior(agent.RightSlash, slashDetector));
+    }
 }
