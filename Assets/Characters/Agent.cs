@@ -56,10 +56,6 @@ public class Agent : MonoBehaviour
 			_characterState.Agent = this;
         } 
 	}
-	/*{
-		get => characterRef.CharacterState;
-		set => characterRef.CharacterState = value;
-	}*/
 
 	public bool CanMove { get; set; } = true;
 
@@ -234,6 +230,8 @@ public class Agent : MonoBehaviour
 		{
 			rightWeaponSlot.Weapon = rightWeaponItem?.RealObject.GetComponent<Weapon>();
 		}
+
+		CharacterState.viewCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
 	}
 
 	public void Turn(Vector2 direction)

@@ -88,7 +88,9 @@ namespace ContentGeneration.Assets.UI.Model
             DamageTaken = new DamageTaken(2f);
             Prop = new CharacterProperties();
             Prop.Character = this;
+#if NOESIS
             Behaviors = new Behaviors();
+#endif
         }
 
         /// <summary>
@@ -127,6 +129,8 @@ namespace ContentGeneration.Assets.UI.Model
             }
 
             DamageTaken.Update(Time.fixedDeltaTime);
+
+            UIUpdate();
         }
 #endif
 
@@ -171,7 +175,7 @@ namespace ContentGeneration.Assets.UI.Model
             PropertyChanged?.Invoke(thisInstance, new PropertyChangedEventArgs(name));
         }
 
-        #region Screen position of health bars
+#region Screen position of health bars
 
 #if NOESIS
         private float _uiScreenPosX;
@@ -242,8 +246,11 @@ namespace ContentGeneration.Assets.UI.Model
             ScreenPosX = agentCenterPos.x;
             ScreenPosY = agentCenterPos.y;
 
+            /*
             VisibleOnCamera = ExtensionMethods.IsPointInDirection(camera.transform.position, camera.transform.forward, Agent.transform.position) &&
                                             (camera.transform.position - Agent.transform.position).magnitude < 25f;
+            */
+            VisibleOnCamera = true;
         }
 #else
         public float ScreenPosX => 0f;
@@ -251,7 +258,7 @@ namespace ContentGeneration.Assets.UI.Model
         public float ScreenPosY => 0f;
 #endif
 
-        #endregion
+#endregion
     }
 
     public class DamageTaken : INotifyPropertyChanged

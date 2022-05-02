@@ -158,7 +158,7 @@ namespace ContentGeneration.Assets.UI
             BottomColor = Color.FromRgb(18, 57, 87);
 
             PlayerState = new PlayerCharacterState();
-            PlayerState.Properties.Spirit = 42;
+            PlayerState.Prop.Spirit = 42;
             Enemies = new ObservableCollection<CharacterState>();
 
             Message = "Sample text";

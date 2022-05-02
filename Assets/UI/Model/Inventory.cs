@@ -259,11 +259,12 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
-
+#if NOESIS
         public void RemoveItems(IEnumerable<ItemState> items)
         {
             items.ForEach(item => RemoveItem(item));
         }
+#endif
 
         public void RemoveItem(ItemState item)
         {
@@ -274,7 +275,9 @@ namespace ContentGeneration.Assets.UI.Model
             }
             else
             {
+#if NOESIS
                 Debug.LogError("Item doesn't exist");
+#endif
             }
         }
 

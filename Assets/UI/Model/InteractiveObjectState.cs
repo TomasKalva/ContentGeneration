@@ -121,10 +121,10 @@ namespace ContentGeneration.Assets.UI.Model
         }
     }
 
+#if NOESIS
     public delegate void InteractionDelegate<InteractiveObjectT>(InteractiveObjectState<InteractiveObjectT> interactiveObject, PlayerCharacterState playerCharacter)
         where InteractiveObjectT : InteractiveObject;
 
-#if NOESIS
     public class InteractiveObjectState<InteractiveObjectT> : InteractiveObjectState where InteractiveObjectT : InteractiveObject
     {
         InteractiveObjectT _intObjT;
@@ -184,7 +184,7 @@ namespace ContentGeneration.Assets.UI.Model
             Interaction?.Reset(this);
         }
 
-        #region Api
+    #region Api
 
         public InteractiveObjectState<InteractiveObjectT> SetInteraction(InteractionSequence<InteractiveObjectT> interaction)
         {
@@ -205,12 +205,13 @@ namespace ContentGeneration.Assets.UI.Model
             return this;
         }
 
-        #endregion
+    #endregion
 
 
     }
 #endif
 
+#if NOESIS
     public class InteractOptions<InteractiveObjectT> : INotifyPropertyChanged where InteractiveObjectT : InteractiveObject
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -233,7 +234,6 @@ namespace ContentGeneration.Assets.UI.Model
             });
         }
 
-#if NOESIS
         public void DoOption(Agent agent, InteractiveObjectState<InteractiveObjectT> interactiveObjectState, int optionIndex)
         {
             if(optionIndex >= 0 && optionIndex < Options.Count)
@@ -248,24 +248,20 @@ namespace ContentGeneration.Assets.UI.Model
             Options.Add(new InteractOption<InteractiveObjectT>(description, action, index));
             return this;
         }
-#endif
-    }
+}
 
     public class InteractOption<InteractiveObjectT> where InteractiveObjectT : InteractiveObject
     {
         public string Description { get; }
-#if NOESIS
         public InteractionDelegate<InteractiveObjectT> Action { get; }
-#endif
         public int Index { get; set; }
 
-#if NOESIS
         public InteractOption(string description, InteractionDelegate<InteractiveObjectT> action, int index = 0)
         {
             Description = description;
             Action = action;
             Index = index;
         }
-#endif
     }
+#endif
 }

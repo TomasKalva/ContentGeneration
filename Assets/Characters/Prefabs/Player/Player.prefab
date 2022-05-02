@@ -277,18 +277,6 @@ MonoBehaviour:
   playerInputSpace: {fileID: 0}
   interactionDistance: 1.5
   libraries: {fileID: 11400000, guid: e6d383d7b852e69439d0877d7ed97ca5, type: 2}
---- !u!114 &-2672352175194269786
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1728200003014362746}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54b0dcc6a06dbc541b2d0c515ac31d0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &8630713964869020744
 MonoBehaviour:
   m_ObjectHideFlags: 0
