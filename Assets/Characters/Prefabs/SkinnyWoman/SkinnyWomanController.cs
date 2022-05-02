@@ -11,7 +11,9 @@ public class SkinnyWomanController : EnemyController<SkinnyWomanAgent>
 	[SerializeField]
 	public ColliderDetector castDetector;
 
-	private void Start()
-	{
-	}
+    public override void AddBehaviors(Behaviors behaviors)
+    {
+        behaviors.AddBehavior(new DetectorBehavior(agent.RushForward, rushForwardDetector));
+        behaviors.AddBehavior(new DetectorBehavior(agent.CastFireball, castDetector));
+    }
 }

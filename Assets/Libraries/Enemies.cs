@@ -39,10 +39,10 @@ public class Enemies : ScriptableObject
     {
         /*Human,
         Sculpture,
-        MayanThrower,*/
-        MayanSwordsman,
-        /*SkinnyWoman,
-        DragonMan,
+        MayanThrower,
+        MayanSwordsman,*/
+        SkinnyWoman,
+        /*DragonMan,
         Dog,*/
     };
 
@@ -153,36 +153,30 @@ public class Enemies : ScriptableObject
 
         return mayan;
     }
-    /*
-    public Agent SkinnyWoman()
+    
+    public CharacterState SkinnyWoman()
     {
-        var skinnyWoman = Instantiate(skinnyWomanPrefab);
-        var character = skinnyWoman.CharacterState;
+        var skinnyWoman = new CharacterState();
+        skinnyWoman.GeometryMaker = Geometry<Agent>(skinnyWomanPrefab);
 
         // properties
-        character.Health = 50f;
-        character.Will = 20f;
-        character.Posture = 10f;
+        skinnyWoman.Health = 50f;
+        skinnyWoman.Will = 20f;
+        skinnyWoman.Posture = 10f;
 
         // inventory
-        character.SetItemToSlot(SlotType.Active, new FreeWill());
-        character.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanSword());
-        character.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanSword());
+        skinnyWoman.SetItemToSlot(SlotType.Active, new FreeWill());
+        skinnyWoman.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanSword());
+        skinnyWoman.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanSword());
 
         // behaviors
-        //var behaviors = skinnyWoman.Behaviors;
-        //var controller = skinnyWoman.GetComponent<SkinnyWomanController>();
+        var behaviors = skinnyWoman.Behaviors;
 
         AddDefaultBehaviors(behaviors);
 
-        behaviors.AddBehavior(new DetectorBehavior(skinnyWoman.RushForward, controller.rushForwardDetector));
-        behaviors.AddBehavior(new DetectorBehavior(skinnyWoman.CastFireball, controller.castDetector));
-
-        skinnyWoman.acting.MyReset();
-
         return skinnyWoman;
     }
-
+    /*
     public Agent DragonMan()
     {
         var dragonMan = Instantiate(dragonManPrefab);

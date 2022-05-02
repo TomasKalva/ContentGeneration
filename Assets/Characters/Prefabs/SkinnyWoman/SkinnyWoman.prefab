@@ -538,7 +538,6 @@ GameObject:
   - component: {fileID: 7465914728098360250}
   - component: {fileID: 7465914728098360251}
   - component: {fileID: 7465914728098360252}
-  - component: {fileID: 7465914728098360248}
   - component: {fileID: 7465914728098360247}
   - component: {fileID: 3008176056970571526}
   - component: {fileID: 104408679878136733}
@@ -606,6 +605,9 @@ MonoBehaviour:
   stairsMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  movingPlatformMask:
+    serializedVersion: 2
+    m_Bits: 0
   body: {fileID: 0}
   velocity: {x: 0, y: 0, z: 0}
   direction: {x: 0, y: 0}
@@ -639,18 +641,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Animator: {fileID: 3025493158891192715}
   _ActionOnDisable: 0
---- !u!114 &7465914728098360248
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7465914728098359872}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c1ca6a87ecf97d43bed157c7760b7c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!136 &7465914728098360247
 CapsuleCollider:
   m_ObjectHideFlags: 0
