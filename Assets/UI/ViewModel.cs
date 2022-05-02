@@ -92,7 +92,7 @@ namespace ContentGeneration.Assets.UI
 
         void Start()
         {
-            Enemies = new ObservableCollection<CharacterState>(Object.FindObjectsOfType<CharacterReference>().Select(r => r.CharacterState));
+            Enemies = new ObservableCollection<CharacterState>(Object.FindObjectsOfType<Agent>().Select(a => a.CharacterState));
         }
 
         float inputDelay;
