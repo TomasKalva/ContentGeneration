@@ -38,10 +38,10 @@ public class Enemies : ScriptableObject
     public IEnumerable<Func<CharacterState>> AllAgents () => new List<Func<CharacterState>>()
     {
         /*Human,
-        Sculpture,*/
-        MayanThrower,
-        /*MayanSwordsman,
-        SkinnyWoman,
+        Sculpture,
+        MayanThrower,*/
+        MayanSwordsman,
+        /*SkinnyWoman,
         DragonMan,
         Dog,*/
     };
@@ -121,37 +121,39 @@ public class Enemies : ScriptableObject
 
         return mayan;
     }
-    /*
-    public Agent MayanSwordsman()
+    
+    /// <summary>
+    /// Is the same as mayan thrower for now.
+    /// </summary>
+    public CharacterState MayanSwordsman()
     {
-        var mayan = Instantiate(mayanPrefab);
-        var character = mayan.CharacterState;
+        var mayan = new CharacterState();
+        mayan.GeometryMaker = Geometry<Agent>(mayanPrefab);
 
         // properties
-        character.Health = 50f;
-        character.Will = 20f;
-        character.Posture = 10f;
+        mayan.Health = 50f;
+        mayan.Will = 20f;
+        mayan.Posture = 10f;
 
         // inventory
-        character.SetItemToSlot(SlotType.Active, new FreeWill());
-        character.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanSword());
-        character.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanKnife());
+        mayan.SetItemToSlot(SlotType.Active, new FreeWill());
+        mayan.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanSword());
+        mayan.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanKnife());
 
         // behaviors
         var behaviors = mayan.Behaviors;
-        var controller = mayan.GetComponent<MayanController>();
 
         AddDefaultBehaviors(behaviors);
-
+        /*
+         * todo: define behavior definition strategy, that will allow creating arbitrary links between controllers and behavior
         behaviors.AddBehavior(new DetectorBehavior(mayan.LongOverheadAttack, controller.overheadDetector));
         behaviors.AddBehavior(new DetectorBehavior(mayan.LeftSwing, controller.swingDetector));
         behaviors.AddBehavior(new DetectorBehavior(mayan.RightSwing, controller.swingDetector));
-
-        mayan.acting.MyReset();
+        */
 
         return mayan;
     }
-
+    /*
     public Agent SkinnyWoman()
     {
         var skinnyWoman = Instantiate(skinnyWomanPrefab);
