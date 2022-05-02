@@ -37,9 +37,9 @@ public class Enemies : ScriptableObject
 
     public IEnumerable<Func<CharacterState>> AllAgents () => new List<Func<CharacterState>>()
     {
-        Human,
-        /*Sculpture,
-        MayanThrower,
+        //Human,
+        Sculpture,
+        /*MayanThrower,
         MayanSwordsman,
         SkinnyWoman,
         DragonMan,
@@ -71,48 +71,42 @@ public class Enemies : ScriptableObject
 
         // behaviors
         var behaviors = human.Behaviors;
-        //var controller = human.GetComponent<HumanController>();
-
         AddDefaultBehaviors(behaviors);
-
-        //behaviors.AddBehavior(new DetectorBehavior(human.Attack, controller.attackArea));
-
-        //human.acting.MyReset();
 
         return human;
     }
-    /*
-    public Agent Sculpture()
+    
+    public CharacterState Sculpture()
     {
-        var sculpture = Instantiate(sculpturePrefab);
-        var character = sculpture.CharacterState;
+        var sculpture = new CharacterState();
+        sculpture.GeometryMaker = Geometry<Agent>(sculpturePrefab);
 
         // properties
-        character.Health = 40f;
-        character.Will = 20f;
-        character.Posture = 10f;
+        sculpture.Health = 40f;
+        sculpture.Will = 20f;
+        sculpture.Posture = 10f;
 
         // inventory
-        character.SetItemToSlot(SlotType.Active, new FreeWill());
-        character.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.SculptureClub());
-        character.SetItemToSlot(SlotType.RightWeapon, libraries.Items.SculptureClub());
+        sculpture.SetItemToSlot(SlotType.Active, new FreeWill());
+        sculpture.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.SculptureClub());
+        sculpture.SetItemToSlot(SlotType.RightWeapon, libraries.Items.SculptureClub());
 
         // behaviors
         var behaviors = sculpture.Behaviors;
-        var controller = sculpture.GetComponent<SculptureController>();
 
         AddDefaultBehaviors(behaviors);
-
+        /*
         behaviors.AddBehavior(new DetectorBehavior(sculpture.WideAttack, controller.leftWideDetector, controller.rightWideDownDetector));
         behaviors.AddBehavior(new DetectorBehavior(sculpture.OverheadAttack, controller.overheadDetector));
         behaviors.AddBehavior(new DetectorBehavior(sculpture.DoubleSwipe, controller.doubleSwipeLeftDetector, controller.doubleSwipeRightDetector));
         behaviors.AddBehavior(new DetectorBehavior(sculpture.GroundSlam, controller.groundSlamDetector));
-
+        
         sculpture.acting.MyReset();
+        */
 
         return sculpture;
     }
-
+    /*
     public Agent MayanThrower()
     {
         var mayan = Instantiate(mayanPrefab);

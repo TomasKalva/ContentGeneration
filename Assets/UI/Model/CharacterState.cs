@@ -246,11 +246,8 @@ namespace ContentGeneration.Assets.UI.Model
             ScreenPosX = agentCenterPos.x;
             ScreenPosY = agentCenterPos.y;
 
-            /*
             VisibleOnCamera = ExtensionMethods.IsPointInDirection(camera.transform.position, camera.transform.forward, Agent.transform.position) &&
                                             (camera.transform.position - Agent.transform.position).magnitude < 25f;
-            */
-            VisibleOnCamera = true;
         }
 #else
         public float ScreenPosX => 0f;

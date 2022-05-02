@@ -33,11 +33,11 @@ public abstract class EnemyController<AgentT> : MonoBehaviour where AgentT : Age
 
     private void Start()
     {
-		AddBehaviors();
+		AddBehaviors(agent.CharacterState.Behaviors);
 		agent.acting.MyReset();
 	}
 
-    public virtual void AddBehaviors() { }
+    public virtual void AddBehaviors(Behaviors behaviors) { }
 
 	void OnWorldCreated()
 	{

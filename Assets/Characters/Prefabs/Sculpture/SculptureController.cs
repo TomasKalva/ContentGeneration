@@ -23,7 +23,11 @@ public class SculptureController : EnemyController<SculptureAgent>
 	[SerializeField]
 	public ColliderDetector groundSlamDetector;
 
-    private void Start()
+    public override void AddBehaviors(Behaviors behaviors)
 	{
+		behaviors.AddBehavior(new DetectorBehavior(agent.WideAttack, leftWideDetector, rightWideDownDetector));
+		behaviors.AddBehavior(new DetectorBehavior(agent.OverheadAttack, overheadDetector));
+		behaviors.AddBehavior(new DetectorBehavior(agent.DoubleSwipe, doubleSwipeLeftDetector, doubleSwipeRightDetector));
+		behaviors.AddBehavior(new DetectorBehavior(agent.GroundSlam, groundSlamDetector));
 	}
 }
