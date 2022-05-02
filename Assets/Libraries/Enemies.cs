@@ -1,4 +1,5 @@
 using ContentGeneration.Assets.UI.Model;
+using ShapeGrammar;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -259,5 +260,21 @@ public class Enemies : ScriptableObject
         dog.acting.MyReset();
 
         return dog;
+    }
+
+    public GeometryMaker<AgentT> Geometry<AgentT>(AgentT prefab) where AgentT : Agent
+    {
+        return new GeometryMaker<AgentT>(
+            () =>
+            {
+                var newObj = Instantiate(prefab);
+                var comp = newObj.GetComponentInChildren<AgentT>();
+                if (comp == null)
+                {
+                    throw new InvalidOperationException("The object doesn't have Agent component");
+                }
+                return comp;
+            }
+        );
     }
 }

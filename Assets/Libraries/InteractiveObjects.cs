@@ -69,18 +69,20 @@ public class InteractiveObjects : ScriptableObject
         return obj;
     }
 
-    public InteractiveObject AscensionKiln()
+    public InteractiveObjectState AscensionKiln()
     {
         var state = new AscensionKiln()
         {
             Name = "Ascension Kiln",
             MessageOnInteract = "Will increased",
-            InteractionDescription = "Increase will"
+            InteractionDescription = "Increase will",
+            GeometryMaker = Geometry<Kiln>(ascensionKilnPrefab.transform)
         };
-        var obj = Instantiate(ascensionKilnPrefab);
-        obj.State = state;
 
-        return obj;
+        //var obj = Instantiate(ascensionKilnPrefab);
+        //obj.State = state;
+
+        return state;
     }
 
     public ElevatorState Elevator(float height, bool up)
@@ -160,7 +162,7 @@ public class InteractiveObjects : ScriptableObject
         );
     }
 
-    public InteractiveObjectState<InteractiveObjectT> NewInteractiveObject<InteractiveObjectT>(string name, GeometryMaker<InteractiveObjectT> geometryMaker) where InteractiveObjectT : InteractiveObject
+    public InteractiveObjectState<InteractiveObjectT> InteractiveObject<InteractiveObjectT>(string name, GeometryMaker<InteractiveObjectT> geometryMaker) where InteractiveObjectT : InteractiveObject
     {
         var newInteractiveObjectState = new InteractiveObjectState<InteractiveObjectT>()
         {

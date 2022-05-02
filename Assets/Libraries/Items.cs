@@ -25,8 +25,6 @@ public class Items : ScriptableObject
     [SerializeField]
     Weapons weapons;
 
-    public ItemState BlueIchorEssence() => new BlueIchorEssence();
-    public ItemState RedIchorEssence() => new RedIchorEssence();
     public ItemState FreeWill() => new FreeWill();
 
     public ItemState SculptureClub() => new WeaponItem("Sculpture Club", "Made of idk stone", weapons.SculptureClub().transform);

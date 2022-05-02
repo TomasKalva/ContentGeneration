@@ -22,5 +22,3 @@ public class FreeWill : ItemState
         };
     }
 }
-// Red Ichor Essence
-// Once noble blood of the Great One now serves as beverage for those in need

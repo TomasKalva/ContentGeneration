@@ -215,6 +215,21 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
+        public virtual void UIUpdate()
+        {
+            var camera = viewCamera;
+
+            var agentUiPos = camera.WorldToScreenPoint(Agent.transform.position + Agent.UIOffset * Vector3.up);
+            UIScreenPosX = agentUiPos.x;
+            UIScreenPosY = agentUiPos.y;
+
+            var agentCenterPos = camera.WorldToScreenPoint(Agent.transform.position + Agent.CenterOffset * Vector3.up);
+            ScreenPosX = agentCenterPos.x;
+            ScreenPosY = agentCenterPos.y;
+
+            VisibleOnCamera = ExtensionMethods.IsPointInDirection(camera.transform.position, camera.transform.forward, Agent.transform.position) &&
+                                            (camera.transform.position - Agent.transform.position).magnitude < 25f;
+        }
 #else
         public float ScreenPosX => 0f;
 
