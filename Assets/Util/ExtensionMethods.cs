@@ -165,7 +165,7 @@ static class ExtensionMethods
         return RandomBox(minExt * Vector2Int.one, maxExt * Vector2Int.one);
     }
 
-    public static Box2Int RandomBox(IIntDistr xDistr, IIntDistr yDistr) 
+    public static Box2Int RandomBox(IDistribution<int> xDistr, IDistribution<int> yDistr) 
     {
         return new Box2Int(Vector2Int.zero, new Vector2Int(xDistr.Sample(), yDistr.Sample()));
     }

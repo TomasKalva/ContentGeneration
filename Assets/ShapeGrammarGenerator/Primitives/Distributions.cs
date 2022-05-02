@@ -7,12 +7,12 @@ using UnityEngine;
 
 namespace ShapeGrammar
 {
-    public interface IIntDistr
+    public interface IDistribution<T>
     {
-        public int Sample();
+        public T Sample();
     }
 
-    public class RandomIntDistr : IIntDistr
+    public class RandomIntDistr : IDistribution<int>
     {
         int min, max;
 
@@ -28,7 +28,7 @@ namespace ShapeGrammar
         }
     }
 
-    public class IntDistr : IIntDistr
+    public class IntDistr : IDistribution<int>
     {
         int start, step;
         int current;
@@ -47,12 +47,12 @@ namespace ShapeGrammar
         }
     }
 
-    public class IntervalDistr : IIntDistr
+    public class IntervalDistr : IDistribution<int>
     {
-        IIntDistr seq;
+        IDistribution<int> seq;
         int min, max;
 
-        public IntervalDistr(IIntDistr seq, int min, int max)
+        public IntervalDistr(IDistribution<int> seq, int min, int max)
         {
             this.seq = seq;
             this.min = min;
@@ -71,7 +71,7 @@ namespace ShapeGrammar
     /// <summary>
     /// Binomial distribution given by center and width.
     /// </summary>
-    public class SlopeDistr : IIntDistr
+    public class SlopeDistr : IDistribution<int>
     {
         float p;
         int center, width;
@@ -98,7 +98,7 @@ namespace ShapeGrammar
             return center + successes - width;
         }
     }
-    public class UniformDistr : IIntDistr
+    public class UniformDistr : IDistribution<int>
     {
         int min, max;
 
@@ -111,6 +111,34 @@ namespace ShapeGrammar
         public int Sample()
         {
             return UnityEngine.Random.Range(min, max);
+        }
+    }
+
+    public class WeightedDistribution<T> : IDistribution<T>
+    {
+        struct WeightItemPair
+        {
+            public float weight;
+            public T value;
+
+            public WeightItemPair(float weight, T value)
+            {
+                this.weight = weight;
+                this.value = value;
+            }
+        }
+
+        WeightItemPair[] Items { get; }
+
+        public WeightedDistribution(params (float, T)[] items)
+        {
+            Items = items.Select(item => new WeightItemPair(item.Item1, item.Item2)).ToArray();
+        }
+
+        public T Sample()
+        {
+            float getWeight(WeightItemPair wiPair) => wiPair.weight;
+            return Items.GetRandom(getWeight).value;
         }
     }
 }

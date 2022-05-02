@@ -89,16 +89,23 @@ namespace ShapeGrammar
     {
         public Node Node { get; }
         public List<InteractiveObjectState> InteractiveObjectStates { get; }
+        public List<CharacterState> EnemyStates { get; }
 
-        public Area(Node node, string debugMsg)
+        public Area(Node node)
         {
             Node = node;
             InteractiveObjectStates = new List<InteractiveObjectState>();
+            EnemyStates = new List<CharacterState>();
         }
 
         public void AddInteractiveObject(InteractiveObjectState interactiveObject)
         {
             InteractiveObjectStates.Add(interactiveObject);
+        }
+
+        public void AddEnemy(CharacterState enemy)
+        {
+            EnemyStates.Add(enemy);
         }
 
         public virtual void InstantiateAll()
@@ -110,6 +117,13 @@ namespace ShapeGrammar
                 ios.MakeGeometry();
                 // todo: Create tool for placement of real assets, so that magic numbers aren't needed
                 ios.InteractiveObject.transform.position = 2.8f * (Vector3)flooredCubes.Pop().Position ;
+            }
+
+            foreach (var enemy in EnemyStates)
+            {
+                enemy.MakeGeometry();
+                // todo: Create tool for placement of real assets, so that magic numbers aren't needed
+                enemy.Agent.transform.position = 2.8f * (Vector3)flooredCubes.Pop().Position;
             }
         }
     }
@@ -219,7 +233,7 @@ namespace ShapeGrammar
         {
             var traversable = grammar.Evaluate(LanguageState.GrammarState)
                                 .Where(node => node.HasSymbols(Sym.FullFloorMarker))
-                                .Select(node => new Area(node, "Debugging"))
+                                .Select(node => new Area(node))
                                 .ToList();
             LanguageState.TraversableAreas.AddRange(traversable);
             return traversable;

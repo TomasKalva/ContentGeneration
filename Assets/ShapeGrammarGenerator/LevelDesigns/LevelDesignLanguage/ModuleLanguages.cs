@@ -49,13 +49,27 @@ namespace ShapeGrammar
 
         public void FarmerBranch(int progress)
         {
+            var gardenEnemies = new WeightedDistribution<Func<CharacterState>>(
+                    (3, Lib.Enemies.Dog),
+                    (3, Lib.Enemies.Human),
+                    (1, Lib.Enemies.Sculpture)
+                );
+            /*var gardenEnemies = new List<Func<CharacterState>>()
+            {
+                Lib.Enemies.Dog,
+                Lib.Enemies.Sculpture,
+                Lib.Enemies.Human,
+            };*/
+
             Env.AddLine(Gr.PrL.Garden(), 2, out var path_to_farmer);
             Env.AddOne(Gr.PrL.Garden(), out var farmer_area);
+
             var apples = Enumerable.Range(0, 5).Select(_ => 
                 Lib.Items.NewItem("Earthen apple", "An apple produced by the earth itself.")
                     .OnUse(ch => ch.Prop.Spirit += 10 )
                     .SetConsumable()
                 );
+
             farmer_area.AddInteractiveObject(
                 Lib.InteractiveObjects.InteractiveObject("Farmer", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
                     .SetInteraction(
@@ -91,13 +105,18 @@ namespace ShapeGrammar
                         )
                     )
                 );
-            //Env.AddRandom(Gr.PrL.Garden(), 5, out var garden);
-            //garden.Areas.ForEach(area =>
+            Env.AddRandom(Gr.PrL.Garden(), 5, out var garden);
             apples.ForEach(apple =>
                 farmer_area.AddInteractiveObject(
                         Lib.InteractiveObjects.Item(apple)
                     )
             );
+
+            path_to_farmer.Areas.Concat(garden.Areas)
+                .ForEach(
+                    area => Enumerable.Range(1, 1 + UnityEngine.Random.Range(0, 3))
+                        .ForEach(_ => area.AddEnemy(gardenEnemies.Sample()()))
+                );
             //);
         }
     }

@@ -37,14 +37,16 @@ public class Enemies : ScriptableObject
 
     public IEnumerable<Func<CharacterState>> AllAgents () => new List<Func<CharacterState>>()
     {
-        /*Human,
+        Human,
         Sculpture,
         MayanThrower,
         MayanSwordsman,
         SkinnyWoman,
-        DragonMan,*/
+        DragonMan,
         Dog,
     };
+
+
 
     void AddDefaultBehaviors(Behaviors behaviors)
     {
