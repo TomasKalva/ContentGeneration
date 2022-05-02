@@ -52,7 +52,7 @@ public class InteractiveObjects : ScriptableObject
     [SerializeField]
     Transform physicalItemPrefab;
 
-    public InteractiveObject Grave()
+    public Grave Grave()
     {
         var state = new Grave()
         {
@@ -61,15 +61,14 @@ public class InteractiveObjects : ScriptableObject
             InteractionDescription = "Choose Grave",
             InteractOptions = new InteractOptions<InteractiveObject>()
                 .AddOption("Take candle", (grave, player) => Debug.Log("Taking candle"))
-                .AddOption("Put candle", (grave, player) => Debug.Log("Putting candle"))
+                .AddOption("Put candle", (grave, player) => Debug.Log("Putting candle")),
+            GeometryMaker = Geometry<InteractiveObject>(gravePrefab.transform)
         };
-        var obj = Instantiate(gravePrefab);
-        obj.State = state;
 
-        return obj;
+        return state;
     }
 
-    public InteractiveObjectState AscensionKiln()
+    public AscensionKiln AscensionKiln()
     {
         var state = new AscensionKiln()
         {
@@ -78,9 +77,6 @@ public class InteractiveObjects : ScriptableObject
             InteractionDescription = "Increase will",
             GeometryMaker = Geometry<Kiln>(ascensionKilnPrefab.transform)
         };
-
-        //var obj = Instantiate(ascensionKilnPrefab);
-        //obj.State = state;
 
         return state;
     }

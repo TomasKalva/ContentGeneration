@@ -75,7 +75,7 @@ namespace ShapeGrammar
 
             var goodGraveCube = levelRoot.CG().WithFloor().Cubes
                 .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor)).GetRandom();
-            world.AddInteractiveObject(interactiveObjects.Grave(), GridToWorld(goodGraveCube.Position));
+            world.AddInteractiveObject(interactiveObjects.Grave().MakeGeometry(), GridToWorld(goodGraveCube.Position));
 
             /*
             var elevator = libraries.InteractiveObjects.Elevator(1 * worldScale, false);

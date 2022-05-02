@@ -38,11 +38,11 @@ public class InteractiveObject : MonoBehaviour
     {
         GameViewModel.ViewModel.Message = State.MessageOnInteract;
         
-        State?.Interact(agent);
+        State.Interact(agent);
     }
 
     public void OptionalInteract(Agent agent, int optionIndex)
     {
-        State?.OptionalInteract(agent, optionIndex);
+        State.OptionalInteract(agent, optionIndex);
     }
 }

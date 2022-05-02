@@ -67,7 +67,7 @@ public class GridWorldGenerator : WorldGenerator
         }
 
         var startArea = areas.Where(area => !area.Modules.Any(module => module.coords.y == 0 || module.Outside)).GetRandom();
-        startArea.AddObject(new WorldObjectObject(interactiveObjects.Grave().transform));
+        startArea.AddObject(new WorldObjectObject(interactiveObjects.Grave().MakeGeometry().transform));
         foreach (var area in areas)
         {
             if(!area.Modules.Any(module => module.coords.y == 0 || module.Outside))
