@@ -37,10 +37,10 @@ public class Enemies : ScriptableObject
 
     public IEnumerable<Func<CharacterState>> AllAgents () => new List<Func<CharacterState>>()
     {
-        //Human,
-        Sculpture,
-        /*MayanThrower,
-        MayanSwordsman,
+        /*Human,
+        Sculpture,*/
+        MayanThrower,
+        /*MayanSwordsman,
         SkinnyWoman,
         DragonMan,
         Dog,*/
@@ -95,48 +95,33 @@ public class Enemies : ScriptableObject
         var behaviors = sculpture.Behaviors;
 
         AddDefaultBehaviors(behaviors);
-        /*
-        behaviors.AddBehavior(new DetectorBehavior(sculpture.WideAttack, controller.leftWideDetector, controller.rightWideDownDetector));
-        behaviors.AddBehavior(new DetectorBehavior(sculpture.OverheadAttack, controller.overheadDetector));
-        behaviors.AddBehavior(new DetectorBehavior(sculpture.DoubleSwipe, controller.doubleSwipeLeftDetector, controller.doubleSwipeRightDetector));
-        behaviors.AddBehavior(new DetectorBehavior(sculpture.GroundSlam, controller.groundSlamDetector));
-        
-        sculpture.acting.MyReset();
-        */
 
         return sculpture;
     }
-    /*
-    public Agent MayanThrower()
+    
+    public CharacterState MayanThrower()
     {
-        var mayan = Instantiate(mayanPrefab);
-        var character = mayan.CharacterState;
+        var mayan = new CharacterState();
+        mayan.GeometryMaker = Geometry<Agent>(mayanPrefab);
 
         // properties
-        character.Health = 40f;
-        character.Will = 20f;
-        character.Posture = 10f;
+        mayan.Health = 40f;
+        mayan.Will = 20f;
+        mayan.Posture = 10f;
 
         // inventory
-        character.SetItemToSlot(SlotType.Active, new FreeWill());
-        character.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanSword());
-        character.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanKnife());
+        mayan.SetItemToSlot(SlotType.Active, new FreeWill());
+        mayan.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanSword());
+        mayan.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanKnife());
 
         // behaviors
         var behaviors = mayan.Behaviors;
-        var controller = mayan.GetComponent<MayanController>();
 
         AddDefaultBehaviors(behaviors);
 
-        behaviors.AddBehavior(new DetectorBehavior(mayan.OverheadAttack, controller.overheadDetector));
-        behaviors.AddBehavior(new DetectorBehavior(mayan.Throw, controller.throwDetector));
-        behaviors.AddBehavior(new DetectorBehavior(mayan.LeftSwing, controller.swingDetector));
-
-        mayan.acting.MyReset();
-
         return mayan;
     }
-
+    /*
     public Agent MayanSwordsman()
     {
         var mayan = Instantiate(mayanPrefab);
