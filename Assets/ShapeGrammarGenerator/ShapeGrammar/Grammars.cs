@@ -96,24 +96,30 @@ namespace ShapeGrammar
     }
 
     public delegate IEnumerable<Node> NodesQuery(ShapeGrammarState state);
+    public static class NodesQueries
+    {
+        public static NodesQuery LastCreated { get; } = state => state.LastCreated;
+        public static NodesQuery All { get; } = state => state.Root.AllDerived();
+    }
 
     public class CustomGrammar : Grammar
     {
         ProductionList Productions { get; }
         int Count { get; }
-        Symbol StartSymbol { get; }
+        NodesQuery StartNodesQuery { get; }
         NodesQuery NodesQuery { get; }
 
-        public CustomGrammar(ProductionList productions, int count, Symbol startSymbol, NodesQuery nodesQuery = null)
+        public CustomGrammar(ProductionList productions, int count, NodesQuery startNodesQuery = null, NodesQuery nodesQuery = null)
         {
             Productions = productions;
             Count = count;
-            StartSymbol = startSymbol;
+            StartNodesQuery = startNodesQuery ?? (state => state.Root.AllDerived());
             NodesQuery = nodesQuery ?? (state => state.Root.AllDerived());
         }
 
         public override IEnumerable<Node> Evaluate(ShapeGrammarState shapeGrammarState)
         {
+            shapeGrammarState.ActiveNodes = StartNodesQuery(shapeGrammarState);
             for (int i = 0; i < Count; i++)
             {
                 shapeGrammarState.ActiveNodes = NodesQuery(shapeGrammarState);
@@ -179,8 +185,8 @@ namespace ShapeGrammar
             EvaluatorSequence.Add(evaluator);
             return this;
         }
-        public GrammarSequence AppendLinear(ProductionList productions, int count, Symbol startSymbol)
-            => Add(new CustomGrammar(productions, count, startSymbol, state => state.LastCreated));
+        public GrammarSequence AppendLinear(ProductionList productions, int count, NodesQuery startNodesQuery)
+            => Add(new CustomGrammar(productions, count, startNodesQuery, state => state.LastCreated));
         public GrammarSequence AppendStartEnd(Symbols symbols, ProductionList productions, NodesQuery startQuery, NodesQuery endQuery)
             => Add(new StartEndGrammar(symbols, productions, startQuery, endQuery));
         public override IEnumerable<Node> Evaluate(ShapeGrammarState shapeGrammarState)

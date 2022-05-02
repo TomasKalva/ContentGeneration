@@ -14,7 +14,7 @@ namespace ShapeGrammar
 
         public void LevelStart(out Area area)
         {
-            Env.AddOne(Gr.PrL.CreateNewHouse(), out area);
+            Env.One(Gr.PrL.CreateNewHouse(), NodesQueries.All, out area);
         }
 
         public void LevelPathSegment()
@@ -54,15 +54,9 @@ namespace ShapeGrammar
                     (3, Lib.Enemies.Human),
                     (1, Lib.Enemies.Sculpture)
                 );
-            /*var gardenEnemies = new List<Func<CharacterState>>()
-            {
-                Lib.Enemies.Dog,
-                Lib.Enemies.Sculpture,
-                Lib.Enemies.Human,
-            };*/
 
-            Env.AddLine(Gr.PrL.Garden(), 2, out var path_to_farmer);
-            Env.AddOne(Gr.PrL.Garden(), out var farmer_area);
+            Env.Line(Gr.PrL.Garden(), NodesQueries.LastCreated, 2, out var path_to_farmer);
+            Env.One(Gr.PrL.Garden(), NodesQueries.LastCreated, out var farmer_area);
 
             var apples = Enumerable.Range(0, 5).Select(_ => 
                 Lib.Items.NewItem("Earthen apple", "An apple produced by the earth itself.")
@@ -105,9 +99,11 @@ namespace ShapeGrammar
                         )
                     )
                 );
-            Env.AddRandom(Gr.PrL.Garden(), 5, out var garden);
+            // todo: make extend randomly use only starting and created nodes
+            Env.ExtendRandomly(Gr.PrL.Garden(), NodesQueries.LastCreated, 5, out var garden);
+            var gardenIterator = new Stack<Area>(garden.Areas);
             apples.ForEach(apple =>
-                farmer_area.AddInteractiveObject(
+                gardenIterator.Pop().AddInteractiveObject(
                         Lib.InteractiveObjects.Item(apple)
                     )
             );
@@ -117,7 +113,6 @@ namespace ShapeGrammar
                     area => Enumerable.Range(1, 1 + UnityEngine.Random.Range(0, 3))
                         .ForEach(_ => area.AddEnemy(gardenEnemies.Sample()()))
                 );
-            //);
         }
     }
 }

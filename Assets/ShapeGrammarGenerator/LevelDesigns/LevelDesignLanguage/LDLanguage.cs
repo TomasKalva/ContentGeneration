@@ -239,22 +239,22 @@ namespace ShapeGrammar
             return traversable;
         }
 
-        public void AddLine(ProductionList productions, int count, out LinearPath linearPath)
+        public void Line(ProductionList productions, NodesQuery startNodesQuery, int count, out LinearPath linearPath)
         {
-            var linearGrammar = new CustomGrammar(productions, count, null, state => state.LastCreated);
+            var linearGrammar = new CustomGrammar(productions, count, startNodesQuery, state => state.LastCreated);
             var traversable = GenerateAndTakeTraversable(linearGrammar);
             linearPath = new LinearPath(traversable.ToList());
         }
 
-        public void AddOne(ProductionList productions, out Area one)
+        public void One(ProductionList productions, NodesQuery startNodesQuery, out Area one)
         {
-            var grammar = new RandomGrammar(productions, 1);
+            var grammar = new CustomGrammar(productions, 1, startNodesQuery);
             one = GenerateAndTakeTraversable(grammar).First();
         }
 
-        public void AddRandom(ProductionList productions, int count, out Branching branching)
+        public void ExtendRandomly(ProductionList productions, NodesQuery startNodesQuery, int count, out Branching branching)
         {
-            var grammar = new RandomGrammar(productions, count);
+            var grammar = new CustomGrammar(productions, count, startNodesQuery);
             var traversableNodes = GenerateAndTakeTraversable(grammar);
             branching = new Branching(traversableNodes.ToList());
         }

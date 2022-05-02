@@ -57,6 +57,8 @@ namespace ShapeGrammar
         }
     }
 
+
+
     public class ChapelHall : Symbol
     {
         public Vector3Int Direction { get; }

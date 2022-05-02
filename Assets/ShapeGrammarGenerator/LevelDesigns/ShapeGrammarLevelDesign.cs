@@ -52,15 +52,15 @@ namespace ShapeGrammar
                     )
                     .AppendLinear(
                         new ProductionList(pr.GardenFromCourtyard()),
-                        1, pr.sym.Courtyard
+                        1, NodesQueries.All
                     )
                     .AppendLinear(
                         prL.Garden(),
-                        5, pr.sym.Courtyard
+                        5, NodesQueries.All
                     )
                     .AppendLinear(
                         targetedLowGarden,
-                        5, pr.sym.Courtyard
+                        5, NodesQueries.All
                     )
                     .AppendStartEnd(
                         pr.sym,
@@ -75,11 +75,9 @@ namespace ShapeGrammar
             var shapeGrammar = new RandomGrammar(prL.TestingProductions(), 20);
             var randGardenGrammar = new RandomGrammar(prL.Garden(), 1);
 
-            var newNodes = grammarState.ApplyProduction(pr.CreateNewHouse());
-            randGardenGrammar.Evaluate(grammarState);
-            /*var graveyardGrammar = new RandomGrammar(prL.Graveyard(pr), 10);
-            var graveyardPostprocessGrammar = new AllGrammar(prL.GraveyardPostprocess(pr));
-            var roofGrammar = new AllGrammar(prL.Roofs(pr));
+            var graveyardGrammar = new RandomGrammar(prL.Graveyard(), 10);
+            var graveyardPostprocessGrammar = new AllGrammar(prL.GraveyardPostprocess());
+            var roofGrammar = new AllGrammar(prL.Roofs());
 
             var newNodes = grammarState.ApplyProduction(pr.CreateNewHouse());
             shapeGrammar.Evaluate(grammarState);
@@ -91,7 +89,7 @@ namespace ShapeGrammar
             //graveyardPostprocessGrammar.Evaluate(grammarState);
 
             roofGrammar.Evaluate(grammarState);
-            */
+            
 
             grammarState.Print(new PrintingState()).Show();
             grammarState.Stats.Print();
