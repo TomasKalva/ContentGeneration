@@ -43,7 +43,6 @@ public class Agent : MonoBehaviour
 	public Acting acting;
 	public Animator animator;
 	public AnimancerComponent animancerAnimator;
-	public CharacterRef characterRef;
 	public Renderer myRenderer;
 
 	CharacterState _characterState;
@@ -98,7 +97,6 @@ public class Agent : MonoBehaviour
 		acting = GetComponent<Acting>();
 		animator = GetComponent<Animator>();
 		animancerAnimator = GetComponent<AnimancerComponent>();
-		characterRef = GetComponent<CharacterRef>();
 	}
 
     private void Start()

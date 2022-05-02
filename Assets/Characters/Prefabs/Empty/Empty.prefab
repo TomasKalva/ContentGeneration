@@ -29,6 +29,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5786553739861778978}
   m_RootOrder: 1
@@ -49,6 +50,8 @@ MonoBehaviour:
   actName: Run
   type: 0
   priority: -10
+  duration: 0
+  cost: 0
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -58,8 +61,8 @@ MonoBehaviour:
     _Clip: {fileID: 7400000, guid: 64a52e5438aabac4a96a342bfbcee2ba, type: 2}
     _Speed: 1
     _NormalizedStartTime: 0
-  duration: 0
   speed: 3
+  animMetersPerSecond: 1
 --- !u!114 &838705702077803633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -76,6 +79,8 @@ MonoBehaviour:
   actName: Staggered
   type: 0
   priority: 0
+  duration: 1
+  cost: 0
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -85,7 +90,6 @@ MonoBehaviour:
     _Clip: {fileID: 7400000, guid: 64a52e5438aabac4a96a342bfbcee2ba, type: 2}
     _Speed: 1
     _NormalizedStartTime: 0
-  duration: 1
 --- !u!114 &5226583028225350149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102,6 +106,8 @@ MonoBehaviour:
   actName: Idle
   type: 0
   priority: -100
+  duration: 1
+  cost: 0
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -111,7 +117,6 @@ MonoBehaviour:
     _Clip: {fileID: 7400000, guid: 64a52e5438aabac4a96a342bfbcee2ba, type: 2}
     _Speed: 1
     _NormalizedStartTime: 0
-  duration: 1
 --- !u!1 &5786553739861778974
 GameObject:
   m_ObjectHideFlags: 0
@@ -126,7 +131,6 @@ GameObject:
   - component: {fileID: 5786553739861778979}
   - component: {fileID: 5786553739861778985}
   - component: {fileID: 5786553739861778984}
-  - component: {fileID: 4753134690817229751}
   - component: {fileID: 5786553739861778968}
   - component: {fileID: 5786553739861778969}
   - component: {fileID: 9147495160149788056}
@@ -147,6 +151,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5786553740325880200}
   - {fileID: 1983976511654748805}
@@ -191,6 +196,9 @@ MonoBehaviour:
   stairsMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  movingPlatformMask:
+    serializedVersion: 2
+    m_Bits: 0
   body: {fileID: 0}
   velocity: {x: 0, y: 0, z: 0}
   direction: {x: 0, y: 0}
@@ -209,9 +217,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actContainer: {fileID: 2893532181383869896}
   _activeAct: {fileID: 0}
+  actingSpeedMultiplier: 1
 --- !u!95 &5786553739861778985
 Animator:
-  serializedVersion: 3
+  serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -224,6 +233,7 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -242,27 +252,6 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4753134690817229751
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5786553739861778974}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c1ca6a87ecf97d43bed157c7760b7c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  characterState:
-    _health:
-      max: 100
-      value: 42
-    _stamina:
-      max: 100
-      value: 42
-    viewCamera: {fileID: 0}
-    agent: {fileID: 0}
 --- !u!114 &5786553739861778968
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -284,6 +273,8 @@ MonoBehaviour:
   centerOffset: 0
   uiOffset: 1
   stateMaterials: {fileID: 0}
+  leftWeaponSlot: {fileID: 0}
+  rightWeaponSlot: {fileID: 0}
 --- !u!114 &5786553739861778969
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -296,7 +287,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3057617215ffe304e8ef45e287373b8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetPoint: {fileID: 0}
+  targetEnemy: {fileID: 0}
   minDistance: 10
 --- !u!114 &9147495160149788056
 MonoBehaviour:
@@ -340,6 +331,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 1, z: 0.5}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5786553739861778978}
   m_RootOrder: 0

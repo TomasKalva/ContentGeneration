@@ -28,6 +28,7 @@ Transform:
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0.136, y: 0.036, z: 0.528}
   m_LocalScale: {x: 0.13305, y: 0.36796308, z: 0.13305}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5601675082454693018}
   - {fileID: 5601675080894996818}
@@ -113,6 +114,7 @@ Transform:
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.311, z: -0.55}
   m_LocalScale: {x: 0.74693, y: 0.74693, z: 0.31897646}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5601675080577982629}
   m_RootOrder: 1
@@ -215,6 +217,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0.30875117, z: -0, w: 0.95114285}
   m_LocalPosition: {x: -1.69, y: 0, z: 2.44}
   m_LocalScale: {x: 3.3208063, y: 0.40739253, z: 4.4902596}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8807186798528609753}
   m_RootOrder: 4
@@ -342,6 +345,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.785, z: 0}
   m_LocalScale: {x: 0.26983, y: 1.7615, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5601675080577982629}
   m_RootOrder: 0
@@ -431,6 +435,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8807186798528609753}
   m_RootOrder: 5
@@ -452,6 +457,7 @@ MonoBehaviour:
   type: 1
   priority: 0
   duration: 1.5
+  cost: 0
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -520,6 +526,7 @@ MonoBehaviour:
   type: 2
   priority: 0
   duration: 2.5
+  cost: 0
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -550,6 +557,7 @@ MonoBehaviour:
   type: 2
   priority: 0
   duration: 0.05
+  cost: 0
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -580,6 +588,7 @@ MonoBehaviour:
   type: 2
   priority: 0
   duration: 0
+  cost: 0
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -607,6 +616,7 @@ MonoBehaviour:
   type: 2
   priority: 0
   duration: 1
+  cost: 0
   acts:
   - {fileID: 1355666744191393179}
   - {fileID: 8532614792741806392}
@@ -637,6 +647,7 @@ MonoBehaviour:
   type: 0
   priority: -100
   duration: 0
+  cost: 0
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -663,6 +674,7 @@ MonoBehaviour:
   type: 0
   priority: 0
   duration: 1
+  cost: 0
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -689,6 +701,7 @@ MonoBehaviour:
   type: 0
   priority: 0
   duration: 1
+  cost: 0
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -715,6 +728,7 @@ MonoBehaviour:
   type: 0
   priority: -10
   duration: 0
+  cost: 0
   anim:
     _FadeDuration: 0.25
     _Events:
@@ -725,6 +739,7 @@ MonoBehaviour:
     _Speed: 1
     _NormalizedStartTime: 0
   speed: 3
+  animMetersPerSecond: 1
 --- !u!1 &8807186798488096231
 GameObject:
   m_ObjectHideFlags: 0
@@ -756,6 +771,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.018, y: 0, z: 1.06}
   m_LocalScale: {x: 2.4918156, y: 0.40739253, z: 1.4166003}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8807186798528609753}
   m_RootOrder: 1
@@ -869,7 +885,6 @@ GameObject:
   - component: {fileID: 8807186798528609752}
   - component: {fileID: 8807186798528609746}
   - component: {fileID: 8807186798528609747}
-  - component: {fileID: 7746781374595112012}
   - component: {fileID: 8807186798528609784}
   - component: {fileID: 8807186798528609787}
   - component: {fileID: 6568692567801715614}
@@ -890,6 +905,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 11.49, y: -8.4, z: -60.52}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8807186799172574835}
   - {fileID: 8807186798488096228}
@@ -938,6 +954,9 @@ MonoBehaviour:
   stairsMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  movingPlatformMask:
+    serializedVersion: 2
+    m_Bits: 0
   body: {fileID: 0}
   velocity: {x: 0, y: 0, z: 0}
   direction: {x: 0, y: 0}
@@ -959,7 +978,7 @@ MonoBehaviour:
   actingSpeedMultiplier: 1
 --- !u!95 &8807186798528609746
 Animator:
-  serializedVersion: 3
+  serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -972,6 +991,7 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -990,18 +1010,6 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7746781374595112012
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8807186798528609765}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c1ca6a87ecf97d43bed157c7760b7c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &8807186798528609784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1023,6 +1031,8 @@ MonoBehaviour:
   centerOffset: 0
   uiOffset: 1
   stateMaterials: {fileID: 0}
+  leftWeaponSlot: {fileID: 0}
+  rightWeaponSlot: {fileID: 0}
 --- !u!114 &8807186798528609787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1082,6 +1092,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8807186798528609753}
   m_RootOrder: 0
