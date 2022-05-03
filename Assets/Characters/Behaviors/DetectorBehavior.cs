@@ -38,7 +38,7 @@ public class DetectorBehavior : Behavior
         //agent.acting.SelectAct(currentAct);
     }
 
-    public override bool UpdateBehavior(Agent agent)
+    public override bool Update(Agent agent)
     {
         return act.ActEnded;
     }

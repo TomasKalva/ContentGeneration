@@ -23,12 +23,11 @@ namespace ShapeGrammar
             var languageState = new LanguageState(grammarState);
             var gr = new Grammars(ldk);
             var sym = new Symbols();
-            var env = new Environments(languageState, sym);
             ProductionProgram.pr = new Productions(ldk, sym);
             ProductionProgram.ldk = ldk;
             ProductionProgram.StyleRules = ldk.houseStyleRules;
 
-            MyLanguage language = new MyLanguage(new LanguageParams(ldk, lib, gr, languageState, env));
+            MyLanguage language = new MyLanguage(new LanguageParams(ldk, lib, gr, languageState));
 
             language.MyLevel();
 

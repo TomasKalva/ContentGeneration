@@ -49,7 +49,7 @@ public class WaitForPlayer : Behavior
         PlayerFound = false;
     }
 
-    public override bool UpdateBehavior(Agent agent)
+    public override bool Update(Agent agent)
     {
         if(targetPoint == null)
         {

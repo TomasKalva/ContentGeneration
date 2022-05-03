@@ -15,6 +15,7 @@ namespace ShapeGrammar
         public void LevelStart(out Area area)
         {
             Env.One(Gr.PrL.CreateNewHouse(), NodesQueries.All, out area);
+            area.Node.AddSymbol(Gr.Sym.LevelStartMarker);
         }
 
         public void LevelPathSegment()
@@ -25,6 +26,35 @@ namespace ShapeGrammar
         public void LevelEnd()
         {
 
+        }
+    }
+
+    class TestingLanguage : LDLanguage
+    {
+        public TestingLanguage(LanguageParams tools) : base(tools) { }
+
+        public void LargeLevel()
+        {
+            var grammarState = State.GrammarState;
+
+            var shapeGrammar = new RandomGrammar(Gr.PrL.TestingProductions(), 20);
+            var randGardenGrammar = new RandomGrammar(Gr.PrL.Garden(), 1);
+            var graveyardGrammar = new RandomGrammar(Gr.PrL.Graveyard(), 10);
+            var graveyardPostprocessGrammar = new AllGrammar(Gr.PrL.GraveyardPostprocess());
+            var roofGrammar = new AllGrammar(Gr.PrL.Roofs());
+
+            Env.Execute(shapeGrammar);
+            Env.Execute(randGardenGrammar);
+            Env.Execute(graveyardGrammar);
+            Env.Execute(graveyardPostprocessGrammar);
+            Env.Execute(roofGrammar);
+
+            var allAreas = State.TraversableAreas;
+            //var objects = Enumerable.Range(0, 100).Select(_ => Lib.InteractiveObjects.Item(Lib.Items.FreeWill()));
+            
+            //.Select(_ => Lib.InteractiveObjects.AscensionKiln());
+            //.Select(_ => Lib.InteractiveObjects.InteractiveObject<InteractiveObject>("bush", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer)));
+            //objects.ForEach(obj => allAreas.GetRandom().AddInteractiveObject(obj));
         }
     }
 

@@ -49,7 +49,7 @@ public class Awareness : Behavior
         targetPoint = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
-    public override bool UpdateBehavior(Agent agent)
+    public override bool Update(Agent agent)
     {
         Vector3 direction = TargetPoint - agent.movement.body.position;
         var toTargetDir = direction.XZ();

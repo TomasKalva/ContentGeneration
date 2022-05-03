@@ -26,7 +26,7 @@ public class Behaviors
 
     public Behavior NextBehavior(Agent agent)
     {
-        return behaviors.Where(behavior => behavior.CanEnter(agent)).GetRandom(behavior => behavior.Priority(agent));
+        return behaviors.Where(behavior => behavior.CanEnter(agent)).ArgMax(behavior => behavior.Priority(agent));
     }
 
     public void UpdateBehavior(Agent agent)
@@ -45,7 +45,7 @@ public class Behaviors
             }
         }
 
-        if (CurrentBehaviour.UpdateBehavior(agent))
+        if (CurrentBehaviour.Update(agent))
         {
             CurrentBehaviour.Exit(agent);
             CurrentBehaviour = null;

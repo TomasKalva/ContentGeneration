@@ -43,7 +43,7 @@ namespace ShapeGrammar
             //var shapeGrammar = new CustomGrammarEvaluator(productionList, 20, null, state => state.LastCreated);
 
 
-            var gardenGrammar =
+            var targetedGardenGrammar =
                 new GrammarSequence()
                     .SetStartHandler(
                         state =>state
@@ -82,7 +82,7 @@ namespace ShapeGrammar
             var newNodes = grammarState.ApplyProduction(pr.CreateNewHouse());
             shapeGrammar.Evaluate(grammarState);
 
-            gardenGrammar.Evaluate(grammarState);
+            targetedGardenGrammar.Evaluate(grammarState);
             
 
             //graveyardGrammar.Evaluate(grammarState);

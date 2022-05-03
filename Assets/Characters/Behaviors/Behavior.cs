@@ -10,6 +10,9 @@ public abstract class Behavior
     /// </summary>
     public abstract int Priority(Agent agent);
     public virtual void Enter(Agent agent) { }
-    public virtual bool UpdateBehavior(Agent agent) => true;
+    /// <summary>
+    /// Returs true if should exit.
+    /// </summary>
+    public virtual bool Update(Agent agent) => true;
     public virtual void Exit(Agent agent) { }
 }

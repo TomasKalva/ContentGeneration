@@ -41,7 +41,7 @@ public class TurnToTargetBehavior : Behavior
 
     public override int Priority(Agent agent) => 1;
 
-    public override bool UpdateBehavior(Agent agent)
+    public override bool Update(Agent agent)
     {
         Vector3 direction = TargetPoint - agent.transform.position;
         var moveDirection = direction.XZ().normalized;

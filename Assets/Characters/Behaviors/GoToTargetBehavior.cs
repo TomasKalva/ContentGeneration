@@ -38,7 +38,7 @@ public class GoToTargetBehavior : Behavior
         targetPoint = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
-    public override bool UpdateBehavior(Agent agent)
+    public override bool Update(Agent agent)
     {
         Vector3 direction = TargetPoint - agent.movement.transform.position;
         var moveDirection = new Vector2(direction.x, direction.z);

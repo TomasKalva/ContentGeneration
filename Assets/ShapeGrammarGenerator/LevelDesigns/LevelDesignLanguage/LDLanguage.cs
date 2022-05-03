@@ -40,7 +40,8 @@ namespace ShapeGrammar
 
             State = languageParams.LanguageState;
 
-            Env = languageParams.Env;
+            Env = new Environments(this);
+            //Env = languageParams.Env;
             Msg = new MsgPrinter();
 
             L = Languages.Get(languageParams);
@@ -49,7 +50,7 @@ namespace ShapeGrammar
         public void Instantiate()
         {
             UnityEngine.Debug.Log($"Traversable areas total: {State.TraversableAreas.Count}");
-            State.TraversableAreas.ForEach(area => area.InstantiateAll());
+            State.TraversableAreas.ForEach(area => area.InstantiateAll(Ldk.gg));
         }
     }
 
@@ -60,15 +61,13 @@ namespace ShapeGrammar
         public LevelDevelopmentKit Ldk { get; }
         public Libraries Lib { get; }
         public Grammars Gr { get; }
-        public Environments Env { get; }
 
-        public LanguageParams(LevelDevelopmentKit ldk, Libraries lib, Grammars gr, LanguageState languageState, Environments env)
+        public LanguageParams(LevelDevelopmentKit ldk, Libraries lib, Grammars gr, LanguageState languageState)
         {
             Ldk = ldk;
             Lib = lib;
             Gr = gr;
             LanguageState = languageState;
-            Env = env;
         }
     }
 
@@ -79,6 +78,7 @@ namespace ShapeGrammar
         public void MyLevel()
         {
             L.LevelLanguage.LevelStart(out var startArea);
+            //L.TestingLanguage.LargeLevel();
             L.FarmersLanguage.FarmerBranch(0);
         }
     }
@@ -87,12 +87,14 @@ namespace ShapeGrammar
 
     class Area
     {
+        LDLanguage L { get; }
         public Node Node { get; }
         public List<InteractiveObjectState> InteractiveObjectStates { get; }
         public List<CharacterState> EnemyStates { get; }
 
-        public Area(Node node)
+        public Area(Node node, LDLanguage language)
         {
+            L = language;
             Node = node;
             InteractiveObjectStates = new List<InteractiveObjectState>();
             EnemyStates = new List<CharacterState>();
@@ -105,25 +107,45 @@ namespace ShapeGrammar
 
         public void AddEnemy(CharacterState enemy)
         {
+            var gotoPosition = L.Ldk.gg.GridToWorld(Node.LE.CG().Cubes.GetRandom().Position);
+            var thisAreaPositions = new HashSet<Vector3Int>(Node.LE.CG().Cubes.Select(c => c.Position));
+            enemy.Behaviors.AddBehavior(
+                new Wait(
+                    _ => true,// thisAreaPositions.Contains(Vector3Int.RoundToInt(GameViewModel.ViewModel.PlayerState.Agent.transform.position + 0.5f * Vector3.one)),
+                    _ => gotoPosition
+                    )
+                );
             EnemyStates.Add(enemy);
         }
 
-        public virtual void InstantiateAll()
+        public virtual void InstantiateAll(GeneratorGeometry gg)
         {
             var flooredCubes = new Stack<Cube>(Node.LE.CG().WithFloor().Cubes.Shuffle());
 
             foreach (var ios in InteractiveObjectStates)
             {
+                if (!flooredCubes.Any())
+                {
+                    Debug.LogError("Not enough empty cubes");
+                    break;
+                }
+
                 ios.MakeGeometry();
                 // todo: Create tool for placement of real assets, so that magic numbers aren't needed
-                ios.InteractiveObject.transform.position = 2.8f * (Vector3)flooredCubes.Pop().Position ;
+                ios.InteractiveObject.transform.position = gg.GridToWorld(flooredCubes.Pop().Position);
             }
 
             foreach (var enemy in EnemyStates)
             {
+                if (!flooredCubes.Any())
+                {
+                    Debug.LogError("Not enough empty cubes");
+                    break;
+                }
+
                 enemy.MakeGeometry();
                 // todo: Create tool for placement of real assets, so that magic numbers aren't needed
-                enemy.Agent.transform.position = 2.8f * (Vector3)flooredCubes.Pop().Position;
+                enemy.Agent.transform.position = gg.GridToWorld(flooredCubes.Pop().Position);
             }
         }
     }
@@ -203,6 +225,7 @@ namespace ShapeGrammar
         public LevelLanguage LevelLanguage { get; private set; }
         public BrothersLanguage BrothersLanguage { get; private set; }
         public FarmersLanguage FarmersLanguage { get; private set; }
+        public TestingLanguage TestingLanguage { get; private set; }
 
         Languages()
         {
@@ -213,6 +236,7 @@ namespace ShapeGrammar
             LevelLanguage = new LevelLanguage(tools);
             BrothersLanguage = new BrothersLanguage(tools);
             FarmersLanguage = new FarmersLanguage(tools);
+            TestingLanguage = new TestingLanguage(tools);
         }
     }
 
@@ -220,23 +244,30 @@ namespace ShapeGrammar
 
     class Environments
     {
+        LDLanguage L { get; }
         LanguageState LanguageState { get; }
         Symbols Sym { get; }
 
-        public Environments(LanguageState languageState, Symbols sym)
+        public Environments(LDLanguage language)
         {
-            LanguageState = languageState;
-            Sym = sym;
+            L = language;
+            LanguageState = L.State;
+            Sym = L.Gr.Sym;
         }
 
         IEnumerable<Area> GenerateAndTakeTraversable(Grammar grammar)
         {
             var traversable = grammar.Evaluate(LanguageState.GrammarState)
                                 .Where(node => node.HasSymbols(Sym.FullFloorMarker))
-                                .Select(node => new Area(node))
+                                .Select(node => new Area(node, L))
                                 .ToList();
             LanguageState.TraversableAreas.AddRange(traversable);
             return traversable;
+        }
+
+        public void Execute(Grammar grammar)
+        {
+            var traversable = GenerateAndTakeTraversable(grammar);
         }
 
         public void Line(ProductionList productions, NodesQuery startNodesQuery, int count, out LinearPath linearPath)

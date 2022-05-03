@@ -20,33 +20,6 @@ namespace ShapeGrammar
 
         float worldScale;
 
-        /*
-        private void Start()
-        {
-            // Keep scene view
-            if (Application.isEditor)
-            {
-                UnityEditor.SceneView.FocusWindowIfItsOpen(typeof(UnityEditor.SceneView));
-            }
-            //UnityEngine.Random.InitState(16);
-
-            var stopwatch = new System.Diagnostics.Stopwatch();
-            stopwatch.Start();
-
-            Debug.Log("Generating world");
-
-            var examples = new Examples(FountainheadStyle);
-            examples.JustHouse();
-
-            examples.grid.Generate(2f, parent);
-
-            //Debug.Log(ExtensionMethods.Circle3(2).Count());// ForEach(v => Debug.Log($"{v}\n"));
-
-            stopwatch.Stop();
-            Debug.Log(stopwatch.ElapsedMilliseconds);
-        }
-        */
-
         public override void Generate(World world)
         {
             /*if (Application.isEditor)
@@ -62,7 +35,7 @@ namespace ShapeGrammar
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 
-            var examples = new Examples(DefaultHouseStyle, GardenStyle, libraries);
+            var examples = new Examples(DefaultHouseStyle, GardenStyle, parent, libraries);
             var levelRoot = examples.LanguageDesign(libraries);
             examples.grid.Generate(worldScale, parent);
 
@@ -73,15 +46,15 @@ namespace ShapeGrammar
 
             Debug.Log("Generating world");
 
-            var goodGraveCube = levelRoot.CG().WithFloor().Cubes
-                .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor)).GetRandom();
-            world.AddInteractiveObject(interactiveObjects.Grave().MakeGeometry(), GridToWorld(goodGraveCube.Position));
 
             /*
             var elevator = libraries.InteractiveObjects.Elevator(1 * worldScale, false);
             world.AddObject(elevator.Object, Vector3.zero);
             */
 
+            var goodGraveCube = levelRoot.CG().WithFloor().Cubes
+                .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor)).GetRandom();
+            world.AddInteractiveObject(interactiveObjects.Grave().MakeGeometry(), GridToWorld(goodGraveCube.Position));
 
             /*
             var allEnemies = libraries.Enemies.AllAgents();
@@ -93,9 +66,11 @@ namespace ShapeGrammar
             itemCubes.ForEach(cube => world.AddItem(libraries.InteractiveObjects.Item(libraries.Items.Scythe()).MakeGeometry(), GridToWorld(cube.Position)));
             */
 
+            /*
             var kilnCube = goodGraveCube.NeighborsHor().GetRandom();
             world.AddInteractiveObject(interactiveObjects.AscensionKiln().MakeGeometry(), GridToWorld(kilnCube.Position));
-            
+            */
+
         }
         /*
          For profiling
@@ -122,10 +97,26 @@ namespace ShapeGrammar
         }
         */
 
-        Vector3 GridToWorld(Vector3 pos)
+        public Vector3 GridToWorld(Vector3 pos)
         {
             return parent.position + worldScale * pos;
         }
+    }
 
+    public class GeneratorGeometry
+    {
+        Transform worldParent;
+        float worldScale;
+
+        public GeneratorGeometry(Transform worldParent, float worldScale)
+        {
+            this.worldParent = worldParent;
+            this.worldScale = worldScale;
+        }
+
+        public Vector3 GridToWorld(Vector3 pos)
+        {
+            return worldParent.position + worldScale * pos;
+        }
     }
 }
