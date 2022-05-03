@@ -264,7 +264,7 @@ namespace ShapeGrammar
                         .PlaceNodes(newRoom)
 
                         .FindPath(() => ldk.con.ConnectByDoor(newRoom.LE, what.LE).GN(sym.ConnectionMarker), out var door)
-                        .PlaceNodes(newRoom, what);
+                        .PlaceNodes(what, newRoom);
                 });
         }
 
@@ -358,7 +358,7 @@ namespace ShapeGrammar
 
                         // The door doesn't get overwritten by apply style only because it has higher priority, which doesn't feel robust enough
                         .FindPath(() => ldk.con.ConnectByFall(newRoom.LE, bottomRoom.LE).GN(), out var fall)
-                        .PlaceNodes(newRoom, bottomRoom);
+                        .PlaceNodes(bottomRoom, newRoom);
 
                 });
         }
@@ -406,10 +406,10 @@ namespace ShapeGrammar
                         .PlaceNodes(newRoom)
 
                         .FindPath(() => ldk.con.ConnectByBalconyStairsOutside(from.LE, newRoom.LE, state.WorldState.Added.Merge(foundation.LE).Merge(reservation.LE)).GN(sym.ConnectionMarker), out var stairs)
-                        .PlaceNodes(newRoom, from)
+                        .PlaceNodes(from, newRoom)
 
                         .FindPath(() => ldk.con.ConnectByFall(newRoom.LE, to.LE).GN(), out var fall)
-                        .PlaceNodes(newRoom, to);
+                        .PlaceNodes(to, newRoom);
                 });
         }
 
@@ -675,7 +675,7 @@ namespace ShapeGrammar
 
                         //Replace with open connection
                         .FindPath(() => ldk.con.ConnectByDoor(newPark.LE, what.LE).GN(sym.ConnectionMarker), out var door)
-                        .PlaceNodes(newPark, what);
+                        .PlaceNodes(what, newPark);
                 });
         }
 
@@ -709,7 +709,7 @@ namespace ShapeGrammar
                         .PlaceNodes(newPark)
 
                         .FindPath(() => ldk.con.ConnectByStairsInside(newPark.LE, what.LE).GN(sym.ConnectionMarker), out var stairs)
-                        .PlaceNodes(newPark, what);
+                        .PlaceNodes(what, newPark);
                 });
         }
 
@@ -741,7 +741,7 @@ namespace ShapeGrammar
 
                         //Replace with open connection
                         .FindPath(() => ldk.con.ConnectByDoor(newChapelEntrance.LE, what.LE).GN(sym.ConnectionMarker), out var door)
-                        .PlaceNodes(newChapelEntrance, what);
+                        .PlaceNodes(what, newChapelEntrance);
                 });
         }
 
@@ -776,7 +776,7 @@ namespace ShapeGrammar
                         .PlaceNodes(newChapelHall)
 
                         .FindPath(() => ldk.con.ConnectByDoor(newChapelHall.LE, entrance.LE).GN(sym.ConnectionMarker), out var door)
-                        .PlaceNodes(newChapelHall, entrance);
+                        .PlaceNodes(entrance, newChapelHall);
                 });
         }
 
@@ -806,7 +806,7 @@ namespace ShapeGrammar
                         .PlaceNodes(newRoom)
                         
                         .FindPath(() => ldk.con.ConnectByDoor(newRoom.LE, hall.LE).GN(sym.ConnectionMarker), out var door)
-                        .PlaceNodes(newRoom, hall);
+                        .PlaceNodes(hall, newRoom);
                 });
         }
 
@@ -843,7 +843,7 @@ namespace ShapeGrammar
                         .PlaceNodes(nextFloor)
 
                         .FindPath(() => ldk.con.ConnectByStairsInside(nextFloor.LE, roomBelow.LE).GN(sym.ConnectionMarker), out var stairs)
-                        .PlaceNodes(nextFloor, reservation);
+                        .PlaceNodes(roomBelow, nextFloor);
                 });
         }
 
@@ -872,7 +872,7 @@ namespace ShapeGrammar
                         .PlaceNodes(towerTop)
 
                         .FindPath(() => ldk.con.ConnectByStairsInside(towerTop.LE, roomBelow.LE).GN(sym.ConnectionMarker), out var stairs)
-                        .PlaceNodes(towerTop, reservation);
+                        .PlaceNodes(roomBelow, towerTop);
                 });
         }
         #endregion
