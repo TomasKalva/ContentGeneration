@@ -100,6 +100,24 @@ namespace ShapeGrammar
     {
         public static NodesQuery LastCreated { get; } = state => state.LastCreated;
         public static NodesQuery All { get; } = state => state.Root.AllDerived();
+        public static NodesQuery Extend(NodesQuery start)
+        {
+            var toExtend = new List<Node>();
+            return state =>
+            {
+                // add start to the nodes to be extended during the first step
+                if (!toExtend.Any())
+                {
+                    toExtend.AddRange(start(state));
+                }
+                else
+                {
+                    toExtend.AddRange(LastCreated(state));
+                }
+
+                return toExtend;
+            };
+        }
     }
 
     public class CustomGrammar : Grammar
@@ -119,10 +137,9 @@ namespace ShapeGrammar
 
         public override IEnumerable<Node> Evaluate(ShapeGrammarState shapeGrammarState)
         {
-            shapeGrammarState.ActiveNodes = StartNodesQuery(shapeGrammarState);
             for (int i = 0; i < Count; i++)
             {
-                shapeGrammarState.ActiveNodes = NodesQuery(shapeGrammarState);
+                shapeGrammarState.ActiveNodes = i == 0 ? StartNodesQuery(shapeGrammarState) : NodesQuery(shapeGrammarState);
                 var applicable = Productions.Get.Shuffle();
                 var newNodes = Produce(shapeGrammarState, applicable);
             }

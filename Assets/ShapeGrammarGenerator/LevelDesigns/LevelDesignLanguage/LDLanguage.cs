@@ -254,7 +254,7 @@ namespace ShapeGrammar
 
         public void ExtendRandomly(ProductionList productions, NodesQuery startNodesQuery, int count, out Branching branching)
         {
-            var grammar = new CustomGrammar(productions, count, startNodesQuery);
+            var grammar = new CustomGrammar(productions, count, startNodesQuery, NodesQueries.Extend(NodesQueries.LastCreated));
             var traversableNodes = GenerateAndTakeTraversable(grammar);
             branching = new Branching(traversableNodes.ToList());
         }
