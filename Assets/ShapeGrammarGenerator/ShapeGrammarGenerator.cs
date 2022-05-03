@@ -56,6 +56,10 @@ namespace ShapeGrammar
                 .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor)).GetRandom();
             world.AddInteractiveObject(interactiveObjects.Grave().MakeGeometry(), GridToWorld(goodGraveCube.Position));
 
+
+            var hs = new HashSet<Vector3Int>() { new Vector3Int(0, 1, 0) };
+
+            Debug.Log($"hs contains (0, 1, 0): {hs.Contains(new Vector3Int(0, 1, 0))}");
             /*
             var allEnemies = libraries.Enemies.AllAgents();
             var enemyCubes = levelRoot.CG().WithFloor().Cubes.Shuffle().Take(10);
@@ -114,9 +118,14 @@ namespace ShapeGrammar
             this.worldScale = worldScale;
         }
 
-        public Vector3 GridToWorld(Vector3 pos)
+        public Vector3 GridToWorld(Vector3 gridPos)
         {
-            return worldParent.position + worldScale * pos;
+            return worldParent.position + worldScale * gridPos;
+        }
+
+        public Vector3 WorldToGrid(Vector3 worldPos)
+        {
+            return (worldPos - worldParent.position) / worldScale;
         }
     }
 }

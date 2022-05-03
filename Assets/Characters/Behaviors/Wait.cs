@@ -10,7 +10,7 @@ public class Wait : Behavior
 
     Func<Agent, bool> ShouldWait { get; }
 
-    float MinDistance => 0.5f;
+    float MinDistance => 1.5f;
 
     public Wait(Func<Agent, bool> shouldWait, Func<Agent, Vector3> waitPosition)
     {
@@ -35,7 +35,8 @@ public class Wait : Behavior
         if((targetPoint - agent.transform.position).magnitude > MinDistance &&
             agent.CanMove)
         {
-            agent.Run(targetPoint.XZ());
+            var direction = (targetPoint - agent.transform.position).XZ();
+            agent.Run(direction);
         }
 
         return !ShouldWait(agent);

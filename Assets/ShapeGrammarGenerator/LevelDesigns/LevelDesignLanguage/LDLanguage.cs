@@ -107,11 +107,17 @@ namespace ShapeGrammar
 
         public void AddEnemy(CharacterState enemy)
         {
-            var gotoPosition = L.Ldk.gg.GridToWorld(Node.LE.CG().Cubes.GetRandom().Position);
+            // define behavior that makes enemies only go after player, if he's in their area
+            var gotoPosition = L.Ldk.gg.GridToWorld(Node.LE.CG().WithFloor().Cubes.GetRandom().Position);
+            //L.Lib.InteractiveObjects.AscensionKiln().MakeGeometry().transform.position = gotoPosition; // visualization of waiting spots
             var thisAreaPositions = new HashSet<Vector3Int>(Node.LE.CG().Cubes.Select(c => c.Position));
             enemy.Behaviors.AddBehavior(
                 new Wait(
-                    _ => true,// thisAreaPositions.Contains(Vector3Int.RoundToInt(GameViewModel.ViewModel.PlayerState.Agent.transform.position + 0.5f * Vector3.one)),
+                    _ => 
+                    {
+                        var playerGridPosition = Vector3Int.RoundToInt(L.Ldk.gg.WorldToGrid(GameViewModel.ViewModel.PlayerState.Agent.transform.position));
+                        return !thisAreaPositions.Contains(playerGridPosition); 
+                    },
                     _ => gotoPosition
                     )
                 );
