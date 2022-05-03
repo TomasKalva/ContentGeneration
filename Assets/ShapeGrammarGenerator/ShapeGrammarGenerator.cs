@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using Assets.Util;
+using ContentGeneration.Assets.UI.Util;
 
 namespace ShapeGrammar
 {
@@ -31,6 +32,17 @@ namespace ShapeGrammar
             //UnityEngine.Random.InitState(42);
 
             worldScale = 2.8f;
+
+            var playerState = new ContentGeneration.Assets.UI.Model.PlayerCharacterState();
+            var prop = new ContentGeneration.Assets.UI.Model.CharacterProperties()
+            {
+                Health = 100,
+                Spirit = 100,
+                Will = 50,
+            };
+            playerState.Prop = prop;
+            prop.Character = playerState;
+            GameViewModel.ViewModel.PlayerState = playerState;
 
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();

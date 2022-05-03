@@ -184,7 +184,6 @@ namespace ShapeGrammar
                 }
 
                 ios.MakeGeometry();
-                // todo: Create tool for placement of real assets, so that magic numbers aren't needed
                 ios.InteractiveObject.transform.position = gg.GridToWorld(flooredCubes.Pop().Position);
             }
 
@@ -197,7 +196,6 @@ namespace ShapeGrammar
                 }
 
                 enemy.MakeGeometry();
-                // todo: Create tool for placement of real assets, so that magic numbers aren't needed
                 enemy.Agent.transform.position = gg.GridToWorld(flooredCubes.Pop().Position);
             }
         }
