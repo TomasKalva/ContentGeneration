@@ -55,7 +55,7 @@ namespace ShapeGrammar
             var chunkCoords = TryCreateChunk(coords);
             var localCoords = coords.Mod(sizes);
             var cube = chunks[chunkCoords][localCoords.x, localCoords.y, localCoords.z];
-            Debug.Assert(cube != null, $"chunks[{chunkCoords}][{localCoords}] is null");
+            //Debug.Assert(cube != null, $"chunks[{chunkCoords}][{localCoords}] is null");
             Profiler.EndSample();
             return cube;
         }

@@ -33,6 +33,7 @@ namespace ShapeGrammar
 
             worldScale = 2.8f;
 
+            // todo: make this initialization less annoying
             var playerState = new ContentGeneration.Assets.UI.Model.PlayerCharacterState();
             var prop = new ContentGeneration.Assets.UI.Model.CharacterProperties()
             {

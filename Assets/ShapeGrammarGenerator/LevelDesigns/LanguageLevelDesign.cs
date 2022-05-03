@@ -35,14 +35,14 @@ namespace ShapeGrammar
             language.Instantiate();
 
             // enable disabling enemies in distance
-            /*var spacePartitioning = new SpacePartitioning(language.State.TraversabilityGraph);
+            var spacePartitioning = new SpacePartitioning(language.State.TraversabilityGraph);
             var playerState = GameViewModel.ViewModel.PlayerState;
             playerState.OnUpdate += () =>
             {
                 var playerGridPosition = Vector3Int.RoundToInt(language.Ldk.gg.WorldToGrid(GameViewModel.ViewModel.PlayerState.Agent.transform.position));
                 var playerNode = language.State.GrammarState.GetNode(playerGridPosition);
                 spacePartitioning.Update(playerNode);
-            };*/
+            };
 
             grammarState.Print(new PrintingState()).Show();
             grammarState.Stats.Print();
