@@ -70,7 +70,7 @@ namespace ShapeGrammar
 
             State.TraversableAreas
                .ForEach(
-                   area => Enumerable.Range(0, 2)
+                   area => Enumerable.Range(0, 1)
                        .ForEach(_ => area.AddEnemy(Lib.Enemies.AllAgents().GetRandom()()))
                );
         }

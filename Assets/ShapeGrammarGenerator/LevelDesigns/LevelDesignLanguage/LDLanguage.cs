@@ -59,12 +59,11 @@ namespace ShapeGrammar
             var area = Areas.Where(area => area.Node == node).FirstOrDefault();
             if(area == null)
             {
-                throw new InvalidOperationException("Area for the node doesn't exist");
+                node.Print(new PrintingState()).Show();
+                throw new InvalidOperationException($"Area for the node doesn't exist");
             }
             return area;
         }
-
-        public IEnumerable<Area> GetAreas => Areas;
 
         public bool AreConnected(Area from, Area to)
         {
@@ -202,6 +201,16 @@ namespace ShapeGrammar
                 enemy.Agent.transform.position = gg.GridToWorld(flooredCubes.Pop().Position);
             }
         }
+
+        public void Enable()
+        {
+            EnemyStates.ForEach(enemy => enemy.Agent.enabled = true);
+        }
+
+        public void Disable()
+        {
+            EnemyStates.ForEach(enemy => enemy.Agent.enabled = false);
+        }
     }
 
     class AreasConnection : IEdge<Area>
@@ -230,6 +239,46 @@ namespace ShapeGrammar
         public Area Other(Area vert)
         {
             return vert == From ? To : vert == To ? From : throw new InvalidOperationException($"The vertex {vert} isn't in the edge.");
+        }
+    }
+
+    class SpacePartitioning
+    {
+        IEnumerable<Area> activeAreas;
+        TraversabilityGraph traversabilityGraph;
+        GraphAlgorithms<Area, Edge<Area>, IGraph<Area, Edge<Area>>> areasConnnectionsAlg;
+
+        public SpacePartitioning(TraversabilityGraph traversabilityGraph)
+        {
+            this.traversabilityGraph = traversabilityGraph;
+            Initialize();
+        }
+
+        public void Initialize()
+        {
+            traversabilityGraph.Areas.ForEach(area => area.Disable());
+            activeAreas = traversabilityGraph.Areas;
+        }
+
+        public void Update(Node activeNode)
+        {
+            if(activeNode == null)
+            {
+                return;
+            }
+
+            var activeArea = traversabilityGraph.GetArea(activeNode);
+            activeAreas.ForEach(area => area.Disable());
+
+            // current neighbors
+            var currActive = traversabilityGraph.Neighbors(activeArea).Append(activeArea);
+            // remove no longer active
+            var notActive = activeAreas.Where(area => areasConnnectionsAlg.Distance(area, activeArea, int.MaxValue) > 2).ToList();
+            // add newly active
+            var newActive = currActive.Except(notActive);
+
+            activeAreas = newActive;
+            activeAreas.ForEach(area => area.Enable());
         }
     }
 

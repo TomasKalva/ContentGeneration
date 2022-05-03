@@ -143,6 +143,16 @@ namespace ShapeGrammar
             grammarState.VerticallyTaken = grammarState.VerticallyTaken.Merge(le.ProjectToY(0));
         }
 
+        protected void AddToCubeToNodes(ShapeGrammarState grammarState)
+        {
+            var sym = new Symbols();
+            To.Where(node => !node.HasSymbols(sym.ConnectionMarker))
+                .ForEach(node =>
+                {
+                    node.LE.CG().Cubes.ForEach(cube => grammarState.CubeToNode[cube.Position] = node);
+                });
+        }
+
         public abstract PrintingState Print(PrintingState state);
 
         public PrintingState PrintNodes(PrintingState state)
@@ -162,6 +172,7 @@ namespace ShapeGrammar
             AddIntoDag();
             var lge = To.Select(node => node.LE).ToLevelGroupElement(grammarState.WorldState.Grid);
             grammarState.WorldState = grammarState.WorldState.TryPush(lge);
+            AddToCubeToNodes(grammarState);
             AddToFoundation(grammarState, lge);
             return To;
         }
@@ -186,6 +197,7 @@ namespace ShapeGrammar
             });
             var lge = To.Select(node => node.LE).ToLevelGroupElement(grammarState.WorldState.Grid);
             grammarState.WorldState = grammarState.WorldState.ChangeAll(To.Select<Node, WorldState.ChangeWorld>(gn => ws => ws.TryPush(gn.LE)));
+            AddToCubeToNodes(grammarState);
             AddToFoundation(grammarState, lge);
             return To;
         }
@@ -208,6 +220,10 @@ namespace ShapeGrammar
         public WorldState WorldState { get; set; }
 
         public Grid<bool> OffersFoundation { get; }
+        /// <summary>
+        /// Contains the node which has the cube. Doesn't include paths.
+        /// </summary>
+        public Grid<Node> CubeToNode { get; }
         public LevelElement VerticallyTaken { get; set; }
         public IEnumerable<Node> LastCreated { get; private set; }
         public IEnumerable<Node> ActiveNodes { get; set; }
@@ -276,6 +292,7 @@ namespace ShapeGrammar
             Root = new Node(empty, new List<Symbol>());
             WorldState = new WorldState(empty, grid, le => le.ApplyGrammarStyleRules(ldk.houseStyleRules)).TryPush(empty);
             OffersFoundation = new Grid<bool>(new Vector3Int(10, 1, 10), (_1, _2) => true);
+            CubeToNode = new Grid<Node>(new Vector3Int(10, 10, 10), (_1, _2) => null);
             VerticallyTaken = LevelElement.Empty(grid);
             Stats = new GrammarStats();
             ActiveNodes = Root.AllDerived();
@@ -380,6 +397,9 @@ namespace ShapeGrammar
         }
         #endregion
 
-
+        public Node GetNode(Vector3Int cubePos)
+        {
+            return CubeToNode[cubePos];
+        }
     }
 }

@@ -2,6 +2,7 @@
 using ContentGeneration.Assets.UI;
 using ContentGeneration.Assets.UI.Model;
 using ContentGeneration.Assets.UI.Util;
+using ShapeGrammar;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,8 +62,6 @@ public class PlayerController : MonoBehaviour
 			{"Option2", false },
 			{"Option3", false },
 		};
-
-		spacePartitioning = new SpacePartitioning();
 	}
 
     private void Start()
@@ -350,7 +349,7 @@ public class PlayerController : MonoBehaviour
 			Debug.Log(currentModule.GetProperty<AreaModuleProperty>().Area.Name);
 		}*/
 
-		spacePartitioning.Update(grid, currentModule);
+		//spacePartitioning.Update(grid, currentModule);
 		//
 		/*grid.AreasConnections.Vertices.ForEach(area => area.Disable());
 		var currActive = grid.AreasConnections.Neighbors(currentModule.GetProperty<AreaModuleProperty>().Area).Concat(new List<Area>() { currentModule.GetProperty<AreaModuleProperty>().Area });
@@ -358,49 +357,6 @@ public class PlayerController : MonoBehaviour
 		/*activeAreas.UnionWith(currActive);
 		activeAreas.RemoveWhere(area => )*/
 	}
-
-	class SpacePartitioning
-    {
-		HashSet<Area> activeAreas;
-		IGraph<Area, Edge<Area>> areasConnections;
-		GraphAlgorithms<Area, Edge<Area>, IGraph<Area, Edge<Area>>> areasConnnectionsAlg;
-		bool initialized;
-
-		public SpacePartitioning()
-        {
-			activeAreas = new HashSet<Area>();
-			initialized = false;
-		}
-
-		public void Initialize(ModuleGrid grid)
-		{
-			grid.AreasConnections.Vertices.ForEach(area => area.Disable());
-			this.areasConnections = grid.AreasConnections;
-			this.areasConnnectionsAlg = new GraphAlgorithms<Area, Edge<Area>, IGraph<Area, Edge<Area>>>(areasConnections);
-		}
-
-		public void Update(ModuleGrid grid, Module active)
-        {
-            if (!initialized)
-            {
-				Initialize(grid);
-				initialized = true;
-            }
-
-			var activeArea = active.GetProperty<AreaModuleProperty>().Area;
-			var currActive = grid.AreasConnections.Neighbors(activeArea).Concat(new List<Area>() { activeArea });
-
-			// remove no longer active
-			var notActive = activeAreas.Where(area => areasConnnectionsAlg.Distance(area, activeArea, int.MaxValue) > 2).ToList();
-			notActive.ForEach(area => area.Disable());
-			notActive.ForEach(area => activeAreas.Remove(area));
-
-			// add newly active
-			var newActive = currActive.Except(activeAreas);
-			newActive.ForEach(area => area.Enable());
-			newActive.ForEach(area => activeAreas.Add(area));
-		}
-    }
 
 	Vector3 InpForward
 	{

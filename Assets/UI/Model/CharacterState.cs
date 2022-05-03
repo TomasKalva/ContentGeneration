@@ -71,6 +71,8 @@ namespace ContentGeneration.Assets.UI.Model
             set { _properties = value; OnPropertyChanged(this); }
         }
 
+        public Action OnUpdate { get; set; }
+
         public DamageTaken DamageTaken { get; }
 
         public bool PostureBroken { get; set; }
@@ -88,6 +90,7 @@ namespace ContentGeneration.Assets.UI.Model
             DamageTaken = new DamageTaken(2f);
             Prop = new CharacterProperties();
             Prop.Character = this;
+            OnUpdate = () => { };
 #if NOESIS
             Behaviors = new Behaviors();
 #endif
@@ -129,6 +132,8 @@ namespace ContentGeneration.Assets.UI.Model
             }
 
             DamageTaken.Update(Time.fixedDeltaTime);
+
+            OnUpdate();
 
             UIUpdate();
         }
