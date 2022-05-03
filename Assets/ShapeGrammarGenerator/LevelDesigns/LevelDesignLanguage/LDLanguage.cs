@@ -255,7 +255,7 @@ namespace ShapeGrammar
 
     class SpacePartitioning
     {
-        IEnumerable<Area> activeAreas;
+        HashSet<Area> activeAreas;
         TraversabilityGraph traversabilityGraph;
         bool initialized = false; // initialize during first update so that UI can get reference to this enemy
 
@@ -267,7 +267,7 @@ namespace ShapeGrammar
         public void Initialize()
         {
             traversabilityGraph.Areas.ForEach(area => area.Disable());
-            activeAreas = Enumerable.Empty<Area>();
+            activeAreas = new HashSet<Area>();
         }
 
         public void Update(Node activeNode)
@@ -284,14 +284,17 @@ namespace ShapeGrammar
             }
 
             var activeArea = traversabilityGraph.GetArea(activeNode);
+            var currentAreas = traversabilityGraph.Neighbors(activeArea).Append(activeArea);
 
             // remove no longer active
-            var notActive = activeAreas.Where(area => traversabilityGraph.Distance(area, activeArea, int.MaxValue) > 0).ToList();
+            var notActive = activeAreas.Where(area => traversabilityGraph.Distance(area, activeArea, int.MaxValue) > 1).ToList();
             notActive.ForEach(area => area.Disable());
+            notActive.ForEach(area => activeAreas.Remove(area));
 
             // add newly active
-            activeAreas = traversabilityGraph.Neighbors(activeArea).Append(activeArea);
-            activeAreas.ForEach(area => area.Enable());
+            var newActive = currentAreas.Except(activeAreas);
+            newActive.ForEach(area => area.Enable());
+            newActive.ForEach(area => activeAreas.Add(area));
         }
     }
 

@@ -20,7 +20,7 @@ public class DetectorBehavior : Behavior
 
     public Transform DetectedTarget()
     {
-        return detectors.Select(detector => detector.other).FirstOrDefault()?.transform;
+        return detectors.Select(detector => detector?.other).FirstOrDefault()?.transform;
     }
 
     public override bool CanEnter(Agent agent)

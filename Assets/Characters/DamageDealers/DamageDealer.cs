@@ -46,8 +46,12 @@ public abstract class DamageDealer : MonoBehaviour
     {
         foreach(var hitAgent in HitAgents())
         {
+            if (hitAgent == null || !hitAgent.gameObject.activeSelf)
+                continue;
+
             if (hitAgent != Owner && !currentlyHit.Contains(hitAgent))
             {
+
                 if(!options.friendlyFire && hitAgent.gameObject.layer == Owner.gameObject.layer)
                 {
                     continue;

@@ -15,8 +15,8 @@ namespace ShapeGrammar
         public void MyLevel()
         {
             L.LevelLanguage.LevelStart(out var startArea);
-            //L.TestingLanguage.LargeLevel();
-            L.FarmersLanguage.FarmerBranch(0);
+            L.TestingLanguage.LargeLevel();
+            //L.FarmersLanguage.FarmerBranch(0);
         }
     }
 
@@ -70,7 +70,7 @@ namespace ShapeGrammar
 
             State.TraversableAreas
                .ForEach(
-                   area => Enumerable.Range(0, 1)
+                   area => Enumerable.Range(0, 3)
                        .ForEach(_ => area.AddEnemy(Lib.Enemies.AllAgents().GetRandom()()))
                );
         }
