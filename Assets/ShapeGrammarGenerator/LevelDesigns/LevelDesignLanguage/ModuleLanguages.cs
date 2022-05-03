@@ -8,6 +8,18 @@ using UnityEngine;
 
 namespace ShapeGrammar
 {
+    class MyLanguage : LDLanguage
+    {
+        public MyLanguage(LanguageParams tools) : base(tools) { }
+
+        public void MyLevel()
+        {
+            L.LevelLanguage.LevelStart(out var startArea);
+            L.TestingLanguage.LargeLevel();
+            //L.FarmersLanguage.FarmerBranch(0);
+        }
+    }
+
     class LevelLanguage : LDLanguage
     {
         public LevelLanguage(LanguageParams tools) : base(tools) { }
@@ -50,11 +62,17 @@ namespace ShapeGrammar
             Env.Execute(roofGrammar);
 
             var allAreas = State.TraversableAreas;
-            //var objects = Enumerable.Range(0, 100).Select(_ => Lib.InteractiveObjects.Item(Lib.Items.FreeWill()));
-            
+            //var objects = Enumerable.Range(0, 100)
+            //.Select(_ => Lib.InteractiveObjects.Item(Lib.Items.FreeWill()));
             //.Select(_ => Lib.InteractiveObjects.AscensionKiln());
             //.Select(_ => Lib.InteractiveObjects.InteractiveObject<InteractiveObject>("bush", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer)));
             //objects.ForEach(obj => allAreas.GetRandom().AddInteractiveObject(obj));
+
+            State.TraversableAreas
+               .ForEach(
+                   area => Enumerable.Range(0, 2)
+                       .ForEach(_ => area.AddEnemy(Lib.Enemies.AllAgents().GetRandom()()))
+               );
         }
     }
 
@@ -140,7 +158,7 @@ namespace ShapeGrammar
 
             path_to_farmer.Areas.Concat(garden.Areas)
                 .ForEach(
-                    area => Enumerable.Range(1, 1 + UnityEngine.Random.Range(0, 3))
+                    area => Enumerable.Range(0, 1 + UnityEngine.Random.Range(0, 2))
                         .ForEach(_ => area.AddEnemy(gardenEnemies.Sample()()))
                 );
         }

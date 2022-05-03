@@ -32,7 +32,6 @@ namespace ShapeGrammar
             language.MyLevel();
 
             language.Instantiate();
-            //((FarmersLanguage < LDLanguage > )language).FarmerBranch(0);
 
             grammarState.Print(new PrintingState()).Show();
             grammarState.Stats.Print();

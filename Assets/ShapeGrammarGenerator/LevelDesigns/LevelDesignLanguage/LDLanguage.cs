@@ -12,12 +12,73 @@ namespace ShapeGrammar
     class LanguageState
     {
         public ShapeGrammarState GrammarState { get; }
-        public List<Area> TraversableAreas { get; }
+        public IEnumerable<Area> TraversableAreas => TraversabilityGraph.Areas;
+        public TraversabilityGraph TraversabilityGraph { get; }
 
         public LanguageState(ShapeGrammarState grammarState)
         {
             GrammarState = grammarState;
-            TraversableAreas = new List<Area>();
+            TraversabilityGraph = new TraversabilityGraph();
+        }
+
+        public void AddAreas(List<Area> areas)
+        {
+            TraversabilityGraph.Areas.AddRange(areas);
+        }
+
+        public void AddConnections(List<Node> connections)
+        {
+            var areaConnections = connections.Select(nCon =>
+            {
+                var pred = nCon.DerivedFrom;
+                if (pred.Count < 2) 
+                {
+                    throw new InvalidOperationException($"The connection node doesn't have enough parents: expected 2, actual {pred.Count}");
+                }
+                var from = TraversabilityGraph.GetArea(pred[0]);
+                var to = TraversabilityGraph.GetArea(pred[1]);
+                return new AreasConnection(nCon, from, to);
+            });
+            TraversabilityGraph.Connections.AddRange(areaConnections);
+        }
+    }
+
+    class TraversabilityGraph : IGraph<Area, AreasConnection>
+    {
+        public List<Area> Areas { get; }
+        public List<AreasConnection> Connections { get; }
+
+        public TraversabilityGraph()
+        {
+            Areas = new List<Area>();
+            Connections = new List<AreasConnection>();
+        }
+
+        public Area GetArea(Node node)
+        {
+            var area = Areas.Where(area => area.Node == node).FirstOrDefault();
+            if(area == null)
+            {
+                throw new InvalidOperationException("Area for the node doesn't exist");
+            }
+            return area;
+        }
+
+        public IEnumerable<Area> GetAreas => Areas;
+
+        public bool AreConnected(Area from, Area to)
+        {
+            return Connections.Any(edge => edge.Connects(from, to));
+        }
+
+        public IEnumerable<AreasConnection> EdgesFrom(Area vert)
+        {
+            return Connections.Where(edge => edge.Contains(vert));
+        }
+
+        public IEnumerable<Area> Neighbors(Area vert)
+        {
+            return EdgesFrom(vert).Select(edge => edge.Other(vert));
         }
     }
 
@@ -49,7 +110,6 @@ namespace ShapeGrammar
 
         public void Instantiate()
         {
-            UnityEngine.Debug.Log($"Traversable areas total: {State.TraversableAreas.Count}");
             State.TraversableAreas.ForEach(area => area.InstantiateAll(Ldk.gg));
         }
     }
@@ -68,18 +128,6 @@ namespace ShapeGrammar
             Lib = lib;
             Gr = gr;
             LanguageState = languageState;
-        }
-    }
-
-    class MyLanguage : LDLanguage
-    {
-        public MyLanguage(LanguageParams tools) : base(tools) { }
-
-        public void MyLevel()
-        {
-            L.LevelLanguage.LevelStart(out var startArea);
-            //L.TestingLanguage.LargeLevel();
-            L.FarmersLanguage.FarmerBranch(0);
         }
     }
 
@@ -156,9 +204,33 @@ namespace ShapeGrammar
         }
     }
 
-    class AreasConnection
+    class AreasConnection : IEdge<Area>
     {
+        public Node Path { get; }
+        public Area From { get; }
+        public Area To { get; }
 
+        public AreasConnection(Node path, Area from, Area to)
+        {
+            Path = path;
+            From = from;
+            To = to;
+        }
+
+        public bool Connects(Area from, Area to)
+        {
+            return (from == From && to == To) || (from == To && to == From);
+        }
+
+        public bool Contains(Area vert)
+        {
+            return vert == From || vert == To;
+        }
+
+        public Area Other(Area vert)
+        {
+            return vert == From ? To : vert == To ? From : throw new InvalidOperationException($"The vertex {vert} isn't in the edge.");
+        }
     }
 
     class LinearPath
@@ -263,11 +335,16 @@ namespace ShapeGrammar
 
         IEnumerable<Area> GenerateAndTakeTraversable(Grammar grammar)
         {
-            var traversable = grammar.Evaluate(LanguageState.GrammarState)
+            var newNodes = grammar.Evaluate(LanguageState.GrammarState);
+            var traversable = newNodes
                                 .Where(node => node.HasSymbols(Sym.FullFloorMarker))
                                 .Select(node => new Area(node, L))
                                 .ToList();
-            LanguageState.TraversableAreas.AddRange(traversable);
+            LanguageState.AddAreas(traversable);
+            var connections = newNodes
+                                .Where(node => node.HasSymbols(Sym.ConnectionMarker))
+                                .ToList();
+            LanguageState.AddConnections(connections);
             return traversable;
         }
 

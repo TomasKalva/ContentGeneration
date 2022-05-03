@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 033e94d6160965042a78bd27acdd445a, type: 3}
   m_Name: Objects
   m_EditorClassIdentifier: 
-  farmer: {fileID: 8485218781275954064, guid: faddf14723f88e942b9698be87e6a416, type: 3}
+  farmer: {fileID: 3307065043585355908, guid: 6a49633222cd2af468ba1be834475af5, type: 3}

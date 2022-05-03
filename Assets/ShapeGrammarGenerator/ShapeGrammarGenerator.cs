@@ -56,10 +56,6 @@ namespace ShapeGrammar
                 .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor)).GetRandom();
             world.AddInteractiveObject(interactiveObjects.Grave().MakeGeometry(), GridToWorld(goodGraveCube.Position));
 
-
-            var hs = new HashSet<Vector3Int>() { new Vector3Int(0, 1, 0) };
-
-            Debug.Log($"hs contains (0, 1, 0): {hs.Contains(new Vector3Int(0, 1, 0))}");
             /*
             var allEnemies = libraries.Enemies.AllAgents();
             var enemyCubes = levelRoot.CG().WithFloor().Cubes.Shuffle().Take(10);
