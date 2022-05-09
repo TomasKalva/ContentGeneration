@@ -165,6 +165,9 @@ namespace ShapeGrammar
                         )
                         .PlaceNodes(courtyard)
 
+                        .EmptyPath()
+                        .PlaceNodes(courtyard, bridge)
+
                         .Set(() => ldk.sgShapes.BridgeFoundation(
                             bridge.LE,
                             bridge.GetSymbol<Bridge>().Direction
@@ -194,6 +197,9 @@ namespace ShapeGrammar
                         .NotTaken()
                         .CanBeFounded()
                         .PlaceNodes(bridge)
+
+                        .EmptyPath()
+                        .PlaceNodes(bridge, newBridge)
 
                         .Set(() => ldk.sgShapes.BridgeFoundation(
                             newBridge.LE,
@@ -231,7 +237,10 @@ namespace ShapeGrammar
                         .PlaceNodes(bridge)
 
                         .Found()
-                        .PlaceNodes(newCourtyard);
+                        .PlaceNodes(newCourtyard)
+
+                        .EmptyPath()
+                        .PlaceNodes(bridge, newCourtyard);
                     
                 });
         }

@@ -231,6 +231,11 @@ namespace ShapeGrammar
             return this;
         }
 
+        public ProductionProgram EmptyPath()
+        {
+            return Set(() => new CubeGroup(ldk.grid, new List<Cube>()).LE().GN(pr.sym.ConnectionMarker));
+        }
+
         public ProductionProgram Set(Func<Node> nodesF, out Node result)
         {
             result = null;
