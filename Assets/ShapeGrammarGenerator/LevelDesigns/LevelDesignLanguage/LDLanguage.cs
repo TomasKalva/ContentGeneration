@@ -320,9 +320,38 @@ namespace ShapeGrammar
         }
     }
 
-    class Enemy
-    {
+    delegate CharacterState CharacterMaker();
 
+    abstract class Placer<T>
+    {
+        /// <summary>
+        /// Puts T into the area.
+        /// </summary>
+        protected Action<Area, T> PlacementOp { get; }
+
+        protected Placer(Action<Area, T> placementOp)
+        {
+            PlacementOp = placementOp;
+        }
+
+        public abstract void Place(IEnumerable<Area> areas);
+    }
+
+    class RandomPlacer<T> : Placer<T>
+    {
+        WeightedDistribution<Func<T>> ToPlace { get; }
+        IDistribution<int> Count { get; }
+
+        public RandomPlacer(Action<Area, T> placementOp, WeightedDistribution<Func<T>> enemies, IDistribution<int> count = null) : base(placementOp)
+        {
+            ToPlace = enemies;
+            Count ??= new UniformDistr(1, 2);
+        }
+
+        public override void Place(IEnumerable<Area> areas)
+        {
+            areas.ForEach(area => Enumerable.Range(0, Count.Sample()).ForEach(_ => PlacementOp(area, ToPlace.Sample()())));
+        }
     }
 
     class Item

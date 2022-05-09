@@ -97,12 +97,6 @@ namespace ShapeGrammar
 
         public void FarmerBranch(int progress)
         {
-            var gardenEnemies = new WeightedDistribution<Func<CharacterState>>(
-                    (3, Lib.Enemies.Dog),
-                    (3, Lib.Enemies.Human),
-                    (1, Lib.Enemies.Sculpture)
-                );
-
             Env.Line(Gr.PrL.Garden(), NodesQueries.LastCreated, 2, out var path_to_farmer);
             Env.One(Gr.PrL.Garden(), NodesQueries.LastCreated, out var farmer_area);
 
@@ -147,7 +141,6 @@ namespace ShapeGrammar
                         )
                     )
                 );
-            // todo: make extend randomly use only starting and created nodes
             Env.ExtendRandomly(Gr.PrL.Garden(), NodesQueries.LastCreated, 5, out var garden);
             var gardenIterator = new Stack<Area>(garden.Areas);
             apples.ForEach(apple =>
@@ -156,11 +149,16 @@ namespace ShapeGrammar
                     )
             );
 
-            path_to_farmer.Areas.Concat(garden.Areas)
-                .ForEach(
-                    area => Enumerable.Range(0, 1 + UnityEngine.Random.Range(0, 2))
-                        .ForEach(_ => area.AddEnemy(gardenEnemies.Sample()()))
+            var enemyPlacer = 
+                new RandomPlacer<CharacterState>(
+                    (area, enemy) => area.AddEnemy(enemy),
+                    new WeightedDistribution<Func<CharacterState>>(
+                        (3, Lib.Enemies.Dog),
+                        (3, Lib.Enemies.Human),
+                        (1, Lib.Enemies.Sculpture)
+                    )
                 );
+            enemyPlacer.Place(path_to_farmer.Areas.Concat(garden.Areas));
         }
     }
 }
