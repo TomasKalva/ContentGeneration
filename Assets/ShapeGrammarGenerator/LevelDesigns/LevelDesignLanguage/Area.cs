@@ -161,6 +161,10 @@ namespace ShapeGrammar
         {
             return Connections.Where(edge => edge.Contains(vert));
         }
+        public IEnumerable<AreasConnection> EdgesTo(Area vert)
+        {
+            return Connections.Where(edge => edge.To == vert);
+        }
 
         public IEnumerable<Area> Neighbors(Area vert)
         {

@@ -131,11 +131,11 @@ namespace ContentGeneration.Assets.UI.Model
         public InteractiveObjectT IntObj 
         { 
             get => _intObjT; 
-            private set
+            protected set
             {
                 _intObjT = value;
                 InteractiveObject = value;
-            } 
+            }
         }
 
         public InteractionDelegate<InteractiveObjectT> ActionOnInteract { get; set; }

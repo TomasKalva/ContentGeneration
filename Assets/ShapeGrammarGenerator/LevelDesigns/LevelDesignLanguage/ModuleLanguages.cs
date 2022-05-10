@@ -73,10 +73,43 @@ namespace ShapeGrammar
         {
             var branchNodes = startNodesQuery(State.GrammarState);
             Env.Line(keyBranchPr, startNodesQuery, keyBranchLength, out var keyBranch);
+            
+            
             keyBranch.LastArea().AddInteractiveObject(Lib.InteractiveObjects.Item(Lib.Items.NewItem("Key", "You have key now")));
 
             Env.One(Gr.PrL.BlockedByDoor(), _ => branchNodes, out var locked);
             locked.AddInteractiveObject(Lib.InteractiveObjects.Item(Lib.Items.NewItem("Unlocked", "The door are unlocked now")));
+            // the locked area has to be connected to some previous area
+            var connection = State.TraversabilityGraph.EdgesTo(locked).First();
+            // the door face exists because of the chosen grammar
+            var doorFace = connection.Path.LE.CG().InsideFacesH().Where(faceH => faceH.FaceType == FACE_HOR.Door).Facets.First();
+            doorFace.OnObjectCreated = tr =>
+            {
+                var door = tr.GetComponentInChildren<Door>();
+                var doorState = (DoorState)door.State;
+
+                bool unlocked = false;
+                doorState.ActionOnInteract = (ios, player) =>
+                {
+                    if (unlocked)
+                    {
+                        ios.IntObj.SwitchPosition();
+                    }
+                    else
+                    {
+                        if (player.Inventory.HasItems("Key", 1, out var key))
+                        {
+                            player.Inventory.RemoveItems(key);
+                            Msg.Show("Door unlocked");
+                            ios.IntObj.SwitchPosition();
+                        }
+                        else
+                        {
+                            Msg.Show("Door is locked");
+                        }
+                    }
+                };
+            };
         }
     }
 

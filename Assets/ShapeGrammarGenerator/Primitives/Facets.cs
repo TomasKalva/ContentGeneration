@@ -15,6 +15,7 @@ namespace ShapeGrammar
         public ShapeGrammarObjectStyle Style { get; set; }
         public Cube MyCube { get; set; }
         public Cube OtherCube => MyCube.Grid[MyCube.Position + Direction];
+        public Action<Transform> OnObjectCreated { get; set; } = _ => { };
 
         public abstract void Generate(float cubeSide, Transform parent, Vector3Int cubePosition);
 
@@ -61,6 +62,8 @@ namespace ShapeGrammar
             obj.localScale = scale * Vector3.one;
             obj.localPosition = (cubePosition + offset) * scale;
             obj.rotation = Quaternion.LookRotation(Direction, Vector3.up);
+
+            OnObjectCreated(obj);
         }
 
         public IEnumerable<Corner> Corners()
@@ -102,6 +105,8 @@ namespace ShapeGrammar
             obj.SetParent(parent);
             obj.localScale = scale * Vector3.one;
             obj.localPosition = (cubePosition + offset) * scale;
+
+            OnObjectCreated(obj);
         }
 
         public FaceVer MoveBy(Vector3Int offset) => MoveBy<FaceVer>(offset);
@@ -134,6 +139,8 @@ namespace ShapeGrammar
             obj.SetParent(parent);
             obj.localScale = scale * Vector3.one;
             obj.localPosition = (cubePosition + offset) * scale;
+
+            OnObjectCreated(obj);
         }
 
         public Corner MoveBy(Vector3Int offset) => MoveBy<Corner>(offset);

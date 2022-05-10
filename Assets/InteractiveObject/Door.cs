@@ -19,7 +19,7 @@ public class Door : InteractiveObject
 
     private void Awake()
     {
-        State = new DoorState() 
+        State = new DoorState(this) 
         { 
             InteractionDescription = "Open/Close" 
         };
@@ -38,11 +38,13 @@ public class Door : InteractiveObject
 
 public class DoorState : InteractiveObjectState<Door>
 {
-    Door Door => InteractiveObject.GetComponentInChildren<Door>();
-
-    public override void Interact(Agent agent)
+    public DoorState(Door door)
     {
-        Door.SwitchPosition();
+        IntObj = door;
+        ActionOnInteract = (ios, player) =>
+        {
+            ios.IntObj.SwitchPosition();
+        };
     }
 }
 
