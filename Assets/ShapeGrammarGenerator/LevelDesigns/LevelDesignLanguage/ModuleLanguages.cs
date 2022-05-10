@@ -12,11 +12,20 @@ namespace ShapeGrammar
     {
         public MyLanguage(LanguageParams tools) : base(tools) { }
 
-        public void MyLevel()
+        public void MyWorldStart()
         {
-            L.LevelLanguage.LevelStart(out var startArea);
+            State.LC.AddEvent(5, () =>
+            {
+                L.LevelLanguage.LevelStart(out var startArea);
+                return false;
+            });
+            
+            State.LC.AddEvent(5, () =>
+            {
+                L.FarmersLanguage.FarmerBranch(0);
+                return false;
+            });
             //L.TestingLanguage.LargeLevel();
-            L.FarmersLanguage.FarmerBranch(0);
         }
     }
 

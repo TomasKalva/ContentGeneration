@@ -30,7 +30,9 @@ namespace ShapeGrammar
 
             MyLanguage language = new MyLanguage(new LanguageParams(ldk, lib, gr, languageState));
 
-            language.MyLevel();
+            language.MyWorldStart();
+
+            language.State.LC.Construct();
 
             language.Instantiate();
 

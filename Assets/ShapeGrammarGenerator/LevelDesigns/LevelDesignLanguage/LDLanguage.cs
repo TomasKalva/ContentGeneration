@@ -14,11 +14,13 @@ namespace ShapeGrammar
         public ShapeGrammarState GrammarState { get; }
         public IEnumerable<Area> TraversableAreas => TraversabilityGraph.Areas;
         public TraversabilityGraph TraversabilityGraph { get; }
+        public LevelConstructor LC { get; }
 
         public LanguageState(ShapeGrammarState grammarState)
         {
             GrammarState = grammarState;
             TraversabilityGraph = new TraversabilityGraph();
+            LC = new LevelConstructor();
         }
 
         public void AddAreas(List<Area> areas)
@@ -41,7 +43,13 @@ namespace ShapeGrammar
             });
             TraversabilityGraph.Connections.AddRange(areaConnections);
         }
+
+        public void MoveToNextLevel()
+        {
+            LC.Construct();
+        }
     }
+
     abstract class LDLanguage
     {
         public LanguageState State { get; }
