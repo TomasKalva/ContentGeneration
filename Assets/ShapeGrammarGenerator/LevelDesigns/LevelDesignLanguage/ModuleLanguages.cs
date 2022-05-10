@@ -15,8 +15,8 @@ namespace ShapeGrammar
         public void MyLevel()
         {
             L.LevelLanguage.LevelStart(out var startArea);
-            L.TestingLanguage.LargeLevel();
-            //L.FarmersLanguage.FarmerBranch(0);
+            //L.TestingLanguage.LargeLevel();
+            L.FarmersLanguage.FarmerBranch(0);
         }
     }
 
@@ -98,14 +98,8 @@ namespace ShapeGrammar
         public void FarmerBranch(int progress)
         {
             Env.Line(Gr.PrL.Garden(), NodesQueries.LastCreated, 2, out var path_to_farmer);
+
             Env.One(Gr.PrL.Garden(), NodesQueries.LastCreated, out var farmer_area);
-
-            var apples = Enumerable.Range(0, 5).Select(_ => 
-                Lib.Items.NewItem("Earthen apple", "An apple produced by the earth itself.")
-                    .OnUse(ch => ch.Prop.Spirit += 10 )
-                    .SetConsumable()
-                );
-
             farmer_area.AddInteractiveObject(
                 Lib.InteractiveObjects.InteractiveObject("Farmer", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
                     .SetInteraction(
@@ -141,23 +135,22 @@ namespace ShapeGrammar
                         )
                     )
                 );
-            Env.ExtendRandomly(Gr.PrL.Garden(), NodesQueries.LastCreated, 5, out var garden);
-            var gardenIterator = new Stack<Area>(garden.Areas);
-            apples.ForEach(apple =>
-                gardenIterator.Pop().AddInteractiveObject(
-                        Lib.InteractiveObjects.Item(apple)
-                    )
-            );
 
-            var enemyPlacer = 
-                new RandomPlacer<CharacterState>(
-                    (area, enemy) => area.AddEnemy(enemy),
-                    new WeightedDistribution<Func<CharacterState>>(
+            Env.ExtendRandomly(Gr.PrL.Garden(), NodesQueries.LastCreated, 5, out var garden);
+            var apples = Enumerable.Range(0, 5).Select(_ =>
+                Lib.Items.NewItem("Earthen apple", "An apple produced by the earth itself.")
+                    .OnUse(ch => ch.Prop.Spirit += 10)
+                    .SetConsumable()
+                )
+                .Select(itemState => Lib.InteractiveObjects.Item(itemState));
+            var applePlacer = PlO.EvenPlacer(apples);
+            applePlacer.Place(garden.Areas);
+
+            var enemyPlacer = PlC.RandomPlacer(
+                        new RandomIntDistr(1, 1),
                         (3, Lib.Enemies.Dog),
                         (3, Lib.Enemies.Human),
-                        (1, Lib.Enemies.Sculpture)
-                    )
-                );
+                        (1, Lib.Enemies.Sculpture));
             enemyPlacer.Place(path_to_farmer.Areas.Concat(garden.Areas));
         }
     }

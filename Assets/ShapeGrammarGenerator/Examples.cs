@@ -164,7 +164,7 @@ namespace ShapeGrammar
             var bounds = qc.GetFlatBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)));
             var town = pl.MoveToNotOverlap(flatBoxes);// qc.GetOverlappingBoxes(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)), 8));
             //var town = qc.GetNonOverlappingBoxes(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)), 8);
-            var intSeq = new IntervalDistr(new IntDistr(), 4, 10);
+            var intSeq = new IntervalDistr(new IntSeqDistr(), 4, 10);
             town = qc.RaiseRandomly(town, intSeq.Sample);
             town = town.Select(le => sgShapes.TurnIntoHouse(le.CG()));// le.SetAreaType(AreaType.Room));
             town.ApplyGrammarStyleRules(houseStyleRules);

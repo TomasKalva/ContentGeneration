@@ -28,12 +28,12 @@ namespace ShapeGrammar
         }
     }
 
-    public class IntDistr : IDistribution<int>
+    public class IntSeqDistr : IDistribution<int>
     {
         int start, step;
         int current;
 
-        public IntDistr(int start = 0, int step = 1)
+        public IntSeqDistr(int start = 0, int step = 1)
         {
             this.start = start;
             this.step = step;

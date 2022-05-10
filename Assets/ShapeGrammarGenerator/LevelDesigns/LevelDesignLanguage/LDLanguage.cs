@@ -42,46 +42,6 @@ namespace ShapeGrammar
             TraversabilityGraph.Connections.AddRange(areaConnections);
         }
     }
-
-    class TraversabilityGraph : GraphAlgorithms<Area, AreasConnection, TraversabilityGraph>, IGraph<Area, AreasConnection>
-    {
-        public List<Area> Areas { get; }
-        public List<AreasConnection> Connections { get; }
-
-        public TraversabilityGraph() : base(null)
-        {
-            Areas = new List<Area>();
-            Connections = new List<AreasConnection>();
-            graph = this;
-        }
-
-        public Area GetArea(Node node)
-        {
-            var area = Areas.Where(area => area.Node == node).FirstOrDefault();
-            if(area == null)
-            {
-                node.Print(new PrintingState()).Show();
-                throw new InvalidOperationException($"Area for the node doesn't exist");
-            }
-            return area;
-        }
-
-        public bool AreConnected(Area from, Area to)
-        {
-            return Connections.Any(edge => edge.Connects(from, to));
-        }
-
-        public IEnumerable<AreasConnection> EdgesFrom(Area vert)
-        {
-            return Connections.Where(edge => edge.Contains(vert));
-        }
-
-        public IEnumerable<Area> Neighbors(Area vert)
-        {
-            return EdgesFrom(vert).Select(edge => edge.Other(vert));
-        }
-    }
-
     abstract class LDLanguage
     {
         public LanguageState State { get; }
@@ -91,6 +51,8 @@ namespace ShapeGrammar
         public Grammars Gr { get; }
         public Languages L { get; }
         public Environments Env { get; }
+        public ObjectPlacement<CharacterState> PlC { get; }
+        public ObjectPlacement<InteractiveObjectState> PlO { get; }
         public MsgPrinter Msg { get; }
 
         public LDLanguage(LanguageParams languageParams)
@@ -98,10 +60,12 @@ namespace ShapeGrammar
             Ldk = languageParams.Ldk;
             Lib = languageParams.Lib;
             Gr = languageParams.Gr;
-
+            
             State = languageParams.LanguageState;
 
             Env = new Environments(this);
+            PlC = new ObjectPlacement<CharacterState>((area, enemy) => area.AddEnemy(enemy));
+            PlO = new ObjectPlacement<InteractiveObjectState>((area, io) => area.AddInteractiveObject(io));
             //Env = languageParams.Env;
             Msg = new MsgPrinter();
 
@@ -133,125 +97,6 @@ namespace ShapeGrammar
 
     #region Primitives
 
-    class Area
-    {
-        LDLanguage L { get; }
-        public Node Node { get; }
-        public List<InteractiveObjectState> InteractiveObjectStates { get; }
-        public List<CharacterState> EnemyStates { get; }
-
-        public Area(Node node, LDLanguage language)
-        {
-            L = language;
-            Node = node;
-            InteractiveObjectStates = new List<InteractiveObjectState>();
-            EnemyStates = new List<CharacterState>();
-        }
-
-        public void AddInteractiveObject(InteractiveObjectState interactiveObject)
-        {
-            InteractiveObjectStates.Add(interactiveObject);
-        }
-
-        public void AddEnemy(CharacterState enemy)
-        {
-            // define behavior that makes enemies only go after player, if he's in their area
-            var gotoPosition = L.Ldk.gg.GridToWorld(Node.LE.CG().WithFloor().Cubes.GetRandom().Position);
-            //L.Lib.InteractiveObjects.AscensionKiln().MakeGeometry().transform.position = gotoPosition; // visualization of waiting spots
-            var thisAreaPositions = new HashSet<Vector3Int>(Node.LE.CG().Cubes.Select(c => c.Position));
-            enemy.Behaviors.AddBehavior(
-                new Wait(
-                    _ => 
-                    {
-                        var playerGridPosition = Vector3Int.RoundToInt(L.Ldk.gg.WorldToGrid(GameViewModel.ViewModel.PlayerState.Agent.transform.position));
-                        return !thisAreaPositions.Contains(playerGridPosition); 
-                    },
-                    _ => gotoPosition
-                    )
-                );
-            EnemyStates.Add(enemy);
-        }
-
-        public virtual void InstantiateAll(GeneratorGeometry gg)
-        {
-            var flooredCubes = new Stack<Cube>(Node.LE.CG().WithFloor().Cubes.Shuffle());
-
-            foreach (var ios in InteractiveObjectStates)
-            {
-                if (!flooredCubes.Any())
-                {
-                    Debug.LogError("Not enough empty cubes");
-                    break;
-                }
-
-                ios.MakeGeometry();
-                ios.InteractiveObject.transform.position = gg.GridToWorld(flooredCubes.Pop().Position);
-            }
-
-            foreach (var enemy in EnemyStates)
-            {
-                if (!flooredCubes.Any())
-                {
-                    Debug.LogError("Not enough empty cubes");
-                    break;
-                }
-
-                enemy.MakeGeometry();
-                enemy.Agent.transform.position = gg.GridToWorld(flooredCubes.Pop().Position);
-            }
-        }
-
-        public void Enable()
-        {
-            EnemyStates.ForEach(enemy =>
-            {
-                if (enemy.Agent)
-                {
-                    enemy.Agent.gameObject.SetActive(true);
-                }
-            });
-        }
-
-        public void Disable()
-        {
-            EnemyStates.ForEach(enemy =>
-            {
-                if (enemy.Agent)
-                {
-                    enemy.Agent.gameObject.SetActive(false);
-                }
-            });
-        }
-    }
-
-    class AreasConnection : IEdge<Area>
-    {
-        public Node Path { get; }
-        public Area From { get; }
-        public Area To { get; }
-
-        public AreasConnection(Node path, Area from, Area to)
-        {
-            Path = path;
-            From = from;
-            To = to;
-        }
-
-        public bool Connects(Area from, Area to)
-        {
-            return (from == From && to == To) || (from == To && to == From);
-        }
-
-        public bool Contains(Area vert)
-        {
-            return vert == From || vert == To;
-        }
-
-        public Area Other(Area vert)
-        {
-            return vert == From ? To : vert == To ? From : throw new InvalidOperationException($"The vertex {vert} isn't in the edge.");
-        }
-    }
 
     class SpacePartitioning
     {
@@ -298,61 +143,6 @@ namespace ShapeGrammar
         }
     }
 
-    class LinearPath
-    {
-        public List<Area> Areas { get; }
-
-        public LinearPath(List<Area> areas)
-        {
-            Areas = areas;
-        }
-
-        public Area LastArea() => Areas.LastOrDefault();
-    }
-
-    class Branching
-    {
-        public List<Area> Areas { get; }
-
-        public Branching(List<Area> areas)
-        {
-            Areas = areas;
-        }
-    }
-
-    delegate CharacterState CharacterMaker();
-
-    abstract class Placer<T>
-    {
-        /// <summary>
-        /// Puts T into the area.
-        /// </summary>
-        protected Action<Area, T> PlacementOp { get; }
-
-        protected Placer(Action<Area, T> placementOp)
-        {
-            PlacementOp = placementOp;
-        }
-
-        public abstract void Place(IEnumerable<Area> areas);
-    }
-
-    class RandomPlacer<T> : Placer<T>
-    {
-        WeightedDistribution<Func<T>> ToPlace { get; }
-        IDistribution<int> Count { get; }
-
-        public RandomPlacer(Action<Area, T> placementOp, WeightedDistribution<Func<T>> enemies, IDistribution<int> count = null) : base(placementOp)
-        {
-            ToPlace = enemies;
-            Count ??= new UniformDistr(1, 2);
-        }
-
-        public override void Place(IEnumerable<Area> areas)
-        {
-            areas.ForEach(area => Enumerable.Range(0, Count.Sample()).ForEach(_ => PlacementOp(area, ToPlace.Sample()())));
-        }
-    }
 
     class Item
     {
@@ -488,38 +278,6 @@ namespace ShapeGrammar
             PrL = new ProductionLists(ldk, Pr);
         }
     }
-    /*
-    interface IProductions : ILDLanguage
-    {
-        protected ProductionLists PrL => new ProductionLists(Ldk);
-        protected Productions Pr => new Productions(Ldk);
-
-        public ProductionList CreateNewHouse() => PrL.CreateNewHouse(Pr);
-        public ProductionList Garden() => PrL.Garden(Pr);
-        public ProductionList GuidedGarden(PathGuide guide) => PrL.GuidedGarden(Pr, guide);
-        public ProductionList Graveyard() => PrL.Graveyard(Pr);
-        public ProductionList GraveyardPostprocess() => PrL.GraveyardPostprocess(Pr);
-        public ProductionList ConnectBack() => PrL.ConnectBack(Pr);
-        public ProductionList Roofs() => PrL.Roofs(Pr);
-    }*/
-
-    /*
-    class InteractiveObjects
-    {
-        public GeometryMaker Geometry(Transform prefab)
-        {
-            return new GeometryMaker(() => GameObject.Instantiate(prefab));
-        }
-
-        public InteractiveObjectState NewInteractiveObject(string name, GeometryMaker geometryMaker)
-        {
-            var newInteractiveObject = new InteractiveObjectState()
-            {
-                Name = name,
-            };
-            return newInteractiveObject;
-        }
-    }*/
 
     #endregion
 }
