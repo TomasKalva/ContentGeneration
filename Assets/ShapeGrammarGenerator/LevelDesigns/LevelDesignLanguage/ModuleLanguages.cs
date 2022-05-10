@@ -14,7 +14,7 @@ namespace ShapeGrammar
 
         public void MyWorldStart()
         {
-            State.LC.AddEvent(5, () =>
+            State.LC.AddEvent(100, () =>
             {
                 L.LevelLanguage.LevelStart(out var startArea);
                 return false;
@@ -23,6 +23,12 @@ namespace ShapeGrammar
             State.LC.AddEvent(5, () =>
             {
                 L.FarmersLanguage.FarmerBranch(0);
+                return false;
+            });
+
+            State.LC.AddEvent(0, () =>
+            {
+                L.LevelLanguage.LevelEnd();
                 return false;
             });
             //L.TestingLanguage.LargeLevel();
@@ -46,7 +52,8 @@ namespace ShapeGrammar
 
         public void LevelEnd()
         {
-
+            Env.One(Gr.PrL.LevelEnd(), NodesQueries.All, out var area);
+            area.AddInteractiveObject(Lib.InteractiveObjects.Item(Lib.Items.NewItem("Done", "You have finished")));
         }
     }
 
