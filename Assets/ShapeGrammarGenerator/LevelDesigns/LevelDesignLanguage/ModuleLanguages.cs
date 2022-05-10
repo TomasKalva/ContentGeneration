@@ -19,10 +19,16 @@ namespace ShapeGrammar
                 L.LevelLanguage.LevelStart(out var startArea);
                 return false;
             });
-            
+
             State.LC.AddEvent(5, () =>
             {
                 L.FarmersLanguage.FarmerBranch(0);
+                return false;
+            });
+
+            State.LC.AddEvent(5, () =>
+            {
+                L.PatternLanguage.LockedDoor(NodesQueries.LastCreated, 4, Gr.PrL.TestingProductions());
                 return false;
             });
 
@@ -54,6 +60,23 @@ namespace ShapeGrammar
         {
             Env.One(Gr.PrL.LevelEnd(), NodesQueries.All, out var area);
             area.AddInteractiveObject(Lib.InteractiveObjects.Item(Lib.Items.NewItem("Done", "You have finished")));
+        }
+
+
+    }
+
+    class PatternLanguage : LDLanguage
+    {
+        public PatternLanguage(LanguageParams tools) : base(tools) { }
+
+        public void LockedDoor(NodesQuery startNodesQuery, int keyBranchLength, ProductionList keyBranchPr)
+        {
+            var branchNodes = startNodesQuery(State.GrammarState);
+            Env.Line(keyBranchPr, startNodesQuery, keyBranchLength, out var keyBranch);
+            keyBranch.LastArea().AddInteractiveObject(Lib.InteractiveObjects.Item(Lib.Items.NewItem("Key", "You have key now")));
+
+            Env.One(Gr.PrL.BlockedByDoor(), _ => branchNodes, out var locked);
+            locked.AddInteractiveObject(Lib.InteractiveObjects.Item(Lib.Items.NewItem("Unlocked", "The door are unlocked now")));
         }
     }
 

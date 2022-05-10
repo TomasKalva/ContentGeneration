@@ -195,6 +195,7 @@ namespace ShapeGrammar
         public LevelLanguage LevelLanguage { get; private set; }
         public BrothersLanguage BrothersLanguage { get; private set; }
         public FarmersLanguage FarmersLanguage { get; private set; }
+        public PatternLanguage PatternLanguage { get; private set; }
         public TestingLanguage TestingLanguage { get; private set; }
 
         Languages()
@@ -206,6 +207,7 @@ namespace ShapeGrammar
             LevelLanguage = new LevelLanguage(tools);
             BrothersLanguage = new BrothersLanguage(tools);
             FarmersLanguage = new FarmersLanguage(tools);
+            PatternLanguage = new PatternLanguage(tools);
             TestingLanguage = new TestingLanguage(tools);
         }
     }
@@ -265,6 +267,7 @@ namespace ShapeGrammar
             branching = new Branching(traversableNodes.ToList());
         }
     }
+
     class MsgPrinter
     {
         public void Show(string message)
