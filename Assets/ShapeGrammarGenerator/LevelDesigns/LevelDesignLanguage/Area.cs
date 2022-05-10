@@ -13,6 +13,8 @@ namespace ShapeGrammar
     {
         LDLanguage L { get; }
         public Node Node { get; }
+        public List<AreasConnection> EdgesFrom { get; }
+        public List<AreasConnection> EdgesTo { get; }
         public List<InteractiveObjectState> InteractiveObjectStates { get; }
         public List<CharacterState> EnemyStates { get; }
 
@@ -20,6 +22,8 @@ namespace ShapeGrammar
         {
             L = language;
             Node = node;
+            EdgesFrom = new List<AreasConnection>();
+            EdgesTo = new List<AreasConnection>();
             InteractiveObjectStates = new List<InteractiveObjectState>();
             EnemyStates = new List<CharacterState>();
         }
@@ -111,6 +115,8 @@ namespace ShapeGrammar
             Path = path;
             From = from;
             To = to;
+            From.EdgesFrom.Add(this);
+            To.EdgesTo.Add(this);
         }
 
         public bool Connects(Area from, Area to)

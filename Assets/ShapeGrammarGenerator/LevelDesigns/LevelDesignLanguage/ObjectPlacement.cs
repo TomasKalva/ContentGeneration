@@ -24,7 +24,8 @@ namespace ShapeGrammar
                     new WeightedDistribution<Func<T>>(
                         items
                     ),
-                    count
+                    count,
+                    areas => areas.AreasList
                 );
         }
 
@@ -36,9 +37,25 @@ namespace ShapeGrammar
         public Placer<Areas, T> EvenPlacer(params T[] items)
         {
             return
-                new EvenPlacer<T>(
+                new EvenPlacer<Areas, T>(
                     placementOp,
-                    items
+                    items,
+                    areas => areas.AreasList.Shuffle()
+                );
+        }
+
+        public Placer<Areas, T> DeadEndPlacer(IEnumerable<T> items)
+        {
+            return DeadEndPlacer(items.ToArray());
+        }
+
+        public Placer<Areas, T> DeadEndPlacer(params T[] items)
+        {
+            return
+                new EvenPlacer<Areas, T>(
+                    placementOp,
+                    items,
+                    areas => areas.AreasList.OrderBy(area => area.EdgesFrom.Count)
                 );
         }
     }
@@ -69,6 +86,8 @@ namespace ShapeGrammar
         public Branching(List<Area> areas) : base(areas)
         {
         }
+
+        //public IEnumerable<Area> DeadEnds() => AreasList.Where(area => !area.EdgesFrom.Any());
     }
 
     abstract class Placer<AreasT, T> where AreasT : Areas
@@ -77,10 +96,13 @@ namespace ShapeGrammar
         /// Puts T into the area.
         /// </summary>
         protected Action<Area, T> PlacementOp { get; }
+        public delegate IEnumerable<Area> AreasPrioritizer(AreasT areasT);
+        protected AreasPrioritizer Prioritizer { get; }
 
-        protected Placer(Action<Area, T> placementOp)
+        protected Placer(Action<Area, T> placementOp, AreasPrioritizer prioritizer)
         {
             PlacementOp = placementOp;
+            Prioritizer = prioritizer;
         }
 
         public abstract void Place(AreasT areas);
@@ -91,7 +113,7 @@ namespace ShapeGrammar
         WeightedDistribution<Func<T>> ToPlaceF { get; }
         IDistribution<int> Count { get; }
 
-        public RandomPlacer(Action<Area, T> placementOp, WeightedDistribution<Func<T>> toPlaceF, IDistribution<int> count) : base(placementOp)
+        public RandomPlacer(Action<Area, T> placementOp, WeightedDistribution<Func<T>> toPlaceF, IDistribution<int> count, AreasPrioritizer prioritizer) : base(placementOp, prioritizer)
         {
             ToPlaceF = toPlaceF;
             Count ??= new UniformDistr(1, 2);
@@ -99,22 +121,22 @@ namespace ShapeGrammar
 
         public override void Place(Areas areas)
         {
-            areas.AreasList.ForEach(area => Enumerable.Range(0, Count.Sample()).ForEach(_ => PlacementOp(area, ToPlaceF.Sample()())));
+            Prioritizer(areas).ForEach(area => Enumerable.Range(0, Count.Sample()).ForEach(_ => PlacementOp(area, ToPlaceF.Sample()())));
         }
     }
 
-    class EvenPlacer<T> : Placer<Areas, T>
+    class EvenPlacer<AreasT, T> : Placer<AreasT, T> where AreasT : Areas
     {
         List<T> ToPlace { get; }
 
-        public EvenPlacer(Action<Area, T> placementOp, IEnumerable<T> toPlace) : base(placementOp)
+        public EvenPlacer(Action<Area, T> placementOp, IEnumerable<T> toPlace, AreasPrioritizer prioritizer) : base(placementOp, prioritizer)
         {
             ToPlace = toPlace.ToList();
         }
 
-        public override void Place(Areas areas)
+        public override void Place(AreasT areas)
         {
-            areas.AreasList.Shuffle()
+            Prioritizer(areas)
                 .Zip(ToPlace, (area, toPlace) => new { area, toPlace})
                 .ForEach(x => PlacementOp(x.area, x.toPlace));
         }
