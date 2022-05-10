@@ -266,6 +266,13 @@ namespace ShapeGrammar
             var traversableNodes = GenerateAndTakeTraversable(grammar);
             branching = new Branching(traversableNodes.ToList());
         }
+
+        public void BranchRandomly(ProductionList productions, int count, out Branching branching)
+        {
+            var grammar = new CustomGrammar(productions, count);
+            var traversableNodes = GenerateAndTakeTraversable(grammar);
+            branching = new Branching(traversableNodes.ToList());
+        }
     }
 
     class MsgPrinter

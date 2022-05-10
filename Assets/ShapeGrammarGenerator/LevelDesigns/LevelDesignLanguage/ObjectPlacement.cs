@@ -16,7 +16,7 @@ namespace ShapeGrammar
             this.placementOp = placementOp;
         }
 
-        public Placer<T> RandomPlacer(IDistribution<int> count, params (float, Func<T>)[] items)
+        public Placer<Areas, T> RandomPlacer(IDistribution<int> count, params (float, Func<T>)[] items)
         {
             return 
                 new RandomPlacer<T>(
@@ -28,12 +28,12 @@ namespace ShapeGrammar
                 );
         }
 
-        public Placer<T> EvenPlacer(IEnumerable<T> items)
+        public Placer<Areas, T> EvenPlacer(IEnumerable<T> items)
         {
             return EvenPlacer(items.ToArray());
         }
 
-        public Placer<T> EvenPlacer(params T[] items)
+        public Placer<Areas, T> EvenPlacer(params T[] items)
         {
             return
                 new EvenPlacer<T>(
@@ -43,29 +43,35 @@ namespace ShapeGrammar
         }
     }
 
-    class LinearPath
+    class Areas
     {
-        public List<Area> Areas { get; }
+        public List<Area> AreasList { get; }
 
-        public LinearPath(List<Area> areas)
+        public Areas(List<Area> areasList)
         {
-            Areas = areas;
+            AreasList = areasList;
         }
 
-        public Area LastArea() => Areas.LastOrDefault();
+        public Areas Concat(Areas areas) => new Areas(AreasList.Concat(areas.AreasList).ToList());
     }
 
-    class Branching
+    class LinearPath : Areas
     {
-        public List<Area> Areas { get; }
-
-        public Branching(List<Area> areas)
+        public LinearPath(List<Area> areas) : base(areas)
         {
-            Areas = areas;
+        }
+
+        public Area LastArea() => AreasList.LastOrDefault();
+    }
+
+    class Branching : Areas
+    {
+        public Branching(List<Area> areas) : base(areas)
+        {
         }
     }
 
-    abstract class Placer<T>
+    abstract class Placer<AreasT, T> where AreasT : Areas
     {
         /// <summary>
         /// Puts T into the area.
@@ -77,10 +83,10 @@ namespace ShapeGrammar
             PlacementOp = placementOp;
         }
 
-        public abstract void Place(IEnumerable<Area> areas);
+        public abstract void Place(AreasT areas);
     }
 
-    class RandomPlacer<T> : Placer<T>
+    class RandomPlacer<T> : Placer<Areas, T>
     {
         WeightedDistribution<Func<T>> ToPlaceF { get; }
         IDistribution<int> Count { get; }
@@ -91,13 +97,13 @@ namespace ShapeGrammar
             Count ??= new UniformDistr(1, 2);
         }
 
-        public override void Place(IEnumerable<Area> areas)
+        public override void Place(Areas areas)
         {
-            areas.ForEach(area => Enumerable.Range(0, Count.Sample()).ForEach(_ => PlacementOp(area, ToPlaceF.Sample()())));
+            areas.AreasList.ForEach(area => Enumerable.Range(0, Count.Sample()).ForEach(_ => PlacementOp(area, ToPlaceF.Sample()())));
         }
     }
 
-    class EvenPlacer<T> : Placer<T>
+    class EvenPlacer<T> : Placer<Areas, T>
     {
         List<T> ToPlace { get; }
 
@@ -106,9 +112,9 @@ namespace ShapeGrammar
             ToPlace = toPlace.ToList();
         }
 
-        public override void Place(IEnumerable<Area> areas)
+        public override void Place(Areas areas)
         {
-            areas.Shuffle()
+            areas.AreasList.Shuffle()
                 .Zip(ToPlace, (area, toPlace) => new { area, toPlace})
                 .ForEach(x => PlacementOp(x.area, x.toPlace));
         }

@@ -28,7 +28,8 @@ namespace ShapeGrammar
 
             State.LC.AddEvent(5, () =>
             {
-                L.PatternLanguage.BranchWithKey(NodesQueries.LastCreated, 4, Gr.PrL.TestingProductions());
+                //L.PatternLanguage.BranchWithKey(NodesQueries.LastCreated, 4, Gr.PrL.TestingProductions());
+                L.PatternLanguage.RandomBranchingWithKeys(6, Gr.PrL.TestingProductions(), out var branches);
                 return false;
             });
 
@@ -131,15 +132,27 @@ namespace ShapeGrammar
             return items;
         }
 
-        public void BranchWithKey(NodesQuery startNodesQuery, int keyBranchLength, ProductionList keyBranchPr)
+        public void BranchWithKey(NodesQuery startNodesQuery, int keyBranchLength, ProductionList keyBranchPr, out Area locked, out LinearPath keyBranch)
         {
             var branchNodes = startNodesQuery(State.GrammarState);
-            Env.Line(keyBranchPr, startNodesQuery, keyBranchLength, out var keyBranch);
+            Env.Line(keyBranchPr, startNodesQuery, keyBranchLength, out keyBranch);
 
             var keys = CreateLockItems("Key", 1, "Used to unlock door", out var unlock);
             keyBranch.LastArea().AddInteractiveObject(Lib.InteractiveObjects.Item(keys.First()));
 
-            LockedArea(_ => branchNodes, unlock, out var locked);
+            LockedArea(_ => branchNodes, unlock, out locked);
+            locked.AddInteractiveObject(Lib.InteractiveObjects.Item(Lib.Items.NewItem("Unlocked", "The door are unlocked now")));
+        }
+
+        public void RandomBranchingWithKeys(int areasCount, ProductionList keyBranchPr, out Branching branches)
+        {
+            Env.BranchRandomly(keyBranchPr, areasCount, out branches);
+
+            var keys = CreateLockItems("Gemstone", 3, "Shiny", out var unlock);
+            var keyPlacer = PlO.EvenPlacer(keys.Select(item => Lib.InteractiveObjects.Item(item)));
+            keyPlacer.Place(branches);
+
+            LockedArea(NodesQueries.All, unlock, out var locked);
             locked.AddInteractiveObject(Lib.InteractiveObjects.Item(Lib.Items.NewItem("Unlocked", "The door are unlocked now")));
         }
     }
@@ -247,14 +260,14 @@ namespace ShapeGrammar
                 )
                 .Select(itemState => Lib.InteractiveObjects.Item(itemState));
             var applePlacer = PlO.EvenPlacer(apples);
-            applePlacer.Place(garden.Areas);
+            applePlacer.Place(garden);
 
             var enemyPlacer = PlC.RandomPlacer(
                         new RandomIntDistr(1, 1),
                         (3, Lib.Enemies.Dog),
                         (3, Lib.Enemies.Human),
                         (1, Lib.Enemies.Sculpture));
-            enemyPlacer.Place(path_to_farmer.Areas.Concat(garden.Areas));
+            enemyPlacer.Place(path_to_farmer.Concat(garden));
         }
     }
 }
