@@ -28,7 +28,7 @@ namespace ShapeGrammar
 
             State.LC.AddEvent(5, () =>
             {
-                L.PatternLanguage.LockedDoor(NodesQueries.LastCreated, 4, Gr.PrL.TestingProductions());
+                L.PatternLanguage.BranchWithKey(NodesQueries.LastCreated, 4, Gr.PrL.TestingProductions());
                 return false;
             });
 
@@ -69,18 +69,16 @@ namespace ShapeGrammar
     {
         public PatternLanguage(LanguageParams tools) : base(tools) { }
 
-        public void LockedDoor(NodesQuery startNodesQuery, int keyBranchLength, ProductionList keyBranchPr)
-        {
-            var branchNodes = startNodesQuery(State.GrammarState);
-            Env.Line(keyBranchPr, startNodesQuery, keyBranchLength, out var keyBranch);
-            
-            
-            keyBranch.LastArea().AddInteractiveObject(Lib.InteractiveObjects.Item(Lib.Items.NewItem("Key", "You have key now")));
+        /// <summary>
+        /// Returns true if unlocking was successful.
+        /// </summary>
+        public delegate bool UnlockAction(PlayerCharacterState player);
 
-            Env.One(Gr.PrL.BlockedByDoor(), _ => branchNodes, out var locked);
-            locked.AddInteractiveObject(Lib.InteractiveObjects.Item(Lib.Items.NewItem("Unlocked", "The door are unlocked now")));
+        public void LockedArea(NodesQuery startNodes, UnlockAction unlock, out Area lockedArea)
+        {
+            Env.One(Gr.PrL.BlockedByDoor(), startNodes, out lockedArea);
             // the locked area has to be connected to some previous area
-            var connection = State.TraversabilityGraph.EdgesTo(locked).First();
+            var connection = State.TraversabilityGraph.EdgesTo(lockedArea).First();
             // the door face exists because of the chosen grammar
             var doorFace = connection.Path.LE.CG().InsideFacesH().Where(faceH => faceH.FaceType == FACE_HOR.Door).Facets.First();
             doorFace.OnObjectCreated = tr =>
@@ -97,9 +95,10 @@ namespace ShapeGrammar
                     }
                     else
                     {
-                        if (player.Inventory.HasItems("Key", 1, out var key))
+                        unlocked = unlock(player);
+
+                        if (unlocked)
                         {
-                            player.Inventory.RemoveItems(key);
                             Msg.Show("Door unlocked");
                             ios.IntObj.SwitchPosition();
                         }
@@ -110,6 +109,38 @@ namespace ShapeGrammar
                     }
                 };
             };
+        }
+
+        public IEnumerable<ItemState> CreateLockItems(string name, int count, string description, out UnlockAction unlockAction)
+        {
+            var items = Enumerable.Range(0, count).Select(_ =>
+                Lib.Items.NewItem(name, description)
+                );
+            unlockAction = player =>
+            {
+                if (player.Inventory.HasItems(name, count, out var keys))
+                {
+                    player.Inventory.RemoveItems(keys);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            };
+            return items;
+        }
+
+        public void BranchWithKey(NodesQuery startNodesQuery, int keyBranchLength, ProductionList keyBranchPr)
+        {
+            var branchNodes = startNodesQuery(State.GrammarState);
+            Env.Line(keyBranchPr, startNodesQuery, keyBranchLength, out var keyBranch);
+
+            var keys = CreateLockItems("Key", 1, "Used to unlock door", out var unlock);
+            keyBranch.LastArea().AddInteractiveObject(Lib.InteractiveObjects.Item(keys.First()));
+
+            LockedArea(_ => branchNodes, unlock, out var locked);
+            locked.AddInteractiveObject(Lib.InteractiveObjects.Item(Lib.Items.NewItem("Unlocked", "The door are unlocked now")));
         }
     }
 
