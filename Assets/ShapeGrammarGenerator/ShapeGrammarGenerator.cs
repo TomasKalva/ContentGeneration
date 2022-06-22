@@ -49,7 +49,7 @@ namespace ShapeGrammar
             stopwatch.Start();
 
             var examples = new Examples(DefaultHouseStyle, GardenStyle, parent, libraries);
-            var levelRoot = examples.LanguageDesign(libraries);
+            var levelRoot = examples.DebugPlatform();
             examples.grid.Generate(worldScale, parent);
 
             stopwatch.Stop();
@@ -65,10 +65,13 @@ namespace ShapeGrammar
             world.AddObject(elevator.Object, Vector3.zero);
             */
 
-            var goodGraveCube = levelRoot.CG().WithFloor().Cubes
-                .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor)).GetRandom();
+            var goodCubes = levelRoot.CG().WithFloor().Cubes
+                .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor));
+            var goodGraveCube = goodCubes.ElementAt(0);
             world.AddInteractiveObject(interactiveObjects.Grave().MakeGeometry(), GridToWorld(goodGraveCube.Position));
 
+            var goodTransporterCube = goodCubes.ElementAt(1);
+            world.AddInteractiveObject(interactiveObjects.Transporter().MakeGeometry(), GridToWorld(goodTransporterCube.Position));
             /*
             var allEnemies = libraries.Enemies.AllAgents();
             var enemyCubes = levelRoot.CG().WithFloor().Cubes.Shuffle().Take(10);
@@ -113,6 +116,14 @@ namespace ShapeGrammar
         public Vector3 GridToWorld(Vector3 pos)
         {
             return parent.position + worldScale * pos;
+        }
+
+        public override void DestroyWorld()
+        {
+            for (int i = parent.childCount; i > 0; --i)
+            {
+                GameObject.Destroy(parent.GetChild(0).gameObject);
+            }
         }
     }
 

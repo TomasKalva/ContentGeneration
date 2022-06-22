@@ -19,7 +19,7 @@ namespace ShapeGrammar
                 L.LevelLanguage.LevelStart(out var startArea);
                 return false;
             });
-
+            /*
             State.LC.AddEvent(5, () =>
             {
                 L.FarmersLanguage.FarmerBranch(0);
@@ -32,6 +32,7 @@ namespace ShapeGrammar
                 L.PatternLanguage.RandomBranchingWithKeys(6, Gr.PrL.TestingProductions(), out var locked, out var branches);
                 return false;
             });
+            */
 
             State.LC.AddEvent(0, () =>
             {
@@ -60,7 +61,9 @@ namespace ShapeGrammar
         public void LevelEnd()
         {
             Env.One(Gr.PrL.LevelEnd(), NodesQueries.All, out var area);
-            area.AddInteractiveObject(Lib.InteractiveObjects.Item(Lib.Items.NewItem("Done", "You have finished")));
+            area.AddInteractiveObject(
+                Lib.InteractiveObjects.Transporter()
+                ); 
         }
 
 

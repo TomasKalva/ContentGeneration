@@ -180,4 +180,21 @@ public class InteractiveObjects : ScriptableObject
         };
         return physicalItemState;
     }
+
+    public InteractiveObjectState<InteractiveObject> Transporter()
+    {
+        return InteractiveObject("Transporter", Geometry<InteractiveObject>(physicalItemPrefab))
+                    .Interact(
+                            (transporter, pl) =>
+                            {
+                                transporter.Interact(
+                                    (transporter, pl) => { }
+                                    );
+
+                                var reality = GameObject.Find("Reality").GetComponent<Reality>();
+                                reality.CreateWorld();
+
+                            }
+                        );
+    }
 }

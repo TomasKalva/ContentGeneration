@@ -18,13 +18,20 @@ public class Reality : MonoBehaviour
 
     private void Awake()
     {
-        var worldGenerator = GetComponent<WorldGenerator>();
         var world = GameObject.Find("World").GetComponent<World>();
         world.Initialize();
 
+        CreateWorld();
+    }
+
+    public void CreateWorld()
+    {
+        var worldGenerator = GetComponent<WorldGenerator>();
+        var world = GameObject.Find("World").GetComponent<World>();
+
         worldGenerator.DestroyWorld();
         worldGenerator.Generate(world);
-        if(worldGenerator is GridWorldGenerator gridWorldGenerator)
+        if (worldGenerator is GridWorldGenerator gridWorldGenerator)
             ModuleGrid = gridWorldGenerator.moduleGrid;
 
         world.Created();

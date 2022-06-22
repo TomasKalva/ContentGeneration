@@ -79,6 +79,9 @@ namespace ContentGeneration.Assets.UI.Model
 
         public void Reset(InteractiveObjectState<InteractiveObjectT> ios)
         {
+            if (States.Count == 0)
+                return;
+
             CurrentState = 0;
             States[CurrentState].Enter(ios);
         }
@@ -120,6 +123,9 @@ namespace ContentGeneration.Assets.UI.Model
 
         public override void Enter(InteractiveObjectState<InteractiveObjectT> ios)
         {
+            if (States.Count == 0)
+                return;
+
             States[CurrentState].Enter(ios);
         }
     }
