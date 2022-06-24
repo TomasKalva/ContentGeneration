@@ -21,7 +21,8 @@ namespace ShapeGrammar
         public override LevelElement CreateLevel()
         {
             var grammarState = new ShapeGrammarState(ldk);
-            var languageState = new LanguageState(grammarState);
+            var levelConstructor = new LevelConstructor();
+            var languageState = new LanguageState(grammarState, levelConstructor);
             var gr = new Grammars(ldk);
             var sym = new Symbols();
             ProductionProgram.pr = new Productions(ldk, sym);

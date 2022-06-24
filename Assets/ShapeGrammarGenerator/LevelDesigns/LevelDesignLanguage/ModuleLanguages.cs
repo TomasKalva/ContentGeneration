@@ -25,14 +25,14 @@ namespace ShapeGrammar
                 L.FarmersLanguage.FarmerBranch(0);
                 return false;
             });
-
+            */
             State.LC.AddEvent(5, () =>
             {
                 //L.PatternLanguage.BranchWithKey(NodesQueries.LastCreated, 4, Gr.PrL.TestingProductions());
                 L.PatternLanguage.RandomBranchingWithKeys(6, Gr.PrL.TestingProductions(), out var locked, out var branches);
                 return false;
             });
-            */
+            
 
             State.LC.AddEvent(0, () =>
             {
@@ -61,9 +61,9 @@ namespace ShapeGrammar
         public void LevelEnd()
         {
             Env.One(Gr.PrL.LevelEnd(), NodesQueries.All, out var area);
-            area.AddInteractiveObject(
+            /*area.AddInteractiveObject(
                 Lib.InteractiveObjects.Transporter()
-                ); 
+                );*/
         }
 
 

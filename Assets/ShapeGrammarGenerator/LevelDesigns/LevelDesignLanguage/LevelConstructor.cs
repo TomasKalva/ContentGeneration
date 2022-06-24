@@ -34,6 +34,11 @@ namespace ShapeGrammar
                 }
             });
         }
+
+        public void Destroy()
+        {
+
+        }
     }
 
     /// <summary>

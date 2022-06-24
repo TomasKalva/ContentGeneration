@@ -26,6 +26,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2819975557663227921}
   - {fileID: 2819975558039426890}
@@ -61,6 +62,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2819975557250606188}
   m_RootOrder: 2
@@ -89,7 +91,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2819975557663227921}
   - component: {fileID: 2819975557663227919}
-  - component: {fileID: 2819975557663227920}
   m_Layer: 0
   m_Name: Reality
   m_TagString: Untagged
@@ -107,6 +108,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2819975557250606188}
   m_RootOrder: 0
@@ -125,70 +127,185 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerState:
     _health:
-      max: 50
-      value: 50
+      max: 100
+      value: 100
     _will:
       max: 20
       value: 20
     _posture:
       max: 10
       value: 10
-    viewCamera: {fileID: 0}
-    _currentInteractiveObject: {fileID: 0}
-    _currentInteractiveObjectState: {fileID: 0}
-    _targetedEnemy:
-      _health:
-        max: 100
-        value: 42
-      _will:
-        max: 100
-        value: 42
-      _posture:
-        max: 35
-        value: 35
-      viewCamera: {fileID: 0}
     _properties:
       _character:
         _health:
           max: 100
-          value: 42
+          value: 100
         _will:
-          max: 100
-          value: 42
+          max: 20
+          value: 20
         _posture:
-          max: 35
-          value: 35
+          max: 10
+          value: 10
+        _properties:
+          _character:
+            _health:
+              max: 100
+              value: 100
+            _will:
+              max: 20
+              value: 20
+            _posture:
+              max: 10
+              value: 10
+            _properties:
+              _character:
+                _health:
+                  max: 100
+                  value: 100
+                _will:
+                  max: 20
+                  value: 20
+                _posture:
+                  max: 10
+                  value: 10
+                _properties:
+                  _character:
+                    _health:
+                      max: 100
+                      value: 100
+                    _will:
+                      max: 20
+                      value: 20
+                    _posture:
+                      max: 10
+                      value: 10
+                    _properties:
+                      _health: 0
+                      _will: 0
+                      _poise: 0
+                      _strength: 0
+                      _dexterity: 0
+                      _spirit: 0
+                    viewCamera: {fileID: 0}
+                  _health: 0
+                  _will: 0
+                  _poise: 0
+                  _strength: 0
+                  _dexterity: 0
+                  _spirit: 0
+                viewCamera: {fileID: 0}
+              _health: 0
+              _will: 0
+              _poise: 0
+              _strength: 0
+              _dexterity: 0
+              _spirit: 0
+            viewCamera: {fileID: 0}
+          _health: 0
+          _will: 0
+          _poise: 0
+          _strength: 0
+          _dexterity: 0
+          _spirit: 0
         viewCamera: {fileID: 0}
       _health: 0
       _will: 0
       _poise: 0
       _strength: 0
       _dexterity: 0
---- !u!114 &2819975557663227920
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2819975557663227922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a2c24c5c5938c642a21cd2235a1cc8d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemies: {fileID: 11400000, guid: 1b0b7286e21a6ed4ba0a066c27e7b2e9, type: 2}
-  physicalItems: {fileID: 11400000, guid: 20423688f3eb91143a3abffe5cbd7d83, type: 2}
-  items: {fileID: 11400000, guid: 225b79d8878ee624099ccf1d52670934, type: 2}
-  interactiveObjects: {fileID: 11400000, guid: eb4b228fdb6e5ca46a32f8cfbea7e253, type: 2}
-  objects: {fileID: 11400000, guid: e10829c8911eb364e88ff5b2a21bd9b0, type: 2}
-  libraries: {fileID: 11400000, guid: e6d383d7b852e69439d0877d7ed97ca5, type: 2}
-  modules: {fileID: 11400000, guid: 82502ab36ac59dc41abbe265807332ce, type: 2}
-  styles: {fileID: 11400000, guid: b8396dd037de07641a491158b124c020, type: 2}
-  parent: {fileID: 0}
-  sizes: {x: 20, y: 6, z: 20}
-  extents: {x: 12, y: 8, z: 12}
-  buildingsCount: 30
-  bridgesCount: 5
+      _spirit: 0
+    viewCamera: {fileID: 0}
+    _currentInteractiveObject: {fileID: 0}
+    _targetedEnemy:
+      _health:
+        max: 100
+        value: 100
+      _will:
+        max: 20
+        value: 20
+      _posture:
+        max: 10
+        value: 10
+      _properties:
+        _character:
+          _health:
+            max: 100
+            value: 100
+          _will:
+            max: 20
+            value: 20
+          _posture:
+            max: 10
+            value: 10
+          _properties:
+            _character:
+              _health:
+                max: 100
+                value: 100
+              _will:
+                max: 20
+                value: 20
+              _posture:
+                max: 10
+                value: 10
+              _properties:
+                _character:
+                  _health:
+                    max: 100
+                    value: 100
+                  _will:
+                    max: 20
+                    value: 20
+                  _posture:
+                    max: 10
+                    value: 10
+                  _properties:
+                    _character:
+                      _health:
+                        max: 100
+                        value: 100
+                      _will:
+                        max: 20
+                        value: 20
+                      _posture:
+                        max: 10
+                        value: 10
+                      _properties:
+                        _health: 0
+                        _will: 0
+                        _poise: 0
+                        _strength: 0
+                        _dexterity: 0
+                        _spirit: 0
+                      viewCamera: {fileID: 0}
+                    _health: 0
+                    _will: 0
+                    _poise: 0
+                    _strength: 0
+                    _dexterity: 0
+                    _spirit: 0
+                  viewCamera: {fileID: 0}
+                _health: 0
+                _will: 0
+                _poise: 0
+                _strength: 0
+                _dexterity: 0
+                _spirit: 0
+              viewCamera: {fileID: 0}
+            _health: 0
+            _will: 0
+            _poise: 0
+            _strength: 0
+            _dexterity: 0
+            _spirit: 0
+          viewCamera: {fileID: 0}
+        _health: 0
+        _will: 0
+        _poise: 0
+        _strength: 0
+        _dexterity: 0
+        _spirit: 0
+      viewCamera: {fileID: 0}
 --- !u!1 &2819975558039426891
 GameObject:
   m_ObjectHideFlags: 0
@@ -216,6 +333,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2819975557250606188}
   m_RootOrder: 1
@@ -264,6 +382,7 @@ Transform:
   m_LocalRotation: {x: 0.24944593, y: 0.002036081, z: 0.0125182355, w: 0.9683057}
   m_LocalPosition: {x: 17.75, y: 32.98, z: -6.17}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2819975557250606188}
   m_RootOrder: 3
@@ -363,6 +482,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 0
   m_Antialiasing: 0
   m_AntialiasingQuality: 2

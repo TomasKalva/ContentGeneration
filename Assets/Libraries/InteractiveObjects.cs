@@ -193,7 +193,6 @@ public class InteractiveObjects : ScriptableObject
 
                                 var reality = GameObject.Find("Reality").GetComponent<Reality>();
                                 reality.CreateWorld();
-
                             }
                         );
     }

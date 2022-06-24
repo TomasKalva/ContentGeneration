@@ -29,7 +29,7 @@ namespace ShapeGrammar
             }*/
             //world.AddEnemy(libraries.Enemies.MayanSwordsman(), new Vector3(0, 1, 0));
             //world.AddEnemy(libraries.Enemies.DragonMan(), new Vector3(0, 1, 0));
-            //UnityEngine.Random.InitState(42);
+            UnityEngine.Random.InitState(42);
 
             worldScale = 2.8f;
 
@@ -49,7 +49,7 @@ namespace ShapeGrammar
             stopwatch.Start();
 
             var examples = new Examples(DefaultHouseStyle, GardenStyle, parent, libraries);
-            var levelRoot = examples.DebugPlatform();
+            var levelRoot = examples.LanguageDesign(libraries);
             examples.grid.Generate(worldScale, parent);
 
             stopwatch.Stop();
@@ -70,8 +70,9 @@ namespace ShapeGrammar
             var goodGraveCube = goodCubes.ElementAt(0);
             world.AddInteractiveObject(interactiveObjects.Grave().MakeGeometry(), GridToWorld(goodGraveCube.Position));
 
-            var goodTransporterCube = goodCubes.ElementAt(1);
-            world.AddInteractiveObject(interactiveObjects.Transporter().MakeGeometry(), GridToWorld(goodTransporterCube.Position));
+            //var goodTransporterCube = goodCubes.ElementAt(1);
+            //world.AddInteractiveObject(interactiveObjects.Transporter().MakeGeometry(), GridToWorld(goodTransporterCube.Position));
+            
             /*
             var allEnemies = libraries.Enemies.AllAgents();
             var enemyCubes = levelRoot.CG().WithFloor().Cubes.Shuffle().Take(10);
