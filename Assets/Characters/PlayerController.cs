@@ -39,9 +39,6 @@ public class PlayerController : MonoBehaviour
 	[SerializeField]
 	Libraries libraries;
 
-	Module previousModule;
-	Module currentModule;
-
 	// Start is called before the first frame update
 	void Awake()
 	{
@@ -318,30 +315,6 @@ public class PlayerController : MonoBehaviour
 
 		myAgent.UpdateAgent();
 
-	}
-
-
-
-	void UpdateCurrentModule()
-	{
-		var grid = reality.ModuleGrid;
-		var gridPos = grid.WorldToGrid(transform.position);
-
-		previousModule = currentModule;
-		currentModule = grid[gridPos];
-		/*if (currentModule != null)
-		{
-			Debug.Log(gridPos);
-			Debug.Log(currentModule.GetProperty<AreaModuleProperty>().Area.Name);
-		}*/
-
-		//spacePartitioning.Update(grid, currentModule);
-		//
-		/*grid.AreasConnections.Vertices.ForEach(area => area.Disable());
-		var currActive = grid.AreasConnections.Neighbors(currentModule.GetProperty<AreaModuleProperty>().Area).Concat(new List<Area>() { currentModule.GetProperty<AreaModuleProperty>().Area });
-		currActive.ForEach(area => area.Enable());*/
-		/*activeAreas.UnionWith(currActive);
-		activeAreas.RemoveWhere(area => )*/
 	}
 
 	Vector3 InpForward

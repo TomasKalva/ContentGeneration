@@ -38,9 +38,6 @@ public class ShapeGrammarObjectStyle : ScriptableObject
     [SerializeField]
     ObjectStyle<CUBE>[] cubeObjectStyles;
 
-    [SerializeField]
-    ObjectStyle<CharacterType>[] characterStyles;
-
     public Transform GetObject<T>(ObjectStyle<T>[] objectStyles, Transform defaultT, T objectType)
     {
         var objStyle = objectStyles.Where(objSt => objSt.objectType.Equals(objectType)).GetRandom();
@@ -70,16 +67,5 @@ public class ShapeGrammarObjectStyle : ScriptableObject
     {
         var obj = GetObject<CUBE>(cubeObjectStyles, notExistingObj, objectType);
         return Instantiate(obj);
-    }
-
-    public Transform GetCharacter(CharacterType characterType)
-    {
-        var objPrefab = GetObject<CharacterType>(characterStyles, notExistingObj, characterType);
-        var obj = Instantiate(objPrefab);
-
-        var agent = obj.GetComponent<Agent>();
-        agent.CharacterState.Health = 100f;
-
-        return obj;
     }
 }
