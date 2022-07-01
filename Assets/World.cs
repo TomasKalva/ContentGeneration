@@ -1,5 +1,6 @@
 using Assets.InteractiveObject;
 using ContentGeneration.Assets.UI.Model;
+using ShapeGrammar;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,14 +19,20 @@ public class World
     public delegate void WorldCreated();
     public static event WorldCreated OnCreated;
 
+    public WorldGeometry WorldGeometry { get; }
+
     public IEnumerable<CharacterState> Enemies => enemies.Where(ch => ch != null && !ch.Dead);
     public IEnumerable<InteractiveObjectState> InteractiveObjects => interactiveObjects.Where(io => io != null);
 
     // Start is called before the first frame update
-    public World(Transform architectureParent, Transform entitiesParent)
+    public World(WorldGeometry worldGeometry)
     {
-        ArchitectureParent = architectureParent;
-        EntitiesParent = entitiesParent;
+        WorldGeometry = worldGeometry;
+        var worldParent = worldGeometry.WorldParent;
+        ArchitectureParent = new GameObject("Architecture").transform;
+        ArchitectureParent.SetParent(worldParent);
+        EntitiesParent = new GameObject("Entities").transform;
+        EntitiesParent.SetParent(worldParent);
 
         interactiveObjects = new List<InteractiveObjectState>();
         enemies = new List<CharacterState>();
@@ -48,12 +55,14 @@ public class World
     public void AddEnemy(CharacterState enemy)
     {
         enemy.World = this;
+        enemy.Agent.transform.SetParent(EntitiesParent);
         enemies.Add(enemy);
     }
 
     public void AddItem(InteractiveObjectState item)
     {
         item.World = this;
+        item.InteractiveObject.transform.SetParent(EntitiesParent);
         interactiveObjects.Add(item);
     }
 
@@ -66,6 +75,10 @@ public class World
     public void AddInteractiveObject(InteractiveObjectState interactiveObject)
     {
         interactiveObject.World = this;
+        if (interactiveObject.InteractiveObject.transform == null) // Don't reparent door
+        {
+            interactiveObject.InteractiveObject.transform.SetParent(EntitiesParent);
+        }
         interactiveObjects.Add(interactiveObject);
     }
 

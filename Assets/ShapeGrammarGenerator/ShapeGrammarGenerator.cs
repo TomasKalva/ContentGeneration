@@ -11,10 +11,7 @@ namespace ShapeGrammar
     public class ShapeGrammarGenerator : WorldGenerator
     {
         [SerializeField]
-        Transform architectureParent;
-
-        [SerializeField]
-        Transform entitiesParent;
+        Transform worldParent;
 
         [SerializeField]
         ShapeGrammarObjectStyle DefaultHouseStyle;
@@ -34,7 +31,9 @@ namespace ShapeGrammar
             //world.AddEnemy(libraries.Enemies.DragonMan(), new Vector3(0, 1, 0));
             UnityEngine.Random.InitState(42);
 
-            var world = new World(architectureParent, entitiesParent);
+            var worldGeometry = new WorldGeometry(worldParent, 2.8f);
+            var world = new World(worldGeometry);
+
 
             worldScale = 2.8f;
 
@@ -53,7 +52,7 @@ namespace ShapeGrammar
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 
-            var examples = new Examples(DefaultHouseStyle, GardenStyle, architectureParent, libraries);
+            var examples = new Examples(DefaultHouseStyle, GardenStyle, world.ArchitectureParent, libraries);
             var levelRoot = examples.LanguageDesign(libraries, world);
             examples.grid.Generate(worldScale, world);
 
@@ -75,7 +74,7 @@ namespace ShapeGrammar
             var goodGraveCube = goodCubes.ElementAt(0);
             var graveState = interactiveObjects.Grave();
             var grave = graveState.MakeGeometry();
-            grave.transform.position = GridToWorld(goodGraveCube.Position);
+            grave.transform.position = worldGeometry.GridToWorld(goodGraveCube.Position);
             world.AddInteractiveObject(graveState);
             world.Grave = graveState;
 
@@ -125,7 +124,7 @@ namespace ShapeGrammar
             Debug.Log(stopwatch.ElapsedMilliseconds);
         }
         */
-
+        /*
         public Vector3 GridToWorld(Vector3 pos)
         {
             return architectureParent.position + worldScale * pos;
@@ -137,28 +136,28 @@ namespace ShapeGrammar
             {
                 GameObject.Destroy(architectureParent.GetChild(0).gameObject);
             }
-        }
+        }*/
     }
 
-    public class GeneratorGeometry
+    public class WorldGeometry
     {
-        Transform worldParent;
+        public Transform WorldParent { get; }
         float worldScale;
 
-        public GeneratorGeometry(Transform worldParent, float worldScale)
+        public WorldGeometry(Transform worldParent, float worldScale)
         {
-            this.worldParent = worldParent;
+            this.WorldParent = worldParent;
             this.worldScale = worldScale;
         }
 
         public Vector3 GridToWorld(Vector3 gridPos)
         {
-            return worldParent.position + worldScale * gridPos;
+            return WorldParent.position + worldScale * gridPos;
         }
 
         public Vector3 WorldToGrid(Vector3 worldPos)
         {
-            return (worldPos - worldParent.position) / worldScale;
+            return (worldPos - WorldParent.position) / worldScale;
         }
     }
 }

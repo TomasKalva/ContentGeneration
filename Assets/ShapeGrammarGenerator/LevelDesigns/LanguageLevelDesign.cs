@@ -44,7 +44,7 @@ namespace ShapeGrammar
             var playerState = GameViewModel.ViewModel.PlayerState;
             playerState.OnUpdate += () =>
             {
-                var playerGridPosition = Vector3Int.RoundToInt(language.Ldk.gg.WorldToGrid(GameViewModel.ViewModel.PlayerState.Agent.transform.position));
+                var playerGridPosition = Vector3Int.RoundToInt(language.Ldk.wg.WorldToGrid(GameViewModel.ViewModel.PlayerState.Agent.transform.position));
                 var playerNode = language.State.GrammarState.GetNode(playerGridPosition);
                 spacePartitioning.Update(playerNode);
             };

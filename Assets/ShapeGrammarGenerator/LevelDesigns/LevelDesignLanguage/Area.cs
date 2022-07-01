@@ -36,14 +36,14 @@ namespace ShapeGrammar
         public void AddEnemy(CharacterState enemy)
         {
             // define behavior that makes enemies only go after player, if he's in their area
-            var gotoPosition = L.Ldk.gg.GridToWorld(Node.LE.CG().WithFloor().Cubes.GetRandom().Position);
+            var gotoPosition = L.Ldk.wg.GridToWorld(Node.LE.CG().WithFloor().Cubes.GetRandom().Position);
             //L.Lib.InteractiveObjects.AscensionKiln().MakeGeometry().transform.position = gotoPosition; // visualization of waiting spots
             var thisAreaPositions = new HashSet<Vector3Int>(Node.LE.CG().Cubes.Select(c => c.Position));
             enemy.Behaviors.AddBehavior(
                 new Wait(
                     _ =>
                     {
-                        var playerGridPosition = Vector3Int.RoundToInt(L.Ldk.gg.WorldToGrid(GameViewModel.ViewModel.PlayerState.Agent.transform.position));
+                        var playerGridPosition = Vector3Int.RoundToInt(L.Ldk.wg.WorldToGrid(GameViewModel.ViewModel.PlayerState.Agent.transform.position));
                         return !thisAreaPositions.Contains(playerGridPosition);
                     },
                     _ => gotoPosition
@@ -52,7 +52,7 @@ namespace ShapeGrammar
             EnemyStates.Add(enemy);
         }
 
-        public virtual void InstantiateAll(GeneratorGeometry gg, World world)
+        public virtual void InstantiateAll(WorldGeometry gg, World world)
         {
             var flooredCubes = new Stack<Cube>(Node.LE.CG().WithFloor().Cubes.Shuffle());
 
@@ -63,10 +63,10 @@ namespace ShapeGrammar
                     Debug.LogError("Not enough empty cubes");
                     break;
                 }
-                world.AddInteractiveObject(ios);
-
                 ios.MakeGeometry();
                 ios.InteractiveObject.transform.position = gg.GridToWorld(flooredCubes.Pop().Position);
+
+                world.AddInteractiveObject(ios);
             }
 
             foreach (var enemy in EnemyStates)
@@ -76,10 +76,10 @@ namespace ShapeGrammar
                     Debug.LogError("Not enough empty cubes");
                     break;
                 }
-                world.AddEnemy(enemy);
-
                 enemy.MakeGeometry();
                 enemy.Agent.transform.position = gg.GridToWorld(flooredCubes.Pop().Position);
+
+                world.AddEnemy(enemy);
             }
         }
 

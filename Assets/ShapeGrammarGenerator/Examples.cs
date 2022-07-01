@@ -11,7 +11,7 @@ namespace ShapeGrammar
     {
         public ShapeGrammarObjectStyle DefaultHouseStyle { get; }
         public ShapeGrammarObjectStyle GardenStyle { get; }
-        public GeneratorGeometry gg { get; }
+        public WorldGeometry wg { get; }
         public Grid<Cube> grid { get; }
         public QueryContext qc { get; }
         public ShapeGrammarStyles sgStyles { get; }
@@ -26,7 +26,7 @@ namespace ShapeGrammar
         public LevelDevelopmentKit(ShapeGrammarObjectStyle defaultHouseStyle, ShapeGrammarObjectStyle gardenStyle, Transform worldParent, Libraries lib)
         {
             DefaultHouseStyle = defaultHouseStyle;
-            gg = new GeneratorGeometry(worldParent, 2.8f);
+            wg = new WorldGeometry(worldParent, 2.8f);
             grid = new Grid<Cube>(new Vector3Int(20, 10, 20), (grid, pos) => new Cube(grid, pos));
             qc = new QueryContext(grid);
             sgStyles = new ShapeGrammarStyles(grid, DefaultHouseStyle, gardenStyle);
