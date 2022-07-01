@@ -8,7 +8,8 @@ using UnityEngine;
 public class World : MonoBehaviour
 {
     [SerializeField]
-    Transform parent;
+    Transform architectureParent;
+    public Transform ArchitectureParent => architectureParent;
 
     List<InteractiveObjectState> interactiveObjects;
     List<CharacterState> enemies;
@@ -66,7 +67,7 @@ public class World : MonoBehaviour
 
     public void AddArchitectureElement(Transform el)
     {
-        el.SetParent(parent);
+        el.SetParent(architectureParent);
         architectureElements.Add(el);
     }
 

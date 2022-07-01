@@ -107,6 +107,8 @@ namespace ShapeGrammar
         public void Generate(float cubeSide, World world)
         {
             ((IEnumerable<Cube>)this).ForEach(i => i.Generate(cubeSide, world));
+            var interactiveArchitecture = world.ArchitectureParent.GetComponentsInChildren<InteractiveObject>().Select(io => io.State);
+            interactiveArchitecture.ForEach(el => world.AddInteractiveObject(el));
         }
     }
 
