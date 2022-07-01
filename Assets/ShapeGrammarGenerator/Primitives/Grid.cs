@@ -104,9 +104,9 @@ namespace ShapeGrammar
             return GetEnumerator();
         }
 
-        public void Generate(float cubeSide, Transform parent)
+        public void Generate(float cubeSide, World world)
         {
-            ((IEnumerable<Cube>)this).ForEach(item => item.Generate(cubeSide, parent));
+            ((IEnumerable<Cube>)this).ForEach(i => i.Generate(cubeSide, world));
         }
     }
 

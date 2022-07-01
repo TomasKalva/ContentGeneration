@@ -7,9 +7,12 @@ using UnityEngine;
 
 public class World : MonoBehaviour
 {
+    [SerializeField]
+    Transform parent;
+
     List<InteractiveObjectState> interactiveObjects;
     List<CharacterState> enemies;
-    List<Transform> objects;
+    List<Transform> architectureElements;
     public Grave Grave { get; set; }
 
     public delegate void WorldCreated();
@@ -24,7 +27,7 @@ public class World : MonoBehaviour
         //Initialize();
         interactiveObjects = new List<InteractiveObjectState>();// (FindObjectsOfType<InteractiveObject>());
         enemies = new List<CharacterState>();// (FindObjectsOfType<Agent>());
-        objects = new List<Transform>();
+        architectureElements = new List<Transform>();
     }
 
     /*
@@ -61,9 +64,10 @@ public class World : MonoBehaviour
         interactiveObjects.Add(interactiveObject);
     }
 
-    public void AddObject(Transform obj)
+    public void AddArchitectureElement(Transform el)
     {
-        objects.Add(obj);
+        el.SetParent(parent);
+        architectureElements.Add(el);
     }
 
     public void OnPlayerDeath()

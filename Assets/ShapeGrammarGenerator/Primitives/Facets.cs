@@ -17,7 +17,7 @@ namespace ShapeGrammar
         public Cube OtherCube => MyCube.Grid[MyCube.Position + Direction];
         public Action<Transform> OnObjectCreated { get; set; } = _ => { };
 
-        public abstract void Generate(float cubeSide, Transform parent, Vector3Int cubePosition);
+        public abstract void Generate(float cubeSide, World world, Vector3Int cubePosition);
 
         public FacetT MoveBy<FacetT>(Vector3Int offset) where FacetT : Facet
         {
@@ -46,7 +46,7 @@ namespace ShapeGrammar
             }
         }
 
-        public override void Generate(float scale, Transform parent, Vector3Int cubePosition)
+        public override void Generate(float scale, World world, Vector3Int cubePosition)
         {
             if (Style == null)
                 return;
@@ -58,10 +58,11 @@ namespace ShapeGrammar
             var offset = (Vector3)Direction * 0.5f;
             var obj = Style.GetFaceHor(FaceType);
 
-            obj.SetParent(parent);
             obj.localScale = scale * Vector3.one;
             obj.localPosition = (cubePosition + offset) * scale;
             obj.rotation = Quaternion.LookRotation(Direction, Vector3.up);
+            
+            world.AddArchitectureElement(obj);
 
             OnObjectCreated(obj);
         }
@@ -94,7 +95,7 @@ namespace ShapeGrammar
             }
         }
 
-        public override void Generate(float scale, Transform parent, Vector3Int cubePosition)
+        public override void Generate(float scale, World world, Vector3Int cubePosition)
         {
             if (Style == null)
                 return;
@@ -102,9 +103,10 @@ namespace ShapeGrammar
             var offset = Vector3.up * Math.Max(0, Direction.y);
             var obj = Style.GetFaceVer(FaceType);
 
-            obj.SetParent(parent);
             obj.localScale = scale * Vector3.one;
             obj.localPosition = (cubePosition + offset) * scale;
+
+            world.AddArchitectureElement(obj);
 
             OnObjectCreated(obj);
         }
@@ -128,7 +130,7 @@ namespace ShapeGrammar
             }
         }
 
-        public override void Generate(float scale, Transform parent, Vector3Int cubePosition)
+        public override void Generate(float scale, World world, Vector3Int cubePosition)
         {
             if (Style == null)
                 return;
@@ -136,9 +138,10 @@ namespace ShapeGrammar
             var offset = (Vector3)Direction * 0.5f;
             var obj = Style.GetCorner(CornerType);
 
-            obj.SetParent(parent);
             obj.localScale = scale * Vector3.one;
             obj.localPosition = (cubePosition + offset) * scale;
+
+            world.AddArchitectureElement(obj);
 
             OnObjectCreated(obj);
         }
