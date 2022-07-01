@@ -52,7 +52,7 @@ namespace ShapeGrammar
             EnemyStates.Add(enemy);
         }
 
-        public virtual void InstantiateAll(GeneratorGeometry gg)
+        public virtual void InstantiateAll(GeneratorGeometry gg, World world)
         {
             var flooredCubes = new Stack<Cube>(Node.LE.CG().WithFloor().Cubes.Shuffle());
 
@@ -63,6 +63,7 @@ namespace ShapeGrammar
                     Debug.LogError("Not enough empty cubes");
                     break;
                 }
+                world.AddInteractiveObject(ios);
 
                 ios.MakeGeometry();
                 ios.InteractiveObject.transform.position = gg.GridToWorld(flooredCubes.Pop().Position);
@@ -75,6 +76,7 @@ namespace ShapeGrammar
                     Debug.LogError("Not enough empty cubes");
                     break;
                 }
+                world.AddEnemy(enemy);
 
                 enemy.MakeGeometry();
                 enemy.Agent.transform.position = gg.GridToWorld(flooredCubes.Pop().Position);

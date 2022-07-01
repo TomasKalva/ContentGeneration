@@ -49,7 +49,7 @@ namespace ShapeGrammar
             stopwatch.Start();
 
             var examples = new Examples(DefaultHouseStyle, GardenStyle, parent, libraries);
-            var levelRoot = examples.LanguageDesign(libraries);
+            var levelRoot = examples.LanguageDesign(libraries, world);
             examples.grid.Generate(worldScale, parent);
 
             stopwatch.Stop();
@@ -68,7 +68,11 @@ namespace ShapeGrammar
             var goodCubes = levelRoot.CG().WithFloor().Cubes
                 .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor));
             var goodGraveCube = goodCubes.ElementAt(0);
-            world.AddInteractiveObject(interactiveObjects.Grave().MakeGeometry(), GridToWorld(goodGraveCube.Position));
+            var graveState = interactiveObjects.Grave();
+            var grave = graveState.MakeGeometry();
+            grave.transform.position = GridToWorld(goodGraveCube.Position);
+            world.AddInteractiveObject(graveState);
+            world.Grave = graveState;
 
             //var goodTransporterCube = goodCubes.ElementAt(1);
             //world.AddInteractiveObject(interactiveObjects.Transporter().MakeGeometry(), GridToWorld(goodTransporterCube.Position));

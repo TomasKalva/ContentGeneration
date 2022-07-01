@@ -23,7 +23,9 @@ public class PhysicalItemState : InteractiveObjectState<InteractiveObject>
         var added = agent.CharacterState.AddItem(Item);
         if (added)
         {
-            Object.Destroy(InteractiveObject.gameObject);
+            var world = GameObject.Find("World").GetComponent<World>();
+            world.RemoveItem(this);
+            //Object.Destroy(InteractiveObject.gameObject);
         }
     }
 }

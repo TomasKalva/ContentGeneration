@@ -17,7 +17,7 @@ public class Reality : MonoBehaviour
     private void Awake()
     {
         var world = GameObject.Find("World").GetComponent<World>();
-        world.Initialize();
+        //world.Initialize();
 
         CreateWorld();
     }

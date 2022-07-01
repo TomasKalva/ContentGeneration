@@ -91,7 +91,7 @@ public class PlayerController : MonoBehaviour
 			AddButtonsDown();
 		}
 
-		PlayerCharacterState.CurrentInteractiveObject = world.ObjectsCloseTo(transform.position, interactionDistance).FirstOrDefault();
+		PlayerCharacterState.CurrentInteractiveObjectState = world.ObjectsCloseTo(transform.position, interactionDistance).FirstOrDefault();
 
 		UpdateLockOn();
 
@@ -190,7 +190,7 @@ public class PlayerController : MonoBehaviour
 
 	IEnumerable<Agent> LockableTargets(Agent player)
     {
-		return world.Agents.Where(agent => agent != player && (agent.transform.position - player.transform.position).sqrMagnitude < maxDistance * maxDistance);
+		return world.Enemies.SelectNN(e => e.Agent).Where(agent => agent != player && (agent.transform.position - player.transform.position).sqrMagnitude < maxDistance * maxDistance);
 
 	}
 
@@ -284,7 +284,7 @@ public class PlayerController : MonoBehaviour
 			myAgent.Attack();
 		}
 
-		var interactiveObject = PlayerCharacterState.CurrentInteractiveObject;
+		var interactiveObject = PlayerCharacterState.CurrentInteractiveObjectState;
 
 		if(interactiveObject != null)
 		{

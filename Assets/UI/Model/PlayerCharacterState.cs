@@ -24,31 +24,20 @@ namespace ContentGeneration.Assets.UI.Model
 
 #if NOESIS
         [SerializeField]
-        private InteractiveObject _currentInteractiveObject;
-        public InteractiveObject CurrentInteractiveObject
-        {
-            get { return _currentInteractiveObject; }
-            set { 
-                if(_currentInteractiveObject != null && value == null)
-                {
-                    _currentInteractiveObject.State.PlayerLeft();
-                }
-                _currentInteractiveObject = value;
-                CurrentInteractiveObjectState = value ? value.State : null;
-                OnPropertyChanged(this);
-            }
-        }
-
-#endif
-
-#if NOESIS
-        [SerializeField]
 #endif
         private InteractiveObjectState _currentInteractiveObjectState;
         public InteractiveObjectState CurrentInteractiveObjectState
         {
             get { return _currentInteractiveObjectState; }
-            set { _currentInteractiveObjectState = value; OnPropertyChanged(this); }
+            set
+            {
+                if (_currentInteractiveObjectState != null && value == null)
+                {
+                    _currentInteractiveObjectState.PlayerLeft();
+                }
+                _currentInteractiveObjectState = value; 
+                OnPropertyChanged(this); 
+            }
         }
 
 #if NOESIS

@@ -12,17 +12,19 @@ namespace ShapeGrammar
     public class LanguageLevelDesign : LevelDesign
     {
         Libraries lib;
+        World world;
 
-        public LanguageLevelDesign(LevelDevelopmentKit ldk, Libraries lib) : base(ldk)
+        public LanguageLevelDesign(LevelDevelopmentKit ldk, Libraries lib, World world) : base(ldk)
         {
             this.lib = lib;
+            this.world = world;
         }
 
         public override LevelElement CreateLevel()
         {
             var grammarState = new ShapeGrammarState(ldk);
             var levelConstructor = new LevelConstructor();
-            var languageState = new LanguageState(grammarState, levelConstructor);
+            var languageState = new LanguageState(grammarState, levelConstructor, world);
             var gr = new Grammars(ldk);
             var sym = new Symbols();
             ProductionProgram.pr = new Productions(ldk, sym);

@@ -15,12 +15,14 @@ namespace ShapeGrammar
         public IEnumerable<Area> TraversableAreas => TraversabilityGraph.Areas;
         public TraversabilityGraph TraversabilityGraph { get; }
         public LevelConstructor LC { get; }
+        public World World { get; }
 
-        public LanguageState(ShapeGrammarState grammarState, LevelConstructor levelConstructor)
+        public LanguageState(ShapeGrammarState grammarState, LevelConstructor levelConstructor, World world)
         {
             GrammarState = grammarState;
             TraversabilityGraph = new TraversabilityGraph();
             LC = levelConstructor;
+            World = world;
         }
 
         public void AddAreas(List<Area> areas)
@@ -77,7 +79,7 @@ namespace ShapeGrammar
 
         public void Instantiate()
         {
-            State.TraversableAreas.ForEach(area => area.InstantiateAll(Ldk.gg));
+            State.TraversableAreas.ForEach(area => area.InstantiateAll(Ldk.gg, State.World));
         }
     }
 

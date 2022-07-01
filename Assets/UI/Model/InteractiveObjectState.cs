@@ -163,6 +163,7 @@ namespace ContentGeneration.Assets.UI.Model
         public override InteractiveObject MakeGeometry()
         {
             IntObj = GeometryMaker.CreateGeometry();
+            InteractiveObject = IntObj;
             return IntObj;
         }
 
