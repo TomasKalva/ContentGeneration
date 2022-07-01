@@ -85,7 +85,7 @@ namespace ShapeGrammar
             var connection = State.TraversabilityGraph.EdgesTo(lockedArea).First();
             // the door face exists because of the chosen grammar
             var doorFace = connection.Path.LE.CG().InsideFacesH().Where(faceH => faceH.FaceType == FACE_HOR.Door).Facets.First();
-            doorFace.OnObjectCreated = tr =>
+            doorFace.OnObjectCreated += tr =>
             {
                 var door = tr.GetComponentInChildren<Door>();
                 var doorState = (DoorState)door.State;

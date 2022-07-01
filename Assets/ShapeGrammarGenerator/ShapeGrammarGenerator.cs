@@ -11,7 +11,10 @@ namespace ShapeGrammar
     public class ShapeGrammarGenerator : WorldGenerator
     {
         [SerializeField]
-        Transform parent;
+        Transform architectureParent;
+
+        [SerializeField]
+        Transform entitiesParent;
 
         [SerializeField]
         ShapeGrammarObjectStyle DefaultHouseStyle;
@@ -21,7 +24,7 @@ namespace ShapeGrammar
 
         float worldScale;
 
-        public override void Generate(World world)
+        public override void Generate()
         {
             /*if (Application.isEditor)
             {
@@ -30,6 +33,8 @@ namespace ShapeGrammar
             //world.AddEnemy(libraries.Enemies.MayanSwordsman(), new Vector3(0, 1, 0));
             //world.AddEnemy(libraries.Enemies.DragonMan(), new Vector3(0, 1, 0));
             UnityEngine.Random.InitState(42);
+
+            var world = new World(architectureParent, entitiesParent);
 
             worldScale = 2.8f;
 
@@ -48,7 +53,7 @@ namespace ShapeGrammar
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 
-            var examples = new Examples(DefaultHouseStyle, GardenStyle, parent, libraries);
+            var examples = new Examples(DefaultHouseStyle, GardenStyle, architectureParent, libraries);
             var levelRoot = examples.LanguageDesign(libraries, world);
             examples.grid.Generate(worldScale, world);
 
@@ -76,7 +81,7 @@ namespace ShapeGrammar
 
             //var goodTransporterCube = goodCubes.ElementAt(1);
             //world.AddInteractiveObject(interactiveObjects.Transporter().MakeGeometry(), GridToWorld(goodTransporterCube.Position));
-            
+
             /*
             var allEnemies = libraries.Enemies.AllAgents();
             var enemyCubes = levelRoot.CG().WithFloor().Cubes.Shuffle().Take(10);
@@ -91,6 +96,9 @@ namespace ShapeGrammar
             var kilnCube = goodGraveCube.NeighborsHor().GetRandom();
             world.AddInteractiveObject(interactiveObjects.AscensionKiln().MakeGeometry(), GridToWorld(kilnCube.Position));
             */
+
+
+            world.Created();
 
         }
         /*
@@ -120,14 +128,14 @@ namespace ShapeGrammar
 
         public Vector3 GridToWorld(Vector3 pos)
         {
-            return parent.position + worldScale * pos;
+            return architectureParent.position + worldScale * pos;
         }
 
         public override void DestroyWorld()
         {
-            for (int i = parent.childCount; i > 0; --i)
+            for (int i = architectureParent.childCount; i > 0; --i)
             {
-                GameObject.Destroy(parent.GetChild(0).gameObject);
+                GameObject.Destroy(architectureParent.GetChild(0).gameObject);
             }
         }
     }

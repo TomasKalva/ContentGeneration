@@ -18,6 +18,8 @@ namespace ContentGeneration.Assets.UI.Model
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public World World { get; set; }
+
 #if NOESIS
         public Behaviors Behaviors { get; set; }
 

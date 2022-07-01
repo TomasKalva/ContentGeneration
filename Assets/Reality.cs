@@ -16,7 +16,7 @@ public class Reality : MonoBehaviour
 
     private void Awake()
     {
-        var world = GameObject.Find("World").GetComponent<World>();
+        //var world = GameObject.Find("World").GetComponent<World>();
         //world.Initialize();
 
         CreateWorld();
@@ -25,11 +25,10 @@ public class Reality : MonoBehaviour
     public void CreateWorld()
     {
         var worldGenerator = GetComponent<WorldGenerator>();
-        var world = GameObject.Find("World").GetComponent<World>();
+        //var world = GameObject.Find("World").GetComponent<World>();
 
         //worldGenerator.DestroyWorld();
-        worldGenerator.Generate(world);
-
-        world.Created();
+        worldGenerator.Generate();
+;
     }
 }

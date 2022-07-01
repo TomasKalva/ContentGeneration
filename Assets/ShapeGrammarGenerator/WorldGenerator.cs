@@ -21,7 +21,7 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField]
     protected Libraries libraries;
 
-    public virtual void Generate(World world)
+    public virtual void Generate()
     {
         //world.AddEnemy(enemies.sculpture, new Vector3(0, 0, -54));
 

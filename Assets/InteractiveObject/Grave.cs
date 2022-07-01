@@ -11,12 +11,13 @@ public class Grave : InteractiveObjectState<InteractiveObject>
 
     public override void Interact(global::Agent agent)
     {
-        InteractiveObject.World.Grave = this;
+        World.Grave = this;
     }
 
-    public void SpawnPlayer()
+    public PlayerCharacterState SpawnPlayer()
     {
         var playerAgent = PlayerSpawner.Spawn();
         playerAgent.CharacterState = InteractiveObject.Reality.PlayerState;
+        return InteractiveObject.Reality.PlayerState;
     }
 }

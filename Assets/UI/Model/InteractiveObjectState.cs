@@ -39,6 +39,8 @@ namespace ContentGeneration.Assets.UI.Model
             PropertyChanged?.Invoke(thisInstance, new PropertyChangedEventArgs(name));
         }
 
+        public World World { get; set; }
+
 #if NOESIS
         InteractiveObject _interactiveObject;
         public InteractiveObject InteractiveObject 

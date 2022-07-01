@@ -91,6 +91,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2819975557663227921}
   - component: {fileID: 2819975557663227919}
+  - component: {fileID: 635269513}
   m_Layer: 0
   m_Name: Reality
   m_TagString: Untagged
@@ -215,7 +216,6 @@ MonoBehaviour:
       _dexterity: 0
       _spirit: 0
     viewCamera: {fileID: 0}
-    _currentInteractiveObject: {fileID: 0}
     _targetedEnemy:
       _health:
         max: 100
@@ -306,6 +306,27 @@ MonoBehaviour:
         _dexterity: 0
         _spirit: 0
       viewCamera: {fileID: 0}
+--- !u!114 &635269513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2819975557663227922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7264c633415f7345a055b3b0819a8bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemies: {fileID: 11400000, guid: 1b0b7286e21a6ed4ba0a066c27e7b2e9, type: 2}
+  items: {fileID: 11400000, guid: 225b79d8878ee624099ccf1d52670934, type: 2}
+  interactiveObjects: {fileID: 11400000, guid: eb4b228fdb6e5ca46a32f8cfbea7e253, type: 2}
+  objects: {fileID: 11400000, guid: e10829c8911eb364e88ff5b2a21bd9b0, type: 2}
+  libraries: {fileID: 11400000, guid: e6d383d7b852e69439d0877d7ed97ca5, type: 2}
+  architectureParent: {fileID: 0}
+  entitiesParent: {fileID: 0}
+  DefaultHouseStyle: {fileID: 11400000, guid: 082dccf2d8f8d814597ef3a4aa1e13ff, type: 2}
+  GardenStyle: {fileID: 11400000, guid: e1c675f4512976646be7b99bb698de80, type: 2}
 --- !u!1 &2819975558039426891
 GameObject:
   m_ObjectHideFlags: 0
@@ -315,7 +336,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2819975558039426890}
-  - component: {fileID: 2819975558039426889}
   m_Layer: 0
   m_Name: World
   m_TagString: Untagged
@@ -338,18 +358,6 @@ Transform:
   m_Father: {fileID: 2819975557250606188}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2819975558039426889
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2819975558039426891}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81e7bd40eb6c27640ab4b1d9d7f57819, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &5734316382304216675
 GameObject:
   m_ObjectHideFlags: 0
@@ -379,14 +387,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5734316382304216675}
-  m_LocalRotation: {x: 0.24944593, y: 0.002036081, z: 0.0125182355, w: 0.9683057}
-  m_LocalPosition: {x: 17.75, y: 32.98, z: -6.17}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2819975557250606188}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 28.883, y: 0.667, z: 1.653}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &3469223549816914217
 Camera:
   m_ObjectHideFlags: 0
@@ -459,7 +467,7 @@ MonoBehaviour:
   upAlignmentSpeed: 360
   obstructionMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4096
 --- !u!114 &229803805099227387
 MonoBehaviour:
   m_ObjectHideFlags: 0

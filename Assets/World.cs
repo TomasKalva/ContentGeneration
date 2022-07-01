@@ -5,11 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class World : MonoBehaviour
+public class World
 {
-    [SerializeField]
-    Transform architectureParent;
-    public Transform ArchitectureParent => architectureParent;
+    public Transform ArchitectureParent { get; }
+    public Transform EntitiesParent { get; }
 
     List<InteractiveObjectState> interactiveObjects;
     List<CharacterState> enemies;
@@ -23,11 +22,13 @@ public class World : MonoBehaviour
     public IEnumerable<InteractiveObjectState> InteractiveObjects => interactiveObjects.Where(io => io != null);
 
     // Start is called before the first frame update
-    void Awake()
+    public World(Transform architectureParent, Transform entitiesParent)
     {
-        //Initialize();
-        interactiveObjects = new List<InteractiveObjectState>();// (FindObjectsOfType<InteractiveObject>());
-        enemies = new List<CharacterState>();// (FindObjectsOfType<Agent>());
+        ArchitectureParent = architectureParent;
+        EntitiesParent = entitiesParent;
+
+        interactiveObjects = new List<InteractiveObjectState>();
+        enemies = new List<CharacterState>();
         architectureElements = new List<Transform>();
     }
 
@@ -46,11 +47,13 @@ public class World : MonoBehaviour
 
     public void AddEnemy(CharacterState enemy)
     {
+        enemy.World = this;
         enemies.Add(enemy);
     }
 
     public void AddItem(InteractiveObjectState item)
     {
+        item.World = this;
         interactiveObjects.Add(item);
     }
 
@@ -62,12 +65,13 @@ public class World : MonoBehaviour
 
     public void AddInteractiveObject(InteractiveObjectState interactiveObject)
     {
+        interactiveObject.World = this;
         interactiveObjects.Add(interactiveObject);
     }
 
     public void AddArchitectureElement(Transform el)
     {
-        el.SetParent(architectureParent);
+        el.SetParent(ArchitectureParent);
         architectureElements.Add(el);
     }
 
@@ -82,7 +86,9 @@ public class World : MonoBehaviour
 
         if (Grave != null)
         {
-            Grave.SpawnPlayer();
+            var player = Grave.SpawnPlayer();
+            player.World = this;
+            player.Agent.GetComponent<PlayerController>().World = this;
         }
         else
         {
