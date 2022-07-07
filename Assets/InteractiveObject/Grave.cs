@@ -1,4 +1,5 @@
 ﻿using ContentGeneration.Assets.UI.Model;
+using ContentGeneration.Assets.UI.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,11 @@ public class Grave : InteractiveObjectState<InteractiveObject>
     public PlayerCharacterState SpawnPlayer()
     {
         var playerAgent = PlayerSpawner.Spawn();
-        playerAgent.CharacterState = InteractiveObject.Reality.PlayerState;
-        return InteractiveObject.Reality.PlayerState;
+        var playerState = GameViewModel.ViewModel.PlayerState;
+        playerAgent.CharacterState = playerState;
+        return playerState;
+
+        /*playerAgent.CharacterState = InteractiveObject.Reality.PlayerState;
+        return InteractiveObject.Reality.PlayerState;*/
     }
 }

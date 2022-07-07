@@ -29,7 +29,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2819975557663227921}
-  - {fileID: 2819975558039426890}
   - {fileID: 2819975557592741364}
   - {fileID: 349668046623684405}
   m_Father: {fileID: 0}
@@ -65,7 +64,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2819975557250606188}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2819975557592741363
 MonoBehaviour:
@@ -90,7 +89,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2819975557663227921}
-  - component: {fileID: 2819975557663227919}
   - component: {fileID: 635269513}
   m_Layer: 0
   m_Name: Reality
@@ -114,198 +112,6 @@ Transform:
   m_Father: {fileID: 2819975557250606188}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2819975557663227919
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2819975557663227922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5513c08f754189043ae70571a5e3e32b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerState:
-    _health:
-      max: 100
-      value: 100
-    _will:
-      max: 20
-      value: 20
-    _posture:
-      max: 10
-      value: 10
-    _properties:
-      _character:
-        _health:
-          max: 100
-          value: 100
-        _will:
-          max: 20
-          value: 20
-        _posture:
-          max: 10
-          value: 10
-        _properties:
-          _character:
-            _health:
-              max: 100
-              value: 100
-            _will:
-              max: 20
-              value: 20
-            _posture:
-              max: 10
-              value: 10
-            _properties:
-              _character:
-                _health:
-                  max: 100
-                  value: 100
-                _will:
-                  max: 20
-                  value: 20
-                _posture:
-                  max: 10
-                  value: 10
-                _properties:
-                  _character:
-                    _health:
-                      max: 100
-                      value: 100
-                    _will:
-                      max: 20
-                      value: 20
-                    _posture:
-                      max: 10
-                      value: 10
-                    _properties:
-                      _health: 0
-                      _will: 0
-                      _poise: 0
-                      _strength: 0
-                      _dexterity: 0
-                      _spirit: 0
-                    viewCamera: {fileID: 0}
-                  _health: 0
-                  _will: 0
-                  _poise: 0
-                  _strength: 0
-                  _dexterity: 0
-                  _spirit: 0
-                viewCamera: {fileID: 0}
-              _health: 0
-              _will: 0
-              _poise: 0
-              _strength: 0
-              _dexterity: 0
-              _spirit: 0
-            viewCamera: {fileID: 0}
-          _health: 0
-          _will: 0
-          _poise: 0
-          _strength: 0
-          _dexterity: 0
-          _spirit: 0
-        viewCamera: {fileID: 0}
-      _health: 0
-      _will: 0
-      _poise: 0
-      _strength: 0
-      _dexterity: 0
-      _spirit: 0
-    viewCamera: {fileID: 0}
-    _targetedEnemy:
-      _health:
-        max: 100
-        value: 100
-      _will:
-        max: 20
-        value: 20
-      _posture:
-        max: 10
-        value: 10
-      _properties:
-        _character:
-          _health:
-            max: 100
-            value: 100
-          _will:
-            max: 20
-            value: 20
-          _posture:
-            max: 10
-            value: 10
-          _properties:
-            _character:
-              _health:
-                max: 100
-                value: 100
-              _will:
-                max: 20
-                value: 20
-              _posture:
-                max: 10
-                value: 10
-              _properties:
-                _character:
-                  _health:
-                    max: 100
-                    value: 100
-                  _will:
-                    max: 20
-                    value: 20
-                  _posture:
-                    max: 10
-                    value: 10
-                  _properties:
-                    _character:
-                      _health:
-                        max: 100
-                        value: 100
-                      _will:
-                        max: 20
-                        value: 20
-                      _posture:
-                        max: 10
-                        value: 10
-                      _properties:
-                        _health: 0
-                        _will: 0
-                        _poise: 0
-                        _strength: 0
-                        _dexterity: 0
-                        _spirit: 0
-                      viewCamera: {fileID: 0}
-                    _health: 0
-                    _will: 0
-                    _poise: 0
-                    _strength: 0
-                    _dexterity: 0
-                    _spirit: 0
-                  viewCamera: {fileID: 0}
-                _health: 0
-                _will: 0
-                _poise: 0
-                _strength: 0
-                _dexterity: 0
-                _spirit: 0
-              viewCamera: {fileID: 0}
-            _health: 0
-            _will: 0
-            _poise: 0
-            _strength: 0
-            _dexterity: 0
-            _spirit: 0
-          viewCamera: {fileID: 0}
-        _health: 0
-        _will: 0
-        _poise: 0
-        _strength: 0
-        _dexterity: 0
-        _spirit: 0
-      viewCamera: {fileID: 0}
 --- !u!114 &635269513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -318,46 +124,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7264c633415f7345a055b3b0819a8bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemies: {fileID: 11400000, guid: 1b0b7286e21a6ed4ba0a066c27e7b2e9, type: 2}
-  items: {fileID: 11400000, guid: 225b79d8878ee624099ccf1d52670934, type: 2}
-  interactiveObjects: {fileID: 11400000, guid: eb4b228fdb6e5ca46a32f8cfbea7e253, type: 2}
-  objects: {fileID: 11400000, guid: e10829c8911eb364e88ff5b2a21bd9b0, type: 2}
-  libraries: {fileID: 11400000, guid: e6d383d7b852e69439d0877d7ed97ca5, type: 2}
-  architectureParent: {fileID: 0}
-  entitiesParent: {fileID: 0}
+  worldParent: {fileID: 0}
   DefaultHouseStyle: {fileID: 11400000, guid: 082dccf2d8f8d814597ef3a4aa1e13ff, type: 2}
   GardenStyle: {fileID: 11400000, guid: e1c675f4512976646be7b99bb698de80, type: 2}
---- !u!1 &2819975558039426891
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2819975558039426890}
-  m_Layer: 0
-  m_Name: World
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2819975558039426890
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2819975558039426891}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2819975557250606188}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  libraries: {fileID: 11400000, guid: e6d383d7b852e69439d0877d7ed97ca5, type: 2}
 --- !u!1 &5734316382304216675
 GameObject:
   m_ObjectHideFlags: 0
@@ -393,7 +163,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2819975557250606188}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &3469223549816914217
 Camera:

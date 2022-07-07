@@ -191,8 +191,8 @@ public class InteractiveObjects : ScriptableObject
                                     (transporter, pl) => { }
                                     );
 
-                                var reality = GameObject.Find("Reality").GetComponent<Reality>();
-                                reality.CreateWorld();
+                                //var reality = GameObject.Find("Reality").GetComponent<Reality>();
+                                //reality.CreateWorld();
                             }
                         );
     }

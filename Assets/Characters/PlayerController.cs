@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
 
 	public World World { get; set; }
 
-	Reality reality;
+	//Reality reality;
 
 	Agent lockOnTarget;
 
@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour
 	{
 		myAgent = GetComponent<HumanAgent>();
 		//world = GameObject.Find("World").GetComponent<World>();
-		reality = GameObject.Find("Reality").GetComponent<Reality>();
+		//reality = GameObject.Find("Reality").GetComponent<Reality>();
 
 		Application.targetFrameRate = 80;
 

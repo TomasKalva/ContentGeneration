@@ -8,7 +8,7 @@ using ContentGeneration.Assets.UI.Util;
 
 namespace ShapeGrammar
 {
-    public class ShapeGrammarGenerator : MonoBehaviour
+    public class Game : MonoBehaviour
     {
         [SerializeField]
         Transform worldParent;
@@ -23,11 +23,6 @@ namespace ShapeGrammar
         protected Libraries libraries;
 
         float worldScale;
-
-        private void Awake()
-        {
-            Generate();
-        }
 
         public void Generate()
         {
@@ -51,7 +46,7 @@ namespace ShapeGrammar
             {
                 Health = 100,
                 Spirit = 100,
-                Will = 500,
+                Will = 50,
             };
             playerState.Prop = prop;
             prop.Character = playerState;
@@ -107,65 +102,6 @@ namespace ShapeGrammar
 
             world.Created();
 
-        }
-        /*
-         For profiling
-
-        bool generated = false;
-
-        private void Update()
-        {
-            if (generated) return;
-            generated = true;
-
-            var stopwatch = new System.Diagnostics.Stopwatch();
-            stopwatch.Start();
-
-            Debug.Log("Generating world", this);
-
-            UnityEngine.Profiling.Profiler.BeginSample("Generating world");
-            var examples = new Examples(DefaultHouseStyle, GardenStyle);
-            var levelRoot = examples.CurveDesign();
-
-
-            stopwatch.Stop();
-            Debug.Log(stopwatch.ElapsedMilliseconds);
-        }
-        */
-        /*
-        public Vector3 GridToWorld(Vector3 pos)
-        {
-            return architectureParent.position + worldScale * pos;
-        }
-
-        public override void DestroyWorld()
-        {
-            for (int i = architectureParent.childCount; i > 0; --i)
-            {
-                GameObject.Destroy(architectureParent.GetChild(0).gameObject);
-            }
-        }*/
-    }
-
-    public class WorldGeometry
-    {
-        public Transform WorldParent { get; }
-        float worldScale;
-
-        public WorldGeometry(Transform worldParent, float worldScale)
-        {
-            this.WorldParent = worldParent;
-            this.worldScale = worldScale;
-        }
-
-        public Vector3 GridToWorld(Vector3 gridPos)
-        {
-            return WorldParent.position + worldScale * gridPos;
-        }
-
-        public Vector3 WorldToGrid(Vector3 worldPos)
-        {
-            return (worldPos - WorldParent.position) / worldScale;
         }
     }
 }
