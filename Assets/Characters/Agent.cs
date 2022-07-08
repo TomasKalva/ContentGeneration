@@ -242,8 +242,9 @@ public class Agent : MonoBehaviour
 
 	public virtual void Die()
     {
-		GameViewModel.ViewModel.Enemies.Remove(CharacterState);
-		Destroy(gameObject, 1f);
+		CharacterState.World.RemoveEnemy(CharacterState);
+		//GameViewModel.ViewModel.Enemies.Remove(CharacterState);
+		//Destroy(gameObject, 1f);
 		enabled = false;
     }
 

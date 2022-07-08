@@ -81,6 +81,12 @@ namespace ContentGeneration.Assets.UI
             GameObject.Destroy(item.InteractiveObject.gameObject);
         }
 
+        public void RemoveEnemy(CharacterState enemy)
+        {
+            Enemies.Remove(enemy);
+            GameObject.Destroy(enemy.Agent.gameObject, 1f);
+        }
+
         public void AddInteractiveObject(InteractiveObjectState interactiveObject)
         {
             interactiveObject.World = this;
