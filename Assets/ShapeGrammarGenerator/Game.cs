@@ -6,6 +6,7 @@ using System.Linq;
 using Assets.Util;
 using ContentGeneration.Assets.UI.Util;
 using ContentGeneration.Assets.UI.Model;
+using ContentGeneration.Assets.UI;
 
 namespace ShapeGrammar
 {
@@ -150,6 +151,7 @@ namespace ShapeGrammar
             var grammarState = new ShapeGrammarState(ldk);
 
             GameLanguage.State.Restart(world, grammarState);
+            GameViewModel.ViewModel.World = world;
 
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
@@ -158,8 +160,9 @@ namespace ShapeGrammar
 
             ldk.grid.Generate(worldScale, world);
 
-
             GameLanguage.Instantiate();
+
+
 
             // enable disabling enemies in distance
             var spacePartitioning = new SpacePartitioning(GameLanguage.State.TraversabilityGraph);

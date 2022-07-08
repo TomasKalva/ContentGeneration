@@ -27,9 +27,6 @@ namespace ContentGeneration.Assets.UI
         INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        public Color TopColor { get; set; }
-        public Color BottomColor { get; set; }
-        public DelegateCommand ButtonClicked { get; set; }
 
         PlayerCharacterState _playerState;
         public PlayerCharacterState PlayerState 
@@ -78,17 +75,18 @@ namespace ContentGeneration.Assets.UI
         }
 
 
-#if NOESIS
-        private void Awake()
-        {
-            TopColor = Color.FromRgb(17, 102, 157);
-            BottomColor = Color.FromRgb(18, 57, 87);
+        World _world;
 
-            ButtonClicked = new DelegateCommand((p) =>
+        public World World
+        {
+            get => _world;
+            set
             {
-                UnityEngine.Debug.Log("Button clicked");
-            });
+                _world = value;
+                PropertyChanged.OnPropertyChanged(this);
+            }
         }
+#if NOESIS
 
         void Start()
         {
@@ -154,20 +152,12 @@ namespace ContentGeneration.Assets.UI
 #else
         public ViewModel()
         {
-            TopColor = Color.FromRgb(17, 102, 157);
-            BottomColor = Color.FromRgb(18, 57, 87);
-
             PlayerState = new PlayerCharacterState();
             PlayerState.Prop.Spirit = 42;
             Enemies = new ObservableCollection<CharacterState>();
 
             Message = "Sample text";
             MessageOpacity = 0.5f;
-
-            ButtonClicked = new DelegateCommand((p) =>
-            {
-                Console.WriteLine("Button clicked");
-            });
         }
 #endif
     }

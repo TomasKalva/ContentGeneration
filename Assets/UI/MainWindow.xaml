@@ -16,7 +16,7 @@
     <Grid  VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <Canvas>
             <!-- Enemy health bars -->
-            <ItemsControl ItemsSource="{Binding Enemies}">
+            <ItemsControl ItemsSource="{Binding World.Enemies}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <!-- Margin="-100000" to center the control... explanation here:
@@ -40,11 +40,11 @@
             </ItemsControl>
             
             <!-- Lock on target -->
-            <Ellipse Width="10" Height="10" Fill="White" Canvas.Left="{Binding PlayerState.TargetedEnemy.ScreenPosX}" Canvas.Top="{Binding PlayerState.TargetedEnemy.ScreenPosY}"  Margin="-100000">
+            <Ellipse Width="10" Height="10" Fill="White" Canvas.Left="{Binding World.PlayerState.TargetedEnemy.ScreenPosX}" Canvas.Top="{Binding World.PlayerState.TargetedEnemy.ScreenPosY}"  Margin="-100000">
                 <Ellipse.Style>
                     <Style>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding PlayerState.TargetEnemy}" Value="x:Null">
+                            <DataTrigger Binding="{Binding World.PlayerState.TargetEnemy}" Value="x:Null">
                                 <Setter Property="Ellipse.Visibility" Value="Hidden"/>
                             </DataTrigger>
                         </Style.Triggers>
@@ -57,9 +57,9 @@
         <Grid Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <!-- Top left bars -->
             <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30">
-                <comp:ProgressBarNum DataContext="{Binding PlayerState.Health}" HorizontalAlignment="Left" NoNumbers="False" Color="Red" Width="{Binding Maximum, Converter={StaticResource BarLengthConverter}}" Height="15" Margin="5"/>
-                <comp:ProgressBarNum DataContext="{Binding PlayerState.Will}" HorizontalAlignment="Left" Color="Green" Width="{Binding Maximum, Converter={StaticResource BarLengthConverter}}" Height="15" Margin="5"/>
-                <comp:ProgressBarNum DataContext="{Binding PlayerState.Posture}" HorizontalAlignment="Left" Color="Yellow" Width="{Binding Maximum, Converter={StaticResource BarLengthConverter}}" Height="15" Margin="5"/>
+                <comp:ProgressBarNum DataContext="{Binding World.PlayerState.Health}" HorizontalAlignment="Left" NoNumbers="False" Color="Red" Width="{Binding Maximum, Converter={StaticResource BarLengthConverter}}" Height="15" Margin="5"/>
+                <comp:ProgressBarNum DataContext="{Binding World.PlayerState.Will}" HorizontalAlignment="Left" Color="Green" Width="{Binding Maximum, Converter={StaticResource BarLengthConverter}}" Height="15" Margin="5"/>
+                <comp:ProgressBarNum DataContext="{Binding World.PlayerState.Posture}" HorizontalAlignment="Left" Color="Yellow" Width="{Binding Maximum, Converter={StaticResource BarLengthConverter}}" Height="15" Margin="5"/>
             </StackPanel>
 
             <!-- Bottom left item -->
@@ -123,7 +123,7 @@
             <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="Orange" Width="80" Height="20" Margin="30">
                 <TextBlock Foreground="Black" TextAlignment="Center" VerticalAlignment="Center">
                     <Run>Spirit: </Run>
-                    <Run Text="{Binding PlayerState.Prop.Spirit}"/>
+                    <Run Text="{Binding World.PlayerState.Prop.Spirit}"/>
                 </TextBlock>
             </Border>
 
@@ -133,7 +133,7 @@
                     <Style TargetType="Border">
                         <Style.Triggers>
                             <!-- Not showing numbers -->
-                            <DataTrigger Binding="{Binding PlayerState.CurrentInteractiveObjectState}" Value="{x:Null}">
+                            <DataTrigger Binding="{Binding World.PlayerState.CurrentInteractiveObjectState}" Value="{x:Null}">
                                 <Setter Property="Opacity" Value="0" />
                             </DataTrigger>
                         </Style.Triggers>
@@ -143,9 +143,9 @@
                 <StackPanel>
                     <TextBlock Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="20">
                         <Run Text ="E:" FontSize="30"/>
-                        <Run Text="{Binding PlayerState.CurrentInteractiveObjectState.InteractionDescription}"/>
+                        <Run Text="{Binding World.PlayerState.CurrentInteractiveObjectState.InteractionDescription}"/>
                     </TextBlock>
-                    <ItemsControl ItemsSource="{Binding PlayerState.CurrentInteractiveObjectState.InteractOptions.Options}">
+                    <ItemsControl ItemsSource="{Binding World.PlayerState.CurrentInteractiveObjectState.InteractOptions.Options}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="20" Margin="20">
@@ -177,7 +177,7 @@
             </Border>
             
             <!-- Player's inventory -->
-            <comp:InventoryView DataContext="{Binding PlayerState.Inventory}"/>
+            <comp:InventoryView DataContext="{Binding World.PlayerState.Inventory}"/>
         </Grid>
     </Grid>
 </UserControl>

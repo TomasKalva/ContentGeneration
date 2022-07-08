@@ -190,7 +190,7 @@ public class PlayerController : MonoBehaviour
 
 	IEnumerable<Agent> LockableTargets(Agent player)
     {
-		return World.Enemies.SelectNN(e => e.Agent).Where(agent => agent != player && (agent.transform.position - player.transform.position).sqrMagnitude < maxDistance * maxDistance);
+		return World.AliveEnemies.SelectNN(e => e.Agent).Where(agent => agent != player && (agent.transform.position - player.transform.position).sqrMagnitude < maxDistance * maxDistance);
 
 	}
 
