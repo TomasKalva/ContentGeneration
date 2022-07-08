@@ -22,18 +22,24 @@ namespace ShapeGrammar
 
         public override LevelElement CreateLevel()
         {
-            var grammarState = new ShapeGrammarState(ldk);
-            var levelConstructor = new LevelConstructor();
-            var languageState = new LanguageState(grammarState, levelConstructor, world);
-            var gr = new Grammars(ldk);
-            var sym = new Symbols();
-            ProductionProgram.pr = new Productions(ldk, sym);
-            ProductionProgram.ldk = ldk;
-            ProductionProgram.StyleRules = ldk.houseStyleRules;
+            // Declaration
+            MyLanguage language;
+            ShapeGrammarState grammarState;
+            {
+                grammarState = new ShapeGrammarState(ldk);
+                var levelConstructor = new LevelConstructor();
+                var languageState = new LanguageState(grammarState, levelConstructor, world);
+                var gr = new Grammars(ldk);
+                var sym = new Symbols();
+                ProductionProgram.pr = new Productions(ldk, sym);
+                ProductionProgram.ldk = ldk;
+                ProductionProgram.StyleRules = ldk.houseStyleRules;
 
-            MyLanguage language = new MyLanguage(new LanguageParams(ldk, lib, gr, languageState));
+                language = new MyLanguage(new LanguageParams(ldk, lib, gr, languageState));
 
-            language.MyWorldStart();
+                language.MyWorldStart();
+            }
+
 
             language.State.LC.Construct();
 
@@ -42,7 +48,7 @@ namespace ShapeGrammar
             // enable disabling enemies in distance
             var spacePartitioning = new SpacePartitioning(language.State.TraversabilityGraph);
             var playerState = GameViewModel.ViewModel.PlayerState;
-            playerState.OnUpdate += () =>
+            playerState.OnUpdate = () =>
             {
                 var playerGridPosition = Vector3Int.RoundToInt(language.Ldk.wg.WorldToGrid(GameViewModel.ViewModel.PlayerState.Agent.transform.position));
                 var playerNode = language.State.GrammarState.GetNode(playerGridPosition);

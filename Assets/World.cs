@@ -14,6 +14,7 @@ public class World
     List<InteractiveObjectState> interactiveObjects;
     List<CharacterState> enemies;
     List<Transform> architectureElements;
+    public PlayerCharacterState PlayerState { get; }
     public Grave Grave { get; set; }
 
     public delegate void WorldCreated();
@@ -25,7 +26,7 @@ public class World
     public IEnumerable<InteractiveObjectState> InteractiveObjects => interactiveObjects.Where(io => io != null);
 
     // Start is called before the first frame update
-    public World(WorldGeometry worldGeometry)
+    public World(WorldGeometry worldGeometry, PlayerCharacterState playerState)
     {
         WorldGeometry = worldGeometry;
         var worldParent = worldGeometry.WorldParent;
@@ -33,6 +34,7 @@ public class World
         ArchitectureParent.SetParent(worldParent);
         EntitiesParent = new GameObject("Entities").transform;
         EntitiesParent.SetParent(worldParent);
+        PlayerState = playerState;
 
         interactiveObjects = new List<InteractiveObjectState>();
         enemies = new List<CharacterState>();
@@ -91,6 +93,12 @@ public class World
     public void OnPlayerDeath()
     {
         Grave.SpawnPlayer();
+    }
+
+    public void Destroy()
+    {
+        GameObject.Destroy(ArchitectureParent.gameObject);
+        GameObject.Destroy(EntitiesParent.gameObject);
     }
 
     public void Created()

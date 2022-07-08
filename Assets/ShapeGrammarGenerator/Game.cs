@@ -5,9 +5,11 @@ using UnityEngine;
 using System.Linq;
 using Assets.Util;
 using ContentGeneration.Assets.UI.Util;
+using ContentGeneration.Assets.UI.Model;
 
 namespace ShapeGrammar
 {
+
     public class Game : MonoBehaviour
     {
         [SerializeField]
@@ -22,9 +24,16 @@ namespace ShapeGrammar
         [SerializeField]
         protected Libraries libraries;
 
-        float worldScale;
+        MyLanguage GameLanguage;
 
-        public void Generate()
+        private void Awake()
+        {
+            InitializePlayer();
+            InitializeLevelConstructor();
+            GoToNextLevel();
+        }
+
+        public void InitializePlayer()
         {
             /*if (Application.isEditor)
             {
@@ -34,30 +43,140 @@ namespace ShapeGrammar
             //world.AddEnemy(libraries.Enemies.DragonMan(), new Vector3(0, 1, 0));
             UnityEngine.Random.InitState(42);
 
-            var worldGeometry = new WorldGeometry(worldParent, 2.8f);
-            var world = new World(worldGeometry);
-
-
-            worldScale = 2.8f;
-
             // todo: make this initialization less annoying
             var playerState = new ContentGeneration.Assets.UI.Model.PlayerCharacterState();
             var prop = new ContentGeneration.Assets.UI.Model.CharacterProperties()
             {
                 Health = 100,
                 Spirit = 100,
-                Will = 50,
+                Will = 500,
             };
             playerState.Prop = prop;
             prop.Character = playerState;
             GameViewModel.ViewModel.PlayerState = playerState;
+        }
+
+        public void InitializeLevelConstructor()
+        {
+            /*if(this.GameLanguage != null)
+            {
+                this.GameLanguage.State.World.Destroy();
+            }*/
+
+            var playerState = GameViewModel.ViewModel.PlayerState;
+
+            var worldScale = 2.8f;
+            var worldGeometry = new WorldGeometry(worldParent, worldScale);
+            var world = new World(worldGeometry, playerState);
+
+
+
+            var ldk = new LevelDevelopmentKit(DefaultHouseStyle, GardenStyle, worldParent, libraries);
+            //var LanguageLevelDesign = new LanguageLevelDesign(ldk, libraries, world);
+
+            // Declaration
+            LevelElement levelRoot;// = LanguageLevelDesign.CreateLevel();
+            {
+                ShapeGrammarState grammarState;
+                {
+                    grammarState = new ShapeGrammarState(ldk);
+                    var levelConstructor = new LevelConstructor();
+                    var languageState = new LanguageState(grammarState, levelConstructor, world);
+                    var gr = new Grammars(ldk);
+                    var sym = new Symbols();
+                    ProductionProgram.pr = new Productions(ldk, sym);
+                    ProductionProgram.ldk = ldk;
+                    ProductionProgram.StyleRules = ldk.houseStyleRules;
+
+                    GameLanguage = new MyLanguage(new LanguageParams(ldk, libraries, gr, languageState));
+
+                    GameLanguage.MyWorldStart();
+                }
+
+                /*
+                GameLanguage.State.LC.Construct();
+
+                ldk.grid.Generate(worldScale, world);
+
+                GameLanguage.Instantiate();
+
+                // enable disabling enemies in distance
+                var spacePartitioning = new SpacePartitioning(GameLanguage.State.TraversabilityGraph);
+                playerState.OnUpdate = () =>
+                {
+                    var playerGridPosition = Vector3Int.RoundToInt(GameLanguage.Ldk.wg.WorldToGrid(GameViewModel.ViewModel.PlayerState.Agent.transform.position));
+                    var playerNode = GameLanguage.State.GrammarState.GetNode(playerGridPosition);
+                    spacePartitioning.Update(playerNode);
+                };
+
+                grammarState.Print(new PrintingState()).Show();
+                grammarState.Stats.Print();
+
+                levelRoot = grammarState.WorldState.Added;*/
+            }
+
+
+            /*
+            stopwatch.Stop();
+            Debug.Log(stopwatch.ElapsedMilliseconds);
+
+            Debug.Log(levelRoot.Print(0));
+
+            Debug.Log("Generating world");
+
+
+
+            var goodCubes = levelRoot.CG().WithFloor().Cubes
+                .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor));
+            var goodGraveCube = goodCubes.ElementAt(0);
+            var graveState = libraries.InteractiveObjects.Grave();
+            var grave = graveState.MakeGeometry();
+            grave.transform.position = worldGeometry.GridToWorld(goodGraveCube.Position);
+            world.AddInteractiveObject(graveState);
+            world.Grave = graveState;
+
+
+
+            world.Created();*/
+        }
+
+        public void GoToNextLevel()
+        {
+            var world = GameLanguage.State.World;
+            var grammarState = GameLanguage.State.GrammarState;
+            var ldk = GameLanguage.Ldk;
+            var playerState = world.PlayerState;
+
+            //oldWorld.Destroy();
+
+            var worldScale = 2.8f;
+            var worldGeometry = new WorldGeometry(worldParent, worldScale);
+            var world111 = new World(worldGeometry, playerState);
 
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 
-            var examples = new Examples(DefaultHouseStyle, GardenStyle, world.ArchitectureParent, libraries);
-            var levelRoot = examples.LanguageDesign(libraries, world);
-            examples.grid.Generate(worldScale, world);
+            GameLanguage.State.LC.Construct();
+
+            ldk.grid.Generate(worldScale, world);
+
+
+            GameLanguage.Instantiate();
+
+            // enable disabling enemies in distance
+            var spacePartitioning = new SpacePartitioning(GameLanguage.State.TraversabilityGraph);
+            playerState.OnUpdate = () =>
+            {
+                var playerGridPosition = Vector3Int.RoundToInt(GameLanguage.Ldk.wg.WorldToGrid(GameViewModel.ViewModel.PlayerState.Agent.transform.position));
+                var playerNode = GameLanguage.State.GrammarState.GetNode(playerGridPosition);
+                spacePartitioning.Update(playerNode);
+            };
+
+            grammarState.Print(new PrintingState()).Show();
+            grammarState.Stats.Print();
+
+            var levelRoot = grammarState.WorldState.Added;
+
 
             stopwatch.Stop();
             Debug.Log(stopwatch.ElapsedMilliseconds);
@@ -101,7 +220,6 @@ namespace ShapeGrammar
 
 
             world.Created();
-
         }
     }
 }

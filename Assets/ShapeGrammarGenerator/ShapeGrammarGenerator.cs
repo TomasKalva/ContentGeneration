@@ -39,12 +39,6 @@ namespace ShapeGrammar
             //world.AddEnemy(libraries.Enemies.DragonMan(), new Vector3(0, 1, 0));
             UnityEngine.Random.InitState(42);
 
-            var worldGeometry = new WorldGeometry(worldParent, 2.8f);
-            var world = new World(worldGeometry);
-
-
-            worldScale = 2.8f;
-
             // todo: make this initialization less annoying
             var playerState = new ContentGeneration.Assets.UI.Model.PlayerCharacterState();
             var prop = new ContentGeneration.Assets.UI.Model.CharacterProperties()
@@ -56,6 +50,13 @@ namespace ShapeGrammar
             playerState.Prop = prop;
             prop.Character = playerState;
             GameViewModel.ViewModel.PlayerState = playerState;
+
+            var worldGeometry = new WorldGeometry(worldParent, 2.8f);
+            var world = new World(worldGeometry, playerState);
+
+
+            worldScale = 2.8f;
+
 
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();

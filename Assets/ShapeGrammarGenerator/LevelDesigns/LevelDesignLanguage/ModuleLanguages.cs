@@ -26,6 +26,8 @@ namespace ShapeGrammar
                 return false;
             });
             */
+
+            
             State.LC.AddEvent(5, () =>
             {
                 //L.PatternLanguage.BranchWithKey(NodesQueries.LastCreated, 4, Gr.PrL.TestingProductions());
@@ -61,9 +63,9 @@ namespace ShapeGrammar
         public void LevelEnd()
         {
             Env.One(Gr.PrL.LevelEnd(), NodesQueries.All, out var area);
-            /*area.AddInteractiveObject(
+            area.AddInteractiveObject(
                 Lib.InteractiveObjects.Transporter()
-                );*/
+                );
         }
 
 
