@@ -104,6 +104,19 @@ namespace ShapeGrammar
             return GetEnumerator();
         }
 
+        public void Clear()
+        {
+            foreach(var kvp in chunks)
+            {
+                var lbb = kvp.Key * sizes;
+                var chunk = kvp.Value;
+                foreach (var c in new Box3Int(Vector3Int.zero, sizes))
+                {
+                    chunk[c.x, c.y, c.z] = Constr(this, lbb + c);
+                }
+            }
+        }
+
         public void Generate(float cubeSide, World world)
         {
             ((IEnumerable<Cube>)this).ForEach(i => i.Generate(cubeSide, world));

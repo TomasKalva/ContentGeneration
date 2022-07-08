@@ -75,13 +75,12 @@ namespace ShapeGrammar
             //var LanguageLevelDesign = new LanguageLevelDesign(ldk, libraries, world);
 
             // Declaration
-            LevelElement levelRoot;// = LanguageLevelDesign.CreateLevel();
             {
-                ShapeGrammarState grammarState;
+                ShapeGrammarState grammarState = new ShapeGrammarState(ldk);
                 {
-                    grammarState = new ShapeGrammarState(ldk);
                     var levelConstructor = new LevelConstructor();
-                    var languageState = new LanguageState(grammarState, levelConstructor, world);
+                    var languageState = new LanguageState(levelConstructor);
+                    languageState.Init(world, grammarState, ldk);
                     var gr = new Grammars(ldk);
                     var sym = new Symbols();
                     ProductionProgram.pr = new Productions(ldk, sym);
@@ -89,6 +88,7 @@ namespace ShapeGrammar
                     ProductionProgram.StyleRules = ldk.houseStyleRules;
 
                     GameLanguage = new MyLanguage(new LanguageParams(ldk, libraries, gr, languageState));
+
 
                     GameLanguage.MyWorldStart();
                 }
@@ -140,18 +140,28 @@ namespace ShapeGrammar
             world.Created();*/
         }
 
+        int i = 0;
+
         public void GoToNextLevel()
         {
-            var world = GameLanguage.State.World;
-            var grammarState = GameLanguage.State.GrammarState;
-            var ldk = GameLanguage.Ldk;
-            var playerState = world.PlayerState;
+            GameLanguage.State.World?.Destroy();
 
+            /*if(i++ == 1)
+            {
+                return;
+            }*/
             //oldWorld.Destroy();
 
+            var ldk = GameLanguage.State.Ldk;// new LevelDevelopmentKit(DefaultHouseStyle, GardenStyle, worldParent, libraries);
+            ldk.grid.Clear();
+            //GameLanguage.Ldk = ldk;
+            var playerState = GameViewModel.ViewModel.PlayerState;
             var worldScale = 2.8f;
             var worldGeometry = new WorldGeometry(worldParent, worldScale);
-            var world111 = new World(worldGeometry, playerState);
+            var world = new World(worldGeometry, playerState);
+            var grammarState = new ShapeGrammarState(ldk);
+
+            GameLanguage.State.Init(world, grammarState, ldk);
 
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
@@ -167,7 +177,7 @@ namespace ShapeGrammar
             var spacePartitioning = new SpacePartitioning(GameLanguage.State.TraversabilityGraph);
             playerState.OnUpdate = () =>
             {
-                var playerGridPosition = Vector3Int.RoundToInt(GameLanguage.Ldk.wg.WorldToGrid(GameViewModel.ViewModel.PlayerState.Agent.transform.position));
+                var playerGridPosition = Vector3Int.RoundToInt(GameLanguage.State.Ldk.wg.WorldToGrid(GameViewModel.ViewModel.PlayerState.Agent.transform.position));
                 var playerNode = GameLanguage.State.GrammarState.GetNode(playerGridPosition);
                 spacePartitioning.Update(playerNode);
             };

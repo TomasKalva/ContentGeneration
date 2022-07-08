@@ -11,18 +11,26 @@ namespace ShapeGrammar
 {
     class LanguageState
     {
-        public ShapeGrammarState GrammarState { get; }
-        public IEnumerable<Area> TraversableAreas => TraversabilityGraph.Areas;
-        public TraversabilityGraph TraversabilityGraph { get; }
         public LevelConstructor LC { get; }
-        public World World { get; }
 
-        public LanguageState(ShapeGrammarState grammarState, LevelConstructor levelConstructor, World world)
+        public ShapeGrammarState GrammarState { get; set; }
+        public IEnumerable<Area> TraversableAreas => TraversabilityGraph.Areas;
+        public TraversabilityGraph TraversabilityGraph { get; set; }
+        public World World { get; set; }
+        public LevelDevelopmentKit Ldk { get; set; }
+
+        public LanguageState(LevelConstructor levelConstructor)
+        {
+            TraversabilityGraph = new TraversabilityGraph();
+            LC = levelConstructor;
+        }
+
+        public void Init(World world, ShapeGrammarState grammarState, LevelDevelopmentKit ldk)
         {
             GrammarState = grammarState;
             TraversabilityGraph = new TraversabilityGraph();
-            LC = levelConstructor;
             World = world;
+            Ldk = ldk;
         }
 
         public void AddAreas(List<Area> areas)
@@ -51,7 +59,6 @@ namespace ShapeGrammar
     {
         public LanguageState State { get; }
 
-        public LevelDevelopmentKit Ldk { get; }
         public Libraries Lib { get; }
         public Grammars Gr { get; }
         public Languages L { get; }
@@ -62,7 +69,6 @@ namespace ShapeGrammar
 
         public LDLanguage(LanguageParams languageParams)
         {
-            Ldk = languageParams.Ldk;
             Lib = languageParams.Lib;
             Gr = languageParams.Gr;
             
@@ -79,7 +85,7 @@ namespace ShapeGrammar
 
         public void Instantiate()
         {
-            State.TraversableAreas.ForEach(area => area.InstantiateAll(Ldk.wg, State.World));
+            State.TraversableAreas.ForEach(area => area.InstantiateAll(State.Ldk.wg, State.World));
         }
     }
 

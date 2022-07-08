@@ -35,6 +35,7 @@ public class World
         EntitiesParent = new GameObject("Entities").transform;
         EntitiesParent.SetParent(worldParent);
         PlayerState = playerState;
+        PlayerState.World = this;
 
         interactiveObjects = new List<InteractiveObjectState>();
         enemies = new List<CharacterState>();
@@ -99,6 +100,7 @@ public class World
     {
         GameObject.Destroy(ArchitectureParent.gameObject);
         GameObject.Destroy(EntitiesParent.gameObject);
+        PlayerState.Agent?.Die();
     }
 
     public void Created()

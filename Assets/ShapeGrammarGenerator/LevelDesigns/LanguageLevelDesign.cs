@@ -28,7 +28,8 @@ namespace ShapeGrammar
             {
                 grammarState = new ShapeGrammarState(ldk);
                 var levelConstructor = new LevelConstructor();
-                var languageState = new LanguageState(grammarState, levelConstructor, world);
+                var languageState = new LanguageState(levelConstructor);
+                languageState.Init(world, grammarState, ldk);
                 var gr = new Grammars(ldk);
                 var sym = new Symbols();
                 ProductionProgram.pr = new Productions(ldk, sym);
@@ -50,7 +51,7 @@ namespace ShapeGrammar
             var playerState = GameViewModel.ViewModel.PlayerState;
             playerState.OnUpdate = () =>
             {
-                var playerGridPosition = Vector3Int.RoundToInt(language.Ldk.wg.WorldToGrid(GameViewModel.ViewModel.PlayerState.Agent.transform.position));
+                var playerGridPosition = Vector3Int.RoundToInt(language.State.Ldk.wg.WorldToGrid(GameViewModel.ViewModel.PlayerState.Agent.transform.position));
                 var playerNode = language.State.GrammarState.GetNode(playerGridPosition);
                 spacePartitioning.Update(playerNode);
             };
