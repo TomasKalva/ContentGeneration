@@ -28,15 +28,15 @@ namespace ShapeGrammar
             {
                 grammarState = new ShapeGrammarState(ldk);
                 var levelConstructor = new LevelConstructor();
-                var languageState = new LanguageState(levelConstructor);
-                languageState.Init(world, grammarState, ldk);
+                var languageState = new LanguageState(levelConstructor, ldk);
+                languageState.Restart(world, grammarState);
                 var gr = new Grammars(ldk);
                 var sym = new Symbols();
                 ProductionProgram.pr = new Productions(ldk, sym);
                 ProductionProgram.ldk = ldk;
                 ProductionProgram.StyleRules = ldk.houseStyleRules;
 
-                language = new MyLanguage(new LanguageParams(ldk, lib, gr, languageState));
+                language = new MyLanguage(new LanguageParams(lib, gr, languageState));
 
                 language.MyWorldStart();
             }

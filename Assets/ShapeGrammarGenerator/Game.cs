@@ -79,15 +79,15 @@ namespace ShapeGrammar
                 ShapeGrammarState grammarState = new ShapeGrammarState(ldk);
                 {
                     var levelConstructor = new LevelConstructor();
-                    var languageState = new LanguageState(levelConstructor);
-                    languageState.Init(world, grammarState, ldk);
+                    var languageState = new LanguageState(levelConstructor, ldk);
+                    languageState.Restart(world, grammarState);
                     var gr = new Grammars(ldk);
                     var sym = new Symbols();
                     ProductionProgram.pr = new Productions(ldk, sym);
                     ProductionProgram.ldk = ldk;
                     ProductionProgram.StyleRules = ldk.houseStyleRules;
 
-                    GameLanguage = new MyLanguage(new LanguageParams(ldk, libraries, gr, languageState));
+                    GameLanguage = new MyLanguage(new LanguageParams(libraries, gr, languageState));
 
 
                     GameLanguage.MyWorldStart();
@@ -140,28 +140,16 @@ namespace ShapeGrammar
             world.Created();*/
         }
 
-        int i = 0;
-
         public void GoToNextLevel()
         {
-            GameLanguage.State.World?.Destroy();
-
-            /*if(i++ == 1)
-            {
-                return;
-            }*/
-            //oldWorld.Destroy();
-
-            var ldk = GameLanguage.State.Ldk;// new LevelDevelopmentKit(DefaultHouseStyle, GardenStyle, worldParent, libraries);
-            ldk.grid.Clear();
-            //GameLanguage.Ldk = ldk;
+            var ldk = GameLanguage.State.Ldk;
             var playerState = GameViewModel.ViewModel.PlayerState;
             var worldScale = 2.8f;
             var worldGeometry = new WorldGeometry(worldParent, worldScale);
             var world = new World(worldGeometry, playerState);
             var grammarState = new ShapeGrammarState(ldk);
 
-            GameLanguage.State.Init(world, grammarState, ldk);
+            GameLanguage.State.Restart(world, grammarState);
 
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();

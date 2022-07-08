@@ -19,18 +19,21 @@ namespace ShapeGrammar
         public World World { get; set; }
         public LevelDevelopmentKit Ldk { get; set; }
 
-        public LanguageState(LevelConstructor levelConstructor)
+        public LanguageState(LevelConstructor levelConstructor, LevelDevelopmentKit ldk)
         {
             TraversabilityGraph = new TraversabilityGraph();
             LC = levelConstructor;
+            Ldk = ldk;
         }
 
-        public void Init(World world, ShapeGrammarState grammarState, LevelDevelopmentKit ldk)
+        public void Restart(World world, ShapeGrammarState grammarState)
         {
+            World?.Destroy();
+            Ldk.grid.Clear();
+
             GrammarState = grammarState;
             TraversabilityGraph = new TraversabilityGraph();
             World = world;
-            Ldk = ldk;
         }
 
         public void AddAreas(List<Area> areas)
@@ -77,7 +80,6 @@ namespace ShapeGrammar
             Env = new Environments(this);
             PlC = new ObjectPlacement<CharacterState>((area, enemy) => area.AddEnemy(enemy));
             PlO = new ObjectPlacement<InteractiveObjectState>((area, io) => area.AddInteractiveObject(io));
-            //Env = languageParams.Env;
             Msg = new MsgPrinter();
 
             L = Languages.Get(languageParams);
@@ -93,13 +95,11 @@ namespace ShapeGrammar
     {
         public LanguageState LanguageState { get; }
 
-        public LevelDevelopmentKit Ldk { get; }
         public Libraries Lib { get; }
         public Grammars Gr { get; }
 
-        public LanguageParams(LevelDevelopmentKit ldk, Libraries lib, Grammars gr, LanguageState languageState)
+        public LanguageParams(Libraries lib, Grammars gr, LanguageState languageState)
         {
-            Ldk = ldk;
             Lib = lib;
             Gr = gr;
             LanguageState = languageState;

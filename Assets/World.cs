@@ -23,7 +23,7 @@ public class World
     public WorldGeometry WorldGeometry { get; }
 
     public IEnumerable<CharacterState> Enemies => enemies.Where(ch => ch != null && !ch.Dead);
-    public IEnumerable<InteractiveObjectState> InteractiveObjects => interactiveObjects.Where(io => io != null);
+    public IEnumerable<InteractiveObjectState> InteractiveObjects => interactiveObjects.Where(io => io != null && io.InteractiveObject != null);
 
     // Start is called before the first frame update
     public World(WorldGeometry worldGeometry, PlayerCharacterState playerState)
@@ -78,7 +78,7 @@ public class World
     public void AddInteractiveObject(InteractiveObjectState interactiveObject)
     {
         interactiveObject.World = this;
-        if (interactiveObject.InteractiveObject.transform == null) // Don't reparent door
+        if (interactiveObject.InteractiveObject.transform.parent == null) // Don't reparent door
         {
             interactiveObject.InteractiveObject.transform.SetParent(EntitiesParent);
         }
