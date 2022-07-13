@@ -29,7 +29,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
         public FactionManifestation GetFactionManifestation()
         {
-            throw new NotImplementedException();
+            return new FactionManifestation(Concepts, this);
         }
     }
 
@@ -54,7 +54,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
         public FactionEnvironment GetFactionEnvironment()
         {
-            throw new NotImplementedException();
+            return new FactionEnvironment(Concepts, this);
         }
 
         public InteractiveObjectState ContinueManifestation()
@@ -105,7 +105,6 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             var progress = FactionManifestation.Progress;
 
             // Create stats of the enemy
-
 
             // Create weapon for the enemy
 
@@ -167,6 +166,12 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
     {
         public List<Func<ProductionList>> ProductionLists { get; }
         public List<Func<CharacterState>> CharacterStates { get; }
+
+        public FactionConcepts(List<Func<ProductionList>> productionLists, List<Func<CharacterState>> characterStates)
+        {
+            ProductionLists = productionLists;
+            CharacterStates = characterStates;
+        }
 
         public FactionConcepts TakeSubset(float sizeRatio)
         {

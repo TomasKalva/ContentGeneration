@@ -44,11 +44,12 @@ namespace ShapeGrammar
                 return false;
             });
 
-            State.LC.AddEvent(5, () =>
+            L.FactionsLanguage.InitializeFactions();
+            /*State.LC.AddEvent(5, () =>
             {
                 L.TestingLanguage.LargeLevel();
                 return false;
-            });
+            });*/
         }
     }
 
@@ -288,6 +289,28 @@ namespace ShapeGrammar
     {
         public FactionsLanguage(LanguageParams tools) : base(tools) { }
 
+        public void InitializeFactions()
+        {
+            var concepts = new FactionConcepts(
+                    new List<Func<ProductionList>>()
+                    {
+                        Gr.PrL.Garden
+                    },
+                    new List<Func<CharacterState>>()
+                    {
+                        Lib.Enemies.Sculpture,
+                        Lib.Enemies.MayanSwordsman
+                    }
+                );
+            var faction = new Faction(concepts);
+            var factionManifestation = faction.GetFactionManifestation();
+            State.LC.AddEvent(5, () =>
+            {
+                LinearBranch(factionManifestation.GetFactionEnvironment(), 0);
+                return false;
+            });
+        }
+
         public void LockedDoorBranch(int progress)
         {
 
@@ -302,66 +325,12 @@ namespace ShapeGrammar
         {
             Env.Line(fe.ProductionList() , NodesQueries.All, 5, out var path);
 
-            PlO.ProgressFunctionPlacer(fe.CreateInteractiveObjectFactory(), new UniformIntDistr(1, 3)).Place(path);
-            PlO.ProgressFunctionPlacer(progress => Lib.InteractiveObjects.Item(fe.CreateItemFactory()(progress)), new UniformIntDistr(1, 3)).Place(path);
-            PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 3)).Place(path);
+            //PlO.ProgressFunctionPlacer(fe.CreateInteractiveObjectFactory(), new UniformIntDistr(1, 4)).Place(path);
+            //PlO.ProgressFunctionPlacer(progress => Lib.InteractiveObjects.Item(fe.CreateItemFactory()(progress)), new UniformIntDistr(1, 4)).Place(path);
+            PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(path);
 
 
-            path.LastArea().AddInteractiveObject(fe.FactionManifestation.ContinueManifestation());
-
-            /*Env.One(Gr.PrL.Garden(), NodesQueries.LastCreated, out var farmer_area);
-            farmer_area.AddInteractiveObject(
-                Lib.InteractiveObjects.InteractiveObject("Farmer", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
-                    .SetInteraction(
-                        new InteractionSequence<InteractiveObject>()
-                            .Say("My name is Ted")
-                            .Say("I a farmer")
-                            .Say("I desire nourishment")
-                            .Act("Confirm your understanding", (ios, _) => ios.Interaction.TryMoveNext(ios))
-                            .Decision("Would you mind sharing some apples?",
-                            new InteractOption<InteractiveObject>("Give apples",
-                                (farmer, player) =>
-                                {
-                                    if (player.Inventory.HasItems("Earthen apple", 3, out var desiredApples))
-                                    {
-                                        player.Inventory.RemoveItems(desiredApples);
-                                        Msg.Show("Apples given");
-
-                                        // moves farmer to another state
-                                        farmer.SetInteraction(
-                                            new InteractionSequence<InteractiveObject>()
-                                                .Say("Thanks for the apples, mate")
-                                        );
-
-                                        player.Prop.Spirit += 10 * (1 + progress);
-                                        //Levels().Next().AddPossibleBranch(FarmerBranch(progress + 1);
-                                    }
-                                    else
-                                    {
-                                        Msg.Show("Not enough apples");
-                                    }
-                                }
-                            , 0)
-                        )
-                    )
-                );*/
-            /*
-            Env.ExtendRandomly(Gr.PrL.Garden(), NodesQueries.LastCreated, 5, out var garden);
-            var apples = Enumerable.Range(0, 5).Select(_ =>
-                Lib.Items.NewItem("Earthen apple", "An apple produced by the earth itself.")
-                    .OnUse(ch => ch.Prop.Spirit += 10)
-                    .SetConsumable()
-                )
-                .Select(itemState => Lib.InteractiveObjects.Item(itemState));
-            var applePlacer = PlO.EvenPlacer(apples);
-            applePlacer.Place(garden);
-
-            var enemyPlacer = PlC.RandomPlacer(
-                        new RandomIntDistr(1, 1),
-                        (3, Lib.Enemies.Dog),
-                        (3, Lib.Enemies.Human),
-                        (1, Lib.Enemies.Sculpture));
-            enemyPlacer.Place(path_to_farmer.Concat(garden));*/
+            //path.LastArea().AddInteractiveObject(fe.FactionManifestation.ContinueManifestation());
         }
     }
 }
