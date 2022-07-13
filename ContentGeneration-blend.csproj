@@ -93,6 +93,7 @@
     <Compile Include="Assets\UI\Model\PlayerCharacterState.cs" />
     <Compile Include="Assets\UI\Util\Extensions.cs" />
     <Compile Include="Assets\UI\Util\FloatRange.cs" />
+    <Compile Include="Assets\UI\World.cs" />
     <Compile Include="Blend\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>

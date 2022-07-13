@@ -201,6 +201,7 @@ namespace ShapeGrammar
         public FarmersLanguage FarmersLanguage { get; private set; }
         public PatternLanguage PatternLanguage { get; private set; }
         public TestingLanguage TestingLanguage { get; private set; }
+        public FactionsLanguage FactionsLanguage { get; private set; }
 
         Languages()
         {
@@ -213,6 +214,7 @@ namespace ShapeGrammar
             FarmersLanguage = new FarmersLanguage(tools);
             PatternLanguage = new PatternLanguage(tools);
             TestingLanguage = new TestingLanguage(tools);
+            FactionsLanguage = new FactionsLanguage(tools);
         }
     }
 

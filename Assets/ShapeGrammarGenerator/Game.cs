@@ -59,11 +59,6 @@ namespace ShapeGrammar
 
         public void InitializeLevelConstructor()
         {
-            /*if(this.GameLanguage != null)
-            {
-                this.GameLanguage.State.World.Destroy();
-            }*/
-
             var playerState = GameViewModel.ViewModel.PlayerState;
 
             var worldScale = 2.8f;
@@ -73,7 +68,6 @@ namespace ShapeGrammar
 
 
             var ldk = new LevelDevelopmentKit(DefaultHouseStyle, GardenStyle, worldParent, libraries);
-            //var LanguageLevelDesign = new LanguageLevelDesign(ldk, libraries, world);
 
             // Declaration
             {
@@ -94,51 +88,7 @@ namespace ShapeGrammar
                     GameLanguage.MyWorldStart();
                 }
 
-                /*
-                GameLanguage.State.LC.Construct();
-
-                ldk.grid.Generate(worldScale, world);
-
-                GameLanguage.Instantiate();
-
-                // enable disabling enemies in distance
-                var spacePartitioning = new SpacePartitioning(GameLanguage.State.TraversabilityGraph);
-                playerState.OnUpdate = () =>
-                {
-                    var playerGridPosition = Vector3Int.RoundToInt(GameLanguage.Ldk.wg.WorldToGrid(GameViewModel.ViewModel.PlayerState.Agent.transform.position));
-                    var playerNode = GameLanguage.State.GrammarState.GetNode(playerGridPosition);
-                    spacePartitioning.Update(playerNode);
-                };
-
-                grammarState.Print(new PrintingState()).Show();
-                grammarState.Stats.Print();
-
-                levelRoot = grammarState.WorldState.Added;*/
             }
-
-
-            /*
-            stopwatch.Stop();
-            Debug.Log(stopwatch.ElapsedMilliseconds);
-
-            Debug.Log(levelRoot.Print(0));
-
-            Debug.Log("Generating world");
-
-
-
-            var goodCubes = levelRoot.CG().WithFloor().Cubes
-                .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor));
-            var goodGraveCube = goodCubes.ElementAt(0);
-            var graveState = libraries.InteractiveObjects.Grave();
-            var grave = graveState.MakeGeometry();
-            grave.transform.position = worldGeometry.GridToWorld(goodGraveCube.Position);
-            world.AddInteractiveObject(graveState);
-            world.Grave = graveState;
-
-
-
-            world.Created();*/
         }
 
         public void GoToNextLevel()
