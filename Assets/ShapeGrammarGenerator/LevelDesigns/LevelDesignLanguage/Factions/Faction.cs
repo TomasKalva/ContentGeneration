@@ -31,6 +31,10 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
     class FactionManifestation
     {
         public Faction Faction { get; }
+        /// <summary>
+        /// How many environments player already went through.
+        /// </summary>
+        public int Progress { get; set; }
 
         public FactionEnvironment GetFactionEnvironment()
         {
@@ -55,8 +59,54 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Returns a factory that returns similar items.
+        /// </summary>
+        public ItemState CreateItem(float areaProgress)
+        {
+            var affinity = FactionManifestation.Faction.Affinity;
+            var progress = FactionManifestation.Progress;
+
+            // Add effects to the item
+
+
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns a factory that returns similar enemies.
+        /// </summary>
+        public CharacterState CreateEnemy(float areasProgress)
+        {
+            var affinity = FactionManifestation.Faction.Affinity;
+            var progress = FactionManifestation.Progress;
+
+            // Create stats of the enemy
+
+            // Create weapon for the enemy
+
+            // Create items for the enemy
+
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns a factory that returns interactive objects.
+        /// </summary>
+        public InteractiveObjectState CreateInteractiveObject(float areaProgress)
+        {
+            var affinity = FactionManifestation.Faction.Affinity;
+            var progress = FactionManifestation.Progress;
+            
+            // Create interaction of the interactive object
+
+            throw new NotImplementedException();
+        }
+
+        /*
         public Placer<Areas, CharacterState> EnemyPlacer()
         {
+
             throw new NotImplementedException();
         }
 
@@ -81,7 +131,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             ItemPlacer().Place(path);
             InteractiveObjectPlacer().Place(path);
             ObjectPlacer().Place(path);
-        }
+        }*/
     }
 
 

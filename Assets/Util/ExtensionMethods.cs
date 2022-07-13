@@ -257,6 +257,14 @@ static class ExtensionMethods
             }
         }
     }
+    
+    /// <summary>
+    /// Foreach with index.
+    /// </summary>
+    public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T, int> action)
+    {
+        enumerable.Select((item, i) => new { item, i }).ForEach(x => action(x.item, x.i));
+    }
 
     public static Box3Int BoundingBox<T>(this T[,,] array)
     {

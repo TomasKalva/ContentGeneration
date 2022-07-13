@@ -302,7 +302,11 @@ namespace ShapeGrammar
         {
             Env.Line(fe.ProductionList() , NodesQueries.All, 5, out var path);
 
-            fe.PlaceEverything(path);
+            PlO.ProgressFunctionPlacer(fe.CreateInteractiveObject).Place(path);
+            PlO.ProgressFunctionPlacer(progress => Lib.InteractiveObjects.Item(fe.CreateItem(progress))).Place(path);
+            PlC.ProgressFunctionPlacer(fe.CreateEnemy).Place(path);
+
+
             path.LastArea().AddInteractiveObject(fe.FactionManifestation.ContinueManifestation());
 
             /*Env.One(Gr.PrL.Garden(), NodesQueries.LastCreated, out var farmer_area);

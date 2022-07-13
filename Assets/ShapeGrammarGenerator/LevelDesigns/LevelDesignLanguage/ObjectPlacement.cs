@@ -58,6 +58,15 @@ namespace ShapeGrammar
                     areas => areas.AreasList.OrderBy(area => area.EdgesFrom.Count)
                 );
         }
+
+        public Placer<Areas, T> ProgressFunctionPlacer(Func<float, T> progressFunc)
+        {
+            return
+                new ProgressFunctionPlacer<Areas, T>(
+                    placementOp,
+                    progressFunc
+                );
+        }
     }
 
     class Areas
@@ -155,4 +164,24 @@ namespace ShapeGrammar
         public T Next() => items.Pop();
         public bool Any() => items.Any();
     }*/
+
+    class ProgressFunctionPlacer<AreasT, T> : Placer<AreasT, T> where AreasT : Areas
+    {
+        IDistribution<int> Count { get; }
+        Func<float, T> TFactory { get; }
+
+        public ProgressFunctionPlacer(Action<Area, T> placementOp, IDistribution<int> count, Func<float, T> progressFunction) : base(placementOp, areas => areas.AreasList)
+        {
+            Count = count;
+            TFactory = progressFunction;
+        }
+
+        public override void Place(AreasT areas)
+        {
+            float totalAreas = areas.AreasList.Count;
+            Prioritizer(areas).ForEach((area, i) =>
+                Enumerable.Range(0, Count.Sample())
+                    .ForEach(_ => PlacementOp(area, TFactory(i / (totalAreas - 1f))));
+        }
+    }
 }
