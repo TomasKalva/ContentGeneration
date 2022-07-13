@@ -44,7 +44,7 @@ namespace ShapeGrammar
                 return false;
             });
 
-            L.FactionsLanguage.InitializeFactions();
+            L.FactionsLanguage.InitializeFactions(3);
             /*State.LC.AddEvent(5, () =>
             {
                 L.TestingLanguage.LargeLevel();
@@ -289,34 +289,47 @@ namespace ShapeGrammar
     {
         public FactionsLanguage(LanguageParams tools) : base(tools) { }
 
-        public void InitializeFactions()
+        public void InitializeFactions(int factionsCount)
         {
-            var concepts = new FactionConcepts(
-                    new List<Func<ProductionList>>()
-                    {
-                        Gr.PrL.Garden
-                    },
-                    new List<Func<CharacterState>>()
-                    {
-                        Lib.Enemies.Sculpture,
-                        Lib.Enemies.MayanSwordsman
-                    }
-                );
-            var faction = new Faction(concepts);
-            var factionManifestation = faction.GetFactionManifestation();
-            State.LC.AddEvent(5, () =>
+            var branches = new List<Action<FactionEnvironment, int>>()
             {
-                LinearBranch(factionManifestation.GetFactionEnvironment(), 0);
-                return false;
+                LockedDoorBranch,
+                RandomBranches,
+                LinearBranch
+            };
+
+            Enumerable.Range(0, factionsCount).ForEach(_ =>
+            {
+                var concepts = new FactionConcepts(
+                        new List<Func<ProductionList>>()
+                        {
+                            Gr.PrL.Garden
+                        },
+                        new List<Func<CharacterState>>()
+                        {
+                            Lib.Enemies.Sculpture,
+                            Lib.Enemies.MayanSwordsman
+                        }
+                    );
+
+
+                var faction = new Faction(concepts);
+                var factionManifestation = faction.GetFactionManifestation();
+                State.LC.AddEvent(5, () =>
+                {
+                    var factionEnvironment = factionManifestation.GetFactionEnvironment();
+                    branches.GetRandom()(factionEnvironment, faction.StartingBranchProgress);
+                    return false;
+                });
             });
         }
 
-        public void LockedDoorBranch(int progress)
+        public void LockedDoorBranch(FactionEnvironment fe, int progress)
         {
 
         }
 
-        public void RandomBranches(int progress)
+        public void RandomBranches(FactionEnvironment fe, int progress)
         {
 
         }

@@ -21,6 +21,8 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         /// </summary>
         public int Affinity { get; set; }
 
+        public int StartingBranchProgress => Math.Min(3, Affinity / 4);
+
         public Faction(FactionConcepts concepts)
         {
             Concepts = concepts;
