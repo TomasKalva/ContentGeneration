@@ -59,11 +59,12 @@ namespace ShapeGrammar
                 );
         }
 
-        public Placer<Areas, T> ProgressFunctionPlacer(Func<float, T> progressFunc)
+        public Placer<Areas, T> ProgressFunctionPlacer(ProgressFactory<T> progressFunc, IDistribution<int> count)
         {
             return
                 new ProgressFunctionPlacer<Areas, T>(
                     placementOp,
+                    count,
                     progressFunc
                 );
         }
@@ -165,12 +166,15 @@ namespace ShapeGrammar
         public bool Any() => items.Any();
     }*/
 
+    public delegate T ProgressFactory<T>(float progress);
+
     class ProgressFunctionPlacer<AreasT, T> : Placer<AreasT, T> where AreasT : Areas
     {
-        IDistribution<int> Count { get; }
-        Func<float, T> TFactory { get; }
 
-        public ProgressFunctionPlacer(Action<Area, T> placementOp, IDistribution<int> count, Func<float, T> progressFunction) : base(placementOp, areas => areas.AreasList)
+        IDistribution<int> Count { get; }
+        ProgressFactory<T> TFactory { get; }
+
+        public ProgressFunctionPlacer(Action<Area, T> placementOp, IDistribution<int> count, ProgressFactory<T> progressFunction) : base(placementOp, areas => areas.AreasList)
         {
             Count = count;
             TFactory = progressFunction;
@@ -181,7 +185,7 @@ namespace ShapeGrammar
             float totalAreas = areas.AreasList.Count;
             Prioritizer(areas).ForEach((area, i) =>
                 Enumerable.Range(0, Count.Sample())
-                    .ForEach(_ => PlacementOp(area, TFactory(i / (totalAreas - 1f))));
+                    .ForEach(_ => PlacementOp(area, TFactory(i / (totalAreas - 1f)))));
         }
     }
 }

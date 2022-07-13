@@ -12,11 +12,11 @@ namespace ShapeGrammar
         public T Sample();
     }
 
-    public class RandomIntDistr : IDistribution<int>
+    public class UniformIntDistr : IDistribution<int>
     {
         int min, max;
 
-        public RandomIntDistr(int min, int max)
+        public UniformIntDistr(int min, int max)
         {
             this.min = min;
             this.max = max;

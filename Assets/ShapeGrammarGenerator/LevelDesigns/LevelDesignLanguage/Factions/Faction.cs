@@ -14,10 +14,18 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
     /// </summary>
     class Faction
     {
+        public FactionConcepts Concepts { get; }
+
         /// <summary>
         /// Affinity of player with the faction.
         /// </summary>
         public int Affinity { get; set; }
+
+        public Faction(FactionConcepts concepts)
+        {
+            Concepts = concepts;
+            Affinity = 0;
+        }
 
         public FactionManifestation GetFactionManifestation()
         {
@@ -30,11 +38,19 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
     /// </summary>
     class FactionManifestation
     {
+        public FactionConcepts Concepts { get; }
         public Faction Faction { get; }
         /// <summary>
         /// How many environments player already went through.
         /// </summary>
         public int Progress { get; set; }
+
+        public FactionManifestation(FactionConcepts concepts, Faction faction)
+        {
+            Concepts = concepts;
+            Faction = faction;
+            Progress = 0;
+        }
 
         public FactionEnvironment GetFactionEnvironment()
         {
@@ -52,17 +68,24 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
     /// </summary>
     class FactionEnvironment
     {
+        public FactionConcepts Concepts { get; }
         public FactionManifestation FactionManifestation { get; }
+
+        public FactionEnvironment(FactionConcepts concepts, FactionManifestation factionManifestation)
+        {
+            Concepts = concepts;
+            FactionManifestation = factionManifestation;
+        }
 
         public ProductionList ProductionList()
         {
-            throw new NotImplementedException();
+            return Concepts.ProductionLists.GetRandom()();
         }
 
         /// <summary>
         /// Returns a factory that returns similar items.
         /// </summary>
-        public ItemState CreateItem(float areaProgress)
+        public ProgressFactory<ItemState> CreateItemFactory()
         {
             var affinity = FactionManifestation.Faction.Affinity;
             var progress = FactionManifestation.Progress;
@@ -76,24 +99,30 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         /// <summary>
         /// Returns a factory that returns similar enemies.
         /// </summary>
-        public CharacterState CreateEnemy(float areasProgress)
+        public ProgressFactory<CharacterState> CreateEnemyFactory()
         {
             var affinity = FactionManifestation.Faction.Affinity;
             var progress = FactionManifestation.Progress;
 
             // Create stats of the enemy
 
+
             // Create weapon for the enemy
 
             // Create items for the enemy
 
-            throw new NotImplementedException();
+            return progress =>
+            {
+                var character = Concepts.CharacterStates.GetRandom()();
+                return character;
+            };
         }
+
 
         /// <summary>
         /// Returns a factory that returns interactive objects.
         /// </summary>
-        public InteractiveObjectState CreateInteractiveObject(float areaProgress)
+        public ProgressFactory<InteractiveObjectState> CreateInteractiveObjectFactory()
         {
             var affinity = FactionManifestation.Faction.Affinity;
             var progress = FactionManifestation.Progress;
@@ -134,11 +163,10 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         }*/
     }
 
-
-
     class FactionConcepts
     {
-        List<ProductionList> productionLists;
+        public List<Func<ProductionList>> ProductionLists { get; }
+        public List<Func<CharacterState>> CharacterStates { get; }
 
         public FactionConcepts TakeSubset(float sizeRatio)
         {

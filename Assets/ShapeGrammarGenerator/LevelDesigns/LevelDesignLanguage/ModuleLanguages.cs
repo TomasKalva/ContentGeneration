@@ -275,7 +275,7 @@ namespace ShapeGrammar
             applePlacer.Place(garden);
 
             var enemyPlacer = PlC.RandomPlacer(
-                        new RandomIntDistr(1, 1),
+                        new UniformIntDistr(1, 1),
                         (3, Lib.Enemies.Dog),
                         (3, Lib.Enemies.Human),
                         (1, Lib.Enemies.Sculpture));
@@ -302,9 +302,9 @@ namespace ShapeGrammar
         {
             Env.Line(fe.ProductionList() , NodesQueries.All, 5, out var path);
 
-            PlO.ProgressFunctionPlacer(fe.CreateInteractiveObject).Place(path);
-            PlO.ProgressFunctionPlacer(progress => Lib.InteractiveObjects.Item(fe.CreateItem(progress))).Place(path);
-            PlC.ProgressFunctionPlacer(fe.CreateEnemy).Place(path);
+            PlO.ProgressFunctionPlacer(fe.CreateInteractiveObjectFactory(), new UniformIntDistr(1, 3)).Place(path);
+            PlO.ProgressFunctionPlacer(progress => Lib.InteractiveObjects.Item(fe.CreateItemFactory()(progress)), new UniformIntDistr(1, 3)).Place(path);
+            PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 3)).Place(path);
 
 
             path.LastArea().AddInteractiveObject(fe.FactionManifestation.ContinueManifestation());
