@@ -132,36 +132,6 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
             throw new NotImplementedException();
         }
-
-        /*
-        public Placer<Areas, CharacterState> EnemyPlacer()
-        {
-
-            throw new NotImplementedException();
-        }
-
-        public Placer<Areas, ItemState> ItemPlacer()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Placer<Areas, InteractiveObjectState> InteractiveObjectPlacer()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Placer<Areas, ObjectState> ObjectPlacer()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void PlaceEverything(LinearPath path)
-        {
-            EnemyPlacer().Place(path);
-            ItemPlacer().Place(path);
-            InteractiveObjectPlacer().Place(path);
-            ObjectPlacer().Place(path);
-        }*/
     }
 
     class FactionConcepts

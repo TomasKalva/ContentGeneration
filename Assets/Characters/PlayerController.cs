@@ -306,10 +306,10 @@ public class PlayerController : MonoBehaviour
 			myAgent.CharacterState.Health -= 1000f;
 		}
 
-		if (buttonDown["UseItem"])
+		// Interact and UseItem are the same button
+		if (interactiveObject == null && buttonDown["UseItem"])
 		{
 			myAgent.UseItem();
-			//PlayerCharacterState.PlayerInventory.UseItem();
 		}
 
 		ClearButtonsDown();
