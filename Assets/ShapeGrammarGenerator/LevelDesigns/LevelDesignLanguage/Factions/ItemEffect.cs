@@ -22,6 +22,8 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
     public delegate IEnumerable<CharacterState> SelectTargets();
 
+    public delegate bool FinishedInTime(float deltaT);
+
     public class Selector
     {
         class Hit
@@ -42,12 +44,9 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         IDistribution<float> TimeBetweenHits { get; }
         SelectTargets select;
         List<Hit> Hits;
-        /// <summary>
-        /// Takes deltaT each update.
-        /// </summary>
-        Func<float, bool> finished;
+        FinishedInTime finished;
 
-        public Selector(IDistribution<float> timeBetweenHits, SelectTargets select, Func<float, bool> finished)
+        public Selector(IDistribution<float> timeBetweenHits, SelectTargets select, FinishedInTime finished)
         {
             Hits = new List<Hit>();
             ImmuneCharacters = new HashSet<CharacterState>();
