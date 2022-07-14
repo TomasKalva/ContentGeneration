@@ -298,9 +298,9 @@ namespace ShapeGrammar
                 LinearBranch
             };
 
-            var effectsLibrary = new EffectLibrary();
-            var factionScalingEffectLibrary = new FactionScalingEffectLibrary(effectsLibrary);
             var selectorLibrary = new SelectorLibrary();
+            var effectsLibrary = new EffectLibrary(selectorLibrary);
+            var factionScalingEffectLibrary = new FactionScalingEffectLibrary(effectsLibrary);
 
             Enumerable.Range(0, factionsCount).ForEach(_ =>
             {

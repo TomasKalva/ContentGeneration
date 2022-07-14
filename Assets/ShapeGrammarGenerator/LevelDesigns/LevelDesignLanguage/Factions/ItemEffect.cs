@@ -1,4 +1,5 @@
-﻿using ContentGeneration.Assets.UI.Model;
+﻿using Assets.Util;
+using ContentGeneration.Assets.UI.Model;
 using ShapeGrammar;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
     public class Selector
     {
-        struct Hit
+        class Hit
         {
             public CharacterState Character;
             public float TimeUntilNextHit;
@@ -41,9 +42,12 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         IDistribution<float> TimeBetweenHits { get; }
         SelectTargets select;
         List<Hit> Hits;
-        Func<bool> finished;
+        /// <summary>
+        /// Takes deltaT each update.
+        /// </summary>
+        Func<float, bool> finished;
 
-        public Selector(IDistribution<float> timeBetweenHits, SelectTargets select, Func<bool> finished)
+        public Selector(IDistribution<float> timeBetweenHits, SelectTargets select, Func<float, bool> finished)
         {
             Hits = new List<Hit>();
             ImmuneCharacters = new HashSet<CharacterState>();
@@ -80,7 +84,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             return hit;
         }
 
-        public bool Finished() => finished();
+        public bool Finished(float deltaT) => finished(deltaT);
     }
 
     /// <summary>
@@ -106,21 +110,24 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             affectedCharacters.ForEach(character =>
                 effects.ForEach(effect => effect(character)));
 
-            return selector.Finished();
+            return selector.Finished(deltaT);
         }
     }
 
     class SelectorLibrary
     {
-        public SelectorByUser SelfSelector() => 
-            ch => new Selector(
-                new ConstDistr(1f),
+        public Selector ConstSelector(CharacterState target, float duration, IDistribution<float> timeBetweenHits)
+        {
+            var countdown = new CountdownTimer(duration);
+            return new Selector(
+                timeBetweenHits,
                 () =>
                 {
-                    return ch.ToEnumerable();
+                    return target.ToEnumerable();
                 },
-                () => true
+                dt => countdown.Finished(dt)
             );
+        }
 
         public SelectorByUser BallSelector() => 
             ch => new Selector(
@@ -129,13 +136,29 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 {
                     throw new NotImplementedException();
                 },
-                () => throw new NotImplementedException()
+                dt => throw new NotImplementedException()
             );
 
+        public SelectorByUser SelfSelector() =>
+            ch => new Selector(
+                new ConstDistr(1f),
+                () =>
+                {
+                    return ch.ToEnumerable();
+                },
+                dt => true
+            );
     }
 
     class EffectLibrary
     {
+        SelectorLibrary sel;
+
+        public EffectLibrary(SelectorLibrary sel)
+        {
+            this.sel = sel;
+        }
+
         public Effect Heal(float healing)
         {
             return ch => ch.Health += healing;
@@ -149,6 +172,16 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         public Effect GiveSpirit(float spirit)
         {
             return ch => ch.Prop.Spirit += spirit;
+        }
+
+        public Effect Bleed(float damage, float time)
+        {
+            return ch => ch.World.AddOccurence(
+                new Occurence(
+                    sel.ConstSelector(ch, time, new ConstDistr(0.1f)),
+                    Damage(damage)
+                )
+            );
         }
     }
 
@@ -179,8 +212,9 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             EffectsByUser = new List<EffectByFactionByUser>()
             {
                 //FromPower(p => eff.Heal(5f * p)),
-                FromPower(p => eff.Damage(10f + 5f * p)),
-                FromPower(p => eff.GiveSpirit(10f + 20f * p)),
+                //FromPower(p => eff.Damage(10f + 5f * p)),
+                //FromPower(p => eff.GiveSpirit(10f + 20f * p)),
+                FromPower(p => eff.Bleed(0.5f + 1f * p, 2f)),
             };
         }
     }
@@ -201,13 +235,13 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
     class OccurenceManager
     {
-        List<Occurence> CurrentOccurences { get; }
-        HashSet<Occurence> FinishedOccurences { get; }
+        List<Occurence> CurrentOccurences { get; set; }
+        //HashSet<Occurence> FinishedOccurences { get; }
 
         public OccurenceManager()
         {
             CurrentOccurences = new List<Occurence>();
-            FinishedOccurences = new HashSet<Occurence>();
+            //FinishedOccurences = new HashSet<Occurence>();
         }
 
         public void AddOccurence(Occurence occurence)
@@ -217,15 +251,17 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
         public void Update(float deltaT)
         {
-            CurrentOccurences.ForEach(occurence =>
+            // todo: somehow optimize this to avoid allocations each update
+            CurrentOccurences = CurrentOccurences.Where(occurence => !occurence.Update(deltaT)).ToList();
+            /*CurrentOccurences.ForEach(occurence =>
             {
                 if (occurence.Update(deltaT))
                 {
-                    FinishedOccurences.Add(occurence);
+                    //FinishedOccurences.Add(occurence);
                 }
-            });
-            CurrentOccurences.RemoveAll(occurence => FinishedOccurences.Contains(occurence));
-            FinishedOccurences.Clear();
+            });*/
+            //CurrentOccurences.RemoveAll(occurence => FinishedOccurences.Contains(occurence));
+            //FinishedOccurences.Clear();
         }
     }
 }
