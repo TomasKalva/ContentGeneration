@@ -298,6 +298,10 @@ namespace ShapeGrammar
                 LinearBranch
             };
 
+            var effectsLibrary = new EffectLibrary();
+            var factionScalingEffectLibrary = new FactionScalingEffectLibrary(effectsLibrary);
+            var selectorLibrary = new SelectorLibrary();
+
             Enumerable.Range(0, factionsCount).ForEach(_ =>
             {
                 var concepts = new FactionConcepts(
@@ -309,6 +313,11 @@ namespace ShapeGrammar
                         {
                             Lib.Enemies.Sculpture,
                             Lib.Enemies.MayanSwordsman
+                        },
+                        factionScalingEffectLibrary.EffectsByUser.Take(5).ToList(),
+                        new List<SelectorByUser>()
+                        {
+                            selectorLibrary.SelfSelector()
                         }
                     );
 

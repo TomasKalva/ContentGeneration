@@ -35,6 +35,7 @@ namespace ContentGeneration.Assets.UI.Model
                 Strength = Strength;
                 Dexterity = Dexterity;
                 Spirit = Spirit;
+                Versatility = Versatility;
 
                 PropertyChanged.OnPropertyChanged(this); 
             }
@@ -139,6 +140,20 @@ namespace ContentGeneration.Assets.UI.Model
             set
             {
                 _spirit = value;
+                PropertyChanged.OnPropertyChanged(this);
+            }
+        }
+
+#if NOESIS
+        [SerializeField]
+#endif
+        private float _versatility;
+        public float Versatility
+        {
+            get { return _versatility; }
+            set
+            {
+                _versatility = value;
                 PropertyChanged.OnPropertyChanged(this);
             }
         }

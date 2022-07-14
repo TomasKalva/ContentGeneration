@@ -1,4 +1,5 @@
 using Assets.InteractiveObject;
+using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using ContentGeneration.Assets.UI.Model;
 using ShapeGrammar;
 using System.Collections;
@@ -21,6 +22,7 @@ namespace ContentGeneration.Assets.UI
         public ObservableCollection<CharacterState> Enemies { get; }
         List<Transform> architectureElements;
         public PlayerCharacterState PlayerState { get; }
+        OccurenceManager Occurences { get; }
         public Grave Grave { get; set; }
 
         public delegate void WorldCreated();
@@ -40,6 +42,7 @@ namespace ContentGeneration.Assets.UI
             ArchitectureParent.SetParent(worldParent);
             EntitiesParent = new GameObject("Entities").transform;
             EntitiesParent.SetParent(worldParent);
+            Occurences = new OccurenceManager();
             PlayerState = playerState;
             PlayerState.World = this;
 
@@ -134,6 +137,16 @@ namespace ContentGeneration.Assets.UI
             {
                 OnCreated();
             }
+        }
+
+        public void AddOccurence(Occurence occurence)
+        {
+            Occurences.AddOccurence(occurence);
+        }
+
+        public void Update(float deltaT)
+        {
+            Occurences.Update(deltaT);
         }
     }
 }

@@ -141,4 +141,19 @@ namespace ShapeGrammar
             return Items.GetRandom(getWeight).value;
         }
     }
+
+    public class ConstDistr : IDistribution<float>
+    {
+        float val;
+
+        public ConstDistr(float val)
+        {
+            this.val = val;
+        }
+
+        public float Sample()
+        {
+            return val;
+        }
+    }
 }
