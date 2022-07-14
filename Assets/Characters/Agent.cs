@@ -102,6 +102,7 @@ public class Agent : MonoBehaviour
     private void Start()
     {
 		SynchronizeWithState(CharacterState);
+		acting.UseItem.Inventory = CharacterState.Inventory;
 	}
 
     public void StartReceivingControls()
@@ -192,6 +193,11 @@ public class Agent : MonoBehaviour
 			walk.Direction = direction;
 			walk.SetDirection = true;
 		}
+	}
+
+	public void UseItem()
+	{
+		var useItem = acting.SelectAct("UseItem") as UseItem;
 	}
 
 	/// <summary>

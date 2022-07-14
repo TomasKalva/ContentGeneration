@@ -149,6 +149,7 @@ GameObject:
   - component: {fileID: 1608244499992161290}
   - component: {fileID: 6158737007284265538}
   - component: {fileID: 4467630507473043128}
+  - component: {fileID: 8642968245184377946}
   m_Layer: 10
   m_Name: ActContainer
   m_TagString: Untagged
@@ -653,6 +654,33 @@ MonoBehaviour:
   - {fileID: 5151155491971333745}
   damageStartT: 0.5
   damageEndT: 0.6
+--- !u!114 &8642968245184377946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5245136111020689035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbf4d194e363e0a4fa66ab8076bf6894, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: UseItem
+  type: 0
+  priority: 0
+  duration: 1
+  cost: 0
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 7419766856727880187, guid: 9f1dedf80f06d0c4bb5b4c68d4840de4, type: 3}
+    _Speed: 1
+    _NormalizedStartTime: 0
 --- !u!1 &5592726371195089901
 GameObject:
   m_ObjectHideFlags: 0
@@ -931,7 +959,6 @@ MonoBehaviour:
   acting: {fileID: 0}
   animator: {fileID: 0}
   animancerAnimator: {fileID: 0}
-  characterRef: {fileID: 0}
   myRenderer: {fileID: 3838463620079320682}
   centerOffset: 1
   uiOffset: 2.5

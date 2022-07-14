@@ -9040,6 +9040,7 @@ GameObject:
   - component: {fileID: 6408259666256583763}
   - component: {fileID: 5988140770622481007}
   - component: {fileID: 1889782971674989523}
+  - component: {fileID: 3093288350632298614}
   m_Layer: 10
   m_Name: ActContainer
   m_TagString: Untagged
@@ -9294,6 +9295,33 @@ MonoBehaviour:
   startT: 0.3
   endT: 0.82
   shotsCount: 40
+--- !u!114 &3093288350632298614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5245136111020689035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbf4d194e363e0a4fa66ab8076bf6894, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: UseItem
+  type: 0
+  priority: 0
+  duration: 1
+  cost: 0
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 6724177559500300020, guid: 5c54177e04fe64e47a038d7fe05919be, type: 3}
+    _Speed: 1
+    _NormalizedStartTime: 0
 --- !u!1 &5246965190431853219
 GameObject:
   m_ObjectHideFlags: 0
@@ -13394,7 +13422,6 @@ MonoBehaviour:
   acting: {fileID: 0}
   animator: {fileID: 0}
   animancerAnimator: {fileID: 0}
-  characterRef: {fileID: 0}
   myRenderer: {fileID: 7304942410282828220}
   centerOffset: 0
   uiOffset: 1
@@ -17288,11 +17315,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}
---- !u!4 &3700916034506211953 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8254846310209840316, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}
-  m_PrefabInstance: {fileID: 4743224433215940301}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &3700916034506211958 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8254846310209840315, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}
@@ -17304,6 +17326,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4b1d4dfc7fe70746971ef0676f31c76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &3700916034506211953 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8254846310209840316, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}
+  m_PrefabInstance: {fileID: 4743224433215940301}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5426539852469631606
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -190,6 +190,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 533700495570473802, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
   m_PrefabInstance: {fileID: 1194537448326927664}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &6092720893106556704 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4908475155549395472, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
+  m_PrefabInstance: {fileID: 1194537448326927664}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8202382001279321236 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7009693949902344612, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
@@ -297,6 +302,33 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
+--- !u!114 &2661613158497524587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6092720893106556704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbf4d194e363e0a4fa66ab8076bf6894, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detector: {fileID: 0}
+  actName: UseItem
+  type: 0
+  priority: 0
+  duration: 1
+  cost: 0
+  anim:
+    _FadeDuration: 0.25
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 4991481162077392411, guid: a69d055ec4c9a41438719a6cc0a2e663, type: 3}
+    _Speed: 1
+    _NormalizedStartTime: 0
 --- !u!54 &5361028783015928387
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -80,6 +80,7 @@ namespace ContentGeneration.Assets.UI.Model
     public interface IInventory
     {
         InventorySlot AddItem(SlotType slotType, ItemState item);
+        void UseItem();
 
         void Update();
     }
@@ -315,6 +316,8 @@ namespace ContentGeneration.Assets.UI.Model
                 return false;
             }
         }
+
+        public virtual void UseItem() {}
 #endif
     }
 
@@ -422,7 +425,7 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
-        public void UseItem()
+        public override void UseItem()
         {
             if (Active)
                 return;
@@ -467,6 +470,11 @@ namespace ContentGeneration.Assets.UI.Model
 
         public EnemyInventory(CharacterState character) : base(character)
         {
+        }
+
+        public override void UseItem()
+        {
+            // Decide on which item to use and then use it
         }
     }
 }

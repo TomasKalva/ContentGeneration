@@ -308,7 +308,8 @@ public class PlayerController : MonoBehaviour
 
 		if (buttonDown["UseItem"])
 		{
-			PlayerCharacterState.PlayerInventory.UseItem();
+			myAgent.UseItem();
+			//PlayerCharacterState.PlayerInventory.UseItem();
 		}
 
 		ClearButtonsDown();

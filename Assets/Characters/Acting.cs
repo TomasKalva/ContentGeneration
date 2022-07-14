@@ -22,7 +22,11 @@ public class Acting : MonoBehaviour, IActing
 
     StaggeredAct staggered;
 
+    UseItem useItem;
+
     public StaggeredAct Staggered => staggered;
+
+    public UseItem UseItem => useItem;
 
     List<Act> acts;
 
@@ -54,6 +58,7 @@ public class Acting : MonoBehaviour, IActing
     {
         Idle = actContainer.GetComponent<IdleAct>();
         staggered = actContainer.GetComponent<StaggeredAct>();
+        useItem = actContainer.GetComponent<UseItem>();
         acts = actContainer.GetComponents<Act>().ToList();
         agent = GetComponent<Agent>();
     }
