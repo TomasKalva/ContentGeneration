@@ -348,7 +348,7 @@ namespace ShapeGrammar
             Env.Line(fe.ProductionList() , NodesQueries.All, 5, out var path);
 
             //PlO.ProgressFunctionPlacer(fe.CreateInteractiveObjectFactory(), new UniformIntDistr(1, 4)).Place(path);
-            //PlO.ProgressFunctionPlacer(progress => Lib.InteractiveObjects.Item(fe.CreateItemFactory()(progress)), new UniformIntDistr(1, 4)).Place(path);
+            PlO.ProgressFunctionPlacer(progress => Lib.InteractiveObjects.Item(fe.CreateItemFactory()(progress)), new UniformIntDistr(1, 4)).Place(path);
             PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(path);
 
 

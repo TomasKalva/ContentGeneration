@@ -28,6 +28,12 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             public CharacterState Character;
             public float TimeUntilNextHit;
 
+            public Hit(CharacterState character, float timeUntilNextHit)
+            {
+                Character = character;
+                TimeUntilNextHit = timeUntilNextHit;
+            }
+
             public bool TimeExpired => TimeUntilNextHit <= 0f;
         }
 
@@ -39,6 +45,8 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
         public Selector(IDistribution<float> timeBetweenHits, SelectTargets select, Func<bool> finished)
         {
+            Hits = new List<Hit>();
+            ImmuneCharacters = new HashSet<CharacterState>();
             TimeBetweenHits = timeBetweenHits;
             this.select = select;
             this.finished = finished;
@@ -65,7 +73,11 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         public IEnumerable<CharacterState> Select(float deltaT)
         {
             UpdateHits(deltaT);
-            return select().Where(ch => CanBeHit(ch));
+            var hit = select().Where(ch => CanBeHit(ch)).ToList();
+            hit.ForEach(hitCh => 
+                Hits.Add(new Hit(hitCh, TimeBetweenHits.Sample()))
+                );
+            return hit;
         }
 
         public bool Finished() => finished();
@@ -126,12 +138,12 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
     {
         public Effect Heal(float healing)
         {
-            return ch => ch.Prop.Health += healing;
+            return ch => ch.Health += healing;
         }
 
         public Effect Damage(float damage)
         {
-            return ch => ch.Prop.Health -= damage;
+            return ch => ch.Health -= damage;
         }
 
         public Effect GiveSpirit(float spirit)
@@ -166,9 +178,9 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         {
             EffectsByUser = new List<EffectByFactionByUser>()
             {
-                FromPower(p => eff.Heal(5f * p)),
-                FromPower(p => eff.Damage(5f * p)),
-                FromPower(p => eff.GiveSpirit(20f * p)),
+                //FromPower(p => eff.Heal(5f * p)),
+                FromPower(p => eff.Damage(10f + 5f * p)),
+                FromPower(p => eff.GiveSpirit(10f + 20f * p)),
             };
         }
     }

@@ -27,6 +27,8 @@ namespace ShapeGrammar
 
         MyLanguage GameLanguage;
 
+        World World { get; set; }
+
         private void Awake()
         {
             InitializePlayer();
@@ -63,7 +65,7 @@ namespace ShapeGrammar
 
             var worldScale = 2.8f;
             var worldGeometry = new WorldGeometry(worldParent, worldScale);
-            var world = new World(worldGeometry, playerState);
+            World = new World(worldGeometry, playerState);
 
 
 
@@ -75,7 +77,7 @@ namespace ShapeGrammar
                 {
                     var levelConstructor = new LevelConstructor();
                     var languageState = new LanguageState(levelConstructor, ldk);
-                    languageState.Restart(world, grammarState);
+                    languageState.Restart(World, grammarState);
                     var gr = new Grammars(ldk);
                     var sym = new Symbols();
                     ProductionProgram.pr = new Productions(ldk, sym);
@@ -97,18 +99,18 @@ namespace ShapeGrammar
             var playerState = GameViewModel.ViewModel.PlayerState;
             var worldScale = 2.8f;
             var worldGeometry = new WorldGeometry(worldParent, worldScale);
-            var world = new World(worldGeometry, playerState);
+            World = new World(worldGeometry, playerState);
             var grammarState = new ShapeGrammarState(ldk);
 
-            GameLanguage.State.Restart(world, grammarState);
-            GameViewModel.ViewModel.World = world;
+            GameLanguage.State.Restart(World, grammarState);
+            GameViewModel.ViewModel.World = World;
 
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 
             GameLanguage.State.LC.Construct();
 
-            ldk.grid.Generate(worldScale, world);
+            ldk.grid.Generate(worldScale, World);
 
             GameLanguage.Instantiate();
 
@@ -148,8 +150,8 @@ namespace ShapeGrammar
             var graveState = libraries.InteractiveObjects.Grave();
             var grave = graveState.MakeGeometry();
             grave.transform.position = worldGeometry.GridToWorld(goodGraveCube.Position);
-            world.AddInteractiveObject(graveState);
-            world.Grave = graveState;
+            World.AddInteractiveObject(graveState);
+            World.Grave = graveState;
 
             //var goodTransporterCube = goodCubes.ElementAt(1);
             //world.AddInteractiveObject(interactiveObjects.Transporter().MakeGeometry(), GridToWorld(goodTransporterCube.Position));
@@ -170,7 +172,12 @@ namespace ShapeGrammar
             */
 
 
-            world.Created();
+            World.Created();
+        }
+
+        private void FixedUpdate()
+        {
+            World.Update(Time.fixedDeltaTime);
         }
     }
 }

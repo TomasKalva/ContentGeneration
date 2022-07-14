@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 {
@@ -107,6 +108,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 }
                     .OnUse(ch => 
                     {
+                        Debug.Log($"Procedural item is used by {ch.Agent.gameObject.name}");
                         var occurence = new Occurence(selectorByUser(ch), effectByUser(ch));
                         ch.World.AddOccurence(occurence);
                     });
