@@ -17,6 +17,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
     }*/
 
     public delegate void Effect(CharacterState target);
+
     public delegate Effect EffectByUser(CharacterState user);
     public delegate Selector SelectorByUser(CharacterState user);
 
@@ -219,7 +220,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
     class FactionScalingEffectLibrary
     {
-        public List<EffectByFactionByUser> EffectsByUser { get; }
+        public List<Annotated<EffectByFactionByUser>> EffectsByUser { get; }
 
         float EffectPower(Faction faction, CharacterState user)
         {
@@ -228,25 +229,26 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             return affinity + vers;
         }
 
-        EffectByFactionByUser FromPower(Func<float, Effect> powerToEffect)
+        Annotated<EffectByFactionByUser> FromPower(string name, string description, Func<float, Effect> powerToEffect)
         {
-            return faction => user =>
+
+            return new Annotated<EffectByFactionByUser>(name, description, faction => user =>
             {
                 var power = EffectPower(faction, user);
                 return powerToEffect(power);
-            };
+            });
         }
 
         public FactionScalingEffectLibrary(EffectLibrary eff)
         {
-            EffectsByUser = new List<EffectByFactionByUser>()
+            EffectsByUser = new List<Annotated<EffectByFactionByUser>>()
             {
-                //FromPower(p => eff.Heal(5f * p)),
-                //FromPower(p => eff.Damage(10f + 5f * p)),
-                //FromPower(p => eff.GiveSpirit(10f + 20f * p)),
-                //FromPower(p => eff.Bleed(5f + 2f * p, 2f)),
-                //FromPower(p => eff.BoostStaminaRegen(5f + 2f * p, 2f)),
-                FromPower(p => eff.RegenerateHealth(5f + 2f * p, 2f)),
+                FromPower("Heal", "heals", p => eff.Heal(5f * p)),
+                FromPower("Damage", "damages", p => eff.Damage(10f + 5f * p)),
+                FromPower("Give spirit", "gives spirit to", p => eff.GiveSpirit(10f + 20f * p)),
+                FromPower("Bleed", "applies bleeding to", p => eff.Bleed(5f + 2f * p, 2f)),
+                FromPower("Boost stamina regeneration", "boosts stamina regeneration to", p => eff.BoostStaminaRegen(5f + 2f * p, 2f)),
+                FromPower("Regenerate health", "regenerates health to", p => eff.RegenerateHealth(5f + 2f * p, 2f)),
             };
         }
     }

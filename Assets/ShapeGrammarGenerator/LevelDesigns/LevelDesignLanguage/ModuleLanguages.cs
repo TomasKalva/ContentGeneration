@@ -1,4 +1,5 @@
 ﻿using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
+using Assets.Util;
 using ContentGeneration.Assets.UI.Model;
 using System;
 using System.Collections.Generic;
@@ -319,9 +320,9 @@ namespace ShapeGrammar
                             Lib.Enemies.MayanSwordsman
                         },
                         factionScalingEffectLibrary.EffectsByUser.Take(5).ToList(),
-                        new List<SelectorByUser>()
+                        new List<Annotated<SelectorByUser>>()
                         {
-                            selectorLibrary.SelfSelector()
+                            new Annotated<SelectorByUser>("Self", "self", selectorLibrary.SelfSelector())
                         }
                     );
 
