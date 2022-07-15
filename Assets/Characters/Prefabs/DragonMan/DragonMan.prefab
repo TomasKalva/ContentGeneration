@@ -9289,7 +9289,7 @@ MonoBehaviour:
     _Speed: 1
     _NormalizedStartTime: 0
   timedActions: []
-  projectile: {fileID: 1623888701323414183, guid: 1694dcff4e154a44882fab16eabbfe61, type: 3}
+  projectile: {fileID: 1623888701323414183, guid: eabd56301874bd7489737f922a8bcb67, type: 3}
   gun: {fileID: 7775730742045144830}
   speed: 5
   startT: 0.3

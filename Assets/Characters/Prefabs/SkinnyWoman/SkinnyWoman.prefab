@@ -391,7 +391,7 @@ MonoBehaviour:
     _Clip: {fileID: 7623476096177806632, guid: 7beb9fa765a5ad34ca8650a306ad6d20, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  projectile: {fileID: 1623888701323414183, guid: 2ab9cf753a845844cada17e0a18afbe7, type: 3}
+  projectile: {fileID: 1623888701323414183, guid: eabd56301874bd7489737f922a8bcb67, type: 3}
   gun: {fileID: 3700916034506211953}
   speed: 10
   shootT: 0.6

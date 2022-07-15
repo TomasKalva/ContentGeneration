@@ -316,7 +316,7 @@ namespace ShapeGrammar
                         },
                         new List<Func<CharacterState>>()
                         {
-                            Lib.Enemies.DragonMan,
+                            Lib.Enemies.SkinnyWoman,
                             Lib.Enemies.MayanSwordsman
                         },
                         factionScalingEffectLibrary.EffectsByUser.Take(5).ToList(),
