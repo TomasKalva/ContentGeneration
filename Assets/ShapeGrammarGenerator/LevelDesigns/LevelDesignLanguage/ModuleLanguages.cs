@@ -15,11 +15,13 @@ namespace ShapeGrammar
 
         public void MyWorldStart()
         {
-            State.LC.AddEvent(100, () =>
-            {
-                L.LevelLanguage.LevelStart(out var startArea);
-                return false;
-            });
+            State.LC.AddEvent(
+                new LevelConstructionEvent(100, () =>
+                {
+                    L.LevelLanguage.LevelStart(out var startArea);
+                    return false;
+                }) 
+            );
             
             /*State.LC.AddEvent(5, () =>
             {
@@ -38,11 +40,13 @@ namespace ShapeGrammar
             */
             
 
-            State.LC.AddEvent(0, () =>
-            {
-                L.LevelLanguage.LevelEnd();
-                return false;
-            });
+            State.LC.AddEvent(
+                new LevelConstructionEvent(0, () =>
+                {
+                    L.LevelLanguage.LevelEnd();
+                    return false;
+                })
+            );
 
             L.FactionsLanguage.InitializeFactions(3);
             /*State.LC.AddEvent(5, () =>
@@ -324,12 +328,14 @@ namespace ShapeGrammar
 
                 var faction = new Faction(concepts);
                 var factionManifestation = faction.GetFactionManifestation();
-                State.LC.AddEvent(5, () =>
-                {
-                    var factionEnvironment = factionManifestation.GetFactionEnvironment();
-                    branches.GetRandom()(factionEnvironment, faction.StartingBranchProgress);
-                    return false;
-                });
+                State.LC.AddEvent(
+                    new LevelConstructionEvent(5, () =>
+                    {
+                        var factionEnvironment = factionManifestation.GetFactionEnvironment();
+                        branches.GetRandom()(factionEnvironment, faction.StartingBranchProgress);
+                        return false;
+                    })
+                );
             });
         }
 

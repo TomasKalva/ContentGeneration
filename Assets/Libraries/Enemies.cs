@@ -63,7 +63,7 @@ public class Enemies : ScriptableObject
 
         // properties
         human.Health = 40f;
-        human.Will = 20f;
+        human.Stamina = 20f;
         human.Posture = 10f;
 
         // inventory
@@ -85,7 +85,7 @@ public class Enemies : ScriptableObject
 
         // properties
         sculpture.Health = 40f;
-        sculpture.Will = 20f;
+        sculpture.Stamina = 20f;
         sculpture.Posture = 10f;
 
         // inventory
@@ -108,7 +108,7 @@ public class Enemies : ScriptableObject
 
         // properties
         mayan.Health = 40f;
-        mayan.Will = 20f;
+        mayan.Stamina = 20f;
         mayan.Posture = 10f;
 
         // inventory
@@ -134,7 +134,7 @@ public class Enemies : ScriptableObject
 
         // properties
         mayan.Health = 50f;
-        mayan.Will = 20f;
+        mayan.Stamina = 20f;
         mayan.Posture = 10f;
 
         // inventory
@@ -163,7 +163,7 @@ public class Enemies : ScriptableObject
 
         // properties
         skinnyWoman.Health = 50f;
-        skinnyWoman.Will = 20f;
+        skinnyWoman.Stamina = 20f;
         skinnyWoman.Posture = 10f;
 
         // inventory
@@ -186,7 +186,7 @@ public class Enemies : ScriptableObject
 
         // properties
         dragonMan.Health = 40f;
-        dragonMan.Will = 20f;
+        dragonMan.Stamina = 20f;
         dragonMan.Posture = 10f;
 
         // inventory
@@ -209,7 +209,7 @@ public class Enemies : ScriptableObject
 
         // properties
         dog.Health = 50f;
-        dog.Will = 20f;
+        dog.Stamina = 20f;
         dog.Posture = 10f;
 
         // inventory

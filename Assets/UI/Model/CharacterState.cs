@@ -46,11 +46,11 @@ namespace ContentGeneration.Assets.UI.Model
 #if NOESIS
         [SerializeField]
 #endif
-        private FloatRange _will;
-        public FloatRange Will
+        private FloatRange _stamina;
+        public FloatRange Stamina
         {
-            get { return _will; }
-            set { _will = value; PropertyChanged.OnPropertyChanged(this); }
+            get { return _stamina; }
+            set { _stamina = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
 #if NOESIS
@@ -86,7 +86,7 @@ namespace ContentGeneration.Assets.UI.Model
         public CharacterState()
         {
             Health = new FloatRange(100, 100);
-            Will = new FloatRange(20, 20);
+            Stamina = new FloatRange(20, 20);
             Posture = 10f;
             Inventory = new EnemyInventory(this);
             DamageTaken = new DamageTaken(2f);
@@ -104,7 +104,7 @@ namespace ContentGeneration.Assets.UI.Model
         public void Reset()
         {
             Health += Health.Maximum;
-            Will += Will.Maximum;
+            Stamina += Stamina.Maximum;
         }
 
         /// <summary>

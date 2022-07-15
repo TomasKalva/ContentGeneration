@@ -30,7 +30,7 @@ namespace ContentGeneration.Assets.UI.Model
 
                 // Update character with the properties
                 Health = Health;
-                Will = Will;
+                Endurance = Endurance;
                 Poise = Poise;
                 Strength = Strength;
                 Dexterity = Dexterity;
@@ -62,16 +62,16 @@ namespace ContentGeneration.Assets.UI.Model
 #if NOESIS
         [SerializeField]
 #endif
-        private float _will;
-        public float Will
+        private float _endurance;
+        public float Endurance
         {
-            get { return _will; }
+            get { return _endurance; }
             set
             {
-                _will = value;
+                _endurance = value;
                 if (Character != null)
                 {
-                    Character.Will.Maximum = _will;
+                    Character.Stamina.Maximum = _endurance;
                 }
                 PropertyChanged.OnPropertyChanged(this);
             }

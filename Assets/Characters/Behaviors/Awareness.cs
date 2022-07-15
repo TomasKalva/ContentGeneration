@@ -34,7 +34,7 @@ public class Awareness : Behavior
 
     bool BreakAwareness(Agent agent)
 	{
-        return (!LowWill || agent.CharacterState.Will > RequiredWill) && (agent.CharacterState.Behaviors.BehaviorPossible(agent, 4) || Vector3.Distance(agent.transform.position, TargetPoint) > maxDistance);
+        return (!LowWill || agent.CharacterState.Stamina > RequiredWill) && (agent.CharacterState.Behaviors.BehaviorPossible(agent, 4) || Vector3.Distance(agent.transform.position, TargetPoint) > maxDistance);
 	}
 
     public override bool CanEnter(Agent agent)
@@ -75,11 +75,11 @@ public class Awareness : Behavior
             agent.WalkBack(-toTargetDir);
         }
 
-        if(agent.CharacterState.Will < MinWill)
+        if(agent.CharacterState.Stamina < MinWill)
         {
             LowWill = true;
         }
-        if (agent.CharacterState.Will > RequiredWill)
+        if (agent.CharacterState.Stamina > RequiredWill)
         {
             LowWill = false;
         }

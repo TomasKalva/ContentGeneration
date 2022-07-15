@@ -17,7 +17,7 @@ public class FreeWill : ItemState
             if (character.Agent != null &&
                 !character.Agent.acting.Busy)
             {
-                character.Will += ExtensionMethods.PerFixedSecond(2f);
+                character.Stamina += ExtensionMethods.PerFixedSecond(2f);
             }
         };
     }

@@ -46,7 +46,7 @@ namespace ShapeGrammar
             {
                 Health = 100,
                 Spirit = 100,
-                Will = 500,
+                Endurance = 500,
             };
             playerState.Prop = prop;
             prop.Character = playerState;

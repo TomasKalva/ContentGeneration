@@ -15,9 +15,9 @@ namespace ShapeGrammar
             LevelConstructionEvents = new List<LevelConstructionEvent>();
         }
 
-        public void AddEvent(int priority, LevelConstruction construction, Condition condition = null)
+        public void AddEvent(LevelConstructionEvent levelConstructionEvent)
         {
-            LevelConstructionEvents.Add(new LevelConstructionEvent(priority, construction, condition));
+            LevelConstructionEvents.Add(levelConstructionEvent);
         }
 
         public void Construct()

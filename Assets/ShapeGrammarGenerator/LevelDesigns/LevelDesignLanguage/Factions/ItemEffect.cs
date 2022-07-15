@@ -148,7 +148,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 dt => true
             );
     }
-
+    
     class EffectLibrary
     {
         SelectorLibrary sel;
@@ -173,14 +173,45 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             return ch => ch.Prop.Spirit += spirit;
         }
 
-        public Effect Bleed(float damage, float time)
+        public Effect Bleed(float damagePerSecond, float timeS)
         {
+            var tickLength = 0.1f;
             return ch => ch.World.AddOccurence(
                 new Occurence(
-                    sel.ConstSelector(ch, time, new ConstDistr(0.1f)),
-                    Damage(damage)
+                    sel.ConstSelector(ch, timeS, new ConstDistr(tickLength)),
+                    Damage(damagePerSecond * tickLength)
                 )
             );
+        }
+
+        public Effect BoostStaminaRegen(float boostPerSecond, float timeS)
+        {
+            var tickLength = 0.1f;
+            return ch => ch.World.AddOccurence(
+                new Occurence(
+                    sel.ConstSelector(ch, timeS, new ConstDistr(tickLength)),
+                    ch => ch.Stamina += boostPerSecond * tickLength
+                )
+            );
+        }
+
+        public Effect RegenerateHealth(float boostPerSecond, float timeS)
+        {
+            var tickLength = 0.1f;
+            return ch => ch.World.AddOccurence(
+                new Occurence(
+                    sel.ConstSelector(ch, timeS, new ConstDistr(tickLength)),
+                    Heal(boostPerSecond * tickLength)
+                )
+            );
+        }
+
+        /// <summary>
+        /// LevelConstructionEvent from function because it can potentialy contain level related state.
+        /// </summary>
+        public Effect StartQuestline(LevelConstructor levelConstructor, Func<LevelConstructionEvent> levelConstructionEventF)
+        {
+            return _ => levelConstructor.AddEvent(levelConstructionEventF());
         }
     }
 
@@ -213,7 +244,9 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 //FromPower(p => eff.Heal(5f * p)),
                 //FromPower(p => eff.Damage(10f + 5f * p)),
                 //FromPower(p => eff.GiveSpirit(10f + 20f * p)),
-                FromPower(p => eff.Bleed(0.5f + 1f * p, 2f)),
+                //FromPower(p => eff.Bleed(5f + 2f * p, 2f)),
+                //FromPower(p => eff.BoostStaminaRegen(5f + 2f * p, 2f)),
+                FromPower(p => eff.RegenerateHealth(5f + 2f * p, 2f)),
             };
         }
     }

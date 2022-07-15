@@ -13,7 +13,7 @@ namespace Assets.InteractiveObject
 
         public override void Interact(global::Agent agent)
         {
-            agent.CharacterState.Will.Maximum += 10f;
+            agent.CharacterState.Stamina.Maximum += 10f;
             IntObj?.BurstFire();
         }
     }

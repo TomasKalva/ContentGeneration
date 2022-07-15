@@ -44,7 +44,7 @@ public class Act : MonoBehaviour
 
     public bool CanBeUsed(Agent agent)
     {
-        return agent.CharacterState.Will >= cost;// detector && detector.Triggered;
+        return agent.CharacterState.Stamina >= cost;// detector && detector.Triggered;
     }
 
     public virtual void StartAct(Agent agent) 
