@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 {
@@ -116,6 +117,13 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
     class SelectorLibrary
     {
+        Libraries lib;
+
+        public SelectorLibrary(Libraries lib)
+        {
+            this.lib = lib;
+        }
+
         public Selector ConstSelector(CharacterState target, float duration, IDistribution<float> timeBetweenHits)
         {
             var countdown = new CountdownTimer(duration);
@@ -139,10 +147,25 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 dt => true
             );
 
-        public SelectorByUser BallSelector()
+        public class SelectorArgs
         {
-            return ch =>
+
+        }
+
+
+        public Func<SelectorArgs, SelectorByUser> FireSelector()
+        {
+            return _ => ch =>
             {
+                FireVFX fire = lib.VFXs.Fire();
+                ColliderDetector collider = fire.ColliderDetector;
+                var ts = new GeometricTargetSelector(
+                        fire,
+                        collider,
+                        t => false
+                    );
+                fire.transform.position = ch.Agent.transform.position;
+
                 /*
                 var movingBall = Libraries.GeometricSelectors.Ball()
                     .PutTo(ch.Agent.rightWeaponSlot)
@@ -151,11 +174,8 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                     .DestroyAtWallTouch()*/
                 return new Selector(
                     new ConstDistr(1f),
-                    () =>
-                    {
-                        throw new NotImplementedException();
-                    },
-                    dt => throw new NotImplementedException()
+                    ts.SelectTargets,
+                    dt => ts.Update(dt)
                 );
             };
         }

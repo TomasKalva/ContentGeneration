@@ -28,4 +28,5 @@ public class Libraries : ScriptableObject
     public Objects Objects;
     public Weapons Weapons;
     public VFXs VFXs;
+    public GeometricSelectors GeometricSelectors;
 }

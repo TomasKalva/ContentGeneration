@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f47dd8e05435374b8795b00973475a1, type: 3}
   m_Name: VFXs
   m_EditorClassIdentifier: 
-  fireVFX: {fileID: 307045165925678689, guid: 8e77f332b9dc7a2478e242bc3e2f1ee0, type: 3}
+  fireVFX: {fileID: 18303237948005380, guid: 973b994b1ab73f143b187d8a224c1afa, type: 3}

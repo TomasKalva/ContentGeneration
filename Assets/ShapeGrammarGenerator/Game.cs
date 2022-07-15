@@ -34,7 +34,6 @@ namespace ShapeGrammar
             InitializePlayer();
             InitializeLevelConstructor();
             GoToNextLevel();
-            libraries.VFXs.Fire();
         }
 
         public void InitializePlayer()

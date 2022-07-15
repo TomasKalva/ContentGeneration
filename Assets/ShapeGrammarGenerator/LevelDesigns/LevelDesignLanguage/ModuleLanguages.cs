@@ -298,12 +298,12 @@ namespace ShapeGrammar
         {
             var branches = new List<Action<FactionEnvironment, int>>()
             {
-                LockedDoorBranch,
-                RandomBranches,
+                //LockedDoorBranch,
+                //RandomBranches,
                 LinearBranch
             };
 
-            var selectorLibrary = new SelectorLibrary();
+            var selectorLibrary = new SelectorLibrary(Lib);
             var effectsLibrary = new EffectLibrary(selectorLibrary);
             var factionScalingEffectLibrary = new FactionScalingEffectLibrary(effectsLibrary);
 
@@ -316,13 +316,14 @@ namespace ShapeGrammar
                         },
                         new List<Func<CharacterState>>()
                         {
-                            Lib.Enemies.Sculpture,
+                            Lib.Enemies.DragonMan,
                             Lib.Enemies.MayanSwordsman
                         },
                         factionScalingEffectLibrary.EffectsByUser.Take(5).ToList(),
                         new List<Annotated<SelectorByUser>>()
                         {
-                            new Annotated<SelectorByUser>("Self", "self", selectorLibrary.SelfSelector())
+                            //new Annotated<SelectorByUser>("Self", "self", selectorLibrary.SelfSelector()),
+                            new Annotated<SelectorByUser>("Fire", "all those that stand in fire", selectorLibrary.FireSelector()(null))
                         }
                     );
 

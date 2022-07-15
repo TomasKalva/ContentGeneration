@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
@@ -9,6 +10,9 @@ public class ColliderDetector : MonoBehaviour
     LayerMask detectionMask = -1;
 
     public Collider other;
+    List<Collider> hit;
+
+    public IEnumerable<Collider> Hit => hit;
 
     public bool Triggered => other != null;
 
@@ -17,6 +21,11 @@ public class ColliderDetector : MonoBehaviour
     public delegate void Collision(Collider other);
 
     public event Collision OnEnter = delegate { };
+
+    private void Awake()
+    {
+        hit = new List<Collider>();
+    }
 
     private void Start()
     {
@@ -51,6 +60,15 @@ public class ColliderDetector : MonoBehaviour
         {
             OnEnter(other);
             this.other = other;
+            if(hit == null)
+            {
+                ;
+            }
+            if(other == null)
+            {
+                ;
+            }
+            hit.Add(other);
         }
     }
 
@@ -58,6 +76,7 @@ public class ColliderDetector : MonoBehaviour
     {
         if (detectionMask == (detectionMask | (1 << other.gameObject.layer)))
         {
+            hit.Remove(other);
             this.other = null;
         }
     }

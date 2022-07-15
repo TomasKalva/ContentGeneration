@@ -18,3 +18,4 @@ MonoBehaviour:
   Objects: {fileID: 11400000, guid: e10829c8911eb364e88ff5b2a21bd9b0, type: 2}
   Weapons: {fileID: 11400000, guid: 633c9bb7e3c734248bab76460fd83e1e, type: 2}
   VFXs: {fileID: 11400000, guid: a2130730ea57d854682cf8c87ddf9340, type: 2}
+  GeometricSelectors: {fileID: 11400000, guid: 37ace3e26c29b9247b1cbc8524cd3ab3, type: 2}

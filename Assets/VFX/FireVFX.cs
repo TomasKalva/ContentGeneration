@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
-public class FireVFX : MonoBehaviour
+public class FireVFX : VFX, IDestroyable
 {
-    [SerializeField]
-    VisualEffect fireEffect;
-
     [SerializeField]
     string startColorName;
 
@@ -21,7 +18,7 @@ public class FireVFX : MonoBehaviour
     {
         set
         {
-            fireEffect.SetVector4(startColorName, value);
+            visualEffect.SetVector4(startColorName, value);
         }
     }
 
@@ -29,7 +26,7 @@ public class FireVFX : MonoBehaviour
     {
         set
         {
-            fireEffect.SetVector4(endColorName, value);
+            visualEffect.SetVector4(endColorName, value);
         }
     }
 
@@ -37,7 +34,12 @@ public class FireVFX : MonoBehaviour
     {
         set
         {
-            fireEffect.SetGradient(gradientName, value);
+            visualEffect.SetGradient(gradientName, value);
         }
+    }
+
+    public void Destroy(float timeS)
+    {
+        Destroy(gameObject, timeS);
     }
 }

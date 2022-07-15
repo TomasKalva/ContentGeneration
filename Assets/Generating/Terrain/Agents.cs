@@ -15,17 +15,17 @@ namespace Assets
     class Agents
     {
         private int simulationSpeed;
-        List<Agent> agents;
+        List<Agent2> agents;
         List<Spawner> spawners;
 
         public Agents(int simulationSpeed)
         {
-            this.agents = new List<Agent>();
+            this.agents = new List<Agent2>();
             this.spawners = new List<Spawner>();
             this.simulationSpeed = simulationSpeed;
         }
 
-        public void AddAgent(Agent agent)
+        public void AddAgent(Agent2 agent)
         {
             agents.Add(agent);
         }
@@ -68,23 +68,23 @@ namespace Assets
         }
     }
 
-    abstract class Agent
+    abstract class Agent2
     {
         public Vector2 Position { get; protected set; }
         protected int Steps { get; set; }
         private Brush brush;
-        public Agent(Brush brush)
+        public Agent2(Brush brush)
         {
             Steps = int.MaxValue;
             SetPosition(new Vector2(50f, 50f));
             this.brush = brush;
         }
-        public Agent SetPosition(Vector2 pos)
+        public Agent2 SetPosition(Vector2 pos)
         {
             Position = pos;
             return this;
         }
-        public Agent SetSteps(int steps)
+        public Agent2 SetSteps(int steps)
         {
             Steps = steps;
             return this;
@@ -104,7 +104,7 @@ namespace Assets
     }
 }
 
-class BasicAgent : Assets.Agent
+class BasicAgent : Assets.Agent2
 {
     public BasicAgent(Brush brush):base(brush)
     {
@@ -118,7 +118,7 @@ class BasicAgent : Assets.Agent
     }
 }
 
-class RepulsedAgent : Assets.Agent
+class RepulsedAgent : Assets.Agent2
 {
     Vector2 repulsor;
 
@@ -142,7 +142,7 @@ class RepulsedAgent : Assets.Agent
     }
 }
 
-class ClimbinAgent : Assets.Agent
+class ClimbinAgent : Assets.Agent2
 {
     public ClimbinAgent(Brush brush) : base(brush)
     {
@@ -156,7 +156,7 @@ class ClimbinAgent : Assets.Agent
     }
 }
 
-class DescendingAgent : Assets.Agent
+class DescendingAgent : Assets.Agent2
 {
     float? height;
 
