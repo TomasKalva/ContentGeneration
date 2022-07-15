@@ -15,7 +15,6 @@ MonoBehaviour:
   Items: {fileID: 11400000, guid: 225b79d8878ee624099ccf1d52670934, type: 2}
   Enemies: {fileID: 11400000, guid: 1b0b7286e21a6ed4ba0a066c27e7b2e9, type: 2}
   InteractiveObjects: {fileID: 11400000, guid: eb4b228fdb6e5ca46a32f8cfbea7e253, type: 2}
-  Modules: {fileID: 11400000, guid: 82502ab36ac59dc41abbe265807332ce, type: 2}
   Objects: {fileID: 11400000, guid: e10829c8911eb364e88ff5b2a21bd9b0, type: 2}
-  PhysicalItems: {fileID: 11400000, guid: 20423688f3eb91143a3abffe5cbd7d83, type: 2}
   Weapons: {fileID: 11400000, guid: 633c9bb7e3c734248bab76460fd83e1e, type: 2}
+  VFXs: {fileID: 11400000, guid: a2130730ea57d854682cf8c87ddf9340, type: 2}

@@ -27,4 +27,5 @@ public class Libraries : ScriptableObject
     public InteractiveObjects InteractiveObjects;
     public Objects Objects;
     public Weapons Weapons;
+    public VFXs VFXs;
 }

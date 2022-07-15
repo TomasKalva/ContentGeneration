@@ -129,16 +129,6 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             );
         }
 
-        public SelectorByUser BallSelector() => 
-            ch => new Selector(
-                new ConstDistr(1f),
-                () =>
-                {
-                    throw new NotImplementedException();
-                },
-                dt => throw new NotImplementedException()
-            );
-
         public SelectorByUser SelfSelector() =>
             ch => new Selector(
                 new ConstDistr(1f),
@@ -148,6 +138,33 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 },
                 dt => true
             );
+
+        public SelectorByUser BallSelector()
+        {
+            return ch =>
+            {
+                /*
+                var movingBall = Libraries.GeometricSelectors.Ball()
+                    .PutTo(ch.Agent.rightWeaponSlot)
+                    .MoveDir(ch.Agent.movement.AgentForward)
+                    .Speed()
+                    .DestroyAtWallTouch()*/
+                return new Selector(
+                    new ConstDistr(1f),
+                    () =>
+                    {
+                        throw new NotImplementedException();
+                    },
+                    dt => throw new NotImplementedException()
+                );
+            };
+        }
+
+
+        //public SelectTargets 
+
+        //public SelectorByUser BallSelector() =>
+        //    throw new NotImplementedException();
     }
     
     class EffectLibrary
