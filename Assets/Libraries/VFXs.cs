@@ -29,6 +29,9 @@ public class VFXs : ScriptableObject
 
     public FireVFX Fire()
     {
-        return Instantiate(fireVFX);
+        var fire = Instantiate(fireVFX);
+        fire.gameObject.SetActive(false);
+        fire.gameObject.SetActive(true);
+        return fire;
     }
 }

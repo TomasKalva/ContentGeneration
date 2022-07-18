@@ -203,7 +203,11 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
         public Effect Damage(float damage)
         {
-            return ch => ch.Health -= damage;
+            return ch =>
+            {
+                ch.Health -= damage;
+                ch.DamageTaken.AddDamage(damage);
+            };
         }
 
         public Effect GiveSpirit(float spirit)

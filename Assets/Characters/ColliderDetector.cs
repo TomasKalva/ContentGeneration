@@ -12,7 +12,7 @@ public class ColliderDetector : MonoBehaviour
     public Collider other;
     List<Collider> hit;
 
-    public IEnumerable<Collider> Hit => hit;
+    public IEnumerable<Collider> Hit => hit.SelectNN(x => x);
 
     public bool Triggered => other != null;
 
@@ -58,17 +58,12 @@ public class ColliderDetector : MonoBehaviour
     {
         if (detectionMask == (detectionMask | (1 << other.gameObject.layer)))
         {
-            OnEnter(other);
-            this.other = other;
-            if(hit == null)
+            if (other != null)
             {
-                ;
+                OnEnter(other);
+                this.other = other;
+                hit.Add(other);
             }
-            if(other == null)
-            {
-                ;
-            }
-            hit.Add(other);
         }
     }
 
