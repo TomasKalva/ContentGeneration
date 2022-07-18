@@ -164,11 +164,43 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
 
 
+        public SelectorByUserByArgs GeometricSelector(Func<VFX> vfxF)
+        {
+            return args => ch =>
+            {
+                VFX vfx = vfxF();
+                vfx.SetColor(args.Color);
+                vfx.SetTexture(args.FlipbookTexture);
+
+                ColliderDetector collider = vfx.ColliderDetector;
+                var ts = new GeometricTargetSelector(
+                        vfx,
+                        collider,
+                        t => false
+                    );
+                vfx.transform.position = ch.Agent.transform.position;
+
+                /*
+                var movingBall = Libraries.GeometricSelectors.Ball()
+                    .PutTo(ch.Agent.rightWeaponSlot)
+                    .MoveDir(ch.Agent.movement.AgentForward)
+                    .Speed()
+                    .DestroyAtWallTouch()*/
+                return new Selector(
+                    new ConstDistr(1f),
+                    ts.SelectTargets,
+                    dt => ts.Update(dt)
+                );
+            };
+        }
+        /*
         public SelectorByUserByArgs FireSelector()
         {
-            return _ => ch =>
+            return args => ch =>
             {
                 FireVFX fire = lib.VFXs.Fire();
+                fire.SetColor(args.Color);
+                fire.SetTexture(args.FlipbookTexture);
 
                 ColliderDetector collider = fire.ColliderDetector;
                 var ts = new GeometricTargetSelector(
@@ -178,12 +210,6 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                     );
                 fire.transform.position = ch.Agent.transform.position;
 
-                /*
-                var movingBall = Libraries.GeometricSelectors.Ball()
-                    .PutTo(ch.Agent.rightWeaponSlot)
-                    .MoveDir(ch.Agent.movement.AgentForward)
-                    .Speed()
-                    .DestroyAtWallTouch()*/
                 return new Selector(
                     new ConstDistr(1f),
                     ts.SelectTargets,
@@ -207,19 +233,13 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                     );
                 movingCloud.transform.position = ch.Agent.transform.position;
 
-                /*
-                var movingBall = Libraries.GeometricSelectors.Ball()
-                    .PutTo(ch.Agent.rightWeaponSlot)
-                    .MoveDir(ch.Agent.movement.AgentForward)
-                    .Speed()
-                    .DestroyAtWallTouch()*/
                 return new Selector(
                     new ConstDistr(1f),
                     ts.SelectTargets,
                     dt => ts.Update(dt)
                 );
             };
-        }
+        }*/
 
 
         //public SelectTargets 

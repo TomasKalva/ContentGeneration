@@ -324,12 +324,17 @@ namespace ShapeGrammar
                         new List<Annotated<SelectorByUserByArgs>>()
                         {
                             //new Annotated<SelectorByUser>("Self", "self", selectorLibrary.SelfSelector()),
-                            //new Annotated<SelectorByUser>("Fire", "all those that stand in fire", selectorLibrary.FireSelector()(null)),
-                            new Annotated<SelectorByUserByArgs>("Moving cloud", "all those that stand in cloud", selectorLibrary.MovingCloudSelector()),
+                            new Annotated<SelectorByUserByArgs>("Fire", "all those that stand in fire", selectorLibrary.GeometricSelector(Lib.VFXs.Fire)),
+                            new Annotated<SelectorByUserByArgs>("Cloud", "all those that stand in cloud", selectorLibrary.GeometricSelector(Lib.VFXs.MovingCloud)),
+                            new Annotated<SelectorByUserByArgs>("Lightning", "all those that stand in lightning", selectorLibrary.GeometricSelector(Lib.VFXs.Lightning)),
+                            new Annotated<SelectorByUserByArgs>("Lightning", "all those that stand in lightning", selectorLibrary.GeometricSelector(Lib.VFXs.Fireball)),
                         },
                         new List<FlipbookTexture>()
                         {
-                            Lib.VFXs.WindTexture
+                            Lib.VFXs.WindTexture,
+                            Lib.VFXs.FireTexture,
+                            Lib.VFXs.SmokeTexture,
+                            Lib.VFXs.LightningTexture,
                         }
                     );
 

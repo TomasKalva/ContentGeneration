@@ -101,7 +101,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             {
                 var annotatedEffectByUser = Concepts.Effects.GetRandom();
                 var annotatedSelectorByUserByArgs = Concepts.Selectors.GetRandom();
-                var selectorByUser = annotatedSelectorByUserByArgs.Item(new SelectorArgs(Color.blue, Concepts.Textures.GetRandom()));
+                var selectorByUser = annotatedSelectorByUserByArgs.Item(new SelectorArgs(Color.yellow, Concepts.Textures.GetRandom()));
 
                 return new ItemState()
                 {

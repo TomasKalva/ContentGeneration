@@ -16,6 +16,18 @@ MonoBehaviour:
     texture: {fileID: 2800000, guid: c5f1164b603d9404c93f6ecedf7514a3, type: 3}
     width: 5
     height: 5
+  fireTexture:
+    texture: {fileID: 2800000, guid: 3951d8e9377626d42a6c31f7aaad02ef, type: 3}
+    width: 5
+    height: 3
+  smokeTexture:
+    texture: {fileID: 2800000, guid: 8581bd89e0030b4429d52ddefc027b79, type: 3}
+    width: 5
+    height: 5
+  lightningTexture:
+    texture: {fileID: 2800000, guid: e161b433957cd5e47ad28b6360e179e8, type: 3}
+    width: 6
+    height: 2
   fireVFX: {fileID: 18303237948005380, guid: 973b994b1ab73f143b187d8a224c1afa, type: 3}
   movingCloudVFX: {fileID: 600732697362729564, guid: 1ae0d4383621d1146b94cd355957e4a3, type: 3}
   fireballVFX: {fileID: 6834373475453394285, guid: 9d6af111517323d4d917564e583f1722, type: 3}

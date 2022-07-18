@@ -48,9 +48,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visualEffect: {fileID: 6013403318234778997}
   colliderDetector: {fileID: 1775293156385310484}
-  startColorName: 
-  endColorName: 
-  gradientName: 
+  colorName: Color
+  textureName: FlipbookTexture
+  textureWidth: FlipbookWidth
+  textureHeight: FlipbookHeight
 --- !u!1 &6744236060167406136
 GameObject:
   m_ObjectHideFlags: 0
@@ -169,11 +170,17 @@ VisualEffect:
     m_Vector3f:
       m_Array: []
     m_Vector4f:
-      m_Array: []
+      m_Array:
+      - m_Value: {x: 2.7680163, y: 3.4469638, z: 1.0967612, w: 0}
+        m_Name: Color
+        m_Overridden: 1
     m_Uint:
       m_Array: []
     m_Int:
-      m_Array: []
+      m_Array:
+      - m_Value: 3
+        m_Name: FlipbookHeight
+        m_Overridden: 1
     m_Matrix4x4f:
       m_Array: []
     m_AnimationCurve:
@@ -181,7 +188,13 @@ VisualEffect:
     m_Gradient:
       m_Array: []
     m_NamedObject:
-      m_Array: []
+      m_Array:
+      - m_Value: {fileID: 2800000, guid: 225d19d9d69b30e48b82b08c480967b2, type: 3}
+        m_Name: New Texture2DArray
+        m_Overridden: 1
+      - m_Value: {fileID: 2800000, guid: 3951d8e9377626d42a6c31f7aaad02ef, type: 3}
+        m_Name: FlipbookTexture
+        m_Overridden: 1
     m_Bool:
       m_Array: []
 --- !u!73398921 &617101836512161523

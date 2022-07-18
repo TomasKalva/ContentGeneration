@@ -48,8 +48,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visualEffect: {fileID: 6013403318234778997}
   colliderDetector: {fileID: 1775293156385310484}
-  colorName: 
-  textureName: 
+  colorName: Color
+  textureName: FlipbookTexture
+  textureWidth: FlipbookWidth
+  textureHeight: FlipbookHeight
 --- !u!1 &6744236060167406136
 GameObject:
   m_ObjectHideFlags: 0
