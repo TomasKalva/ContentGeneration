@@ -57,4 +57,36 @@ public class VFXs : ScriptableObject
     public MovingCloudVFX MovingCloud() => Instantiate(movingCloudVFX);
     public FireballVFX Fireball() => Instantiate(fireballVFX);
     public LightningVFX Lightning() => Instantiate(lightningVFX);
+
+    public List<VFX> TestVFXs(Transform parent)
+    {
+        var textures = new[]{
+            WindTexture,
+            FireTexture,
+            SmokeTexture,
+            LightningTexture,
+        };
+        var vfxs = new Func<VFX>[]
+        {
+            Fire,
+            MovingCloud,
+            Fireball,
+            Lightning,
+        };
+        var color = new Color(1f, 1f, 1f, 1f);
+
+        var vfxList = new List<VFX>();
+        textures.ForEach((texture, x) =>
+            vfxs.ForEach((vfxF, z) =>
+            {
+                var vfx = vfxF();
+                vfx.SetColor(color);
+                vfx.SetTexture(texture);
+                vfx.transform.SetParent(parent);
+                vfx.transform.position = 6f * new Vector3(x, 0f, z);
+                vfxList.Add(vfx);
+            }));
+
+        return vfxList;
+    }
 }

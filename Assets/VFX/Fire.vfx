@@ -1916,7 +1916,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 0.03
+      m_SerializableObject: 0.3
     m_Space: 2147483647
   m_Property:
     name: Alpha
@@ -5543,7 +5543,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661614884}
       inputSlot: {fileID: 8926484042661614619}
-    position: {x: 685, y: 2117}
+    position: {x: 682, y: 2001}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661614884
