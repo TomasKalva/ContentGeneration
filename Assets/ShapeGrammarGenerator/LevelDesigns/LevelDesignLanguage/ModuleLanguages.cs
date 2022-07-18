@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using static Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions.SelectorLibrary;
 
 namespace ShapeGrammar
 {
@@ -320,11 +321,15 @@ namespace ShapeGrammar
                             Lib.Enemies.MayanSwordsman
                         },
                         factionScalingEffectLibrary.EffectsByUser.Take(5).ToList(),
-                        new List<Annotated<SelectorByUser>>()
+                        new List<Annotated<SelectorByUserByArgs>>()
                         {
                             //new Annotated<SelectorByUser>("Self", "self", selectorLibrary.SelfSelector()),
                             //new Annotated<SelectorByUser>("Fire", "all those that stand in fire", selectorLibrary.FireSelector()(null)),
-                            new Annotated<SelectorByUser>("Moving cloud", "all those that stand in cloud", selectorLibrary.MovingCloudSelector()(null)),
+                            new Annotated<SelectorByUserByArgs>("Moving cloud", "all those that stand in cloud", selectorLibrary.MovingCloudSelector()),
+                        },
+                        new List<FlipbookTexture>()
+                        {
+                            Lib.VFXs.WindTexture
                         }
                     );
 

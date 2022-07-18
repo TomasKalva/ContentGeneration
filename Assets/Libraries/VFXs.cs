@@ -25,6 +25,9 @@ public class VFXs : ScriptableObject
 #endif
 
     [SerializeField]
+    FlipbookTexture windTexture;
+
+    [SerializeField]
     FireVFX fireVFX;
 
     [SerializeField]
@@ -35,6 +38,8 @@ public class VFXs : ScriptableObject
 
     [SerializeField]
     LightningVFX lightningVFX;
+
+    public FlipbookTexture WindTexture => windTexture;
 
     public FireVFX Fire() => Instantiate(fireVFX);
     public MovingCloudVFX MovingCloud() => Instantiate(movingCloudVFX);

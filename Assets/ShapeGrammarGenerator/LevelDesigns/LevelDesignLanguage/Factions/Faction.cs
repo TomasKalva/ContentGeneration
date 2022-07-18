@@ -100,17 +100,18 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             return envProgress =>
             {
                 var annotatedEffectByUser = Concepts.Effects.GetRandom();
-                var annotatedSelectorByUser = Concepts.Selectors.GetRandom();
+                var annotatedSelectorByUserByArgs = Concepts.Selectors.GetRandom();
+                var selectorByUser = annotatedSelectorByUserByArgs.Item(new SelectorArgs(Color.blue, Concepts.Textures.GetRandom()));
 
                 return new ItemState()
                 {
                     Name = annotatedEffectByUser.Name,
-                    Description = $"So basically it {annotatedEffectByUser.Description} {annotatedSelectorByUser.Description}."
+                    Description = $"So basically it {annotatedEffectByUser.Description} {annotatedSelectorByUserByArgs.Description}."
                 }
                     .OnUse(ch => 
                     {
                         Debug.Log($"Procedural item is used by {ch.Agent.gameObject.name}");
-                        var occurence = new Occurence(annotatedSelectorByUser.Item(ch), annotatedEffectByUser.Item(faction)(ch));
+                        var occurence = new Occurence(selectorByUser(ch), annotatedEffectByUser.Item(faction)(ch));
                         ch.World.AddOccurence(occurence);
                     });
             };
@@ -159,14 +160,16 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         public List<Func<ProductionList>> ProductionLists { get; }
         public List<Func<CharacterState>> CharacterStates { get; }
         public List<Annotated<EffectByFactionByUser>> Effects { get; }
-        public List<Annotated<SelectorByUser>> Selectors { get; }
+        public List<Annotated<SelectorByUserByArgs>> Selectors { get; }
+        public List<FlipbookTexture> Textures { get; }
 
-        public FactionConcepts(List<Func<ProductionList>> productionLists, List<Func<CharacterState>> characterStates, List<Annotated<EffectByFactionByUser>> effects, List<Annotated<SelectorByUser>> selectors)
+        public FactionConcepts(List<Func<ProductionList>> productionLists, List<Func<CharacterState>> characterStates, List<Annotated<EffectByFactionByUser>> effects, List<Annotated<SelectorByUserByArgs>> selectors, List<FlipbookTexture> flipbookTextures)
         {
             ProductionLists = productionLists;
             CharacterStates = characterStates;
             Effects = effects;
             Selectors = selectors;
+            Textures = flipbookTextures;
         }
 
         public FactionConcepts TakeSubset(float sizeRatio)

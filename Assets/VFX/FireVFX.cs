@@ -3,32 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
-public class FireVFX : VFX, IDestroyable
+public class FireVFX : VFX
 {
-    [SerializeField]
-    string startColorName;
-
-    [SerializeField]
-    string endColorName;
-
     [SerializeField]
     string gradientName;
 
-    public Color StartColor
-    {
-        set
-        {
-            visualEffect.SetVector4(startColorName, value);
-        }
-    }
-
-    public Color EndColor
-    {
-        set
-        {
-            visualEffect.SetVector4(endColorName, value);
-        }
-    }
 
     public Gradient Gradient
     {
@@ -36,10 +15,5 @@ public class FireVFX : VFX, IDestroyable
         {
             visualEffect.SetGradient(gradientName, value);
         }
-    }
-
-    public void Destroy(float timeS)
-    {
-        Destroy(gameObject, timeS);
     }
 }

@@ -12,6 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f47dd8e05435374b8795b00973475a1, type: 3}
   m_Name: VFXs
   m_EditorClassIdentifier: 
+  windTexture:
+    texture: {fileID: 2800000, guid: c5f1164b603d9404c93f6ecedf7514a3, type: 3}
+    width: 5
+    height: 5
   fireVFX: {fileID: 18303237948005380, guid: 973b994b1ab73f143b187d8a224c1afa, type: 3}
   movingCloudVFX: {fileID: 600732697362729564, guid: 1ae0d4383621d1146b94cd355957e4a3, type: 3}
   fireballVFX: {fileID: 6834373475453394285, guid: 9d6af111517323d4d917564e583f1722, type: 3}

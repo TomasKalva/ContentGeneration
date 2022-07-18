@@ -115,6 +115,20 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         }
     }
 
+    public struct SelectorArgs
+    {
+        public Color Color { get; }
+        public FlipbookTexture FlipbookTexture { get; }
+
+        public SelectorArgs(Color color, FlipbookTexture flipbookTexture)
+        {
+            Color = color;
+            FlipbookTexture = flipbookTexture;
+        }
+    }
+
+    public delegate SelectorByUser SelectorByUserByArgs(SelectorArgs args);
+
     class SelectorLibrary
     {
         Libraries lib;
@@ -147,17 +161,15 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 dt => true
             );
 
-        public class SelectorArgs
-        {
-
-        }
 
 
-        public Func<SelectorArgs, SelectorByUser> FireSelector()
+
+        public SelectorByUserByArgs FireSelector()
         {
             return _ => ch =>
             {
                 FireVFX fire = lib.VFXs.Fire();
+
                 ColliderDetector collider = fire.ColliderDetector;
                 var ts = new GeometricTargetSelector(
                         fire,
@@ -180,11 +192,13 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             };
         }
 
-        public Func<SelectorArgs, SelectorByUser> MovingCloudSelector()
+        public SelectorByUserByArgs MovingCloudSelector()
         {
-            return _ => ch =>
+            return args => ch =>
             {
                 MovingCloudVFX movingCloud = lib.VFXs.MovingCloud();
+                movingCloud.SetColor(args.Color);
+                movingCloud.SetTexture(args.FlipbookTexture);
                 ColliderDetector collider = movingCloud.ColliderDetector;
                 var ts = new GeometricTargetSelector(
                         movingCloud,

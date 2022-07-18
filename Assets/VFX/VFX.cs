@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,11 +16,86 @@ public class VFX : MonoBehaviour, IDestroyable
     protected ColliderDetector colliderDetector;
     public ColliderDetector ColliderDetector => colliderDetector;
 
-    public virtual void SetColor(Color color) { }
-    public virtual void SetTexture() { }
+    #region Parametrization
+
+    [SerializeField]
+    string colorName;
+
+    [SerializeField]
+    string textureName;
+
+    [SerializeField]
+    string textureWidth;
+
+    [SerializeField]
+    string textureHeight;
+
+    public Color Color
+    {
+        set
+        {
+            visualEffect.SetVector4(colorName, value);
+        }
+    }
+
+    Texture Texture
+    {
+        set
+        {
+            visualEffect.SetTexture(textureName, value);
+        }
+    }
+
+    int TextureWidth
+    {
+        set
+        {
+            visualEffect.SetInt(textureWidth, value);
+        }
+    }
+
+    int TextureHeight
+    {
+        set
+        {
+            visualEffect.SetInt(textureHeight, value);
+        }
+    }
+
+    public virtual void SetColor(Color color)
+    {
+        Color = color;
+    }
+
+    public virtual void SetTexture(FlipbookTexture flipbookTexture)
+    {
+        Texture = flipbookTexture.Texture;
+        TextureWidth = flipbookTexture.Width;
+        TextureHeight = flipbookTexture.Height;
+    }
+
+    #endregion
 
     public virtual void Destroy(float timeS)
     {
         Destroy(gameObject, timeS);
     }
+}
+
+/// <summary>
+/// Describes texture made of multiple smaller textures in grid.
+/// </summary>
+[Serializable]
+public class FlipbookTexture
+{
+    [SerializeField]
+    Texture texture;
+    [SerializeField]
+    int width;
+    [SerializeField]
+    int height;
+
+    public Texture Texture => texture;
+    public int Width => width;
+    public int Height => height;
 }
