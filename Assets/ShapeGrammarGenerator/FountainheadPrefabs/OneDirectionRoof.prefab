@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3451741780534927737}
   - component: {fileID: 3256856974140780095}
   - component: {fileID: 3393792409087758492}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: OneDirectionRoof
   m_TagString: Untagged
   m_Icon: {fileID: 0}

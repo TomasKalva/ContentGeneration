@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3352810698672278595}
   - component: {fileID: 9188248284321713681}
   - component: {fileID: 4220900612625813622}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: CrossRoof
   m_TagString: Untagged
   m_Icon: {fileID: 0}

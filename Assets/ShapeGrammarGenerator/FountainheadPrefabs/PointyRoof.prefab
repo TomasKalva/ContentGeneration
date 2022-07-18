@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1203116446052783209}
   - component: {fileID: 5585020274817696108}
   - component: {fileID: -2979926724727582506}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: PointyRoof
   m_TagString: Untagged
   m_Icon: {fileID: 0}

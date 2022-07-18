@@ -1,6 +1,7 @@
 ﻿using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using Assets.Util;
 using ContentGeneration.Assets.UI.Model;
+using ContentGeneration.Assets.UI.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +51,7 @@ namespace ShapeGrammar
                 })
             );
 
-            L.FactionsLanguage.InitializeFactions(3);
+            L.FactionsLanguage.InitializeFactions(1);
             /*State.LC.AddEvent(5, () =>
             {
                 L.TestingLanguage.LargeLevel();
@@ -324,22 +325,33 @@ namespace ShapeGrammar
                         new List<Annotated<SelectorByUserByArgs>>()
                         {
                             //new Annotated<SelectorByUser>("Self", "self", selectorLibrary.SelfSelector()),
-                            new Annotated<SelectorByUserByArgs>("Fire", "all those that stand in fire", selectorLibrary.GeometricSelector(Lib.VFXs.Fire)),
-                            new Annotated<SelectorByUserByArgs>("Cloud", "all those that stand in cloud", selectorLibrary.GeometricSelector(Lib.VFXs.MovingCloud)),
-                            new Annotated<SelectorByUserByArgs>("Lightning", "all those that stand in lightning", selectorLibrary.GeometricSelector(Lib.VFXs.Lightning)),
-                            new Annotated<SelectorByUserByArgs>("Lightning", "all those that stand in lightning", selectorLibrary.GeometricSelector(Lib.VFXs.Fireball)),
+                            new Annotated<SelectorByUserByArgs>("Fire", "all those that stand in fire", selectorLibrary.GeometricSelector(Lib.VFXs.Fire, 8f, selectorLibrary.RightHandOfCharacter(0.5f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
+                            new Annotated<SelectorByUserByArgs>("Cloud", "all those that stand in cloud", selectorLibrary.GeometricSelector(Lib.VFXs.MovingCloud, 4f, selectorLibrary.FrontOfCharacter(1.2f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
+                            new Annotated<SelectorByUserByArgs>("Lightning", "all those that stand in lightning", selectorLibrary.GeometricSelector(Lib.VFXs.Lightning, 6f, selectorLibrary.FrontOfCharacter(0.5f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
+                            new Annotated<SelectorByUserByArgs>("Fireball", "all those that are hit by fireball", selectorLibrary.GeometricSelector(Lib.VFXs.Fireball, 4f, selectorLibrary.FrontOfCharacter(0.8f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
                         },
                         new List<FlipbookTexture>()
                         {
                             Lib.VFXs.WindTexture,
                             Lib.VFXs.FireTexture,
                             Lib.VFXs.SmokeTexture,
-                            Lib.VFXs.LightningTexture,
+                            //Lib.VFXs.LightningTexture,
                         }
                     );
 
-
                 var faction = new Faction(concepts);
+
+                /*concepts.Selectors.ForEach((selector, x) =>
+                    concepts.Textures.ForEach((texture, y) => 
+                        {
+                            var ch = Lib.Enemies.SkinnyWoman();
+                            ch.MakeGeometry();
+                            var occurence = new Occurence(selector.Item(new SelectorArgs(Color.yellow, texture))(ch), factionScalingEffectLibrary.EffectsByUser.GetRandom().Item(faction)(ch));
+                            ch.World.AddOccurence(occurence);
+                        }
+                    )
+                );*/
+
                 var factionManifestation = faction.GetFactionManifestation();
                 State.LC.AddEvent(
                     new LevelConstructionEvent(5, () =>
@@ -368,7 +380,7 @@ namespace ShapeGrammar
 
             //PlO.ProgressFunctionPlacer(fe.CreateInteractiveObjectFactory(), new UniformIntDistr(1, 4)).Place(path);
             PlO.ProgressFunctionPlacer(progress => Lib.InteractiveObjects.Item(fe.CreateItemFactory()(progress)), new UniformIntDistr(1, 4)).Place(path);
-            PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(path);
+            //PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(path);
 
 
             //path.LastArea().AddInteractiveObject(fe.FactionManifestation.ContinueManifestation());

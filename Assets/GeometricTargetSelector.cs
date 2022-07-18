@@ -29,7 +29,7 @@ public class GeometricTargetSelector
         this.destroyable = destroyable;
         this.colliderDetector = colliderDetector;
         this.finishedInTime = finishedInTime;
-        SelectTargets = () => colliderDetector.Hit.Select(c => c.GetComponentInParent<Agent>().CharacterState);
+        SelectTargets = () => colliderDetector.Hit.SelectNN(c => c.GetComponentInParent<Agent>()?.CharacterState);
     }
 
     public bool Update(float deltaT)

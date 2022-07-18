@@ -163,8 +163,29 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
 
 
+        public delegate void InitializeSelector(CharacterState caster, Rigidbody selector);
 
-        public SelectorByUserByArgs GeometricSelector(Func<VFX> vfxF)
+        public InitializeSelector ConstPosition(Vector3 pos) 
+        {
+            return (ch, s) => s.position = pos;
+        }
+
+        public InitializeSelector FrontOfCharacter(float frontDist)
+        {
+            return (ch, s) => s.position = ch.Agent.GetGroundPosition() + ch.Agent.movement.AgentForward * frontDist;
+        }
+
+        public InitializeSelector RightHandOfCharacter(float frontDist)
+        {
+            return (ch, s) => s.position = ch.Agent.GetRightHandPosition() + ch.Agent.movement.AgentForward * frontDist + 0.2f * Vector3.down;
+        }
+
+        public InitializeSelector Move(Func<CharacterState, Vector3> directionF, float speed)
+        {
+            return (ch, s) => s.velocity = speed * directionF(ch);
+        }
+
+        public SelectorByUserByArgs GeometricSelector(Func<VFX> vfxF, float duration, InitializeSelector initSelector)
         {
             return args => ch =>
             {
@@ -172,13 +193,22 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 vfx.SetColor(args.Color);
                 vfx.SetTexture(args.FlipbookTexture);
 
+                var rb = vfx.gameObject.AddComponent<Rigidbody>();
+                rb.useGravity = false;
+                initSelector(ch, rb);
+
+                rb.transform.forward = ch.Agent.transform.forward;
+
                 ColliderDetector collider = vfx.ColliderDetector;
+                var countdown = new CountdownTimer(duration);
+                var wallHitCountdown = new EventsCountdown(10);
                 var ts = new GeometricTargetSelector(
                         vfx,
                         collider,
-                        t => false
+                        dt => countdown.Finished(dt) || wallHitCountdown.Finished(collider.Hit.SelectNN(hit => hit.gameObject).Where(go => go.layer == LayerMask.NameToLayer("StaticEnvironment")).Any())
                     );
-                vfx.transform.position = ch.Agent.transform.position;
+                
+                //vfx.transform.position = ch.Agent.transform.position;
 
                 /*
                 var movingBall = Libraries.GeometricSelectors.Ball()
@@ -186,13 +216,54 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                     .MoveDir(ch.Agent.movement.AgentForward)
                     .Speed()
                     .DestroyAtWallTouch()*/
-                return new Selector(
+
+                var selector = new Selector(
                     new ConstDistr(1f),
                     ts.SelectTargets,
                     dt => ts.Update(dt)
                 );
+                selector.AddImmuneCharacter(ch);
+                return selector;
             };
         }
+
+        /*
+        public SelectorByUserByArgs GeometricStarSelector(Func<VFX> vfxF, int raysCount)
+        {
+            return args => ch =>
+            {
+                VFX vfx = vfxF();
+                vfx.SetColor(args.Color);
+                vfx.SetTexture(args.FlipbookTexture);
+                
+                Enumerable.Range(0, raysCount).ForEach(i =>
+                {
+
+                }
+                var rb = vfx.gameObject.AddComponent<Rigidbody>();
+                rb.useGravity = false;
+                initSelector(ch, rb);
+
+                rb.transform.forward = ch.Agent.transform.forward;
+
+                ColliderDetector collider = vfx.ColliderDetector;
+                var ts = new GeometricTargetSelector(
+                        vfx,
+                        collider,
+                        t => false
+                    );
+
+                var selector = new Selector(
+                    new ConstDistr(1f),
+                    ts.SelectTargets,
+                    dt => ts.Update(dt)
+                );
+                selector.AddImmuneCharacter(ch);
+                return selector;
+            };
+        }*/
+
+
         /*
         public SelectorByUserByArgs FireSelector()
         {

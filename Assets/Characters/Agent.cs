@@ -238,6 +238,16 @@ public class Agent : MonoBehaviour
 		CharacterState.viewCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
 	}
 
+	public Vector3 GetGroundPosition()
+    {
+		return transform.position;
+	}
+
+	public Vector3 GetRightHandPosition()
+	{
+		return rightWeaponSlot.transform.position;
+	}
+
 	public void Turn(Vector2 direction)
 	{
 		if (direction.sqrMagnitude > 0.0001f/* && !acting.Busy*/)

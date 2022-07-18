@@ -99,19 +99,19 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             // Add effects to the item
             return envProgress =>
             {
-                var annotatedEffectByUser = Concepts.Effects.GetRandom();
+                var annotatedEffectByFactionByUser = Concepts.Effects.GetRandom();
                 var annotatedSelectorByUserByArgs = Concepts.Selectors.GetRandom();
                 var selectorByUser = annotatedSelectorByUserByArgs.Item(new SelectorArgs(Color.yellow, Concepts.Textures.GetRandom()));
 
                 return new ItemState()
                 {
-                    Name = annotatedEffectByUser.Name,
-                    Description = $"So basically it {annotatedEffectByUser.Description} {annotatedSelectorByUserByArgs.Description}."
+                    Name = annotatedEffectByFactionByUser.Name,
+                    Description = $"So basically it {annotatedEffectByFactionByUser.Description} {annotatedSelectorByUserByArgs.Description}."
                 }
                     .OnUse(ch => 
                     {
                         Debug.Log($"Procedural item is used by {ch.Agent.gameObject.name}");
-                        var occurence = new Occurence(selectorByUser(ch), annotatedEffectByUser.Item(faction)(ch));
+                        var occurence = new Occurence(selectorByUser(ch), annotatedEffectByFactionByUser.Item(faction)(ch));
                         ch.World.AddOccurence(occurence);
                     });
             };
