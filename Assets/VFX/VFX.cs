@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
-public class VFX : MonoBehaviour
+public class VFX : MonoBehaviour, IDestroyable
 {
     [SerializeField]
     protected VisualEffect visualEffect;
@@ -17,4 +17,9 @@ public class VFX : MonoBehaviour
 
     public virtual void SetColor(Color color) { }
     public virtual void SetTexture() { }
+
+    public virtual void Destroy(float timeS)
+    {
+        Destroy(gameObject, timeS);
+    }
 }

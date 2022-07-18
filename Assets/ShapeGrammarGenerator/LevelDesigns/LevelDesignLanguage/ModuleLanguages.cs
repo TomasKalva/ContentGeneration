@@ -323,7 +323,8 @@ namespace ShapeGrammar
                         new List<Annotated<SelectorByUser>>()
                         {
                             //new Annotated<SelectorByUser>("Self", "self", selectorLibrary.SelfSelector()),
-                            new Annotated<SelectorByUser>("Fire", "all those that stand in fire", selectorLibrary.FireSelector()(null))
+                            //new Annotated<SelectorByUser>("Fire", "all those that stand in fire", selectorLibrary.FireSelector()(null)),
+                            new Annotated<SelectorByUser>("Moving cloud", "all those that stand in cloud", selectorLibrary.MovingCloudSelector()(null)),
                         }
                     );
 

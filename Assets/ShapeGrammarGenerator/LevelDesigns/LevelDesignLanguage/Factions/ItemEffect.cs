@@ -180,6 +180,33 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             };
         }
 
+        public Func<SelectorArgs, SelectorByUser> MovingCloudSelector()
+        {
+            return _ => ch =>
+            {
+                MovingCloudVFX movingCloud = lib.VFXs.MovingCloud();
+                ColliderDetector collider = movingCloud.ColliderDetector;
+                var ts = new GeometricTargetSelector(
+                        movingCloud,
+                        collider,
+                        t => false
+                    );
+                movingCloud.transform.position = ch.Agent.transform.position;
+
+                /*
+                var movingBall = Libraries.GeometricSelectors.Ball()
+                    .PutTo(ch.Agent.rightWeaponSlot)
+                    .MoveDir(ch.Agent.movement.AgentForward)
+                    .Speed()
+                    .DestroyAtWallTouch()*/
+                return new Selector(
+                    new ConstDistr(1f),
+                    ts.SelectTargets,
+                    dt => ts.Update(dt)
+                );
+            };
+        }
+
 
         //public SelectTargets 
 

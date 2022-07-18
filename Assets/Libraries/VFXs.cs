@@ -27,11 +27,17 @@ public class VFXs : ScriptableObject
     [SerializeField]
     FireVFX fireVFX;
 
-    public FireVFX Fire()
-    {
-        var fire = Instantiate(fireVFX);
-        fire.gameObject.SetActive(false);
-        fire.gameObject.SetActive(true);
-        return fire;
-    }
+    [SerializeField]
+    MovingCloudVFX movingCloudVFX;
+
+    [SerializeField]
+    FireballVFX fireballVFX;
+
+    [SerializeField]
+    LightningVFX lightningVFX;
+
+    public FireVFX Fire() => Instantiate(fireVFX);
+    public MovingCloudVFX MovingCloud() => Instantiate(movingCloudVFX);
+    public FireballVFX Fireball() => Instantiate(fireballVFX);
+    public LightningVFX Lightning() => Instantiate(lightningVFX);
 }

@@ -13,3 +13,6 @@ MonoBehaviour:
   m_Name: VFXs
   m_EditorClassIdentifier: 
   fireVFX: {fileID: 18303237948005380, guid: 973b994b1ab73f143b187d8a224c1afa, type: 3}
+  movingCloudVFX: {fileID: 600732697362729564, guid: 1ae0d4383621d1146b94cd355957e4a3, type: 3}
+  fireballVFX: {fileID: 6834373475453394285, guid: 9d6af111517323d4d917564e583f1722, type: 3}
+  lightningVFX: {fileID: 6751895925672123220, guid: 19b75388dcd832645b8548c10b970991, type: 3}
