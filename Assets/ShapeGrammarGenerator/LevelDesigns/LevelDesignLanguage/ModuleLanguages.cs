@@ -429,7 +429,7 @@ namespace ShapeGrammar
 
         public void LinearBranch(FactionEnvironment fe, int progress)
         {
-            Env.Line(fe.ProductionList() , NodesQueries.All, 1, out var path);
+            Env.Line(fe.ProductionList() , NodesQueries.All, 5, out var path);
 
             //PlO.ProgressFunctionPlacer(fe.CreateInteractiveObjectFactory(), new UniformIntDistr(1, 4)).Place(path);
             var itemFactories = Enumerable.Range(0, 3).Select(_ => fe.CreateItemFactory()).ToList();

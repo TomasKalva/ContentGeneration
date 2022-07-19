@@ -88,8 +88,6 @@ namespace ContentGeneration.Assets.UI.Model
             Description = "";
             OnUseDelegate = _ => { };
             OnDropDelegate = _ => { };
-            OnEquipDelegate = _ => { };
-            OnUnequipDelegate = _ => { };
             OnUpdateDelegate = _ => { };
         }
 
@@ -116,22 +114,6 @@ namespace ContentGeneration.Assets.UI.Model
             OnDropDelegate = characterAction;
             return this;
             //Debug.Log($"Dropping {Name}");
-        }
-
-        public CharacterAction OnEquipDelegate { get; protected set; }
-        public ItemState OnEquip(CharacterAction characterAction)
-        {
-            OnEquipDelegate = characterAction;
-            return this;
-            //Debug.Log($"Equipping {Name}");
-        }
-
-        public CharacterAction OnUnequipDelegate { get; protected set; }
-        public ItemState OnUnequip(CharacterAction characterAction)
-        {
-            OnUnequipDelegate = characterAction;
-            return this;
-            //Debug.Log($"Unequipping {Name}");
         }
 
         public CharacterAction OnUpdateDelegate { get; protected set; }

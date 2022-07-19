@@ -188,6 +188,11 @@ namespace ContentGeneration.Assets.UI.Model
             return slots.Where(slot => slot.Item == null).FirstOrDefault();
         }
 
+        InventorySlot SlotWithSameStackableItem(IEnumerable<InventorySlot> slots, string itemName)
+        {
+            return slots.Where(slot => slot.Item?.Name == itemName).FirstOrDefault();
+        }
+
         IEnumerable<InventorySlot> AllSlots()
         {
             return PassiveSlots.Concat(
@@ -201,18 +206,24 @@ namespace ContentGeneration.Assets.UI.Model
         }
 
         /// <summary>
-        /// Returns slot the item is put to.
+        /// Adds item and returns slot the item is put to.
         /// </summary>
         public InventorySlot AddItem(SlotType slotType, ItemState item)
         {
+            if (item.IsStackable)
+            {
+                var stackableSlot = SlotWithSameStackableItem(GetSlots(slotType), item.Name);
+                if(stackableSlot != null)
+                {
+                    stackableSlot.Item.StacksCount += item.StacksCount;
+                    return stackableSlot;
+                }
+            }
+
             var slot = AvailableSlot(GetSlots(slotType));
             if (slot != null)
             {
                 slot.Item = item;
-                if (slot.SlotType != SlotType.Passive)
-                {
-                    item?.OnEquipDelegate(character);
-                }
                 return slot;
             }
             else
@@ -245,19 +256,13 @@ namespace ContentGeneration.Assets.UI.Model
         public void EquipItem(InventorySlot itemSlot)
         {
             var item = itemSlot.Item;
-            if (MoveFromSlotToSlots(itemSlot, ActiveSlots))
-            {
-                item?.OnEquipDelegate(character);
-            }
+            MoveFromSlotToSlots(itemSlot, ActiveSlots);
         }
 
         public void UnequipItem(InventorySlot itemSlot)
         {
             var item = itemSlot.Item;
-            if (MoveFromSlotToSlots(itemSlot, PassiveSlots))
-            {
-                item?.OnUnequipDelegate(character);
-            }
+            MoveFromSlotToSlots(itemSlot, PassiveSlots);
         }
 
 #if NOESIS
