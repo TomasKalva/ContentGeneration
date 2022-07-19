@@ -24,7 +24,7 @@
     </UserControl.Style>
     <StackPanel>
         <comp:ProgressBarNum DataContext="{Binding Health}" Color="Red"/>
-        <comp:ProgressBarNum DataContext="{Binding Will}" Color="Green"/>
+        <comp:ProgressBarNum DataContext="{Binding Stamina}" Color="Green"/>
         <Border Background="White" Width="50" BorderThickness="2" BorderBrush="Black">
             <TextBlock Text="{Binding DamageTaken.Damage}" FontSize="10" Foreground="Black" TextAlignment="Center" VerticalAlignment="Center"/>
         </Border>

@@ -136,7 +136,8 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                         var occurence = new Occurence(selectorByUser(ch), effectByUser(ch));
                         ch.World.AddOccurence(occurence);
                     })
-                    .SetConsumable();
+                    .SetConsumable()
+                    .SetStackable(1);
             };
         }
 

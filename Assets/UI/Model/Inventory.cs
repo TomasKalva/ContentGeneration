@@ -316,9 +316,9 @@ namespace ContentGeneration.Assets.UI.Model
                 return false;
             }
         }
-
-        public virtual void UseItem() {}
+        
 #endif
+        public virtual void UseItem() {}
     }
 
     public class PlayerInventory : Inventory

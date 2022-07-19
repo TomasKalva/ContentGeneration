@@ -60,6 +60,28 @@ namespace ContentGeneration.Assets.UI.Model
             return this;
         }
 
+        int _stacksCount;
+        public int StacksCount
+        {
+            get => _stacksCount;
+            set { _stacksCount = value; PropertyChanged.OnPropertyChanged(this); }
+        }
+
+        bool _isStackable;
+        public bool IsStackable
+        {
+            get => _isStackable;
+            set { _isStackable = value; PropertyChanged.OnPropertyChanged(this); }
+        }
+
+        public ItemState SetStackable(int stacksCount)
+        {
+            StacksCount = stacksCount;
+            IsStackable = true;
+            return this;
+        }
+
+
         public ItemState()
         {
             Name = "";

@@ -123,11 +123,20 @@ namespace ContentGeneration.Assets.UI.Model
         }
     }
 
-#if NOESIS
     public delegate void InteractionDelegate<InteractiveObjectT>(InteractiveObjectState<InteractiveObjectT> interactiveObject, PlayerCharacterState playerCharacter)
-        where InteractiveObjectT : InteractiveObject;
+#if NOESIS
+        where InteractiveObjectT : InteractiveObject
+#else
+    where InteractiveObjectT : class
+#endif
+        ;
 
-    public class InteractiveObjectState<InteractiveObjectT> : InteractiveObjectState where InteractiveObjectT : InteractiveObject
+    public class InteractiveObjectState<InteractiveObjectT> : InteractiveObjectState
+#if NOESIS
+    where InteractiveObjectT : InteractiveObject
+#else
+    where InteractiveObjectT : class
+#endif
     {
         InteractiveObjectT _intObjT;
         public InteractiveObjectT IntObj 
@@ -136,7 +145,9 @@ namespace ContentGeneration.Assets.UI.Model
             protected set
             {
                 _intObjT = value;
+#if NOESIS
                 InteractiveObject = value;
+#endif
             }
         }
 
@@ -149,6 +160,7 @@ namespace ContentGeneration.Assets.UI.Model
             set { _interactOptions = value; OnPropertyChanged(this); }
         }
 
+#if NOESIS
         InteractionSequence<InteractiveObjectT> _interaction;
         public InteractionSequence<InteractiveObjectT> Interaction 
         { 
@@ -186,14 +198,17 @@ namespace ContentGeneration.Assets.UI.Model
         {
             Interaction?.Reset(this);
         }
+#endif
 
-    #region Api
+#region Api
 
+#if NOESIS
         public InteractiveObjectState<InteractiveObjectT> SetInteraction(InteractionSequence<InteractiveObjectT> interaction)
         {
             Interaction = interaction;
             return this;
         }
+#endif
 
         public InteractiveObjectState<InteractiveObjectT> Interact(InteractionDelegate<InteractiveObjectT> onInteract)
         {
@@ -208,14 +223,17 @@ namespace ContentGeneration.Assets.UI.Model
             return this;
         }
 
-    #endregion
+#endregion
 
 
     }
-#endif
 
+    public class InteractOptions<InteractiveObjectT> : INotifyPropertyChanged
 #if NOESIS
-    public class InteractOptions<InteractiveObjectT> : INotifyPropertyChanged where InteractiveObjectT : InteractiveObject
+    where InteractiveObjectT : InteractiveObject
+#else
+    where InteractiveObjectT : class
+#endif
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -227,6 +245,7 @@ namespace ContentGeneration.Assets.UI.Model
             set { _options = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
+#if NOESIS
         public InteractOptions(params InteractOption<InteractiveObjectT>[] options)
         {
             Options = new ObservableCollection<InteractOption<InteractiveObjectT>>();
@@ -244,6 +263,7 @@ namespace ContentGeneration.Assets.UI.Model
                 Options[optionIndex].Action(interactiveObjectState, (PlayerCharacterState)agent.CharacterState);
             }
         }
+#endif
 
         public InteractOptions<InteractiveObjectT> AddOption(string description, InteractionDelegate<InteractiveObjectT> action)
         {
@@ -253,7 +273,12 @@ namespace ContentGeneration.Assets.UI.Model
         }
 }
 
-    public class InteractOption<InteractiveObjectT> where InteractiveObjectT : InteractiveObject
+    public class InteractOption<InteractiveObjectT>
+#if NOESIS
+    where InteractiveObjectT : InteractiveObject
+#else
+    where InteractiveObjectT : class
+#endif
     {
         public string Description { get; }
         public InteractionDelegate<InteractiveObjectT> Action { get; }
@@ -266,5 +291,4 @@ namespace ContentGeneration.Assets.UI.Model
             Index = index;
         }
     }
-#endif
 }

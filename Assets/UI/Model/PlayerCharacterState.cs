@@ -31,10 +31,12 @@ namespace ContentGeneration.Assets.UI.Model
             get { return _currentInteractiveObjectState; }
             set
             {
+#if NOESIS
                 if (_currentInteractiveObjectState != null && value == null)
                 {
                     _currentInteractiveObjectState.PlayerLeft();
                 }
+#endif
                 _currentInteractiveObjectState = value; 
                 OnPropertyChanged(this); 
             }
