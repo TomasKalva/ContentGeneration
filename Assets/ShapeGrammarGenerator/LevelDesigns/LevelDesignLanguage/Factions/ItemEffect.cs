@@ -398,8 +398,9 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         float EffectPower(FactionEnvironment factionEnv, CharacterState user)
         {
             var affinity = factionEnv.FactionManifestation.Faction.Affinity;
+            var manifProgress = factionEnv.FactionManifestation.Progress;
             var vers = user.Prop.Versatility;
-            return affinity + vers;
+            return affinity + 7 * manifProgress + vers;
         }
 
         Annotated<EffectByFactionEnvironmentByUser> FromPower(string name, string description, Func<float, Effect> powerToEffect)
