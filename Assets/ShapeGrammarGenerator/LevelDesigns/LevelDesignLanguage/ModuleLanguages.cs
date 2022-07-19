@@ -306,6 +306,9 @@ namespace ShapeGrammar
             var effectsLibrary = new EffectLibrary(selectorLibrary);
             var factionScalingEffectLibrary = new FactionScalingEffectLibrary(effectsLibrary);
 
+            // Make sure that item names are generated uniquely across all factions
+            var uniqueNameGenerator = new UniqueNameGenerator();
+
             var concepts = new FactionConcepts(
                     new List<Func<ProductionList>>()
                     {
@@ -320,27 +323,53 @@ namespace ShapeGrammar
                     Lib.Enemies.AllAgents().Shuffle().Take(2).ToList()
                     ,
                     factionScalingEffectLibrary.EffectsByUser.Take(5).ToList(),
-                    new List<Annotated<SelectorByUserByArgs>>()
+                    new List<Annotated<SelectorByArgsByUser>>()
                     {
                             //new Annotated<SelectorByUser>("Self", "self", selectorLibrary.SelfSelector()),
-                            new Annotated<SelectorByUserByArgs>("Fire", "all those that stand in fire", selectorLibrary.GeometricSelector(Lib.VFXs.Fire, 8f, selectorLibrary.RightHandOfCharacter(0.5f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
-                            new Annotated<SelectorByUserByArgs>("Cloud", "all those that stand in cloud", selectorLibrary.GeometricSelector(Lib.VFXs.MovingCloud, 4f, selectorLibrary.FrontOfCharacter(1.2f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
-                            new Annotated<SelectorByUserByArgs>("Lightning", "all those that stand in lightning", selectorLibrary.GeometricSelector(Lib.VFXs.Lightning, 6f, selectorLibrary.FrontOfCharacter(0.5f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
-                            new Annotated<SelectorByUserByArgs>("Fireball", "all those that are hit by fireball", selectorLibrary.GeometricSelector(Lib.VFXs.Fireball, 4f, selectorLibrary.FrontOfCharacter(0.8f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
+                            new Annotated<SelectorByArgsByUser>("Fire", "all those that stand in fire", selectorLibrary.GeometricSelector(Lib.VFXs.Fire, 8f, selectorLibrary.RightHandOfCharacter(0.5f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
+                            new Annotated<SelectorByArgsByUser>("Cloud", "all those that stand in cloud", selectorLibrary.GeometricSelector(Lib.VFXs.MovingCloud, 4f, selectorLibrary.FrontOfCharacter(1.2f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
+                            new Annotated<SelectorByArgsByUser>("Lightning", "all those that stand in lightning", selectorLibrary.GeometricSelector(Lib.VFXs.Lightning, 6f, selectorLibrary.FrontOfCharacter(0.5f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
+                            new Annotated<SelectorByArgsByUser>("Fireball", "all those that are hit by fireball", selectorLibrary.GeometricSelector(Lib.VFXs.Fireball, 4f, selectorLibrary.FrontOfCharacter(0.8f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
                     },
                     new List<FlipbookTexture>()
                     {
                             Lib.VFXs.WindTexture,
                             Lib.VFXs.FireTexture,
                             Lib.VFXs.SmokeTexture,
-                        //Lib.VFXs.LightningTexture,
+                            Lib.VFXs.LightningTexture,
+                    },
+                    new List<string>()
+                    {
+                        "office",
+                        "resource",
+                        "university",
+                        "judgment",
+                        "software",
+                        "story",
+                        "injury",
+                        "shirt",
+                        "distribution",
+                        "tale",
+                    },
+                    new List<string>()
+                    {
+                        "violet",
+                        "squalid",
+                        "intelligent",
+                        "successfull",
+                        "defiant",
+                        "fallacious",
+                        "lamentable",
+                        "ordinary",
+                        "absorbing",
+                        "hanging",
                     }
                 );
 
             Enumerable.Range(0, factionsCount).ForEach(_ =>
             {
-                var factionConcepts = concepts.TakeSubset(3, 4, 2, 2);
-                var faction = new Faction(concepts);
+                var factionConcepts = concepts.TakeSubset(3, 4, 2, 2, 8, 8);
+                var faction = new Faction(concepts, uniqueNameGenerator);
 
                 State.LC.AddEvent(
                     new LevelConstructionEvent(5, () =>
@@ -373,36 +402,19 @@ namespace ShapeGrammar
 
         }
 
-
-
-        public void LinearBranch(FactionEnvironment fe, int progress)
+        /// <summary>
+        /// Returns interactive object that allows player to continue the manifestation.
+        /// </summary>
+        InteractiveObjectState ProgressOfManifestation(FactionManifestation manifestation)
         {
-            Env.Line(fe.ProductionList() , NodesQueries.All, 1, out var path);
-
-            //PlO.ProgressFunctionPlacer(fe.CreateInteractiveObjectFactory(), new UniformIntDistr(1, 4)).Place(path);
-            PlO.ProgressFunctionPlacer(progress => Lib.InteractiveObjects.Item(fe.CreateItemFactory()(progress)), new UniformIntDistr(1, 4)).Place(path);
-            //PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(path);
-
-            /*
-            var manif = fe.FactionManifestation;
-            manif.Progress++;
-            State.LC.AddEvent(
-                new LevelConstructionEvent(
-                    10 + manif.Progress, 
-                    () =>
-                    {
-                        LinearBranch(manif.GetFactionEnvironment(), manif.Progress);
-                        return true;
-                    })
-                );*/
-            var progressManifestation = Lib.InteractiveObjects.InteractiveObject("Progress of Manifestation", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
+            return Lib.InteractiveObjects.InteractiveObject("Progress of Manifestation", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
                     .SetInteraction(
                         new InteractionSequence<InteractiveObject>()
-                            .Decision($"Progress this manifestation ({progress + 1})",
+                            .Decision($"Progress this manifestation ({manifestation.Progress + 1})",
                             new InteractOption<InteractiveObject>("Yes",
                                 (ios, player) =>
                                 {
-                                    fe.FactionManifestation.ContinueManifestation(State.LC, Branches());
+                                    manifestation.ContinueManifestation(State.LC, Branches());
                                     Msg.Show("Progress achieved");
                                     ios.SetInteraction(
                                         new InteractionSequence<InteractiveObject>()
@@ -412,7 +424,21 @@ namespace ShapeGrammar
                             , 0)
                         )
                     );
-            path.LastArea().AddInteractiveObject(progressManifestation);
+        }
+
+
+        public void LinearBranch(FactionEnvironment fe, int progress)
+        {
+            Env.Line(fe.ProductionList() , NodesQueries.All, 1, out var path);
+
+            //PlO.ProgressFunctionPlacer(fe.CreateInteractiveObjectFactory(), new UniformIntDistr(1, 4)).Place(path);
+            var itemFactories = Enumerable.Range(0, 3).Select(_ => fe.CreateItemFactory()).ToList();
+            PlO.ProgressFunctionPlacer(
+                progress => Lib.InteractiveObjects.Item(itemFactories.GetRandom()(progress)), 
+                new UniformIntDistr(1, 4)).Place(path);
+            //PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(path);
+
+            path.LastArea().AddInteractiveObject(ProgressOfManifestation(fe.FactionManifestation));
         }
     }
 }

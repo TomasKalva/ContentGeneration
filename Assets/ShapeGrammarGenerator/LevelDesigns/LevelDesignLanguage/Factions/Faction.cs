@@ -12,29 +12,35 @@ using static ShapeGrammar.FactionsLanguage;
 namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 {
 
+
     /// <summary>
     /// Persistent over the entire game.
     /// </summary>
     class Faction
     {
-        public FactionConcepts Concepts { get; }
+        FactionConcepts Concepts { get; }
+
+        public UniqueNameGenerator UniqueNameGenerator { get; }
 
         /// <summary>
         /// Affinity of player with the faction.
         /// </summary>
         public int Affinity { get; set; }
 
+
+
         public int StartingBranchProgress => Math.Min(3, Affinity / 4);
 
-        public Faction(FactionConcepts concepts)
+        public Faction(FactionConcepts concepts, UniqueNameGenerator uniqueNameGenerator)
         {
             Concepts = concepts;
+            UniqueNameGenerator = uniqueNameGenerator;
             Affinity = 0;
         }
 
         public FactionManifestation GetFactionManifestation()
         {
-            return new FactionManifestation(Concepts.TakeSubset(3, 3, 2, 2), this);
+            return new FactionManifestation(Concepts.TakeSubset(3, 3, 2, 2, 6, 6), this);
         }
     }
 
@@ -43,7 +49,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
     /// </summary>
     class FactionManifestation
     {
-        public FactionConcepts Concepts { get; }
+        FactionConcepts Concepts { get; }
         public Faction Faction { get; }
         /// <summary>
         /// How many environments player already went through.
@@ -59,7 +65,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
         public FactionEnvironment GetFactionEnvironment()
         {
-            return new FactionEnvironment(Concepts.TakeSubset(2, 1 + Progress, 1, 1), this);
+            return new FactionEnvironment(Concepts.TakeSubset(2, 2 + Progress, 2, 2, 3, 3), this);
         }
 
         public void ContinueManifestation(LevelConstructor levelConstructor, IEnumerable<FactionEnvironmentConstructor> branches)
@@ -82,7 +88,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
     /// </summary>
     class FactionEnvironment
     {
-        public FactionConcepts Concepts { get; }
+        FactionConcepts Concepts { get; }
         public FactionManifestation FactionManifestation { get; }
 
         public FactionEnvironment(FactionConcepts concepts, FactionManifestation factionManifestation)
@@ -97,38 +103,44 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         }
 
         /// <summary>
-        /// Returns a factory that returns similar items.
+        /// Returns a factory that returns the same items.
         /// </summary>
         public ProgressFactory<ItemState> CreateItemFactory()
         {
+            /*
             var faction = FactionManifestation.Faction;
             var affinity = faction.Affinity;
-            var progress = FactionManifestation.Progress;
+            var progress = FactionManifestation.Progress;*/
 
+            // Fix item properties
+            var annotatedEffectByFactionEnvByUser = Concepts.Effects.GetRandom();
+            var effectByUser = annotatedEffectByFactionEnvByUser.Item(this);
+
+            var annotatedSelectorByArgsByUser = Concepts.Selectors.GetRandom();
+            var selectorByUser = annotatedSelectorByArgsByUser.Item(new SelectorArgs(Color.yellow, Concepts.Textures.GetRandom()));
+
+            var name = FactionManifestation.Faction.UniqueNameGenerator.GenerateUniqueName(Concepts.Adjectives, Concepts.Nouns);
+            name = string.Concat(name[0].ToString().ToUpper(), name.Substring(1));
 
             // Add effects to the item
-            return envProgress =>
+            return _ => // the effects are independent of the progress so that they can easily stack
             {
-                var annotatedEffectByFactionByUser = Concepts.Effects.GetRandom();
-                var annotatedSelectorByUserByArgs = Concepts.Selectors.GetRandom();
-                var selectorByUser = annotatedSelectorByUserByArgs.Item(new SelectorArgs(Color.yellow, Concepts.Textures.GetRandom()));
-
                 return new ItemState()
                 {
-                    Name = annotatedEffectByFactionByUser.Name,
-                    Description = $"So basically it {annotatedEffectByFactionByUser.Description} {annotatedSelectorByUserByArgs.Description}."
+                    Name = name,
+                    Description = $"So basically it {annotatedEffectByFactionEnvByUser.Description} {annotatedSelectorByArgsByUser.Description}."
                 }
                     .OnUse(ch => 
                     {
                         Debug.Log($"Procedural item is used by {ch.Agent.gameObject.name}");
-                        var occurence = new Occurence(selectorByUser(ch), annotatedEffectByFactionByUser.Item(faction)(ch));
+                        var occurence = new Occurence(selectorByUser(ch), effectByUser(ch));
                         ch.World.AddOccurence(occurence);
                     })
                     .SetConsumable();
             };
-
-            throw new NotImplementedException();
         }
+
+
 
         /// <summary>
         /// Returns a factory that returns similar enemies.
@@ -170,27 +182,40 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
     {
         public List<Func<ProductionList>> ProductionLists { get; }
         public List<Func<CharacterState>> CharacterStates { get; }
-        public List<Annotated<EffectByFactionByUser>> Effects { get; }
-        public List<Annotated<SelectorByUserByArgs>> Selectors { get; }
+        public List<Annotated<EffectByFactionEnvironmentByUser>> Effects { get; }
+        public List<Annotated<SelectorByArgsByUser>> Selectors { get; }
         public List<FlipbookTexture> Textures { get; }
+        public List<string> Nouns { get; }
+        public List<string> Adjectives { get; }
 
-        public FactionConcepts(List<Func<ProductionList>> productionLists, List<Func<CharacterState>> characterStates, List<Annotated<EffectByFactionByUser>> effects, List<Annotated<SelectorByUserByArgs>> selectors, List<FlipbookTexture> flipbookTextures)
+        public FactionConcepts(
+            List<Func<ProductionList>> productionLists, 
+            List<Func<CharacterState>> characterStates, 
+            List<Annotated<EffectByFactionEnvironmentByUser>> effects, 
+            List<Annotated<SelectorByArgsByUser>> selectors, 
+            List<FlipbookTexture> flipbookTextures,
+            List<string> nouns,
+            List<string> adjectives)
         {
             ProductionLists = productionLists;
             CharacterStates = characterStates;
             Effects = effects;
             Selectors = selectors;
             Textures = flipbookTextures;
+            Nouns = nouns;
+            Adjectives = adjectives;
         }
 
-        public FactionConcepts TakeSubset(int characterStatesCount, int effectsCount, int selectorsCount, int texturesCount)
+        public FactionConcepts TakeSubset(int characterStatesCount, int effectsCount, int selectorsCount, int texturesCount, int nounsCount, int adjectivesCount)
         {
             return new FactionConcepts(
                     ProductionLists,
-                    CharacterStates.Take(characterStatesCount).ToList(),
-                    Effects.Take(effectsCount).ToList(),
-                    Selectors.Take(selectorsCount).ToList(),
-                    Textures.Take(texturesCount).ToList()
+                    CharacterStates.Shuffle().Take(characterStatesCount).ToList(),
+                    Effects.Shuffle().Take(effectsCount).ToList(),
+                    Selectors.Shuffle().Take(selectorsCount).ToList(),
+                    Textures.Shuffle().Take(texturesCount).ToList(),
+                    Nouns.Shuffle().Take(nounsCount).ToList(),
+                    Adjectives.Shuffle().Take(adjectivesCount).ToList()
                 );
         }
 
@@ -198,5 +223,32 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         {
 
         }*/
+    }
+
+    class UniqueNameGenerator
+    {
+        Dictionary<string, int> AlreadyGenerated { get; }
+
+        public UniqueNameGenerator()
+        {
+            AlreadyGenerated = new Dictionary<string, int>();
+        }
+
+        public string GenerateUniqueName(List<string> adjectives, List<string> nouns)
+        {
+            int c = 100;
+            string generated = "";
+            while (c-- >= 0)
+            {
+                generated = $"{adjectives.GetRandom()} {nouns.GetRandom()}";
+                if (!AlreadyGenerated.ContainsKey(generated))
+                {
+                    AlreadyGenerated.Add(generated, 0);
+                    return generated;
+                }
+            }
+            var n = ++AlreadyGenerated[generated];
+            return $"{generated} {n}";
+        }
     }
 }

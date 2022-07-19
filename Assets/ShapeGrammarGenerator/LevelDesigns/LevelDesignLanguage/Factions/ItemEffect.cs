@@ -127,7 +127,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         }
     }
 
-    public delegate SelectorByUser SelectorByUserByArgs(SelectorArgs args);
+    public delegate SelectorByUser SelectorByArgsByUser(SelectorArgs args);
 
     class SelectorLibrary
     {
@@ -185,7 +185,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             return (ch, s) => s.velocity = speed * directionF(ch);
         }
 
-        public SelectorByUserByArgs GeometricSelector(Func<VFX> vfxF, float duration, InitializeSelector initSelector)
+        public SelectorByArgsByUser GeometricSelector(Func<VFX> vfxF, float duration, InitializeSelector initSelector)
         {
             return args => ch =>
             {
@@ -389,23 +389,23 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         }
     }
 
-    delegate EffectByUser EffectByFactionByUser(Faction faction);
+    delegate EffectByUser EffectByFactionEnvironmentByUser(FactionEnvironment factionEnv);
 
     class FactionScalingEffectLibrary
     {
-        public List<Annotated<EffectByFactionByUser>> EffectsByUser { get; }
+        public List<Annotated<EffectByFactionEnvironmentByUser>> EffectsByUser { get; }
 
-        float EffectPower(Faction faction, CharacterState user)
+        float EffectPower(FactionEnvironment factionEnv, CharacterState user)
         {
-            var affinity = faction.Affinity;
+            var affinity = factionEnv.FactionManifestation.Faction.Affinity;
             var vers = user.Prop.Versatility;
             return affinity + vers;
         }
 
-        Annotated<EffectByFactionByUser> FromPower(string name, string description, Func<float, Effect> powerToEffect)
+        Annotated<EffectByFactionEnvironmentByUser> FromPower(string name, string description, Func<float, Effect> powerToEffect)
         {
 
-            return new Annotated<EffectByFactionByUser>(name, description, faction => user =>
+            return new Annotated<EffectByFactionEnvironmentByUser>(name, description, faction => user =>
             {
                 var power = EffectPower(faction, user);
                 return powerToEffect(power);
@@ -414,7 +414,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
         public FactionScalingEffectLibrary(EffectLibrary eff)
         {
-            EffectsByUser = new List<Annotated<EffectByFactionByUser>>()
+            EffectsByUser = new List<Annotated<EffectByFactionEnvironmentByUser>>()
             {
                 FromPower("Heal", "heals", p => eff.Heal(5f + 5f * p)),
                 FromPower("Damage", "damages", p => eff.Damage(10f + 5f * p)),
