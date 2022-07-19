@@ -29,7 +29,7 @@
                                         RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}" 
                                VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" TextWrapping="WrapWithOverflow" FontSize="10"/>
                 </Border>
-                <!--
+
                 <Border Canvas.Right="3" Canvas.Bottom="3" Background="Black" Width="20" Height="20">
                     <Border.Style>
                         <Style TargetType="Border">
@@ -41,12 +41,12 @@
                             </Style.Triggers>
                         </Style>
                     </Border.Style>
-                    <TextBlock FontSize="14"
+                    <TextBlock FontSize="14" Foreground="White"
                                VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center"
                                Text="{Binding Path=DataContext.Item.StacksCount,
                                         RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}">
                     </TextBlock>
-                </Border> -->
+                </Border>
             </Canvas>
         </DataTemplate>
 
