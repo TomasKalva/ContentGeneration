@@ -79,7 +79,7 @@ namespace ContentGeneration.Assets.UI.Model
 
     public interface IInventory
     {
-        InventorySlot AddItem(SlotType slotType, ItemState item);
+        InventorySlot AddItem(IEnumerable<InventorySlot> slots, ItemState item);
         void UseItem();
 
         void Update();
@@ -183,24 +183,24 @@ namespace ContentGeneration.Assets.UI.Model
             RightWeaponSlot = new InventorySlot(SlotType.RightWeapon, 0);
         }
 
-        InventorySlot AvailableSlot(IEnumerable<InventorySlot> slots)
+        public InventorySlot AvailableSlot(IEnumerable<InventorySlot> slots)
         {
             return slots.Where(slot => slot.Item == null).FirstOrDefault();
         }
 
-        InventorySlot SlotWithSameStackableItem(IEnumerable<InventorySlot> slots, string itemName)
+        public InventorySlot SlotWithSameStackableItem(IEnumerable<InventorySlot> slots, string itemName)
         {
             return slots.Where(slot => slot.Item?.Name == itemName).FirstOrDefault();
         }
 
-        IEnumerable<InventorySlot> AllSlots()
+        public IEnumerable<InventorySlot> AllSlots()
         {
             return PassiveSlots.Concat(
                         ActiveSlots.Concat(
                             new InventorySlot[2] { LeftWeaponSlot, RightWeaponSlot }));
         }
 
-        IEnumerable<InventorySlot> GetSlots(SlotType slotType)
+        public IEnumerable<InventorySlot> GetSlots(SlotType slotType)
         {
             return AllSlots().Where(slot => slot.SlotType == slotType);
         }
@@ -208,11 +208,11 @@ namespace ContentGeneration.Assets.UI.Model
         /// <summary>
         /// Adds item and returns slot the item is put to.
         /// </summary>
-        public InventorySlot AddItem(SlotType slotType, ItemState item)
+        public InventorySlot AddItem(IEnumerable<InventorySlot> slots, ItemState item)
         {
             if (item.IsStackable)
             {
-                var stackableSlot = SlotWithSameStackableItem(GetSlots(slotType), item.Name);
+                var stackableSlot = SlotWithSameStackableItem(slots, item.Name);
                 if(stackableSlot != null)
                 {
                     stackableSlot.Item.StacksCount += item.StacksCount;
@@ -220,7 +220,7 @@ namespace ContentGeneration.Assets.UI.Model
                 }
             }
 
-            var slot = AvailableSlot(GetSlots(slotType));
+            var slot = AvailableSlot(slots);
             if (slot != null)
             {
                 slot.Item = item;

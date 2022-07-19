@@ -101,7 +101,12 @@ namespace ContentGeneration.Assets.UI.Model
                 characterAction(character);
                 if (IsConsumable)
                 {
-                    character.Inventory.RemoveItem(this);
+                    bool remove = IsStackable ? --StacksCount <= 0 : true;
+
+                    if (remove)
+                    {
+                        character.Inventory.RemoveItem(this);
+                    }
                 }
             };
             return this;

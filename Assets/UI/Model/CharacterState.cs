@@ -164,7 +164,7 @@ namespace ContentGeneration.Assets.UI.Model
         {
             var slot = slotType.IsWeapon() ?
                 Inventory.EquipWeapon(slotType, item) :
-                Inventory.AddItem(slotType, item);
+                Inventory.AddItem(Inventory.GetSlots(slotType), item);
 #if NOESIS
             if(Agent != null)
             {

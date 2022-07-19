@@ -436,7 +436,7 @@ namespace ShapeGrammar
             PlO.ProgressFunctionPlacer(
                 progress => Lib.InteractiveObjects.Item(itemFactories.GetRandom()(progress)), 
                 new UniformIntDistr(1, 4)).Place(path);
-            //PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(path);
+            PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(path);
 
             path.LastArea().AddInteractiveObject(ProgressOfManifestation(fe.FactionManifestation));
         }
