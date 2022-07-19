@@ -52,11 +52,13 @@ namespace ShapeGrammar
             );
 
             L.FactionsLanguage.InitializeFactions(1);
-            /*State.LC.AddEvent(5, () =>
+            /*State.LC.AddEvent(
+                new LevelConstructionEvent(5, () =>
             {
                 L.TestingLanguage.LargeLevel();
                 return false;
-            });*/
+            })
+            );*/
         }
     }
 
@@ -298,70 +300,67 @@ namespace ShapeGrammar
 
         public void InitializeFactions(int factionsCount)
         {
-            var branches = new List<Action<FactionEnvironment, int>>()
-            {
-                //LockedDoorBranch,
-                //RandomBranches,
-                LinearBranch
-            };
+            var branches = Branches();
 
             var selectorLibrary = new SelectorLibrary(Lib);
             var effectsLibrary = new EffectLibrary(selectorLibrary);
             var factionScalingEffectLibrary = new FactionScalingEffectLibrary(effectsLibrary);
 
-            Enumerable.Range(0, factionsCount).ForEach(_ =>
-            {
-                var concepts = new FactionConcepts(
-                        new List<Func<ProductionList>>()
-                        {
+            var concepts = new FactionConcepts(
+                    new List<Func<ProductionList>>()
+                    {
                             Gr.PrL.Garden
-                        },
-                        new List<Func<CharacterState>>()
-                        {
-                            Lib.Enemies.SkinnyWoman,
-                            Lib.Enemies.MayanSwordsman
-                        },
-                        factionScalingEffectLibrary.EffectsByUser.Take(5).ToList(),
-                        new List<Annotated<SelectorByUserByArgs>>()
-                        {
+                    },
+                    /*new List<Func<CharacterState>>()
+                    {
+                        Lib.Enemies.SkinnyWoman,
+                        Lib.Enemies.MayanSwordsman,
+
+                    },*/
+                    Lib.Enemies.AllAgents().Shuffle().Take(2).ToList()
+                    ,
+                    factionScalingEffectLibrary.EffectsByUser.Take(5).ToList(),
+                    new List<Annotated<SelectorByUserByArgs>>()
+                    {
                             //new Annotated<SelectorByUser>("Self", "self", selectorLibrary.SelfSelector()),
                             new Annotated<SelectorByUserByArgs>("Fire", "all those that stand in fire", selectorLibrary.GeometricSelector(Lib.VFXs.Fire, 8f, selectorLibrary.RightHandOfCharacter(0.5f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
                             new Annotated<SelectorByUserByArgs>("Cloud", "all those that stand in cloud", selectorLibrary.GeometricSelector(Lib.VFXs.MovingCloud, 4f, selectorLibrary.FrontOfCharacter(1.2f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
                             new Annotated<SelectorByUserByArgs>("Lightning", "all those that stand in lightning", selectorLibrary.GeometricSelector(Lib.VFXs.Lightning, 6f, selectorLibrary.FrontOfCharacter(0.5f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
                             new Annotated<SelectorByUserByArgs>("Fireball", "all those that are hit by fireball", selectorLibrary.GeometricSelector(Lib.VFXs.Fireball, 4f, selectorLibrary.FrontOfCharacter(0.8f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
-                        },
-                        new List<FlipbookTexture>()
-                        {
+                    },
+                    new List<FlipbookTexture>()
+                    {
                             Lib.VFXs.WindTexture,
                             Lib.VFXs.FireTexture,
                             Lib.VFXs.SmokeTexture,
-                            //Lib.VFXs.LightningTexture,
-                        }
-                    );
+                        //Lib.VFXs.LightningTexture,
+                    }
+                );
 
+            Enumerable.Range(0, factionsCount).ForEach(_ =>
+            {
+                var factionConcepts = concepts.TakeSubset(3, 4, 2, 2);
                 var faction = new Faction(concepts);
 
-                /*concepts.Selectors.ForEach((selector, x) =>
-                    concepts.Textures.ForEach((texture, y) => 
-                        {
-                            var ch = Lib.Enemies.SkinnyWoman();
-                            ch.MakeGeometry();
-                            var occurence = new Occurence(selector.Item(new SelectorArgs(Color.yellow, texture))(ch), factionScalingEffectLibrary.EffectsByUser.GetRandom().Item(faction)(ch));
-                            ch.World.AddOccurence(occurence);
-                        }
-                    )
-                );*/
-
-                var factionManifestation = faction.GetFactionManifestation();
                 State.LC.AddEvent(
                     new LevelConstructionEvent(5, () =>
                     {
+                        var factionManifestation = faction.GetFactionManifestation();
                         var factionEnvironment = factionManifestation.GetFactionEnvironment();
                         branches.GetRandom()(factionEnvironment, faction.StartingBranchProgress);
                         return false;
                     })
                 );
             });
+        }
+
+        public delegate void FactionEnvironmentConstructor(FactionEnvironment fe, int progress);
+
+        public IEnumerable<FactionEnvironmentConstructor> Branches()
+        {
+            //yield return LockedDoorBranch;
+            //yield return RandomBranches;
+            yield return LinearBranch;
         }
 
         public void LockedDoorBranch(FactionEnvironment fe, int progress)
@@ -374,16 +373,46 @@ namespace ShapeGrammar
 
         }
 
+
+
         public void LinearBranch(FactionEnvironment fe, int progress)
         {
-            Env.Line(fe.ProductionList() , NodesQueries.All, 5, out var path);
+            Env.Line(fe.ProductionList() , NodesQueries.All, 1, out var path);
 
             //PlO.ProgressFunctionPlacer(fe.CreateInteractiveObjectFactory(), new UniformIntDistr(1, 4)).Place(path);
             PlO.ProgressFunctionPlacer(progress => Lib.InteractiveObjects.Item(fe.CreateItemFactory()(progress)), new UniformIntDistr(1, 4)).Place(path);
             //PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(path);
 
-
-            //path.LastArea().AddInteractiveObject(fe.FactionManifestation.ContinueManifestation());
+            /*
+            var manif = fe.FactionManifestation;
+            manif.Progress++;
+            State.LC.AddEvent(
+                new LevelConstructionEvent(
+                    10 + manif.Progress, 
+                    () =>
+                    {
+                        LinearBranch(manif.GetFactionEnvironment(), manif.Progress);
+                        return true;
+                    })
+                );*/
+            var progressManifestation = Lib.InteractiveObjects.InteractiveObject("Progress of Manifestation", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
+                    .SetInteraction(
+                        new InteractionSequence<InteractiveObject>()
+                            .Decision($"Progress this manifestation ({progress + 1})",
+                            new InteractOption<InteractiveObject>("Yes",
+                                (ios, player) =>
+                                {
+                                    fe.FactionManifestation.ContinueManifestation(State.LC, Branches());
+                                    Msg.Show("Progress achieved");
+                                    ios.SetInteraction(
+                                        new InteractionSequence<InteractiveObject>()
+                                            .Say("Thank you for your attention.")
+                                    );
+                                }
+                            , 0)
+                        )
+                    );
+            path.LastArea().AddInteractiveObject(progressManifestation);
         }
     }
 }

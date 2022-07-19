@@ -222,7 +222,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                     ts.SelectTargets,
                     dt => ts.Update(dt)
                 );
-                selector.AddImmuneCharacter(ch);
+                //selector.AddImmuneCharacter(ch);
                 return selector;
             };
         }
@@ -416,7 +416,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         {
             EffectsByUser = new List<Annotated<EffectByFactionByUser>>()
             {
-                FromPower("Heal", "heals", p => eff.Heal(5f * p)),
+                FromPower("Heal", "heals", p => eff.Heal(5f + 5f * p)),
                 FromPower("Damage", "damages", p => eff.Damage(10f + 5f * p)),
                 FromPower("Give spirit", "gives spirit to", p => eff.GiveSpirit(10f + 20f * p)),
                 FromPower("Bleed", "applies bleeding to", p => eff.Bleed(5f + 2f * p, 2f)),

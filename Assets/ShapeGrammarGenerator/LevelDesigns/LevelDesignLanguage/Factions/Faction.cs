@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using static ShapeGrammar.FactionsLanguage;
 
 namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 {
@@ -33,7 +34,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
         public FactionManifestation GetFactionManifestation()
         {
-            return new FactionManifestation(Concepts, this);
+            return new FactionManifestation(Concepts.TakeSubset(3, 3, 2, 2), this);
         }
     }
 
@@ -58,12 +59,21 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
         public FactionEnvironment GetFactionEnvironment()
         {
-            return new FactionEnvironment(Concepts, this);
+            return new FactionEnvironment(Concepts.TakeSubset(2, 1 + Progress, 1, 1), this);
         }
 
-        public InteractiveObjectState ContinueManifestation()
+        public void ContinueManifestation(LevelConstructor levelConstructor, IEnumerable<FactionEnvironmentConstructor> branches)
         {
-            throw new NotImplementedException();
+            Progress++;
+            levelConstructor.AddEvent(
+                new LevelConstructionEvent(
+                    10 + Progress,
+                    () =>
+                    {
+                        branches.GetRandom()(GetFactionEnvironment(), Progress);
+                        return true;
+                    })
+                );
         }
     }
 
@@ -113,7 +123,8 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                         Debug.Log($"Procedural item is used by {ch.Agent.gameObject.name}");
                         var occurence = new Occurence(selectorByUser(ch), annotatedEffectByFactionByUser.Item(faction)(ch));
                         ch.World.AddOccurence(occurence);
-                    });
+                    })
+                    .SetConsumable();
             };
 
             throw new NotImplementedException();
@@ -172,9 +183,15 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             Textures = flipbookTextures;
         }
 
-        public FactionConcepts TakeSubset(float sizeRatio)
+        public FactionConcepts TakeSubset(int characterStatesCount, int effectsCount, int selectorsCount, int texturesCount)
         {
-            throw new NotImplementedException();
+            return new FactionConcepts(
+                    ProductionLists,
+                    CharacterStates.Take(characterStatesCount).ToList(),
+                    Effects.Take(effectsCount).ToList(),
+                    Selectors.Take(selectorsCount).ToList(),
+                    Textures.Take(texturesCount).ToList()
+                );
         }
 
         /*public Environment(int progress)
