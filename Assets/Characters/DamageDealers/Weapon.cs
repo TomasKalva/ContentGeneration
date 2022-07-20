@@ -1,4 +1,5 @@
 using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,20 +12,27 @@ public class Weapon : MonoBehaviour
     [SerializeField]
     float pushForceIntensity = 500f;
 
-    SelectorByUser HitSelector { get; set; }
+    ByTime<SelectorByUser> HitSelectorByDuration { get; set; }
     List<Effect> Effects { get; set; }
 
-    public Weapon SetHitSelector(SelectorByUser selector)
+    public Weapon SetHitSelector(ByTime<SelectorByUser> selectorByDuration)
     {
-        HitSelector = selector;
+        HitSelectorByDuration = selectorByDuration;
         return this;
     }
 
+    bool _active;
+
     public bool Active
     {
+        get
+        {
+            return _active;
+        }
         set
         {
             Detector.enabled = value;
+            _active = value;
         }
     }
 
@@ -40,36 +48,14 @@ public class Weapon : MonoBehaviour
         return this;
     }
 
-    protected IEnumerable<Agent> HitAgents()
-    {
-        return Detector.Hit.Select(hit => hit.GetComponentInParent<Agent>());
-        /*if (Active && detector.Triggered)
-        {
-            return new Agent[1] { detector.other.GetComponentInParent<Agent>() };
-        }
-        else
-        {
-            return Enumerable.Empty<Agent>();
-        }*/
-    }
-
-    public void DealDamage(Agent owner)
+    public void DealDamage(Agent owner, float damageDuration)
     {
         var ownerState = owner.CharacterState;
         ownerState.World.AddOccurence(
             new Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions.Occurence(
-                HitSelector(ownerState),
+                HitSelectorByDuration(damageDuration)(ownerState),
                 Effects.ToArray()
                 )
             );
-        /*owner.World.AddOccurence(
-            new Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions.Occurence(
-                Weapon.GetSelector(),
-                ))*/
     }
-    /*
-    public override Vector3 PushForce(Transform enemy)
-    {
-        return pushForceIntensity * (enemy.position - Owner.transform.position).normalized;
-    }*/
 }

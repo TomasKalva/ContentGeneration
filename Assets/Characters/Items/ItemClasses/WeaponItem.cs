@@ -26,15 +26,4 @@ public class WeaponItem : ItemState
                 character.SetItemToSlot(SlotType.RightWeapon, this);
             };
     }
-
-    /*
-    public void DealDamage(CharacterState owner)
-    {
-        owner.World.AddOccurence(
-            new Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions.Occurence(
-                Weapon.HitSelector(owner),
-                Effect
-                )
-            );
-    }*/
 }

@@ -60,6 +60,8 @@ public class Attack : AnimatedAct
         agent.State = AgentState.PREPARE;
     }
 
+    float DamageDuration() => damageEndT - damageStartT;
+
     void SetSlotsActive(bool active, Agent agent)
     {
         foreach (var weaponSlot in weaponSlots)
@@ -67,11 +69,12 @@ public class Attack : AnimatedAct
             var weapon = weaponSlot.Weapon;
             if (weapon != null)
             {
-                weaponSlot.Weapon.Active = active;
-                if (active)
+                // When the damage starts
+                if (!weaponSlot.Weapon.Active && active)
                 {
-                    weapon.DealDamage(agent);
+                    weapon.DealDamage(agent, DamageDuration());
                 }
+                weaponSlot.Weapon.Active = active;
             }
         }
     }

@@ -25,6 +25,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
     public delegate IEnumerable<CharacterState> SelectTargets();
 
     public delegate bool FinishedInTime(float deltaT);
+    public delegate T ByTime<T>(float time);
 
     public class Selector
     {
@@ -226,14 +227,16 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 return selector;
             };
         }
-        public SelectorByUser WeaponSelector(ColliderDetector colliderDetector)
+
+        public ByTime<SelectorByUser> WeaponSelector(ColliderDetector colliderDetector)
         {
-            return user =>
+            return duration => user =>
             {
+                var countdown = new CountdownTimer(duration);
                 var selector = new Selector(
-                    new ConstDistr(1f), //todo: make each character be hit by weapon at most once each swing
+                    new ConstDistr(10f), //todo: make each character be hit by weapon at most once each swing
                     () => colliderDetector.Hit.SelectNN(c => c.GetComponentInParent<Agent>()?.CharacterState),
-                    dt => false
+                    dt => countdown.Finished(dt)
                 );
                 selector.AddImmuneCharacter(user);
                 return selector;
