@@ -9,13 +9,13 @@ using UnityEngine.Events;
 public class WeaponItem : ItemState
 {
     float Damage { get; }
-    Weapon Weapon { get; }
+    public Weapon Weapon { get; }
 
-    public WeaponItem(string name, string description, Transform realObject)
+    public WeaponItem(string name, string description, Weapon weapon)
     {
         Name = name;
         Description = description;
-        RealObject = realObject;
+        Weapon = weapon;
         OnUseDelegate =
             character =>
             {

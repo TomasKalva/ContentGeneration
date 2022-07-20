@@ -37,20 +37,18 @@ public class Items : ScriptableObject
 
     public ItemState FreeWill() => new FreeWill();
 
-    public ItemState SculptureClub() => new WeaponItem("Sculpture Club", "Made of idk stone", weapons.SculptureClub().transform);
-    public ItemState MayanKnife() => new WeaponItem("Mayan Knife", "Every Mayan has one", weapons.MayanKnife().transform);
+    public ItemState SculptureClub() => new WeaponItem("Sculpture Club", "Made of idk stone", weapons.SculptureClub());
+    public ItemState MayanKnife() => new WeaponItem("Mayan Knife", "Every Mayan has one", weapons.MayanKnife());
     //public ItemState Fireball() => new WeaponItem("Fireball", "It's a fireball", weapons.Fireball().transform);
-    public ItemState MayanSword() => new WeaponItem("Mayan Sword", "Like a knife but bigger", weapons.MayanSword().transform);
-    public ItemState Scythe() => new WeaponItem("Scythe", "Harvesting tool", weapons.Scythe().transform);
-    public ItemState Mace() => new WeaponItem("Mace", "Mace", weapons.Mace().transform);
-    public ItemState Katana() => new WeaponItem("Katana", "Katana", weapons.Katana().transform);
+    public ItemState MayanSword() => new WeaponItem("Mayan Sword", "Like a knife but bigger", weapons.MayanSword());
+    public ItemState Scythe() => new WeaponItem("Scythe", "Harvesting tool", weapons.Scythe());
+    public ItemState Mace() => new WeaponItem("Mace", "Mace", weapons.Mace());
+    public ItemState Katana() => new WeaponItem("Katana", "Katana", weapons.Katana());
 
     public ItemState NewItem(string name, string description) => 
         new ItemState() 
         { 
             Name = name, 
-            Description = description, 
-            // todo: add some default object model
-            RealObject = weapons.Katana().transform 
+            Description = description,
         };
 }

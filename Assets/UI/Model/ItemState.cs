@@ -41,18 +41,6 @@ namespace ContentGeneration.Assets.UI.Model
             set { _description = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
-#if NOESIS
-        [SerializeField]
-        Transform realObject;
-
-
-        public Transform RealObject
-        {
-            get => realObject;
-            set { realObject = value; PropertyChanged.OnPropertyChanged(this); }
-        }
-#endif
-
         bool IsConsumable { get; set; }
         public ItemState SetConsumable()
         {

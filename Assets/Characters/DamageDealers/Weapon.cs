@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Weapon : AreaDamage
+public class Weapon : MonoBehaviour
 {
+    ColliderDetector detector;
     bool _active;
 
     [SerializeField]
     float pushForceIntensity = 500f;
 
-    public override bool Active
+    public bool Active
     {
         get
         {
@@ -21,25 +22,31 @@ public class Weapon : AreaDamage
             _active = value;
             if (!_active)
             {
-                ResetHitAgents();
+                //ResetHitAgents();
             }
         }
     }
 
-    protected override IEnumerable<Agent> HitAgents()
+    private void Start()
     {
-        if (Active && detector.Triggered)
+        detector = GetComponent<ColliderDetector>();
+    }
+
+    protected IEnumerable<Agent> HitAgents()
+    {
+        return detector.Hit.Select(hit => hit.GetComponentInParent<Agent>());
+        /*if (Active && detector.Triggered)
         {
             return new Agent[1] { detector.other.GetComponentInParent<Agent>() };
         }
         else
         {
             return Enumerable.Empty<Agent>();
-        }
+        }*/
     }
-
+    /*
     public override Vector3 PushForce(Transform enemy)
     {
         return pushForceIntensity * (enemy.position - Owner.transform.position).normalized;
-    }
+    }*/
 }

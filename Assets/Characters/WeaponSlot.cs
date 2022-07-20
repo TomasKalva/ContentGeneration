@@ -36,12 +36,14 @@ public class WeaponSlot : MonoBehaviour
 
         //var weapon = Instantiate(weapon, transform);
         newWeapon.transform.SetParent(transform);
-        newWeapon.FindOwner();
+        //newWeapon.FindOwner();
         newWeapon.gameObject.SetActive(true);
 
         newWeapon.transform.localPosition = Vector3.zero;
         newWeapon.transform.localRotation = Quaternion.identity;
         newWeapon.transform.localScale = Vector3.one;
+
+        newWeapon.GetComponent<Renderer>().enabled = true;
 
         this.weapon = newWeapon;
     }

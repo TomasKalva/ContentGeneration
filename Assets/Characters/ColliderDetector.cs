@@ -25,10 +25,6 @@ public class ColliderDetector : MonoBehaviour
     private void Awake()
     {
         hit = new List<Collider>();
-    }
-
-    private void Start()
-    {
         var renderer = GetComponent<Renderer>();
         if (renderer != null && !Show)
         {

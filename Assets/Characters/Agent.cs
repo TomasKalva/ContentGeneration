@@ -226,13 +226,13 @@ public class Agent : MonoBehaviour
 		var leftWeaponItem = inventory.LeftWeaponSlot.Item;
 		if(leftWeaponSlot != null)
 		{
-			leftWeaponSlot.Weapon = leftWeaponItem?.RealObject.GetComponent<Weapon>();
+			leftWeaponSlot.Weapon = (leftWeaponItem as WeaponItem)?.Weapon;
 		}
 
 		var rightWeaponItem = inventory.RightWeaponSlot.Item;
 		if(rightWeaponSlot != null)
 		{
-			rightWeaponSlot.Weapon = rightWeaponItem?.RealObject.GetComponent<Weapon>();
+			rightWeaponSlot.Weapon = (rightWeaponItem as WeaponItem)?.Weapon;
 		}
 
 		CharacterState.viewCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
