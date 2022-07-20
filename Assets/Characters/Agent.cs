@@ -274,9 +274,9 @@ public class Agent : MonoBehaviour
         }
     }
 
-	public virtual void Stagger(Vector3 pushForce)
+	public virtual void Stagger()
     {
-		acting.Staggered.PushForce = pushForce;
+		//acting.Staggered.PushForce = pushForce;
 		acting.ForceIntoAct(acting.Staggered);
 	}
 }

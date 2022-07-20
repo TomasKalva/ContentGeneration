@@ -333,6 +333,11 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             return ch => ch.Health += healing;
         }
 
+        public Effect ReducePosture(float postureReduction)
+        {
+            return ch => ch.DamageTaken.AddDamage(postureReduction);
+        }
+
         public Effect Damage(float damage)
         {
             return ch =>
@@ -341,6 +346,11 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 ch.DamageTaken.AddDamage(damage);
             };
         }
+        /*
+        public EffectByUser Push(float force)
+        {
+            return user => ch => 
+        }*/
 
         public Effect GiveSpirit(float spirit)
         {

@@ -142,21 +142,21 @@ namespace ContentGeneration.Assets.UI.Model
 #endif
 
 #if NOESIS
-        public void TakeDamage(DamageDealer damageDealer)
+        public void TakeDamage(float damage)
         {
-            Health -= damageDealer.Damage;
+            Health -= damage;
 
             if (!PostureBroken)
             {
-                Posture -= damageDealer.Damage;
+                Posture -= damage;
             }
             if (Posture.Empty())
             {
-                Agent.Stagger(damageDealer.PushForce(Agent.transform));
+                Agent.Stagger(/*damageDealer.PushForce(Agent.transform)*/);
                 PostureBroken = true;
             }
 
-            DamageTaken.AddDamage(damageDealer.Damage);
+            DamageTaken.AddDamage(damage);
         }
 #endif
 
