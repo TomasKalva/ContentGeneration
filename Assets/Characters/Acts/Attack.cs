@@ -60,7 +60,7 @@ public class Attack : AnimatedAct
         agent.State = AgentState.PREPARE;
     }
 
-    void SetSlotsActive(bool active)
+    void SetSlotsActive(bool active, Agent agent)
     {
         foreach (var weaponSlot in weaponSlots)
         {
@@ -68,6 +68,10 @@ public class Attack : AnimatedAct
             if (weapon != null)
             {
                 weaponSlot.Weapon.Active = active;
+                if (active)
+                {
+                    weapon.DealDamage(agent);
+                }
             }
         }
     }
@@ -79,19 +83,19 @@ public class Attack : AnimatedAct
         {
             lockOnTarget.Finished = true;
             agent.State = AgentState.DAMAGE;
-            SetSlotsActive(true);
+            SetSlotsActive(true, agent);
         }
 
         if (agent.State == AgentState.DAMAGE && normalizedElapsed >= damageEndT)
         {
             agent.State = AgentState.RESTORE;
-            SetSlotsActive(false);
+            SetSlotsActive(false, agent);
         }
     }
 
     public override void EndAct(Agent agent)
     {
-        SetSlotsActive(false);
+        SetSlotsActive(false, agent);
         agent.State = AgentState.NORMAL;
         movementContraints.ForEach(con => con.Finished = true);
     }

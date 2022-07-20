@@ -226,6 +226,19 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 return selector;
             };
         }
+        public SelectorByUser WeaponSelector(ColliderDetector colliderDetector)
+        {
+            return user =>
+            {
+                var selector = new Selector(
+                    new ConstDistr(1f), //todo: make each character be hit by weapon at most once each swing
+                    () => colliderDetector.Hit.SelectNN(c => c.GetComponentInParent<Agent>()?.CharacterState),
+                    dt => false
+                );
+                selector.AddImmuneCharacter(user);
+                return selector;
+            };
+        }
 
         /*
         public SelectorByUserByArgs GeometricStarSelector(Func<VFX> vfxF, int raysCount)

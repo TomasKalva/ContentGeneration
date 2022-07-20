@@ -38,7 +38,8 @@ public class Libraries : ScriptableObject
     {
         Selectors = new SelectorLibrary(this);
         Effects = new EffectLibrary(Selectors);
-        Items.SetLibraries(Selectors, Effects);
+        Weapons.SetLibraries(Selectors);
+        Items.SetLibraries(Effects);
 
     }
 }

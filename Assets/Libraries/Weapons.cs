@@ -1,3 +1,4 @@
+using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using ContentGeneration.Assets.UI.Model;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,6 +23,13 @@ public class Weapons : ScriptableObject
     }
 #endif
 
+    SelectorLibrary Selectors;
+
+    public void SetLibraries(SelectorLibrary selectors)
+    {
+        Selectors = selectors;
+    }
+
     [SerializeField]
     Weapon sculptureClub;
 
@@ -45,9 +53,9 @@ public class Weapons : ScriptableObject
     [SerializeField]
     Weapon katana;
 
-    Weapon CreateSelector(Weapon weapon)
+    Weapon AddSelector(Weapon weapon)
     {
-        return weapon;
+        return weapon.SetHitSelector(Selectors.WeaponSelector(weapon.Detector));
         /*
         owner.World.AddOccurence(
             new Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions.Occurence(
@@ -57,14 +65,14 @@ public class Weapons : ScriptableObject
 
     public Weapon MayanSword()
     {
-        var sword = Instantiate(mayanSword);
+        var sword = AddSelector(Instantiate(mayanSword));
         //sword.Damage = 12f;
         return sword;
     }
 
     public Weapon MayanKnife()
     {
-        var knife = Instantiate(mayanKnife);
+        var knife = AddSelector(Instantiate(mayanKnife));
         //knife.Damage = 5f;
         return knife;
     }
@@ -79,27 +87,27 @@ public class Weapons : ScriptableObject
 
     public Weapon SculptureClub()
     {
-        var club = Instantiate(sculptureClub);
+        var club = AddSelector(Instantiate(sculptureClub));
         //club.Damage = 22f;
         return club;
     }
     public Weapon Scythe()
     {
-        var scythe = Instantiate(this.scythe);
+        var scythe = AddSelector(Instantiate(this.scythe));
         //scythe.Damage = 30f;
         return scythe;
     }
 
     public Weapon Mace()
     {
-        var mace = Instantiate(this.mace);
+        var mace = AddSelector(Instantiate(this.mace));
         //mace.Damage = 19f;
         return mace;
     }
 
     public Weapon Katana()
     {
-        var katana = Instantiate(this.katana);
+        var katana = AddSelector(Instantiate(this.katana));
         //katana.Damage = 19f;
         return katana;
     }

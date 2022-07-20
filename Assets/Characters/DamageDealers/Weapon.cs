@@ -1,3 +1,4 @@
+using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,36 +6,43 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-    ColliderDetector detector;
-    bool _active;
+    public ColliderDetector Detector { get; private set; }
 
     [SerializeField]
     float pushForceIntensity = 500f;
 
+    SelectorByUser HitSelector { get; set; }
+    List<Effect> Effects { get; set; }
+
+    public Weapon SetHitSelector(SelectorByUser selector)
+    {
+        HitSelector = selector;
+        return this;
+    }
+
     public bool Active
     {
-        get
-        {
-            return _active;
-        }
         set
         {
-            _active = value;
-            if (!_active)
-            {
-                //ResetHitAgents();
-            }
+            Detector.enabled = value;
         }
     }
 
-    private void Start()
+    private void Awake()
     {
-        detector = GetComponent<ColliderDetector>();
+        Detector = GetComponent<ColliderDetector>();
+        Effects = new List<Effect>();
+    }
+
+    public Weapon AddEffect(Effect effect)
+    {
+        Effects.Add(effect);
+        return this;
     }
 
     protected IEnumerable<Agent> HitAgents()
     {
-        return detector.Hit.Select(hit => hit.GetComponentInParent<Agent>());
+        return Detector.Hit.Select(hit => hit.GetComponentInParent<Agent>());
         /*if (Active && detector.Triggered)
         {
             return new Agent[1] { detector.other.GetComponentInParent<Agent>() };
@@ -43,6 +51,21 @@ public class Weapon : MonoBehaviour
         {
             return Enumerable.Empty<Agent>();
         }*/
+    }
+
+    public void DealDamage(Agent owner)
+    {
+        var ownerState = owner.CharacterState;
+        ownerState.World.AddOccurence(
+            new Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions.Occurence(
+                HitSelector(ownerState),
+                Effects.ToArray()
+                )
+            );
+        /*owner.World.AddOccurence(
+            new Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions.Occurence(
+                Weapon.GetSelector(),
+                ))*/
     }
     /*
     public override Vector3 PushForce(Transform enemy)

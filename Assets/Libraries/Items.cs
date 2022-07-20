@@ -27,23 +27,21 @@ public class Items : ScriptableObject
     Weapons weapons;
 
     EffectLibrary Effects;
-    SelectorLibrary Selectors;
 
-    public void SetLibraries(SelectorLibrary selectors, EffectLibrary effects)
+    public void SetLibraries(EffectLibrary effects)
     {
-        Selectors = selectors;
         Effects = effects;
     }
 
     public ItemState FreeWill() => new FreeWill();
 
-    public ItemState SculptureClub() => new WeaponItem("Sculpture Club", "Made of idk stone", weapons.SculptureClub());
-    public ItemState MayanKnife() => new WeaponItem("Mayan Knife", "Every Mayan has one", weapons.MayanKnife());
+    public ItemState SculptureClub() => new WeaponItem("Sculpture Club", "Made of idk stone", weapons.SculptureClub(), Effects.Damage(5));
+    public ItemState MayanKnife() => new WeaponItem("Mayan Knife", "Every Mayan has one", weapons.MayanKnife(), Effects.Damage(5));
     //public ItemState Fireball() => new WeaponItem("Fireball", "It's a fireball", weapons.Fireball().transform);
-    public ItemState MayanSword() => new WeaponItem("Mayan Sword", "Like a knife but bigger", weapons.MayanSword());
-    public ItemState Scythe() => new WeaponItem("Scythe", "Harvesting tool", weapons.Scythe());
-    public ItemState Mace() => new WeaponItem("Mace", "Mace", weapons.Mace());
-    public ItemState Katana() => new WeaponItem("Katana", "Katana", weapons.Katana());
+    public ItemState MayanSword() => new WeaponItem("Mayan Sword", "Like a knife but bigger", weapons.MayanSword(), Effects.Damage(5));
+    public ItemState Scythe() => new WeaponItem("Scythe", "Harvesting tool", weapons.Scythe(), Effects.Damage(5));
+    public ItemState Mace() => new WeaponItem("Mace", "Mace", weapons.Mace(), Effects.Damage(5));
+    public ItemState Katana() => new WeaponItem("Katana", "Katana", weapons.Katana(), Effects.Damage(5));
 
     public ItemState NewItem(string name, string description) => 
         new ItemState() 
