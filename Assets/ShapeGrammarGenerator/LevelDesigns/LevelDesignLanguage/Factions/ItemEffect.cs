@@ -66,13 +66,13 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         void UpdateHits(float deltaT)
         {
             Hits.ForEach(hit => hit.TimeUntilNextHit -= deltaT);
-            Hits.RemoveAll(hit => hit.TimeExpired);
+            Hits.RemoveAll(hit => hit.Character.Agent == null || hit.TimeExpired);
         }
 
         bool CanBeHit(CharacterState characterState)
         {
             bool immune = ImmuneCharacters.Contains(characterState);
-            bool hitAlready = Hits.Where(hit => hit.Character == characterState).Any();
+            bool hitAlready = Hits.Where(hit => hit.Character.Agent != null && hit.Character == characterState).Any();
             return !immune && !hitAlready;
         }
 
@@ -206,7 +206,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 var ts = new GeometricTargetSelector(
                         vfx,
                         collider,
-                        dt => countdown.Finished(dt) || wallHitCountdown.Finished(collider.Hit.SelectNN(hit => hit.gameObject).Where(go => go.layer == LayerMask.NameToLayer("StaticEnvironment")).Any())
+                        dt => countdown.Finished(dt) || wallHitCountdown.Finished(collider.Hits.SelectNN(hit => hit.gameObject).Where(go => go.layer == LayerMask.NameToLayer("StaticEnvironment")).Any())
                     );
                 
                 //vfx.transform.position = ch.Agent.transform.position;
@@ -234,8 +234,8 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             {
                 var countdown = new CountdownTimer(duration);
                 var selector = new Selector(
-                    new ConstDistr(10f), //todo: make each character be hit by weapon at most once each swing
-                    () => colliderDetector.Hit.SelectNN(c => c.GetComponentInParent<Agent>()?.CharacterState),
+                    new ConstDistr(10f),
+                    () => colliderDetector.Hits.SelectNN(c => c?.GetComponentInParent<Agent>()?.CharacterState),
                     dt => countdown.Finished(dt)
                 );
                 selector.AddImmuneCharacter(user);
@@ -351,7 +351,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
         public Effect DamagePosture(float postureDamage)
         {
-            return ch => ch.PostureManager.DamagePosture(postureDamage);
+            return ch => ch.DamageTaken.AddDamage(postureDamage);
         }
 
         public Effect Damage(float damage)

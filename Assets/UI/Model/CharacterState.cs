@@ -75,7 +75,7 @@ namespace ContentGeneration.Assets.UI.Model
 
         public Action OnUpdate { get; set; }
 
-        public PostureManager PostureManager { get; }
+        public DamageTaken DamageTaken { get; }
 
         public bool PostureBroken { get; set; }
 
@@ -89,7 +89,7 @@ namespace ContentGeneration.Assets.UI.Model
             Stamina = new FloatRange(20, 20);
             Posture = 10f;
             Inventory = new EnemyInventory(this);
-            PostureManager = new PostureManager(2f);
+            DamageTaken = new DamageTaken(2f);
             Prop = new CharacterProperties();
             Prop.Character = this;
             OnUpdate = () => { };
@@ -133,7 +133,7 @@ namespace ContentGeneration.Assets.UI.Model
                 PostureBroken = false;
             }
 
-            PostureManager.Update(Time.fixedDeltaTime);
+            DamageTaken.Update(Time.fixedDeltaTime);
 
             OnUpdate();
 
@@ -156,7 +156,7 @@ namespace ContentGeneration.Assets.UI.Model
                 PostureBroken = true;
             }
 
-            PostureManager.DamagePosture(damage);
+            DamageTaken.AddDamage(damage);
         }
 #endif
 
@@ -265,7 +265,10 @@ namespace ContentGeneration.Assets.UI.Model
 #endregion
     }
 
-    public class PostureManager : INotifyPropertyChanged
+    /// <summary>
+    /// Stores amount of damage taken in the last few moments.
+    /// </summary>
+    public class DamageTaken : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -289,7 +292,7 @@ namespace ContentGeneration.Assets.UI.Model
             set { _damage = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
-        public PostureManager(float timeOutDuration)
+        public DamageTaken(float timeOutDuration)
         {
             this.timeOutDuration = timeOutDuration;
             Damage = 0f;
@@ -297,10 +300,10 @@ namespace ContentGeneration.Assets.UI.Model
             timeRemaining = 0f;
         }
 
-        public void DamagePosture(float postureDamage)
+        public void AddDamage(float damage)
         {
             timeRemaining = timeOutDuration;
-            Damage += postureDamage;
+            Damage += damage;
             TimedOut = false;
         }
 

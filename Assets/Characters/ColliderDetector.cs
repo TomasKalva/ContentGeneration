@@ -10,9 +10,9 @@ public class ColliderDetector : MonoBehaviour
     LayerMask detectionMask = -1;
 
     public Collider other;
-    List<Collider> hit;
+    List<Collider> hits;
 
-    public IEnumerable<Collider> Hit => hit.SelectNN(x => x);
+    public IEnumerable<Collider> Hits => hits.Where(x => x != null);
 
     public bool Triggered => other != null;
 
@@ -24,7 +24,7 @@ public class ColliderDetector : MonoBehaviour
 
     private void Awake()
     {
-        hit = new List<Collider>();
+        hits = new List<Collider>();
         var renderer = GetComponent<Renderer>();
         if (renderer != null && !Show)
         {
@@ -58,7 +58,7 @@ public class ColliderDetector : MonoBehaviour
             {
                 OnEnter(other);
                 this.other = other;
-                hit.Add(other);
+                hits.Add(other);
             }
         }
     }
@@ -67,7 +67,7 @@ public class ColliderDetector : MonoBehaviour
     {
         if (detectionMask == (detectionMask | (1 << other.gameObject.layer)))
         {
-            hit.Remove(other);
+            hits.Remove(other);
             this.other = null;
         }
     }

@@ -41,7 +41,7 @@ public class Items : ScriptableObject
     public ItemState MayanSword() => new WeaponItem("Mayan Sword", "Like a knife but bigger", weapons.MayanSword(), Effects.Damage(5));
     public ItemState Scythe() => new WeaponItem("Scythe", "Harvesting tool", weapons.Scythe(), Effects.Damage(5));
     public ItemState Mace() => new WeaponItem("Mace", "Mace", weapons.Mace(), Effects.Damage(5));
-    public ItemState Katana() => new WeaponItem("Katana", "Katana", weapons.Katana(), Effects.Damage(5));
+    public ItemState Katana() => new WeaponItem("Katana", "Katana", weapons.Katana(), Effects.Damage(25));
 
     public ItemState NewItem(string name, string description) => 
         new ItemState() 
