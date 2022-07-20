@@ -66,6 +66,21 @@ namespace ContentGeneration.Assets.UI.Model
 #if NOESIS
         [SerializeField]
 #endif
+        private float _spirit;
+
+        public float Spirit
+        {
+            get { return _spirit; }
+            set
+            {
+                _spirit = value;
+                OnPropertyChanged(this);
+            }
+        }
+
+#if NOESIS
+        [SerializeField]
+#endif
         private CharacterStats _stats;
         public CharacterStats Stats
         {
@@ -115,6 +130,16 @@ namespace ContentGeneration.Assets.UI.Model
             Debug.Log($"Adding item: {item}");
 #endif
             return SetItemToSlot(SlotType.Passive, item);
+        }
+
+        public bool Pay(int spiritCost)
+        {
+            if (Spirit >= spiritCost)
+            {
+                Spirit -= spiritCost;
+                return true;
+            }
+            return false;
         }
 
 #if NOESIS

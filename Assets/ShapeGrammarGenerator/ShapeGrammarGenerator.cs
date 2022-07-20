@@ -42,10 +42,10 @@ namespace ShapeGrammar
 
             // todo: make this initialization less annoying
             var playerState = new ContentGeneration.Assets.UI.Model.PlayerCharacterState();
+            playerState.Spirit = 100;
             var stats = new ContentGeneration.Assets.UI.Model.CharacterStats(playerState)
             {
                 Will = 100,
-                Spirit = 100,
                 Endurance = 500,
             };
             playerState.Stats = stats;

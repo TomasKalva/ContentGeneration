@@ -48,6 +48,7 @@ namespace ContentGeneration.Assets.UI.Model
                 if(Character != null)
                 {
                     Character.Health.Maximum = 50 + 10 * _will;
+                    Debug.Log($"Max health:{Character.Health.Maximum}");
                 }
                 PropertyChanged.OnPropertyChanged(this); 
             }
@@ -104,7 +105,10 @@ namespace ContentGeneration.Assets.UI.Model
                     if(agent != null)
                     {
                         agent.acting.SetActingSpeedMultiplier(1f + 0.01f * _agility);
-                        var move = agent.acting.GetAct("Move");
+                        //var walk = agent.acting.GetAct("Walk") as Move;
+                        //walk.SetSpeedMultiplier(1f + 0.01f * _agility);
+                        var run = agent.acting.GetAct("Run") as Move;
+                        run.SetSpeedMultiplier(1f + 0.01f * _agility);
                     }
                 }
                 PropertyChanged.OnPropertyChanged(this);
@@ -161,20 +165,6 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
-#if NOESIS
-        [SerializeField]
-#endif
-        private float _spirit;
-
-        public float Spirit
-        {
-            get { return _spirit; }
-            set
-            {
-                _spirit = value;
-                PropertyChanged.OnPropertyChanged(this);
-            }
-        }
         public CharacterStats(CharacterState character)
         {
             Character = character;
@@ -189,8 +179,6 @@ namespace ContentGeneration.Assets.UI.Model
             Posture = Posture;
             Resistances = Resistances;
             Versatility = Versatility;
-
-            Spirit = Spirit;
         }
     }
 }

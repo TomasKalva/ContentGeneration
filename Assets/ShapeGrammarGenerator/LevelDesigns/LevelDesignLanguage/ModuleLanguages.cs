@@ -52,6 +52,14 @@ namespace ShapeGrammar
             );
 
             L.FactionsLanguage.InitializeFactions(1);
+
+            State.LC.AddEvent(
+                new LevelConstructionEvent(90,
+                () =>
+                {
+                    L.AscendingLanguage.AscendingBranch(() => 100);
+                    return true;
+                }));
             /*State.LC.AddEvent(
                 new LevelConstructionEvent(5, () =>
             {
@@ -261,7 +269,7 @@ namespace ShapeGrammar
                                                 .Say("Thanks for the apples, mate")
                                         );
 
-                                        player.Stats.Spirit += 10 * (1 + progress);
+                                        player.Spirit += 10 * (1 + progress);
                                         //Levels().Next().AddPossibleBranch(FarmerBranch(progress + 1);
                                     }
                                     else
@@ -277,7 +285,7 @@ namespace ShapeGrammar
             Env.ExtendRandomly(Gr.PrL.Garden(), NodesQueries.LastCreated, 5, out var garden);
             var apples = Enumerable.Range(0, 5).Select(_ =>
                 Lib.Items.NewItem("Earthen apple", "An apple produced by the earth itself.")
-                    .OnUse(ch => ch.Stats.Spirit += 10)
+                    .OnUse(ch => ch.Spirit += 10)
                     .SetConsumable()
                 )
                 .Select(itemState => Lib.InteractiveObjects.Item(itemState));
@@ -293,6 +301,76 @@ namespace ShapeGrammar
         }
     }
 
+    class AscendingLanguage : LDLanguage
+    {
+        public AscendingLanguage(LanguageParams tools) : base(tools) { }
+
+        struct StatIncrease
+        {
+            public string Stat { get; }
+            public Action<PlayerCharacterState> Increase { get; }
+
+            public StatIncrease(string stat, Action<PlayerCharacterState> increase)
+            {
+                Stat = stat;
+                Increase = increase;
+            }
+        }
+
+        public void AscendingBranch(Func<int> startingAscensionPrice)
+        {
+            Env.One(Gr.PrL.Garden(), NodesQueries.All, out var ascending_area);
+
+            var statsIncreases = new[] {
+                new StatIncrease("Will", player => player.Stats.Will++),
+                new StatIncrease("Strength", player => player.Stats.Strength++),
+                new StatIncrease("Endurance", player => player.Stats.Endurance++),
+                new StatIncrease("Agility", player => player.Stats.Agility++),
+                new StatIncrease("Posture", player => player.Stats.Posture++),
+                new StatIncrease("Resistances", player => player.Stats.Resistances++),
+                new StatIncrease("Versatility", player => player.Stats.Versatility++),
+            };
+
+            int ascensionPrice = startingAscensionPrice();
+
+            Func<StatIncrease, InteractOption<InteractiveObject>> increaseOption = null; // Declare function before calling it recursively
+            increaseOption = 
+                statIncrease => new InteractOption<InteractiveObject>($"{statIncrease.Stat}",
+                    (kiln, player) =>
+                    {
+                        if (player.Pay(ascensionPrice))
+                        {
+                            statIncrease.Increase(player);
+                            ascensionPrice += 50;
+                            kiln.Interaction = 
+                            new InteractionSequence<InteractiveObject>()
+                            .Say("Do you desire further ascending?")
+                            .Decision($"What ascension are you longing for? ({ascensionPrice} Spirit)",
+                                statsIncreases.Take(3).Select(si => increaseOption(si)).ToArray());
+                        }
+                    });
+
+            Env.One(Gr.PrL.Garden(), NodesQueries.LastCreated, out var farmer_area);
+            farmer_area.AddInteractiveObject(
+                Lib.InteractiveObjects.InteractiveObject("Farmer", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
+                    .SetInteraction(
+                        new InteractionSequence<InteractiveObject>()
+                            .Say("Ascension kiln is glad to feel you")
+                            .Decision($"What ascension are you longing for? ({ascensionPrice} Spirit)",
+                                statsIncreases.Take(3).Select(si => increaseOption(si)).ToArray())
+                    )
+                );
+
+            // Add the same branch to the next level
+            State.LC.AddEvent(
+                new LevelConstructionEvent(90,
+                () =>
+                {
+                    L.AscendingLanguage.AscendingBranch(() => ascensionPrice);
+                    return true;
+                }));
+        }
+    }
 
     class FactionsLanguage : LDLanguage
     {
@@ -436,7 +514,7 @@ namespace ShapeGrammar
             PlO.ProgressFunctionPlacer(
                 progress => Lib.InteractiveObjects.Item(itemFactories.GetRandom()(progress)), 
                 new UniformIntDistr(1, 4)).Place(path);
-            PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(path);
+            //PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(path);
 
             path.LastArea().AddInteractiveObject(ProgressOfManifestation(fe.FactionManifestation));
         }

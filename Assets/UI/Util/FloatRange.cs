@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace ContentGeneration.Assets.UI.Util
 {
@@ -18,21 +20,44 @@ namespace ContentGeneration.Assets.UI.Util
 #if NOESIS
     [Serializable]
 #endif
-    public class FloatRange
+    public class FloatRange : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        void OnPropertyChanged(INotifyPropertyChanged thisInstance, [CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(thisInstance, new PropertyChangedEventArgs(name));
+        }
+
         public const float MAX_VALUE = 1_000_000f;
 
 #if NOESIS
         [SerializeField]
 #endif
-        private float max;
-        public float Maximum { get => max; set => max = value; }
+        float _max;
+        public float Maximum 
+        { 
+            get => _max; 
+            set
+            {
+                _max = value;
+                OnPropertyChanged(this);
+            } 
+        }
 
 #if NOESIS
         [SerializeField]
 #endif
-        private float value;
-        public float Value { get => value; set { this.value = Math.Max(0f, Math.Min(value, Maximum)); } }
+        float _value;
+        public float Value 
+        {
+            get => _value; 
+            set 
+            { 
+                _value = Math.Max(0f, Math.Min(value, Maximum));
+                OnPropertyChanged(this);
+            } 
+        }
         public bool Unbound => Maximum == MAX_VALUE;
         public bool Full() => Value == Maximum;
         public bool Empty() => Value == 0f;
@@ -40,14 +65,14 @@ namespace ContentGeneration.Assets.UI.Util
         public FloatRange(float maximum, float value)
         {
             Maximum = maximum;
-            this.value = 0f;
+            this._value = 0f;
             Value = value;
         }
 
         public FloatRange()
         {
             Maximum = MAX_VALUE;
-            value = 0;
+            _value = 0;
         }
 
         public static FloatRange operator -(FloatRange r1, float d) => new FloatRange(r1.Maximum, r1.Value - d);

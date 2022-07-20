@@ -367,7 +367,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
         public Effect GiveSpirit(float spirit)
         {
-            return ch => ch.Stats.Spirit += spirit;
+            return ch => ch.Spirit += spirit;
         }
 
         public Effect Bleed(float damagePerSecond, float timeS)

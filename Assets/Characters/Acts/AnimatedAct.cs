@@ -34,7 +34,7 @@ public class AnimatedAct : Act
     {
         timeElapsed += dt;
         OnUpdate(agent);
-        return timeElapsed >= duration;
+        return timeElapsed >= Duration;
     }
 
     public virtual void OnUpdate(Agent agent) { }

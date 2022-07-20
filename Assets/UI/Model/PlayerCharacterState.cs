@@ -69,5 +69,6 @@ namespace ContentGeneration.Assets.UI.Model
         {
             return PlayerInventory.AddItem(Inventory.AllSlots(), item) != null;
         }
+
     }
 }

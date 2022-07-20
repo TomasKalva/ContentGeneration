@@ -202,11 +202,15 @@ namespace ShapeGrammar
         public PatternLanguage PatternLanguage { get; private set; }
         public TestingLanguage TestingLanguage { get; private set; }
         public FactionsLanguage FactionsLanguage { get; private set; }
+        public AscendingLanguage AscendingLanguage { get; private set; }
 
         Languages()
         {
         }
 
+        /// <summary>
+        /// Can't be in constructor to avoid infinite recursion.
+        /// </summary>
         void Init(LanguageParams tools)
         {
             LevelLanguage = new LevelLanguage(tools);
@@ -215,6 +219,7 @@ namespace ShapeGrammar
             PatternLanguage = new PatternLanguage(tools);
             TestingLanguage = new TestingLanguage(tools);
             FactionsLanguage = new FactionsLanguage(tools);
+            AscendingLanguage = new AscendingLanguage(tools);
         }
     }
 

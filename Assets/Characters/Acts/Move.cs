@@ -20,16 +20,25 @@ public class Move : AnimatedAct
 
     public bool SetDirection { get; set; } = true;
 
+    float Speed => speed * speedMultiplier;
+
+    float speedMultiplier = 1f;
+    public void SetSpeedMultiplier(float speedMultitplier)
+    {
+        this.speedMultiplier = speedMultitplier;
+        Duration = animMetersPerSecond / Speed;
+    }
+
     private void Awake()
     {
-        Duration = animMetersPerSecond / speed;
+        Duration = animMetersPerSecond / Speed;
     }
 
     public override bool UpdateAct(Agent agent, float dt)
     {
         PlayIfNotActive(agent, 0.1f);
 
-        agent.movement.Move(Direction, speed, SetDirection);
+        agent.movement.Move(Direction, Speed, SetDirection);
         return true;
     }
 }
