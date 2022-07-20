@@ -302,8 +302,8 @@ namespace ShapeGrammar
         {
             var branches = Branches();
 
-            var selectorLibrary = new SelectorLibrary(Lib);
-            var effectsLibrary = new EffectLibrary(selectorLibrary);
+            var selectorLibrary = Lib.Selectors;
+            var effectsLibrary = Lib.Effects;
             var factionScalingEffectLibrary = new FactionScalingEffectLibrary(effectsLibrary);
 
             // Make sure that item names are generated uniquely across all factions

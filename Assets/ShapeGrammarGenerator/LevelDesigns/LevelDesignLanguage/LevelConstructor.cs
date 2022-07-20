@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ShapeGrammar
 {
-    class LevelConstructor
+    public class LevelConstructor
     {
         List<LevelConstructionEvent> LevelConstructionEvents { get; }
 
@@ -44,8 +44,8 @@ namespace ShapeGrammar
     /// <summary>
     /// Returns true if construction is finished.
     /// </summary>
-    delegate bool LevelConstruction();
-    class LevelConstructionEvent
+    public delegate bool LevelConstruction();
+    public class LevelConstructionEvent
     {
         public int Priority { get; }
         Condition Condition { get; }
@@ -68,5 +68,5 @@ namespace ShapeGrammar
         }
     }
 
-    delegate bool Condition();
+    public delegate bool Condition();
 }

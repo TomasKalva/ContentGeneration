@@ -129,7 +129,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
     public delegate SelectorByUser SelectorByArgsByUser(SelectorArgs args);
 
-    class SelectorLibrary
+    public class SelectorLibrary
     {
         Libraries lib;
 
@@ -319,7 +319,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         //    throw new NotImplementedException();
     }
     
-    class EffectLibrary
+    public class EffectLibrary
     {
         SelectorLibrary sel;
 
@@ -333,19 +333,16 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             return ch => ch.Health += healing;
         }
 
-        public Effect ReducePosture(float postureReduction)
+        public Effect DamagePosture(float postureDamage)
         {
-            return ch => ch.DamageTaken.AddDamage(postureReduction);
+            return ch => ch.PostureManager.DamagePosture(postureDamage);
         }
 
         public Effect Damage(float damage)
         {
-            return ch =>
-            {
-                ch.Health -= damage;
-                ch.DamageTaken.AddDamage(damage);
-            };
+            return ch => ch.TakeDamage(damage);
         }
+
         /*
         public EffectByUser Push(float force)
         {

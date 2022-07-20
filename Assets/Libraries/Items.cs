@@ -1,3 +1,4 @@
+using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using ContentGeneration.Assets.UI.Model;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,6 +25,15 @@ public class Items : ScriptableObject
 
     [SerializeField]
     Weapons weapons;
+
+    EffectLibrary Effects;
+    SelectorLibrary Selectors;
+
+    public void SetLibraries(SelectorLibrary selectors, EffectLibrary effects)
+    {
+        Selectors = selectors;
+        Effects = effects;
+    }
 
     public ItemState FreeWill() => new FreeWill();
 

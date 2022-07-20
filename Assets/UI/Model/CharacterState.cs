@@ -75,7 +75,7 @@ namespace ContentGeneration.Assets.UI.Model
 
         public Action OnUpdate { get; set; }
 
-        public DamageTaken DamageTaken { get; }
+        public PostureManager PostureManager { get; }
 
         public bool PostureBroken { get; set; }
 
@@ -89,7 +89,7 @@ namespace ContentGeneration.Assets.UI.Model
             Stamina = new FloatRange(20, 20);
             Posture = 10f;
             Inventory = new EnemyInventory(this);
-            DamageTaken = new DamageTaken(2f);
+            PostureManager = new PostureManager(2f);
             Prop = new CharacterProperties();
             Prop.Character = this;
             OnUpdate = () => { };
@@ -133,7 +133,7 @@ namespace ContentGeneration.Assets.UI.Model
                 PostureBroken = false;
             }
 
-            DamageTaken.Update(Time.fixedDeltaTime);
+            PostureManager.Update(Time.fixedDeltaTime);
 
             OnUpdate();
 
@@ -156,7 +156,7 @@ namespace ContentGeneration.Assets.UI.Model
                 PostureBroken = true;
             }
 
-            DamageTaken.AddDamage(damage);
+            PostureManager.DamagePosture(damage);
         }
 #endif
 
@@ -265,7 +265,7 @@ namespace ContentGeneration.Assets.UI.Model
 #endregion
     }
 
-    public class DamageTaken : INotifyPropertyChanged
+    public class PostureManager : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -289,7 +289,7 @@ namespace ContentGeneration.Assets.UI.Model
             set { _damage = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
-        public DamageTaken(float timeOutDuration)
+        public PostureManager(float timeOutDuration)
         {
             this.timeOutDuration = timeOutDuration;
             Damage = 0f;
@@ -297,10 +297,10 @@ namespace ContentGeneration.Assets.UI.Model
             timeRemaining = 0f;
         }
 
-        public void AddDamage(float damage)
+        public void DamagePosture(float postureDamage)
         {
             timeRemaining = timeOutDuration;
-            Damage += damage;
+            Damage += postureDamage;
             TimedOut = false;
         }
 

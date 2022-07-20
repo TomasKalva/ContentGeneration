@@ -1,3 +1,4 @@
+using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using ContentGeneration.Assets.UI.Model;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,4 +30,15 @@ public class Libraries : ScriptableObject
     public Weapons Weapons;
     public VFXs VFXs;
     public GeometricSelectors GeometricSelectors;
+
+    public EffectLibrary Effects;
+    public SelectorLibrary Selectors;
+
+    public void Initialize()
+    {
+        Selectors = new SelectorLibrary(this);
+        Effects = new EffectLibrary(Selectors);
+        Items.SetLibraries(Selectors, Effects);
+
+    }
 }

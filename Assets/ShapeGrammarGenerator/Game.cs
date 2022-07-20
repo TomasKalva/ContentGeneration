@@ -31,6 +31,7 @@ namespace ShapeGrammar
 
         private void Awake()
         {
+            libraries.Initialize();
             InitializePlayer();
             InitializeLevelConstructor();
             GoToNextLevel();

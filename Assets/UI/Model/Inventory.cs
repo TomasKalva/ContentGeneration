@@ -360,13 +360,13 @@ namespace ContentGeneration.Assets.UI.Model
         {
 
 #if !NOESIS
-            AddItem(SlotType.Passive, new ItemState());
+            /*AddItem(SlotType.Passive, new ItemState());
             AddItem(SlotType.Passive, new ItemState());
             AddItem(SlotType.Passive, new ItemState());
             AddItem(SlotType.Passive, new ItemState());
 
             EquipItem(PassiveSlots[1]);
-            UnequipItem(PassiveSlots[1]);
+            UnequipItem(PassiveSlots[1]);*/
 #endif
             
             CursorSlot = PassiveSlots[0];
