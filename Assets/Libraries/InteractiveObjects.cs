@@ -29,7 +29,7 @@ public class InteractiveObjects : ScriptableObject
     InteractiveObject gravePrefab;
 
     [SerializeField]
-    InteractiveObject ascensionKilnPrefab;
+    public InteractiveObject ascensionKilnPrefab;
 
     [SerializeField]
     Transform elevatorPrefab;

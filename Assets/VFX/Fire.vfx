@@ -3424,7 +3424,7 @@ MonoBehaviour:
   AlphaComposition: 0
   SampleMode: 0
   Mode: 1
-  ColorMode: 3
+  ColorMode: 2
   channels: 6
 --- !u!114 &8926484042661614793
 MonoBehaviour:
@@ -3664,7 +3664,7 @@ MonoBehaviour:
   m_InputSlots:
   - {fileID: 8926484042661614801}
   m_OutputSlots: []
-  m_Disabled: 1
+  m_Disabled: 0
   attribute: color
   Composition: 0
   Source: 0
@@ -3698,7 +3698,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"x":1.0370899438858033,"y":1.0592737197875977,"z":0.0}'
+      m_SerializableObject: '{"x":3.03143310546875,"y":0.2118074744939804,"z":0.0}'
     m_Space: 2147483647
   m_Property:
     name: Color

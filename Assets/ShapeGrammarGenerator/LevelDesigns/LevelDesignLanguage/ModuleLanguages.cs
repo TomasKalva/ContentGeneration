@@ -333,31 +333,32 @@ namespace ShapeGrammar
 
             int ascensionPrice = startingAscensionPrice();
 
-            Func<StatIncrease, InteractOption<InteractiveObject>> increaseOption = null; // Declare function before calling it recursively
+            Func<StatIncrease, InteractOption<Kiln>> increaseOption = null; // Declare function before calling it recursively
             increaseOption = 
-                statIncrease => new InteractOption<InteractiveObject>($"{statIncrease.Stat}",
+                statIncrease => new InteractOption<Kiln>($"{statIncrease.Stat}",
                     (kiln, player) =>
                     {
                         if (player.Pay(ascensionPrice))
                         {
                             statIncrease.Increase(player);
                             ascensionPrice += 50;
+                            kiln.IntObj.BurstFire();
                             kiln.Interaction = 
-                            new InteractionSequence<InteractiveObject>()
-                            .Say("Do you desire further ascending?")
-                            .Decision($"What ascension are you longing for? ({ascensionPrice} Spirit)",
-                                statsIncreases.Take(3).Select(si => increaseOption(si)).ToArray());
+                                new InteractionSequence<Kiln>()
+                                .Say("Do you desire further ascending?")
+                                .Decision($"What ascension are you longing for? ({ascensionPrice} Spirit)",
+                                    statsIncreases.Shuffle().Take(3).Select(si => increaseOption(si)).ToArray());
                         }
                     });
 
             Env.One(Gr.PrL.Garden(), NodesQueries.LastCreated, out var farmer_area);
             farmer_area.AddInteractiveObject(
-                Lib.InteractiveObjects.InteractiveObject("Farmer", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
+                Lib.InteractiveObjects.InteractiveObject("Farmer", Lib.InteractiveObjects.Geometry<Kiln>(Lib.InteractiveObjects.ascensionKilnPrefab.transform))
                     .SetInteraction(
-                        new InteractionSequence<InteractiveObject>()
+                        new InteractionSequence<Kiln>()
                             .Say("Ascension kiln is glad to feel you")
                             .Decision($"What ascension are you longing for? ({ascensionPrice} Spirit)",
-                                statsIncreases.Take(3).Select(si => increaseOption(si)).ToArray())
+                                statsIncreases.Shuffle().Take(3).Select(si => increaseOption(si)).ToArray())
                     )
                 );
 
