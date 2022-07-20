@@ -261,7 +261,7 @@ namespace ShapeGrammar
                                                 .Say("Thanks for the apples, mate")
                                         );
 
-                                        player.Prop.Spirit += 10 * (1 + progress);
+                                        player.Stats.Spirit += 10 * (1 + progress);
                                         //Levels().Next().AddPossibleBranch(FarmerBranch(progress + 1);
                                     }
                                     else
@@ -277,7 +277,7 @@ namespace ShapeGrammar
             Env.ExtendRandomly(Gr.PrL.Garden(), NodesQueries.LastCreated, 5, out var garden);
             var apples = Enumerable.Range(0, 5).Select(_ =>
                 Lib.Items.NewItem("Earthen apple", "An apple produced by the earth itself.")
-                    .OnUse(ch => ch.Prop.Spirit += 10)
+                    .OnUse(ch => ch.Stats.Spirit += 10)
                     .SetConsumable()
                 )
                 .Select(itemState => Lib.InteractiveObjects.Item(itemState));

@@ -235,6 +235,8 @@ public class Agent : MonoBehaviour
 			rightWeaponSlot.Weapon = (rightWeaponItem as WeaponItem)?.Weapon;
 		}
 
+		state.Stats.Update();
+
 		CharacterState.viewCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
 	}
 

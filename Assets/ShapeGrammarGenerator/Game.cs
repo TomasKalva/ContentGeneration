@@ -49,14 +49,15 @@ namespace ShapeGrammar
 
             // todo: make this initialization less annoying
             var playerState = new ContentGeneration.Assets.UI.Model.PlayerCharacterState();
-            var prop = new ContentGeneration.Assets.UI.Model.CharacterProperties()
+            var stats = new ContentGeneration.Assets.UI.Model.CharacterStats(playerState)
             {
-                Health = 100,
+                Will = 1,
                 Spirit = 100,
-                Endurance = 100,
+                Endurance = 1,
             };
-            playerState.Prop = prop;
-            prop.Character = playerState;
+            playerState.Stats = stats;
+
+
             GameViewModel.ViewModel.PlayerState = playerState;
         }
 

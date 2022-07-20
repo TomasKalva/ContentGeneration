@@ -367,7 +367,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
         public Effect GiveSpirit(float spirit)
         {
-            return ch => ch.Prop.Spirit += spirit;
+            return ch => ch.Stats.Spirit += spirit;
         }
 
         public Effect Bleed(float damagePerSecond, float timeS)
@@ -422,7 +422,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         {
             var affinity = factionEnv.FactionManifestation.Faction.Affinity;
             var manifProgress = factionEnv.FactionManifestation.Progress;
-            var vers = user.Prop.Versatility;
+            var vers = user.Stats.Versatility;
             return affinity + 7 * manifProgress + vers;
         }
 

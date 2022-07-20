@@ -66,11 +66,11 @@ namespace ContentGeneration.Assets.UI.Model
 #if NOESIS
         [SerializeField]
 #endif
-        private CharacterProperties _properties;
-        public CharacterProperties Prop
+        private CharacterStats _stats;
+        public CharacterStats Stats
         {
-            get { return _properties; }
-            set { _properties = value; OnPropertyChanged(this); }
+            get { return _stats; }
+            set { _stats = value; OnPropertyChanged(this); }
         }
 
         public Action OnUpdate { get; set; }
@@ -85,13 +85,12 @@ namespace ContentGeneration.Assets.UI.Model
 
         public CharacterState()
         {
-            Health = new FloatRange(100, 100);
-            Stamina = new FloatRange(20, 20);
+            Health = new FloatRange(10000, 10000);
+            Stamina = new FloatRange(2000, 2000);
             Posture = 10f;
             Inventory = new EnemyInventory(this);
             DamageTaken = new DamageTaken(2f);
-            Prop = new CharacterProperties();
-            Prop.Character = this;
+            Stats = new CharacterStats(this);
             OnUpdate = () => { };
 #if NOESIS
             Behaviors = new Behaviors();

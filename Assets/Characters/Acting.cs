@@ -49,8 +49,13 @@ public class Acting : MonoBehaviour, IActing
         private set => _activeAct = value; 
     }
 
-    [SerializeField]
-    public float actingSpeedMultiplier = 1f;
+    public void SetActingSpeedMultiplier(float actingSpeedMultiplier)
+    {
+        foreach (var act in acts)
+        {
+            act.Duration = act.Duration / actingSpeedMultiplier;
+        }
+    }
 
     List<Act> selectedActs = new List<Act>();
 
@@ -61,14 +66,6 @@ public class Acting : MonoBehaviour, IActing
         useItem = actContainer.GetComponent<UseItem>();
         acts = actContainer.GetComponents<Act>().ToList();
         agent = GetComponent<Agent>();
-    }
-
-    void Start() 
-    { 
-        foreach(var act in acts)
-        {
-            act.Duration /= actingSpeedMultiplier;
-        }
     }
 
     public Act SelectAct(string actName)
