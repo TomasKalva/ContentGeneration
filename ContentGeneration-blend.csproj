@@ -82,7 +82,7 @@
     <Compile Include="Assets\UI\Components\FloatingHealthBar.xaml.cs">
       <DependentUpon>FloatingHealthBar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Assets\UI\Model\CharacterProperties.cs" />
+    <Compile Include="Assets\UI\Model\CharacterStats.cs" />
     <Compile Include="Assets\UI\Model\InteractiveObjectState.cs" />
     <Compile Include="Assets\UI\Model\CharacterState.cs" />
     <Compile Include="Assets\UI\Components\ProgressBarNum.xaml.cs">

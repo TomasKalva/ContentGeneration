@@ -42,7 +42,7 @@ namespace ShapeGrammar
             });
             */
             
-
+            /*
             State.LC.AddEvent(
                 new LevelConstructionEvent(0, () =>
                 {
@@ -59,14 +59,14 @@ namespace ShapeGrammar
                 {
                     L.AscendingLanguage.AscendingBranch(() => 100);
                     return true;
-                }));
-            /*State.LC.AddEvent(
+                }));*/
+            State.LC.AddEvent(
                 new LevelConstructionEvent(5, () =>
             {
-                L.TestingLanguage.LargeLevel();
+                L.TestingLanguage.StatsScalingOfEnemies();
                 return false;
             })
-            );*/
+            );
         }
     }
 
@@ -219,6 +219,21 @@ namespace ShapeGrammar
                    area => Enumerable.Range(0, 1)
                        .ForEach(_ => area.AddEnemy(Lib.Enemies.AllAgents().GetRandom()()))
                );
+        }
+
+        public void StatsScalingOfEnemies()
+        {
+            Env.One(Gr.PrL.Garden(), NodesQueries.All, out var area);
+
+            var enemy = Lib.Enemies.MayanSwordsman();
+            var stats = new CharacterStats(enemy)
+            {
+                Will = 5
+            };
+            enemy.Stats = stats;
+            enemy.Stats.Update();
+
+            area.AddEnemy(enemy);
         }
     }
 

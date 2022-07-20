@@ -42,6 +42,7 @@ namespace ContentGeneration.Assets.UI.Util
             {
                 _max = value;
                 OnPropertyChanged(this);
+                Value = _value;
             } 
         }
 
