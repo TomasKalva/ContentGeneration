@@ -39,11 +39,11 @@ public class Enemies : ScriptableObject
     {
         //Human,
         //Sculpture,
-        //MayanThrower,
-        //MayanSwordsman,
-        //SkinnyWoman,
-        //DragonMan,
-        Dog,
+        MayanThrower,
+        MayanSwordsman,
+        /*SkinnyWoman,
+        DragonMan,
+        Dog,*/
     };
 
 

@@ -85,7 +85,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!65 &6532971475689113204
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -111,7 +111,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed199e28a2c93f5439bdee611f8c51c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 0
   pushForceIntensity: 500
 --- !u!114 &5629946263785905809
 MonoBehaviour:

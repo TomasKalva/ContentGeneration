@@ -16,6 +16,9 @@ public class PlayerController : MonoBehaviour
 
 	PlayerCharacterState PlayerCharacterState => (PlayerCharacterState)myAgent.CharacterState;
 
+	[SerializeField]
+	Transform orbitCameraFocusPoint;
+
 	OrbitCamera orbitCamera;
 
 	public World World { get; set; }
@@ -70,7 +73,7 @@ public class PlayerController : MonoBehaviour
 		playerInputSpace = camera.transform;
 		//myAgent.movement.playerInputSpace = playerInputSpace;
 		orbitCamera = camera.GetComponent<OrbitCamera>();
-		orbitCamera.DefaultCamUpdater = orbitCamera.FocusPlayer(transform);
+		orbitCamera.DefaultCamUpdater = orbitCamera.FocusPlayer(orbitCameraFocusPoint);
 		lockOnTarget = null;
 
 		var viewModel = camera.GetComponent<ViewModel>();

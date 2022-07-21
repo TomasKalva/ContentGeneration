@@ -55,7 +55,7 @@ namespace ShapeGrammar
                 Will = 10,
                 Strength = 5,
                 Endurance = 99,
-                Agility = 1,
+                Agility = 50,
                 Posture = 5,
                 Resistances = 5,
                 Versatility = 5

@@ -104,7 +104,7 @@ namespace ContentGeneration.Assets.UI.Model
                     var agent = Character.Agent;
                     if(agent != null)
                     {
-                        agent.acting.SetActingSpeedMultiplier(1f + 0.005f * _agility);
+                        agent.acting.SetActingSpeedMultiplier(1f + 0.0025f * _agility);
                         //var walk = agent.acting.GetAct("Walk") as Move;
                         //walk.SetSpeedMultiplier(1f + 0.01f * _agility);
                         var run = agent.acting.GetAct("Run") as Move;
