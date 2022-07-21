@@ -60,7 +60,7 @@ public class Attack : AnimatedAct
         agent.State = AgentState.PREPARE;
     }
 
-    float DamageDuration() => damageEndT - damageStartT;
+    float DamageDuration() => (damageEndT - damageStartT) * Duration;
 
     void SetSlotsActive(bool active, Agent agent)
     {
