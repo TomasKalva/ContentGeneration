@@ -7,19 +7,14 @@ using ContentGeneration.Assets.UI.Util;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System;
+using System.Collections.Generic;
 
 namespace ContentGeneration.Assets.UI.Model
 {
-#if NOESIS
-    [Serializable]
-#endif
     public class CharacterStats : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-#if NOESIS
-        [SerializeField]
-#endif
         private CharacterState _character;
         public CharacterState Character
         {
@@ -35,9 +30,6 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
-#if NOESIS
-        [SerializeField]
-#endif
         private int _will;
         public int Will
         {
@@ -54,9 +46,6 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
-#if NOESIS
-        [SerializeField]
-#endif
         private int _strength;
         public int Strength
         {
@@ -71,9 +60,6 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
-#if NOESIS
-        [SerializeField]
-#endif
         private int _endurance;
         public int Endurance
         {
@@ -89,9 +75,6 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
-#if NOESIS
-        [SerializeField]
-#endif
         private int _agility;
         public int Agility
         {
@@ -115,9 +98,6 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
-#if NOESIS
-        [SerializeField]
-#endif
         private int _posture;
         public int Posture
         {
@@ -133,9 +113,6 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
-#if NOESIS
-        [SerializeField]
-#endif
         private int _resistances;
         public int Resistances
         {
@@ -151,9 +128,6 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
-#if NOESIS
-        [SerializeField]
-#endif
         private int _versatility;
         public int Versatility
         {
@@ -179,6 +153,31 @@ namespace ContentGeneration.Assets.UI.Model
             Posture = Posture;
             Resistances = Resistances;
             Versatility = Versatility;
+        }
+
+        public static IEnumerable<StatIncrease> StatIncreases()
+        {
+            return new[] {
+                new StatIncrease("Will", ch => ch.Stats.Will++),
+                new StatIncrease("Strength", ch => ch.Stats.Strength++),
+                new StatIncrease("Endurance", ch => ch.Stats.Endurance++),
+                new StatIncrease("Agility", ch => ch.Stats.Agility++),
+                new StatIncrease("Posture", ch => ch.Stats.Posture++),
+                new StatIncrease("Resistances", ch => ch.Stats.Resistances++),
+                new StatIncrease("Versatility", ch => ch.Stats.Versatility++),
+            };
+        }
+    }
+
+    public struct StatIncrease
+    {
+        public string Stat { get; }
+        public Action<CharacterState> Increase { get; }
+
+        public StatIncrease(string stat, Action<CharacterState> increase)
+        {
+            Stat = stat;
+            Increase = increase;
         }
     }
 }

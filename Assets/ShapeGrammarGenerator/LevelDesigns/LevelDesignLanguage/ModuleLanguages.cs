@@ -25,13 +25,13 @@ namespace ShapeGrammar
                     return false;
                 }) 
             );
-            
+
             /*State.LC.AddEvent(5, () =>
             {
                 L.FarmersLanguage.FarmerBranch(0);
                 return false;
             });*/
-            
+
 
             /*
             State.LC.AddEvent(5, () =>
@@ -41,7 +41,7 @@ namespace ShapeGrammar
                 return false;
             });
             */
-            
+
             /*
             State.LC.AddEvent(
                 new LevelConstructionEvent(0, () =>
@@ -60,12 +60,21 @@ namespace ShapeGrammar
                     L.AscendingLanguage.AscendingBranch(() => 100);
                     return true;
                 }));*/
+
+            State.LC.AddEvent(
+                new LevelConstructionEvent(10, () =>
+                {
+                    L.TestingLanguage.LevellingUpItems();
+                    return false;
+                })
+            );
+
             State.LC.AddEvent(
                 new LevelConstructionEvent(5, () =>
-            {
-                L.TestingLanguage.StatsScalingOfEnemies();
-                return false;
-            })
+                {
+                    L.TestingLanguage.StatsScalingOfEnemies();
+                    return false;
+                })
             );
         }
     }
@@ -248,6 +257,29 @@ namespace ShapeGrammar
 
             allEnemiesPlacer.Place(areas);
         }
+
+        public void LevellingUpItems()
+        {
+            Env.One(Gr.PrL.Garden(), NodesQueries.LastCreated, out var level_up_area);
+
+            var statIncreaseItems = CharacterStats.StatIncreases().Select(statIncrease =>
+                new ItemState()
+                {
+                    Name = statIncrease.Stat,
+                    Description = $"Increases {statIncrease.Stat}"
+                }
+                .OnUse(player => statIncrease.Increase(player))
+            ).ToArray();
+
+            level_up_area.AddInteractiveObject(
+                Lib.InteractiveObjects.InteractiveObject("Levelling up object", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
+                    .SetInteraction(
+                        new InteractionSequence<InteractiveObject>()
+                            .Act("Take levelling up items", (ios, player) => statIncreaseItems.ForEach(item => player.AddItem(item))
+                            )
+                        )
+                    );
+        }
     }
 
     class BrothersLanguage : LDLanguage
@@ -333,31 +365,12 @@ namespace ShapeGrammar
     {
         public AscendingLanguage(LanguageParams tools) : base(tools) { }
 
-        struct StatIncrease
-        {
-            public string Stat { get; }
-            public Action<PlayerCharacterState> Increase { get; }
-
-            public StatIncrease(string stat, Action<PlayerCharacterState> increase)
-            {
-                Stat = stat;
-                Increase = increase;
-            }
-        }
 
         public void AscendingBranch(Func<int> startingAscensionPrice)
         {
             Env.One(Gr.PrL.Garden(), NodesQueries.All, out var ascending_area);
 
-            var statsIncreases = new[] {
-                new StatIncrease("Will", player => player.Stats.Will++),
-                new StatIncrease("Strength", player => player.Stats.Strength++),
-                new StatIncrease("Endurance", player => player.Stats.Endurance++),
-                new StatIncrease("Agility", player => player.Stats.Agility++),
-                new StatIncrease("Posture", player => player.Stats.Posture++),
-                new StatIncrease("Resistances", player => player.Stats.Resistances++),
-                new StatIncrease("Versatility", player => player.Stats.Versatility++),
-            };
+            var statsIncreases = CharacterStats.StatIncreases();
 
             int ascensionPrice = startingAscensionPrice();
 

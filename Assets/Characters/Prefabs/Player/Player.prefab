@@ -1283,7 +1283,7 @@ MonoBehaviour:
   actName: UseItem
   type: 0
   priority: 0
-  duration: 1
+  duration: 0.5
   cost: 0
   anim:
     _FadeDuration: 0.25
