@@ -79,7 +79,7 @@ public class Awareness : Behavior
         {
             LowWill = true;
         }
-        if (agent.CharacterState.Stamina > RequiredWill)
+        if (agent.CharacterState.Stamina >= RequiredWill)
         {
             LowWill = false;
         }
