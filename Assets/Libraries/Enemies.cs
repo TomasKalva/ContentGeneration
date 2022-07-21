@@ -64,7 +64,7 @@ public class Enemies : ScriptableObject
         // properties
         human.Health = 40f;
         human.Stamina = 20f;
-        human.Posture = 10f;
+        human.Poise = 10f;
 
         // inventory
         human.SetItemToSlot(SlotType.Active, new FreeWill());
@@ -86,7 +86,7 @@ public class Enemies : ScriptableObject
         // properties
         sculpture.Health = 40f;
         sculpture.Stamina = 20f;
-        sculpture.Posture = 10f;
+        sculpture.Poise = 10f;
 
         // inventory
         sculpture.SetItemToSlot(SlotType.Active, new FreeWill());
@@ -109,7 +109,7 @@ public class Enemies : ScriptableObject
         // properties
         mayan.Health = 40f;
         mayan.Stamina = 20f;
-        mayan.Posture = 10f;
+        mayan.Poise = 10f;
 
         // inventory
         mayan.SetItemToSlot(SlotType.Active, new FreeWill());
@@ -135,7 +135,7 @@ public class Enemies : ScriptableObject
         // properties
         mayan.Health = 50f;
         mayan.Stamina = 20f;
-        mayan.Posture = 10f;
+        mayan.Poise = 10f;
 
         // inventory
         mayan.SetItemToSlot(SlotType.Active, new FreeWill());
@@ -164,7 +164,7 @@ public class Enemies : ScriptableObject
         // properties
         skinnyWoman.Health = 50f;
         skinnyWoman.Stamina = 20f;
-        skinnyWoman.Posture = 10f;
+        skinnyWoman.Poise = 10f;
 
         // inventory
         skinnyWoman.SetItemToSlot(SlotType.Active, new FreeWill());
@@ -187,7 +187,7 @@ public class Enemies : ScriptableObject
         // properties
         dragonMan.Health = 40f;
         dragonMan.Stamina = 20f;
-        dragonMan.Posture = 10f;
+        dragonMan.Poise = 10f;
 
         // inventory
         dragonMan.SetItemToSlot(SlotType.Active, new FreeWill());
@@ -210,7 +210,7 @@ public class Enemies : ScriptableObject
         // properties
         dog.Health = 50f;
         dog.Stamina = 20f;
-        dog.Posture = 10f;
+        dog.Poise = 10f;
 
         // inventory
         dog.SetItemToSlot(SlotType.Active, new FreeWill());

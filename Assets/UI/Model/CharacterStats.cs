@@ -38,8 +38,8 @@ namespace ContentGeneration.Assets.UI.Model
 #if NOESIS
         [SerializeField]
 #endif
-        private float _will;
-        public float Will
+        private int _will;
+        public int Will
         {
             get { return _will; }
             set 
@@ -57,8 +57,8 @@ namespace ContentGeneration.Assets.UI.Model
 #if NOESIS
         [SerializeField]
 #endif
-        private float _strength;
-        public float Strength
+        private int _strength;
+        public int Strength
         {
             get { return _strength; }
             set
@@ -74,8 +74,8 @@ namespace ContentGeneration.Assets.UI.Model
 #if NOESIS
         [SerializeField]
 #endif
-        private float _endurance;
-        public float Endurance
+        private int _endurance;
+        public int Endurance
         {
             get { return _endurance; }
             set
@@ -92,8 +92,8 @@ namespace ContentGeneration.Assets.UI.Model
 #if NOESIS
         [SerializeField]
 #endif
-        private float _agility;
-        public float Agility
+        private int _agility;
+        public int Agility
         {
             get { return _agility; }
             set
@@ -118,8 +118,8 @@ namespace ContentGeneration.Assets.UI.Model
 #if NOESIS
         [SerializeField]
 #endif
-        private float _posture;
-        public float Posture
+        private int _posture;
+        public int Posture
         {
             get { return _posture; }
             set 
@@ -127,7 +127,7 @@ namespace ContentGeneration.Assets.UI.Model
                 _posture = value;
                 if (Character != null)
                 {
-                    Character.Posture.Maximum = _posture;
+                    Character.Poise.Maximum = 20f + 6f * _posture;
                 }
                 PropertyChanged.OnPropertyChanged(this); 
             }
@@ -136,8 +136,8 @@ namespace ContentGeneration.Assets.UI.Model
 #if NOESIS
         [SerializeField]
 #endif
-        private float _resistances;
-        public float Resistances
+        private int _resistances;
+        public int Resistances
         {
             get { return _resistances; }
             set
@@ -145,7 +145,7 @@ namespace ContentGeneration.Assets.UI.Model
                 _resistances = value;
                 if (Character != null)
                 {
-                    Character.Posture.Maximum = _posture;
+                    Character.Poise.Maximum = _posture;
                 }
                 PropertyChanged.OnPropertyChanged(this);
             }
@@ -154,8 +154,8 @@ namespace ContentGeneration.Assets.UI.Model
 #if NOESIS
         [SerializeField]
 #endif
-        private float _versatility;
-        public float Versatility
+        private int _versatility;
+        public int Versatility
         {
             get { return _versatility; }
             set

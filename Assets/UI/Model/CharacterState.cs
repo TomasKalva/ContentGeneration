@@ -56,11 +56,11 @@ namespace ContentGeneration.Assets.UI.Model
 #if NOESIS
         [SerializeField]
 #endif
-        private FloatRange _posture;
-        public FloatRange Posture
+        private FloatRange _poise;
+        public FloatRange Poise
         {
-            get { return _posture; }
-            set { _posture = value; PropertyChanged.OnPropertyChanged(this); }
+            get { return _poise; }
+            set { _poise = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
 #if NOESIS
@@ -102,7 +102,7 @@ namespace ContentGeneration.Assets.UI.Model
         {
             Health = new FloatRange(10000, 10000);
             Stamina = new FloatRange(2000, 2000);
-            Posture = 10f;
+            Poise = 10f;
             Inventory = new EnemyInventory(this);
             DamageTaken = new DamageTaken(2f);
             Stats = new CharacterStats(this);
@@ -149,10 +149,10 @@ namespace ContentGeneration.Assets.UI.Model
 
             if (PostureBroken)
             {
-                Posture += ExtensionMethods.PerFixedSecond(5f * Posture.Maximum);
+                Poise += ExtensionMethods.PerFixedSecond(5f * Poise.Maximum);
             }
 
-            if (Posture.Full())
+            if (Poise.Full())
             {
                 PostureBroken = false;
             }
@@ -172,9 +172,9 @@ namespace ContentGeneration.Assets.UI.Model
 
             if (!PostureBroken)
             {
-                Posture -= damage;
+                Poise -= damage;
             }
-            if (Posture.Empty())
+            if (Poise.Empty())
             {
                 Agent.Stagger(/*damageDealer.PushForce(Agent.transform)*/);
                 PostureBroken = true;

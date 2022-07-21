@@ -231,10 +231,10 @@ namespace ShapeGrammar
                     var enemy = chF();
                     var stats = new CharacterStats(enemy)
                     {
-                        Will = 5,
+                        Will = 50,
                         Strength = 5,
                         Endurance = 5,
-                        Agility = 50,
+                        Agility = 99,
                         Posture = 5,
                         Resistances = 5,
                         Versatility = 5
