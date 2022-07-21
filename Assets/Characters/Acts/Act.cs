@@ -31,7 +31,7 @@ public class Act : MonoBehaviour
 
     public TargetPosition TargetPosition { get; set; }
 
-    public float BaseDuration { get; private set; }
+    public float BaseDuration { get; protected set; }
 
     public float Duration
     {

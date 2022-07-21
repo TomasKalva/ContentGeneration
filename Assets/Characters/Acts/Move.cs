@@ -26,12 +26,12 @@ public class Move : AnimatedAct
     public void SetSpeedMultiplier(float speedMultitplier)
     {
         this.speedMultiplier = speedMultitplier;
-        Duration = animMetersPerSecond / Speed;
+        BaseDuration = animMetersPerSecond / Speed;
     }
 
     private void Awake()
     {
-        Duration = animMetersPerSecond / Speed;
+        BaseDuration = animMetersPerSecond / Speed;
     }
 
     public override bool UpdateAct(Agent agent, float dt)
