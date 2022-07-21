@@ -52,8 +52,13 @@ namespace ShapeGrammar
             playerState.Spirit = 1000_000;
             var stats = new ContentGeneration.Assets.UI.Model.CharacterStats(playerState)
             {
-                Will = 1,
-                Endurance = 1,
+                Will = 10,
+                Strength = 5,
+                Endurance = 99,
+                Agility = 1,
+                Posture = 5,
+                Resistances = 5,
+                Versatility = 5
             };
             playerState.Stats = stats;
 

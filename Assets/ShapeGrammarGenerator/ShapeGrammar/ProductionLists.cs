@@ -135,5 +135,13 @@ namespace ShapeGrammar
                 pr.AddRoof()
             );
         }
+
+        public ProductionList TestinRoomFromRoom()
+        {
+            return new ProductionList
+            (
+                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 10, 3, 10)))
+            );
+        }
     }
 }

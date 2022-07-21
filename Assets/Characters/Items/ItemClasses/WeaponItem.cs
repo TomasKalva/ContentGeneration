@@ -9,7 +9,7 @@ using UnityEngine.Events;
 [Serializable]
 public class WeaponItem : ItemState
 {
-    float Damage { get; }
+    float BaseDamage { get; }
     public Weapon Weapon { get; }
     Effect Effect { get; }
 

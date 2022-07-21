@@ -49,11 +49,23 @@ public class Acting : MonoBehaviour, IActing
         private set => _activeAct = value; 
     }
 
+    /// <summary>
+    /// Set to speed up acts with slow animations.
+    /// </summary>
+    [SerializeField]
+    float agentBaseActingSpeedMultiplier = 1f;
+
+    /// <summary>
+    /// Set from outside to parametrize speed of acting.
+    /// </summary>
+    float actingSpeedMultiplier = 1f;
+
     public void SetActingSpeedMultiplier(float actingSpeedMultiplier)
     {
+        this.actingSpeedMultiplier = actingSpeedMultiplier;
         foreach (var act in acts)
         {
-            act.Duration = act.Duration / actingSpeedMultiplier;
+            act.Duration = act.BaseDuration / (this.actingSpeedMultiplier * agentBaseActingSpeedMultiplier);
         }
     }
 

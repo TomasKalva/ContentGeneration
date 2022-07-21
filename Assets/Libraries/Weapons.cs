@@ -53,8 +53,9 @@ public class Weapons : ScriptableObject
     [SerializeField]
     Weapon katana;
 
-    Weapon AddSelector(Weapon weapon)
+    Weapon CreateWeapon(Weapon prefab)
     {
+        var weapon = Instantiate(prefab);
         return weapon.SetHitSelector(Selectors.WeaponSelector(weapon.Detector));
         /*
         owner.World.AddOccurence(
@@ -65,14 +66,14 @@ public class Weapons : ScriptableObject
 
     public Weapon MayanSword()
     {
-        var sword = AddSelector(Instantiate(mayanSword));
+        var sword = CreateWeapon(mayanSword);
         //sword.Damage = 12f;
         return sword;
     }
 
     public Weapon MayanKnife()
     {
-        var knife = AddSelector(Instantiate(mayanKnife));
+        var knife = CreateWeapon(mayanKnife);
         //knife.Damage = 5f;
         return knife;
     }
@@ -87,27 +88,27 @@ public class Weapons : ScriptableObject
 
     public Weapon SculptureClub()
     {
-        var club = AddSelector(Instantiate(sculptureClub));
+        var club = CreateWeapon(sculptureClub);
         //club.Damage = 22f;
         return club;
     }
     public Weapon Scythe()
     {
-        var scythe = AddSelector(Instantiate(this.scythe));
+        var scythe = CreateWeapon(this.scythe);
         //scythe.Damage = 30f;
         return scythe;
     }
 
     public Weapon Mace()
     {
-        var mace = AddSelector(Instantiate(this.mace));
+        var mace = CreateWeapon(this.mace);
         //mace.Damage = 19f;
         return mace;
     }
 
     public Weapon Katana()
     {
-        var katana = AddSelector(Instantiate(this.katana));
+        var katana = CreateWeapon(this.katana);
         //katana.Damage = 19f;
         return katana;
     }

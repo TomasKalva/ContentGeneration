@@ -302,8 +302,8 @@ MonoBehaviour:
       inWeight: 0.32608697
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.34166253
-      value: 14.1509495
+      time: 0.35832512
+      value: 7.6768894
       inSlope: 0.45897678
       outSlope: 0.45897678
       tangentMode: 0
@@ -760,7 +760,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actContainer: {fileID: 5245136111020689035}
   _activeAct: {fileID: 0}
-  actingSpeedMultiplier: 1
+  agentBaseActingSpeedMultiplier: 1
 --- !u!114 &7465914728098360252
 MonoBehaviour:
   m_ObjectHideFlags: 0

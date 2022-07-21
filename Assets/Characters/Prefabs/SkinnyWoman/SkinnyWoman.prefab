@@ -292,7 +292,7 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.22082722
+      time: 0.18749084
       value: 0
       inSlope: 0.1886792
       outSlope: 0.1886792
@@ -302,15 +302,24 @@ MonoBehaviour:
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 0.24166256
-      value: 14.2924595
-      inSlope: -38.590973
-      outSlope: -38.590973
+      value: 14.752367
+      inSlope: 3.012624
+      outSlope: 3.012624
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.41939268
+      outWeight: 1
     - serializedVersion: 3
-      time: 0.34775937
+      time: 0.341969
+      value: 13.325974
+      inSlope: -72.754524
+      outSlope: -72.754524
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.4435922
       value: 0
       inSlope: -1.8123833
       outSlope: -1.8123833
@@ -654,7 +663,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actContainer: {fileID: 5245136111020689035}
   _activeAct: {fileID: 0}
-  actingSpeedMultiplier: 1
+  agentBaseActingSpeedMultiplier: 1
 --- !u!114 &7465914728098360252
 MonoBehaviour:
   m_ObjectHideFlags: 0

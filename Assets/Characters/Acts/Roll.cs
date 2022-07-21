@@ -153,7 +153,7 @@ public class CurveVelocityUpdater : VelocityUpdater
 
         var speed0 = speedF.Evaluate((t - dt) / duration);
         var speed1 = speedF.Evaluate(t / duration);
-        var dS = speed1 - speed0;
+        var dS = (speed1 - speed0) / duration; // dividing by duration makes traveled distance independent of duration
         movement.Accelerate(directionF().XZ().normalized, dS);
         //movement.velocity += dS * direction;
 

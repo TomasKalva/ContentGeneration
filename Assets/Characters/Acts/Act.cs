@@ -31,10 +31,17 @@ public class Act : MonoBehaviour
 
     public TargetPosition TargetPosition { get; set; }
 
+    public float BaseDuration { get; private set; }
+
     public float Duration
     {
         get => duration == 0f ? 0.01f : duration;
         set => duration = value;
+    }
+
+    private void Awake()
+    {
+        BaseDuration = duration;
     }
 
     /// <summary>

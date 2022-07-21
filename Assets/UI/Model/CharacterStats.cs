@@ -83,7 +83,7 @@ namespace ContentGeneration.Assets.UI.Model
                 _endurance = value;
                 if (Character != null)
                 {
-                    Character.Stamina.Maximum = 20 + 5 * _endurance;
+                    Character.Stamina.Maximum = 10 + _endurance;
                 }
                 PropertyChanged.OnPropertyChanged(this);
             }
@@ -104,7 +104,7 @@ namespace ContentGeneration.Assets.UI.Model
                     var agent = Character.Agent;
                     if(agent != null)
                     {
-                        agent.acting.SetActingSpeedMultiplier(1f + 0.01f * _agility);
+                        agent.acting.SetActingSpeedMultiplier(1f + 0.005f * _agility);
                         //var walk = agent.acting.GetAct("Walk") as Move;
                         //walk.SetSpeedMultiplier(1f + 0.01f * _agility);
                         var run = agent.acting.GetAct("Run") as Move;

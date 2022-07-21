@@ -223,17 +223,26 @@ namespace ShapeGrammar
 
         public void StatsScalingOfEnemies()
         {
-            Env.One(Gr.PrL.Garden(), NodesQueries.All, out var area);
+            Env.One(Gr.PrL.TestinRoomFromRoom(), NodesQueries.All, out var area);
 
-            var enemy = Lib.Enemies.MayanSwordsman();
-            var stats = new CharacterStats(enemy)
+            Lib.Enemies.AllAgents().ForEach(chF =>
             {
-                Will = 5
-            };
-            enemy.Stats = stats;
-            enemy.Stats.Update();
+                var enemy = chF();
+                var stats = new CharacterStats(enemy)
+                {
+                    Will = 5,
+                    Strength = 5,
+                    Endurance = 5,
+                    Agility = 99,
+                    Posture = 5,
+                    Resistances = 5,
+                    Versatility = 5
+                };
+                enemy.Stats = stats;
+                enemy.Stats.Update();
 
-            area.AddEnemy(enemy);
+                area.AddEnemy(enemy);
+            });
         }
     }
 

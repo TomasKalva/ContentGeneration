@@ -31,6 +31,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -0
       objectReference: {fileID: 0}
+    - target: {fileID: 533700495570473792, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
+      propertyPath: agentBaseActingSpeedMultiplier
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 533700495570473793, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
       propertyPath: myRenderer
       value: 
@@ -151,6 +155,14 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0.94693404
       objectReference: {fileID: 0}
+    - target: {fileID: 3211458325877576360, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
+      propertyPath: speedF.m_Curve.Array.data[2].time
+      value: 0.67147505
+      objectReference: {fileID: 0}
+    - target: {fileID: 3211458325877576360, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
+      propertyPath: speedF.m_Curve.Array.data[2].value
+      value: 7.966033
+      objectReference: {fileID: 0}
     - target: {fileID: 3334858607170646547, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
       propertyPath: m_Layer
       value: 10
@@ -198,6 +210,14 @@ PrefabInstance:
     - target: {fileID: 8178095939921671359, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
       propertyPath: damage
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 8893546541117693315, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
+      propertyPath: speedF.m_Curve.Array.data[1].time
+      value: 0.3068583
+      objectReference: {fileID: 0}
+    - target: {fileID: 8893546541117693315, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
+      propertyPath: speedF.m_Curve.Array.data[1].value
+      value: 8.561329
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1c4377381ff4ab04b952d9d565460363, type: 3}
