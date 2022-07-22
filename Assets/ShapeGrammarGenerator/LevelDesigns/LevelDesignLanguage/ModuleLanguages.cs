@@ -436,9 +436,9 @@ namespace ShapeGrammar
                     {
                             Gr.PrL.Garden
                     },
-                    Lib.Enemies.AllAgents().Shuffle().Take(2).ToList()
+                    Lib.Enemies.AllAgents().Shuffle().ToList()
                     ,
-                    factionScalingEffectLibrary.EffectsByUser.Take(5).ToList(),
+                    factionScalingEffectLibrary.EffectsByUser.ToList(),
                     new List<Annotated<SelectorByArgsByUser>>()
                     {
                             //new Annotated<SelectorByUser>("Self", "self", selectorLibrary.SelfSelector()),
@@ -485,12 +485,13 @@ namespace ShapeGrammar
                         {"Chaos", Color.yellow },
                         {"Divine", Color.white },
                         {"Dark", Color.blue },
-                    }
+                    },
+                    Lib.Items.AllWeapons().ToList()
                 );
 
             Enumerable.Range(0, factionsCount).ForEach(_ =>
             {
-                var factionConcepts = concepts.TakeSubset(3, 4, 2, 2, 8, 8);
+                var factionConcepts = concepts.TakeSubset(3, 4, 2, 2, 8, 8, 5);
                 var faction = new Faction(concepts, uniqueNameGenerator);
 
                 State.LC.AddEvent(

@@ -3168,6 +3168,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6891736725473310710}
     m_Modifications:
+    - target: {fileID: 8254846310209840315, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}
+      propertyPath: weaponScale
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8254846310209840316, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -3253,6 +3257,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1618451539645319855}
     m_Modifications:
+    - target: {fileID: 8254846310209840315, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}
+      propertyPath: weaponScale
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8254846310209840316, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}
       propertyPath: m_RootOrder
       value: 1

@@ -1,5 +1,6 @@
 using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using ContentGeneration.Assets.UI.Model;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -44,23 +45,33 @@ public class Items : ScriptableObject
         yield return ch => Effects.Push(100f * pushForceScaling(ch))(ch);
     }
 
-    public ItemState SculptureClub() => new WeaponItem("Sculpture Club", "Made of idk stone", weapons.SculptureClub(), 
+    public WeaponItem SculptureClub() => new WeaponItem("Sculpture Club", "Made of idk stone", weapons.SculptureClub(), 
         BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 5f));
 
-    public ItemState MayanKnife() => new WeaponItem("Mayan Knife", "Every Mayan has one", weapons.MayanKnife(),
+    public WeaponItem MayanKnife() => new WeaponItem("Mayan Knife", "Every Mayan has one", weapons.MayanKnife(),
         BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 1f));
 
-    public ItemState MayanSword() => new WeaponItem("Mayan Sword", "Like a knife but bigger", weapons.MayanSword(),
+    public WeaponItem MayanSword() => new WeaponItem("Mayan Sword", "Like a knife but bigger", weapons.MayanSword(),
         BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 1f));
 
-    public ItemState Scythe() => new WeaponItem("Scythe", "Harvesting tool", weapons.Scythe(),
+    public WeaponItem Scythe() => new WeaponItem("Scythe", "Harvesting tool", weapons.Scythe(),
         BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 1f));
 
-    public ItemState Mace() => new WeaponItem("Mace", "Mace", weapons.Mace(),
+    public WeaponItem Mace() => new WeaponItem("Mace", "Mace", weapons.Mace(),
         BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 1f));
 
-    public ItemState Katana() => new WeaponItem("Katana", "Katana", weapons.Katana(),
+    public WeaponItem Katana() => new WeaponItem("Katana", "Katana", weapons.Katana(),
         BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 1f));
+
+    public IEnumerable<Func<WeaponItem>> AllWeapons() => new List<Func<WeaponItem>>()
+    {
+        SculptureClub,
+        MayanKnife,
+        MayanSword,
+        Scythe,
+        Mace,
+        Katana,
+    };
 
     public ItemState NewItem(string name, string description) => 
         new ItemState() 

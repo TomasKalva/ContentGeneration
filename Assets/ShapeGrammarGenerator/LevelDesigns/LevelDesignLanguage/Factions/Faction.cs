@@ -40,7 +40,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
         public FactionManifestation GetFactionManifestation()
         {
-            return new FactionManifestation(Concepts.TakeSubset(3, 3, 2, 2, 6, 6), this);
+            return new FactionManifestation(Concepts.TakeSubset(3, 3, 2, 2, 6, 6, 3), this);
         }
     }
 
@@ -65,7 +65,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
         public FactionEnvironment GetFactionEnvironment()
         {
-            return new FactionEnvironment(Concepts.TakeSubset(2, 2 + Progress, 2, 2, 3, 3), this);
+            return new FactionEnvironment(Concepts.TakeSubset(2, 2 + Progress, 2, 2, 3, 3, 3), this);
         }
 
         public void ContinueManifestation(LevelConstructor levelConstructor, IEnumerable<FactionEnvironmentConstructor> branches)
@@ -166,13 +166,18 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
             // Create stats of the enemy
 
-            // Create weapon for the enemy
 
             // Create items for the enemy
 
             return progress =>
             {
+                // Create weapon for the enemy
+                var leftWeaponF = Concepts.Weapons.GetRandom();
+                var rightWeaponF = Concepts.Weapons.GetRandom();
+
                 var character = Concepts.CharacterStates.GetRandom()();
+                character.SetItemToSlot(SlotType.LeftWeapon, leftWeaponF());
+                character.SetItemToSlot(SlotType.RightWeapon, rightWeaponF());
                 return character;
             };
         }
@@ -202,6 +207,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         public List<string> Nouns { get; }
         public List<string> Adjectives { get; }
         public Dictionary<string, Color> ColorFromName { get; }
+        public List<Func<WeaponItem>> Weapons { get; }
 
         public FactionConcepts(
             List<Func<ProductionList>> productionLists, 
@@ -211,7 +217,8 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             List<FlipbookTexture> flipbookTextures,
             List<string> nouns,
             List<string> adjectives,
-            Dictionary<string, Color> colorFromName)
+            Dictionary<string, Color> colorFromName,
+            List<Func<WeaponItem>> weapons)
         {
             ProductionLists = productionLists;
             CharacterStates = characterStates;
@@ -221,9 +228,10 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             Nouns = nouns;
             Adjectives = adjectives;
             ColorFromName = colorFromName;
+            Weapons = weapons;
         }
 
-        public FactionConcepts TakeSubset(int characterStatesCount, int effectsCount, int selectorsCount, int texturesCount, int nounsCount, int adjectivesCount)
+        public FactionConcepts TakeSubset(int characterStatesCount, int effectsCount, int selectorsCount, int texturesCount, int nounsCount, int adjectivesCount, int weaponsCount)
         {
             return new FactionConcepts(
                     ProductionLists,
@@ -233,7 +241,8 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                     Textures.Shuffle().Take(texturesCount).ToList(),
                     Nouns.Shuffle().Take(nounsCount).ToList(),
                     Adjectives.Shuffle().Take(adjectivesCount).ToList(),
-                    ColorFromName
+                    ColorFromName,
+                    Weapons.Shuffle().Take(weaponsCount).ToList()
                 );
         }
 
@@ -267,6 +276,46 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             }
             var n = ++AlreadyGenerated[generated];
             return $"{generated} {n}";
+        }
+    }
+
+    delegate ByUser<Effect> EffectByFactionEnvironmentByUser(FactionEnvironment factionEnv);
+
+    class FactionScalingEffectLibrary
+    {
+        public List<Annotated<EffectByFactionEnvironmentByUser>> EffectsByUser { get; }
+
+        float EffectPower(FactionEnvironment factionEnv, CharacterState user)
+        {
+            var affinity = factionEnv.FactionManifestation.Faction.Affinity;
+            var manifProgress = factionEnv.FactionManifestation.Progress;
+            var vers = user.Stats.Versatility;
+            return affinity + 7 * manifProgress + vers;
+        }
+
+        Annotated<EffectByFactionEnvironmentByUser> FromPower(string name, string description, Func<float, Effect> powerToEffect)
+        {
+
+            return new Annotated<EffectByFactionEnvironmentByUser>(name, description, faction => user =>
+            {
+                var power = EffectPower(faction, user);
+                return powerToEffect(power);
+            });
+        }
+
+        public FactionScalingEffectLibrary(EffectLibrary eff)
+        {
+            EffectsByUser = new List<Annotated<EffectByFactionEnvironmentByUser>>()
+            {
+                FromPower("Heal", "heals", p => eff.Heal(5f + 5f * p)),
+                FromPower("Chaos", "gives chaose damage", p => eff.Damage(new DamageDealt(DamageType.Chaos, 10f + 5f * p))),
+                FromPower("Dark", "gives dark damage", p => eff.Damage(new DamageDealt(DamageType.Dark, 10f + 5f * p))),
+                FromPower("Divine", "gives divine damage", p => eff.Damage(new DamageDealt(DamageType.Divine, 10f + 5f * p))),
+                FromPower("Give spirit", "gives spirit to", p => eff.GiveSpirit(10f + 20f * p)),
+                FromPower("Bleed", "applies bleeding to", p => eff.Bleed(5f + 2f * p, 2f)),
+                FromPower("Boost stamina regeneration", "boosts stamina regeneration to", p => eff.BoostStaminaRegen(5f + 2f * p, 2f)),
+                FromPower("Regenerate health", "regenerates health to", p => eff.RegenerateHealth(5f + 2f * p, 2f)),
+            };
         }
     }
 }

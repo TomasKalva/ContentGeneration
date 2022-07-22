@@ -5,6 +5,9 @@ using static Movement;
 
 public class WeaponSlot : MonoBehaviour
 {
+    [SerializeField]
+    float weaponScale = 1f;
+
     Weapon weapon;
 
     public Weapon Weapon 
@@ -41,7 +44,7 @@ public class WeaponSlot : MonoBehaviour
 
         newWeapon.transform.localPosition = Vector3.zero;
         newWeapon.transform.localRotation = Quaternion.identity;
-        newWeapon.transform.localScale = Vector3.one;
+        newWeapon.transform.localScale = weaponScale * Vector3.one;
 
         newWeapon.GetComponent<Renderer>().enabled = true;
 
