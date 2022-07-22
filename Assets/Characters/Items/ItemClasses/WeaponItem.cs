@@ -3,6 +3,7 @@ using ContentGeneration.Assets.UI.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,18 +12,19 @@ public class WeaponItem : ItemState
 {
     float BaseDamage { get; }
     public Weapon Weapon { get; }
-    List<Effect> Effects { get; set; }
+    ByUser<Effect>[] BaseEffects { get; set; }
+    List<ByUser<Effect>> UpgradeEffects { get; set; }
 
-    public WeaponItem(string name, string description, Weapon weapon, Effect effect)
+    public WeaponItem(string name, string description, Weapon weapon, IEnumerable<ByUser<Effect>> baseEffects)
     {
         Name = name;
         Description = description;
         Weapon = weapon; 
         weapon.WeaponItem = this;
 
-        Effects = new List<Effect>();
-        AddEffect(effect);
-        
+        BaseEffects = baseEffects.ToArray();
+        UpgradeEffects = new List<ByUser<Effect>>();
+
         OnUseDelegate =
             character =>
             {
@@ -31,9 +33,9 @@ public class WeaponItem : ItemState
             };
     }
 
-    public WeaponItem AddEffect(Effect effect)
+    public WeaponItem AddUpgradeEffect(ByUser<Effect> effect)
     {
-        Effects.Add(effect);
+        UpgradeEffects.Add(effect);
         return this;
     }
 
@@ -42,8 +44,49 @@ public class WeaponItem : ItemState
         owner.World.AddOccurence(
             new Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions.Occurence(
                 Weapon.HitSelectorByDuration(damageDuration)(owner),
-                Effects.ToArray()
+                BaseEffects.Select(effectByUser => effectByUser(owner)).ToArray()
                 )
             );
+    }
+}
+
+public enum DamageType
+{
+    Physical,
+    Fire,
+    Dark,
+    Divine
+}
+
+public struct Damage
+{
+    public DamageType Type;
+    public float Amount;
+
+    public Damage(DamageType type, float amount)
+    {
+        Type = type;
+        Amount = amount;
+    }
+}
+
+public class Defense
+{
+    public DamageType Type;
+    public float ReductionPercentage;
+
+    public Defense(DamageType type, float reductionPercentage)
+    {
+        Type = type;
+        ReductionPercentage = reductionPercentage;
+    }
+
+    public Damage DamageAfterDefense(Damage incomingDamage) 
+    {
+        return incomingDamage.Type == Type ?
+            // Reduce damage if it has the same type
+            new Damage(incomingDamage.Type, incomingDamage.Amount* (1f - ReductionPercentage)) :
+            // Return the same damage otherwise
+            incomingDamage;
     }
 }

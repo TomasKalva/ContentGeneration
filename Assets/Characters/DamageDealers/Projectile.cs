@@ -17,7 +17,7 @@ public class Projectile : AreaDamage
         if (!Active)
             return;
 
-        agent.CharacterState.TakeDamage(Damage);
+        agent.CharacterState.TakeDamage(new Damage(DamageType.Physical, Damage));
         Destroy(gameObject);
     }
 

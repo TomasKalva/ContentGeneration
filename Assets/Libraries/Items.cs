@@ -35,13 +35,18 @@ public class Items : ScriptableObject
 
     public ItemState FreeWill() => new FreeWill();
 
-    public ItemState SculptureClub() => new WeaponItem("Sculpture Club", "Made of idk stone", weapons.SculptureClub(), Effects.Damage(5));
-    public ItemState MayanKnife() => new WeaponItem("Mayan Knife", "Every Mayan has one", weapons.MayanKnife(), Effects.Damage(5));
+    public IEnumerable<ByUser<Effect>> BaseWeaponEffects()
+    {
+        yield return ch => Effects.Damage(new Damage(DamageType.Physical, 10 + 2 * ch.Stats.Strength));
+    }
+
+    public ItemState SculptureClub() => new WeaponItem("Sculpture Club", "Made of idk stone", weapons.SculptureClub(), BaseWeaponEffects());
+    public ItemState MayanKnife() => new WeaponItem("Mayan Knife", "Every Mayan has one", weapons.MayanKnife(), BaseWeaponEffects());
     //public ItemState Fireball() => new WeaponItem("Fireball", "It's a fireball", weapons.Fireball().transform);
-    public ItemState MayanSword() => new WeaponItem("Mayan Sword", "Like a knife but bigger", weapons.MayanSword(), Effects.Damage(5));
-    public ItemState Scythe() => new WeaponItem("Scythe", "Harvesting tool", weapons.Scythe(), Effects.Damage(5));
-    public ItemState Mace() => new WeaponItem("Mace", "Mace", weapons.Mace(), Effects.Damage(5));
-    public ItemState Katana() => new WeaponItem("Katana", "Katana", weapons.Katana(), Effects.Damage(25));
+    public ItemState MayanSword() => new WeaponItem("Mayan Sword", "Like a knife but bigger", weapons.MayanSword(), BaseWeaponEffects());
+    public ItemState Scythe() => new WeaponItem("Scythe", "Harvesting tool", weapons.Scythe(), BaseWeaponEffects());
+    public ItemState Mace() => new WeaponItem("Mace", "Mace", weapons.Mace(), BaseWeaponEffects());
+    public ItemState Katana() => new WeaponItem("Katana", "Katana", weapons.Katana(), BaseWeaponEffects());
 
     public ItemState NewItem(string name, string description) => 
         new ItemState() 

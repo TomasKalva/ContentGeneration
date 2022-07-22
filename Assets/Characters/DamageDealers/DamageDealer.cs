@@ -72,7 +72,7 @@ public abstract class DamageDealer : MonoBehaviour
 
     protected virtual void DealDamage(Agent agent)
     {
-        agent.CharacterState.TakeDamage(Damage);
+        agent.CharacterState.TakeDamage(new Damage(DamageType.Physical, Damage));
     }
 
     protected abstract void Initialize();

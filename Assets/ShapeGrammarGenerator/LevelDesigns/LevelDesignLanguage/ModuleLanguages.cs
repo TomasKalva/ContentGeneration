@@ -243,7 +243,7 @@ namespace ShapeGrammar
                         Will = 50,
                         Strength = 5,
                         Endurance = 5,
-                        Agility = 99,
+                        Agility = 10,
                         Posture = 5,
                         Resistances = 5,
                         Versatility = 5
@@ -434,12 +434,6 @@ namespace ShapeGrammar
                     {
                             Gr.PrL.Garden
                     },
-                    /*new List<Func<CharacterState>>()
-                    {
-                        Lib.Enemies.SkinnyWoman,
-                        Lib.Enemies.MayanSwordsman,
-
-                    },*/
                     Lib.Enemies.AllAgents().Shuffle().Take(2).ToList()
                     ,
                     factionScalingEffectLibrary.EffectsByUser.Take(5).ToList(),

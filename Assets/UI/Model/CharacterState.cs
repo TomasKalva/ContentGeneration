@@ -8,6 +8,7 @@ using ContentGeneration.Assets.UI.Util;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System;
+using System.Linq;
 
 namespace ContentGeneration.Assets.UI.Model
 {
@@ -98,6 +99,8 @@ namespace ContentGeneration.Assets.UI.Model
 
         public Inventory Inventory { get; set; }
 
+        Defense[] Defenses { get; }
+
         public CharacterState()
         {
             Health = new FloatRange(10000, 10000);
@@ -107,6 +110,13 @@ namespace ContentGeneration.Assets.UI.Model
             DamageTaken = new DamageTaken(2f);
             Stats = new CharacterStats(this);
             OnUpdate = () => { };
+            Defenses = new Defense[]
+            {
+                new Defense(DamageType.Physical, 0f),
+                new Defense(DamageType.Fire, 0f),
+                new Defense(DamageType.Dark, 0f),
+                new Defense(DamageType.Divine, 0f),
+            };
 #if NOESIS
             Behaviors = new Behaviors();
 #endif
@@ -166,13 +176,15 @@ namespace ContentGeneration.Assets.UI.Model
 #endif
 
 #if NOESIS
-        public void TakeDamage(float damage)
+        public void TakeDamage(Damage damage)
         {
-            Health -= damage;
+            var reducedDamage = Defenses.Aggregate(damage, (dmg, def) => def.DamageAfterDefense(dmg));
+
+            Health -= reducedDamage.Amount;
 
             if (!PostureBroken)
             {
-                Poise -= damage;
+                Poise -= damage.Amount;
             }
             if (Poise.Empty())
             {
@@ -180,7 +192,7 @@ namespace ContentGeneration.Assets.UI.Model
                 PostureBroken = true;
             }
 
-            DamageTaken.AddDamage(damage);
+            DamageTaken.AddDamage(damage.Amount);
         }
 #endif
 
