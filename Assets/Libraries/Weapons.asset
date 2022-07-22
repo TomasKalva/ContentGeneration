@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02f5080d6ca5df541a0fa6683d653ecc, type: 3}
   m_Name: Weapons
   m_EditorClassIdentifier: 
-  sculptureClub: {fileID: 4133879677656881596, guid: 2fe51648b597b2444934605ab64ee5b8, type: 3}
-  mayanKnife: {fileID: 4133879677656881596, guid: 6c042c00cd821074db51e59537b4182a, type: 3}
-  mayanSword: {fileID: 4133879677656881596, guid: e3b3ac1a04916a64d978248eee3617b8, type: 3}
-  scythe: {fileID: 3097573828825190701, guid: 1ac7bb6754fb6ae42b9e8bf28bcb8be3, type: 3}
-  mace: {fileID: 4133879677656881596, guid: 052d3d586d478524dba74f2db92d1b48, type: 3}
-  katana: {fileID: 3012890681912307712, guid: c8833c50b278b31458e318cf6ca39b68, type: 3}
+  sculptureClub: {fileID: 7196914652543359938, guid: ed2f81090891e2d49841e6b0cb07f873, type: 3}
+  mayanKnife: {fileID: 7795895994795262324, guid: bde1506fdac7a2143972b6a98f9f71eb, type: 3}
+  mayanSword: {fileID: 7570257875598507692, guid: c334bb9cc19a41543ada90b2f26ceb3e, type: 3}
+  scythe: {fileID: 1849457314063641004, guid: e23206d515f09b143967a3b562f17e9b, type: 3}
+  mace: {fileID: 6546352223966995575, guid: 81f41c4cb88f48141a54bd4fc04b682a, type: 3}
+  katana: {fileID: 8067920061552960337, guid: c1adbfd48bc7ea1449bc9cc8ef106a17, type: 3}

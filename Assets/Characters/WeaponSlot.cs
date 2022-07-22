@@ -46,7 +46,7 @@ public class WeaponSlot : MonoBehaviour
         newWeapon.transform.localRotation = Quaternion.identity;
         newWeapon.transform.localScale = weaponScale * Vector3.one;
 
-        newWeapon.GetComponent<Renderer>().enabled = true;
+        newWeapon.Show();
 
         this.weapon = newWeapon;
     }

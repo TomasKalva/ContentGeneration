@@ -8,9 +8,7 @@ using UnityEngine;
 public class Weapon : MonoBehaviour
 {
     public ColliderDetector Detector { get; private set; }
-
-    [SerializeField]
-    float pushForceIntensity = 500f;
+    Renderer Renderer { get; set; }
 
     public ByTime<SelectorByUser> HitSelectorByDuration { get; set; }
 
@@ -38,11 +36,20 @@ public class Weapon : MonoBehaviour
 
     private void Awake()
     {
-        Detector = GetComponent<ColliderDetector>();
+        Detector = GetComponentInChildren<ColliderDetector>();
+        Renderer = GetComponentInChildren<Renderer>();
     }
 
     public void DealDamage(Agent owner, float damageDuration)
     {
         WeaponItem.DealDamage(owner.CharacterState, damageDuration);
+    }
+
+    public void Show()
+    {
+        if (Renderer != null)
+        {
+            Renderer.enabled = true;
+        }
     }
 }
