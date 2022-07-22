@@ -451,7 +451,9 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             EffectsByUser = new List<Annotated<EffectByFactionEnvironmentByUser>>()
             {
                 FromPower("Heal", "heals", p => eff.Heal(5f + 5f * p)),
-                FromPower("Damage", "damages", p => eff.Damage(new DamageDealt(DamageType.Physical, 10f + 5f * p))),
+                FromPower("Chaos", "gives chaose damage", p => eff.Damage(new DamageDealt(DamageType.Chaos, 10f + 5f * p))),
+                FromPower("Dark", "gives dark damage", p => eff.Damage(new DamageDealt(DamageType.Dark, 10f + 5f * p))),
+                FromPower("Divine", "gives divine damage", p => eff.Damage(new DamageDealt(DamageType.Divine, 10f + 5f * p))),
                 FromPower("Give spirit", "gives spirit to", p => eff.GiveSpirit(10f + 20f * p)),
                 FromPower("Bleed", "applies bleeding to", p => eff.Bleed(5f + 2f * p, 2f)),
                 FromPower("Boost stamina regeneration", "boosts stamina regeneration to", p => eff.BoostStaminaRegen(5f + 2f * p, 2f)),

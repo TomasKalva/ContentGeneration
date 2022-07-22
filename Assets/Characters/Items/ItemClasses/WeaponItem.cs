@@ -53,7 +53,7 @@ public class WeaponItem : ItemState
 public enum DamageType
 {
     Physical,
-    Fire,
+    Chaos,
     Dark,
     Divine
 }

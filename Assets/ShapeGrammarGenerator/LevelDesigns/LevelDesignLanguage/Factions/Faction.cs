@@ -91,6 +91,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         FactionConcepts Concepts { get; }
         public FactionManifestation FactionManifestation { get; }
 
+
         public FactionEnvironment(FactionConcepts concepts, FactionManifestation factionManifestation)
         {
             Concepts = concepts;
@@ -102,6 +103,11 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             return Concepts.ProductionLists.GetRandom()();
         }
 
+        Color ColorFromName<T>(Annotated<T> something) =>
+            Concepts.ColorFromName.TryGetValue(something.Name, out var color) ?
+                color :
+                Concepts.ColorFromName.Values.GetRandom();
+
         /// <summary>
         /// Returns a factory that returns the same items.
         /// </summary>
@@ -112,19 +118,26 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             var affinity = faction.Affinity;
             var progress = FactionManifestation.Progress;*/
 
+
+
             // Fix item properties
             var annotatedEffectByFactionEnvByUser = Concepts.Effects.GetRandom();
             var effectByUser = annotatedEffectByFactionEnvByUser.Item(this);
+            var effectColor = ColorFromName(annotatedEffectByFactionEnvByUser);
 
             var annotatedSelectorByArgsByUser = Concepts.Selectors.GetRandom();
-            var selectorByUser = annotatedSelectorByArgsByUser.Item(new SelectorArgs(Color.yellow, Concepts.Textures.GetRandom()));
+            var selectorByUser = annotatedSelectorByArgsByUser.Item(new SelectorArgs(effectColor, Concepts.Textures.GetRandom()));
 
             var name = FactionManifestation.Faction.UniqueNameGenerator.GenerateUniqueName(Concepts.Adjectives, Concepts.Nouns);
             name = string.Concat(name[0].ToString().ToUpper(), name.Substring(1));
 
+
+
             // Add effects to the item
             return _ => // the effects are independent of the progress so that they can easily stack
             {
+
+
                 return new ItemState()
                 {
                     Name = name,
@@ -188,6 +201,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         public List<FlipbookTexture> Textures { get; }
         public List<string> Nouns { get; }
         public List<string> Adjectives { get; }
+        public Dictionary<string, Color> ColorFromName { get; }
 
         public FactionConcepts(
             List<Func<ProductionList>> productionLists, 
@@ -196,7 +210,8 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             List<Annotated<SelectorByArgsByUser>> selectors, 
             List<FlipbookTexture> flipbookTextures,
             List<string> nouns,
-            List<string> adjectives)
+            List<string> adjectives,
+            Dictionary<string, Color> colorFromName)
         {
             ProductionLists = productionLists;
             CharacterStates = characterStates;
@@ -205,6 +220,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             Textures = flipbookTextures;
             Nouns = nouns;
             Adjectives = adjectives;
+            ColorFromName = colorFromName;
         }
 
         public FactionConcepts TakeSubset(int characterStatesCount, int effectsCount, int selectorsCount, int texturesCount, int nounsCount, int adjectivesCount)
@@ -216,7 +232,8 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                     Selectors.Shuffle().Take(selectorsCount).ToList(),
                     Textures.Shuffle().Take(texturesCount).ToList(),
                     Nouns.Shuffle().Take(nounsCount).ToList(),
-                    Adjectives.Shuffle().Take(adjectivesCount).ToList()
+                    Adjectives.Shuffle().Take(adjectivesCount).ToList(),
+                    ColorFromName
                 );
         }
 

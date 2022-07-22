@@ -51,7 +51,6 @@ namespace ShapeGrammar
                 })
             );
 
-            L.FactionsLanguage.InitializeFactions(1);
 
             State.LC.AddEvent(
                 new LevelConstructionEvent(90,
@@ -61,6 +60,9 @@ namespace ShapeGrammar
                     return true;
                 }));*/
 
+            L.FactionsLanguage.InitializeFactions(1);
+
+            /*
             State.LC.AddEvent(
                 new LevelConstructionEvent(10, () =>
                 {
@@ -75,7 +77,7 @@ namespace ShapeGrammar
                     L.TestingLanguage.StatsScalingOfEnemies();
                     return false;
                 })
-            );
+            );*/
         }
     }
 
@@ -443,7 +445,7 @@ namespace ShapeGrammar
                             new Annotated<SelectorByArgsByUser>("Fire", "all those that stand in fire", selectorLibrary.GeometricSelector(Lib.VFXs.Fire, 8f, selectorLibrary.RightHandOfCharacter(0.5f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
                             new Annotated<SelectorByArgsByUser>("Cloud", "all those that stand in cloud", selectorLibrary.GeometricSelector(Lib.VFXs.MovingCloud, 4f, selectorLibrary.FrontOfCharacter(1.2f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
                             new Annotated<SelectorByArgsByUser>("Lightning", "all those that stand in lightning", selectorLibrary.GeometricSelector(Lib.VFXs.Lightning, 6f, selectorLibrary.FrontOfCharacter(0.5f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
-                            new Annotated<SelectorByArgsByUser>("Fireball", "all those that are hit by fireball", selectorLibrary.GeometricSelector(Lib.VFXs.Fireball, 4f, selectorLibrary.FrontOfCharacter(0.8f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
+                            new Annotated<SelectorByArgsByUser>("Fireball", "all those that are hit by fireball", selectorLibrary.GeometricSelector(Lib.VFXs.Fireball, 4f, selectorLibrary.FrontOfCharacter(0.8f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 5f))),
                     },
                     new List<FlipbookTexture>()
                     {
@@ -477,6 +479,12 @@ namespace ShapeGrammar
                         "ordinary",
                         "absorbing",
                         "hanging",
+                    },
+                    new Dictionary<string, Color>()
+                    {
+                        {"Chaos", Color.yellow },
+                        {"Divine", Color.white },
+                        {"Dark", Color.blue },
                     }
                 );
 
@@ -550,7 +558,7 @@ namespace ShapeGrammar
             PlO.ProgressFunctionPlacer(
                 progress => Lib.InteractiveObjects.Item(itemFactories.GetRandom()(progress)), 
                 new UniformIntDistr(1, 4)).Place(path);
-            //PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(path);
+            PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(path);
 
             path.LastArea().AddInteractiveObject(ProgressOfManifestation(fe.FactionManifestation));
         }

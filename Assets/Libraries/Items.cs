@@ -60,7 +60,7 @@ public class Items : ScriptableObject
         BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 1f));
 
     public ItemState Katana() => new WeaponItem("Katana", "Katana", weapons.Katana(),
-        BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 10f));
+        BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 1f));
 
     public ItemState NewItem(string name, string description) => 
         new ItemState() 

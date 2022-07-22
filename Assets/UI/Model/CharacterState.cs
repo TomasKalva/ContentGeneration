@@ -120,12 +120,12 @@ namespace ContentGeneration.Assets.UI.Model
             Defenses = new Defense[]
             {
                 new Defense(DamageType.Physical, 0f),
-                new Defense(DamageType.Fire, 0f),
+                new Defense(DamageType.Chaos, 0f),
                 new Defense(DamageType.Dark, 0f),
                 new Defense(DamageType.Divine, 0f),
             };
             PhysicalDefense = FindDefense(DamageType.Physical);
-            FireDefense = FindDefense(DamageType.Fire);
+            FireDefense = FindDefense(DamageType.Chaos);
             DarkDefense = FindDefense(DamageType.Dark);
             DivineDefense = FindDefense(DamageType.Divine);
 #if NOESIS
