@@ -12,8 +12,9 @@ public class Weapon : MonoBehaviour
     [SerializeField]
     float pushForceIntensity = 500f;
 
-    ByTime<SelectorByUser> HitSelectorByDuration { get; set; }
-    List<Effect> Effects { get; set; }
+    public ByTime<SelectorByUser> HitSelectorByDuration { get; set; }
+
+    public WeaponItem WeaponItem { private get; set; }
 
     public Weapon SetHitSelector(ByTime<SelectorByUser> selectorByDuration)
     {
@@ -22,7 +23,6 @@ public class Weapon : MonoBehaviour
     }
 
     bool _active;
-
     public bool Active
     {
         get
@@ -39,23 +39,10 @@ public class Weapon : MonoBehaviour
     private void Awake()
     {
         Detector = GetComponent<ColliderDetector>();
-        Effects = new List<Effect>();
-    }
-
-    public Weapon AddEffect(Effect effect)
-    {
-        Effects.Add(effect);
-        return this;
     }
 
     public void DealDamage(Agent owner, float damageDuration)
     {
-        var ownerState = owner.CharacterState;
-        ownerState.World.AddOccurence(
-            new Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions.Occurence(
-                HitSelectorByDuration(damageDuration)(ownerState),
-                Effects.ToArray()
-                )
-            );
+        WeaponItem.DealDamage(owner.CharacterState, damageDuration);
     }
 }
