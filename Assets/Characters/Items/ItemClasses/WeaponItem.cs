@@ -58,12 +58,12 @@ public enum DamageType
     Divine
 }
 
-public struct Damage
+public struct DamageDealt
 {
     public DamageType Type;
     public float Amount;
 
-    public Damage(DamageType type, float amount)
+    public DamageDealt(DamageType type, float amount)
     {
         Type = type;
         Amount = amount;
@@ -81,11 +81,11 @@ public class Defense
         ReductionPercentage = reductionPercentage;
     }
 
-    public Damage DamageAfterDefense(Damage incomingDamage) 
+    public DamageDealt DamageAfterDefense(DamageDealt incomingDamage) 
     {
         return incomingDamage.Type == Type ?
             // Reduce damage if it has the same type
-            new Damage(incomingDamage.Type, incomingDamage.Amount* (1f - ReductionPercentage)) :
+            new DamageDealt(incomingDamage.Type, incomingDamage.Amount* (1f - 0.01f * ReductionPercentage)) :
             // Return the same damage otherwise
             incomingDamage;
     }

@@ -35,18 +35,32 @@ public class Items : ScriptableObject
 
     public ItemState FreeWill() => new FreeWill();
 
-    public IEnumerable<ByUser<Effect>> BaseWeaponEffects()
+    /// <summary>
+    /// Good push force values between 1 and 10.
+    /// </summary>
+    public IEnumerable<ByUser<Effect>> BaseWeaponEffects(ByUser<float> damageScaling, ByUser<float> pushForceScaling)
     {
-        yield return ch => Effects.Damage(new Damage(DamageType.Physical, 10 + 2 * ch.Stats.Strength));
+        yield return ch => Effects.Damage(new DamageDealt(DamageType.Physical, damageScaling(ch)));
+        yield return ch => Effects.Push(100f * pushForceScaling(ch))(ch);
     }
 
-    public ItemState SculptureClub() => new WeaponItem("Sculpture Club", "Made of idk stone", weapons.SculptureClub(), BaseWeaponEffects());
-    public ItemState MayanKnife() => new WeaponItem("Mayan Knife", "Every Mayan has one", weapons.MayanKnife(), BaseWeaponEffects());
-    //public ItemState Fireball() => new WeaponItem("Fireball", "It's a fireball", weapons.Fireball().transform);
-    public ItemState MayanSword() => new WeaponItem("Mayan Sword", "Like a knife but bigger", weapons.MayanSword(), BaseWeaponEffects());
-    public ItemState Scythe() => new WeaponItem("Scythe", "Harvesting tool", weapons.Scythe(), BaseWeaponEffects());
-    public ItemState Mace() => new WeaponItem("Mace", "Mace", weapons.Mace(), BaseWeaponEffects());
-    public ItemState Katana() => new WeaponItem("Katana", "Katana", weapons.Katana(), BaseWeaponEffects());
+    public ItemState SculptureClub() => new WeaponItem("Sculpture Club", "Made of idk stone", weapons.SculptureClub(), 
+        BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 5f));
+
+    public ItemState MayanKnife() => new WeaponItem("Mayan Knife", "Every Mayan has one", weapons.MayanKnife(),
+        BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 1f));
+
+    public ItemState MayanSword() => new WeaponItem("Mayan Sword", "Like a knife but bigger", weapons.MayanSword(),
+        BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 1f));
+
+    public ItemState Scythe() => new WeaponItem("Scythe", "Harvesting tool", weapons.Scythe(),
+        BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 1f));
+
+    public ItemState Mace() => new WeaponItem("Mace", "Mace", weapons.Mace(),
+        BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 1f));
+
+    public ItemState Katana() => new WeaponItem("Katana", "Katana", weapons.Katana(),
+        BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 10f));
 
     public ItemState NewItem(string name, string description) => 
         new ItemState() 

@@ -355,16 +355,25 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             return ch => ch.DamageTaken.AddDamage(postureDamage);
         }
 
-        public Effect Damage(Damage damage)
+        public Effect Damage(DamageDealt damage)
         {
             return ch => ch.TakeDamage(damage);
         }
 
-        /*
-        public EffectByUser Push(float force)
+        
+        public ByUser<Effect> Push(float force)
         {
-            return user => ch => 
-        }*/
+            return user => ch =>
+            {
+                var userAgent = user.Agent;
+                var chAgent = ch.Agent;
+                if (userAgent == null || chAgent == null)
+                    return;
+
+                var direction = (chAgent.transform.position - userAgent.transform.position).normalized;
+                chAgent.movement.Impulse(force * direction);
+            };
+        }
 
         public Effect GiveSpirit(float spirit)
         {
@@ -377,7 +386,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             return ch => ch.World.AddOccurence(
                 new Occurence(
                     sel.ConstSelector(ch, timeS, new ConstDistr(tickLength)),
-                    Damage(new Damage(DamageType.Physical, damagePerSecond * tickLength))
+                    Damage(new DamageDealt(DamageType.Physical, damagePerSecond * tickLength))
                 )
             );
         }
@@ -442,7 +451,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             EffectsByUser = new List<Annotated<EffectByFactionEnvironmentByUser>>()
             {
                 FromPower("Heal", "heals", p => eff.Heal(5f + 5f * p)),
-                FromPower("Damage", "damages", p => eff.Damage(new Damage(DamageType.Physical, 10f + 5f * p))),
+                FromPower("Damage", "damages", p => eff.Damage(new DamageDealt(DamageType.Physical, 10f + 5f * p))),
                 FromPower("Give spirit", "gives spirit to", p => eff.GiveSpirit(10f + 20f * p)),
                 FromPower("Bleed", "applies bleeding to", p => eff.Bleed(5f + 2f * p, 2f)),
                 FromPower("Boost stamina regeneration", "boosts stamina regeneration to", p => eff.BoostStaminaRegen(5f + 2f * p, 2f)),

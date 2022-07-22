@@ -108,6 +108,7 @@ namespace ContentGeneration.Assets.UI.Model
                 if (Character != null)
                 {
                     Character.Poise.Maximum = 20f + 6f * _posture;
+                    Character.PhysicalDefense.ReductionPercentage = 0.5f * _posture;
                 }
                 PropertyChanged.OnPropertyChanged(this); 
             }
@@ -122,7 +123,9 @@ namespace ContentGeneration.Assets.UI.Model
                 _resistances = value;
                 if (Character != null)
                 {
-                    Character.Poise.Maximum = _posture;
+                    Character.FireDefense.ReductionPercentage = 0.5f * _resistances;
+                    Character.DarkDefense.ReductionPercentage = 0.5f * _resistances;
+                    Character.DivineDefense.ReductionPercentage = 0.5f * _resistances;
                 }
                 PropertyChanged.OnPropertyChanged(this);
             }

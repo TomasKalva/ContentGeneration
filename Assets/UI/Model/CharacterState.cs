@@ -101,6 +101,14 @@ namespace ContentGeneration.Assets.UI.Model
 
         Defense[] Defenses { get; }
 
+        public Defense FindDefense(DamageType damageType) =>
+            Defenses.Where(def => def.Type == damageType).FirstOrDefault();
+
+        public Defense PhysicalDefense { get; }
+        public Defense DarkDefense { get; }
+        public Defense FireDefense { get; }
+        public Defense DivineDefense { get; }
+
         public CharacterState()
         {
             Health = new FloatRange(10000, 10000);
@@ -108,7 +116,6 @@ namespace ContentGeneration.Assets.UI.Model
             Poise = 10f;
             Inventory = new EnemyInventory(this);
             DamageTaken = new DamageTaken(2f);
-            Stats = new CharacterStats(this);
             OnUpdate = () => { };
             Defenses = new Defense[]
             {
@@ -117,9 +124,14 @@ namespace ContentGeneration.Assets.UI.Model
                 new Defense(DamageType.Dark, 0f),
                 new Defense(DamageType.Divine, 0f),
             };
+            PhysicalDefense = FindDefense(DamageType.Physical);
+            FireDefense = FindDefense(DamageType.Fire);
+            DarkDefense = FindDefense(DamageType.Dark);
+            DivineDefense = FindDefense(DamageType.Divine);
 #if NOESIS
             Behaviors = new Behaviors();
 #endif
+            Stats = new CharacterStats(this);
         }
 
         /// <summary>
@@ -176,7 +188,7 @@ namespace ContentGeneration.Assets.UI.Model
 #endif
 
 #if NOESIS
-        public void TakeDamage(Damage damage)
+        public void TakeDamage(DamageDealt damage)
         {
             var reducedDamage = Defenses.Aggregate(damage, (dmg, def) => def.DamageAfterDefense(dmg));
 
