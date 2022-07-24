@@ -60,7 +60,7 @@ namespace ShapeGrammar
                     return true;
                 }));*/
 
-            L.FactionsLanguage.InitializeFactions(1);
+            //L.FactionsLanguage.InitializeFactions(1);
 
             /*
             State.LC.AddEvent(
@@ -69,7 +69,7 @@ namespace ShapeGrammar
                     L.TestingLanguage.LevellingUpItems();
                     return false;
                 })
-            );
+            );*/
 
             State.LC.AddEvent(
                 new LevelConstructionEvent(5, () =>
@@ -77,7 +77,7 @@ namespace ShapeGrammar
                     L.TestingLanguage.StatsScalingOfEnemies();
                     return false;
                 })
-            );*/
+            );
         }
     }
 
