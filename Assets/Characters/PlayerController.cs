@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
 
 	OrbitCamera orbitCamera;
 
-	public World World { get; set; }
+	//public World World { get; set; }
 
 	//Reality reality;
 
@@ -94,7 +94,7 @@ public class PlayerController : MonoBehaviour
 			AddButtonsDown();
 		}
 
-		PlayerCharacterState.CurrentInteractiveObjectState = World.ObjectsCloseTo(transform.position, interactionDistance).FirstOrDefault();
+		PlayerCharacterState.CurrentInteractiveObjectState = PlayerCharacterState.World.ObjectsCloseTo(transform.position, interactionDistance).FirstOrDefault();
 
 		UpdateLockOn();
 
@@ -193,7 +193,7 @@ public class PlayerController : MonoBehaviour
 
 	IEnumerable<Agent> LockableTargets(Agent player)
     {
-		return World.AliveEnemies.SelectNN(e => e.Agent).Where(agent => agent != player && (agent.transform.position - player.transform.position).sqrMagnitude < maxDistance * maxDistance);
+		return PlayerCharacterState.World.AliveEnemies.SelectNN(e => e.Agent).Where(agent => agent != player && (agent.transform.position - player.transform.position).sqrMagnitude < maxDistance * maxDistance);
 
 	}
 
@@ -234,8 +234,8 @@ public class PlayerController : MonoBehaviour
 		// Death and respawning
         if (myAgent.CharacterState.Dead && !respawned)
 		{
-			World.OnPlayerDeath();
-			respawned = true;
+			PlayerCharacterState.World.OnPlayerDeath();
+			//respawned = true;
 			/*if (PlayerCharacterState.SpawnPoint && !respawned)
 			{
 				PlayerCharacterState.SpawnPoint.SpawnPlayer();

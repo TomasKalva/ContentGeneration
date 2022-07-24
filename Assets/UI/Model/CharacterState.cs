@@ -151,6 +151,15 @@ namespace ContentGeneration.Assets.UI.Model
             OnDeath = () => { };
         }
 
+        public virtual void Die()
+        {
+            Agent.enabled = false;
+            World.RemoveEnemy(this);
+            OnDeath();
+            //GameViewModel.ViewModel.Enemies.Remove(CharacterState);
+            //Destroy(gameObject, 1f);
+        }
+
         /// <summary>
         /// Resets the state of the character.
         /// </summary>

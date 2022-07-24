@@ -60,7 +60,7 @@ namespace ShapeGrammar
                     return true;
                 }));
 
-            L.FactionsLanguage.InitializeFactions(1);
+            L.FactionsLanguage.InitializeFactions(3);
 
             /*
             State.LC.AddEvent(
@@ -442,7 +442,7 @@ namespace ShapeGrammar
                     {
                             //new Annotated<SelectorByUser>("Self", "self", selectorLibrary.SelfSelector()),
                             new Annotated<SelectorByArgsByUser>("Fire", "all those that stand in fire", selectorLibrary.GeometricSelector(Lib.VFXs.Fire, 8f, selectorLibrary.RightHandOfCharacter(0.5f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
-                            new Annotated<SelectorByArgsByUser>("Cloud", "all those that stand in cloud", selectorLibrary.GeometricSelector(Lib.VFXs.MovingCloud, 4f, selectorLibrary.FrontOfCharacter(1.2f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
+                            new Annotated<SelectorByArgsByUser>("Cloud", "all those that stand in cloud", selectorLibrary.GeometricSelector(Lib.VFXs.MovingCloud, 4f, selectorLibrary.FrontOfCharacter(1.4f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
                             new Annotated<SelectorByArgsByUser>("Lightning", "all those that stand in lightning", selectorLibrary.GeometricSelector(Lib.VFXs.Lightning, 6f, selectorLibrary.FrontOfCharacter(0.5f))),
                             new Annotated<SelectorByArgsByUser>("Fireball", "all those that are hit by fireball", selectorLibrary.GeometricSelector(Lib.VFXs.Fireball, 4f, selectorLibrary.FrontOfCharacter(0.8f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 5f))),
                     },

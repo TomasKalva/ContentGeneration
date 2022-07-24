@@ -128,7 +128,7 @@ namespace ContentGeneration.Assets.UI
             {
                 var player = Grave.SpawnPlayer();
                 player.World = this;
-                player.Agent.GetComponent<PlayerController>().World = this;
+                //player.Agent.GetComponent<PlayerController>().World = this;
             }
             else
             {

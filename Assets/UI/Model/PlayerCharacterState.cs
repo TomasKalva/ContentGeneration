@@ -69,5 +69,14 @@ namespace ContentGeneration.Assets.UI.Model
         {
             return PlayerInventory.AddItem(Inventory.AllSlots(), item) != null;
         }
+
+        public override void Die()
+        {
+            GameObject.Destroy(Agent.gameObject, 0f);
+            OnDeath();
+            World.OnPlayerDeath();
+            //GameViewModel.ViewModel.Enemies.Remove(CharacterState);
+            //Destroy(gameObject, 1f);
+        }
     }
 }

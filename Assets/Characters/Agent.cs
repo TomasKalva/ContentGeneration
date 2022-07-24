@@ -135,7 +135,7 @@ public class Agent : MonoBehaviour
         {
             if (!died)
 			{
-				Die();
+				CharacterState.Die();
 				died = true;
 			}
 			return;
