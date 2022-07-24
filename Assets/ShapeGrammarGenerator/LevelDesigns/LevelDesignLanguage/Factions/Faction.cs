@@ -178,6 +178,8 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 var character = Concepts.CharacterStates.GetRandom()();
                 character.SetItemToSlot(SlotType.LeftWeapon, leftWeaponF());
                 character.SetItemToSlot(SlotType.RightWeapon, rightWeaponF());
+
+
                 return character;
             };
         }
@@ -316,6 +318,16 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 FromPower("Boost stamina regeneration", "boosts stamina regeneration to", p => eff.BoostStaminaRegen(5f + 2f * p, 2f)),
                 FromPower("Regenerate health", "regenerates health to", p => eff.RegenerateHealth(5f + 2f * p, 2f)),
             };
+        }
+    }
+
+    class ScalingCharacterStats
+    {
+        public CharacterStats GetStats()
+        {
+            var stats = new CharacterStats();
+            return stats;
+
         }
     }
 }

@@ -23,6 +23,11 @@ namespace ContentGeneration.Assets.UI.Model
             { 
                 _character = value;
 
+                if(_character.Stats != this)
+                {
+                    _character.Stats = this;
+                }
+
                 // Update character with the properties
                 Update();
 
@@ -142,9 +147,8 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
-        public CharacterStats(CharacterState character)
+        public CharacterStats()
         {
-            Character = character;
         }
 
         public void Update()
@@ -158,29 +162,53 @@ namespace ContentGeneration.Assets.UI.Model
             Versatility = Versatility;
         }
 
-        public static IEnumerable<StatIncrease> StatIncreases()
+        public static IEnumerable<StatManipulation<Action<CharacterState>>> StatIncreases()
         {
             return new[] {
-                new StatIncrease("Will", ch => ch.Stats.Will++),
-                new StatIncrease("Strength", ch => ch.Stats.Strength++),
-                new StatIncrease("Endurance", ch => ch.Stats.Endurance++),
-                new StatIncrease("Agility", ch => ch.Stats.Agility++),
-                new StatIncrease("Posture", ch => ch.Stats.Posture++),
-                new StatIncrease("Resistances", ch => ch.Stats.Resistances++),
-                new StatIncrease("Versatility", ch => ch.Stats.Versatility++),
+                new StatManipulation<Action<CharacterState>>(Stat.Will, ch => ch.Stats.Will++),
+                new StatManipulation<Action<CharacterState>>(Stat.Strength, ch => ch.Stats.Strength++),
+                new StatManipulation<Action<CharacterState>>(Stat.Endurance, ch => ch.Stats.Endurance++),
+                new StatManipulation<Action<CharacterState>>(Stat.Agility, ch => ch.Stats.Agility++),
+                new StatManipulation<Action<CharacterState>>(Stat.Posture, ch => ch.Stats.Posture++),
+                new StatManipulation<Action<CharacterState>>(Stat.Resistances, ch => ch.Stats.Resistances++),
+                new StatManipulation<Action<CharacterState>>(Stat.Versatility, ch => ch.Stats.Versatility++),
+            };
+        }
+
+        public static IEnumerable<StatManipulation<Action<CharacterState, int>>> StatChanges()
+        {
+            return new[] {
+                new StatManipulation<Action<CharacterState, int>>(Stat.Will, (ch, val) => ch.Stats.Will += val),
+                new StatManipulation<Action<CharacterState, int>>(Stat.Strength, (ch, val) => ch.Stats.Strength += val),
+                new StatManipulation<Action<CharacterState, int>>(Stat.Endurance, (ch, val) => ch.Stats.Endurance += val),
+                new StatManipulation<Action<CharacterState, int>>(Stat.Agility, (ch, val) => ch.Stats.Agility += val),
+                new StatManipulation<Action<CharacterState, int>>(Stat.Posture, (ch, val) => ch.Stats.Posture += val),
+                new StatManipulation<Action<CharacterState, int>>(Stat.Resistances, (ch, val) => ch.Stats.Resistances += val),
+                new StatManipulation<Action<CharacterState, int>>(Stat.Versatility, (ch, val) => ch.Stats.Versatility += val),
             };
         }
     }
 
-    public struct StatIncrease
+    public enum Stat
     {
-        public string Stat { get; }
-        public Action<CharacterState> Increase { get; }
+        Will,
+        Strength,
+        Endurance,
+        Agility,
+        Posture,
+        Resistances,
+        Versatility,
+    }
 
-        public StatIncrease(string stat, Action<CharacterState> increase)
+    public struct StatManipulation<ManipulationT>
+    {
+        public Stat Stat { get; }
+        public ManipulationT Increase { get; }
+
+        public StatManipulation(Stat stat, ManipulationT manipulation)
         {
             Stat = stat;
-            Increase = increase;
+            Increase = manipulation;
         }
     }
 }

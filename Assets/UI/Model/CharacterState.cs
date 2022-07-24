@@ -86,7 +86,16 @@ namespace ContentGeneration.Assets.UI.Model
         public CharacterStats Stats
         {
             get { return _stats; }
-            set { _stats = value; OnPropertyChanged(this); }
+            set 
+            {
+                _stats = value; 
+                if(_stats.Character != this)
+                {
+                    _stats.Character = this;
+                }
+
+                OnPropertyChanged(this); 
+            }
         }
 
         public Action OnUpdate { get; set; }
@@ -131,7 +140,7 @@ namespace ContentGeneration.Assets.UI.Model
 #if NOESIS
             Behaviors = new Behaviors();
 #endif
-            Stats = new CharacterStats(this);
+            Stats = new CharacterStats();
         }
 
         /// <summary>

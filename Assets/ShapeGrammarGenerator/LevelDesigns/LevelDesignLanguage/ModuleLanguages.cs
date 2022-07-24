@@ -60,7 +60,7 @@ namespace ShapeGrammar
                     return true;
                 }));*/
 
-            //L.FactionsLanguage.InitializeFactions(1);
+            L.FactionsLanguage.InitializeFactions(1);
 
             /*
             State.LC.AddEvent(
@@ -69,7 +69,7 @@ namespace ShapeGrammar
                     L.TestingLanguage.LevellingUpItems();
                     return false;
                 })
-            );*/
+            );
 
             State.LC.AddEvent(
                 new LevelConstructionEvent(5, () =>
@@ -77,7 +77,7 @@ namespace ShapeGrammar
                     L.TestingLanguage.StatsScalingOfEnemies();
                     return false;
                 })
-            );
+            );*/
         }
     }
 
@@ -240,7 +240,7 @@ namespace ShapeGrammar
                 Lib.Enemies.AllAgents().Select(chF =>
                 {
                     var enemy = chF();
-                    var stats = new CharacterStats(enemy)
+                    var stats = new CharacterStats()
                     {
                         Will = 50,
                         Strength = 5,
@@ -251,7 +251,6 @@ namespace ShapeGrammar
                         Versatility = 5
                     };
                     enemy.Stats = stats;
-                    enemy.Stats.Update();
 
                     return enemy;
                 })
@@ -267,7 +266,7 @@ namespace ShapeGrammar
             var statIncreaseItems = CharacterStats.StatIncreases().Select(statIncrease =>
                 new ItemState()
                 {
-                    Name = statIncrease.Stat,
+                    Name = statIncrease.Stat.ToString(),
                     Description = $"Increases {statIncrease.Stat}"
                 }
                 .OnUse(player => statIncrease.Increase(player))
@@ -376,7 +375,7 @@ namespace ShapeGrammar
 
             int ascensionPrice = startingAscensionPrice();
 
-            Func<StatIncrease, InteractOption<Kiln>> increaseOption = null; // Declare function before calling it recursively
+            Func<StatManipulation<Action<CharacterState>>, InteractOption<Kiln>> increaseOption = null; // Declare function before calling it recursively
             increaseOption = 
                 statIncrease => new InteractOption<Kiln>($"{statIncrease.Stat}",
                     (kiln, player) =>
