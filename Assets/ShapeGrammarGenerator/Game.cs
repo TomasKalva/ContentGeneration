@@ -49,19 +49,22 @@ namespace ShapeGrammar
 
             // todo: make this initialization less annoying
             var playerState = new ContentGeneration.Assets.UI.Model.PlayerCharacterState();
-            playerState.Spirit = 1000_000;
+            playerState.Spirit = 50;
             var stats = new ContentGeneration.Assets.UI.Model.CharacterStats()
             {
-                Will = 50,
+                Will = 5,
                 Strength = 5,
-                Endurance = 99,
-                Agility = 10,
+                Endurance = 5,
+                Agility = 5,
                 Posture = 5,
                 Resistances = 5,
                 Versatility = 5
             };
             playerState.Stats = stats;
 
+            playerState.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanKnife());
+            playerState.SetItemToSlot(SlotType.RightWeapon, libraries.Items.Katana());
+            playerState.SetItemToSlot(SlotType.Active, libraries.Items.FreeWill());
 
             GameViewModel.ViewModel.PlayerState = playerState;
         }

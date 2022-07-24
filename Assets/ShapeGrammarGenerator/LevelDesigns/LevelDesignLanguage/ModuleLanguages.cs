@@ -269,7 +269,7 @@ namespace ShapeGrammar
                     Name = statIncrease.Stat.ToString(),
                     Description = $"Increases {statIncrease.Stat}"
                 }
-                .OnUse(player => statIncrease.Increase(player))
+                .OnUse(player => statIncrease.Manipulate(player.Stats))
             ).ToArray();
 
             level_up_area.AddInteractiveObject(
@@ -375,14 +375,14 @@ namespace ShapeGrammar
 
             int ascensionPrice = startingAscensionPrice();
 
-            Func<StatManipulation<Action<CharacterState>>, InteractOption<Kiln>> increaseOption = null; // Declare function before calling it recursively
+            Func<StatManipulation<Action<CharacterStats>>, InteractOption<Kiln>> increaseOption = null; // Declare function before calling it recursively
             increaseOption = 
                 statIncrease => new InteractOption<Kiln>($"{statIncrease.Stat}",
                     (kiln, player) =>
                     {
                         if (player.Pay(ascensionPrice))
                         {
-                            statIncrease.Increase(player);
+                            statIncrease.Manipulate(player.Stats);
                             ascensionPrice += 50;
                             kiln.IntObj.BurstFire();
                             kiln.Interaction = 
@@ -443,7 +443,7 @@ namespace ShapeGrammar
                             //new Annotated<SelectorByUser>("Self", "self", selectorLibrary.SelfSelector()),
                             new Annotated<SelectorByArgsByUser>("Fire", "all those that stand in fire", selectorLibrary.GeometricSelector(Lib.VFXs.Fire, 8f, selectorLibrary.RightHandOfCharacter(0.5f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
                             new Annotated<SelectorByArgsByUser>("Cloud", "all those that stand in cloud", selectorLibrary.GeometricSelector(Lib.VFXs.MovingCloud, 4f, selectorLibrary.FrontOfCharacter(1.2f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
-                            new Annotated<SelectorByArgsByUser>("Lightning", "all those that stand in lightning", selectorLibrary.GeometricSelector(Lib.VFXs.Lightning, 6f, selectorLibrary.FrontOfCharacter(0.5f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
+                            new Annotated<SelectorByArgsByUser>("Lightning", "all those that stand in lightning", selectorLibrary.GeometricSelector(Lib.VFXs.Lightning, 6f, selectorLibrary.FrontOfCharacter(0.5f))),
                             new Annotated<SelectorByArgsByUser>("Fireball", "all those that are hit by fireball", selectorLibrary.GeometricSelector(Lib.VFXs.Fireball, 4f, selectorLibrary.FrontOfCharacter(0.8f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 5f))),
                     },
                     new List<FlipbookTexture>()

@@ -44,7 +44,7 @@ namespace ContentGeneration.Assets.UI.Model
                 _will = value;
                 if(Character != null)
                 {
-                    Character.Health.Maximum = 50 + 10 * _will;
+                    Character.Health.Maximum = 40 + 10 * _will;
                     Debug.Log($"Max health:{Character.Health.Maximum}");
                 }
                 PropertyChanged.OnPropertyChanged(this); 
@@ -162,29 +162,29 @@ namespace ContentGeneration.Assets.UI.Model
             Versatility = Versatility;
         }
 
-        public static IEnumerable<StatManipulation<Action<CharacterState>>> StatIncreases()
+        public static IEnumerable<StatManipulation<Action<CharacterStats>>> StatIncreases()
         {
             return new[] {
-                new StatManipulation<Action<CharacterState>>(Stat.Will, ch => ch.Stats.Will++),
-                new StatManipulation<Action<CharacterState>>(Stat.Strength, ch => ch.Stats.Strength++),
-                new StatManipulation<Action<CharacterState>>(Stat.Endurance, ch => ch.Stats.Endurance++),
-                new StatManipulation<Action<CharacterState>>(Stat.Agility, ch => ch.Stats.Agility++),
-                new StatManipulation<Action<CharacterState>>(Stat.Posture, ch => ch.Stats.Posture++),
-                new StatManipulation<Action<CharacterState>>(Stat.Resistances, ch => ch.Stats.Resistances++),
-                new StatManipulation<Action<CharacterState>>(Stat.Versatility, ch => ch.Stats.Versatility++),
+                new StatManipulation<Action<CharacterStats>>(Stat.Will, ch => ch.Will++),
+                new StatManipulation<Action<CharacterStats>>(Stat.Strength, ch => ch.Strength++),
+                new StatManipulation<Action<CharacterStats>>(Stat.Endurance, ch => ch.Endurance++),
+                new StatManipulation<Action<CharacterStats>>(Stat.Agility, ch => ch.Agility++),
+                new StatManipulation<Action<CharacterStats>>(Stat.Posture, ch => ch.Posture++),
+                new StatManipulation<Action<CharacterStats>>(Stat.Resistances, ch => ch.Resistances++),
+                new StatManipulation<Action<CharacterStats>>(Stat.Versatility, ch => ch.Versatility++),
             };
         }
 
-        public static IEnumerable<StatManipulation<Action<CharacterState, int>>> StatChanges()
+        public static IEnumerable<StatManipulation<Action<CharacterStats, int>>> StatChanges()
         {
             return new[] {
-                new StatManipulation<Action<CharacterState, int>>(Stat.Will, (ch, val) => ch.Stats.Will += val),
-                new StatManipulation<Action<CharacterState, int>>(Stat.Strength, (ch, val) => ch.Stats.Strength += val),
-                new StatManipulation<Action<CharacterState, int>>(Stat.Endurance, (ch, val) => ch.Stats.Endurance += val),
-                new StatManipulation<Action<CharacterState, int>>(Stat.Agility, (ch, val) => ch.Stats.Agility += val),
-                new StatManipulation<Action<CharacterState, int>>(Stat.Posture, (ch, val) => ch.Stats.Posture += val),
-                new StatManipulation<Action<CharacterState, int>>(Stat.Resistances, (ch, val) => ch.Stats.Resistances += val),
-                new StatManipulation<Action<CharacterState, int>>(Stat.Versatility, (ch, val) => ch.Stats.Versatility += val),
+                new StatManipulation<Action<CharacterStats, int>>(Stat.Will, (ch, val) => ch.Will += val),
+                new StatManipulation<Action<CharacterStats, int>>(Stat.Strength, (ch, val) => ch.Strength += val),
+                new StatManipulation<Action<CharacterStats, int>>(Stat.Endurance, (ch, val) => ch.Endurance += val),
+                new StatManipulation<Action<CharacterStats, int>>(Stat.Agility, (ch, val) => ch.Agility += val),
+                new StatManipulation<Action<CharacterStats, int>>(Stat.Posture, (ch, val) => ch.Posture += val),
+                new StatManipulation<Action<CharacterStats, int>>(Stat.Resistances, (ch, val) => ch.Resistances += val),
+                new StatManipulation<Action<CharacterStats, int>>(Stat.Versatility, (ch, val) => ch.Versatility += val),
             };
         }
     }
@@ -203,12 +203,12 @@ namespace ContentGeneration.Assets.UI.Model
     public struct StatManipulation<ManipulationT>
     {
         public Stat Stat { get; }
-        public ManipulationT Increase { get; }
+        public ManipulationT Manipulate { get; }
 
         public StatManipulation(Stat stat, ManipulationT manipulation)
         {
             Stat = stat;
-            Increase = manipulation;
+            Manipulate = manipulation;
         }
     }
 }

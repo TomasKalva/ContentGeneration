@@ -136,8 +136,6 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             // Add effects to the item
             return _ => // the effects are independent of the progress so that they can easily stack
             {
-
-
                 return new ItemState()
                 {
                     Name = name,
@@ -162,23 +160,25 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         public ProgressFactory<CharacterState> CreateEnemyFactory()
         {
             var affinity = FactionManifestation.Faction.Affinity;
-            var progress = FactionManifestation.Progress;
+            var manifestationProgress = FactionManifestation.Progress;
 
             // Create stats of the enemy
-
+            var scalingStats = new ScalingCharacterStats();
 
             // Create items for the enemy
 
             return progress =>
             {
+                var character = Concepts.CharacterStates.GetRandom()();
+
+                character.Stats = scalingStats.GetStats(manifestationProgress);
+
                 // Create weapon for the enemy
                 var leftWeaponF = Concepts.Weapons.GetRandom();
                 var rightWeaponF = Concepts.Weapons.GetRandom();
 
-                var character = Concepts.CharacterStates.GetRandom()();
                 character.SetItemToSlot(SlotType.LeftWeapon, leftWeaponF());
                 character.SetItemToSlot(SlotType.RightWeapon, rightWeaponF());
-
 
                 return character;
             };
@@ -313,7 +313,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 FromPower("Chaos", "gives chaose damage", p => eff.Damage(new DamageDealt(DamageType.Chaos, 10f + 5f * p))),
                 FromPower("Dark", "gives dark damage", p => eff.Damage(new DamageDealt(DamageType.Dark, 10f + 5f * p))),
                 FromPower("Divine", "gives divine damage", p => eff.Damage(new DamageDealt(DamageType.Divine, 10f + 5f * p))),
-                FromPower("Give spirit", "gives spirit to", p => eff.GiveSpirit(10f + 20f * p)),
+                FromPower("Give spirit", "gives spirit to", p => eff.GiveSpirit(10f + 2f * p)),
                 FromPower("Bleed", "applies bleeding to", p => eff.Bleed(5f + 2f * p, 2f)),
                 FromPower("Boost stamina regeneration", "boosts stamina regeneration to", p => eff.BoostStaminaRegen(5f + 2f * p, 2f)),
                 FromPower("Regenerate health", "regenerates health to", p => eff.RegenerateHealth(5f + 2f * p, 2f)),
@@ -323,9 +323,28 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
     class ScalingCharacterStats
     {
-        public CharacterStats GetStats()
+        public CharacterStats GetStats(int manifestationProgress)
         {
-            var stats = new CharacterStats();
+            var stats = new CharacterStats()
+            {
+                Will = 4 * manifestationProgress,
+                Strength = 5 * manifestationProgress,
+                Versatility = 5 * manifestationProgress
+            };
+
+            var statChanges = CharacterStats.StatChanges();
+            var randomisedStats = new Stat[]
+            {
+                Stat.Endurance,
+                Stat.Agility,
+                Stat.Posture,
+                Stat.Resistances,
+            };
+            var increasedStats = randomisedStats.Take(manifestationProgress).ToHashSet();
+
+            statChanges.Where(sc => increasedStats.Contains(sc.Stat))
+                .ForEach(sc => sc.Manipulate(stats, 4 + 4 * manifestationProgress));
+
             return stats;
 
         }
