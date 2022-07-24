@@ -26,6 +26,13 @@ namespace ContentGeneration.Assets.UI.Model
 
         public GeometryMaker<Agent> GeometryMaker { get; set; }
 
+        public Action OnDeath { get; private set; }
+        public CharacterState SetOnDeath(Action onDeath)
+        {
+            OnDeath = onDeath;
+            return this;
+        }
+
         public Agent MakeGeometry()
         {
             var agent = GeometryMaker.CreateGeometry();
@@ -141,6 +148,7 @@ namespace ContentGeneration.Assets.UI.Model
             Behaviors = new Behaviors();
 #endif
             Stats = new CharacterStats();
+            OnDeath = () => { };
         }
 
         /// <summary>

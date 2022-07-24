@@ -1,5 +1,6 @@
 ﻿using Assets.Util;
 using ContentGeneration.Assets.UI.Model;
+using ContentGeneration.Assets.UI.Util;
 using ShapeGrammar;
 using System;
 using System.Collections.Generic;
@@ -172,6 +173,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 var character = Concepts.CharacterStates.GetRandom()();
 
                 character.Stats = scalingStats.GetStats(manifestationProgress);
+                character.SetOnDeath(() => GameViewModel.ViewModel.PlayerState.Spirit += character.Health.Maximum);
 
                 // Create weapon for the enemy
                 var leftWeaponF = Concepts.Weapons.GetRandom();

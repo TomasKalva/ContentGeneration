@@ -42,7 +42,6 @@ namespace ShapeGrammar
             });
             */
 
-            /*
             State.LC.AddEvent(
                 new LevelConstructionEvent(0, () =>
                 {
@@ -51,6 +50,7 @@ namespace ShapeGrammar
                 })
             );
 
+            
 
             State.LC.AddEvent(
                 new LevelConstructionEvent(90,
@@ -58,7 +58,7 @@ namespace ShapeGrammar
                 {
                     L.AscendingLanguage.AscendingBranch(() => 100);
                     return true;
-                }));*/
+                }));
 
             L.FactionsLanguage.InitializeFactions(1);
 
