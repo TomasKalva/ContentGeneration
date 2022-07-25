@@ -366,10 +366,16 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             }
         }
 
-        IEnumerable<Point> EvenlySampleCircle(Vector3 center, float radius, int samplesCount)
+        /// <summary>
+        /// Arc size is in degrees. The center of the arc is on startDirection.
+        /// </summary>
+        IEnumerable<Point> EvenlySampleCircle(Vector3 center, float radius, int samplesCount, float arcSizeDeg, Vector2 startDirection)
         {
+            var startAngle = Mathf.Atan2(startDirection.y, startDirection.x);
+            var arcSizeRad = arcSizeDeg * Mathf.Deg2Rad;
             return Enumerable.Range(0, samplesCount)
-                .Select(i => Mathf.PI * 2f * (i / (float)samplesCount))
+                .Select(i => Mathf.PI * 2f * (i / (float)samplesCount) - startAngle)
+                .Where(angle => angle < arcSizeRad || angle >= 2 * Mathf.PI - arcSizeRad)
                 .Select(angle =>
                 {
                     var cos = Mathf.Cos(angle);
@@ -397,7 +403,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         
         public Action<CharacterState> ShowCircle(Func<VFX> vfxF, Color color, FlipbookTexture texture, float radius, int sampleCount, float duration, DamageDealt damageDealt)
         {
-            return user => EvenlySampleCircle(user.Agent.transform.position, radius, sampleCount)
+            return user => EvenlySampleCircle(user.Agent.transform.position, radius, sampleCount, 180f, Vector2.one)
                 .ForEach(point => user.World.CreateOccurence(
                     sel.GeometricSelector(vfxF, duration, sel.Initializator()
                         .ConstPosition(point.Position)
