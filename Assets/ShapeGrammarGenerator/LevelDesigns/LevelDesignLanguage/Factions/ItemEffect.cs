@@ -284,8 +284,19 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             return ch => ch.TakeDamage(damage);
         }
 
-        
-        public ByUser<Effect> Push(float force)
+        public Effect Push(Vector3 direction, float force)
+        {
+            return ch =>
+            {
+                var chAgent = ch.Agent;
+                if (chAgent == null)
+                    return;
+
+                chAgent.movement.Impulse(force * direction);
+            };
+        }
+
+        public ByUser<Effect> PushFrom(float force)
         {
             return user => ch =>
             {
@@ -401,7 +412,10 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 );
         }
 
-        public Effect ShowCircle(Func<VFX> vfxF, Color color, FlipbookTexture texture, Vector3 center, float radius, int sampleCount, float duration, float halfArcSize, Vector2 startDirection, DamageDealt damageDealt)
+        /// <summary>
+        /// Spawns the vfx in the given circle arc.
+        /// </summary>
+        public Effect Circle(Func<VFX> vfxF, Color color, FlipbookTexture texture, Vector3 center, float radius, int sampleCount, float duration, float halfArcSize, Vector2 startDirection, DamageDealt damageDealt)
         {
             return user => EvenlySampleCircle(center, radius, sampleCount, halfArcSize, startDirection)
                 .ForEach(point => user.World.CreateOccurence(
@@ -414,9 +428,26 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 );
         }
 
-        public Effect ShowCircle(Func<VFX> vfxF, Color color, FlipbookTexture texture, float radius, int sampleCount, float duration, float halfArcSize, Vector2 startDirection, DamageDealt damageDealt)
+        public Effect Circle(Func<VFX> vfxF, Color color, FlipbookTexture texture, float radius, int sampleCount, float duration, float halfArcSize, Vector2 startDirection, DamageDealt damageDealt)
         {
-            return user => ShowCircle(vfxF, color, texture, user.Agent.transform.position, radius, sampleCount, duration, halfArcSize, startDirection, damageDealt)(user);
+            return user => Circle(vfxF, color, texture, user.Agent.transform.position, radius, sampleCount, duration, halfArcSize, startDirection, damageDealt)(user);
+        }
+
+        public Effect Cloud(Func<VFX> vfxF, Color color, FlipbookTexture texture, float scale, float speed, float pushForce, DamageDealt damageDealt)
+        {
+            return user =>
+            {
+                var pushDirection = user.Agent.transform.forward;
+                user.World.CreateOccurence(
+                    sel.GeometricSelector(vfxF, 4f, sel.Initializator()
+                        .FrontOfCharacter(1.3f)
+                        .Move(user => user.Agent.movement.AgentForward, speed)
+                        .Scale(scale)
+                        )(new SelectorArgs(color, texture))(user),
+                    eff.Damage(damageDealt),
+                    eff.Push(pushDirection, pushForce)
+                    );
+            };
         }
 
         /// <summary>
@@ -476,7 +507,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 Name = "Square of Chaos",
                 Description = "Four flames, each representing one of the principial witches burnt for practicing the forbidden arts of chaos."
             }
-            .OnUse(ch => spells.ShowCircle(vfxs.Fire, Color.yellow, vfxs.FireTexture, 2.5f, 4, 10f, 180f, ch.Agent.transform.forward.XZ(),
+            .OnUse(ch => spells.Circle(vfxs.Fire, Color.yellow, vfxs.FireTexture, 2.5f, 4, 10f, 180f, ch.Agent.transform.forward.XZ(),
                 new DamageDealt(DamageType.Chaos, 10f + 3f * ch.Stats.Versatility))(ch));
 
         public ItemState CircleOfChaos()
@@ -485,7 +516,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 Name = "Circle of Chaos",
                 Description = ""
             }
-            .OnUse(ch => spells.ShowCircle(vfxs.Fire, Color.yellow, vfxs.FireTexture, 2.5f, 24, 10f, 180f, ch.Agent.transform.forward.XZ(),
+            .OnUse(ch => spells.Circle(vfxs.Fire, Color.yellow, vfxs.FireTexture, 2.5f, 24, 10f, 180f, ch.Agent.transform.forward.XZ(),
                 new DamageDealt(DamageType.Chaos, 10f + 3f * ch.Stats.Versatility))(ch));
 
         public ItemState Inferno()
@@ -494,7 +525,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 Name = "Inferno",
                 Description = "Let the chaos engulf your body."
             }
-            .OnUse(ch => spells.ShowCircle(() => vfxs.MovingCloud().SetHalfWidth(1.2f), Color.yellow, vfxs.FireTexture, 0.5f, 3, 10f, 180f, ch.Agent.transform.forward.XZ(),
+            .OnUse(ch => spells.Circle(() => vfxs.MovingCloud().SetHalfWidth(1.2f), Color.yellow, vfxs.FireTexture, 0.5f, 3, 10f, 180f, ch.Agent.transform.forward.XZ(),
                 new DamageDealt(DamageType.Chaos, 10f + 3f * ch.Stats.Versatility))(ch));
 
         public ItemState WaveOfChaos()
@@ -512,7 +543,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                         arcDirection = ch.Agent.transform.forward.XZ();
                     }
 
-                    spells.ShowCircle(vfxs.Fire, Color.yellow, vfxs.FireTexture, userPosition.Value, 1.5f + waveNumber++ * 0.7f, 24 + 3 * waveNumber, 0.7f, 30f, arcDirection.Value,
+                    spells.Circle(vfxs.Fire, Color.yellow, vfxs.FireTexture, userPosition.Value, 1.5f + waveNumber++ * 0.7f, 24 + 3 * waveNumber, 0.7f, 30f, arcDirection.Value,
                         new DamageDealt(DamageType.Chaos, 10f + 3f * ch.Stats.Versatility))(ch);
                 };
             };
@@ -526,6 +557,23 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             }
              .OnUse(ch => wavesF()(ch));
         }
+
+        public ItemState Cloud()
+            => new ItemState()
+            {
+                Name = "Cloud",
+                Description = "Soothing cloud."
+            }
+            .OnUse(ch => spells.Cloud(() => vfxs.MovingCloud().SetHalfWidth(0.5f), Color.white, vfxs.WindTexture, 1f, 2f, 1000f, new DamageDealt(DamageType.Divine, 0f + 3f * ch.Stats.Versatility))(ch));
+
+        public ItemState HeavenlyFlameCloud()
+            => new ItemState()
+            {
+                Name = "Heavenly Flame Cloud",
+                Description = "Burning cloud."
+            }
+            .OnUse(ch => spells.Cloud(() => vfxs.MovingCloud().SetHalfWidth(0.5f), Color.white, vfxs.FireTexture, 1f, 2f, 800f, new DamageDealt(DamageType.Divine, 15f + 5f * ch.Stats.Versatility))(ch));
+
     }
 
     /*

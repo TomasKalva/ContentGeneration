@@ -42,7 +42,7 @@ public class Items : ScriptableObject
     public IEnumerable<ByUser<Effect>> BaseWeaponEffects(ByUser<float> damageScaling, ByUser<float> pushForceScaling)
     {
         yield return ch => Effects.Damage(new DamageDealt(DamageType.Physical, damageScaling(ch)));
-        yield return ch => Effects.Push(100f * pushForceScaling(ch))(ch);
+        yield return ch => Effects.PushFrom(100f * pushForceScaling(ch))(ch);
     }
 
     public WeaponItem SculptureClub() => new WeaponItem("Sculpture Club", "Made of idk stone", weapons.SculptureClub(), 

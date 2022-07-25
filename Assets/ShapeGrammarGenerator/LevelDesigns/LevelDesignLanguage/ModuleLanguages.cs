@@ -70,7 +70,7 @@ namespace ShapeGrammar
                     return false;
                 })
             );
-            
+            */
             State.LC.AddEvent(
                 new LevelConstructionEvent(5, () =>
                 {
@@ -78,7 +78,7 @@ namespace ShapeGrammar
                     return false;
                 })
             );
-            */
+            
 
             State.LC.AddEvent(
                 new LevelConstructionEvent(90,
@@ -299,6 +299,8 @@ namespace ShapeGrammar
             var spellItems = new SpellItems(spells, Lib.VFXs);
             var s = new Func<ItemState>[]
             {
+                spellItems.HeavenlyFlameCloud,
+                spellItems.Cloud,
                 spellItems.WaveOfChaos,
                 spellItems.FireBolt,
                 spellItems.FlameBolt,
