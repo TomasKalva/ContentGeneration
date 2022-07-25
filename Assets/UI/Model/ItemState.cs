@@ -101,18 +101,6 @@ namespace ContentGeneration.Assets.UI.Model
             return this;
         }
 
-        /// <summary>
-        /// Adds a character action that executes the given occurence.
-        /// </summary>
-        public ItemState OnUseOccurence(Func<CharacterState, Occurence> occurenceF)
-        {
-            return OnUse(character =>
-            {
-                var occurence = occurenceF(character);
-                character.World.AddOccurence(occurence);
-            });
-        }
-
         public CharacterAction OnDropDelegate { get; protected set; }
         public ItemState OnDrop(CharacterAction characterAction)
         {

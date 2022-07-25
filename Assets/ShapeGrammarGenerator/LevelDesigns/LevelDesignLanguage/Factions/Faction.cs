@@ -140,8 +140,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                     .OnUse(ch => 
                     {
                         Debug.Log($"Procedural item is used by {ch.Agent.gameObject.name}");
-                        var occurence = new Occurence(selectorByUser(ch), effectByUser(ch));
-                        ch.World.AddOccurence(occurence);
+                        ch.World.CreateOccurence(selectorByUser(ch), effectByUser(ch));
                     })
                     .SetConsumable()
                     .SetStackable(1);

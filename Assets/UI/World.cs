@@ -141,9 +141,9 @@ namespace ContentGeneration.Assets.UI
             }
         }
 
-        public void AddOccurence(Occurence occurence)
+        public void CreateOccurence(Selector selector, params Effect[] effects)
         {
-            Occurences.AddOccurence(occurence);
+            Occurences.CreateOccurence(selector, effects);
         }
 
         public void Update(float deltaT)

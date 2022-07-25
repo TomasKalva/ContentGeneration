@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using static Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions.OccurenceManager;
 
 namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 {
@@ -88,33 +89,6 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         }
 
         public bool Finished(float deltaT) => finished(deltaT);
-    }
-
-    /// <summary>
-    /// Something that happens inside of the world.
-    /// </summary>
-    public class Occurence
-    {
-        Selector selector;
-        Effect[] effects;
-
-        public Occurence(Selector selector, params Effect[] effects)
-        {
-            this.selector = selector;
-            this.effects = effects;
-        }
-
-        /// <summary>
-        /// Returns true iff the occurence has finished.
-        /// </summary>
-        public bool Update(float deltaT)
-        {
-            var affectedCharacters = selector.Select(deltaT);
-            affectedCharacters.ForEach(character =>
-                effects.ForEach(effect => effect(character)));
-
-            return selector.Finished(deltaT);
-        }
     }
 
     public struct SelectorArgs
@@ -327,33 +301,27 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         public Effect Bleed(float damagePerSecond, float timeS)
         {
             var tickLength = 0.1f;
-            return ch => ch.World.AddOccurence(
-                new Occurence(
+            return ch => ch.World.CreateOccurence(
                     sel.ConstSelector(ch, timeS, new ConstDistr(tickLength)),
                     Damage(new DamageDealt(DamageType.Physical, damagePerSecond * tickLength))
-                )
             );
         }
 
         public Effect BoostStaminaRegen(float boostPerSecond, float timeS)
         {
             var tickLength = 0.1f;
-            return ch => ch.World.AddOccurence(
-                new Occurence(
+            return ch => ch.World.CreateOccurence(
                     sel.ConstSelector(ch, timeS, new ConstDistr(tickLength)),
                     ch => ch.Stamina += boostPerSecond * tickLength
-                )
             );
         }
 
         public Effect RegenerateHealth(float boostPerSecond, float timeS)
         {
             var tickLength = 0.1f;
-            return ch => ch.World.AddOccurence(
-                new Occurence(
+            return ch => ch.World.CreateOccurence(
                     sel.ConstSelector(ch, timeS, new ConstDistr(tickLength)),
                     Heal(boostPerSecond * tickLength)
-                )
             );
         }
 
@@ -380,12 +348,19 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             this.vfxs = vfxs;
         }
 
+        IEnumerable<Vector3> EvenlySampleCircle(float radius, int samplesCount)
+        {
+            return Enumerable.Range(0, samplesCount + 1)
+                .Select(i => Mathf.PI * 2f * (i / (float)samplesCount))
+                .Select(angle => radius * new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)));
+        }
+
         /// <summary>
         /// Shoots a bolt forward from character's hand. It deals damage upon impact.
         /// </summary>
-        public ByUser<Occurence> Bolt(Color color, FlipbookTexture texture, float scale, float speed, DamageDealt damageDealt)
+        public Action<CharacterState> Bolt(Color color, FlipbookTexture texture, float scale, float speed, DamageDealt damageDealt)
         {
-            return user => new Occurence(
+            return user => user.World.CreateOccurence(
                 sel.GeometricSelector(vfxs.Lightning, 4f, sel.Initializator()
                     .RightHandOfCharacter(0f)
                     .Move(user => user.Agent.movement.AgentForward, speed)
@@ -395,7 +370,20 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 eff.Damage(damageDealt)
                 );
         }
-    }
+
+        /*
+        public ByUser<Occurence> ShowCircle(VFX vfx, Color color, FlipbookTexture texture, float radius, DamageDealt damageDealt)
+        {
+            return user => new Occurence(
+                sel.GeometricSelector(vfxs.Lightning, 4f, sel.Initializator()
+                    .FrontOfCharacter(0f)
+                    .RotatePitch(-90f)
+                    .Scale(scale)
+                    )(new SelectorArgs(color, texture))(user),
+                eff.Damage(damageDealt)
+                );
+        }*/
+}
 
     class SpellItems
     {
@@ -414,7 +402,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 Name = "Fire Bolt",
                 Description = "When the nature changed, fire bolts were among the first to notice due to their swiftness."
             }
-            .OnUseOccurence(ch => spells.Bolt(Color.yellow, vfxs.LightningTexture, 0.6f, 7f,
+            .OnUse(ch => spells.Bolt(Color.yellow, vfxs.LightningTexture, 0.6f, 7f,
                 new DamageDealt(DamageType.Chaos, 10f + 5f * ch.Stats.Versatility))(ch));
 
         public ItemState FlameBolt()
@@ -423,7 +411,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 Name = "Flame Bolt",
                 Description = "More powerfull version of fire bolt."
             }
-            .OnUseOccurence(ch => spells.Bolt(Color.yellow, vfxs.LightningTexture, 0.8f, 7f,
+            .OnUse(ch => spells.Bolt(Color.yellow, vfxs.LightningTexture, 0.8f, 7f,
                 new DamageDealt(DamageType.Chaos, 13f + 6f * ch.Stats.Versatility))(ch));
 
         public ItemState ChaosBolt()
@@ -432,7 +420,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 Name = "Chaos Bolt",
                 Description = "Made of pure chaos capable of piercing into any unsuspecting body."
             }
-            .OnUseOccurence(ch => spells.Bolt(Color.yellow, vfxs.LightningTexture, 1f, 9f,
+            .OnUse(ch => spells.Bolt(Color.yellow, vfxs.LightningTexture, 1f, 9f,
                 new DamageDealt(DamageType.Chaos, 21f + 10f * ch.Stats.Versatility))(ch));
     }
 
@@ -461,9 +449,36 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             //FinishedOccurences = new HashSet<Occurence>();
         }
 
-        public void AddOccurence(Occurence occurence)
+        /// <summary>
+        /// Something that happens inside of the world.
+        /// </summary>
+        class Occurence
         {
-            CurrentOccurences.Add(occurence);
+            Selector selector;
+            Effect[] effects;
+
+            public Occurence(Selector selector, params Effect[] effects)
+            {
+                this.selector = selector;
+                this.effects = effects;
+            }
+
+            /// <summary>
+            /// Returns true iff the occurence has finished.
+            /// </summary>
+            public bool Update(float deltaT)
+            {
+                var affectedCharacters = selector.Select(deltaT);
+                affectedCharacters.ForEach(character =>
+                    effects.ForEach(effect => effect(character)));
+
+                return selector.Finished(deltaT);
+            }
+        }
+
+        public void CreateOccurence(Selector selector, params Effect[] effects)
+        {
+            CurrentOccurences.Add(new Occurence(selector, effects));
         }
 
         public void Update(float deltaT)
@@ -480,5 +495,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             //CurrentOccurences.RemoveAll(occurence => FinishedOccurences.Contains(occurence));
             //FinishedOccurences.Clear();
         }
+
+
     }
 }

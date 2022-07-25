@@ -41,11 +41,9 @@ public class WeaponItem : ItemState
 
     public void DealDamage(CharacterState owner, float damageDuration)
     {
-        owner.World.AddOccurence(
-            new Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions.Occurence(
+        owner.World.CreateOccurence(
                 Weapon.HitSelectorByDuration(damageDuration)(owner),
                 BaseEffects.Select(effectByUser => effectByUser(owner)).ToArray()
-                )
             );
     }
 }
