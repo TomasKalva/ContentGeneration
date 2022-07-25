@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using ContentGeneration.Assets.UI.Util;
+using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 
 namespace ContentGeneration.Assets.UI.Model
 {
@@ -84,7 +85,7 @@ namespace ContentGeneration.Assets.UI.Model
         public CharacterAction OnUseDelegate { get; protected set; }
         public ItemState OnUse(CharacterAction characterAction)
         {
-            OnUseDelegate = character =>
+            OnUseDelegate += character =>
             {
                 characterAction(character);
                 if (IsConsumable)
@@ -98,7 +99,18 @@ namespace ContentGeneration.Assets.UI.Model
                 }
             };
             return this;
-            //Debug.Log($"Using {Name}");
+        }
+
+        /// <summary>
+        /// Adds a character action that executes the given occurence.
+        /// </summary>
+        public ItemState OnUseOccurence(Func<CharacterState, Occurence> occurenceF)
+        {
+            return OnUse(character =>
+            {
+                var occurence = occurenceF(character);
+                character.World.AddOccurence(occurence);
+            });
         }
 
         public CharacterAction OnDropDelegate { get; protected set; }

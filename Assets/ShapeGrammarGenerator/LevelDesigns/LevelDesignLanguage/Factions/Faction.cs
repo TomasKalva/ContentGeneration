@@ -104,11 +104,6 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             return Concepts.ProductionLists.GetRandom()();
         }
 
-        Color ColorFromName<T>(Annotated<T> something) =>
-            Concepts.ColorFromName.TryGetValue(something.Name, out var color) ?
-                color :
-                Concepts.ColorFromName.Values.GetRandom();
-
         /// <summary>
         /// Returns a factory that returns the same items.
         /// </summary>
@@ -124,12 +119,12 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             // Fix item properties
             var annotatedEffectByFactionEnvByUser = Concepts.Effects.GetRandom();
             var effectByUser = annotatedEffectByFactionEnvByUser.Item(this);
-            var effectColor = ColorFromName(annotatedEffectByFactionEnvByUser);
+            var effectColor = Color.yellow;
 
             var annotatedSelectorByArgsByUser = Concepts.Selectors.GetRandom();
             var selectorByUser = annotatedSelectorByArgsByUser.Item(new SelectorArgs(effectColor, Concepts.Textures.GetRandom()));
 
-            var name = FactionManifestation.Faction.UniqueNameGenerator.GenerateUniqueName(Concepts.Adjectives, Concepts.Nouns);
+            var name = $"{annotatedSelectorByArgsByUser.Name} {annotatedEffectByFactionEnvByUser.Name}";
             name = string.Concat(name[0].ToString().ToUpper(), name.Substring(1));
 
 
@@ -208,9 +203,6 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         public List<Annotated<EffectByFactionEnvironmentByUser>> Effects { get; }
         public List<Annotated<SelectorByArgsByUser>> Selectors { get; }
         public List<FlipbookTexture> Textures { get; }
-        public List<string> Nouns { get; }
-        public List<string> Adjectives { get; }
-        public Dictionary<string, Color> ColorFromName { get; }
         public List<Func<WeaponItem>> Weapons { get; }
 
         public FactionConcepts(
@@ -219,9 +211,6 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             List<Annotated<EffectByFactionEnvironmentByUser>> effects, 
             List<Annotated<SelectorByArgsByUser>> selectors, 
             List<FlipbookTexture> flipbookTextures,
-            List<string> nouns,
-            List<string> adjectives,
-            Dictionary<string, Color> colorFromName,
             List<Func<WeaponItem>> weapons)
         {
             ProductionLists = productionLists;
@@ -229,9 +218,6 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             Effects = effects;
             Selectors = selectors;
             Textures = flipbookTextures;
-            Nouns = nouns;
-            Adjectives = adjectives;
-            ColorFromName = colorFromName;
             Weapons = weapons;
         }
 
@@ -243,9 +229,6 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                     Effects.Shuffle().Take(effectsCount).ToList(),
                     Selectors.Shuffle().Take(selectorsCount).ToList(),
                     Textures.Shuffle().Take(texturesCount).ToList(),
-                    Nouns.Shuffle().Take(nounsCount).ToList(),
-                    Adjectives.Shuffle().Take(adjectivesCount).ToList(),
-                    ColorFromName,
                     Weapons.Shuffle().Take(weaponsCount).ToList()
                 );
         }

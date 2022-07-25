@@ -41,7 +41,7 @@ namespace ShapeGrammar
                 return false;
             });
             */
-
+            /*
             State.LC.AddEvent(
                 new LevelConstructionEvent(0, () =>
                 {
@@ -60,7 +60,7 @@ namespace ShapeGrammar
                     return true;
                 }));
 
-            L.FactionsLanguage.InitializeFactions(3);
+            L.FactionsLanguage.InitializeFactions(3);*/
 
             /*
             State.LC.AddEvent(
@@ -70,14 +70,22 @@ namespace ShapeGrammar
                     return false;
                 })
             );
-
+            */
             State.LC.AddEvent(
                 new LevelConstructionEvent(5, () =>
                 {
                     L.TestingLanguage.StatsScalingOfEnemies();
                     return false;
                 })
-            );*/
+            );
+
+            State.LC.AddEvent(
+                new LevelConstructionEvent(90,
+                () =>
+                {
+                    L.TestingLanguage.Spells();
+                    return true;
+                }));
         }
     }
 
@@ -281,6 +289,30 @@ namespace ShapeGrammar
                         )
                     );
         }
+
+        public void Spells()
+        {
+            Env.One(Gr.PrL.Garden(), NodesQueries.All, out var area);
+
+            var spells = new Spells(Lib.Effects, Lib.Selectors, Lib.VFXs);
+            var spellItems = new SpellItems(spells, Lib.VFXs);
+            var s = new Func<ItemState>[]
+            {
+                spellItems.FireBolt,
+                spellItems.FlameBolt,
+                spellItems.ChaosBolt,
+            };
+
+
+            area.AddInteractiveObject(
+                Lib.InteractiveObjects.InteractiveObject("Spells object", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
+                    .SetInteraction(
+                        new InteractionSequence<InteractiveObject>()
+                            .Act("Take all spells", (ios, player) => s.ForEach(itemF => player.AddItem(itemF()))
+                            )
+                        )
+                    );
+        }
     }
 
     class BrothersLanguage : LDLanguage
@@ -441,10 +473,10 @@ namespace ShapeGrammar
                     new List<Annotated<SelectorByArgsByUser>>()
                     {
                             //new Annotated<SelectorByUser>("Self", "self", selectorLibrary.SelfSelector()),
-                            new Annotated<SelectorByArgsByUser>("Fire", "all those that stand in fire", selectorLibrary.GeometricSelector(Lib.VFXs.Fire, 8f, selectorLibrary.RightHandOfCharacter(0.5f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
-                            new Annotated<SelectorByArgsByUser>("Cloud", "all those that stand in cloud", selectorLibrary.GeometricSelector(Lib.VFXs.MovingCloud, 4f, selectorLibrary.FrontOfCharacter(1.4f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 1f))),
-                            new Annotated<SelectorByArgsByUser>("Lightning", "all those that stand in lightning", selectorLibrary.GeometricSelector(Lib.VFXs.Lightning, 6f, selectorLibrary.FrontOfCharacter(0.5f))),
-                            new Annotated<SelectorByArgsByUser>("Fireball", "all those that are hit by fireball", selectorLibrary.GeometricSelector(Lib.VFXs.Fireball, 4f, selectorLibrary.FrontOfCharacter(0.8f) + selectorLibrary.Move(ch => ch.Agent.movement.AgentForward, 5f))),
+                            new Annotated<SelectorByArgsByUser>("Fire", "all those that stand in fire", selectorLibrary.GeometricSelector(Lib.VFXs.Fire, 8f, selectorLibrary.Initializator().RightHandOfCharacter(0.5f).Move(ch => ch.Agent.movement.AgentForward, 1f))),
+                            new Annotated<SelectorByArgsByUser>("Cloud", "all those that stand in cloud", selectorLibrary.GeometricSelector(Lib.VFXs.MovingCloud, 4f, selectorLibrary.Initializator().FrontOfCharacter(1.4f).Move(ch => ch.Agent.movement.AgentForward, 1f))),
+                            new Annotated<SelectorByArgsByUser>("Lightning", "all those that stand in lightning", selectorLibrary.GeometricSelector(Lib.VFXs.Lightning, 6f, selectorLibrary.Initializator().FrontOfCharacter(0.5f))),
+                            new Annotated<SelectorByArgsByUser>("Fireball", "all those that are hit by fireball", selectorLibrary.GeometricSelector(Lib.VFXs.Fireball, 4f, selectorLibrary.Initializator().FrontOfCharacter(0.8f).Move(ch => ch.Agent.movement.AgentForward, 5f))),
                     },
                     new List<FlipbookTexture>()
                     {
@@ -452,38 +484,6 @@ namespace ShapeGrammar
                             Lib.VFXs.FireTexture,
                             Lib.VFXs.SmokeTexture,
                             Lib.VFXs.LightningTexture,
-                    },
-                    new List<string>()
-                    {
-                        "office",
-                        "resource",
-                        "university",
-                        "judgment",
-                        "software",
-                        "story",
-                        "injury",
-                        "shirt",
-                        "distribution",
-                        "tale",
-                    },
-                    new List<string>()
-                    {
-                        "violet",
-                        "squalid",
-                        "intelligent",
-                        "successfull",
-                        "defiant",
-                        "fallacious",
-                        "lamentable",
-                        "ordinary",
-                        "absorbing",
-                        "hanging",
-                    },
-                    new Dictionary<string, Color>()
-                    {
-                        {"Chaos", Color.yellow },
-                        {"Divine", Color.white },
-                        {"Dark", Color.blue },
                     },
                     Lib.Items.AllWeapons().ToList()
                 );

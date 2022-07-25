@@ -163,31 +163,64 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 dt => true
             );
 
+        public SelectorInitializator Initializator() => new SelectorInitializator();
 
-
-        public delegate void InitializeSelector(CharacterState caster, Rigidbody selector);
-
-        public InitializeSelector ConstPosition(Vector3 pos) 
+        public delegate void SelectorInitializationOperation(CharacterState caster, Rigidbody selector);
+        public class SelectorInitializator
         {
-            return (ch, s) => s.position = pos;
+            /// <summary>
+            /// These operations that will initialize the selector.
+            /// </summary>
+            List<SelectorInitializationOperation> initializationOperations;
+
+            public SelectorInitializator()
+            {
+                this.initializationOperations = new List<SelectorInitializationOperation>();
+            }
+
+            public SelectorInitializator ConstPosition(Vector3 pos)
+            {
+                initializationOperations.Add((ch, s) => s.position = pos);
+                return this;
+            }
+
+            public SelectorInitializator FrontOfCharacter(float frontDist)
+            {
+                initializationOperations.Add((ch, s) => s.position = ch.Agent.GetGroundPosition() + ch.Agent.movement.AgentForward * frontDist);
+                return this;
+            }
+
+            public SelectorInitializator RightHandOfCharacter(float frontDist)
+            {
+                initializationOperations.Add((ch, s) => s.position = ch.Agent.GetRightHandPosition() + ch.Agent.movement.AgentForward * frontDist + 0.2f * Vector3.down);
+                return this;
+            }
+
+            public SelectorInitializator Move(Func<CharacterState, Vector3> directionF, float speed)
+            {
+                initializationOperations.Add((ch, s) => s.velocity = speed * directionF(ch));
+                return this;
+            }
+
+            public SelectorInitializator RotatePitch(float angles)
+            {
+                initializationOperations.Add((ch, s) => s.transform.Rotate(new Vector3(angles, 0f, 0f)));
+                return this;
+            }
+
+            public SelectorInitializator Scale(float scale)
+            {
+                initializationOperations.Add((ch, s) => s.transform.localScale = new Vector3(scale, scale, scale));
+                return this;
+            }
+
+            public void Initialize(CharacterState caster, Rigidbody selector)
+            {
+                initializationOperations.ForEach(op => op(caster, selector));
+            }
         }
 
-        public InitializeSelector FrontOfCharacter(float frontDist)
-        {
-            return (ch, s) => s.position = ch.Agent.GetGroundPosition() + ch.Agent.movement.AgentForward * frontDist;
-        }
-
-        public InitializeSelector RightHandOfCharacter(float frontDist)
-        {
-            return (ch, s) => s.position = ch.Agent.GetRightHandPosition() + ch.Agent.movement.AgentForward * frontDist + 0.2f * Vector3.down;
-        }
-
-        public InitializeSelector Move(Func<CharacterState, Vector3> directionF, float speed)
-        {
-            return (ch, s) => s.velocity = speed * directionF(ch);
-        }
-
-        public SelectorByArgsByUser GeometricSelector(Func<VFX> vfxF, float duration, InitializeSelector initSelector)
+        public SelectorByArgsByUser GeometricSelector(Func<VFX> vfxF, float duration, SelectorInitializator selectorInitialization)
         {
             return args => ch =>
             {
@@ -197,9 +230,10 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
                 var rb = vfx.gameObject.AddComponent<Rigidbody>();
                 rb.useGravity = false;
-                initSelector(ch, rb);
-
                 rb.transform.forward = ch.Agent.transform.forward;
+
+                selectorInitialization.Initialize(ch, rb);
+
 
                 ColliderDetector collider = vfx.ColliderDetector;
                 var countdown = new CountdownTimer(duration);
@@ -224,7 +258,8 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                     ts.SelectTargets,
                     dt => ts.Update(dt)
                 );
-                //selector.AddImmuneCharacter(ch);
+
+                selector.AddImmuneCharacter(ch);
                 return selector;
             };
         }
@@ -243,97 +278,6 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 return selector;
             };
         }
-
-        /*
-        public SelectorByUserByArgs GeometricStarSelector(Func<VFX> vfxF, int raysCount)
-        {
-            return args => ch =>
-            {
-                VFX vfx = vfxF();
-                vfx.SetColor(args.Color);
-                vfx.SetTexture(args.FlipbookTexture);
-                
-                Enumerable.Range(0, raysCount).ForEach(i =>
-                {
-
-                }
-                var rb = vfx.gameObject.AddComponent<Rigidbody>();
-                rb.useGravity = false;
-                initSelector(ch, rb);
-
-                rb.transform.forward = ch.Agent.transform.forward;
-
-                ColliderDetector collider = vfx.ColliderDetector;
-                var ts = new GeometricTargetSelector(
-                        vfx,
-                        collider,
-                        t => false
-                    );
-
-                var selector = new Selector(
-                    new ConstDistr(1f),
-                    ts.SelectTargets,
-                    dt => ts.Update(dt)
-                );
-                selector.AddImmuneCharacter(ch);
-                return selector;
-            };
-        }*/
-
-
-        /*
-        public SelectorByUserByArgs FireSelector()
-        {
-            return args => ch =>
-            {
-                FireVFX fire = lib.VFXs.Fire();
-                fire.SetColor(args.Color);
-                fire.SetTexture(args.FlipbookTexture);
-
-                ColliderDetector collider = fire.ColliderDetector;
-                var ts = new GeometricTargetSelector(
-                        fire,
-                        collider,
-                        t => false
-                    );
-                fire.transform.position = ch.Agent.transform.position;
-
-                return new Selector(
-                    new ConstDistr(1f),
-                    ts.SelectTargets,
-                    dt => ts.Update(dt)
-                );
-            };
-        }
-
-        public SelectorByUserByArgs MovingCloudSelector()
-        {
-            return args => ch =>
-            {
-                MovingCloudVFX movingCloud = lib.VFXs.MovingCloud();
-                movingCloud.SetColor(args.Color);
-                movingCloud.SetTexture(args.FlipbookTexture);
-                ColliderDetector collider = movingCloud.ColliderDetector;
-                var ts = new GeometricTargetSelector(
-                        movingCloud,
-                        collider,
-                        t => false
-                    );
-                movingCloud.transform.position = ch.Agent.transform.position;
-
-                return new Selector(
-                    new ConstDistr(1f),
-                    ts.SelectTargets,
-                    dt => ts.Update(dt)
-                );
-            };
-        }*/
-
-
-        //public SelectTargets 
-
-        //public SelectorByUser BallSelector() =>
-        //    throw new NotImplementedException();
     }
     
     public class EffectLibrary
@@ -422,6 +366,75 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         }
     }
 
+
+    class Spells
+    {
+        EffectLibrary eff;
+        SelectorLibrary sel;
+        VFXs vfxs;
+
+        public Spells(EffectLibrary eff, SelectorLibrary sel, VFXs vfxs)
+        {
+            this.eff = eff;
+            this.sel = sel;
+            this.vfxs = vfxs;
+        }
+
+        /// <summary>
+        /// Shoots a bolt forward from character's hand. It deals damage upon impact.
+        /// </summary>
+        public ByUser<Occurence> Bolt(Color color, FlipbookTexture texture, float scale, float speed, DamageDealt damageDealt)
+        {
+            return user => new Occurence(
+                sel.GeometricSelector(vfxs.Lightning, 4f, sel.Initializator()
+                    .RightHandOfCharacter(0f)
+                    .Move(user => user.Agent.movement.AgentForward, speed)
+                    .RotatePitch(-90f)
+                    .Scale(scale)
+                    )(new SelectorArgs(color, texture))(user),
+                eff.Damage(damageDealt)
+                );
+        }
+    }
+
+    class SpellItems
+    {
+        Spells spells;
+        VFXs vfxs;
+
+        public SpellItems(Spells spells, VFXs vfxs)
+        {
+            this.spells = spells;
+            this.vfxs = vfxs;
+        }
+
+        public ItemState FireBolt()
+            => new ItemState()
+            {
+                Name = "Fire Bolt",
+                Description = "When the nature changed, fire bolts were among the first to notice due to their swiftness."
+            }
+            .OnUseOccurence(ch => spells.Bolt(Color.yellow, vfxs.LightningTexture, 0.6f, 7f,
+                new DamageDealt(DamageType.Chaos, 10f + 5f * ch.Stats.Versatility))(ch));
+
+        public ItemState FlameBolt()
+            => new ItemState()
+            {
+                Name = "Flame Bolt",
+                Description = "More powerfull version of fire bolt."
+            }
+            .OnUseOccurence(ch => spells.Bolt(Color.yellow, vfxs.LightningTexture, 0.8f, 7f,
+                new DamageDealt(DamageType.Chaos, 13f + 6f * ch.Stats.Versatility))(ch));
+
+        public ItemState ChaosBolt()
+            => new ItemState()
+            {
+                Name = "Chaos Bolt",
+                Description = "Made of pure chaos capable of piercing into any unsuspecting body."
+            }
+            .OnUseOccurence(ch => spells.Bolt(Color.yellow, vfxs.LightningTexture, 1f, 9f,
+                new DamageDealt(DamageType.Chaos, 21f + 10f * ch.Stats.Versatility))(ch));
+    }
 
     /*
     class OccurenceLibrary
