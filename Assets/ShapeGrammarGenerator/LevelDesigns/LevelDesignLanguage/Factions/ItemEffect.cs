@@ -367,17 +367,18 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         }
 
         /// <summary>
-        /// Arc size is in degrees. The center of the arc is on startDirection.
+        /// The center of the arc is on startDirection.
         /// </summary>
-        IEnumerable<Point> EvenlySampleCircle(Vector3 center, float radius, int samplesCount, float arcSizeDeg, Vector2 startDirection)
+        IEnumerable<Point> EvenlySampleCircle(Vector3 center, float radius, int samplesCount, float halfArcSizeDeg, Vector2 startDirection)
         {
             var startAngle = Mathf.Atan2(startDirection.y, startDirection.x);
-            var arcSizeRad = arcSizeDeg * Mathf.Deg2Rad;
+            var arcSizeRad = halfArcSizeDeg * Mathf.Deg2Rad;
             return Enumerable.Range(0, samplesCount)
-                .Select(i => Mathf.PI * 2f * (i / (float)samplesCount) - startAngle)
+                .Select(i => (Mathf.PI * 2f * (i / (float)samplesCount) - startAngle + 2 * Mathf.PI) % (2 * Mathf.PI))
                 .Where(angle => angle < arcSizeRad || angle >= 2 * Mathf.PI - arcSizeRad)
                 .Select(angle =>
                 {
+                    angle = angle + startAngle;
                     var cos = Mathf.Cos(angle);
                     var sin = Mathf.Sin(angle);
                     return new Point(center + radius * new Vector3(cos, 0f, sin), -new Vector3(cos, 0f, sin));
@@ -387,7 +388,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         /// <summary>
         /// Shoots a bolt forward from character's hand. It deals damage upon impact.
         /// </summary>
-        public Action<CharacterState> Bolt(Color color, FlipbookTexture texture, float scale, float speed, DamageDealt damageDealt)
+        public Effect Bolt(Color color, FlipbookTexture texture, float scale, float speed, DamageDealt damageDealt)
         {
             return user => user.World.CreateOccurence(
                 sel.GeometricSelector(vfxs.Lightning, 4f, sel.Initializator()
@@ -400,10 +401,9 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 );
         }
 
-        
-        public Action<CharacterState> ShowCircle(Func<VFX> vfxF, Color color, FlipbookTexture texture, float radius, int sampleCount, float duration, DamageDealt damageDealt)
+        public Effect ShowCircle(Func<VFX> vfxF, Color color, FlipbookTexture texture, Vector3 center, float radius, int sampleCount, float duration, float halfArcSize, Vector2 startDirection, DamageDealt damageDealt)
         {
-            return user => EvenlySampleCircle(user.Agent.transform.position, radius, sampleCount, 180f, Vector2.one)
+            return user => EvenlySampleCircle(center, radius, sampleCount, halfArcSize, startDirection)
                 .ForEach(point => user.World.CreateOccurence(
                     sel.GeometricSelector(vfxF, duration, sel.Initializator()
                         .ConstPosition(point.Position)
@@ -412,6 +412,19 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                     eff.Damage(damageDealt)
                     )
                 );
+        }
+
+        public Effect ShowCircle(Func<VFX> vfxF, Color color, FlipbookTexture texture, float radius, int sampleCount, float duration, float halfArcSize, Vector2 startDirection, DamageDealt damageDealt)
+        {
+            return user => ShowCircle(vfxF, color, texture, user.Agent.transform.position, radius, sampleCount, duration, halfArcSize, startDirection, damageDealt)(user);
+        }
+
+        public Effect Periodically(Effect effect, float duration, float tickLength)
+        {
+            return ch => ch.World.CreateOccurence(
+                    sel.ConstSelector(ch, duration, new ConstDistr(tickLength)),
+                    effect
+                    );
         }
 }
 
@@ -459,7 +472,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 Name = "Square of Chaos",
                 Description = "Four flames, each representing one of the principial witches burnt for practicing the forbidden arts of chaos."
             }
-            .OnUse(ch => spells.ShowCircle(vfxs.Fire, Color.yellow, vfxs.FireTexture, 2.5f, 4, 10f,
+            .OnUse(ch => spells.ShowCircle(vfxs.Fire, Color.yellow, vfxs.FireTexture, 2.5f, 4, 10f, 180f, ch.Agent.transform.forward.XZ(),
                 new DamageDealt(DamageType.Chaos, 10f + 3f * ch.Stats.Versatility))(ch));
 
         public ItemState CircleOfChaos()
@@ -468,7 +481,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 Name = "Circle of Chaos",
                 Description = ""
             }
-            .OnUse(ch => spells.ShowCircle(vfxs.Fire, Color.yellow, vfxs.FireTexture, 2.5f, 24, 10f,
+            .OnUse(ch => spells.ShowCircle(vfxs.Fire, Color.yellow, vfxs.FireTexture, 2.5f, 24, 10f, 180f, ch.Agent.transform.forward.XZ(),
                 new DamageDealt(DamageType.Chaos, 10f + 3f * ch.Stats.Versatility))(ch));
 
         public ItemState Inferno()
@@ -477,9 +490,33 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 Name = "Inferno",
                 Description = "Let the chaos engulf your body."
             }
-            .OnUse(ch => spells.ShowCircle(() => vfxs.MovingCloud().SetHalfWidth(1.2f), Color.yellow, vfxs.FireTexture, 0.5f, 3, 10f,
+            .OnUse(ch => spells.ShowCircle(() => vfxs.MovingCloud().SetHalfWidth(1.2f), Color.yellow, vfxs.FireTexture, 0.5f, 3, 10f, 180f, ch.Agent.transform.forward.XZ(),
                 new DamageDealt(DamageType.Chaos, 10f + 3f * ch.Stats.Versatility))(ch));
 
+        public ItemState WaveOfChaos()
+        {
+            Vector3? userPosition = null; // Remember the position where user stood when casting 
+            int waveNumber = 0;
+            Effect arcMaker = ch =>
+            {
+                if (!userPosition.HasValue)
+                {
+                    userPosition = ch.Agent.transform.position;
+                }
+
+                spells.ShowCircle(vfxs.Fire, Color.yellow, vfxs.FireTexture, userPosition.Value, 1.5f + waveNumber++ * 0.7f, 24, 1f, 90f, ch.Agent.transform.forward.XZ(),
+                    new DamageDealt(DamageType.Chaos, 10f + 3f * ch.Stats.Versatility))(ch);
+            };
+
+            Effect waves = spells.Periodically(arcMaker, 2f, 0.5f);
+
+            return new ItemState()
+            {
+                Name = "Wave of Chaos",
+                Description = "Chaos propagates at lazy pace rendering its victims unsuspecting of any disturbances."
+            }
+             .OnUse(ch => waves(ch));
+        }
     }
 
     /*
