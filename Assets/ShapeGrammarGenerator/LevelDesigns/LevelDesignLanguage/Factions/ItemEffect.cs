@@ -182,6 +182,12 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 return this;
             }
 
+            public SelectorInitializator SetDirection(Vector3 direction)
+            {
+                initializationOperations.Add((ch, s) => s.transform.forward = direction);
+                return this;
+            }
+
             public SelectorInitializator Scale(float scale)
             {
                 initializationOperations.Add((ch, s) => s.transform.localScale = new Vector3(scale, scale, scale));
@@ -348,11 +354,11 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             this.vfxs = vfxs;
         }
 
-        IEnumerable<Vector3> EvenlySampleCircle(float radius, int samplesCount)
+        IEnumerable<Vector3> EvenlySampleCircle(Vector3 center, float radius, int samplesCount)
         {
-            return Enumerable.Range(0, samplesCount + 1)
+            return Enumerable.Range(0, samplesCount)
                 .Select(i => Mathf.PI * 2f * (i / (float)samplesCount))
-                .Select(angle => radius * new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)));
+                .Select(angle => center + radius * new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)));
         }
 
         /// <summary>
@@ -371,18 +377,19 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 );
         }
 
-        /*
-        public ByUser<Occurence> ShowCircle(VFX vfx, Color color, FlipbookTexture texture, float radius, DamageDealt damageDealt)
+        
+        public Action<CharacterState> ShowCircle(Func<VFX> vfxF, Color color, FlipbookTexture texture, float radius, int sampleCount, float duration, DamageDealt damageDealt)
         {
-            return user => new Occurence(
-                sel.GeometricSelector(vfxs.Lightning, 4f, sel.Initializator()
-                    .FrontOfCharacter(0f)
-                    .RotatePitch(-90f)
-                    .Scale(scale)
-                    )(new SelectorArgs(color, texture))(user),
-                eff.Damage(damageDealt)
+            return user => EvenlySampleCircle(user.Agent.transform.position, radius, sampleCount)
+                .ForEach(pos => user.World.CreateOccurence(
+                    sel.GeometricSelector(vfxF, duration, sel.Initializator()
+                        .ConstPosition(pos)
+                        .SetDirection(new Vector3(pos.x, 0f, -pos.z)) // face out of the circle center
+                        )(new SelectorArgs(color, texture))(user),
+                    eff.Damage(damageDealt)
+                    )
                 );
-        }*/
+        }
 }
 
     class SpellItems
@@ -422,6 +429,34 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             }
             .OnUse(ch => spells.Bolt(Color.yellow, vfxs.LightningTexture, 1f, 9f,
                 new DamageDealt(DamageType.Chaos, 21f + 10f * ch.Stats.Versatility))(ch));
+
+        public ItemState SquareOfChaos()
+            => new ItemState()
+            {
+                Name = "Square of Chaos",
+                Description = "Four flames, each representing one of the principial witches burnt for practicing the forbidden arts of chaos."
+            }
+            .OnUse(ch => spells.ShowCircle(vfxs.Fire, Color.yellow, vfxs.FireTexture, 2.5f, 4, 10f,
+                new DamageDealt(DamageType.Chaos, 10f + 3f * ch.Stats.Versatility))(ch));
+
+        public ItemState CircleOfChaos()
+            => new ItemState()
+            {
+                Name = "Circle of Chaos",
+                Description = "Let the chaos engulf your body."
+            }
+            .OnUse(ch => spells.ShowCircle(vfxs.Fire, Color.yellow, vfxs.FireTexture, 2.5f, 24, 10f,
+                new DamageDealt(DamageType.Chaos, 10f + 3f * ch.Stats.Versatility))(ch));
+        /*
+        public ItemState CircleOfChaos()
+            => new ItemState()
+            {
+                Name = "Circle of Chaos",
+                Description = "Let the chaos engulf your body."
+            }
+            .OnUse(ch => spells.ShowCircle(vfxs.Fire, Color.yellow, vfxs.FireTexture, 2.5f, 24, 10f,
+                new DamageDealt(DamageType.Chaos, 10f + 3f * ch.Stats.Versatility))(ch));*/
+
     }
 
     /*

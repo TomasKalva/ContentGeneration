@@ -301,6 +301,8 @@ namespace ShapeGrammar
                 spellItems.FireBolt,
                 spellItems.FlameBolt,
                 spellItems.ChaosBolt,
+                spellItems.CircleOfChaos,
+                spellItems.SquareOfChaos,
             };
 
 
