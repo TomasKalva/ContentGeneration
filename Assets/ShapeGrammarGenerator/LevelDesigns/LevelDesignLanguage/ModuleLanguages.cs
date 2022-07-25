@@ -299,6 +299,7 @@ namespace ShapeGrammar
             var spellItems = new SpellItems(spells, Lib.VFXs);
             var s = new Func<ItemState>[]
             {
+                spellItems.Firefall,
                 spellItems.HeavenlyFlameCloud,
                 spellItems.Cloud,
                 spellItems.WaveOfChaos,
@@ -480,10 +481,10 @@ namespace ShapeGrammar
                     new List<Annotated<SelectorByArgsByUser>>()
                     {
                             //new Annotated<SelectorByUser>("Self", "self", selectorLibrary.SelfSelector()),
-                            new Annotated<SelectorByArgsByUser>("Fire", "all those that stand in fire", selectorLibrary.GeometricSelector(Lib.VFXs.Fire, 8f, selectorLibrary.Initializator().RightHandOfCharacter(0.5f).Move(ch => ch.Agent.movement.AgentForward, 1f))),
-                            new Annotated<SelectorByArgsByUser>("Cloud", "all those that stand in cloud", selectorLibrary.GeometricSelector(Lib.VFXs.MovingCloud, 4f, selectorLibrary.Initializator().FrontOfCharacter(1.4f).Move(ch => ch.Agent.movement.AgentForward, 1f))),
+                            new Annotated<SelectorByArgsByUser>("Fire", "all those that stand in fire", selectorLibrary.GeometricSelector(Lib.VFXs.Fire, 8f, selectorLibrary.Initializator().RightHandOfCharacter(0.5f).SetVelocity(ch => ch.Agent.movement.AgentForward, 1f))),
+                            new Annotated<SelectorByArgsByUser>("Cloud", "all those that stand in cloud", selectorLibrary.GeometricSelector(Lib.VFXs.MovingCloud, 4f, selectorLibrary.Initializator().FrontOfCharacter(1.4f).SetVelocity(ch => ch.Agent.movement.AgentForward, 1f))),
                             new Annotated<SelectorByArgsByUser>("Lightning", "all those that stand in lightning", selectorLibrary.GeometricSelector(Lib.VFXs.Lightning, 6f, selectorLibrary.Initializator().FrontOfCharacter(0.5f))),
-                            new Annotated<SelectorByArgsByUser>("Fireball", "all those that are hit by fireball", selectorLibrary.GeometricSelector(Lib.VFXs.Fireball, 4f, selectorLibrary.Initializator().FrontOfCharacter(0.8f).Move(ch => ch.Agent.movement.AgentForward, 5f))),
+                            new Annotated<SelectorByArgsByUser>("Fireball", "all those that are hit by fireball", selectorLibrary.GeometricSelector(Lib.VFXs.Fireball, 4f, selectorLibrary.Initializator().FrontOfCharacter(0.8f).SetVelocity(ch => ch.Agent.movement.AgentForward, 5f))),
                     },
                     new List<FlipbookTexture>()
                     {

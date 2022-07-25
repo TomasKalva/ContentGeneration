@@ -154,23 +154,23 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
             public SelectorInitializator ConstPosition(Vector3 pos)
             {
-                initializationOperations.Add((ch, s) => s.position = pos);
+                initializationOperations.Add((ch, s) => s.transform.position = pos);
                 return this;
             }
 
             public SelectorInitializator FrontOfCharacter(float frontDist)
             {
-                initializationOperations.Add((ch, s) => s.position = ch.Agent.GetGroundPosition() + ch.Agent.movement.AgentForward * frontDist);
+                initializationOperations.Add((ch, s) => s.transform.position = ch.Agent.GetGroundPosition() + ch.Agent.movement.AgentForward * frontDist);
                 return this;
             }
 
             public SelectorInitializator RightHandOfCharacter(float frontDist)
             {
-                initializationOperations.Add((ch, s) => s.position = ch.Agent.GetRightHandPosition() + ch.Agent.movement.AgentForward * frontDist + 0.2f * Vector3.down);
+                initializationOperations.Add((ch, s) => s.transform.position = ch.Agent.GetRightHandPosition() + ch.Agent.movement.AgentForward * frontDist + 0.2f * Vector3.down);
                 return this;
             }
 
-            public SelectorInitializator Move(Func<CharacterState, Vector3> directionF, float speed)
+            public SelectorInitializator SetVelocity(Func<CharacterState, Vector3> directionF, float speed)
             {
                 initializationOperations.Add((ch, s) => s.velocity = speed * directionF(ch));
                 return this;
@@ -185,6 +185,12 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             public SelectorInitializator SetDirection(Vector3 direction)
             {
                 initializationOperations.Add((ch, s) => s.transform.forward = direction);
+                return this;
+            }
+
+            public SelectorInitializator Move(Vector3 direction)
+            {
+                initializationOperations.Add((ch, s) => s.transform.position = s.transform.position + direction);
                 return this;
             }
 
@@ -404,7 +410,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             return user => user.World.CreateOccurence(
                 sel.GeometricSelector(vfxs.Lightning, 4f, sel.Initializator()
                     .RightHandOfCharacter(0f)
-                    .Move(user => user.Agent.movement.AgentForward, speed)
+                    .SetVelocity(user => user.Agent.movement.AgentForward, speed)
                     .RotatePitch(-90f)
                     .Scale(scale)
                     )(new SelectorArgs(color, texture))(user),
@@ -441,11 +447,26 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 user.World.CreateOccurence(
                     sel.GeometricSelector(vfxF, 4f, sel.Initializator()
                         .FrontOfCharacter(1.3f)
-                        .Move(user => user.Agent.movement.AgentForward, speed)
+                        .SetVelocity(user => user.Agent.movement.AgentForward, speed)
                         .Scale(scale)
                         )(new SelectorArgs(color, texture))(user),
                     eff.Damage(damageDealt),
                     eff.Push(pushDirection, pushForce)
+                    );
+            };
+        }
+
+        public Effect Firefall(Func<VFX> vfxF, Color color, FlipbookTexture texture, DamageDealt damageDealt)
+        {
+            return user =>
+            {
+                user.World.CreateOccurence(
+                    sel.GeometricSelector(vfxF, 6f, sel.Initializator()
+                        .FrontOfCharacter(1.3f)
+                        .RotatePitch(-90)
+                        .Move(1.5f * Vector3.up)
+                        )(new SelectorArgs(color, texture))(user),
+                    eff.Damage(damageDealt)
                     );
             };
         }
@@ -574,6 +595,15 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             }
             .OnUse(ch => spells.Cloud(() => vfxs.MovingCloud().SetHalfWidth(0.5f), Color.white, vfxs.FireTexture, 1f, 2f, 800f, new DamageDealt(DamageType.Divine, 15f + 5f * ch.Stats.Versatility))(ch));
 
+        public ItemState Firefall()
+            => new ItemState()
+            {
+                Name = "Firefall",
+                Description = "."
+            }
+            .OnUse(ch => spells.Firefall(() => vfxs.MovingCloud().SetHalfWidth(2.0f), Color.yellow, vfxs.FireTexture, new DamageDealt(DamageType.Divine, 0f + 3f * ch.Stats.Versatility))(ch));
+
+        
     }
 
     /*
