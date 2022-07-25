@@ -386,7 +386,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         /// <summary>
         /// The center of the arc is on startDirection.
         /// </summary>
-        IEnumerable<Point> EvenlySampleCircle(Vector3 center, float radius, int samplesCount, float halfArcSizeDeg, Vector2 startDirection)
+        IEnumerable<Point> EvenlySampleCircleBorder(Vector3 center, float radius, int samplesCount, float halfArcSizeDeg, Vector2 startDirection)
         {
             var startAngle = Mathf.Atan2(startDirection.y, startDirection.x);
             var arcSizeRad = halfArcSizeDeg * Mathf.Deg2Rad;
@@ -399,6 +399,21 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                     var cos = Mathf.Cos(angle);
                     var sin = Mathf.Sin(angle);
                     return new Point(center + radius * new Vector3(cos, 0f, sin), -new Vector3(cos, 0f, sin));
+                });
+        }
+
+        IEnumerable<Vector3> EvenlySampleCircleArea(Vector3 center, float radius, int samplesCount)
+        {
+            return Enumerable.Range(0, samplesCount)
+                .Select(_ => new Vector2(radius * Mathf.Sqrt(UnityEngine.Random.Range(0f, 1f)), 2 * Mathf.PI * UnityEngine.Random.Range(0f, 1f)))
+                .Select(rTheta =>
+                {
+                    float r = rTheta.x;
+                    float theta = rTheta.y;
+
+                    var x = r * Mathf.Cos(theta);
+                    var z = r * Mathf.Sin(theta);
+                    return center + new Vector3(x, 0f, z);
                 });
         }
 
@@ -421,9 +436,9 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         /// <summary>
         /// Spawns the vfx in the given circle arc.
         /// </summary>
-        public Effect Circle(Func<VFX> vfxF, Color color, FlipbookTexture texture, Vector3 center, float radius, int sampleCount, float duration, float halfArcSize, Vector2 startDirection, DamageDealt damageDealt)
+        public Effect CircleBorder(Func<VFX> vfxF, Color color, FlipbookTexture texture, Vector3 center, float radius, int sampleCount, float duration, float halfArcSize, Vector2 startDirection, DamageDealt damageDealt)
         {
-            return user => EvenlySampleCircle(center, radius, sampleCount, halfArcSize, startDirection)
+            return user => EvenlySampleCircleBorder(center, radius, sampleCount, halfArcSize, startDirection)
                 .ForEach(point => user.World.CreateOccurence(
                     sel.GeometricSelector(vfxF, duration, sel.Initializator()
                         .ConstPosition(point.Position)
@@ -436,7 +451,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
         public Effect Circle(Func<VFX> vfxF, Color color, FlipbookTexture texture, float radius, int sampleCount, float duration, float halfArcSize, Vector2 startDirection, DamageDealt damageDealt)
         {
-            return user => Circle(vfxF, color, texture, user.Agent.transform.position, radius, sampleCount, duration, halfArcSize, startDirection, damageDealt)(user);
+            return user => CircleBorder(vfxF, color, texture, user.Agent.transform.position, radius, sampleCount, duration, halfArcSize, startDirection, damageDealt)(user);
         }
 
         public Effect Cloud(Func<VFX> vfxF, Color color, FlipbookTexture texture, float scale, float speed, float pushForce, DamageDealt damageDealt)
@@ -469,6 +484,19 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                     eff.Damage(damageDealt)
                     );
             };
+        }
+
+        public Effect CircleArea(Func<VFX> vfxF, Color color, FlipbookTexture texture, DamageDealt damageDealt)
+        {
+            return user => EvenlySampleCircleArea(user.Agent.transform.position, 4f, 10)
+                .ForEach(pos =>
+                user.World.CreateOccurence(
+                    sel.GeometricSelector(vfxF, 6f, sel.Initializator()
+                        .ConstPosition(pos)
+                        )(new SelectorArgs(color, texture))(user),
+                    eff.Damage(damageDealt)
+                    )
+            );
         }
 
         /// <summary>
@@ -564,7 +592,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                         arcDirection = ch.Agent.transform.forward.XZ();
                     }
 
-                    spells.Circle(vfxs.Fire, Color.yellow, vfxs.FireTexture, userPosition.Value, 1.5f + waveNumber++ * 0.7f, 24 + 3 * waveNumber, 0.7f, 30f, arcDirection.Value,
+                    spells.CircleBorder(vfxs.Fire, Color.yellow, vfxs.FireTexture, userPosition.Value, 1.5f + waveNumber++ * 0.7f, 24 + 3 * waveNumber, 0.7f, 30f, arcDirection.Value,
                         new DamageDealt(DamageType.Chaos, 10f + 3f * ch.Stats.Versatility))(ch);
                 };
             };
@@ -602,6 +630,14 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 Description = "."
             }
             .OnUse(ch => spells.Firefall(() => vfxs.MovingCloud().SetHalfWidth(2.0f), Color.yellow, vfxs.FireTexture, new DamageDealt(DamageType.Divine, 0f + 3f * ch.Stats.Versatility))(ch));
+
+        public ItemState ConsecratedGround()
+            => new ItemState()
+            {
+                Name = "Consecrated Ground",
+                Description = "."
+            }
+            .OnUse(ch => spells.CircleArea(vfxs.Fire, Color.yellow, vfxs.FireTexture, new DamageDealt(DamageType.Chaos, 20f + 5f * ch.Stats.Versatility))(ch));
 
         
     }
