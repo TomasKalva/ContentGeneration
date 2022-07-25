@@ -419,6 +419,10 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             return user => ShowCircle(vfxF, color, texture, user.Agent.transform.position, radius, sampleCount, duration, halfArcSize, startDirection, damageDealt)(user);
         }
 
+        /// <summary>
+        /// Periodically use effect for the given duration.
+        /// passed to the effect.
+        /// </summary>
         public Effect Periodically(Effect effect, float duration, float tickLength)
         {
             return ch => ch.World.CreateOccurence(
@@ -495,27 +499,32 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
         public ItemState WaveOfChaos()
         {
-            Vector3? userPosition = null; // Remember the position where user stood when casting 
-            int waveNumber = 0;
-            Effect arcMaker = ch =>
+            Func<Effect> arcMakerF = () =>
             {
-                if (!userPosition.HasValue)
+                Vector3? userPosition = null; // Remember the position where user stood when casting 
+                Vector2? arcDirection = null;
+                int waveNumber = 0;
+                return ch =>
                 {
-                    userPosition = ch.Agent.transform.position;
-                }
+                    if (!userPosition.HasValue)
+                    {
+                        userPosition = ch.Agent.transform.position;
+                        arcDirection = ch.Agent.transform.forward.XZ();
+                    }
 
-                spells.ShowCircle(vfxs.Fire, Color.yellow, vfxs.FireTexture, userPosition.Value, 1.5f + waveNumber++ * 0.7f, 24, 1f, 90f, ch.Agent.transform.forward.XZ(),
-                    new DamageDealt(DamageType.Chaos, 10f + 3f * ch.Stats.Versatility))(ch);
+                    spells.ShowCircle(vfxs.Fire, Color.yellow, vfxs.FireTexture, userPosition.Value, 1.5f + waveNumber++ * 0.7f, 24 + 3 * waveNumber, 0.7f, 30f, arcDirection.Value,
+                        new DamageDealt(DamageType.Chaos, 10f + 3f * ch.Stats.Versatility))(ch);
+                };
             };
 
-            Effect waves = spells.Periodically(arcMaker, 2f, 0.5f);
+            Func<Effect> wavesF = () => spells.Periodically(arcMakerF(), 2f, 0.3f);
 
             return new ItemState()
             {
                 Name = "Wave of Chaos",
                 Description = "Chaos propagates at lazy pace rendering its victims unsuspecting of any disturbances."
             }
-             .OnUse(ch => waves(ch));
+             .OnUse(ch => wavesF()(ch));
         }
     }
 
