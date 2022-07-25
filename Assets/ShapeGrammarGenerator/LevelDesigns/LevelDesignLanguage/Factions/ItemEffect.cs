@@ -354,11 +354,28 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             this.vfxs = vfxs;
         }
 
-        IEnumerable<Vector3> EvenlySampleCircle(Vector3 center, float radius, int samplesCount)
+        struct Point
+        {
+            public Vector3 Position;
+            public Vector3 Normal;
+
+            public Point(Vector3 position, Vector3 normal)
+            {
+                Position = position;
+                Normal = normal;
+            }
+        }
+
+        IEnumerable<Point> EvenlySampleCircle(Vector3 center, float radius, int samplesCount)
         {
             return Enumerable.Range(0, samplesCount)
                 .Select(i => Mathf.PI * 2f * (i / (float)samplesCount))
-                .Select(angle => center + radius * new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)));
+                .Select(angle =>
+                {
+                    var cos = Mathf.Cos(angle);
+                    var sin = Mathf.Sin(angle);
+                    return new Point(center + radius * new Vector3(cos, 0f, sin), -new Vector3(cos, 0f, sin));
+                });
         }
 
         /// <summary>
@@ -381,10 +398,10 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         public Action<CharacterState> ShowCircle(Func<VFX> vfxF, Color color, FlipbookTexture texture, float radius, int sampleCount, float duration, DamageDealt damageDealt)
         {
             return user => EvenlySampleCircle(user.Agent.transform.position, radius, sampleCount)
-                .ForEach(pos => user.World.CreateOccurence(
+                .ForEach(point => user.World.CreateOccurence(
                     sel.GeometricSelector(vfxF, duration, sel.Initializator()
-                        .ConstPosition(pos)
-                        .SetDirection(new Vector3(pos.x, 0f, -pos.z)) // face out of the circle center
+                        .ConstPosition(point.Position)
+                        .SetDirection(point.Normal) // face out of the circle center
                         )(new SelectorArgs(color, texture))(user),
                     eff.Damage(damageDealt)
                     )
@@ -443,19 +460,19 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             => new ItemState()
             {
                 Name = "Circle of Chaos",
-                Description = "Let the chaos engulf your body."
+                Description = ""
             }
             .OnUse(ch => spells.ShowCircle(vfxs.Fire, Color.yellow, vfxs.FireTexture, 2.5f, 24, 10f,
                 new DamageDealt(DamageType.Chaos, 10f + 3f * ch.Stats.Versatility))(ch));
-        /*
-        public ItemState CircleOfChaos()
+
+        public ItemState Inferno()
             => new ItemState()
             {
-                Name = "Circle of Chaos",
+                Name = "Inferno",
                 Description = "Let the chaos engulf your body."
             }
-            .OnUse(ch => spells.ShowCircle(vfxs.Fire, Color.yellow, vfxs.FireTexture, 2.5f, 24, 10f,
-                new DamageDealt(DamageType.Chaos, 10f + 3f * ch.Stats.Versatility))(ch));*/
+            .OnUse(ch => spells.ShowCircle(() => vfxs.MovingCloud().SetHalfWidth(1.2f), Color.yellow, vfxs.FireTexture, 0.5f, 3, 10f,
+                new DamageDealt(DamageType.Chaos, 10f + 3f * ch.Stats.Versatility))(ch));
 
     }
 

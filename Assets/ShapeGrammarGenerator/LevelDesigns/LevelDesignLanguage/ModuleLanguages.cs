@@ -303,6 +303,7 @@ namespace ShapeGrammar
                 spellItems.ChaosBolt,
                 spellItems.CircleOfChaos,
                 spellItems.SquareOfChaos,
+                spellItems.Inferno,
             };
 
 

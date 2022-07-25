@@ -52,6 +52,7 @@ MonoBehaviour:
   textureName: FlipbookTexture
   textureWidth: FlipbookWidth
   textureHeight: FlipbookHeight
+  halfWidthName: HalfWidth
 --- !u!1 &6744236060167406136
 GameObject:
   m_ObjectHideFlags: 0

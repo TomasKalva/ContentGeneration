@@ -5,4 +5,12 @@ using UnityEngine.VFX;
 
 public class MovingCloudVFX : VFX
 {
+    [SerializeField]
+    string halfWidthName;
+
+    public MovingCloudVFX SetHalfWidth(float halfWidth)
+    {
+        visualEffect.SetFloat(halfWidthName, halfWidth);
+        return this;
+    }
 }
