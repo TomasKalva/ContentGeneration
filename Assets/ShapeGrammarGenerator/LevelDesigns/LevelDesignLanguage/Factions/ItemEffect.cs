@@ -528,6 +528,22 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                         )
                 );
         }
+
+        /// <summary>
+        /// Spawns the vfx in the given circle.
+        /// </summary>
+        public Effect TangentCircleBorder(Func<VFX> vfxF, Color color, FlipbookTexture texture, float radius, int sampleCount, float duration, DamageDealt damageDealt)
+        {
+            return user => EvenlySampleCircleBorder(user.Agent.transform.position, radius, sampleCount, 180f, user.Agent.transform.forward)
+                .ForEach(point => user.World.CreateOccurence(
+                    sel.GeometricSelector(vfxF, duration, sel.Initializator()
+                        .ConstPosition(point.Position)
+                        .SetDirection(Quaternion.Euler(0f, 90f, 0f) * point.Normal/* new Vector3(-point.Normal.x, 0f, point.Normal.z)*/) // face along tangent
+                        )(new SelectorArgs(color, texture))(user),
+                    eff.Damage(damageDealt)
+                    )
+                );
+        }
     }
 
     class SpellItems
@@ -592,8 +608,16 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 Name = "Inferno",
                 Description = "Let the chaos engulf your body."
             }
-            .OnUse(ch => spells.CircleBorder(() => vfxs.MovingCloud().SetHalfWidth(1.2f), Color.yellow, vfxs.FireTexture, 0.5f, 3, 10f, 180f, ch.Agent.transform.forward.XZ(),
-                new DamageDealt(DamageType.Chaos, 10f + 3f * ch.Stats.Versatility))(ch));
+            .OnUse(ch => spells.CircleBorder(
+                vfxF: () => vfxs.MovingCloud().SetHalfWidth(1.2f), 
+                color: Color.yellow,
+                texture: vfxs.FireTexture,
+                radius: 0.5f,
+                sampleCount: 3,
+                duration: 10f,
+                halfArcSize: 180f,
+                startDirection: ch.Agent.transform.forward.XZ(),
+                damageDealt: new DamageDealt(DamageType.Chaos, 10f + 3f * ch.Stats.Versatility))(ch));
 
         public ItemState WaveOfChaos()
         {
@@ -715,6 +739,21 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                     radius: 3f,
                     samplesCount: 3,
                     damageDealt: new DamageDealt(DamageType.Divine, 10f + 3f * ch.Stats.Versatility))(ch));
+
+        public ItemState Triangle()
+            => new ItemState()
+            {
+                Name = "Triangle",
+                Description = "Only on special occassions does Chaos take on such a perfect shape."
+            }
+            .OnUse(ch => spells.TangentCircleBorder(
+                vfxF: () => vfxs.MovingCloud().SetHalfWidth(0.3f),
+                color: Color.yellow,
+                texture: vfxs.FireTexture,
+                radius: 0.7f,
+                sampleCount: 3,
+                duration: 10f,
+                damageDealt: new DamageDealt(DamageType.Chaos, 10f + 3f * ch.Stats.Versatility))(ch));
     }
 
     /*
