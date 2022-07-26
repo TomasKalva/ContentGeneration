@@ -28,14 +28,11 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         /// </summary>
         public int Affinity { get; set; }
 
-
-
         public int StartingBranchProgress => Math.Min(3, Affinity / 4);
 
-        public Faction(FactionConcepts concepts, UniqueNameGenerator uniqueNameGenerator)
+        public Faction(FactionConcepts concepts)
         {
             Concepts = concepts;
-            UniqueNameGenerator = uniqueNameGenerator;
             Affinity = 0;
         }
 
@@ -224,6 +221,20 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             }
             var n = ++AlreadyGenerated[generated];
             return $"{generated} {n}";
+        }
+
+        public string UniqueName(string str)
+        {
+            if (AlreadyGenerated.TryGetValue(str, out var value))
+            {
+                AlreadyGenerated[str]++;
+                return $"{str} {value}";
+            }
+            else
+            {
+                AlreadyGenerated.Add(str, 1);
+                return str;
+            }
         }
     }
 

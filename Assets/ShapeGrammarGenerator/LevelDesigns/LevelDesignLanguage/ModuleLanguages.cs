@@ -189,7 +189,7 @@ namespace ShapeGrammar
             var branchNodes = startNodesQuery(State.GrammarState);
             Env.Line(keyBranchPr, startNodesQuery, keyBranchLength, out keyBranch);
 
-            var keys = CreateLockItems("Key", 1, "Used to unlock door", out var unlock);
+            var keys = CreateLockItems(State.UniqueNameGenerator.UniqueName("Key"), 1, "Used to unlock door", out var unlock);
             keyBranch.LastArea().AddInteractiveObject(Lib.InteractiveObjects.Item(keys.First()));
 
             LockedArea(_ => branchNodes, unlock, out locked);
@@ -200,7 +200,7 @@ namespace ShapeGrammar
         {
             Env.BranchRandomly(keyBranchPr, areasCount, out branches);
 
-            var keys = CreateLockItems("Gemstone", 3, "Shiny", out var unlock);
+            var keys = CreateLockItems(State.UniqueNameGenerator.UniqueName("Gemstone"), 3, "Shiny", out var unlock);
             var keyPlacer = PlO.DeadEndPlacer(keys.Select(item => Lib.InteractiveObjects.Item(item)));
             keyPlacer.Place(branches);
 
@@ -458,7 +458,7 @@ namespace ShapeGrammar
             var factionScalingEffectLibrary = new FactionScalingEffectLibrary(effectsLibrary);
 
             // Make sure that item names are generated uniquely across all factions
-            var uniqueNameGenerator = new UniqueNameGenerator();
+            //var uniqueNameGenerator = new UniqueNameGenerator();
 
 
             var spells = new Spells(Lib.Effects, Lib.Selectors, Lib.VFXs);
@@ -515,7 +515,7 @@ namespace ShapeGrammar
             Enumerable.Range(0, factionsCount).ForEach(_ =>
             {
                 var factionConcepts = concepts.TakeSubset(3, 4);
-                var faction = new Faction(concepts, uniqueNameGenerator);
+                var faction = new Faction(concepts);
 
                 State.LC.AddEvent(
                     new LevelConstructionEvent(5, () =>
@@ -533,7 +533,7 @@ namespace ShapeGrammar
 
         public IEnumerable<FactionEnvironmentConstructor> Branches()
         {
-            //yield return LinearWithKey;
+            yield return LinearWithKey;
             yield return BranchesWithKey;
             //yield return RandomBranches;
             //yield return LinearBranch;

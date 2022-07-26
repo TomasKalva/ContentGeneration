@@ -1,4 +1,5 @@
-﻿using ContentGeneration.Assets.UI;
+﻿using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
+using ContentGeneration.Assets.UI;
 using ContentGeneration.Assets.UI.Model;
 using ContentGeneration.Assets.UI.Util;
 using System;
@@ -19,12 +20,15 @@ namespace ShapeGrammar
         public TraversabilityGraph TraversabilityGraph { get; set; }
         public World World { get; set; }
         public LevelDevelopmentKit Ldk { get; set; }
+        public UniqueNameGenerator UniqueNameGenerator { get; }
+
 
         public LanguageState(LevelConstructor levelConstructor, LevelDevelopmentKit ldk)
         {
             TraversabilityGraph = new TraversabilityGraph();
             LC = levelConstructor;
             Ldk = ldk;
+            UniqueNameGenerator = new UniqueNameGenerator();
         }
 
         public void Restart(World world, ShapeGrammarState grammarState)
