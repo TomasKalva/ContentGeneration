@@ -383,7 +383,7 @@ namespace ShapeGrammar
             var applePlacer = PlO.EvenPlacer(apples);
             applePlacer.Place(garden);
 
-            var enemyPlacer = PlC.RandomPlacer(
+            var enemyPlacer = PlC.RandomAreaPlacer(
                         new UniformIntDistr(1, 1),
                         (3, Lib.Enemies.Dog),
                         (3, Lib.Enemies.Human),
@@ -579,7 +579,7 @@ namespace ShapeGrammar
 
             //PlO.ProgressFunctionPlacer(fe.CreateInteractiveObjectFactory(), new UniformIntDistr(1, 4)).Place(path);
             var itemFactories = Enumerable.Range(0, 3).Select<int, Func<InteractiveObjectState>>(_ => () => Lib.InteractiveObjects.Item(fe.CreateItemFactory()(_))).ToArray();
-            PlO.RandomPlacer(new UniformDistr(3, 4), itemFactories).Place(path);
+            PlO.RandomAreasPlacer(new UniformDistr(3, 6), itemFactories).Place(path);
             /*PlO.ProgressFunctionPlacer(
                 progress => Lib.InteractiveObjects.Item(itemFactories.GetRandom()(progress)), 
                 new UniformIntDistr(1, 4)).Place(path);*/

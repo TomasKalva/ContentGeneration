@@ -16,10 +16,10 @@ namespace ShapeGrammar
             this.placementOp = placementOp;
         }
 
-        public Placer<Areas, T> RandomPlacer(IDistribution<int> count, params (float, Func<T>)[] items)
+        public Placer<Areas, T> RandomAreaPlacer(IDistribution<int> count, params (float, Func<T>)[] items)
         {
             return 
-                new RandomPlacer<T>(
+                new RandomAreaPlacer<T>(
                     placementOp,
                     new WeightedDistribution<Func<T>>(
                         items
@@ -29,17 +29,26 @@ namespace ShapeGrammar
                 );
         }
 
-        public Placer<Areas, T> RandomPlacer(IDistribution<int> count, params Func<T>[] items)
+        public Placer<Areas, T> RandomAreasPlacer(IDistribution<int> count, params Func<T>[] items)
+        {
+            return RandomAreasPlacer(count, items.Select(item => (1f, item)).ToArray());
+        }
+
+        public Placer<Areas, T> RandomAreasPlacer(IDistribution<int> count, params (float, Func<T>)[] items)
         {
             return
-                new RandomPlacer<T>(
+                new RandomAreasPlacer<T>(
                     placementOp,
                     new WeightedDistribution<Func<T>>(
-                        items.Select(item => (1f, item)).ToArray()
+                        items
                     ),
-                    count,
-                    areas => areas.AreasList
+                    count
                 );
+        }
+
+        public Placer<Areas, T> RandomAreaPlacer(IDistribution<int> count, params Func<T>[] items)
+        {
+            return RandomAreaPlacer(count, items.Select(item => (1f, item)).ToArray());
         }
 
         public Placer<Areas, T> EvenPlacer(IEnumerable<T> items)
@@ -134,12 +143,12 @@ namespace ShapeGrammar
     /// <summary>
     /// Places the given number of objects randomly in each area.
     /// </summary>
-    class RandomPlacer<T> : Placer<Areas, T>
+    class RandomAreaPlacer<T> : Placer<Areas, T>
     {
         WeightedDistribution<Func<T>> ToPlaceF { get; }
         IDistribution<int> Count { get; }
 
-        public RandomPlacer(Action<Area, T> placementOp, WeightedDistribution<Func<T>> toPlaceF, IDistribution<int> count, AreasPrioritizer prioritizer) : base(placementOp, prioritizer)
+        public RandomAreaPlacer(Action<Area, T> placementOp, WeightedDistribution<Func<T>> toPlaceF, IDistribution<int> count, AreasPrioritizer prioritizer) : base(placementOp, prioritizer)
         {
             ToPlaceF = toPlaceF;
             Count = count != null ? count : new UniformDistr(1, 2);
@@ -148,6 +157,27 @@ namespace ShapeGrammar
         public override void Place(Areas areas)
         {
             Prioritizer(areas).ForEach(area => Enumerable.Range(0, Count.Sample()).ForEach(_ => PlacementOp(area, ToPlaceF.Sample()())));
+        }
+    }
+
+    /// <summary>
+    /// Places the given number of objects randomly across all areas.
+    /// </summary>
+    class RandomAreasPlacer<T> : Placer<Areas, T>
+    {
+        WeightedDistribution<Func<T>> ToPlaceF { get; }
+        IDistribution<int> Count { get; }
+
+        public RandomAreasPlacer(Action<Area, T> placementOp, WeightedDistribution<Func<T>> toPlaceF, IDistribution<int> count) : base(placementOp, null)
+        {
+            ToPlaceF = toPlaceF;
+            Count = count != null ? count : new UniformDistr(1, 2);
+        }
+
+        public override void Place(Areas areas)
+        {
+            var areasList = areas.AreasList;
+            Enumerable.Range(0, Count.Sample()).ForEach(_ => PlacementOp(areasList.GetRandom(), ToPlaceF.Sample()()));
         }
     }
 
