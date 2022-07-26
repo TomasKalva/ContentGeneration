@@ -265,10 +265,10 @@ namespace ShapeGrammar
             linearPath = new LinearPath(traversable.ToList());
         }
 
-        public void One(ProductionList productions, NodesQuery startNodesQuery, out Area one)
+        public void One(ProductionList productions, NodesQuery startNodesQuery, out SingleArea one)
         {
             var grammar = new CustomGrammar(productions, 1, startNodesQuery);
-            one = GenerateAndTakeTraversable(grammar).First();
+            one = new SingleArea(GenerateAndTakeTraversable(grammar).First());
         }
 
         public void ExtendRandomly(ProductionList productions, NodesQuery startNodesQuery, int count, out Branching branching)

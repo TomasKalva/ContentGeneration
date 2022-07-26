@@ -122,6 +122,15 @@ namespace ShapeGrammar
         //public IEnumerable<Area> DeadEnds() => AreasList.Where(area => !area.EdgesFrom.Any());
     }
 
+    class SingleArea : Areas
+    {
+        public SingleArea(Area area) : base(new List<Area>() { area })
+        {
+        }
+
+        public Area Get => AreasList.First();
+    }
+
     abstract class Placer<AreasT, T> where AreasT : Areas
     {
         /// <summary>

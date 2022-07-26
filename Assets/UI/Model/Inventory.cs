@@ -251,6 +251,11 @@ namespace ContentGeneration.Assets.UI.Model
         {
             items.ForEach(item => RemoveItem(item));
         }
+
+        public void RemoveStacksOfItems(ItemState items, int stacksToRemove)
+        {
+            items.RemoveFromInventory(this, stacksToRemove);
+        }
 #endif
 
         public void RemoveItem(ItemState item)
@@ -288,19 +293,23 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 #if NOESIS
-        public bool HasItems(string name, int count, out IEnumerable<ItemState> foundItems)
+        /// <summary>
+        /// Assumes that items are stackable.
+        /// </summary>
+        public bool HasItems(string name, int count, out ItemState foundItems)
         {
-            foundItems = AllSlots().SelectNN(slot => slot.Item).Where(item => item.Name == name);
-            if(foundItems.Count() >= count)
+            foundItems = AllSlots().SelectNN(slot => slot.Item).FirstOrDefault(item => item.Name == name);
+            return foundItems != null && foundItems.StacksCount >= count;
+            /*if (foundItems != null && foundItems.StacksCount >= count)
             {
-                foundItems = foundItems.Take(count);
+                //foundItems = foundItems.Take(count);
                 return true;
             }
             else
             {
                 foundItems = null;
                 return false;
-            }
+            }*/
         }
         
 #endif

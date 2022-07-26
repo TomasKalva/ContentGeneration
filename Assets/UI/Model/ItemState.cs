@@ -46,7 +46,7 @@ namespace ContentGeneration.Assets.UI.Model
         public int StacksCount
         {
             get => _stacksCount;
-            set { _stacksCount = value; PropertyChanged.OnPropertyChanged(this); }
+            set { _stacksCount = Math.Max(0, value); PropertyChanged.OnPropertyChanged(this); }
         }
 
         bool _isStackable;
@@ -64,9 +64,9 @@ namespace ContentGeneration.Assets.UI.Model
             return this;
         }
 
-        public ItemState SetStackable(int stacksCount)
+        public ItemState SetStackable(int stacksCount, bool canBeUsed = true)
         {
-            Usage = new StackableItemUsage(this, stacksCount);
+            Usage = new StackableItemUsage(this, stacksCount, canBeUsed);
             return this;
         }
 
@@ -123,6 +123,11 @@ namespace ContentGeneration.Assets.UI.Model
             return Usage.AddToInventory(inventory, slots, this);
         }
 
+        public void RemoveFromInventory(Inventory inventory, int stacksToRemove)
+        {
+            Usage.RemoveFromInventory(inventory, this, stacksToRemove);
+        }
+
         public void OnRest() 
         {
             Usage.OnRest(this);
@@ -145,6 +150,11 @@ namespace ContentGeneration.Assets.UI.Model
                 {
                     return null;
                 }
+            }
+
+            public virtual void RemoveFromInventory(Inventory inventory, ItemState itemState, int stacksToRemove)
+            {
+                inventory.RemoveItem(itemState);
             }
 
             /// <summary>
@@ -180,10 +190,13 @@ namespace ContentGeneration.Assets.UI.Model
 
         class StackableItemUsage : ItemUsage
         {
-            public StackableItemUsage(ItemState itemState, int stacksCount)
+            bool CanBeUsed { get; }
+
+            public StackableItemUsage(ItemState itemState, int stacksCount, bool canBeUsed)
             {
                 itemState.IsStackable = true;
                 itemState.StacksCount = stacksCount;
+                CanBeUsed = canBeUsed;
             }
 
             public override InventorySlot AddToInventory(Inventory inventory, IEnumerable<InventorySlot> slots, ItemState itemState)
@@ -191,11 +204,20 @@ namespace ContentGeneration.Assets.UI.Model
                 var stackableSlot = inventory.SlotWithSameStackableItem(slots, itemState.Name);
                 if (stackableSlot != null)
                 {
-                    stackableSlot.Item.StacksCount = itemState.StacksCount;
+                    stackableSlot.Item.StacksCount += itemState.StacksCount;
                     return stackableSlot;
                 }
 
                 return base.AddToInventory(inventory, slots, itemState);
+            }
+
+            public override void RemoveFromInventory(Inventory inventory, ItemState itemState, int stacksToRemove)
+            {
+                itemState.StacksCount -= stacksToRemove;
+                if(itemState.StacksCount <= 0)
+                {
+                    inventory.RemoveItem(itemState);
+                }
             }
 
             public override void OnRest(ItemState itemState)
@@ -205,6 +227,9 @@ namespace ContentGeneration.Assets.UI.Model
 
             public override bool TryUse(Inventory inventory, ItemState itemState)
             {
+                if (!CanBeUsed)
+                    return false;
+
                 itemState.StacksCount--;
                 if (itemState.StacksCount <= 0)
                 {
@@ -244,6 +269,11 @@ namespace ContentGeneration.Assets.UI.Model
                 return base.AddToInventory(inventory, slots, itemState);
             }
 
+            public override void RemoveFromInventory(Inventory inventory, ItemState itemState, int stacksToRemove)
+            {
+                itemState.StacksCount -= stacksToRemove;
+            }
+
             public override void OnRest(ItemState itemState)
             {
                 itemState.StacksCount = MaxStacks;
@@ -251,7 +281,7 @@ namespace ContentGeneration.Assets.UI.Model
 
             public override bool TryUse(Inventory inventory, ItemState itemState)
             {
-                itemState.StacksCount = Mathf.Max(0, itemState.StacksCount - 1);
+                itemState.StacksCount -= 1;
                 if (itemState.StacksCount < 0)
                 {
                     return false;

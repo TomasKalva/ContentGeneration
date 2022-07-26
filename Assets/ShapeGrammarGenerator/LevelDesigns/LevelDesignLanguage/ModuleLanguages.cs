@@ -96,10 +96,10 @@ namespace ShapeGrammar
     {
         public LevelLanguage(LanguageParams tools) : base(tools) { }
 
-        public void LevelStart(out Area area)
+        public void LevelStart(out SingleArea area)
         {
             Env.One(Gr.PrL.CreateNewHouse(), NodesQueries.All, out area);
-            area.Node.AddSymbol(Gr.Sym.LevelStartMarker);
+            area.Get.Node.AddSymbol(Gr.Sym.LevelStartMarker);
         }
 
         public void LevelPathSegment()
@@ -110,7 +110,7 @@ namespace ShapeGrammar
         public void LevelEnd()
         {
             Env.One(Gr.PrL.LevelEnd(), NodesQueries.All, out var area);
-            area.AddInteractiveObject(
+            area.Get.AddInteractiveObject(
                 Lib.InteractiveObjects.Transporter()
                 );
         }
@@ -127,11 +127,11 @@ namespace ShapeGrammar
         /// </summary>
         public delegate bool UnlockAction(PlayerCharacterState player);
 
-        public void LockedArea(NodesQuery startNodes, UnlockAction unlock, out Area lockedArea)
+        public void LockedArea(NodesQuery startNodes, UnlockAction unlock, out SingleArea lockedArea)
         {
             Env.One(Gr.PrL.BlockedByDoor(), startNodes, out lockedArea);
             // the locked area has to be connected to some previous area
-            var connection = State.TraversabilityGraph.EdgesTo(lockedArea).First();
+            var connection = State.TraversabilityGraph.EdgesTo(lockedArea.Get).First();
             // the door face exists because of the chosen grammar
             var doorFace = connection.Path.LE.CG().InsideFacesH().Where(faceH => faceH.FaceType == FACE_HOR.Door).Facets.First();
             doorFace.OnObjectCreated += tr =>
@@ -167,13 +167,13 @@ namespace ShapeGrammar
         public IEnumerable<ItemState> CreateLockItems(string name, int count, string description, out UnlockAction unlockAction)
         {
             var items = Enumerable.Range(0, count).Select(_ =>
-                Lib.Items.NewItem(name, description)
+                Lib.Items.NewItem(name, description).SetStackable(1, false)
                 );
             unlockAction = player =>
             {
                 if (player.Inventory.HasItems(name, count, out var keys))
                 {
-                    player.Inventory.RemoveItems(keys);
+                    player.Inventory.RemoveStacksOfItems(keys, count);
                     return true;
                 }
                 else
@@ -184,7 +184,7 @@ namespace ShapeGrammar
             return items;
         }
 
-        public void BranchWithKey(NodesQuery startNodesQuery, int keyBranchLength, ProductionList keyBranchPr, out Area locked, out LinearPath keyBranch)
+        public void BranchWithKey(NodesQuery startNodesQuery, int keyBranchLength, ProductionList keyBranchPr, out SingleArea locked, out LinearPath keyBranch)
         {
             var branchNodes = startNodesQuery(State.GrammarState);
             Env.Line(keyBranchPr, startNodesQuery, keyBranchLength, out keyBranch);
@@ -193,10 +193,10 @@ namespace ShapeGrammar
             keyBranch.LastArea().AddInteractiveObject(Lib.InteractiveObjects.Item(keys.First()));
 
             LockedArea(_ => branchNodes, unlock, out locked);
-            locked.AddInteractiveObject(Lib.InteractiveObjects.Item(Lib.Items.NewItem("Unlocked", "The door are unlocked now")));
+            locked.Get.AddInteractiveObject(Lib.InteractiveObjects.Item(Lib.Items.NewItem("Unlocked", "The door are unlocked now")));
         }
 
-        public void RandomBranchingWithKeys(int areasCount, ProductionList keyBranchPr, out Area locked, out Branching branches)
+        public void RandomBranchingWithKeys(int areasCount, ProductionList keyBranchPr, out SingleArea locked, out Branching branches)
         {
             Env.BranchRandomly(keyBranchPr, areasCount, out branches);
 
@@ -205,7 +205,7 @@ namespace ShapeGrammar
             keyPlacer.Place(branches);
 
             LockedArea(NodesQueries.All, unlock, out locked);
-            locked.AddInteractiveObject(Lib.InteractiveObjects.Item(Lib.Items.NewItem("Unlocked", "The door are unlocked now")));
+            locked.Get.AddInteractiveObject(Lib.InteractiveObjects.Item(Lib.Items.NewItem("Unlocked", "The door are unlocked now")));
         }
     }
 
@@ -283,7 +283,7 @@ namespace ShapeGrammar
                 .OnUse(player => statIncrease.Manipulate(player.Stats))
             ).ToArray();
 
-            level_up_area.AddInteractiveObject(
+            level_up_area.Get.AddInteractiveObject(
                 Lib.InteractiveObjects.InteractiveObject("Levelling up object", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
                     .SetInteraction(
                         new InteractionSequence<InteractiveObject>()
@@ -302,7 +302,7 @@ namespace ShapeGrammar
             Func<ItemState>[] s = spellItems.AllSpellItems()
                 .Select<Func<ItemState>, Func<ItemState>>(itemF => () => itemF().SetReplenishable(1)).ToArray();
 
-            area.AddInteractiveObject(
+            area.Get.AddInteractiveObject(
                 Lib.InteractiveObjects.InteractiveObject("Spells object", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
                     .SetInteraction(
                         new InteractionSequence<InteractiveObject>()
@@ -337,7 +337,7 @@ namespace ShapeGrammar
             Env.Line(Gr.PrL.Garden(), NodesQueries.LastCreated, 2, out var path_to_farmer);
 
             Env.One(Gr.PrL.Garden(), NodesQueries.LastCreated, out var farmer_area);
-            farmer_area.AddInteractiveObject(
+            farmer_area.Get.AddInteractiveObject(
                 Lib.InteractiveObjects.InteractiveObject("Farmer", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
                     .SetInteraction(
                         new InteractionSequence<InteractiveObject>()
@@ -351,7 +351,7 @@ namespace ShapeGrammar
                                 {
                                     if (player.Inventory.HasItems("Earthen apple", 3, out var desiredApples))
                                     {
-                                        player.Inventory.RemoveItems(desiredApples);
+                                        player.Inventory.RemoveStacksOfItems(desiredApples, 3);
                                         Msg.Show("Apples given");
 
                                         // moves farmer to another state
@@ -377,7 +377,7 @@ namespace ShapeGrammar
             var apples = Enumerable.Range(0, 5).Select(_ =>
                 Lib.Items.NewItem("Earthen apple", "An apple produced by the earth itself.")
                     .OnUse(ch => ch.Spirit += 10)
-                    .SetConsumable()
+                    .SetStackable(1)
                 )
                 .Select(itemState => Lib.InteractiveObjects.Item(itemState));
             var applePlacer = PlO.EvenPlacer(apples);
@@ -424,7 +424,7 @@ namespace ShapeGrammar
                     });
 
             Env.One(Gr.PrL.Garden(), NodesQueries.LastCreated, out var farmer_area);
-            farmer_area.AddInteractiveObject(
+            farmer_area.Get.AddInteractiveObject(
                 Lib.InteractiveObjects.InteractiveObject("Farmer", Lib.InteractiveObjects.Geometry<Kiln>(Lib.InteractiveObjects.ascensionKilnPrefab.transform))
                     .SetInteraction(
                         new InteractionSequence<Kiln>()
@@ -533,19 +533,44 @@ namespace ShapeGrammar
 
         public IEnumerable<FactionEnvironmentConstructor> Branches()
         {
-            //yield return LockedDoorBranch;
+            //yield return LinearWithKey;
+            yield return BranchesWithKey;
             //yield return RandomBranches;
-            yield return LinearBranch;
+            //yield return LinearBranch;
         }
 
-        public void LockedDoorBranch(FactionEnvironment fe, int progress)
+        public void LinearWithKey(FactionEnvironment fe, int progress)
         {
+            L.PatternLanguage.BranchWithKey(NodesQueries.LastCreated, 4, Gr.PrL.TestingProductions(), out var lockedArea, out var linearPath);
+
+            var itemPlacer = PlO.RandomAreasPlacer(new UniformDistr(3, 4), ItemsToPlace(fe, 3));
+            itemPlacer.Place(linearPath);
+            itemPlacer.Place(lockedArea);
+            PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(linearPath);
+
+            
+        }
+
+        public void BranchesWithKey(FactionEnvironment fe, int progress)
+        {
+            L.PatternLanguage.RandomBranchingWithKeys(4, Gr.PrL.TestingProductions(), out var lockedArea, out var branches);
+
+            var itemPlacer = PlO.RandomAreasPlacer(new UniformDistr(3, 4), ItemsToPlace(fe, 3));
+            itemPlacer.Place(branches);
+            itemPlacer.Place(lockedArea);
+            PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(branches);
 
         }
 
         public void RandomBranches(FactionEnvironment fe, int progress)
         {
+            Env.BranchRandomly(fe.ProductionList(), 5, out var path);
 
+            //PlO.ProgressFunctionPlacer(fe.CreateInteractiveObjectFactory(), new UniformIntDistr(1, 4)).Place(path);
+            PlO.RandomAreasPlacer(new UniformDistr(3, 6), ItemsToPlace(fe, 3)).Place(path);
+            PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(path);
+
+            path.AreasList.GetRandom().AddInteractiveObject(ProgressOfManifestation(fe.FactionManifestation));
         }
 
         /// <summary>
@@ -573,16 +598,17 @@ namespace ShapeGrammar
         }
 
 
+        public Func<InteractiveObjectState>[] ItemsToPlace(FactionEnvironment fe, int count)
+        {
+            return Enumerable.Range(0, 3).Select<int, Func<InteractiveObjectState>>(_ => () => Lib.InteractiveObjects.Item(fe.CreateItemFactory()(_))).ToArray();
+        }
+
         public void LinearBranch(FactionEnvironment fe, int progress)
         {
             Env.Line(fe.ProductionList() , NodesQueries.All, 5, out var path);
 
             //PlO.ProgressFunctionPlacer(fe.CreateInteractiveObjectFactory(), new UniformIntDistr(1, 4)).Place(path);
-            var itemFactories = Enumerable.Range(0, 3).Select<int, Func<InteractiveObjectState>>(_ => () => Lib.InteractiveObjects.Item(fe.CreateItemFactory()(_))).ToArray();
-            PlO.RandomAreasPlacer(new UniformDistr(3, 6), itemFactories).Place(path);
-            /*PlO.ProgressFunctionPlacer(
-                progress => Lib.InteractiveObjects.Item(itemFactories.GetRandom()(progress)), 
-                new UniformIntDistr(1, 4)).Place(path);*/
+            PlO.RandomAreasPlacer(new UniformDistr(3, 6), ItemsToPlace(fe, 3)).Place(path);
             PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(path);
 
             path.LastArea().AddInteractiveObject(ProgressOfManifestation(fe.FactionManifestation));

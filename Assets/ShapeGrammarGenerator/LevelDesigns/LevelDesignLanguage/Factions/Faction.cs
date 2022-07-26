@@ -109,44 +109,11 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         /// </summary>
         public ProgressFactory<ItemState> CreateItemFactory()
         {
-            /*
-            var faction = FactionManifestation.Faction;
-            var affinity = faction.Affinity;
-            var progress = FactionManifestation.Progress;*/
-
             var manifestationProgress = FactionManifestation.Progress;
 
-            // Fix item properties
-            /*
-            var annotatedEffectByFactionEnvByUser = Concepts.Effects.GetRandom();
-            var effectByUser = annotatedEffectByFactionEnvByUser.Item(this);
-            var effectColor = Color.yellow;
-
-            var annotatedSelectorByArgsByUser = Concepts.Selectors.GetRandom();
-            var selectorByUser = annotatedSelectorByArgsByUser.Item(new SelectorArgs(effectColor, Concepts.Textures.GetRandom()));
-
-            var name = $"{annotatedSelectorByArgsByUser.Name} {annotatedEffectByFactionEnvByUser.Name}";
-            name = string.Concat(name[0].ToString().ToUpper(), name.Substring(1));*/
-
-
-
-            // Add effects to the item
-            return _ => // the effects are independent of the progress so that they can easily stack
+            return _ =>
             {
-                return FactionManifestation.Faction.Concepts.Spells[manifestationProgress].GetRandom()().SetReplenishable(1);
-                /*return new ItemState()
-                {
-                    Name = name,
-                    Description = $"So basically it {annotatedEffectByFactionEnvByUser.Description} {annotatedSelectorByArgsByUser.Description}."
-                }
-                    .OnUse(ch => 
-                    {
-                        Debug.Log($"Procedural item is used by {ch.Agent.gameObject.name}");
-                        ch.World.CreateOccurence(selectorByUser(ch), effectByUser(ch));
-                    })
-                    .SetConsumable()
-                    .SetStackable(1);
-                */
+                return FactionManifestation.Faction.Concepts.Spells[manifestationProgress].GetRandom()().SetStackable(1);
             };
         }
 
