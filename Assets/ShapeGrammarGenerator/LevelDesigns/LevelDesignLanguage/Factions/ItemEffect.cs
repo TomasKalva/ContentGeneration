@@ -371,6 +371,18 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             this.vfxs = vfxs;
         }
 
+        /// <summary>
+        /// Periodically use effect for the given duration.
+        /// passed to the effect.
+        /// </summary>
+        public Effect Periodically(Effect effect, float duration, float tickLength)
+        {
+            return ch => ch.World.CreateOccurence(
+                    sel.ConstSelector(ch, duration, new ConstDistr(tickLength)),
+                    effect
+                    );
+        }
+
         struct Point
         {
             public Vector3 Position;
@@ -486,9 +498,12 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             };
         }
 
-        public Effect CircleArea(Func<VFX> vfxF, Color color, FlipbookTexture texture, DamageDealt damageDealt)
+        /// <summary>
+        /// Places vfx evenly in a circle.
+        /// </summary>
+        public Effect CircleArea(Func<VFX> vfxF, Color color, FlipbookTexture texture, Vector3 center, float radius, int samplesCount, DamageDealt damageDealt)
         {
-            return user => EvenlySampleCircleArea(user.Agent.transform.position, 4f, 10)
+            return user => EvenlySampleCircleArea(center, radius, samplesCount)
                 .ForEach(pos =>
                 user.World.CreateOccurence(
                     sel.GeometricSelector(vfxF, 6f, sel.Initializator()
@@ -499,18 +514,21 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             );
         }
 
-        /// <summary>
-        /// Periodically use effect for the given duration.
-        /// passed to the effect.
-        /// </summary>
-        public Effect Periodically(Effect effect, float duration, float tickLength)
+        public Effect FlameOfHeaven(Func<VFX> vfxF, Color color, FlipbookTexture texture, float forward, float scale, float radius, int samplesCount, DamageDealt damageDealt)
         {
-            return ch => ch.World.CreateOccurence(
-                    sel.ConstSelector(ch, duration, new ConstDistr(tickLength)),
-                    effect
-                    );
+            return user => EvenlySampleCircleArea(Vector3.zero, radius, samplesCount)
+                .ForEach(relativePos =>
+                    user.World.CreateOccurence(
+                        sel.GeometricSelector(vfxF, 6f, sel.Initializator()
+                            .FrontOfCharacter(forward)
+                            .Move(relativePos)
+                            .Scale(scale)
+                            )(new SelectorArgs(color, texture))(user),
+                        eff.Damage(damageDealt)
+                        )
+                );
         }
-}
+    }
 
     class SpellItems
     {
@@ -637,7 +655,14 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 Name = "Consecrated Ground",
                 Description = "."
             }
-            .OnUse(ch => spells.CircleArea(vfxs.Fire, Color.white, vfxs.FireTexture, new DamageDealt(DamageType.Chaos, 20f + 5f * ch.Stats.Versatility))(ch));
+            .OnUse(ch => spells.CircleArea(
+                vfxF: vfxs.Fire,
+                color: Color.white,
+                texture: vfxs.FireTexture,
+                center: ch.Agent.transform.position,
+                radius: 4f,
+                samplesCount: 10,
+                damageDealt: new DamageDealt(DamageType.Chaos, 20f + 5f * ch.Stats.Versatility))(ch));
 
         public ItemState PillarsOfHeaven()
             => new ItemState()
@@ -657,6 +682,39 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                     startDirection: ch.Agent.transform.forward.XZ(),
                     damageDealt: new DamageDealt(DamageType.Divine, 10f + 3f * ch.Stats.Versatility))(ch));
 
+        public ItemState FlameOfHeaven()
+            => new ItemState()
+            {
+                Name = "Flame of Heaven",
+                Description = "Originally meant to heal rather than harm, Flame of Heaven now serves a new master."
+            }
+            .OnUse(ch =>
+                spells.FlameOfHeaven(
+                    vfxF: vfxs.Fire,
+                    color: Color.white,
+                    texture: vfxs.SmokeTexture,
+                    forward: 1.3f,
+                    scale: 4f,
+                    radius: 0.01f,
+                    samplesCount: 1,
+                    damageDealt: new DamageDealt(DamageType.Divine, 10f + 3f * ch.Stats.Versatility))(ch));
+
+        public ItemState FlamesOfHeaven()
+            => new ItemState()
+            {
+                Name = "Flames of Heaven",
+                Description = "Those who transcend now live in peace each captured within its own flame."
+            }
+            .OnUse(ch =>
+                spells.FlameOfHeaven(
+                    vfxF: vfxs.Fire,
+                    color: Color.white,
+                    texture: vfxs.SmokeTexture,
+                    forward: 3f,
+                    scale: 4f,
+                    radius: 3f,
+                    samplesCount: 3,
+                    damageDealt: new DamageDealt(DamageType.Divine, 10f + 3f * ch.Stats.Versatility))(ch));
     }
 
     /*
