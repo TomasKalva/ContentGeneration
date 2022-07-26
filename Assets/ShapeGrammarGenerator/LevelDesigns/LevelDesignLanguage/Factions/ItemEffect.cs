@@ -577,6 +577,29 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             this.vfxs = vfxs;
         }
 
+        public IEnumerable<Func<ItemState>> AllSpellItems() =>
+            new Func<ItemState>[]
+            {
+                    Fireball,
+                    Triangle,
+                    FlamesOfHeaven,
+                    FlameOfHeaven,
+                    PillarsOfHeaven,
+                    ConsecratedGround,
+                    Firefall,
+                    HeavenlyFlameCloud,
+                    Cloud,
+                    WaveOfChaos,
+                    FireBolt,
+                    FlameBolt,
+                    ChaosBolt,
+                    CircleOfChaos,
+                    SquareOfChaos,
+                    Inferno,
+                    Refreshment,
+                    Replenishment,
+            };
+
         public ItemState FireBolt()
             => new ItemState()
             {

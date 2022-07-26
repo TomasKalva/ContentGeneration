@@ -41,7 +41,7 @@ namespace ShapeGrammar
                 return false;
             });
             */
-            /*
+            
             State.LC.AddEvent(
                 new LevelConstructionEvent(0, () =>
                 {
@@ -60,7 +60,7 @@ namespace ShapeGrammar
                     return true;
                 }));
 
-            L.FactionsLanguage.InitializeFactions(3);*/
+            L.FactionsLanguage.InitializeFactions(3);
 
             /*
             State.LC.AddEvent(
@@ -71,6 +71,8 @@ namespace ShapeGrammar
                 })
             );
             */
+
+            /*
             State.LC.AddEvent(
                 new LevelConstructionEvent(5, () =>
                 {
@@ -86,7 +88,7 @@ namespace ShapeGrammar
                 {
                     L.TestingLanguage.Spells();
                     return true;
-                }));
+                }));*/
         }
     }
 
@@ -297,28 +299,8 @@ namespace ShapeGrammar
 
             var spells = new Spells(Lib.Effects, Lib.Selectors, Lib.VFXs);
             var spellItems = new SpellItems(spells, Lib.VFXs);
-            var s = new Func<ItemState>[]
-            {
-                spellItems.Fireball,
-                spellItems.Triangle,
-                spellItems.FlamesOfHeaven,
-                spellItems.FlameOfHeaven,
-                spellItems.PillarsOfHeaven,
-                spellItems.ConsecratedGround,
-                spellItems.Firefall,
-                spellItems.HeavenlyFlameCloud,
-                spellItems.Cloud,
-                spellItems.WaveOfChaos,
-                spellItems.FireBolt,
-                spellItems.FlameBolt,
-                spellItems.ChaosBolt,
-                spellItems.CircleOfChaos,
-                spellItems.SquareOfChaos,
-                spellItems.Inferno,
-                spellItems.Refreshment,
-                spellItems.Replenishment,
-            };
-
+            Func<ItemState>[] s = spellItems.AllSpellItems()
+                .Select<Func<ItemState>, Func<ItemState>>(itemF => () => itemF().SetReplenishable(1)).ToArray();
 
             area.AddInteractiveObject(
                 Lib.InteractiveObjects.InteractiveObject("Spells object", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
@@ -478,35 +460,61 @@ namespace ShapeGrammar
             // Make sure that item names are generated uniquely across all factions
             var uniqueNameGenerator = new UniqueNameGenerator();
 
+
+            var spells = new Spells(Lib.Effects, Lib.Selectors, Lib.VFXs);
+            var spellItems = new SpellItems(spells, Lib.VFXs);
+            Func<ItemState>[] s = spellItems.AllSpellItems()
+                .Select<Func<ItemState>, Func<ItemState>>(itemF => () => itemF().SetReplenishable(1)).ToArray();
+
             var concepts = new FactionConcepts(
                     new List<Func<ProductionList>>()
                     {
                             Gr.PrL.Garden
                     },
-                    Lib.Enemies.AllAgents().Shuffle().ToList()
-                    ,
-                    factionScalingEffectLibrary.EffectsByUser.ToList(),
-                    new List<Annotated<SelectorByArgsByUser>>()
+                    Lib.Enemies.AllAgents().Shuffle().ToList(),
+                    Lib.Items.AllWeapons().ToList(),
+                    new List<List<Func<ItemState>>>()
                     {
-                            //new Annotated<SelectorByUser>("Self", "self", selectorLibrary.SelfSelector()),
-                            new Annotated<SelectorByArgsByUser>("Fire", "all those that stand in fire", selectorLibrary.GeometricSelector(Lib.VFXs.Fire, 8f, selectorLibrary.Initializator().RightHandOfCharacter(0.5f).SetVelocity(ch => ch.Agent.movement.AgentForward, 1f))),
-                            new Annotated<SelectorByArgsByUser>("Cloud", "all those that stand in cloud", selectorLibrary.GeometricSelector(Lib.VFXs.MovingCloud, 4f, selectorLibrary.Initializator().FrontOfCharacter(1.4f).SetVelocity(ch => ch.Agent.movement.AgentForward, 1f))),
-                            new Annotated<SelectorByArgsByUser>("Lightning", "all those that stand in lightning", selectorLibrary.GeometricSelector(Lib.VFXs.Lightning, 6f, selectorLibrary.Initializator().FrontOfCharacter(0.5f))),
-                            new Annotated<SelectorByArgsByUser>("Fireball", "all those that are hit by fireball", selectorLibrary.GeometricSelector(Lib.VFXs.Fireball, 4f, selectorLibrary.Initializator().FrontOfCharacter(0.8f).SetVelocity(ch => ch.Agent.movement.AgentForward, 5f))),
-                    },
-                    new List<FlipbookTexture>()
-                    {
-                            Lib.VFXs.WindTexture,
-                            Lib.VFXs.FireTexture,
-                            Lib.VFXs.SmokeTexture,
-                            Lib.VFXs.LightningTexture,
-                    },
-                    Lib.Items.AllWeapons().ToList()
+                        /*new List<Func<ItemState>>()
+                        {
+
+                        },*/
+                        new List<Func<ItemState>>()
+                        {
+                            spellItems.FireBolt,
+                            spellItems.Replenishment,
+                        },
+                        new List<Func<ItemState>>()
+                        {
+                            spellItems.FlameBolt,
+                            spellItems.Fireball,
+                            spellItems.Cloud,
+                            spellItems.PillarsOfHeaven,
+                            spellItems.ConsecratedGround,
+                            spellItems.Refreshment,
+                        },
+                        new List<Func<ItemState>>()
+                        {
+                            spellItems.ChaosBolt,
+                            spellItems.Firefall,
+                            spellItems.SquareOfChaos,
+                            spellItems.FlameOfHeaven,
+                            spellItems.HeavenlyFlameCloud,
+                            spellItems.Triangle,
+                        },
+                        new List<Func<ItemState>>()
+                        {
+                            spellItems.CircleOfChaos,
+                            spellItems.FlamesOfHeaven,
+                            spellItems.Inferno,
+                            spellItems.WaveOfChaos,
+                        },
+                    }
                 );
 
             Enumerable.Range(0, factionsCount).ForEach(_ =>
             {
-                var factionConcepts = concepts.TakeSubset(3, 4, 2, 2, 8, 8, 5);
+                var factionConcepts = concepts.TakeSubset(3, 4);
                 var faction = new Faction(concepts, uniqueNameGenerator);
 
                 State.LC.AddEvent(

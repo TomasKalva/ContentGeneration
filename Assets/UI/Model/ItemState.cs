@@ -83,6 +83,7 @@ namespace ContentGeneration.Assets.UI.Model
             OnUseDelegate = _ => { };
             OnDropDelegate = _ => { };
             OnUpdateDelegate = _ => { };
+            IsStackable = false;
             Usage = new ItemUsage();
         }
 
@@ -229,9 +230,15 @@ namespace ContentGeneration.Assets.UI.Model
                 var stackableSlot = inventory.SlotWithSameStackableItem(slots, itemState.Name);
                 if (stackableSlot != null)
                 {
-                    stackableSlot.Item.StacksCount += itemState.StacksCount;
-                    MaxStacks += itemState.StacksCount;
-                    return stackableSlot;
+                    // Access Usage of other item to set its MaxStacks
+                    // Usage has to be of correct type
+                    var replenishableItemUsage = stackableSlot.Item.Usage as ReplenishableItemUsage;
+                    if(replenishableItemUsage != null)
+                    {
+                        stackableSlot.Item.StacksCount += itemState.StacksCount;
+                        replenishableItemUsage.MaxStacks += itemState.StacksCount;
+                        return stackableSlot;
+                    }
                 }
 
                 return base.AddToInventory(inventory, slots, itemState);

@@ -19,7 +19,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
     /// </summary>
     class Faction
     {
-        FactionConcepts Concepts { get; }
+        public FactionConcepts Concepts { get; }
 
         public UniqueNameGenerator UniqueNameGenerator { get; }
 
@@ -41,7 +41,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
         public FactionManifestation GetFactionManifestation()
         {
-            return new FactionManifestation(Concepts.TakeSubset(3, 3, 2, 2, 6, 6, 3), this);
+            return new FactionManifestation(Concepts.TakeSubset(3, 3), this);
         }
     }
 
@@ -66,7 +66,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
         public FactionEnvironment GetFactionEnvironment()
         {
-            return new FactionEnvironment(Concepts.TakeSubset(2, 2 + Progress, 2, 2, 3, 3, 3), this);
+            return new FactionEnvironment(Concepts.TakeSubset(2, 1 + Progress), this);
         }
 
         public void ContinueManifestation(LevelConstructor levelConstructor, IEnumerable<FactionEnvironmentConstructor> branches)
@@ -114,9 +114,10 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             var affinity = faction.Affinity;
             var progress = FactionManifestation.Progress;*/
 
-
+            var manifestationProgress = FactionManifestation.Progress;
 
             // Fix item properties
+            /*
             var annotatedEffectByFactionEnvByUser = Concepts.Effects.GetRandom();
             var effectByUser = annotatedEffectByFactionEnvByUser.Item(this);
             var effectColor = Color.yellow;
@@ -125,14 +126,15 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             var selectorByUser = annotatedSelectorByArgsByUser.Item(new SelectorArgs(effectColor, Concepts.Textures.GetRandom()));
 
             var name = $"{annotatedSelectorByArgsByUser.Name} {annotatedEffectByFactionEnvByUser.Name}";
-            name = string.Concat(name[0].ToString().ToUpper(), name.Substring(1));
+            name = string.Concat(name[0].ToString().ToUpper(), name.Substring(1));*/
 
 
 
             // Add effects to the item
             return _ => // the effects are independent of the progress so that they can easily stack
             {
-                return new ItemState()
+                return FactionManifestation.Faction.Concepts.Spells[manifestationProgress].GetRandom()().SetReplenishable(1);
+                /*return new ItemState()
                 {
                     Name = name,
                     Description = $"So basically it {annotatedEffectByFactionEnvByUser.Description} {annotatedSelectorByArgsByUser.Description}."
@@ -144,6 +146,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                     })
                     .SetConsumable()
                     .SetStackable(1);
+                */
             };
         }
 
@@ -199,36 +202,28 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
     {
         public List<Func<ProductionList>> ProductionLists { get; }
         public List<Func<CharacterState>> CharacterStates { get; }
-        public List<Annotated<EffectByFactionEnvironmentByUser>> Effects { get; }
-        public List<Annotated<SelectorByArgsByUser>> Selectors { get; }
-        public List<FlipbookTexture> Textures { get; }
         public List<Func<WeaponItem>> Weapons { get; }
+        public List<List<Func<ItemState>>> Spells { get; }
 
         public FactionConcepts(
             List<Func<ProductionList>> productionLists, 
             List<Func<CharacterState>> characterStates, 
-            List<Annotated<EffectByFactionEnvironmentByUser>> effects, 
-            List<Annotated<SelectorByArgsByUser>> selectors, 
-            List<FlipbookTexture> flipbookTextures,
-            List<Func<WeaponItem>> weapons)
+            List<Func<WeaponItem>> weapons,
+            List<List<Func<ItemState>>> spells)
         {
             ProductionLists = productionLists;
             CharacterStates = characterStates;
-            Effects = effects;
-            Selectors = selectors;
-            Textures = flipbookTextures;
             Weapons = weapons;
+            Spells = spells;
         }
 
-        public FactionConcepts TakeSubset(int characterStatesCount, int effectsCount, int selectorsCount, int texturesCount, int nounsCount, int adjectivesCount, int weaponsCount)
+        public FactionConcepts TakeSubset(int characterStatesCount, int weaponsCount)
         {
             return new FactionConcepts(
                     ProductionLists,
                     CharacterStates.Shuffle().Take(characterStatesCount).ToList(),
-                    Effects.Shuffle().Take(effectsCount).ToList(),
-                    Selectors.Shuffle().Take(selectorsCount).ToList(),
-                    Textures.Shuffle().Take(texturesCount).ToList(),
-                    Weapons.Shuffle().Take(weaponsCount).ToList()
+                    Weapons.Shuffle().Take(weaponsCount).ToList(),
+                    Spells
                 );
         }
 
