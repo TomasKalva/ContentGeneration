@@ -299,6 +299,7 @@ namespace ShapeGrammar
             var spellItems = new SpellItems(spells, Lib.VFXs);
             var s = new Func<ItemState>[]
             {
+                spellItems.Fireball,
                 spellItems.Triangle,
                 spellItems.FlamesOfHeaven,
                 spellItems.FlameOfHeaven,

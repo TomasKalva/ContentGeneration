@@ -432,10 +432,10 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         /// <summary>
         /// Shoots a bolt forward from character's hand. It deals damage upon impact.
         /// </summary>
-        public Effect Bolt(Color color, FlipbookTexture texture, float scale, float speed, DamageDealt damageDealt)
+        public Effect Bolt(Func<VFX> vfxF, Color color, FlipbookTexture texture, float scale, float speed, DamageDealt damageDealt)
         {
             return user => user.World.CreateOccurence(
-                sel.GeometricSelector(vfxs.Lightning, 4f, sel.Initializator()
+                sel.GeometricSelector(vfxF, 4f, sel.Initializator()
                     .RightHandOfCharacter(0f)
                     .SetVelocity(user => user.Agent.movement.AgentForward, speed)
                     .RotatePitch(-90f)
@@ -563,7 +563,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 Name = "Fire Bolt",
                 Description = "When the nature changed, fire bolts were among the first to notice due to their swiftness."
             }
-            .OnUse(ch => spells.Bolt(Color.yellow, vfxs.LightningTexture, 0.6f, 7f,
+            .OnUse(ch => spells.Bolt(vfxs.Lightning, Color.yellow, vfxs.LightningTexture, 0.6f, 7f,
                 new DamageDealt(DamageType.Chaos, 10f + 5f * ch.Stats.Versatility))(ch));
 
         public ItemState FlameBolt()
@@ -572,7 +572,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 Name = "Flame Bolt",
                 Description = "More powerfull version of fire bolt."
             }
-            .OnUse(ch => spells.Bolt(Color.yellow, vfxs.LightningTexture, 0.8f, 7f,
+            .OnUse(ch => spells.Bolt(vfxs.Lightning, Color.yellow, vfxs.LightningTexture, 0.8f, 7f,
                 new DamageDealt(DamageType.Chaos, 13f + 6f * ch.Stats.Versatility))(ch));
 
         public ItemState ChaosBolt()
@@ -581,7 +581,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 Name = "Chaos Bolt",
                 Description = "Made of pure chaos capable of piercing into any unsuspecting body."
             }
-            .OnUse(ch => spells.Bolt(Color.yellow, vfxs.LightningTexture, 1f, 9f,
+            .OnUse(ch => spells.Bolt(vfxs.Lightning, Color.yellow, vfxs.LightningTexture, 1f, 9f,
                 new DamageDealt(DamageType.Chaos, 21f + 10f * ch.Stats.Versatility))(ch));
 
         public ItemState SquareOfChaos()
@@ -754,6 +754,15 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 sampleCount: 3,
                 duration: 10f,
                 damageDealt: new DamageDealt(DamageType.Chaos, 10f + 3f * ch.Stats.Versatility))(ch));
+
+        public ItemState Fireball()
+            => new ItemState()
+            {
+                Name = "Fireball",
+                Description = "Unstable in its very essence, this piece of fire is not held together by powers within our comprehension."
+            }
+            .OnUse(ch => spells.Bolt(vfxs.Fireball, Color.yellow, vfxs.FireTexture, 1f, 9f,
+                new DamageDealt(DamageType.Chaos, 21f + 10f * ch.Stats.Versatility))(ch));
     }
 
     /*
