@@ -42,12 +42,6 @@ namespace ContentGeneration.Assets.UI.Model
             set { _description = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
-        public ItemState SetConsumable()
-        {
-            Usage = new ConsumableItemUsage(this);
-            return this;
-        }
-
         int _stacksCount;
         public int StacksCount
         {
@@ -62,16 +56,25 @@ namespace ContentGeneration.Assets.UI.Model
             set { _isStackable = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
-        public ItemState SetStackable(int stacksCount)
+        ItemUsage Usage { get; set; }
+
+        public ItemState SetConsumable()
         {
-            Usage = new StackableItemUsage(this, stacksCount);
-            /*StacksCount = stacksCount;
-            IsStackable = true;*/
+            Usage = new ConsumableItemUsage(this);
             return this;
         }
 
-        ItemUsage Usage { get; set; }
+        public ItemState SetStackable(int stacksCount)
+        {
+            Usage = new StackableItemUsage(this, stacksCount);
+            return this;
+        }
 
+        public ItemState SetReplenishable(int stacksCount)
+        {
+            Usage = new ReplenishableItemUsage(this, stacksCount);
+            return this;
+        }
 
         public ItemState()
         {
@@ -94,16 +97,6 @@ namespace ContentGeneration.Assets.UI.Model
                 {
                     characterAction(character);
                 }
-                /*characterAction(character);
-                if (IsConsumable)
-                {
-                    bool remove = IsStackable ? --StacksCount <= 0 : true;
-
-                    if (remove)
-                    {
-                        character.Inventory.RemoveItem(this);
-                    }
-                }*/
             };
             return this;
         }
@@ -129,7 +122,10 @@ namespace ContentGeneration.Assets.UI.Model
             return Usage.AddToInventory(inventory, slots, this);
         }
 
-        public virtual void OnRest(CharacterState characterState) { }
+        public void OnRest() 
+        {
+            Usage.OnRest(this);
+        }
 
         /// <summary>
         /// Controls movement through the inventory.
@@ -212,6 +208,46 @@ namespace ContentGeneration.Assets.UI.Model
                 if (itemState.StacksCount <= 0)
                 {
                     inventory.RemoveItem(itemState);
+                }
+                return true;
+            }
+        }
+
+        class ReplenishableItemUsage : ItemUsage
+        {
+            int MaxStacks { get; set; }
+
+            public ReplenishableItemUsage(ItemState itemState, int stacksCount)
+            {
+                itemState.IsStackable = true;
+                itemState.StacksCount = stacksCount;
+                MaxStacks = stacksCount;
+            }
+
+            public override InventorySlot AddToInventory(Inventory inventory, IEnumerable<InventorySlot> slots, ItemState itemState)
+            {
+                var stackableSlot = inventory.SlotWithSameStackableItem(slots, itemState.Name);
+                if (stackableSlot != null)
+                {
+                    stackableSlot.Item.StacksCount += itemState.StacksCount;
+                    MaxStacks += itemState.StacksCount;
+                    return stackableSlot;
+                }
+
+                return base.AddToInventory(inventory, slots, itemState);
+            }
+
+            public override void OnRest(ItemState itemState)
+            {
+                itemState.StacksCount = MaxStacks;
+            }
+
+            public override bool TryUse(Inventory inventory, ItemState itemState)
+            {
+                itemState.StacksCount = Mathf.Max(0, itemState.StacksCount - 1);
+                if (itemState.StacksCount < 0)
+                {
+                    return false;
                 }
                 return true;
             }

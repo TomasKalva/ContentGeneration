@@ -61,7 +61,8 @@ public class InteractiveObjects : ScriptableObject
             InteractionDescription = "Choose Grave",
             InteractOptions = new InteractOptions<InteractiveObject>()
                 .AddOption("Take candle", (grave, player) => Debug.Log("Taking candle"))
-                .AddOption("Put candle", (grave, player) => Debug.Log("Putting candle")),
+                .AddOption("Put candle", (grave, player) => Debug.Log("Putting candle"))
+                .AddOption("Rest", (grave, player) => player.Rest()),
             GeometryMaker = Geometry<InteractiveObject>(gravePrefab.transform)
         };
 

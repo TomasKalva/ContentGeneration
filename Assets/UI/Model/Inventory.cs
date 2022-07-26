@@ -211,26 +211,6 @@ namespace ContentGeneration.Assets.UI.Model
         public InventorySlot AddItem(IEnumerable<InventorySlot> slots, ItemState item)
         {
             return item.AddToInventory(this, slots);
-            /*if (item.IsStackable)
-            {
-                var stackableSlot = SlotWithSameStackableItem(slots, item.Name);
-                if(stackableSlot != null)
-                {
-                    stackableSlot.Item.StacksCount += item.StacksCount;
-                    return stackableSlot;
-                }
-            }
-
-            var slot = AvailableSlot(slots);
-            if (slot != null)
-            {
-                slot.Item = item;
-                return slot;
-            }
-            else
-            {
-                return null;
-            }*/
         }
 
         public InventorySlot EquipWeapon(SlotType slotType, ItemState weapon)

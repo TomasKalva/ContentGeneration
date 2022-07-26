@@ -248,6 +248,11 @@ namespace ContentGeneration.Assets.UI.Model
             return slot != null;
         }
 
+        public void Rest()
+        {
+            Inventory.AllSlots().ForEach(slot => slot.Item?.OnRest());
+        }
+
         /// <summary>
         /// To be able to trigger property change from subclasses.
         /// </summary>
