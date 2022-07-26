@@ -391,7 +391,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             var startAngle = Mathf.Atan2(startDirection.y, startDirection.x);
             var arcSizeRad = halfArcSizeDeg * Mathf.Deg2Rad;
             return Enumerable.Range(0, samplesCount)
-                .Select(i => (Mathf.PI * 2f * (i / (float)samplesCount) - startAngle + 2 * Mathf.PI) % (2 * Mathf.PI))
+                .Select(i => (Mathf.PI * 2f * (i / (float)samplesCount) + 2 * Mathf.PI) % (2 * Mathf.PI))
                 .Where(angle => angle < arcSizeRad || angle >= 2 * Mathf.PI - arcSizeRad)
                 .Select(angle =>
                 {
@@ -449,7 +449,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 );
         }
 
-        public Effect Circle(Func<VFX> vfxF, Color color, FlipbookTexture texture, float radius, int sampleCount, float duration, float halfArcSize, Vector2 startDirection, DamageDealt damageDealt)
+        public Effect CircleBorder(Func<VFX> vfxF, Color color, FlipbookTexture texture, float radius, int sampleCount, float duration, float halfArcSize, Vector2 startDirection, DamageDealt damageDealt)
         {
             return user => CircleBorder(vfxF, color, texture, user.Agent.transform.position, radius, sampleCount, duration, halfArcSize, startDirection, damageDealt)(user);
         }
@@ -556,7 +556,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 Name = "Square of Chaos",
                 Description = "Four flames, each representing one of the principial witches burnt for practicing the forbidden arts of chaos."
             }
-            .OnUse(ch => spells.Circle(vfxs.Fire, Color.yellow, vfxs.FireTexture, 2.5f, 4, 10f, 180f, ch.Agent.transform.forward.XZ(),
+            .OnUse(ch => spells.CircleBorder(vfxs.Fire, Color.yellow, vfxs.FireTexture, 2.5f, 4, 10f, 180f, ch.Agent.transform.forward.XZ(),
                 new DamageDealt(DamageType.Chaos, 10f + 3f * ch.Stats.Versatility))(ch));
 
         public ItemState CircleOfChaos()
@@ -565,7 +565,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 Name = "Circle of Chaos",
                 Description = ""
             }
-            .OnUse(ch => spells.Circle(vfxs.Fire, Color.yellow, vfxs.FireTexture, 2.5f, 24, 10f, 180f, ch.Agent.transform.forward.XZ(),
+            .OnUse(ch => spells.CircleBorder(vfxs.Fire, Color.yellow, vfxs.FireTexture, 2.5f, 24, 10f, 180f, ch.Agent.transform.forward.XZ(),
                 new DamageDealt(DamageType.Chaos, 10f + 3f * ch.Stats.Versatility))(ch));
 
         public ItemState Inferno()
@@ -574,7 +574,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 Name = "Inferno",
                 Description = "Let the chaos engulf your body."
             }
-            .OnUse(ch => spells.Circle(() => vfxs.MovingCloud().SetHalfWidth(1.2f), Color.yellow, vfxs.FireTexture, 0.5f, 3, 10f, 180f, ch.Agent.transform.forward.XZ(),
+            .OnUse(ch => spells.CircleBorder(() => vfxs.MovingCloud().SetHalfWidth(1.2f), Color.yellow, vfxs.FireTexture, 0.5f, 3, 10f, 180f, ch.Agent.transform.forward.XZ(),
                 new DamageDealt(DamageType.Chaos, 10f + 3f * ch.Stats.Versatility))(ch));
 
         public ItemState WaveOfChaos()
@@ -637,9 +637,26 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 Name = "Consecrated Ground",
                 Description = "."
             }
-            .OnUse(ch => spells.CircleArea(vfxs.Fire, Color.yellow, vfxs.FireTexture, new DamageDealt(DamageType.Chaos, 20f + 5f * ch.Stats.Versatility))(ch));
+            .OnUse(ch => spells.CircleArea(vfxs.Fire, Color.white, vfxs.FireTexture, new DamageDealt(DamageType.Chaos, 20f + 5f * ch.Stats.Versatility))(ch));
 
-        
+        public ItemState PillarsOfHeaven()
+            => new ItemState()
+            {
+                Name = "Pillars of Heaven",
+                Description = "Fragments of the original pillars that used to hold heaven safely in its proper place."
+            }
+            .OnUse(ch =>
+                spells.CircleBorder(
+                    vfxF: vfxs.Lightning,
+                    color: Color.white,
+                    texture: vfxs.WindTexture, 
+                    radius: 2.5f,
+                    sampleCount: 8,
+                    duration: 3f,
+                    halfArcSize: 50f,
+                    startDirection: ch.Agent.transform.forward.XZ(),
+                    damageDealt: new DamageDealt(DamageType.Divine, 10f + 3f * ch.Stats.Versatility))(ch));
+
     }
 
     /*
