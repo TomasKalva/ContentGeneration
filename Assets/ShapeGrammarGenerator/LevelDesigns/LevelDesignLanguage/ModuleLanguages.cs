@@ -578,10 +578,11 @@ namespace ShapeGrammar
             Env.Line(fe.ProductionList() , NodesQueries.All, 5, out var path);
 
             //PlO.ProgressFunctionPlacer(fe.CreateInteractiveObjectFactory(), new UniformIntDistr(1, 4)).Place(path);
-            var itemFactories = Enumerable.Range(0, 3).Select(_ => fe.CreateItemFactory()).ToList();
-            PlO.ProgressFunctionPlacer(
+            var itemFactories = Enumerable.Range(0, 3).Select<int, Func<InteractiveObjectState>>(_ => () => Lib.InteractiveObjects.Item(fe.CreateItemFactory()(_))).ToArray();
+            PlO.RandomPlacer(new UniformDistr(3, 4), itemFactories).Place(path);
+            /*PlO.ProgressFunctionPlacer(
                 progress => Lib.InteractiveObjects.Item(itemFactories.GetRandom()(progress)), 
-                new UniformIntDistr(1, 4)).Place(path);
+                new UniformIntDistr(1, 4)).Place(path);*/
             PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(path);
 
             path.LastArea().AddInteractiveObject(ProgressOfManifestation(fe.FactionManifestation));
