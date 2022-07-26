@@ -531,48 +531,6 @@ namespace ShapeGrammar
 
         public delegate void FactionEnvironmentConstructor(FactionEnvironment fe, int progress);
 
-        public IEnumerable<FactionEnvironmentConstructor> Branches()
-        {
-            yield return LinearWithKey;
-            yield return BranchesWithKey;
-            //yield return RandomBranches;
-            //yield return LinearBranch;
-        }
-
-        public void LinearWithKey(FactionEnvironment fe, int progress)
-        {
-            L.PatternLanguage.BranchWithKey(NodesQueries.LastCreated, 4, Gr.PrL.TestingProductions(), out var lockedArea, out var linearPath);
-
-            var itemPlacer = PlO.RandomAreasPlacer(new UniformDistr(3, 4), ItemsToPlace(fe, 3));
-            itemPlacer.Place(linearPath);
-            itemPlacer.Place(lockedArea);
-            PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(linearPath);
-
-            
-        }
-
-        public void BranchesWithKey(FactionEnvironment fe, int progress)
-        {
-            L.PatternLanguage.RandomBranchingWithKeys(4, Gr.PrL.TestingProductions(), out var lockedArea, out var branches);
-
-            var itemPlacer = PlO.RandomAreasPlacer(new UniformDistr(3, 4), ItemsToPlace(fe, 3));
-            itemPlacer.Place(branches);
-            itemPlacer.Place(lockedArea);
-            PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(branches);
-
-        }
-
-        public void RandomBranches(FactionEnvironment fe, int progress)
-        {
-            Env.BranchRandomly(fe.ProductionList(), 5, out var path);
-
-            //PlO.ProgressFunctionPlacer(fe.CreateInteractiveObjectFactory(), new UniformIntDistr(1, 4)).Place(path);
-            PlO.RandomAreasPlacer(new UniformDistr(3, 6), ItemsToPlace(fe, 3)).Place(path);
-            PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(path);
-
-            path.AreasList.GetRandom().AddInteractiveObject(ProgressOfManifestation(fe.FactionManifestation));
-        }
-
         /// <summary>
         /// Returns interactive object that allows player to continue the manifestation.
         /// </summary>
@@ -601,6 +559,49 @@ namespace ShapeGrammar
         public Func<InteractiveObjectState>[] ItemsToPlace(FactionEnvironment fe, int count)
         {
             return Enumerable.Range(0, 3).Select<int, Func<InteractiveObjectState>>(_ => () => Lib.InteractiveObjects.Item(fe.CreateItemFactory()(_))).ToArray();
+        }
+
+        public IEnumerable<FactionEnvironmentConstructor> Branches()
+        {
+            yield return LinearWithKey;
+            yield return BranchesWithKey;
+            yield return RandomBranches;
+            yield return LinearBranch;
+        }
+
+        public void LinearWithKey(FactionEnvironment fe, int progress)
+        {
+            L.PatternLanguage.BranchWithKey(NodesQueries.LastCreated, 4, Gr.PrL.TestingProductions(), out var lockedArea, out var linearPath);
+
+            var itemPlacer = PlO.RandomAreasPlacer(new UniformDistr(3, 4), ItemsToPlace(fe, 3));
+            itemPlacer.Place(linearPath);
+            itemPlacer.Place(lockedArea);
+            PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(linearPath);
+
+            lockedArea.Get.AddInteractiveObject(ProgressOfManifestation(fe.FactionManifestation));
+        }
+
+        public void BranchesWithKey(FactionEnvironment fe, int progress)
+        {
+            L.PatternLanguage.RandomBranchingWithKeys(4, Gr.PrL.TestingProductions(), out var lockedArea, out var branches);
+
+            var itemPlacer = PlO.RandomAreasPlacer(new UniformDistr(3, 4), ItemsToPlace(fe, 3));
+            itemPlacer.Place(branches);
+            itemPlacer.Place(lockedArea);
+            PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(branches);
+
+            lockedArea.Get.AddInteractiveObject(ProgressOfManifestation(fe.FactionManifestation));
+        }
+
+        public void RandomBranches(FactionEnvironment fe, int progress)
+        {
+            Env.BranchRandomly(fe.ProductionList(), 5, out var path);
+
+            //PlO.ProgressFunctionPlacer(fe.CreateInteractiveObjectFactory(), new UniformIntDistr(1, 4)).Place(path);
+            PlO.RandomAreasPlacer(new UniformDistr(3, 6), ItemsToPlace(fe, 3)).Place(path);
+            PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(path);
+
+            path.AreasList.GetRandom().AddInteractiveObject(ProgressOfManifestation(fe.FactionManifestation));
         }
 
         public void LinearBranch(FactionEnvironment fe, int progress)
