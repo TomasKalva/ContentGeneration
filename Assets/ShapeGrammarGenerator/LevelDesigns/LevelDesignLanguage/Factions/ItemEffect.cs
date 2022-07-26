@@ -206,7 +206,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             }
         }
 
-        public SelectorByArgsByUser GeometricSelector(Func<VFX> vfxF, float duration, SelectorInitializator selectorInitialization)
+        public SelectorByArgsByUser GeometricSelector(Func<VFX> vfxF, float duration, SelectorInitializator selectorInitialization, bool selfImmune = true)
         {
             return args => ch =>
             {
@@ -245,7 +245,10 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                     dt => ts.Update(dt)
                 );
 
-                selector.AddImmuneCharacter(ch);
+                if (selfImmune)
+                {
+                    selector.AddImmuneCharacter(ch);
+                }
                 return selector;
             };
         }
@@ -544,6 +547,18 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                     )
                 );
         }
+
+        public Effect Refreshment(Func<VFX> vfxF, Color color, FlipbookTexture texture, float healing)
+        {
+            return user =>
+                    user.World.CreateOccurence(
+                        sel.GeometricSelector(vfxF, 4f, sel.Initializator()
+                            .FrontOfCharacter(0f)
+                            .Scale(2f)
+                            , selfImmune: false)(new SelectorArgs(color, texture))(user),
+                        eff.Heal(healing)
+                        );
+        }
     }
 
     class SpellItems
@@ -763,6 +778,14 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             }
             .OnUse(ch => spells.Bolt(vfxs.Fireball, Color.yellow, vfxs.FireTexture, 1f, 9f,
                 new DamageDealt(DamageType.Chaos, 21f + 10f * ch.Stats.Versatility))(ch));
+
+        public ItemState Refreshment()
+            => new ItemState()
+            {
+                Name = "Refreshment",
+                Description = "."
+            }
+            .OnUse(ch => spells.Refreshment(vfxs.Fire, new Color(0f, 0.7612882f, 1f, 1f), vfxs.LightningTexture, 1f + 0.5f * ch.Stats.Versatility)(ch));
     }
 
     /*
