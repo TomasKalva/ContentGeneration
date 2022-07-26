@@ -210,7 +210,8 @@ namespace ContentGeneration.Assets.UI.Model
         /// </summary>
         public InventorySlot AddItem(IEnumerable<InventorySlot> slots, ItemState item)
         {
-            if (item.IsStackable)
+            return item.AddToInventory(this, slots);
+            /*if (item.IsStackable)
             {
                 var stackableSlot = SlotWithSameStackableItem(slots, item.Name);
                 if(stackableSlot != null)
@@ -229,7 +230,7 @@ namespace ContentGeneration.Assets.UI.Model
             else
             {
                 return null;
-            }
+            }*/
         }
 
         public InventorySlot EquipWeapon(SlotType slotType, ItemState weapon)

@@ -65,6 +65,9 @@ namespace ContentGeneration.Assets.UI.Model
 #endif
         }
 
+        /// <summary>
+        /// Returns true if the item was successfully added.
+        /// </summary>
         public override bool AddItem(ItemState item)
         {
             return PlayerInventory.AddItem(Inventory.AllSlots(), item) != null;

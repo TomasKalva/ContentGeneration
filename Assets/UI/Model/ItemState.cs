@@ -42,10 +42,9 @@ namespace ContentGeneration.Assets.UI.Model
             set { _description = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
-        bool IsConsumable { get; set; }
         public ItemState SetConsumable()
         {
-            IsConsumable = true;
+            Usage = new ConsumableItemUsage(this);
             return this;
         }
 
@@ -65,10 +64,13 @@ namespace ContentGeneration.Assets.UI.Model
 
         public ItemState SetStackable(int stacksCount)
         {
-            StacksCount = stacksCount;
-            IsStackable = true;
+            Usage = new StackableItemUsage(this, stacksCount);
+            /*StacksCount = stacksCount;
+            IsStackable = true;*/
             return this;
         }
+
+        ItemUsage Usage { get; set; }
 
 
         public ItemState()
@@ -78,16 +80,21 @@ namespace ContentGeneration.Assets.UI.Model
             OnUseDelegate = _ => { };
             OnDropDelegate = _ => { };
             OnUpdateDelegate = _ => { };
+            Usage = new ItemUsage();
         }
 
         public delegate void CharacterAction(CharacterState state);
 
         public CharacterAction OnUseDelegate { get; protected set; }
-        public ItemState OnUse(CharacterAction characterAction)
+        public virtual ItemState OnUse(CharacterAction characterAction)
         {
             OnUseDelegate += character =>
             {
-                characterAction(character);
+                if(Usage.TryUse(character.Inventory, this))
+                {
+                    characterAction(character);
+                }
+                /*characterAction(character);
                 if (IsConsumable)
                 {
                     bool remove = IsStackable ? --StacksCount <= 0 : true;
@@ -96,7 +103,7 @@ namespace ContentGeneration.Assets.UI.Model
                     {
                         character.Inventory.RemoveItem(this);
                     }
-                }
+                }*/
             };
             return this;
         }
@@ -116,5 +123,99 @@ namespace ContentGeneration.Assets.UI.Model
             return this;
             //Debug.Log($"Updating {Name}");
         }
+
+        public InventorySlot AddToInventory(Inventory inventory, IEnumerable<InventorySlot> slots)
+        {
+            return Usage.AddToInventory(inventory, slots, this);
+        }
+
+        public virtual void OnRest(CharacterState characterState) { }
+
+        /// <summary>
+        /// Controls movement through the inventory.
+        /// </summary>
+        class ItemUsage
+        {
+            public virtual InventorySlot AddToInventory(Inventory inventory, IEnumerable<InventorySlot> slots, ItemState itemState)
+            {
+                var slot = inventory.AvailableSlot(slots);
+                if (slot != null)
+                {
+                    slot.Item = itemState;
+                    return slot;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            /// <summary>
+            /// Returns true if can be used.
+            /// </summary>
+            public virtual bool TryUse(Inventory inventory, ItemState itemState) => true;
+            public virtual void OnRest(ItemState itemState) { }
+        }
+
+        class ConsumableItemUsage : ItemUsage
+        {
+            public ConsumableItemUsage(ItemState itemState)
+            {
+                itemState.IsStackable = false;
+            }
+
+            public override InventorySlot AddToInventory(Inventory inventory, IEnumerable<InventorySlot> slots, ItemState itemState)
+            {
+                return base.AddToInventory(inventory, slots, itemState);
+            }
+
+            public override void OnRest(ItemState itemState)
+            {
+                // Does nothing
+            }
+
+            public override bool TryUse(Inventory inventory, ItemState itemState)
+            {
+                inventory.RemoveItem(itemState);
+                return true;
+            }
+        }
+
+        class StackableItemUsage : ItemUsage
+        {
+            public StackableItemUsage(ItemState itemState, int stacksCount)
+            {
+                itemState.IsStackable = true;
+                itemState.StacksCount = stacksCount;
+            }
+
+            public override InventorySlot AddToInventory(Inventory inventory, IEnumerable<InventorySlot> slots, ItemState itemState)
+            {
+                var stackableSlot = inventory.SlotWithSameStackableItem(slots, itemState.Name);
+                if (stackableSlot != null)
+                {
+                    stackableSlot.Item.StacksCount = itemState.StacksCount;
+                    return stackableSlot;
+                }
+
+                return base.AddToInventory(inventory, slots, itemState);
+            }
+
+            public override void OnRest(ItemState itemState)
+            {
+                // Does nothing
+            }
+
+            public override bool TryUse(Inventory inventory, ItemState itemState)
+            {
+                itemState.StacksCount--;
+                if (itemState.StacksCount <= 0)
+                {
+                    inventory.RemoveItem(itemState);
+                }
+                return true;
+            }
+        }
     }
+
 }
