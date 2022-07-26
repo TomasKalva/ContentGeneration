@@ -75,7 +75,7 @@ namespace ContentGeneration.Assets.UI.Model
 
         public override void Die()
         {
-            GameObject.Destroy(Agent.gameObject, 0f);
+            GameObject.Destroy(Agent.gameObject);
             OnDeath();
             World.OnPlayerDeath();
             //GameViewModel.ViewModel.Enemies.Remove(CharacterState);

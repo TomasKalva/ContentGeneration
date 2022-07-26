@@ -307,7 +307,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             var stats = new CharacterStats()
             {
                 Will = 4 * manifestationProgress,
-                Strength = 5 * manifestationProgress,
+                Strength = 5 + 5 * manifestationProgress,
                 Versatility = 5 * manifestationProgress
             };
 

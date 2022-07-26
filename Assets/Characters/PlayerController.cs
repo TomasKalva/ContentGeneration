@@ -232,16 +232,16 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
 	{
 		// Death and respawning
-        if (myAgent.CharacterState.Dead && !respawned)
-		{
-			PlayerCharacterState.World.OnPlayerDeath();
+        //if (myAgent.CharacterState.Dead && !respawned)
+		//{
+			//PlayerCharacterState.World.OnPlayerDeath();
 			//respawned = true;
 			/*if (PlayerCharacterState.SpawnPoint && !respawned)
 			{
 				PlayerCharacterState.SpawnPoint.SpawnPlayer();
 				respawned = true;
 			}*/
-		}
+		//}
 
 		//UpdateCurrentModule();
 
