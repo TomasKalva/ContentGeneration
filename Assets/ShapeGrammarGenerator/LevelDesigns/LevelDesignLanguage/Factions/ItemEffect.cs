@@ -127,7 +127,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             );
         }
 
-        public SelectorByUser SelfSelector() =>
+        public ByUser<Selector> SelfSelector() =>
             ch => new Selector(
                 new ConstDistr(1f),
                 () =>
@@ -559,6 +559,11 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                         eff.Heal(healing)
                         );
         }
+
+        public Effect Replenishment(float healing)
+        {
+            return user => eff.Heal(healing)(user);
+        }
     }
 
     class SpellItems
@@ -786,6 +791,14 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 Description = "."
             }
             .OnUse(ch => spells.Refreshment(vfxs.Fire, new Color(0f, 0.7612882f, 1f, 1f), vfxs.LightningTexture, 1f + 0.5f * ch.Stats.Versatility)(ch));
+
+        public ItemState Replenishment()
+            => new ItemState()
+            {
+                Name = "Replenishment",
+                Description = "."
+            }
+            .OnUse(ch => spells.Replenishment(5f + 1.5f * ch.Stats.Versatility)(ch));
     }
 
     /*
@@ -832,7 +845,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             /// </summary>
             public bool Update(float deltaT)
             {
-                var affectedCharacters = selector.Select(deltaT);
+                var affectedCharacters = selector.Select(deltaT).ToList();
                 affectedCharacters.ForEach(character =>
                     effects.ForEach(effect => effect(character)));
 

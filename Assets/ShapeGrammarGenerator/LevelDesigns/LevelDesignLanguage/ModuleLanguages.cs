@@ -316,6 +316,7 @@ namespace ShapeGrammar
                 spellItems.SquareOfChaos,
                 spellItems.Inferno,
                 spellItems.Refreshment,
+                spellItems.Replenishment,
             };
 
 
