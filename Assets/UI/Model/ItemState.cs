@@ -120,9 +120,24 @@ namespace ContentGeneration.Assets.UI.Model
             //Debug.Log($"Updating {Name}");
         }
 
-        public InventorySlot AddToInventory(Inventory inventory, IEnumerable<InventorySlot> slots)
+        public InventorySlot AddToInventory(Inventory inventory)
         {
-            return Usage.AddToInventory(inventory, slots, this);
+            return Usage.AddToInventory(inventory, this);
+        }
+
+        public virtual InventorySlot EquipToFree(Inventory inventory, InventorySlot currentSlot)
+        {
+            return Usage.EquipToFree(inventory, currentSlot);
+        }
+
+        public virtual InventorySlot EquipToPosition(Inventory inventory, InventorySlot currentSlot, int slotId)
+        {
+            return Usage.EquipToPosition(inventory, currentSlot, slotId);
+        }
+
+        public virtual InventorySlot Unequip(Inventory inventory, InventorySlot currentSlot)
+        {
+            return Usage.Unequip(inventory, currentSlot);
         }
 
         public void RemoveFromInventory(Inventory inventory, int stacksToRemove)
@@ -140,18 +155,44 @@ namespace ContentGeneration.Assets.UI.Model
         /// </summary>
         class ItemUsage
         {
-            public virtual InventorySlot AddToInventory(Inventory inventory, IEnumerable<InventorySlot> slots, ItemState itemState)
+            /// <summary>
+            /// Puts the item to the inventory slot if the slot is not null.
+            /// Returns slot.
+            /// </summary>
+            protected InventorySlot PutToSlot(InventorySlot slot, ItemState itemState)
             {
-                var slot = inventory.AvailableSlot(slots);
-                if (slot != null)
-                {
-                    slot.Item = itemState;
-                    return slot;
-                }
-                else
-                {
+                if (slot == null)
                     return null;
-                }
+
+                slot.Item = itemState;
+                return slot;
+            }
+
+            public virtual InventorySlot AddToInventory(Inventory inventory, ItemState itemState)
+            {
+                var slot = inventory.AvailableSlot(inventory.PassiveSlots.Concat(inventory.ActiveSlots));
+                return PutToSlot(slot, itemState);
+            }
+
+            /// <summary>
+            /// Equips the item to a free slot corresponding to its usage.
+            /// </summary>
+            public virtual InventorySlot EquipToFree(Inventory inventory, InventorySlot currentSlot)
+            {
+                return inventory.MoveFromSlotToSlots(currentSlot, inventory.ActiveSlots);
+            }
+
+            /// <summary>
+            /// Equips the item to slot correspoding to its usage and chosen position.
+            /// </summary>
+            public virtual InventorySlot EquipToPosition(Inventory inventory, InventorySlot currentSlot, int slotId)
+            {
+                return null;
+            }
+
+            public virtual InventorySlot Unequip(Inventory inventory, InventorySlot currentSlot)
+            {
+                return inventory.MoveFromSlotToSlots(currentSlot, inventory.PassiveSlots);
             }
 
             public virtual void RemoveFromInventory(Inventory inventory, ItemState itemState, int stacksToRemove)
@@ -171,11 +212,6 @@ namespace ContentGeneration.Assets.UI.Model
             public ConsumableItemUsage(ItemState itemState)
             {
                 itemState.IsStackable = false;
-            }
-
-            public override InventorySlot AddToInventory(Inventory inventory, IEnumerable<InventorySlot> slots, ItemState itemState)
-            {
-                return base.AddToInventory(inventory, slots, itemState);
             }
 
             public override void OnRest(ItemState itemState)
@@ -201,16 +237,16 @@ namespace ContentGeneration.Assets.UI.Model
                 CanBeUsed = canBeUsed;
             }
 
-            public override InventorySlot AddToInventory(Inventory inventory, IEnumerable<InventorySlot> slots, ItemState itemState)
+            public override InventorySlot AddToInventory(Inventory inventory, ItemState itemState)
             {
-                var stackableSlot = inventory.SlotWithSameStackableItem(slots, itemState.Name);
+                var stackableSlot = inventory.SlotWithSameStackableItem(inventory.AllSlots(), itemState.Name);
                 if (stackableSlot != null)
                 {
                     stackableSlot.Item.StacksCount += itemState.StacksCount;
                     return stackableSlot;
                 }
 
-                return base.AddToInventory(inventory, slots, itemState);
+                return base.AddToInventory(inventory, itemState);
             }
 
             public override void RemoveFromInventory(Inventory inventory, ItemState itemState, int stacksToRemove)
@@ -252,9 +288,9 @@ namespace ContentGeneration.Assets.UI.Model
                 MaxStacks = stacksCount;
             }
 
-            public override InventorySlot AddToInventory(Inventory inventory, IEnumerable<InventorySlot> slots, ItemState itemState)
+            public override InventorySlot AddToInventory(Inventory inventory, ItemState itemState)
             {
-                var stackableSlot = inventory.SlotWithSameStackableItem(slots, itemState.Name);
+                var stackableSlot = inventory.SlotWithSameStackableItem(inventory.AllSlots(), itemState.Name);
                 if (stackableSlot != null)
                 {
                     // Access Usage of other item to set its MaxStacks
@@ -268,7 +304,7 @@ namespace ContentGeneration.Assets.UI.Model
                     }
                 }
 
-                return base.AddToInventory(inventory, slots, itemState);
+                return base.AddToInventory(inventory, itemState);
             }
 
             public override void RemoveFromInventory(Inventory inventory, ItemState itemState, int stacksToRemove)
@@ -288,6 +324,38 @@ namespace ContentGeneration.Assets.UI.Model
                 {
                     return false;
                 }
+                return true;
+            }
+        }
+
+        class WearableItemUsage : ItemUsage
+        {
+            SlotType SlotType { get; }
+
+            public WearableItemUsage(ItemState itemState, SlotType slotType)
+            {
+                itemState.IsStackable = false;
+                SlotType = slotType;
+            }
+
+            public override InventorySlot EquipToFree(Inventory inventory, InventorySlot currentSlot)
+            {
+                return inventory.MoveFromSlotToSlots(currentSlot, inventory.WearableSlots.Where(slot => slot.SlotType == SlotType));
+            }
+
+            public override InventorySlot EquipToPosition(Inventory inventory, InventorySlot currentSlot, int slotId)
+            {
+                return inventory.MoveFromSlotToSlots(currentSlot, inventory.WearableSlots.Where(slot => slot.SlotType == SlotType && slot.SlotId == slotId));
+            }
+
+            public override void OnRest(ItemState itemState)
+            {
+                // Does nothing
+            }
+
+            public override bool TryUse(Inventory inventory, ItemState itemState)
+            {
+                inventory.RemoveItem(itemState);
                 return true;
             }
         }

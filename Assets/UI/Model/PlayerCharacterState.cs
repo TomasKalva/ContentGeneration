@@ -70,7 +70,7 @@ namespace ContentGeneration.Assets.UI.Model
         /// </summary>
         public override bool AddItem(ItemState item)
         {
-            return PlayerInventory.AddItem(Inventory.AllSlots(), item) != null;
+            return PlayerInventory.AddItem(item) != null;
         }
 
 #if NOESIS

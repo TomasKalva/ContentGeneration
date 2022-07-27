@@ -62,9 +62,9 @@ namespace ShapeGrammar
             };
             playerState.Stats = stats;
 
-            playerState.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanKnife());
-            playerState.SetItemToSlot(SlotType.RightWeapon, libraries.Items.Katana());
-            playerState.SetItemToSlot(SlotType.Active, libraries.Items.FreeWill());
+            playerState.Inventory.LeftWeapon.Item = libraries.Items.MayanKnife();
+            playerState.Inventory.RightWeapon.Item = libraries.Items.Katana();
+            playerState.AddAndEquipItem(libraries.Items.FreeWill());
 
             GameViewModel.ViewModel.PlayerState = playerState;
         }

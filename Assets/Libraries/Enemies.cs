@@ -65,9 +65,9 @@ public class Enemies : ScriptableObject
         human.Poise = 10f;
 
         // inventory
-        human.SetItemToSlot(SlotType.Active, new FreeWill());
-        human.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanKnife());
-        human.SetItemToSlot(SlotType.RightWeapon, libraries.Items.Scythe());
+        human.AddAndEquipItem(new FreeWill());
+        human.Inventory.LeftWeapon.Item = libraries.Items.MayanKnife();
+        human.Inventory.RightWeapon.Item = libraries.Items.Scythe();
 
         // behaviors
         var behaviors = human.Behaviors;
@@ -87,9 +87,9 @@ public class Enemies : ScriptableObject
         sculpture.Poise = 10f;
 
         // inventory
-        sculpture.SetItemToSlot(SlotType.Active, new FreeWill());
-        sculpture.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.SculptureClub());
-        sculpture.SetItemToSlot(SlotType.RightWeapon, libraries.Items.SculptureClub());
+        sculpture.AddAndEquipItem( new FreeWill());
+        sculpture.Inventory.LeftWeapon.Item = libraries.Items.SculptureClub();
+        sculpture.Inventory.RightWeapon.Item = libraries.Items.SculptureClub();
 
         // behaviors
         var behaviors = sculpture.Behaviors;
@@ -110,9 +110,9 @@ public class Enemies : ScriptableObject
         mayan.Poise = 10f;
 
         // inventory
-        mayan.SetItemToSlot(SlotType.Active, new FreeWill());
-        mayan.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanSword());
-        mayan.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanKnife());
+        mayan.AddAndEquipItem(new FreeWill());
+        mayan.Inventory.LeftWeapon.Item = libraries.Items.MayanSword();
+        mayan.Inventory.RightWeapon.Item = libraries.Items.MayanKnife();
 
         // behaviors
         var behaviors = mayan.Behaviors;
@@ -136,9 +136,9 @@ public class Enemies : ScriptableObject
         mayan.Poise = 10f;
 
         // inventory
-        mayan.SetItemToSlot(SlotType.Active, new FreeWill());
-        mayan.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanSword());
-        mayan.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanKnife());
+        mayan.AddAndEquipItem(new FreeWill());
+        mayan.Inventory.LeftWeapon.Item = libraries.Items.MayanSword();
+        mayan.Inventory.RightWeapon.Item = libraries.Items.MayanKnife();
 
         // behaviors
         var behaviors = mayan.Behaviors;
@@ -165,9 +165,9 @@ public class Enemies : ScriptableObject
         skinnyWoman.Poise = 10f;
 
         // inventory
-        skinnyWoman.SetItemToSlot(SlotType.Active, new FreeWill());
-        skinnyWoman.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanSword());
-        skinnyWoman.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanSword());
+        skinnyWoman.AddAndEquipItem(new FreeWill());
+        skinnyWoman.Inventory.LeftWeapon.Item = libraries.Items.MayanSword();
+        skinnyWoman.Inventory.RightWeapon.Item = libraries.Items.MayanSword();
 
         // behaviors
         var behaviors = skinnyWoman.Behaviors;
@@ -188,9 +188,9 @@ public class Enemies : ScriptableObject
         dragonMan.Poise = 10f;
 
         // inventory
-        dragonMan.SetItemToSlot(SlotType.Active, new FreeWill());
-        dragonMan.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanSword());
-        dragonMan.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanSword());
+        dragonMan.AddAndEquipItem(new FreeWill());
+        dragonMan.Inventory.LeftWeapon.Item = libraries.Items.MayanSword();
+        dragonMan.Inventory.RightWeapon.Item = libraries.Items.MayanSword();
 
         // behaviors
         var behaviors = dragonMan.Behaviors;
@@ -211,8 +211,8 @@ public class Enemies : ScriptableObject
         dog.Poise = 10f;
 
         // inventory
-        dog.SetItemToSlot(SlotType.Active, new FreeWill());
-        dog.SetItemToSlot(SlotType.LeftWeapon, libraries.Items.MayanSword());
+        dog.AddAndEquipItem(new FreeWill());
+        dog.Inventory.LeftWeapon.Item = libraries.Items.MayanSword();
         //character.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanSword());
 
         // behaviors

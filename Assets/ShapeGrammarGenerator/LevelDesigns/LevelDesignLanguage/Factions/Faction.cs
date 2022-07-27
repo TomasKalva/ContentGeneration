@@ -140,8 +140,8 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 var leftWeaponF = Concepts.Weapons.GetRandom();
                 var rightWeaponF = Concepts.Weapons.GetRandom();
 
-                character.SetItemToSlot(SlotType.LeftWeapon, leftWeaponF());
-                character.SetItemToSlot(SlotType.RightWeapon, rightWeaponF());
+                character.Inventory.LeftWeapon.Item = leftWeaponF();
+                character.Inventory.RightWeapon.Item = rightWeaponF();
 
                 return character;
             };

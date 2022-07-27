@@ -177,7 +177,8 @@ namespace ContentGeneration.Assets.UI.Model
 #if NOESIS
             Debug.Log($"Adding item: {item}");
 #endif
-            return SetItemToSlot(SlotType.Passive, item);
+            return item.AddToInventory(Inventory) != null;
+            //return SetItemToSlot(SlotType.Passive, item);
         }
 
         public bool Pay(int spiritCost)
@@ -234,6 +235,34 @@ namespace ContentGeneration.Assets.UI.Model
         }
 #endif
 
+        public InventorySlot AddAndEquipItem(ItemState item)
+        {
+            var firstSlot = item.AddToInventory(Inventory);
+            if (firstSlot == null)
+                return null;
+
+            return item.EquipToFree(Inventory, firstSlot);
+        }
+
+        public void EquipItemToFree(InventorySlot itemSlot)
+        {
+            itemSlot.Item?.EquipToFree(Inventory, itemSlot);
+            if (Agent != null)
+            {
+                Agent.SynchronizeWithState(this);
+            }
+        }
+
+        public void EquipItemToPosition(InventorySlot itemSlot, int slotId)
+        {
+            itemSlot.Item?.EquipToPosition(Inventory, itemSlot, slotId);
+            if (Agent != null)
+            {
+                Agent.SynchronizeWithState(this);
+            }
+        }
+
+        /*
         public bool SetItemToSlot(SlotType slotType, ItemState item)
         {
             var slot = slotType.IsWeapon() ?
@@ -246,7 +275,7 @@ namespace ContentGeneration.Assets.UI.Model
             }
 #endif
             return slot != null;
-        }
+        }*/
 
         public void Rest()
         {
