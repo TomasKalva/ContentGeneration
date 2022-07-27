@@ -46,22 +46,28 @@ public class Items : ScriptableObject
     }
 
     public WeaponItem SculptureClub() => new WeaponItem("Sculpture Club", "Made of idk stone", weapons.SculptureClub(), 
-        BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 5f));
+        BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 5f))
+        .SetWearable(SlotType.Weapon) as WeaponItem;
 
     public WeaponItem MayanKnife() => new WeaponItem("Mayan Knife", "Every Mayan has one", weapons.MayanKnife(),
-        BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 1f));
+        BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 1f))
+        .SetWearable(SlotType.Weapon) as WeaponItem;
 
     public WeaponItem MayanSword() => new WeaponItem("Mayan Sword", "Like a knife but bigger", weapons.MayanSword(),
-        BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 1f));
+        BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 1f))
+        .SetWearable(SlotType.Weapon) as WeaponItem;
 
     public WeaponItem Scythe() => new WeaponItem("Scythe", "Harvesting tool", weapons.Scythe(),
-        BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 1f));
+        BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 1f))
+        .SetWearable(SlotType.Weapon) as WeaponItem;
 
     public WeaponItem Mace() => new WeaponItem("Mace", "Mace", weapons.Mace(),
-        BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 1f));
+        BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 1f))
+        .SetWearable(SlotType.Weapon) as WeaponItem;
 
     public WeaponItem Katana() => new WeaponItem("Katana", "Katana", weapons.Katana(),
-        BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 1f));
+        BaseWeaponEffects(ch => 10 + 2 * ch.Stats.Strength, ch => 1f))
+        .SetWearable(SlotType.Weapon) as WeaponItem;
 
     public IEnumerable<Func<WeaponItem>> AllWeapons() => new List<Func<WeaponItem>>()
     {

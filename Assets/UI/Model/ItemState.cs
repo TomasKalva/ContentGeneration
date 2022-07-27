@@ -78,6 +78,12 @@ namespace ContentGeneration.Assets.UI.Model
             return this;
         }
 
+        public ItemState SetWearable(SlotType slotType)
+        {
+            Usage = new WearableItemUsage(this, slotType);
+            return this;
+        }
+
         public ItemState()
         {
             Name = "";
@@ -345,7 +351,8 @@ namespace ContentGeneration.Assets.UI.Model
 
             public override InventorySlot EquipToPosition(Inventory inventory, InventorySlot currentSlot, int slotId)
             {
-                return inventory.MoveFromSlotToSlots(currentSlot, inventory.WearableSlots.Where(slot => slot.SlotType == SlotType && slot.SlotId == slotId));
+                var newSlot = inventory.WearableSlots.First(slot => slot.SlotType == SlotType && slot.SlotId == slotId);
+                return inventory.ExchangeItems(currentSlot, newSlot);
             }
 
             public override void OnRest(ItemState itemState)
@@ -355,7 +362,6 @@ namespace ContentGeneration.Assets.UI.Model
 
             public override bool TryUse(Inventory inventory, ItemState itemState)
             {
-                inventory.RemoveItem(itemState);
                 return true;
             }
         }

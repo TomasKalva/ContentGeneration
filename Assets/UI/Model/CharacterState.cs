@@ -262,6 +262,13 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
+        public void UnequipItem(InventorySlot itemSlot)
+        {
+            itemSlot.Item?.Unequip(Inventory, itemSlot);
+            /*var item = itemSlot.Item;
+            MoveFromSlotToSlots(itemSlot, PassiveSlots);*/
+        }
+
         /*
         public bool SetItemToSlot(SlotType slotType, ItemState item)
         {

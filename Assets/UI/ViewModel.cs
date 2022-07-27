@@ -126,7 +126,17 @@ namespace ContentGeneration.Assets.UI
 
             if (Input.GetButtonDown("Noesis_Accept"))
             {
-                PlayerState.PlayerInventory.HandleClick();
+                PlayerState.ToggleEquipCursorSlot();
+            }
+            else if (Input.GetButtonDown("Noesis_Equip_Left"))
+            {
+                Debug.Log("Equipping left");
+                PlayerState.ToggleEquipCursorSlot(0);
+            }
+            else if (Input.GetButtonDown("Noesis_Equip_Right"))
+            {
+                Debug.Log("Equipping right");
+                PlayerState.ToggleEquipCursorSlot(1);
             }
 
             if (Input.GetButtonDown("Noesis_Menu"))

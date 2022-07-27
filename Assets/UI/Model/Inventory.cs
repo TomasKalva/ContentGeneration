@@ -243,18 +243,11 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }*/
 
-        public void EquipItem(InventorySlot itemSlot)
+        public void EquipItemToFree(InventorySlot itemSlot)
         {
             itemSlot.Item?.EquipToFree(this, itemSlot);
             /*var item = itemSlot.Item;
             MoveFromSlotToSlots(itemSlot, ActiveSlots);*/
-        }
-
-        public void UnequipItem(InventorySlot itemSlot)
-        {
-            itemSlot.Item?.Unequip(this, itemSlot);
-            /*var item = itemSlot.Item;
-            MoveFromSlotToSlots(itemSlot, PassiveSlots);*/
         }
 
 #if NOESIS
@@ -290,9 +283,15 @@ namespace ContentGeneration.Assets.UI.Model
             if (from.Item == null || newSlot == null)
                 return null;
 
-            newSlot.Item = from.Item;
-            from.Item = null;
-            return newSlot;
+            return ExchangeItems(from, newSlot);
+        }
+
+        public InventorySlot ExchangeItems(InventorySlot from, InventorySlot to)
+        {
+            var item = from.Item;
+            from.Item = to.Item;
+            to.Item = item;
+            return to;
         }
 
         public void Update()
@@ -416,20 +415,6 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
-        public void HandleClick()
-        {
-            if(!Active)
-                return;
-
-            if(CursorSlot.SlotType == SlotType.Passive)
-            {
-                EquipItem(CursorSlot);
-            }
-            else
-            {
-                UnequipItem(CursorSlot);
-            }
-        }
 
         public override void UseItem()
         {

@@ -82,9 +82,6 @@ public class PlayerController : MonoBehaviour
 
 		cameraInputs = new Queue<Vector2>();
 
-		myAgent.CharacterState.Inventory.RightWeapon.Item = libraries.Items.MayanKnife();
-		myAgent.CharacterState.Inventory.RightWeapon.Item = libraries.Items.Katana();
-		//myAgent.CharacterState.SetItemToSlot(SlotType.Active, libraries.Items.FreeWill());
 	}
 
     void Update()

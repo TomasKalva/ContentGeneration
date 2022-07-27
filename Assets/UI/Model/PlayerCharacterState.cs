@@ -83,5 +83,35 @@ namespace ContentGeneration.Assets.UI.Model
             //Destroy(gameObject, 1f);
         }
 #endif
+
+        public void ToggleEquipCursorSlot()
+        {
+            if (!PlayerInventory.Active)
+                return;
+
+            var cursorSlot = PlayerInventory.CursorSlot;
+            if (cursorSlot.SlotType == SlotType.Passive)
+            {
+                EquipItemToFree(cursorSlot);
+                //CursorSlot.Item?.EquipToFree(this, CursorSlot);
+            }
+            else
+            {
+                UnequipItem(cursorSlot);
+            }
+        }
+
+        public void ToggleEquipCursorSlot(int slotId)
+        {
+            if (!PlayerInventory.Active)
+                return;
+
+            var cursorSlot = PlayerInventory.CursorSlot;
+            if (cursorSlot.SlotType == SlotType.Passive)
+            {
+                EquipItemToPosition(cursorSlot, slotId);
+                //CursorSlot.Item?.EquipToPosition(this, CursorSlot, slotId);
+            }
+        }
     }
 }
