@@ -276,7 +276,7 @@ namespace ContentGeneration.Assets.UI.Model
         public void Rest()
         {
 #if NOESIS
-            Inventory.AllSlots().ForEach(slot => slot.Item?.OnRest());
+            Inventory.AllSlots.ForEach(slot => slot.Item?.OnRest());
 #endif
         }
 

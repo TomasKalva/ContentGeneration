@@ -188,6 +188,8 @@ namespace ContentGeneration.Assets.UI.Model
                 new InventorySlot(SlotType.Wrist, 1),
                 new InventorySlot(SlotType.Heart, 0),
             };
+
+            AllSlots = WearableSlots.Concat(ActiveSlots).Concat(PassiveSlots).ToList();
         }
 
         public InventorySlot AvailableSlot(IEnumerable<InventorySlot> slots)
@@ -200,15 +202,11 @@ namespace ContentGeneration.Assets.UI.Model
             return slots.Where(slot => slot.Item?.Name == itemName).FirstOrDefault();
         }
 
-        public IEnumerable<InventorySlot> AllSlots()
-        {
-            return PassiveSlots.Concat(ActiveSlots).Concat(WearableSlots);
-            //.Concat(new InventorySlot[2] { LeftWeaponSlot, RightWeaponSlot });
-        }
+        public List<InventorySlot> AllSlots { get; }
 
         public IEnumerable<InventorySlot> GetSlots(SlotType slotType)
         {
-            return AllSlots().Where(slot => slot.SlotType == slotType);
+            return AllSlots.Where(slot => slot.SlotType == slotType);
         }
 
         /// <summary>
@@ -234,7 +232,7 @@ namespace ContentGeneration.Assets.UI.Model
 
         public void RemoveItem(ItemState item)
         {
-            var itemSlot = AllSlots().Where(slot => slot.Item == item);
+            var itemSlot = AllSlots.Where(slot => slot.Item == item);
             if (itemSlot.Any())
             {
                 itemSlot.First().Item = null;
@@ -278,18 +276,8 @@ namespace ContentGeneration.Assets.UI.Model
         /// </summary>
         public bool HasItems(string name, int count, out ItemState foundItems)
         {
-            foundItems = AllSlots().SelectNN(slot => slot.Item).FirstOrDefault(item => item.Name == name);
+            foundItems = AllSlots.SelectNN(slot => slot.Item).FirstOrDefault(item => item.Name == name);
             return foundItems != null && foundItems.StacksCount >= count;
-            /*if (foundItems != null && foundItems.StacksCount >= count)
-            {
-                //foundItems = foundItems.Take(count);
-                return true;
-            }
-            else
-            {
-                foundItems = null;
-                return false;
-            }*/
         }
         
 #endif
@@ -349,40 +337,17 @@ namespace ContentGeneration.Assets.UI.Model
         /// <summary>
         /// Moves SelectedSlot across active and passive items.
         /// </summary>
-        public void MoveCursor(int x, int y)
+        public void MoveCursor(int x, int _)
         {
+            // todo: remove the y argument
             if(!Active)
                 return;
 
-            if (CursorSlot.SlotType == SlotType.Passive)
-            {
-                int newId = CursorSlot.SlotId + x + y * ColumnsCount;
-                if(newId >= 0)
-                {
-                    newId = Mathf.Clamp(newId, 0, PassiveSlots.Count - 1);
-                    CursorSlot = PassiveSlots[newId];
-                }
-                else
-                {
-                    newId = Mathf.Clamp(newId + ColumnsCount, 0, ActiveSlots.Count - 1);
-                    CursorSlot = ActiveSlots[newId];
-                }
-            }
-            else
-            {
-
-                int newId = CursorSlot.SlotId + x + y * ColumnsCount;
-                if (newId < ColumnsCount)
-                {
-                    newId = Mathf.Clamp(newId, 0, ActiveSlots.Count - 1);
-                    CursorSlot = ActiveSlots[newId];
-                }
-                else
-                {
-                    newId = Mathf.Clamp(newId - ColumnsCount, 0, PassiveSlots.Count - 1);
-                    CursorSlot = PassiveSlots[newId];
-                }
-            }
+            var allSlots = AllSlots;
+            var cursorPosition = allSlots.TakeWhile(x => x != CursorSlot).Count();
+            var max = allSlots.Count();
+            var newCursorPos = Mathf.Clamp(cursorPosition + x, 0, max - 1);
+            CursorSlot = allSlots.ElementAt(newCursorPos);
         }
 
 

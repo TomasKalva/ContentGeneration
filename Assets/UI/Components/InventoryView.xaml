@@ -101,7 +101,7 @@
                     </StackPanel>
                 </Border>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="5" HorizontalAlignment="Center">
+            <StackPanel>
                 <StackPanel.Resources>
                     <Style TargetType="{x:Type TextBlock}">
                         <Setter Property="FontWeight" Value="Bold"/>
@@ -109,9 +109,15 @@
                         <Setter Property="Margin" Value="15,0"/>
                     </Style>
                 </StackPanel.Resources>
-                <TextBlock>E: Equip active item</TextBlock>
-                <TextBlock>1: Equip wearable / left weapon</TextBlock>
-                <TextBlock>2: Equip right weapon</TextBlock>
+                <StackPanel Orientation="Horizontal" Margin="5" HorizontalAlignment="Center">
+                    <TextBlock>E: Equip active item</TextBlock>
+                    <TextBlock>1: Equip wearable / left weapon</TextBlock>
+                    <TextBlock>2: Equip right weapon</TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5" HorizontalAlignment="Center">
+                    <TextBlock>Z: Move left</TextBlock>
+                    <TextBlock>X: Move right</TextBlock>
+                </StackPanel>
             </StackPanel>
         </StackPanel>
     </Border>

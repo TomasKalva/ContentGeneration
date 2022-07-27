@@ -245,7 +245,7 @@ namespace ContentGeneration.Assets.UI.Model
 
             public override InventorySlot AddToInventory(Inventory inventory, ItemState itemState)
             {
-                var stackableSlot = inventory.SlotWithSameStackableItem(inventory.AllSlots(), itemState.Name);
+                var stackableSlot = inventory.SlotWithSameStackableItem(inventory.AllSlots, itemState.Name);
                 if (stackableSlot != null)
                 {
                     stackableSlot.Item.StacksCount += itemState.StacksCount;
@@ -296,7 +296,7 @@ namespace ContentGeneration.Assets.UI.Model
 
             public override InventorySlot AddToInventory(Inventory inventory, ItemState itemState)
             {
-                var stackableSlot = inventory.SlotWithSameStackableItem(inventory.AllSlots(), itemState.Name);
+                var stackableSlot = inventory.SlotWithSameStackableItem(inventory.AllSlots, itemState.Name);
                 if (stackableSlot != null)
                 {
                     // Access Usage of other item to set its MaxStacks
