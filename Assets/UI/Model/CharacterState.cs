@@ -235,15 +235,7 @@ namespace ContentGeneration.Assets.UI.Model
         }
 #endif
 
-        public InventorySlot AddAndEquipItem(ItemState item)
-        {
-            var firstSlot = item.AddToInventory(Inventory);
-            if (firstSlot == null)
-                return null;
-
-            return item.EquipToFree(Inventory, firstSlot);
-        }
-
+        #region Equipping and unequipping
         public void EquipItemToFree(InventorySlot itemSlot)
         {
             itemSlot.Item?.EquipToFree(Inventory, itemSlot);
@@ -265,24 +257,21 @@ namespace ContentGeneration.Assets.UI.Model
         public void UnequipItem(InventorySlot itemSlot)
         {
             itemSlot.Item?.Unequip(Inventory, itemSlot);
-            /*var item = itemSlot.Item;
-            MoveFromSlotToSlots(itemSlot, PassiveSlots);*/
-        }
-
-        /*
-        public bool SetItemToSlot(SlotType slotType, ItemState item)
-        {
-            var slot = slotType.IsWeapon() ?
-                Inventory.EquipWeapon(slotType, item) :
-                Inventory.AddItem(Inventory.GetSlots(slotType), item);
-#if NOESIS
-            if(Agent != null)
+            if (Agent != null)
             {
                 Agent.SynchronizeWithState(this);
             }
-#endif
-            return slot != null;
-        }*/
+        }
+
+        public InventorySlot AddAndEquipItem(ItemState item)
+        {
+            var firstSlot = item.AddToInventory(Inventory);
+            if (firstSlot == null)
+                return null;
+
+            return item.EquipToFree(Inventory, firstSlot);
+        }
+        #endregion
 
         public void Rest()
         {

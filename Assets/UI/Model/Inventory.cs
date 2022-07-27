@@ -188,8 +188,6 @@ namespace ContentGeneration.Assets.UI.Model
                 new InventorySlot(SlotType.Wrist, 1),
                 new InventorySlot(SlotType.Heart, 0),
             };
-            /*LeftWeaponSlot = new InventorySlot(SlotType.LeftWeapon, 0);
-            RightWeaponSlot = new InventorySlot(SlotType.RightWeapon, 0);*/
         }
 
         public InventorySlot AvailableSlot(IEnumerable<InventorySlot> slots)
@@ -221,34 +219,6 @@ namespace ContentGeneration.Assets.UI.Model
             return item.AddToInventory(this);
         }
 
-
-        /*public InventorySlot EquipWeapon(SlotType slotType, ItemState weapon)
-        {
-            if(slotType == SlotType.RightWeapon)
-            {
-                RightWeapon.Item = weapon;
-                return RightWeapon;
-            }
-            else if (slotType == SlotType.Weapon)
-            {
-                LeftWeapon.Item = weapon;
-                return LeftWeapon;
-            }
-            else
-            {
-#if NOESIS
-                Debug.LogError($"{slotType} should be a weapon slot!");
-#endif
-                return null;
-            }
-        }*/
-
-        public void EquipItemToFree(InventorySlot itemSlot)
-        {
-            itemSlot.Item?.EquipToFree(this, itemSlot);
-            /*var item = itemSlot.Item;
-            MoveFromSlotToSlots(itemSlot, ActiveSlots);*/
-        }
 
 #if NOESIS
         public void RemoveItems(IEnumerable<ItemState> items)
