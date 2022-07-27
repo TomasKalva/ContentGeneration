@@ -223,13 +223,13 @@ public class Agent : MonoBehaviour
     {
 		var inventory = state.Inventory;
 
-		var leftWeaponItem = inventory.LeftWeaponSlot.Item;
+		var leftWeaponItem = inventory.LeftWeapon.Item;
 		if(leftWeaponSlot != null)
 		{
 			leftWeaponSlot.Weapon = (leftWeaponItem as WeaponItem)?.Weapon;
 		}
 
-		var rightWeaponItem = inventory.RightWeaponSlot.Item;
+		var rightWeaponItem = inventory.RightWeapon.Item;
 		if(rightWeaponSlot != null)
 		{
 			rightWeaponSlot.Weapon = (rightWeaponItem as WeaponItem)?.Weapon;

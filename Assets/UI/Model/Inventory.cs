@@ -20,6 +20,10 @@ namespace ContentGeneration.Assets.UI.Model
         Passive,
         LeftWeapon,
         RightWeapon,
+        Head,
+        LeftWrist,
+        RightWrist,
+        Heart
     }
     static class SlotTypeExtensions
     {
@@ -119,27 +123,24 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
-        InventorySlot _leftWeaponSlot;
-        public InventorySlot LeftWeaponSlot
+        ObservableCollection<InventorySlot> _equipedSlots;
+        public ObservableCollection<InventorySlot> EquipedSlots
         {
-            get => _leftWeaponSlot;
+            get => _equipedSlots;
             private set
             {
-                _leftWeaponSlot = value;
+                _equipedSlots = value;
                 PropertyChanged.OnPropertyChanged(this);
             }
         }
 
-        InventorySlot _rightWeaponSlot;
-        public InventorySlot RightWeaponSlot
-        {
-            get => _rightWeaponSlot;
-            private set
-            {
-                _rightWeaponSlot = value;
-                PropertyChanged.OnPropertyChanged(this);
-            }
-        }
+
+        public InventorySlot LeftWeapon => GetSlots(SlotType.LeftWeapon).First();
+        public InventorySlot RightWeapon => GetSlots(SlotType.RightWeapon).First();
+        public InventorySlot Head => GetSlots(SlotType.Head).First();
+        public InventorySlot LeftWrist => GetSlots(SlotType.LeftWrist).First();
+        public InventorySlot RightWrist => GetSlots(SlotType.RightWrist).First();
+        public InventorySlot Heart => GetSlots(SlotType.Heart).First();
 
         InventorySlot _selectedSlot;
         public InventorySlot SelectedSlot
@@ -179,8 +180,17 @@ namespace ContentGeneration.Assets.UI.Model
                 ActiveSlots.Add(new InventorySlot(SlotType.Active, i));
             }
 
-            LeftWeaponSlot = new InventorySlot(SlotType.LeftWeapon, 0);
-            RightWeaponSlot = new InventorySlot(SlotType.RightWeapon, 0);
+            EquipedSlots = new ObservableCollection<InventorySlot>() 
+            { 
+                new InventorySlot(SlotType.LeftWeapon, 0),
+                new InventorySlot(SlotType.RightWeapon, 0),
+                new InventorySlot(SlotType.Head, 0),
+                new InventorySlot(SlotType.LeftWrist, 0),
+                new InventorySlot(SlotType.RightWrist, 0),
+                new InventorySlot(SlotType.Heart, 0),
+            };
+            /*LeftWeaponSlot = new InventorySlot(SlotType.LeftWeapon, 0);
+            RightWeaponSlot = new InventorySlot(SlotType.RightWeapon, 0);*/
         }
 
         public InventorySlot AvailableSlot(IEnumerable<InventorySlot> slots)
@@ -195,9 +205,8 @@ namespace ContentGeneration.Assets.UI.Model
 
         public IEnumerable<InventorySlot> AllSlots()
         {
-            return PassiveSlots.Concat(
-                        ActiveSlots.Concat(
-                            new InventorySlot[2] { LeftWeaponSlot, RightWeaponSlot }));
+            return PassiveSlots.Concat(ActiveSlots).Concat(EquipedSlots);
+            //.Concat(new InventorySlot[2] { LeftWeaponSlot, RightWeaponSlot });
         }
 
         public IEnumerable<InventorySlot> GetSlots(SlotType slotType)
@@ -217,13 +226,13 @@ namespace ContentGeneration.Assets.UI.Model
         {
             if(slotType == SlotType.RightWeapon)
             {
-                RightWeaponSlot.Item = weapon;
-                return RightWeaponSlot;
+                RightWeapon.Item = weapon;
+                return RightWeapon;
             }
             else if (slotType == SlotType.LeftWeapon)
             {
-                LeftWeaponSlot.Item = weapon;
-                return LeftWeaponSlot;
+                LeftWeapon.Item = weapon;
+                return LeftWeapon;
             }
             else
             {

@@ -75,14 +75,14 @@
                 </StackPanel>
                 <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
-                        <comp:ItemSlotView DataContext="{Binding}" Width="50" Height="50" Style="{StaticResource WeaponSlotMargin}"></comp:ItemSlotView>
-                        <comp:ItemSlotView DataContext="{Binding}" Width="50" Height="50" Style="{StaticResource WeaponSlotMargin}"></comp:ItemSlotView>
+                        <comp:ItemSlotView DataContext="{Binding Inventory.LeftWeapon}" Width="50" Height="50" Style="{StaticResource WeaponSlotMargin}"></comp:ItemSlotView>
+                        <comp:ItemSlotView DataContext="{Binding Inventory.RightWeapon}" Width="50" Height="50" Style="{StaticResource WeaponSlotMargin}"></comp:ItemSlotView>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
-                        <comp:ItemSlotView DataContext="{Binding}" Width="50" Height="50" Style="{StaticResource EquipmentSlotMargin}"></comp:ItemSlotView>
-                        <comp:ItemSlotView DataContext="{Binding}" Width="50" Height="50" Style="{StaticResource EquipmentSlotMargin}"></comp:ItemSlotView>
-                        <comp:ItemSlotView DataContext="{Binding}" Width="50" Height="50" Style="{StaticResource EquipmentSlotMargin}"></comp:ItemSlotView>
-                        <comp:ItemSlotView DataContext="{Binding}" Width="50" Height="50" Style="{StaticResource EquipmentSlotMargin}"></comp:ItemSlotView>
+                        <comp:ItemSlotView DataContext="{Binding Inventory.Head}" Width="50" Height="50" Style="{StaticResource EquipmentSlotMargin}"></comp:ItemSlotView>
+                        <comp:ItemSlotView DataContext="{Binding Inventory.LeftWrist}" Width="50" Height="50" Style="{StaticResource EquipmentSlotMargin}"></comp:ItemSlotView>
+                        <comp:ItemSlotView DataContext="{Binding Inventory.RightWrist}" Width="50" Height="50" Style="{StaticResource EquipmentSlotMargin}"></comp:ItemSlotView>
+                        <comp:ItemSlotView DataContext="{Binding Inventory.Heart}" Width="50" Height="50" Style="{StaticResource EquipmentSlotMargin}"></comp:ItemSlotView>
                     </StackPanel>
                 </StackPanel>
             </DockPanel>
