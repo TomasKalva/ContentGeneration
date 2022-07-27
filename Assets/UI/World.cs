@@ -1,20 +1,20 @@
 using Assets.InteractiveObject;
 using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
-using ContentGeneration.Assets.UI.Model;
 using ShapeGrammar;
+using UnityEngine;
+using ContentGeneration.Assets.UI.Model;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using UnityEngine;
+
 
 namespace ContentGeneration.Assets.UI
 {
     public class World : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-
         public Transform ArchitectureParent { get; }
         public Transform EntitiesParent { get; }
 

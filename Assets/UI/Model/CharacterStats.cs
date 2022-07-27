@@ -45,7 +45,6 @@ namespace ContentGeneration.Assets.UI.Model
                 if(Character != null)
                 {
                     Character.Health.Maximum = 40 + 10 * _will;
-                    Debug.Log($"Max health:{Character.Health.Maximum}");
                 }
                 PropertyChanged.OnPropertyChanged(this); 
             }

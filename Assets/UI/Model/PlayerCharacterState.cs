@@ -73,6 +73,7 @@ namespace ContentGeneration.Assets.UI.Model
             return PlayerInventory.AddItem(Inventory.AllSlots(), item) != null;
         }
 
+#if NOESIS
         public override void Die()
         {
             GameObject.Destroy(Agent.gameObject);
@@ -81,5 +82,6 @@ namespace ContentGeneration.Assets.UI.Model
             //GameViewModel.ViewModel.Enemies.Remove(CharacterState);
             //Destroy(gameObject, 1f);
         }
+#endif
     }
 }

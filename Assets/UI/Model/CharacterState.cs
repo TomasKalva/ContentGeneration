@@ -115,6 +115,7 @@ namespace ContentGeneration.Assets.UI.Model
 
         public Inventory Inventory { get; set; }
 
+#if NOESIS
         Defense[] Defenses { get; }
 
         public Defense FindDefense(DamageType damageType) =>
@@ -144,9 +145,7 @@ namespace ContentGeneration.Assets.UI.Model
             FireDefense = FindDefense(DamageType.Chaos);
             DarkDefense = FindDefense(DamageType.Dark);
             DivineDefense = FindDefense(DamageType.Divine);
-#if NOESIS
             Behaviors = new Behaviors();
-#endif
             Stats = new CharacterStats();
             OnDeath = () => { };
         }
@@ -159,6 +158,7 @@ namespace ContentGeneration.Assets.UI.Model
             //GameViewModel.ViewModel.Enemies.Remove(CharacterState);
             //Destroy(gameObject, 1f);
         }
+#endif
 
         /// <summary>
         /// Resets the state of the character.
@@ -250,7 +250,9 @@ namespace ContentGeneration.Assets.UI.Model
 
         public void Rest()
         {
+#if NOESIS
             Inventory.AllSlots().ForEach(slot => slot.Item?.OnRest());
+#endif
         }
 
         /// <summary>

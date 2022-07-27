@@ -5,28 +5,100 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:comp="clr-namespace:ContentGeneration.Assets.UI.Components"
              mc:Ignorable="d" 
-             x:Name="parent">
-
+             x:Name="parent"
+             d:DesignHeight="500" d:DesignWidth="700">
+    <UserControl.Resources>
+        <Style x:Key="EquipmentSlotMargin" TargetType="{x:Type FrameworkElement}">
+            <Setter Property="Margin" Value="5,0"/>
+        </Style>
+        <Style x:Key="WeaponSlotMargin" TargetType="{x:Type FrameworkElement}">
+            <Setter Property="Margin" Value="10,0"/>
+        </Style>
+    </UserControl.Resources>
     <UserControl.Style>
         <Style TargetType="{x:Type UserControl}">
             <Style.Triggers>
-                <DataTrigger Binding="{Binding Active}" Value="False">
+                <DataTrigger Binding="{Binding Inventory.Active}" Value="False">
                     <Setter Property="Visibility" Value="Hidden"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
     </UserControl.Style>
     <Border Background="Orange" BorderThickness="5" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <StackPanel Background="Blue" Margin="10">
-            <StackPanel.Resources>
-                <Style x:Key="Margined" TargetType="{x:Type FrameworkElement}">
-                    <Setter Property="Margin" Value="5"/>
-                </Style>
-            </StackPanel.Resources>
+        <StackPanel Orientation="Horizontal">
+            <DockPanel Width="300" Background="Blue" Margin="10">
+                <StackPanel DockPanel.Dock="Top" Margin="5" Orientation="Horizontal">
+                    <Border Width="110" Background="Beige" BorderBrush="Black" BorderThickness="3" Padding="3,3,7,3">
+                        <Grid>
+                            <Grid.Resources>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="FontSize" Value="15"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="Grid.Column" Value="1">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Resources>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition>
+                                    <ColumnDefinition.Width>80</ColumnDefinition.Width>
+                                </ColumnDefinition>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                            </Grid.RowDefinitions>
 
-            <comp:Items DataContext="{Binding ActiveSlots}" Columns="5" Rows="1" Style="{StaticResource Margined}"></comp:Items>
-            <comp:Items DataContext="{Binding PassiveSlots}" Columns="5" Rows="3" Style="{StaticResource Margined}"></comp:Items>
-            <comp:ItemDescriptionView DataContext="{Binding CursorSlot.Item}" Style="{StaticResource Margined}" Width="270"></comp:ItemDescriptionView>
+                            <TextBlock Grid.Column="0" Grid.Row="0">Will</TextBlock>
+                            <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Stats.Will}" TextAlignment="Right"></TextBlock>
+                            <TextBlock Grid.Column="0" Grid.Row="1">Strength</TextBlock>
+                            <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Stats.Strength}"></TextBlock>
+                            <TextBlock Grid.Column="0" Grid.Row="2">Endurance</TextBlock>
+                            <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding Stats.Endurance}"/>
+                            <TextBlock Grid.Column="0" Grid.Row="3">Agility</TextBlock>
+                            <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding Stats.Agility}"/>
+                            <TextBlock Grid.Column="0" Grid.Row="4">Posture</TextBlock>
+                            <TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding Stats.Posture}"/>
+                            <TextBlock Grid.Column="0" Grid.Row="5">Resistances</TextBlock>
+                            <TextBlock Grid.Column="1" Grid.Row="5" Text="{Binding Stats.Resistances}"/>
+                            <TextBlock Grid.Column="0" Grid.Row="6">Versatility</TextBlock>
+                            <TextBlock Grid.Column="1" Grid.Row="6" Text="{Binding Stats.Versatility}"/>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+                <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
+                        <comp:ItemSlotView DataContext="{Binding}" Width="50" Height="50" Style="{StaticResource WeaponSlotMargin}"></comp:ItemSlotView>
+                        <comp:ItemSlotView DataContext="{Binding}" Width="50" Height="50" Style="{StaticResource WeaponSlotMargin}"></comp:ItemSlotView>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
+                        <comp:ItemSlotView DataContext="{Binding}" Width="50" Height="50" Style="{StaticResource EquipmentSlotMargin}"></comp:ItemSlotView>
+                        <comp:ItemSlotView DataContext="{Binding}" Width="50" Height="50" Style="{StaticResource EquipmentSlotMargin}"></comp:ItemSlotView>
+                        <comp:ItemSlotView DataContext="{Binding}" Width="50" Height="50" Style="{StaticResource EquipmentSlotMargin}"></comp:ItemSlotView>
+                        <comp:ItemSlotView DataContext="{Binding}" Width="50" Height="50" Style="{StaticResource EquipmentSlotMargin}"></comp:ItemSlotView>
+                    </StackPanel>
+                </StackPanel>
+            </DockPanel>
+            <Border>
+                <StackPanel Background="Blue" Margin="10" VerticalAlignment="Bottom">
+                    <StackPanel.Resources>
+                        <Style x:Key="Margined" TargetType="{x:Type FrameworkElement}">
+                            <Setter Property="Margin" Value="5"/>
+                        </Style>
+                    </StackPanel.Resources>
+
+                    <comp:Items DataContext="{Binding Inventory.ActiveSlots}" Columns="5" Rows="1" Style="{StaticResource Margined}"></comp:Items>
+                    <comp:Items DataContext="{Binding Inventory.PassiveSlots}" Columns="5" Rows="3" Style="{StaticResource Margined}"></comp:Items>
+                    <comp:ItemDescriptionView DataContext="{Binding Inventory.CursorSlot.Item}" Style="{StaticResource Margined}" Width="270"></comp:ItemDescriptionView>
+                </StackPanel>
+            </Border>
         </StackPanel>
     </Border>
 </UserControl>

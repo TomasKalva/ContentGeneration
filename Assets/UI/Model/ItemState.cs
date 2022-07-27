@@ -9,7 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using ContentGeneration.Assets.UI.Util;
+#if NOESIS
 using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
+#endif
 
 namespace ContentGeneration.Assets.UI.Model
 {

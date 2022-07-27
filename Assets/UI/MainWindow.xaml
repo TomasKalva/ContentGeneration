@@ -177,7 +177,7 @@
             </Border>
             
             <!-- Player's inventory -->
-            <comp:InventoryView DataContext="{Binding World.PlayerState.Inventory}"/>
+            <comp:InventoryView DataContext="{Binding World.PlayerState}"/>
         </Grid>
     </Grid>
 </UserControl>
