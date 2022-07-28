@@ -26,19 +26,21 @@ namespace ShapeGrammar
                 pr.BridgeFromCourtyard(),
                 pr.ExtendBridge(),
                 pr.CourtyardFromBridge(),
-                //pr.ExtendHouse(ldk.tr.GetFloorConnector(lge => ldk.tr.SplittingFloorPlan(lge, 2))),
                 pr.AddNextFloor(),
-                //pr.GardenFromCourtyard(),
                 pr.RoomNextTo(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-                //pr.RoomNextTo(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 4, 2, 5))),
-                //pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
+                
+                //pr.ExtendHouse(ldk.tr.GetFloorConnector(lge => ldk.tr.SplittingFloorPlan(lge, 2))), // Creates area for the node doesn't exist error
+                //pr.GardenFromCourtyard(),
+                pr.RoomNextTo(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 4, 2, 5))),
+                pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
 
                 // these productions make the world untraversable
                 //pr.RoomFallDown(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
                 //pr.TowerFallDown(pr.sym.Courtyard, pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
 
-                //pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
+                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
+
+                pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             );
         }
 
@@ -100,10 +102,29 @@ namespace ShapeGrammar
                 //pr.GardenFromCourtyard(),
                 //pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
                 //pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden), addFloorAbove: false),
-                pr.ParkNextTo(pr.sym.Courtyard, () => ldk.qc.GetFlatBox(3, 3)),
-                pr.DownwardPark(pr.sym.Park, 1, () => ldk.qc.GetFlatBox(3, 3)),
+                pr.ParkNextTo(pr.sym.Room(), () => ldk.qc.GetFlatBox(4, 4)),
+                pr.DownwardPark(pr.sym.Park, 1, () => ldk.qc.GetFlatBox(3, 5)),
                 pr.DownwardPark(pr.sym.Park, 1, () => ldk.qc.GetFlatBox(5, 4)),
                 pr.ChapelNextTo(pr.sym.Park, () => ldk.qc.GetFlatBox(3, 3, 2)),
+                pr.ChapelHall(pr.sym.ChapelEntrance, 6, guideRandomly),
+                pr.ChapelHall(pr.sym.ChapelRoom, 6, guideRandomly),
+                pr.ChapelRoom(3),
+                pr.ChapelNextFloor(3)
+            );
+        }
+
+        public ProductionList Chappels()
+        {
+            var guideRandomly = new RandomPathGuide();
+            return new ProductionList
+            (
+                //pr.GardenFromCourtyard(),
+                //pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
+                //pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden), addFloorAbove: false),
+                //pr.ParkNextTo(pr.sym.Room(), () => ldk.qc.GetFlatBox(4, 4)),
+                //pr.DownwardPark(pr.sym.Park, 1, () => ldk.qc.GetFlatBox(3, 5)),
+                //pr.DownwardPark(pr.sym.Park, 1, () => ldk.qc.GetFlatBox(5, 4)),
+                pr.ChapelNextTo(pr.sym.Room(), () => ldk.qc.GetFlatBox(3, 3, 2)),
                 pr.ChapelHall(pr.sym.ChapelEntrance, 6, guideRandomly),
                 pr.ChapelHall(pr.sym.ChapelRoom, 6, guideRandomly),
                 pr.ChapelRoom(3),
@@ -116,7 +137,8 @@ namespace ShapeGrammar
             var guideRandomly = new RandomPathGuide();
             return new ProductionList
             (
-                pr.ChapelTowerRoof(3)
+                pr.ChapelTowerTop(3),
+                pr.Roof()
             );
         }
 
@@ -132,7 +154,7 @@ namespace ShapeGrammar
         {
             return new ProductionList
             (
-                pr.AddRoof()
+                pr.Roof()
             );
         }
 

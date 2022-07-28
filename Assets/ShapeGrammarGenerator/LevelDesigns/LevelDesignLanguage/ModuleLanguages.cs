@@ -41,7 +41,8 @@ namespace ShapeGrammar
                 return false;
             });
             */
-            
+
+            /*
             State.LC.AddEvent(
                 new LevelConstructionEvent(0, () =>
                 {
@@ -60,7 +61,7 @@ namespace ShapeGrammar
                     return true;
                 }));
 
-            L.FactionsLanguage.InitializeFactions(3);
+            L.FactionsLanguage.InitializeFactions(3);*/
 
             /*
             State.LC.AddEvent(
@@ -88,7 +89,16 @@ namespace ShapeGrammar
                 {
                     L.TestingLanguage.Spells();
                     return true;
-                }));*/
+                }));
+            
+             */
+            State.LC.AddEvent(
+                new LevelConstructionEvent(90,
+                () =>
+                {
+                    L.TestingLanguage.GrammarTesting();
+                    return true;
+                }));
         }
     }
 
@@ -310,6 +320,42 @@ namespace ShapeGrammar
                             )
                         )
                     );
+        }
+
+        public void GrammarTesting()
+        {
+            var grammarState = State.GrammarState;
+
+            //var shapeGrammar = new RandomGrammar(Gr.PrL.TestingProductions(), 20);
+            /*var randGardenGrammar = new RandomGrammar(Gr.PrL.Garden(), 1);
+            var graveyardGrammar = new RandomGrammar(Gr.PrL.Graveyard(), 10);
+            var graveyardPostprocessGrammar = new AllGrammar(Gr.PrL.GraveyardPostprocess());
+            var roofGrammar = new AllGrammar(Gr.PrL.Roofs());
+            */
+
+            //Env.Execute(shapeGrammar);
+            /*Env.Execute(randGardenGrammar);
+            Env.Execute(graveyardGrammar);
+            Env.Execute(graveyardPostprocessGrammar);
+            Env.Execute(roofGrammar);
+            */
+
+            Env.Line(Gr.PrL.Chappels(), NodesQueries.All, 8, out var _);
+            Env.Execute(new AllGrammar(Gr.PrL.GraveyardPostprocess()));
+
+            var allAreas = State.TraversableAreas;
+            //var objects = Enumerable.Range(0, 100)
+            //.Select(_ => Lib.InteractiveObjects.Item(Lib.Items.FreeWill()));
+            //.Select(_ => Lib.InteractiveObjects.AscensionKiln());
+            //.Select(_ => Lib.InteractiveObjects.InteractiveObject<InteractiveObject>("bush", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer)));
+            //objects.ForEach(obj => allAreas.GetRandom().AddInteractiveObject(obj));
+            
+            /*
+            State.TraversableAreas
+               .ForEach(
+                   area => Enumerable.Range(0, 1)
+                       .ForEach(_ => area.AddEnemy(Lib.Enemies.AllAgents().GetRandom()()))
+               );*/
         }
     }
 

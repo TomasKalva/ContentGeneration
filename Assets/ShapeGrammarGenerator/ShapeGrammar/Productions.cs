@@ -71,13 +71,13 @@ namespace ShapeGrammar
                                 .CanBeFounded(),
                             out var courtyard
                         )
-                        .PlaceNodes(room)
+                        .PlaceCurrentFrom(room)
 
                         .Found()
-                        .PlaceNodes(courtyard)
+                        .PlaceCurrentFrom(courtyard)
 
                         .FindPath(() => ldk.con.ConnectByDoor(room.LE, courtyard.LE).GN(sym.ConnectionMarker), out var door)
-                        .PlaceNodes(room, courtyard);
+                        .PlaceCurrentFrom(room, courtyard);
                      
                 });
         }
@@ -116,13 +116,13 @@ namespace ShapeGrammar
                                 .CanBeFounded(),
                             out var newCourtyard
                         )
-                        .PlaceNodes(courtyard)
+                        .PlaceCurrentFrom(courtyard)
 
                         .Found()
-                        .PlaceNodes(newCourtyard)
+                        .PlaceCurrentFrom(newCourtyard)
 
                         .FindPath(() => ldk.con.ConnectByStairsInside(courtyard.LE, newCourtyard.LE).GN(sym.ConnectionMarker), out var p)
-                        .PlaceNodes(courtyard, newCourtyard);
+                        .PlaceCurrentFrom(courtyard, newCourtyard);
                 });
         }
 
@@ -163,16 +163,16 @@ namespace ShapeGrammar
                                 .CanBeFounded(),
                             out var bridge
                         )
-                        .PlaceNodes(courtyard)
+                        .PlaceCurrentFrom(courtyard)
 
                         .EmptyPath()
-                        .PlaceNodes(courtyard, bridge)
+                        .PlaceCurrentFrom(courtyard, bridge)
 
                         .Set(() => ldk.sgShapes.BridgeFoundation(
                             bridge.LE,
                             bridge.GetSymbol<Bridge>().Direction
                             ).GN(sym.Foundation))
-                        .PlaceNodes(bridge);
+                        .PlaceCurrentFrom(bridge);
                 });
         }
 
@@ -196,16 +196,16 @@ namespace ShapeGrammar
                         )
                         .NotTaken()
                         .CanBeFounded()
-                        .PlaceNodes(bridge)
+                        .PlaceCurrentFrom(bridge)
 
                         .EmptyPath()
-                        .PlaceNodes(bridge, newBridge)
+                        .PlaceCurrentFrom(bridge, newBridge)
 
                         .Set(() => ldk.sgShapes.BridgeFoundation(
                             newBridge.LE,
                             newBridge.GetSymbol<Bridge>().Direction
                             ).GN(sym.Foundation))
-                        .PlaceNodes(newBridge);
+                        .PlaceCurrentFrom(newBridge);
                      
                 });
         }
@@ -234,13 +234,13 @@ namespace ShapeGrammar
                         )
                         .NotTaken()
                         .CanBeFounded()
-                        .PlaceNodes(bridge)
+                        .PlaceCurrentFrom(bridge)
 
                         .Found()
-                        .PlaceNodes(newCourtyard)
+                        .PlaceCurrentFrom(newCourtyard)
 
                         .EmptyPath()
-                        .PlaceNodes(bridge, newCourtyard);
+                        .PlaceCurrentFrom(bridge, newCourtyard);
                     
                 });
         }
@@ -263,17 +263,17 @@ namespace ShapeGrammar
                                 .Change(node => node.LE.GN(sym.Room(), sym.FullFloorMarker)),
                             out var newRoom
                             )
-                        .PlaceNodes(what)
+                        .PlaceCurrentFrom(what)
 
                         .Found()
-                        .PlaceNodes(newRoom)
+                        .PlaceCurrentFrom(newRoom)
 
                         .Set(() => newRoom)
                         .ReserveUpward(2)
-                        .PlaceNodes(newRoom)
+                        .PlaceCurrentFrom(newRoom)
 
                         .FindPath(() => ldk.con.ConnectByDoor(newRoom.LE, what.LE).GN(sym.ConnectionMarker), out var door)
-                        .PlaceNodes(what, newRoom);
+                        .PlaceCurrentFrom(what, newRoom);
                 });
         }
 
@@ -311,20 +311,20 @@ namespace ShapeGrammar
                                 ),
                                 out var newRoom
                         )
-                        .PlaceNodes(what)
+                        .PlaceCurrentFrom(what)
 
                         .Found()
-                        .PlaceNodes(newRoom)
+                        .PlaceCurrentFrom(newRoom)
 
                         .ApplyOperationsIf(addFloorAbove,
                             () => state.NewProgram()
                                 .Set(() => newRoom)
                                 .ReserveUpward(2)
-                                .PlaceNodes(newRoom)
+                                .PlaceCurrentFrom(newRoom)
                         )
 
                         .FindPath(() => ldk.con.ConnectByBridge(what.LE, newRoom.LE, state.WorldState.Added).GN(sym.ConnectionMarker), out var bridge)
-                        .PlaceNodes(what, newRoom);
+                        .PlaceCurrentFrom(what, newRoom);
                      
                 });
         }
@@ -348,26 +348,26 @@ namespace ShapeGrammar
                                 ,
                             out var newRoom
                         )
-                        .PlaceNodes(what)
+                        .PlaceCurrentFrom(what)
                         
                         .ReserveUpward(2)
-                        .PlaceNodes(what)
+                        .PlaceCurrentFrom(what)
                         
                         .Set(() =>
                             newRoom.LE.CG().ExtrudeVer(Vector3Int.down, 2).LE(AreaType.Room).GN(sym.Room(false, 0), sym.FullFloorMarker),
                             out var bottomRoom
                         )
-                        .PlaceNodes(newRoom)
+                        .PlaceCurrentFrom(newRoom)
                         
                         .Found()
-                        .PlaceNodes(bottomRoom)
+                        .PlaceCurrentFrom(bottomRoom)
 
                         .FindPath(() => ldk.con.ConnectByDoor(newRoom.LE, what.LE).GN(sym.ConnectionMarker), out var door)
-                        .PlaceNodes(newRoom, what)
+                        .PlaceCurrentFrom(newRoom, what)
 
                         // The door doesn't get overwritten by apply style only because it has higher priority, which doesn't feel robust enough
                         .FindPath(() => ldk.con.ConnectByFall(newRoom.LE, bottomRoom.LE).GN(), out var fall)
-                        .PlaceNodes(bottomRoom, newRoom);
+                        .PlaceCurrentFrom(bottomRoom, newRoom);
 
                 });
         }
@@ -405,20 +405,20 @@ namespace ShapeGrammar
                                 ,
                             out var newRoom
                         )
-                        .PlaceNodes(from)
+                        .PlaceCurrentFrom(from)
 
                         .Found(out var foundation)
-                        .PlaceNodes(newRoom)
+                        .PlaceCurrentFrom(newRoom)
 
                         .Set(() => newRoom)
                         .ReserveUpward(2, out var reservation)
-                        .PlaceNodes(newRoom)
+                        .PlaceCurrentFrom(newRoom)
 
                         .FindPath(() => ldk.con.ConnectByBalconyStairsOutside(from.LE, newRoom.LE, state.WorldState.Added.Merge(foundation.LE).Merge(reservation.LE)).GN(sym.ConnectionMarker), out var stairs)
-                        .PlaceNodes(from, newRoom)
+                        .PlaceCurrentFrom(from, newRoom)
 
                         .FindPath(() => ldk.con.ConnectByFall(newRoom.LE, to.LE).GN(), out var fall)
-                        .PlaceNodes(to, newRoom);
+                        .PlaceCurrentFrom(to, newRoom);
                 });
         }
 
@@ -537,10 +537,10 @@ namespace ShapeGrammar
                         .ReplaceNodes(roomReservation)
 
                         .ReserveUpward(2)
-                        .PlaceNodes(nextFloor)
+                        .PlaceCurrentFrom(nextFloor)
 
                         .FindPath(() => ldk.con.ConnectByWallStairsIn(roomBelow.LE, nextFloor.LE).GN(sym.ConnectionMarker), out var stairs)
-                        .PlaceNodes(roomBelow, nextFloor);
+                        .PlaceCurrentFrom(roomBelow, nextFloor);
                 });
         }
 
@@ -616,7 +616,7 @@ namespace ShapeGrammar
                 });
         }
 
-        public Production AddRoof()
+        public Production Roof()
         {
             return new Production(
                 "AddRoof",
@@ -677,14 +677,14 @@ namespace ShapeGrammar
                                 .Change(node => node.LE.GN(sym.Park, sym.FullFloorMarker)),
                             out var newPark
                             )
-                        .PlaceNodes(what)
+                        .PlaceCurrentFrom(what)
 
                         .Found()
-                        .PlaceNodes(newPark)
+                        .PlaceCurrentFrom(newPark)
 
                         //Replace with open connection
                         .FindPath(() => ldk.con.ConnectByDoor(newPark.LE, what.LE).GN(sym.ConnectionMarker), out var door)
-                        .PlaceNodes(what, newPark);
+                        .PlaceCurrentFrom(what, newPark);
                 });
         }
 
@@ -712,13 +712,13 @@ namespace ShapeGrammar
                                 .Change(node => node.LE.GN(sym.Park, sym.FullFloorMarker)),
                             out var newPark
                             )
-                        .PlaceNodes(what)
+                        .PlaceCurrentFrom(what)
 
                         .Found()
-                        .PlaceNodes(newPark)
+                        .PlaceCurrentFrom(newPark)
 
                         .FindPath(() => ldk.con.ConnectByStairsInside(newPark.LE, what.LE).GN(sym.ConnectionMarker), out var stairs)
-                        .PlaceNodes(what, newPark);
+                        .PlaceCurrentFrom(what, newPark);
                 });
         }
 
@@ -740,17 +740,17 @@ namespace ShapeGrammar
                                 .Change(node => node.LE.SetAreaType(AreaType.Room).GN(sym.ChapelEntrance, sym.FullFloorMarker)),
                             out var newChapelEntrance
                             )
-                        .PlaceNodes(what)
+                        .PlaceCurrentFrom(what)
 
                         .Found()
-                        .PlaceNodes(newChapelEntrance)
+                        .PlaceCurrentFrom(newChapelEntrance)
 
                         .Set(() => newChapelEntrance.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.CrossRoof).GN(sym.Roof))
-                        .PlaceNodes(newChapelEntrance)
+                        .PlaceCurrentFrom(newChapelEntrance)
 
                         //Replace with open connection
                         .FindPath(() => ldk.con.ConnectByDoor(newChapelEntrance.LE, what.LE).GN(sym.ConnectionMarker), out var door)
-                        .PlaceNodes(what, newChapelEntrance);
+                        .PlaceCurrentFrom(what, newChapelEntrance);
                 });
         }
 
@@ -775,17 +775,17 @@ namespace ShapeGrammar
                                 .CanBeFounded(),
                             out var newChapelHall
                             )
-                        .PlaceNodes(entrance)
+                        .PlaceCurrentFrom(entrance)
 
                         .Found()
-                        .PlaceNodes(newChapelHall)
+                        .PlaceCurrentFrom(newChapelHall)
 
                         .Set(() => newChapelHall)
                         .ReserveUpward(2)
-                        .PlaceNodes(newChapelHall)
+                        .PlaceCurrentFrom(newChapelHall)
 
                         .FindPath(() => ldk.con.ConnectByDoor(newChapelHall.LE, entrance.LE).GN(sym.ConnectionMarker), out var door)
-                        .PlaceNodes(entrance, newChapelHall);
+                        .PlaceCurrentFrom(entrance, newChapelHall);
                 });
         }
 
@@ -805,17 +805,17 @@ namespace ShapeGrammar
                         .NotTaken()
                         .CanBeFounded()
                         .CurrentFirst(out var newRoom)
-                        .PlaceNodes(hall)
+                        .PlaceCurrentFrom(hall)
                         
                         .Found()
-                        .PlaceNodes(newRoom)
+                        .PlaceCurrentFrom(newRoom)
 
                         .Set(() => newRoom)
                         .ReserveUpward(2)
-                        .PlaceNodes(newRoom)
+                        .PlaceCurrentFrom(newRoom)
                         
                         .FindPath(() => ldk.con.ConnectByDoor(newRoom.LE, hall.LE).GN(sym.ConnectionMarker), out var door)
-                        .PlaceNodes(hall, newRoom);
+                        .PlaceCurrentFrom(hall, newRoom);
                 });
         }
 
@@ -849,14 +849,14 @@ namespace ShapeGrammar
                         .ReplaceNodes(reservation)
 
                         .ReserveUpward(2)
-                        .PlaceNodes(nextFloor)
+                        .PlaceCurrentFrom(nextFloor)
 
                         .FindPath(() => ldk.con.ConnectByStairsInside(nextFloor.LE, roomBelow.LE).GN(sym.ConnectionMarker), out var stairs)
-                        .PlaceNodes(roomBelow, nextFloor);
+                        .PlaceCurrentFrom(roomBelow, nextFloor);
                 });
         }
 
-        public Production ChapelTowerRoof(int roofHeight)
+        public Production ChapelTowerTop(int roofHeight)
         {
             return new Production(
                 $"ChapelNextFloor",
@@ -878,10 +878,10 @@ namespace ShapeGrammar
                         .ReplaceNodes(reservation)
 
                         .Change(towerTop => towerTop.LE.CG().ExtrudeVer(Vector3Int.up, roofHeight).LE(AreaType.PointyRoof).GN(sym.Roof))
-                        .PlaceNodes(towerTop)
+                        .PlaceCurrentFrom(towerTop)
 
                         .FindPath(() => ldk.con.ConnectByStairsInside(towerTop.LE, roomBelow.LE).GN(sym.ConnectionMarker), out var stairs)
-                        .PlaceNodes(roomBelow, towerTop);
+                        .PlaceCurrentFrom(roomBelow, towerTop);
                 });
         }
         #endregion

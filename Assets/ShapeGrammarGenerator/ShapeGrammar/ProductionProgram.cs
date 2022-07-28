@@ -18,6 +18,8 @@ namespace ShapeGrammar
         public bool Failed { get; private set; }
 
         /// <summary>
+        /// The grammar currently operates on these nodes.
+        /// 
         /// Not IEnumerable to prevent multiple evaluations.
         /// </summary>
         List<Node> CurrentNodes { get; set; }
@@ -35,6 +37,9 @@ namespace ShapeGrammar
             return this;
         }
 
+        /// <summary>
+        /// Keeps only one of the current nodes. Fails if no current nodes exist.
+        /// </summary>
         public ProductionProgram SelectOne(ProductionProgram program, out Node result)
         {
             result = null;
@@ -80,7 +85,10 @@ namespace ShapeGrammar
             return this;
         }
 
-        public ProductionProgram PlaceNodes(params Node[] from)
+        /// <summary>
+        /// Places the current nodes to the level. Each will be child of all nodes contained in from. 
+        /// </summary>
+        public ProductionProgram PlaceCurrentFrom(params Node[] from)
         {
             if (Failed)
                 return this;
@@ -160,6 +168,9 @@ namespace ShapeGrammar
             return this;
         }
 
+        /// <summary>
+        /// Remove the current nodes which are overlapping already added nodes.
+        /// </summary>
         public ProductionProgram NotTaken()
         {
             if (Failed)
@@ -178,10 +189,19 @@ namespace ShapeGrammar
             return this;
         }
 
+        /// <summary>
+        /// Remove the current nodes for which foundation can't be created.
+        /// </summary>
         public ProductionProgram CanBeFounded() => Where(node => State.CanBeFounded(node.LE));
 
+        /// <summary>
+        /// Remove the current nodes which contain no cubes.
+        /// </summary>
         public ProductionProgram NonEmpty() => Where(node => node.LE.Cubes().Any());
 
+        /// <summary>
+        /// todo: what is difference from NotTaken?
+        /// </summary>
         public ProductionProgram DontIntersectAdded() => Where(node => !node.LE.CG().Intersects(State.WorldState.Added.CG()));
 
         public ProductionProgram Change(Func<Node, Node> changer)
@@ -264,13 +284,17 @@ namespace ShapeGrammar
             return this;
         }
 
-        public ProductionProgram MoveNearTo(Node nearWhat)
+        /// <summary>
+        /// Moves current node near to targetNode. None of the cubes of the moved node is vertically taken yet.
+        /// Doesn't work correctly for multiple current nodes.
+        /// </summary>
+        public ProductionProgram MoveNearTo(Node targetNode)
         {
             Change(node => ldk.pl.MoveNearXZ(
-                                    nearWhat.LE.MoveBottomTo(0),
+                                    targetNode.LE.MoveBottomTo(0),
                                     node.LE.MoveBottomTo(0),
                                     State.VerticallyTaken)?.GN())
-            .Change(validNewRoom => validNewRoom.LE.MoveBottomTo(nearWhat.LE.CG().LeftBottomBack().y).GN());
+            .Change(validNewRoom => validNewRoom.LE.MoveBottomTo(targetNode.LE.CG().LeftBottomBack().y).GN());
             return this;
         }
     }
