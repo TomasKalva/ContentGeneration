@@ -396,7 +396,7 @@ namespace ShapeGrammar
             bottomPlatform.ApplyGrammarStyleRules(houseStyleRules);
             topPlatform.ApplyGrammarStyleRules(houseStyleRules);
             
-            var path = con.ConnectByWallStairsOut(bottomPlatform, topPlatform, LevelElement.Empty(grid));
+            var path = con.ConnectByWallStairsOut(LevelElement.Empty(grid))(bottomPlatform, topPlatform);
 
             path.ApplyGrammarStyleRules(houseStyleRules);
             
@@ -414,7 +414,7 @@ namespace ShapeGrammar
             var foundation = sgShapes.Foundation(room1.Merge(room2));
             foundation.ApplyGrammarStyleRules(houseStyleRules);
 
-            var path = con.ConnectByBalconyStairsOutside(room1, room2, foundation);
+            var path = con.ConnectByBalconyStairsOutside(foundation)(room1, room2);
 
             path.ApplyGrammarStyleRules(houseStyleRules);
             
@@ -432,7 +432,7 @@ namespace ShapeGrammar
             var foundation = sgShapes.Foundation(room1.Merge(room2));
             foundation.ApplyGrammarStyleRules(houseStyleRules);
 
-            var path = con.ConnectByBridge(room1, room2, foundation);
+            var path = con.ConnectByBridge(foundation)(room1, room2);
 
             path.ApplyGrammarStyleRules(houseStyleRules);
 

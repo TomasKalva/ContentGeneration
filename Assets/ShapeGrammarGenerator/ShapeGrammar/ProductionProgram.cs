@@ -237,15 +237,16 @@ namespace ShapeGrammar
             return this;
         }
 
-        public ProductionProgram ApplyOperationsIf(bool condition, Func<ProductionProgram> programF)
+        public ProductionProgram RunIf(bool condition, Func<ProductionProgram, ProductionProgram> programF)
         {
             if (Failed)
                 return this;
 
             if (condition)
             {
-                var program = programF();
+                var program = programF(this);
                 AppliedOperations.AddRange(program.AppliedOperations);
+                CurrentNodes = program.CurrentNodes;
                 Failed = program.Failed;
             }
             return this;

@@ -20,6 +20,9 @@ namespace ShapeGrammar
             paths = new Paths(grid);
         }
 
+        public delegate Connection ConnectionNotIntersecting(LevelElement notIntersected);
+        public delegate LevelGeometryElement Connection(LevelElement le1, LevelElement le2);
+
         public LevelGeometryElement ConnectByDoor(LevelElement le1, LevelElement le2)
         {
             var area1Floor = le1.CG().WithFloor();
@@ -47,6 +50,9 @@ namespace ShapeGrammar
             return path != null ? path.LE(AreaType.Path) : null;
         }
 
+        /// <summary>
+        /// Cubes on outside part of the wall.
+        /// </summary>
         CubeGroup WallSpaceOutside(LevelElement le)
         {
             var inside = le.CG();
@@ -54,19 +60,25 @@ namespace ShapeGrammar
             return boundaryWall.ExtrudeHor(true).Cubes.SetMinus(inside.Cubes).ToCubeGroup(le.Grid);
         }
 
-        CubeGroup RoomEdgesWithFloor(LevelElement le)
+        /// <summary>
+        /// Horizontal edges of the area which contain floor.
+        /// </summary>
+        CubeGroup AreaEdgesWithFloor(LevelElement le)
         {
             return le.CG().ExtrudeHor(outside: false).WithFloor();
         }
 
-        public LevelGeometryElement ConnectByWallStairsOut(LevelElement le1, LevelElement le2, LevelElement notIntersecting)
+        public Connection ConnectByWallStairsOut(LevelElement notIntersecting)
         {
-            var start = RoomEdgesWithFloor(le1);
-            var end = RoomEdgesWithFloor(le2);
-            var searchSpace = WallSpaceOutside(le1).Merge(WallSpaceOutside(le2)).Merge(start).Merge(end);
-            Neighbors<PathNode> neighbors = PathNode.NotIn(PathNode.BoundedBy(PathNode.StairsNeighbors(), searchSpace), notIntersecting.CG().Minus(end));
-            var path = paths.ConnectByPath(start, end, neighbors);
-            return path != null ? path.LE(AreaType.Path) : null;
+            return (le1, le2) =>
+            {
+                var start = AreaEdgesWithFloor(le1);
+                var end = AreaEdgesWithFloor(le2);
+                var searchSpace = WallSpaceOutside(le1).Merge(WallSpaceOutside(le2)).Merge(start).Merge(end);
+                Neighbors<PathNode> neighbors = PathNode.NotIn(PathNode.BoundedBy(PathNode.StairsNeighbors(), searchSpace), notIntersecting.CG().Minus(end));
+                var path = paths.ConnectByPath(start, end, neighbors);
+                return path != null ? path.LE(AreaType.Path) : null;
+            };
         }
 
         public LevelGeometryElement ConnectByElevator(LevelElement le1, LevelElement le2)
@@ -91,32 +103,38 @@ namespace ShapeGrammar
             return path != null ? path.LE(AreaType.Fall) : null;
         }
 
-        public LevelGeometryElement ConnectByBalconyStairsOutside(LevelElement le1, LevelElement le2, LevelElement notIntersecting)
+        public Connection ConnectByBalconyStairsOutside(LevelElement notIntersecting)
         {
-            // todo: the path can moved through both start and end so it isn't connected just by balconies, maybe fix this
-            var start = RoomEdgesWithFloor(le1);
-            var end = RoomEdgesWithFloor(le2);
+            return (le1, le2) =>
+            {
+                // todo: the path can moved through both start and end so it isn't connected just by balconies, maybe fix this
+                var start = AreaEdgesWithFloor(le1);
+                var end = AreaEdgesWithFloor(le2);
 
-            var balconySpaceStart = WallSpaceOutside(le1.CG().WithFloor().LE());
-            var balconySpaceEnd = WallSpaceOutside(le2.CG().WithFloor().LE());
+                var balconySpaceStart = WallSpaceOutside(le1.CG().WithFloor().LE());
+                var balconySpaceEnd = WallSpaceOutside(le2.CG().WithFloor().LE());
 
-            var notIntersectingCG = notIntersecting.CG().Minus(end);
-            Neighbors<PathNode> neighbors = 
-                PathNode.NotIn(
-                        PathNode.BalconyStairsBalconyNeighbors(start, end, balconySpaceStart, balconySpaceEnd),
-                        notIntersectingCG
-                );
-            var path = paths.ConnectByPath(start, end, neighbors);
-            return path != null ? path.LE(AreaType.Path) : null;
+                var notIntersectingCG = notIntersecting.CG().Minus(end);
+                Neighbors<PathNode> neighbors =
+                    PathNode.NotIn(
+                            PathNode.BalconyStairsBalconyNeighbors(start, end, balconySpaceStart, balconySpaceEnd),
+                            notIntersectingCG
+                    );
+                var path = paths.ConnectByPath(start, end, neighbors);
+                return path != null ? path.LE(AreaType.Path) : null;
+            };
         }
 
-        public LevelGeometryElement ConnectByBridge(LevelElement le1, LevelElement le2, LevelElement notIntersecting)
+        public Connection ConnectByBridge(LevelElement notIntersecting)
         {
-            var space1 = le1.CG();
-            var space2 = le2.CG();
-            Neighbors<PathNode> neighbors = PathNode.NotIn(PathNode.StraightHorizontalNeighbors(), notIntersecting.CG());
-            var path = paths.ConnectByPath(space1.WithFloor(), space2.WithFloor(), neighbors);
-            return path != null ? path.LE(AreaType.Path) : null;
+            return (le1, le2) =>
+            {
+                var space1 = le1.CG();
+                var space2 = le2.CG();
+                Neighbors<PathNode> neighbors = PathNode.NotIn(PathNode.StraightHorizontalNeighbors(), notIntersecting.CG());
+                var path = paths.ConnectByPath(space1.WithFloor(), space2.WithFloor(), neighbors);
+                return path != null ? path.LE(AreaType.Path) : null;
+            };
         }
 
         public LevelGeometryElement ConnectByStairsInside(LevelElement le1, LevelElement le2, LevelElement bounds = null)
