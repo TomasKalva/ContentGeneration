@@ -102,9 +102,9 @@ namespace ShapeGrammar
                 //pr.GardenFromCourtyard(),
                 //pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
                 //pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden), addFloorAbove: false),
-                pr.ParkNextTo(pr.sym.Room(), () => ldk.qc.GetFlatBox(4, 4)),
-                pr.DownwardPark(pr.sym.Park, 1, () => ldk.qc.GetFlatBox(3, 5)),
-                pr.DownwardPark(pr.sym.Park, 1, () => ldk.qc.GetFlatBox(5, 4)),
+                pr.ParkNextTo(pr.sym.Room(), () => ldk.qc.GetFlatBox(4, 4, 3)),
+                pr.Park(pr.sym.Park, -1, 3, () => ldk.qc.GetFlatBox(3, 5, 3)),
+                pr.Park(pr.sym.Park, -1, 3, () => ldk.qc.GetFlatBox(5, 4, 3)),
                 pr.ChapelNextTo(pr.sym.Park, () => ldk.qc.GetFlatBox(3, 3, 2)),
                 pr.ChapelHall(pr.sym.ChapelEntrance, 6, guideRandomly),
                 pr.ChapelHall(pr.sym.ChapelRoom(), 6, guideRandomly),
@@ -125,11 +125,18 @@ namespace ShapeGrammar
                 //pr.DownwardPark(pr.sym.Park, 1, () => ldk.qc.GetFlatBox(3, 5)),
                 //pr.DownwardPark(pr.sym.Park, 1, () => ldk.qc.GetFlatBox(5, 4)),
                 pr.ChapelNextTo(pr.sym.Room(), () => ldk.qc.GetFlatBox(3, 3, 2)),
-                pr.ChapelHall(pr.sym.ChapelEntrance, 6, guideRandomly),
-                pr.ChapelHall(pr.sym.ChapelRoom(), 6, guideRandomly),
+                pr.ChapelNextTo(pr.sym.Park, () => ldk.qc.GetFlatBox(3, 3, 2)),
+
+                pr.ParkNextTo(pr.sym.Park, () => ldk.qc.GetFlatBox(4, 4, 3)),
+
+                pr.ChapelHall(pr.sym.ChapelEntrance, 4, guideRandomly),
+                pr.ChapelHall(pr.sym.ChapelRoom(), 7, guideRandomly),
+                pr.ChapelHall(pr.sym.ChapelRoom(), 5, guideRandomly),
+
                 pr.ChapelRoom(3),
                 pr.ChapelNextFloor(3, 2),
                 pr.ChapelTowerTop(3),
+
                 pr.Park(pr.sym.ChapelTowerTop, -5, 3, () => ldk.qc.GetFlatBox(5, 6, 3)),
                 pr.Park(pr.sym.Park, -1, 3, () => ldk.qc.GetFlatBox(5, 4, 3)),
                 pr.Park(pr.sym.Park, -1, 3, () => ldk.qc.GetFlatBox(3, 5, 3)),

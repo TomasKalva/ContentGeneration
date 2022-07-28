@@ -658,9 +658,43 @@ namespace ShapeGrammar
 
         #region Graveyard
 
+        public Production FullFloorNextTo(Symbol nextToWhat, Symbol newArea, Func<LevelElement> parkF, Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPlaced)
+        {
+            return new Production(
+                $"{newArea}_NextTo_{nextToWhat.Name}",
+                new ProdParamsManager().AddNodeSymbols(nextToWhat),
+                (state, pp) =>
+                {
+                    var what = pp.Param;
+                    var whatCG = what.LE.CG();
+
+                    return state.NewProgram()
+                        .SelectOne(
+                            state.NewProgram()
+                                .Set(() => parkF().GN())
+                                .MoveNearTo(what)
+                                .Change(node => node.LE.GN(newArea, sym.FullFloorMarker)),
+                            out var newPark
+                            )
+                        .PlaceCurrentFrom(what)
+
+                        .Found()
+                        .PlaceCurrentFrom(newPark)
+
+                        .ApplyOperationsIf(true,
+                            () => fromFloorNodeAfterPlaced(state.NewProgram(), newPark)
+                        )
+
+                        //Replace with open connection
+                        .FindPath(() => ldk.con.ConnectByDoor(newPark.LE, what.LE).GN(sym.ConnectionMarker), out var door)
+                        .PlaceCurrentFrom(what, newPark);
+                });
+        }
 
         public Production ParkNextTo(Symbol nextToWhat, Func<LevelElement> parkF)
         {
+            return FullFloorNextTo(nextToWhat, sym.Park, () => parkF().SetAreaType(AreaType.Garden), (program, _) => program);
+            /*
             return new Production(
                 $"ParkNextTo{nextToWhat.Name}",
                 new ProdParamsManager().AddNodeSymbols(nextToWhat),
@@ -685,45 +719,17 @@ namespace ShapeGrammar
                         //Replace with open connection
                         .FindPath(() => ldk.con.ConnectByDoor(newPark.LE, what.LE).GN(sym.ConnectionMarker), out var door)
                         .PlaceCurrentFrom(what, newPark);
-                });
+                });*/
         }
 
-        public Production DownwardPark(Symbol nextToWhat, int downAmount, Func<LevelElement> parkF)
+        public Production ChapelNextTo(Symbol nextToWhat, Func<LevelElement> chapelEntranceF)
         {
-            return new Production(
-                $"DownwardPark_{nextToWhat.Name}",
-                new ProdParamsManager().AddNodeSymbols(nextToWhat)
-                    .SetCondition((state, pp) => pp.Param.LE.CG().LeftBottomBack().y > downAmount + 1),
-                (state, pp) =>
-                {
-                    var what = pp.Param;
-                    var whatCG = what.LE.CG();
+            return FullFloorNextTo(nextToWhat, sym.ChapelEntrance, () => chapelEntranceF().SetAreaType(AreaType.Room), (program, chapelEntrance) => program
 
-                    return state.NewProgram()
-                        .SelectOne(
-                            state.NewProgram()
-                                .Set(() => parkF().GN())
-                                .MoveNearTo(what)
-                                .Change(park => 
-                                    park.LE
-                                        .MoveBy(downAmount * Vector3Int.down).CG()
-                                        .OpAdd().ExtrudeVer(Vector3Int.up, downAmount).OpNew()
-                                        .LE(AreaType.Garden).GN())
-                                .Change(node => node.LE.GN(sym.Park, sym.FullFloorMarker)),
-                            out var newPark
-                            )
-                        .PlaceCurrentFrom(what)
+                                .Set(() => chapelEntrance.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.CrossRoof).GN(sym.Roof))
+                                .PlaceCurrentFrom(chapelEntrance));
+            /*
 
-                        .Found()
-                        .PlaceCurrentFrom(newPark)
-
-                        .FindPath(() => ldk.con.ConnectByStairsInside(newPark.LE, what.LE).GN(sym.ConnectionMarker), out var stairs)
-                        .PlaceCurrentFrom(what, newPark);
-                });
-        }
-
-        public Production ChapelNextTo(Symbol nextToWhat, Func<LevelElement> parkF)
-        {
             return new Production(
                 $"ChapelNextTo{nextToWhat.Name}",
                 new ProdParamsManager().AddNodeSymbols(nextToWhat),
@@ -735,7 +741,7 @@ namespace ShapeGrammar
                     return state.NewProgram()
                         .SelectOne(
                             state.NewProgram()
-                                .Set(() => parkF().GN())
+                                .Set(() => chapelEntranceF().GN())
                                 .MoveNearTo(what)
                                 .Change(node => node.LE.SetAreaType(AreaType.Room).GN(sym.ChapelEntrance, sym.FullFloorMarker)),
                             out var newChapelEntrance
@@ -751,7 +757,7 @@ namespace ShapeGrammar
                         //Replace with open connection
                         .FindPath(() => ldk.con.ConnectByDoor(newChapelEntrance.LE, what.LE).GN(sym.ConnectionMarker), out var door)
                         .PlaceCurrentFrom(what, newChapelEntrance);
-                });
+                });*/
         }
 
         public Production ChapelHall(Symbol extendFrom, int length, PathGuide pathGuilde)
@@ -919,40 +925,6 @@ namespace ShapeGrammar
                         .PlaceCurrentFrom(what, newPark);
                 });
         }
-        /*
-        public Production ParkToHeight(Symbol nextToWhat, int parkHeight, Func<LevelElement> parkF)
-        {
-            return new Production(
-                $"ParkToHeight_{nextToWhat.Name}",
-                new ProdParamsManager().AddNodeSymbols(nextToWhat)
-                    .SetCondition((state, pp) => pp.Param.LE.CG().LeftBottomBack().y > parkHeight),
-                (state, pp) =>
-                {
-                    var what = pp.Param;
-                    var whatCG = what.LE.CG();
-
-                    return state.NewProgram()
-                        .SelectOne(
-                            state.NewProgram()
-                                .Set(() => parkF().GN())
-                                .MoveNearTo(what)
-                                .Change(park =>
-                                    park.LE
-                                        .MoveBottomTo(parkHeight).CG()
-                                        .OpAdd().ExtrudeVer(Vector3Int.up, 2).OpNew()
-                                        .LE(AreaType.Garden).GN())
-                                .Change(node => node.LE.GN(sym.Park, sym.FullFloorMarker)),
-                            out var newPark
-                            )
-                        .PlaceCurrentFrom(what)
-
-                        .Found()
-                        .PlaceCurrentFrom(newPark)
-
-                        .FindPath(() => ldk.con.ConnectByBalconyStairsOutside(newPark.LE, what.LE, state.WorldState.Added).GN(sym.ConnectionMarker), out var stairs)
-                        .PlaceCurrentFrom(what, newPark);
-                });
-        }*/
         #endregion
     }
 }
