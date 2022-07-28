@@ -79,7 +79,7 @@ namespace ShapeGrammar
             var graveyardPostprocessGrammar = new AllGrammar(prL.GraveyardPostprocess());
             var roofGrammar = new AllGrammar(prL.Roofs());
 
-            var newNodes = grammarState.ApplyProduction(pr.CreateNewHouse());
+            var newNodes = grammarState.ApplyProduction(pr.CreateNewHouse(8));
             shapeGrammar.Evaluate(grammarState);
 
             targetedGardenGrammar.Evaluate(grammarState);

@@ -42,6 +42,17 @@ namespace ShapeGrammar
             return MoveByImpl(offset);
         }
 
+        public LevelElement MoveBottomBy(int yOffset, int minY)
+        {
+            var cg = CG();
+            if (!cg.Cubes.Any())
+                return this;
+
+            var bottom = cg.LeftBottomBack().y;
+            var newBottom = Math.Max(minY, bottom + yOffset);
+            return MoveBy((newBottom - bottom) * Vector3Int.up);
+        }
+
         public LevelElement MoveBottomTo(int yPosition)
         {
             var cg = CG();

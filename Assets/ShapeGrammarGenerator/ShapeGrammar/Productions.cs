@@ -19,7 +19,7 @@ namespace ShapeGrammar
             this.sym = sym;
         }
 
-        public Production CreateNewHouse()
+        public Production CreateNewHouse(int bottomHeight)
         {
             return new Production(
                 "CreateNewHouse",
@@ -27,7 +27,7 @@ namespace ShapeGrammar
                 (state, pp) =>
                 {
                     var root = state.Root;
-                    var room = ldk.sgShapes.Room(new Box2Int(0, 0, 5, 5).InflateY(8, 10));
+                    var room = ldk.sgShapes.Room(new Box2Int(0, 0, 5, 5).InflateY(bottomHeight, bottomHeight + 2));
                     var movedRoom = ldk.pl.MoveToNotOverlap(state.WorldState.Added, room).GN(sym.Room(), sym.FullFloorMarker);
                     var foundation = ldk.sgShapes.Foundation(movedRoom.LE).GN(sym.Foundation);
                     var reservation = movedRoom.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.Reservation).GN(sym.UpwardReservation(movedRoom));
@@ -801,7 +801,7 @@ namespace ShapeGrammar
                     return state.NewProgram()
                         .Set(() => hall)
                         .Change(h => h.LE.CG()
-                            .ExtrudeDir(hall.GetSymbol<ChapelHall>().Direction, extrusionLength).LE(AreaType.Room).GN(sym.ChapelRoom, sym.FullFloorMarker))
+                            .ExtrudeDir(hall.GetSymbol<ChapelHall>().Direction, extrusionLength).LE(AreaType.Room).GN(sym.ChapelRoom(true, 0), sym.FullFloorMarker))
                         .NotTaken()
                         .CanBeFounded()
                         .CurrentFirst(out var newRoom)
@@ -819,7 +819,7 @@ namespace ShapeGrammar
                 });
         }
 
-        public Production ChapelNextFloor(int nextFloorHeight)
+        public Production ChapelNextFloor(int nextFloorHeight, int maxFloor)
         {
             return new Production(
                 $"ChapelNextFloor",
@@ -828,7 +828,9 @@ namespace ShapeGrammar
                     .SetCondition((state, pp) =>
                     {
                         var roomBelow = pp.Param.GetSymbol<UpwardReservation>().RoomBelow.GetSymbol<ChapelRoom>();
-                        return roomBelow != null;
+                        return 
+                            roomBelow != null && 
+                            roomBelow.Floor < maxFloor;
                     }),
                 (state, pp) =>
                 {
@@ -837,6 +839,7 @@ namespace ShapeGrammar
                     var resHeight = reservationCG.Extents().y;
                     var toExtrude = nextFloorHeight - resHeight;
                     var roomBelow = pp.Param.GetSymbol<UpwardReservation>().RoomBelow;
+                    var roomBelowFloor = roomBelow.GetSymbol<ChapelRoom>().Floor;
 
                     return state.NewProgram()
                         .Condition(() => toExtrude >= 0)
@@ -844,7 +847,7 @@ namespace ShapeGrammar
                         .Change(res => res.LE.CG()
                             .ExtrudeDir(Vector3Int.up, toExtrude).LE().GN())
                         .NotTaken()
-                        .Change(extr => extr.LE.CG().Merge(reservationCG).LE(AreaType.Room).GN(sym.ChapelRoom, sym.FullFloorMarker))
+                        .Change(extr => extr.LE.CG().Merge(reservationCG).LE(AreaType.Room).GN(sym.ChapelRoom(true, roomBelowFloor), sym.FullFloorMarker))
                         .CurrentFirst(out var nextFloor)
                         .ReplaceNodes(reservation)
 
@@ -884,6 +887,72 @@ namespace ShapeGrammar
                         .PlaceCurrentFrom(roomBelow, towerTop);
                 });
         }
+
+        public Production Park(Symbol nextToWhat, int heightChangeAmount, int minHeight, Func<LevelElement> parkF)
+        {
+            return new Production(
+                $"DownwardPark_{nextToWhat.Name}",
+                new ProdParamsManager().AddNodeSymbols(nextToWhat),
+                (state, pp) =>
+                {
+                    var what = pp.Param;
+                    var whatCG = what.LE.CG();
+
+                    return state.NewProgram()
+                        .SelectOne(
+                            state.NewProgram()
+                                .Set(() => parkF().GN())
+                                .MoveNearTo(what)
+                                .Change(park =>
+                                    park.LE
+                                        .MoveBottomBy(heightChangeAmount, minHeight).CG()
+                                        .LE(AreaType.Garden).GN())
+                                .Change(node => node.LE.GN(sym.Park, sym.FullFloorMarker)),
+                            out var newPark
+                            )
+                        .PlaceCurrentFrom(what)
+
+                        .Found(out var foundation)
+                        .PlaceCurrentFrom(newPark)
+
+                        .FindPath(() => ldk.con.ConnectByBalconyStairsOutside(newPark.LE, what.LE, state.WorldState.Added.Merge(foundation.LE)).GN(sym.ConnectionMarker), out var stairs)
+                        .PlaceCurrentFrom(what, newPark);
+                });
+        }
+        /*
+        public Production ParkToHeight(Symbol nextToWhat, int parkHeight, Func<LevelElement> parkF)
+        {
+            return new Production(
+                $"ParkToHeight_{nextToWhat.Name}",
+                new ProdParamsManager().AddNodeSymbols(nextToWhat)
+                    .SetCondition((state, pp) => pp.Param.LE.CG().LeftBottomBack().y > parkHeight),
+                (state, pp) =>
+                {
+                    var what = pp.Param;
+                    var whatCG = what.LE.CG();
+
+                    return state.NewProgram()
+                        .SelectOne(
+                            state.NewProgram()
+                                .Set(() => parkF().GN())
+                                .MoveNearTo(what)
+                                .Change(park =>
+                                    park.LE
+                                        .MoveBottomTo(parkHeight).CG()
+                                        .OpAdd().ExtrudeVer(Vector3Int.up, 2).OpNew()
+                                        .LE(AreaType.Garden).GN())
+                                .Change(node => node.LE.GN(sym.Park, sym.FullFloorMarker)),
+                            out var newPark
+                            )
+                        .PlaceCurrentFrom(what)
+
+                        .Found()
+                        .PlaceCurrentFrom(newPark)
+
+                        .FindPath(() => ldk.con.ConnectByBalconyStairsOutside(newPark.LE, what.LE, state.WorldState.Added).GN(sym.ConnectionMarker), out var stairs)
+                        .PlaceCurrentFrom(what, newPark);
+                });
+        }*/
         #endregion
     }
 }

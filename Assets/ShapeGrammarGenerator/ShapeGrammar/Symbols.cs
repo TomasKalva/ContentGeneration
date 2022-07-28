@@ -31,7 +31,7 @@ namespace ShapeGrammar
         public Symbol Park { get; } = new Symbol("Graveyard");
         public Symbol ChapelEntrance { get; } = new Symbol("ChapelEntrance");
         public Symbol ChapelHall(Vector3Int direction) => new ChapelHall("ChapelHall", direction);
-        public Symbol ChapelRoom { get; } = new ChapelRoom("ChapelRoom");
+        public Symbol ChapelRoom(bool plain = true, int floor = 0) => new ChapelRoom("ChapelRoom", plain, floor);
         public Symbol ChapelTowerTop { get; } = new Symbol("ChapelTowerTop");
         #endregion
 
@@ -70,12 +70,13 @@ namespace ShapeGrammar
         }
     }
 
+    /*
     public class ChapelRoom : Symbol
     {
         public ChapelRoom(string name) : base(name)
         {
         }
-    }
+    }*/
 
     public class Marker : Symbol
     {
@@ -133,6 +134,13 @@ namespace ShapeGrammar
         {
             Plain = plain;
             Floor = floor;
+        }
+    }
+
+    public class ChapelRoom : Room
+    {
+        public ChapelRoom(string name, bool plain, int floor) : base(name, plain, floor)
+        {
         }
     }
 

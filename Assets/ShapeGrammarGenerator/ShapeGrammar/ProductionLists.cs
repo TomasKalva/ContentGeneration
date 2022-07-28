@@ -48,7 +48,7 @@ namespace ShapeGrammar
         {
             return new ProductionList
             (
-                pr.CreateNewHouse()
+                pr.CreateNewHouse(2)
             );
         }
 
@@ -107,9 +107,9 @@ namespace ShapeGrammar
                 pr.DownwardPark(pr.sym.Park, 1, () => ldk.qc.GetFlatBox(5, 4)),
                 pr.ChapelNextTo(pr.sym.Park, () => ldk.qc.GetFlatBox(3, 3, 2)),
                 pr.ChapelHall(pr.sym.ChapelEntrance, 6, guideRandomly),
-                pr.ChapelHall(pr.sym.ChapelRoom, 6, guideRandomly),
+                pr.ChapelHall(pr.sym.ChapelRoom(), 6, guideRandomly),
                 pr.ChapelRoom(3),
-                pr.ChapelNextFloor(3)
+                pr.ChapelNextFloor(3, 2)
             );
         }
 
@@ -126,9 +126,14 @@ namespace ShapeGrammar
                 //pr.DownwardPark(pr.sym.Park, 1, () => ldk.qc.GetFlatBox(5, 4)),
                 pr.ChapelNextTo(pr.sym.Room(), () => ldk.qc.GetFlatBox(3, 3, 2)),
                 pr.ChapelHall(pr.sym.ChapelEntrance, 6, guideRandomly),
-                pr.ChapelHall(pr.sym.ChapelRoom, 6, guideRandomly),
+                pr.ChapelHall(pr.sym.ChapelRoom(), 6, guideRandomly),
                 pr.ChapelRoom(3),
-                pr.ChapelNextFloor(3)
+                pr.ChapelNextFloor(3, 2),
+                pr.ChapelTowerTop(3),
+                pr.Park(pr.sym.ChapelTowerTop, -5, 3, () => ldk.qc.GetFlatBox(5, 6, 3)),
+                pr.Park(pr.sym.Park, -1, 3, () => ldk.qc.GetFlatBox(5, 4, 3)),
+                pr.Park(pr.sym.Park, -1, 3, () => ldk.qc.GetFlatBox(3, 5, 3)),
+                pr.Park(pr.sym.Park, 2, 3, () => ldk.qc.GetFlatBox(4, 5, 3))
             );
         }
 
