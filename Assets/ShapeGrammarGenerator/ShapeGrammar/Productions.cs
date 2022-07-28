@@ -248,6 +248,16 @@ namespace ShapeGrammar
 
         public Production RoomNextTo(Symbol nextToWhat, Func<LevelElement> roomF)
         {
+
+            return FullFloorNextTo(nextToWhat, sym.Room(), roomF,
+                (program, _) => program,
+                (program, newRoom) => program
+                        .Set(() => newRoom)
+                        .ReserveUpward(2)
+                        .PlaceCurrentFrom(newRoom),
+                _ => ldk.con.ConnectByDoor
+                );
+            /*
             return new Production(
                 $"RoomNextTo{nextToWhat.Name}",
                 new ProdParamsManager().AddNodeSymbols(nextToWhat),
@@ -275,7 +285,7 @@ namespace ShapeGrammar
 
                         .FindPath(() => ldk.con.ConnectByDoor(newRoom.LE, what.LE).GN(sym.ConnectionMarker), out var door)
                         .PlaceCurrentFrom(what, newRoom);
-                });
+                });*/
         }
 
         public Production ExtendBridgeTo(Symbol from, Func<LevelElement> toF, PathGuide pathGuide = null, bool addFloorAbove = true)
@@ -663,7 +673,7 @@ namespace ShapeGrammar
             Func<LevelElement> parkF, 
             Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPositionedNear,
             Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPlaced,
-            Connections.ConnectionNotIntersecting connectionNotIntersecting)
+            ConnectionNotIntersecting connectionNotIntersecting)
         {
             return new Production(
                 $"{newAreaSym}_NextTo_{nextToWhat.Name}",
@@ -696,7 +706,8 @@ namespace ShapeGrammar
 
                         //Replace with open connection
                         .FindPath(() => 
-                            connectionNotIntersecting(state.WorldState.Added.Merge(foundation.LE))
+                            connectionNotIntersecting
+                                (state.WorldState.Added.Merge(foundation.LE))
                                 (newPark.LE, what.LE)
                                 .GN(sym.ConnectionMarker), out var door)
                         .PlaceCurrentFrom(what, newPark);
@@ -860,41 +871,13 @@ namespace ShapeGrammar
         public Production Park(Symbol nextToWhat, int heightChangeAmount, int minHeight, Func<LevelElement> parkF)
         {
             return FullFloorNextTo(nextToWhat, sym.Park, () => parkF().SetAreaType(AreaType.Garden),
-                (program, _) => program
+                (program, park) => program
+                        .Set(() => park)
                         .Change(park => park
                                 .LE.MoveBottomBy(heightChangeAmount, minHeight).CG()
                                 .LE(AreaType.Garden).GN()),
                 (program, _) => program,
                  ldk.con.ConnectByBalconyStairsOutside);
-            /*
-            return new Production(
-                $"DownwardPark_{nextToWhat.Name}",
-                new ProdParamsManager().AddNodeSymbols(nextToWhat),
-                (state, pp) =>
-                {
-                    var what = pp.Param;
-                    var whatCG = what.LE.CG();
-
-                    return state.NewProgram()
-                        .SelectOne(
-                            state.NewProgram()
-                                .Set(() => parkF().GN())
-                                .MoveNearTo(what)
-                                .Change(park =>
-                                    park.LE
-                                        .MoveBottomBy(heightChangeAmount, minHeight).CG()
-                                        .LE(AreaType.Garden).GN())
-                                .Change(node => node.LE.GN(sym.Park, sym.FullFloorMarker)),
-                            out var newPark
-                            )
-                        .PlaceCurrentFrom(what)
-
-                        .Found(out var foundation)
-                        .PlaceCurrentFrom(newPark)
-
-                        .FindPath(() => ldk.con.ConnectByBalconyStairsOutside(state.WorldState.Added.Merge(foundation.LE))(newPark.LE, what.LE).GN(sym.ConnectionMarker), out var stairs)
-                        .PlaceCurrentFrom(what, newPark);
-                });*/
         }
         #endregion
     }

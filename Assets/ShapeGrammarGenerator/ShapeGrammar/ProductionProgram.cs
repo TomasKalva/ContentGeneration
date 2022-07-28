@@ -237,6 +237,10 @@ namespace ShapeGrammar
             return this;
         }
 
+        /// <summary>
+        /// Runs the program with the current State and CurrentNodes and its state after being run is applied to this.
+        /// programF takes new program with the same state as argument.
+        /// </summary>
         public ProductionProgram RunIf(bool condition, Func<ProductionProgram, ProductionProgram> programF)
         {
             if (Failed)
@@ -244,8 +248,13 @@ namespace ShapeGrammar
 
             if (condition)
             {
-                var program = programF(this);
+                var startingProgram = State.NewProgram();
+                startingProgram.CurrentNodes = CurrentNodes;
+                startingProgram.Failed = Failed;
+
+                var program = programF(startingProgram);
                 AppliedOperations.AddRange(program.AppliedOperations);
+
                 CurrentNodes = program.CurrentNodes;
                 Failed = program.Failed;
             }
