@@ -246,6 +246,26 @@ namespace ShapeGrammar
         }
     }
 
+    public class ConstDirectionPathGuide : PathGuide
+    {
+        Vector3Int Direction { get; }
+
+        public ConstDirectionPathGuide(Vector3Int direction)
+        {
+            Direction = direction;
+        }
+
+        public override LEMoves SelectMove(LEMoves moves)
+        {
+            return moves;
+        }
+
+        public override IEnumerable<Vector3Int> SelectDirections(LevelElement currentElement)
+        {
+            return Direction.ToEnumerable();
+        }
+    }
+
     public class PointPathGuide : PathGuide
     {
         ShapeGrammarState ShapeGrammarState { get; }

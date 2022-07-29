@@ -248,7 +248,6 @@ namespace ShapeGrammar
 
         public Production RoomNextTo(Symbol nextToWhat, Func<LevelElement> roomF)
         {
-
             return FullFloorNextTo(nextToWhat, sym.Room(), roomF,
                 (program, _) => program,
                 (program, newRoom) => program
@@ -257,35 +256,6 @@ namespace ShapeGrammar
                         .PlaceCurrentFrom(newRoom),
                 _ => ldk.con.ConnectByDoor
                 );
-            /*
-            return new Production(
-                $"RoomNextTo{nextToWhat.Name}",
-                new ProdParamsManager().AddNodeSymbols(nextToWhat),
-                (state, pp) =>
-                {
-                    var what = pp.Param;
-                    var whatCG = what.LE.CG();
-
-                    return state.NewProgram()
-                        .SelectOne(
-                            state.NewProgram()
-                                .Set(() => roomF().GN())
-                                .MoveNearTo(what)
-                                .Change(node => node.LE.GN(sym.Room(), sym.FullFloorMarker)),
-                            out var newRoom
-                            )
-                        .PlaceCurrentFrom(what)
-
-                        .Found()
-                        .PlaceCurrentFrom(newRoom)
-
-                        .Set(() => newRoom)
-                        .ReserveUpward(2)
-                        .PlaceCurrentFrom(newRoom)
-
-                        .FindPath(() => ldk.con.ConnectByDoor(newRoom.LE, what.LE).GN(sym.ConnectionMarker), out var door)
-                        .PlaceCurrentFrom(what, newRoom);
-                });*/
         }
 
         public Production ExtendBridgeTo(Symbol from, Func<LevelElement> toF, PathGuide pathGuide = null, bool addFloorAbove = true)
@@ -732,71 +702,79 @@ namespace ShapeGrammar
                  _ => ldk.con.ConnectByDoor);
         }
 
-
-
-        public Production ChapelHall(Symbol extrudeFrom, int length, PathGuide pathGuilde)
+        public Production Extrude(
+            Symbol extrudeFrom, 
+            Func<CubeGroup, Vector3Int, Node> nodeFromExtrudedDirection, 
+            int length,
+            Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPlaced,
+            ConnectionNotIntersecting connectionNotIntersecting,
+            Func<Node, PathGuide> pathGuideFromSelected)
         {
             return new Production(
-                $"ChapelHall",
+                $"Extrude{extrudeFrom}",
                 new ProdParamsManager().AddNodeSymbols(extrudeFrom),
                 (state, pp) =>
                 {
-                    var entrance = pp.Param;
-                    var whatCG = entrance.LE.CG();
+                    var from = pp.Param;
+                    var fromCG = from.LE.CG();
 
                     return state.NewProgram()
                         .SelectOne(
                             state.NewProgram()
-                                .Directional(pathGuilde.SelectDirections(entrance.LE),
+                                .Directional(pathGuideFromSelected(from).SelectDirections(from.LE),
                                     dir =>
-                                        entrance.LE.CG().ExtrudeDir(dir, length).LE(AreaType.Room).GN(sym.ChapelHall(dir), sym.FullFloorMarker)
+                                        nodeFromExtrudedDirection(from.LE.CG().ExtrudeDir(dir, length), dir)
                                 )
                                 .NotTaken()
                                 .CanBeFounded(),
                             out var newChapelHall
                             )
-                        .PlaceCurrentFrom(entrance)
+                        .PlaceCurrentFrom(from)
 
-                        .Found()
+                        .Found(out var foundation)
                         .PlaceCurrentFrom(newChapelHall)
 
+                        .RunIf(true, newProg =>
+                            fromFloorNodeAfterPlaced(newProg, newChapelHall))
+
+                        .FindPath(() => 
+                        connectionNotIntersecting(state.WorldState.Added.Merge(foundation.LE))
+                            (newChapelHall.LE, from.LE).GN(sym.ConnectionMarker), out var door)
+                        .PlaceCurrentFrom(from, newChapelHall);
+                });
+        }
+
+
+        public Production ChapelHall(Symbol extrudeFrom, int length, PathGuide pathGuide)
+        {
+            return Extrude(
+                extrudeFrom,
+                (extrLE, dir) => extrLE.LE(AreaType.Room).GN(sym.ChapelHall(dir), sym.FullFloorMarker),
+                length,
+                (program, newChapelHall) =>
+                    program
                         .Set(() => newChapelHall)
                         .ReserveUpward(2)
-                        .PlaceCurrentFrom(newChapelHall)
-
-                        .FindPath(() => ldk.con.ConnectByDoor(newChapelHall.LE, entrance.LE).GN(sym.ConnectionMarker), out var door)
-                        .PlaceCurrentFrom(entrance, newChapelHall);
-                });
+                        .PlaceCurrentFrom(newChapelHall),
+                _ => ldk.con.ConnectByDoor,
+                _ => pathGuide
+                );
         }
 
         public Production ChapelRoom(int extrusionLength)
         {
-            return new Production(
-                $"ChapelRoom",
-                new ProdParamsManager().AddNodeSymbols(sym.ChapelHall(default)),
-                (state, pp) =>
-                {
-                    var hall = pp.Param;
-
-                    return state.NewProgram()
-                        .Set(() => hall)
-                        .Change(h => h.LE.CG()
-                            .ExtrudeDir(hall.GetSymbol<ChapelHall>().Direction, extrusionLength).LE(AreaType.Room).GN(sym.ChapelRoom(true, 0), sym.FullFloorMarker))
-                        .NotTaken()
-                        .CanBeFounded()
-                        .CurrentFirst(out var newRoom)
-                        .PlaceCurrentFrom(hall)
-                        
-                        .Found()
-                        .PlaceCurrentFrom(newRoom)
-
-                        .Set(() => newRoom)
+            return Extrude(
+                sym.ChapelHall(default),
+                (extrLE, dir) => extrLE.LE(AreaType.Room).GN(sym.ChapelRoom(), sym.FullFloorMarker),
+                extrusionLength,
+                (program, newChapel) =>
+                    program
+                        .Set(() => newChapel)
                         .ReserveUpward(2)
-                        .PlaceCurrentFrom(newRoom)
-                        
-                        .FindPath(() => ldk.con.ConnectByDoor(newRoom.LE, hall.LE).GN(sym.ConnectionMarker), out var door)
-                        .PlaceCurrentFrom(hall, newRoom);
-                });
+                        .PlaceCurrentFrom(newChapel),
+                _ => ldk.con.ConnectByDoor,
+                selectedNode => new ConstDirectionPathGuide(selectedNode.GetSymbol<ChapelHall>().Direction)
+                );
         }
 
         public Production ChapelNextFloor(int nextFloorHeight, int maxFloor)
