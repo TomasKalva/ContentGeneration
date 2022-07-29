@@ -103,7 +103,7 @@ namespace ShapeGrammar
         {
             // find two areas with floor next to each other
             // calculation is done eagerly and in advance, so it doesn't react on changes of geometry
-            var elementsWithFloor = levelGeometry.Leafs().Where(le => AreaType.CanBeConnectedByStairs(le.AreaType) && le.CG().WithFloor().Cubes.Any()).ToList();
+            var elementsWithFloor = levelGeometry.Leafs().Where(le => AreaType.CanBeConnectedByStairs(le.AreaType) && le.CG().BottomLayer().Cubes.Any()).ToList();
             var closeElementsWithFloor = elementsWithFloor
                 .Select2Distinct((el1, el2) => new { el1, el2 })
                 .Where(pair => pair.el1.CG().ExtrudeAll().Intersects(pair.el2.CG())).ToList();
@@ -117,7 +117,7 @@ namespace ShapeGrammar
 
                 var searchSpace = new CubeGroup(ldk.grid, closePair.el1.CG().Merge(closePair.el2.CG()).Cubes);
                 Neighbors<PathNode> neighborNodes = PathNode.BoundedBy(PathNode.StairsNeighbors(), searchSpace);
-                var newPath = ldk.paths.ConnectByPath(closePair.el1.CG().WithFloor(), closePair.el2.CG().WithFloor(), neighborNodes);
+                var newPath = ldk.paths.ConnectByPath(closePair.el1.CG().BottomLayer(), closePair.el2.CG().BottomLayer(), neighborNodes);
 
                 if (newPath == null)
                     return worldState;

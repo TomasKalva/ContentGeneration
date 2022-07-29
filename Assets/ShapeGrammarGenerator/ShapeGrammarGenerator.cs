@@ -79,7 +79,7 @@ namespace ShapeGrammar
             world.AddObject(elevator.Object, Vector3.zero);
             */
 
-            var goodCubes = levelRoot.CG().WithFloor().Cubes
+            var goodCubes = levelRoot.CG().BottomLayer().Cubes
                 .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor));
             var goodGraveCube = goodCubes.ElementAt(0);
             var graveState = libraries.InteractiveObjects.Grave();

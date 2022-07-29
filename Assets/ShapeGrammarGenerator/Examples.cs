@@ -198,8 +198,8 @@ namespace ShapeGrammar
                 if (upperFloor == null)
                     return;
 
-                var lower = floor.CG().WithFloor().CubeGroupMaxLayer(Vector3Int.down);
-                var upper = upperFloor.CG().WithFloor().CubeGroupMaxLayer(Vector3Int.down);
+                var lower = floor.CG().BottomLayer().CubeGroupMaxLayer(Vector3Int.down);
+                var upper = upperFloor.CG().BottomLayer().CubeGroupMaxLayer(Vector3Int.down);
                 var searchSpace = new CubeGroup(grid, floor.CG().ExtrudeHor(false, true).Cubes.Concat(upper.Cubes).ToList());
                 Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.StairsNeighbors(), searchSpace);
                 var path = paths.ConnectByPath(lower, upper, neighbors);

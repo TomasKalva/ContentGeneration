@@ -221,6 +221,7 @@ namespace ShapeGrammar
             return Constr(this, extruded.Cubes);
         }
 
+        public CubeGroup BottomLayer() => CubesMaxLayer(Vector3Int.down).ToCubeGroup(Grid);
         public CubeGroup WithFloor() => Where(cube => cube.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor);
 
         public CubeGroup Symmetrize(FaceHor faceHor)

@@ -133,7 +133,7 @@ namespace ShapeGrammar
         public CubeGroup BalconyOne(CubeGroup house)
         {
             // Find a cube for the balcony
-            var balcony = house.WithFloor()
+            var balcony = house.BottomLayer()
                .AllBoundaryFacesH()
                .Where(face => !face.OtherCube.Changed && !face.OtherCube.In(house))
                .Facets.GetRandom()
@@ -145,7 +145,7 @@ namespace ShapeGrammar
         public CubeGroup BalconyWide(CubeGroup house)
         {
             // Find a cube for the balcony
-            var balcony = house.WithFloor()
+            var balcony = house.BottomLayer()
                .BoundaryFacesH(Vector3Int.left)
                .Where(face => !face.OtherCube.Changed && !face.OtherCube.In(house))
                .Extrude(1);

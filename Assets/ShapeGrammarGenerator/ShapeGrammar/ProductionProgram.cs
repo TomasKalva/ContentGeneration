@@ -61,27 +61,10 @@ namespace ShapeGrammar
             if (Failed) 
                 return this;
 
-            ApplyStyles();
             path = pathFinder();
             Debug.Assert(path != null);
             CurrentNodes = path.ToEnumerable().ToList();
 
-            return this;
-        }
-
-        /// <summary>
-        /// Used, because path finding requires information about floor...
-        /// Maybe just assume that entire bottom layer is filled with floor to get rid of this call.
-        /// </summary>
-        ProductionProgram ApplyStyles()
-        {
-            if (Failed)
-                return this;
-
-            foreach(var node in AppliedOperations.SelectMany(op => op.To))
-            {
-                node.LE.ApplyGrammarStyleRules(StyleRules);
-            }
             return this;
         }
 

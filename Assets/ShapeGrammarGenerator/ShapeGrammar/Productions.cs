@@ -702,13 +702,25 @@ namespace ShapeGrammar
                  _ => ldk.con.ConnectByDoor);
         }
 
+        public Production Park(Symbol nextToWhat, int heightChangeAmount, int minHeight, Func<LevelElement> parkF)
+        {
+            return FullFloorNextTo(nextToWhat, sym.Park, () => parkF().SetAreaType(AreaType.Garden),
+                (program, park) => program
+                        .Set(() => park)
+                        .Change(park => park
+                                .LE.MoveBottomBy(heightChangeAmount, minHeight).CG()
+                                .LE(AreaType.Garden).GN()),
+                (program, _) => program,
+                 ldk.con.ConnectByBalconyStairsOutside);
+        }
+
         public Production Extrude(
-            Symbol extrudeFrom, 
+            Symbol extrudeFrom,
+            Func<Node, PathGuide> pathGuideFromSelected,
             Func<CubeGroup, Vector3Int, Node> nodeFromExtrudedDirection, 
             int length,
             Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPlaced,
-            ConnectionNotIntersecting connectionNotIntersecting,
-            Func<Node, PathGuide> pathGuideFromSelected)
+            ConnectionNotIntersecting connectionNotIntersecting)
         {
             return new Production(
                 $"Extrude{extrudeFrom}",
@@ -749,6 +761,7 @@ namespace ShapeGrammar
         {
             return Extrude(
                 extrudeFrom,
+                _ => pathGuide,
                 (extrLE, dir) => extrLE.LE(AreaType.Room).GN(sym.ChapelHall(dir), sym.FullFloorMarker),
                 length,
                 (program, newChapelHall) =>
@@ -756,8 +769,7 @@ namespace ShapeGrammar
                         .Set(() => newChapelHall)
                         .ReserveUpward(2)
                         .PlaceCurrentFrom(newChapelHall),
-                _ => ldk.con.ConnectByDoor,
-                _ => pathGuide
+                _ => ldk.con.ConnectByDoor
                 );
         }
 
@@ -765,6 +777,7 @@ namespace ShapeGrammar
         {
             return Extrude(
                 sym.ChapelHall(default),
+                selectedNode => new ConstDirectionPathGuide(selectedNode.GetSymbol<ChapelHall>().Direction),
                 (extrLE, dir) => extrLE.LE(AreaType.Room).GN(sym.ChapelRoom(), sym.FullFloorMarker),
                 extrusionLength,
                 (program, newChapel) =>
@@ -772,8 +785,7 @@ namespace ShapeGrammar
                         .Set(() => newChapel)
                         .ReserveUpward(2)
                         .PlaceCurrentFrom(newChapel),
-                _ => ldk.con.ConnectByDoor,
-                selectedNode => new ConstDirectionPathGuide(selectedNode.GetSymbol<ChapelHall>().Direction)
+                _ => ldk.con.ConnectByDoor
                 );
         }
 
@@ -846,17 +858,6 @@ namespace ShapeGrammar
                 });
         }
 
-        public Production Park(Symbol nextToWhat, int heightChangeAmount, int minHeight, Func<LevelElement> parkF)
-        {
-            return FullFloorNextTo(nextToWhat, sym.Park, () => parkF().SetAreaType(AreaType.Garden),
-                (program, park) => program
-                        .Set(() => park)
-                        .Change(park => park
-                                .LE.MoveBottomBy(heightChangeAmount, minHeight).CG()
-                                .LE(AreaType.Garden).GN()),
-                (program, _) => program,
-                 ldk.con.ConnectByBalconyStairsOutside);
-        }
         #endregion
     }
 }

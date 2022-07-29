@@ -20,8 +20,8 @@ namespace ShapeGrammar
 
         public LevelGroupElement WalkableWallPathH(LevelElement area1, LevelElement area2, int thickness)
         {
-            var starting = area1.CG().WithFloor();
-            var ending = area2.CG().WithFloor();
+            var starting = area1.CG().BottomLayer();
+            var ending = area2.CG().BottomLayer();
 
             Neighbors<PathNode> neighbors = PathNode.HorizontalNeighbors();
             var pathCubes = ConnectByPathFS(starting, ending, neighbors);
@@ -60,8 +60,8 @@ namespace ShapeGrammar
 
         public LevelGeometryElement WalkableElevator(LevelElement area1, LevelElement area2)
         {
-            var starting = area1.CG().WithFloor();
-            var ending = area2.CG().WithFloor();
+            var starting = area1.CG().BottomLayer();
+            var ending = area2.CG().BottomLayer();
 
             Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.ElevatorNeighbors(area2.CG()), area1.Merge(area2).CG());
             var pathCubes = ConnectByPath(starting, ending, neighbors);

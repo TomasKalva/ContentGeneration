@@ -37,7 +37,7 @@ namespace ShapeGrammar
         public void AddEnemy(CharacterState enemy)
         {
             // define behavior that makes enemies only go after player, if he's in their area
-            var gotoPosition = L.State.Ldk.wg.GridToWorld(Node.LE.CG().WithFloor().Cubes.GetRandom().Position);
+            var gotoPosition = L.State.Ldk.wg.GridToWorld(Node.LE.CG().BottomLayer().Cubes.GetRandom().Position);
             //L.Lib.InteractiveObjects.AscensionKiln().MakeGeometry().transform.position = gotoPosition; // visualization of waiting spots
             var thisAreaPositions = new HashSet<Vector3Int>(Node.LE.CG().Cubes.Select(c => c.Position));
             enemy.Behaviors.AddBehavior(
@@ -55,7 +55,7 @@ namespace ShapeGrammar
 
         public virtual void InstantiateAll(WorldGeometry gg, World world)
         {
-            var flooredCubes = new Stack<Cube>(Node.LE.CG().WithFloor().Cubes.Shuffle());
+            var flooredCubes = new Stack<Cube>(Node.LE.CG().BottomLayer().Cubes.Shuffle());
 
             foreach (var ios in InteractiveObjectStates)
             {

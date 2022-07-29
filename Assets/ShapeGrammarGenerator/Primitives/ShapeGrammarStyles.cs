@@ -120,7 +120,7 @@ namespace ShapeGrammar
         public CubeGroup PlatformStyle(CubeGroup platformArea)
         {
             platformArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Floor);
-            var platformTop = platformArea.WithFloor();
+            var platformTop = platformArea.BottomLayer();
             platformTop.SpecialCorners(ExtensionMethods.HorizontalDirections().ToArray())
                 .MoveBy(-Vector3Int.up)
                 .MoveInDirUntil(Vector3Int.down, corner => corner.MyCube.Position.y < 0)
@@ -132,7 +132,7 @@ namespace ShapeGrammar
         public CubeGroup PlatformRailingStyle(CubeGroup platformArea)
         {
             platformArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Floor);
-            var platformTop = platformArea.WithFloor();
+            var platformTop = platformArea.BottomLayer();
             platformTop.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Railing);
             platformTop.SpecialCorners(ExtensionMethods.HorizontalDirections().ToArray())
                 .MoveBy(-Vector3Int.up)
