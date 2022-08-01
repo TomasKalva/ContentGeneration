@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using static ShapeGrammar.LevelElement;
 
 namespace ShapeGrammar
 {
@@ -282,13 +283,22 @@ namespace ShapeGrammar
         /// Moves current node near to targetNode. None of the cubes of the moved node is vertically taken yet.
         /// Doesn't work correctly for multiple current nodes.
         /// </summary>
-        public ProductionProgram MoveNearTo(Node targetNode)
+        public ProductionProgram MoveNearTo(Node targetNode, int dist)
         {
-            Change(node => ldk.pl.MoveNearXZ(
-                                    targetNode.LE.MoveBottomTo(0),
-                                    node.LE.MoveBottomTo(0),
-                                    State.VerticallyTaken)?.GN())
-            .Change(validNewRoom => validNewRoom.LE.MoveBottomTo(targetNode.LE.CG().LeftBottomBack().y).GN());
+            Change(node =>
+            {
+                var nodeOnGround = node.LE.MoveBottomTo(0);
+                var targeOnGround = targetNode.LE.MoveBottomTo(0);
+
+                return nodeOnGround
+                    .MovesInDistanceXZ(targeOnGround, dist)
+                    .DontIntersect(State.VerticallyTaken)
+                    .TryMove()?.GN();
+            })
+            // Move node to level of target node
+            .Change(validNewRoom => {
+                return validNewRoom.LE.MoveBottomTo(targetNode.LE.CG().LeftBottomBack().y).GN();
+                });
             return this;
         }
     }

@@ -444,5 +444,16 @@ namespace ShapeGrammar
             var house = sgShapes.CompositeHouse(/*new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)),*/ 6);
             house.ApplyGrammarStyleRules(houseStyleRules);
         }
+
+        public LevelElement TestMoveInDistXZ()
+        {
+            var room1 = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 5));
+            var room2 = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(1, 5));
+
+            room1.ApplyGrammarStyleRules(houseStyleRules);
+            room2.MovesInDistanceXZ(room1, 1).TryMove().ApplyGrammarStyleRules(houseStyleRules);
+
+            return room1;
+        }
     }
 }

@@ -124,7 +124,8 @@ namespace ShapeGrammar
                     () => leF().SetAreaType(AreaType.Garden),
                     pr.MoveVertically(heighChange, minHeight),
                     pr.Empty(),
-                    ldk.con.ConnectByBalconyStairsOutside);
+                    ldk.con.ConnectByBalconyStairsOutside,
+                    1);
 
             return new ProductionList
             (

@@ -262,7 +262,8 @@ namespace ShapeGrammar
                         .Set(() => newRoom)
                         .ReserveUpward(2)
                         .PlaceCurrentFrom(newRoom),
-                _ => ldk.con.ConnectByDoor
+                _ => ldk.con.ConnectByDoor,
+                1
                 );
         }
 
@@ -334,7 +335,7 @@ namespace ShapeGrammar
                         .SelectOne(
                             state.NewProgram(subProg => subProg
                                 .Set(() => roomFromToF().GN())
-                                .MoveNearTo(what)
+                                .MoveNearTo(what, 1)
                                 .Change(node => node.LE.GN(sym.Room(false, 1), sym.FullFloorMarker))
                                 ),
                             out var newRoom
@@ -392,7 +393,7 @@ namespace ShapeGrammar
                         .SelectOne(
                             state.NewProgram(subProg => subProg
                                 .Set(() => roomFromF().GN())
-                                .MoveNearTo(to)
+                                .MoveNearTo(to, 1)
                                 .Change(node => node.LE.MoveBy(Vector3Int.up).GN(sym.Room(false, 1), sym.FullFloorMarker))
                                 ),
                             out var newRoom
@@ -681,7 +682,8 @@ namespace ShapeGrammar
             Func<LevelElement> newAreaF, 
             Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPositionedNear,
             Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPlaced,
-            ConnectionNotIntersecting connectionNotIntersecting)
+            ConnectionNotIntersecting connectionNotIntersecting,
+            int dist)
         {
             return new Production(
                 $"{newAreaSym.Name}_NextTo_{nearWhat.Name}",
@@ -695,7 +697,7 @@ namespace ShapeGrammar
                         .SelectOne(
                             state.NewProgram(subProg => subProg
                                 .Set(() => newAreaF().GN())
-                                .MoveNearTo(what)
+                                .MoveNearTo(what, dist)
                                 .CurrentFirst(out var newArea)
                                 .RunIf(true,
                                     thisProg => fromFloorNodeAfterPositionedNear(thisProg, newArea)
@@ -729,7 +731,8 @@ namespace ShapeGrammar
             return FullFloorPlaceNear(nextToWhat, sym.Park, () => parkF().SetAreaType(AreaType.Garden),
                 (program, _) => program, 
                 (program, _) => program,
-                 _ => ldk.con.ConnectByDoor);
+                 _ => ldk.con.ConnectByDoor,
+                 1);
         }
 
         public Func<ProductionProgram, Node, ProductionProgram> Roof(AreaType roofType, int roofHeight)
@@ -747,7 +750,8 @@ namespace ShapeGrammar
                                 .Set(() => chapelEntrance.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.CrossRoof).GN(sym.Roof))
                                 .NotTaken()
                                 .PlaceCurrentFrom(chapelEntrance),
-                 _ => ldk.con.ConnectByDoor);
+                 _ => ldk.con.ConnectByDoor,
+                 1);
         }
 
         public Production Park(Symbol nextToWhat, int heightChangeAmount, int minHeight, Func<LevelElement> parkF)
@@ -759,7 +763,8 @@ namespace ShapeGrammar
                                 .LE.MoveBottomBy(heightChangeAmount, minHeight).CG()
                                 .LE(AreaType.Garden).GN()),
                 (program, _) => program,
-                 ldk.con.ConnectByBalconyStairsOutside);
+                 ldk.con.ConnectByBalconyStairsOutside,
+                 1);
         }
 
         public Production Extrude(

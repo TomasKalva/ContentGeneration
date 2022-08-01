@@ -92,6 +92,9 @@ namespace ShapeGrammar
         public class LEMoves
         {
             public LevelElement LE { get; }
+            /// <summary>
+            /// Has to be finite.
+            /// </summary>
             public IEnumerable<Vector3Int> Ms { get; }
 
             public LEMoves(LevelElement le, IEnumerable<Vector3Int> ms)
@@ -100,14 +103,14 @@ namespace ShapeGrammar
                 Ms = ms;
             }
 
-            LEMoves Merge(IEnumerable<Vector3Int> newMoves) => new LEMoves(LE, Ms.SetIntersect(newMoves));
+            LEMoves Intersect(IEnumerable<Vector3Int> newMoves) => new LEMoves(LE, Ms.SetIntersect(newMoves));
 
             public LEMoves Where(Func<Vector3Int, bool> filter) => new LEMoves(LE, Ms.Where(filter));
             public LEMoves XZ() => Where(m => m.y == 0);
 
             public LEMoves Intersect(LevelElement toIntersect)
             {
-                return Merge(LE.MovesToIntersect(toIntersect).Ms);
+                return Intersect(LE.MovesToIntersect(toIntersect).Ms);
             }
 
             public LEMoves DontIntersect(LevelElement toNotIntersect)
@@ -119,17 +122,17 @@ namespace ShapeGrammar
 
             public LEMoves MovesNearXZ(LevelElement nearThis)
             {
-                return Merge(LE.MovesNearXZ(nearThis).Ms);
+                return Intersect(LE.MovesNearXZ(nearThis).Ms);
             }
 
             public LEMoves BeInside(LevelElement bounding)
             {
-                return Merge(LE.MovesToBeInside(bounding).Ms);
+                return Intersect(LE.MovesToBeInside(bounding).Ms);
             }
 
             public LEMoves PartlyIntersectXZ(LevelElement toPartlyIntersect)
             {
-                return Merge(LE.MovesToPartlyIntersectXZ(toPartlyIntersect).Ms);
+                return Intersect(LE.MovesToPartlyIntersectXZ(toPartlyIntersect).Ms);
             }
 
             /// <summary>
@@ -137,7 +140,7 @@ namespace ShapeGrammar
             /// </summary>
             public LEMoves MovesInDistanceXZ(LevelElement toThis, int dist)
             {
-                return Merge(LE.MovesInDistanceXZ(toThis, dist).Ms);
+                return Intersect(LE.MovesInDistanceXZ(toThis, dist).Ms);
             }
 
             public LevelElement TryMove()
@@ -193,8 +196,10 @@ namespace ShapeGrammar
         /// </summary>
         public LEMoves MovesInDistanceXZ(LevelElement toThis, int dist)
         {
-            var intersectClose = toThis.CG().MinkowskiMinus(CG().AllBoundaryFacesH().Extrude(dist, false)).Where(move => move.y == 0);
-            var intersectNear = toThis.CG().MinkowskiMinus(CG().AllBoundaryFacesH().Extrude(dist + 1, false)).Where(move => move.y == 0);
+            var cg = CG();
+            var toThisCg = toThis.CG();
+            var intersectClose = toThisCg.MinkowskiMinus(cg.AllBoundaryFacesH().Extrude(dist - 1, false).Merge(toThisCg)).Where(move => move.y == 0);
+            var intersectNear = toThisCg.MinkowskiMinus(cg.AllBoundaryFacesH().Extrude(dist, false)).Where(move => move.y == 0);
             return new LEMoves(this, intersectNear.SetMinus(intersectClose));
         }
 

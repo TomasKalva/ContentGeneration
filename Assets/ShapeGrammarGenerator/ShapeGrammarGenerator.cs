@@ -32,13 +32,13 @@ namespace ShapeGrammar
 
         public void Generate()
         {
-            /*if (Application.isEditor)
+            if (Application.isEditor)
             {
                 UnityEditor.SceneView.FocusWindowIfItsOpen(typeof(UnityEditor.SceneView));
-            }*/
+            }
             //world.AddEnemy(libraries.Enemies.MayanSwordsman(), new Vector3(0, 1, 0));
             //world.AddEnemy(libraries.Enemies.DragonMan(), new Vector3(0, 1, 0));
-            UnityEngine.Random.InitState(42);
+            //UnityEngine.Random.InitState(42);
 
             // todo: make this initialization less annoying
             var playerState = new ContentGeneration.Assets.UI.Model.PlayerCharacterState();
@@ -63,7 +63,7 @@ namespace ShapeGrammar
             stopwatch.Start();
 
             var examples = new Examples(DefaultHouseStyle, GardenStyle, world.ArchitectureParent, libraries);
-            var levelRoot = examples.LanguageDesign(libraries, world);
+            var levelRoot = examples.TestMoveInDistXZ();
             examples.grid.Generate(worldScale, world);
 
             stopwatch.Stop();
