@@ -260,7 +260,7 @@ namespace ShapeGrammar
                 (program, _) => program,
                 (program, newRoom) => program
                         .Set(() => newRoom)
-                        .ReserveUpward(2)
+                        .ReserveUpward(2, sym.UpwardReservation)
                         .PlaceCurrentFrom(newRoom),
                 _ => ldk.con.ConnectByDoor,
                 1
@@ -310,7 +310,7 @@ namespace ShapeGrammar
                         .RunIf(addFloorAbove,
                             thisProg => thisProg
                                 .Set(() => newRoom)
-                                .ReserveUpward(2)
+                                .ReserveUpward(2, sym.UpwardReservation)
                                 .PlaceCurrentFrom(newRoom)
                         )
 
@@ -342,7 +342,7 @@ namespace ShapeGrammar
                         )
                         .PlaceCurrentFrom(what)
                         
-                        .ReserveUpward(2)
+                        .ReserveUpward(2, sym.UpwardReservation)
                         .PlaceCurrentFrom(what)
                         
                         .Set(() =>
@@ -404,7 +404,7 @@ namespace ShapeGrammar
                         .PlaceCurrentFrom(newRoom)
 
                         .Set(() => newRoom)
-                        .ReserveUpward(2, out var reservation)
+                        .ReserveUpward(2, sym.UpwardReservation, out var reservation)
                         .PlaceCurrentFrom(newRoom)
 
                         .FindPath(() => ldk.con.ConnectByBalconyStairsOutside(state.WorldState.Added.Merge(foundation.LE).Merge(reservation.LE))(from.LE, newRoom.LE).GN(sym.ConnectionMarker), out var stairs)
@@ -530,7 +530,7 @@ namespace ShapeGrammar
                         )
                         .ReplaceNodes(roomReservation)
 
-                        .ReserveUpward(2)
+                        .ReserveUpward(2, sym.UpwardReservation)
                         .PlaceCurrentFrom(nextFloor)
 
                         .FindPath(() => ldk.con.ConnectByWallStairsIn(roomBelow.LE, nextFloor.LE).GN(sym.ConnectionMarker), out var stairs)
@@ -659,7 +659,7 @@ namespace ShapeGrammar
         {
             return (program, node) => program
                         .Set(() => node)
-                        .Change(park => park
+                        .Change(node => node
                                 .LE.MoveBottomBy(heightChange, minHeight).GN());
         }
 
@@ -670,6 +670,17 @@ namespace ShapeGrammar
         {
             return (program, node) => program;
         }
+
+        public Func<ProductionProgram, Node, ProductionProgram> Reserve(int reservationHeight, Func<Node, Symbol> reservationSymbolF)
+        {
+            return (program, node) => program
+                        .Set(() => node)
+                        .ReserveUpward(reservationHeight, reservationSymbolF)
+                        .PlaceCurrentFrom(node);
+        }
+
+        LevelElement AllBlocking(ShapeGrammarState state, ProductionProgram prog, Grid<Cube> grid) 
+            => state.WorldState.Added.Merge(prog.AppliedOperations.SelectMany(op => op.To.Select(n => n.LE)).ToLevelGroupElement(grid));
 
         #endregion
 
@@ -692,7 +703,7 @@ namespace ShapeGrammar
                 {
                     var what = pp.Param;
                     var whatCG = what.LE.CG();
-
+                    
                     return state.NewProgram(prog => prog
                         .SelectOne(
                             state.NewProgram(subProg => subProg
@@ -718,7 +729,7 @@ namespace ShapeGrammar
                         //Replace with open connection
                         .FindPath(() => 
                             connectionNotIntersecting
-                                (state.WorldState.Added.Merge(prog.AppliedOperations.SelectMany(op => op.To.Select(n => n.LE)).ToLevelGroupElement(what.LE.Grid)))
+                                (AllBlocking(state, prog, what.LE.Grid))
                                 (newNode.LE, what.LE)
                                 .GN(sym.ConnectionMarker), out var door)
                         .PlaceCurrentFrom(what, newNode)
@@ -822,7 +833,7 @@ namespace ShapeGrammar
                 (program, newChapelHall) =>
                     program
                         .Set(() => newChapelHall)
-                        .ReserveUpward(2)
+                        .ReserveUpward(2, sym.UpwardReservation)
                         .PlaceCurrentFrom(newChapelHall),
                 _ => ldk.con.ConnectByDoor
                 );
@@ -838,10 +849,63 @@ namespace ShapeGrammar
                 (program, newChapel) =>
                     program
                         .Set(() => newChapel)
-                        .ReserveUpward(2)
+                        .ReserveUpward(2, sym.UpwardReservation)
                         .PlaceCurrentFrom(newChapel),
                 _ => ldk.con.ConnectByDoor
                 );
+        }
+
+        public Production TakeUpwardReservation(
+            Symbol reservationSymbol, 
+            Func<int, Symbol> newSymbolFromFloor, 
+            int nextFloorHeight, 
+            int maxFloor,
+            Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPlaced,
+            ConnectionNotIntersecting connection)
+        {
+            return new Production(
+                $"TakeReservation_{reservationSymbol.Name}_{newSymbolFromFloor(0).Name}",
+                new ProdParamsManager()
+                    .AddNodeSymbols(reservationSymbol)
+                    /*.SetCondition((state, pp) =>
+                    {
+                        var roomBelow = pp.Param.GetSymbol<UpwardReservation>().RoomBelow.GetSymbol<ChapelRoom>();
+                        return
+                            roomBelow != null &&
+                            roomBelow.Floor < maxFloor;
+                    })*/,
+                (state, pp) =>
+                {
+                    var reservation = pp.Param;
+                    var reservationCG = reservation.LE.CG();
+                    var toExtrude = nextFloorHeight - 1;
+                    var roomBelow = pp.Param.GetSymbol<UpwardReservation>().RoomBelow;
+                    Debug.Log($"Taking upward reservation {toExtrude}");
+                    //var roomBelowFloor = roomBelow.GetSymbol<ChapelRoom>().Floor;
+
+                    return state.NewProgram(prog => prog
+                        .Condition(() => toExtrude >= 0)
+                        .Set(() => reservation)
+                        .Change(res => res.LE.CG().BottomLayer()
+                            .OpAdd().ExtrudeDir(Vector3Int.up, toExtrude).OpNew().LE().GN())
+                        .CurrentFirst(out var extendedReservation)
+                        
+                        // Only check if the part outside of the reservation was not taken yet
+                        .Set(() => extendedReservation.LE.Minus(reservation.LE).GN())
+                        .NotTaken()
+                        .Set(() => extendedReservation)
+
+                        .Change(extr => extr.LE.SetAreaType(AreaType.Room).GN(newSymbolFromFloor(0)/*roomBelowFloor*/, sym.FullFloorMarker))
+                        .CurrentFirst(out var nextFloor)
+                        .ReplaceNodes(reservation)
+
+                        .RunIf(true, prog => fromFloorNodeAfterPlaced(prog, nextFloor))
+
+                        .FindPath(() => connection(AllBlocking(state, prog, reservation.LE.Grid))
+                            (nextFloor.LE, roomBelow.LE).GN(sym.ConnectionMarker), out var stairs)
+                        .PlaceCurrentFrom(roomBelow, nextFloor)
+                        );
+                });
         }
 
         public Production ChapelNextFloor(int nextFloorHeight, int maxFloor)
@@ -876,7 +940,7 @@ namespace ShapeGrammar
                         .CurrentFirst(out var nextFloor)
                         .ReplaceNodes(reservation)
 
-                        .ReserveUpward(2)
+                        .ReserveUpward(2, sym.UpwardReservation)
                         .PlaceCurrentFrom(nextFloor)
 
                         .FindPath(() => ldk.con.ConnectByStairsInside(nextFloor.LE, roomBelow.LE).GN(sym.ConnectionMarker), out var stairs)

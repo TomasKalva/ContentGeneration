@@ -127,6 +127,15 @@ namespace ShapeGrammar
                     ldk.con.ConnectByBalconyStairsOutside,
                     1);
 
+            Func<int, Production> chapelNextFloor = height =>
+                pr.TakeUpwardReservation(
+                    pr.sym.UpwardReservation(default),
+                    floor => pr.sym.ChapelRoom(true, floor),
+                    height,
+                    1000,
+                    pr.Reserve(2, pr.sym.UpwardReservation),
+                    _ => ldk.con.ConnectByStairsInside);
+
             return new ProductionList
             (
                 //pr.GardenFromCourtyard(),
@@ -178,7 +187,10 @@ namespace ShapeGrammar
                 pr.ChapelHall(pr.sym.ChapelRoom(), 5, guideRandomly),
 
                 pr.ChapelRoom(3),
-                pr.ChapelNextFloor(3, 2),
+
+
+                //pr.ChapelNextFloor(3, 2),
+                chapelNextFloor(3),
                 pr.ChapelTowerTop(3),
 
                 parkNear(pr.sym.ChapelTowerTop, -5, 3, () => ldk.qc.GetFlatBox(5, 6, 3)),

@@ -137,7 +137,10 @@ namespace ShapeGrammar
             };
         }
 
-        public LevelGeometryElement ConnectByStairsInside(LevelElement le1, LevelElement le2, LevelElement bounds = null)
+        public LevelGeometryElement ConnectByStairsInside(LevelElement le1, LevelElement le2)
+            => ConnectByStairsInside(le1, le2, null);
+
+            public LevelGeometryElement ConnectByStairsInside(LevelElement le1, LevelElement le2, LevelElement bounds = null)
         {
             if (bounds == null)
                 bounds = LevelElement.Empty(Grid);
