@@ -688,6 +688,20 @@ namespace ShapeGrammar
                         .PlaceCurrentFrom(towerTop);
         }
 
+        public CubeGroup ShrinkInOrthogonalDirection(CubeGroup cg, Vector3Int dir, int newWidth)
+        {
+            var orthDir = dir.OrthogonalHorizontalDirs().First();
+            var width = cg.ExtentsDir(orthDir);
+            var shrinkL = Math.Max(0, (int)Mathf.Floor((width - newWidth) / 2f));
+            var shrinkR = Math.Max(0, (int)Mathf.Ceil((width - newWidth) / 2f));
+
+            return cg
+                .OpSub()
+                    .ExtrudeDir(orthDir, -shrinkL)
+                    .ExtrudeDir(-orthDir, -shrinkR)
+                .OpNew();
+        }
+
         /*
         public Func<ProductionProgram, Node, ProductionProgram> Roof(AreaType roofType, int roofHeight)
         {
@@ -850,6 +864,66 @@ namespace ShapeGrammar
 
 
         #endregion
+
+        public Production BridgeFrom(Symbol from, PathGuide pathGuide)
+        {
+            return Extrude(
+                    from,
+                    node => pathGuide.SelectDirections(node.LE),
+                    (cg, dir) => ShrinkInOrthogonalDirection(cg, dir, 3).LE(AreaType.Colonnade).GN(sym.Bridge(dir), sym.FullFloorMarker),
+                    6,
+                    Empty(),
+                    ldk.con.ConnectByBalconyStairsOutside
+                );
+            /*return new Production(
+                "BridgeFromCourtyard",
+                new ProdParamsManager().AddNodeSymbols(sym.Courtyard),
+                (state, pp) =>
+                {
+                    var courtyard = pp.Param;
+                    var courtyardCG = courtyard.LE.CG();
+
+                    return state.NewProgram(prog => prog
+                        .SelectOne(
+                            state.NewProgram(subProg => subProg
+                                .Directional(ExtensionMethods.HorizontalDirections().Shuffle(),
+                                    dir =>
+                                    {
+                                        var orthDir = dir.OrthogonalHorizontalDirs().First();
+                                        var width = courtyardCG.ExtentsDir(orthDir);
+                                        var bridgeWidth = 3;
+                                        var shrinkL = (int)Mathf.Floor((width - bridgeWidth) / 2f);
+                                        var shrinkR = (int)Mathf.Ceil((width - bridgeWidth) / 2f);
+
+                                        return courtyardCG
+                                            .ExtrudeDir(dir, 4)
+                                            .OpSub()
+                                                .ExtrudeDir(orthDir, -shrinkL)
+                                                .ExtrudeDir(-orthDir, -shrinkR)
+                                            .OpNew()
+
+                                            .LE(AreaType.Bridge).GN(sym.Bridge(dir), sym.FullFloorMarker);
+                                    }
+                                )
+                                .NonEmpty()
+                                .NotTaken()
+                                .CanBeFounded()
+                                ),
+                            out var bridge
+                        )
+                        .PlaceCurrentFrom(courtyard)
+
+                        .EmptyPath()
+                        .PlaceCurrentFrom(courtyard, bridge)
+
+                        .Set(() => ldk.sgShapes.BridgeFoundation(
+                            bridge.LE,
+                            bridge.GetSymbol<Bridge>().Direction
+                            ).GN(sym.Foundation))
+                        .PlaceCurrentFrom(bridge)
+                        );
+                });*/
+        }
 
         #region Graveyard
 

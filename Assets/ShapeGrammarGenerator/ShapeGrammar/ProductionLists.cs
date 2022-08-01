@@ -197,6 +197,8 @@ namespace ShapeGrammar
                  
                  */
 
+                pr.BridgeFrom(pr.sym.Park, guideRandomly),
+
                 chapelEntranceNear(pr.sym.Room(), 3, () => ldk.qc.GetFlatBox(3, 3, 2)),
                 chapelEntranceNear(pr.sym.Park, 3, () => ldk.qc.GetFlatBox(3, 3, 2)),
 
