@@ -649,8 +649,32 @@ namespace ShapeGrammar
                 }
                 );
         }*/
+        #region Utility
+
+        /// <summary>
+        /// Moves the given current node by heightChange. The bottom layer will not go below minHeight.
+        /// </summary>
+        public Func<ProductionProgram, Node, ProductionProgram> MoveVertically(int heightChange, int minHeight)
+        {
+            return (program, node) => program
+                        .Set(() => node)
+                        .Change(park => park
+                                .LE.MoveBottomBy(heightChange, minHeight).CG()
+                                .LE(AreaType.Garden).GN());
+        }
+
+        /// <summary>
+        /// Just returns the program.
+        /// </summary>
+        public Func<ProductionProgram, Node, ProductionProgram> Empty()
+        {
+            return (program, node) => program;
+        }
+
+        #endregion
 
         #region Graveyard
+
 
         public Production FullFloorPlaceNear(
             Symbol nearWhat, 
@@ -693,7 +717,7 @@ namespace ShapeGrammar
                         //Replace with open connection
                         .FindPath(() => 
                             connectionNotIntersecting
-                                (state.WorldState.Added.Merge(foundation.LE))
+                                (state.WorldState.Added.Merge(prog.AppliedOperations.SelectMany(op => op.To.Select(n => n.LE)).ToLevelGroupElement(what.LE.Grid)))
                                 (newPark.LE, what.LE)
                                 .GN(sym.ConnectionMarker), out var door)
                         .PlaceCurrentFrom(what, newPark)

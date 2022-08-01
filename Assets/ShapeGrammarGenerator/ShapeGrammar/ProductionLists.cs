@@ -116,6 +116,16 @@ namespace ShapeGrammar
         public ProductionList Chappels()
         {
             var guideRandomly = new RandomPathGuide();
+
+            Func<Symbol, int, int, Func<LevelElement>, Production> parkNear = (nearWhatSym, heighChange, minHeight, leF) =>
+                pr.FullFloorPlaceNear(
+                    nearWhatSym,
+                    pr.sym.Park,
+                    () => leF(),
+                    pr.MoveVertically(heighChange, minHeight),
+                    pr.Empty(),
+                    ldk.con.ConnectByBalconyStairsOutside);
+
             return new ProductionList
             (
                 //pr.GardenFromCourtyard(),
@@ -151,7 +161,7 @@ namespace ShapeGrammar
 
 
                 
-                pr.NextTo(park, pr.sym.ChapelTowerTop, pr.Empty(), () => ldk.qc.GetFlatBox(5, 6, 3), ldk.con.ConnectByStairsOutside, heightChange: -5, minHeight: 3),
+                pr.NextTo(park, pr.sym.ChapelTowerTop, pr.MoveVertically(-5, 3), pr.Empty(), () => ldk.qc.GetFlatBox(5, 6, 3), ldk.con.ConnectByStairsOutside, heightChange: -5, minHeight: 3),
                 pr.NextTo(park, park, pr.Empty(), () => ldk.qc.GetFlatBox(5, 4, 3), ldk.con.ConnectByStairsOutside, heightChange: -1, minHeight: 3),
                 pr.NextTo(park, park, pr.Empty(), () => ldk.qc.GetFlatBox(3, 5, 3), ldk.con.ConnectByStairsOutside, heightChange: -1, minHeight: 3),
                 pr.NextTo(park, park, pr.Empty(), () => ldk.qc.GetFlatBox(4, 5, 3), ldk.con.ConnectByStairsOutside, heightChange: 2, minHeight: 3),
@@ -170,10 +180,10 @@ namespace ShapeGrammar
                 pr.ChapelNextFloor(3, 2),
                 pr.ChapelTowerTop(3),
 
-                pr.Park(pr.sym.ChapelTowerTop, -5, 3, () => ldk.qc.GetFlatBox(5, 6, 3)),
-                pr.Park(pr.sym.Park, -1, 3, () => ldk.qc.GetFlatBox(5, 4, 3)),
-                pr.Park(pr.sym.Park, -1, 3, () => ldk.qc.GetFlatBox(3, 5, 3)),
-                pr.Park(pr.sym.Park, 2, 3, () => ldk.qc.GetFlatBox(4, 5, 3))
+                parkNear(pr.sym.ChapelTowerTop, -5, 3, () => ldk.qc.GetFlatBox(5, 6, 3)),
+                parkNear(pr.sym.Park, -1, 3, () => ldk.qc.GetFlatBox(5, 4, 3)),
+                parkNear(pr.sym.Park, -1, 3, () => ldk.qc.GetFlatBox(3, 5, 3)),
+                parkNear(pr.sym.Park, 2, 3, () => ldk.qc.GetFlatBox(4, 5, 3))
             );
         }
 
