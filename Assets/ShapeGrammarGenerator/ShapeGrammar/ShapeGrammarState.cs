@@ -337,9 +337,12 @@ namespace ShapeGrammar
             return le.Cubes().All(cube => OffersFoundation[new Vector3Int(cube.Position.x, 0, cube.Position.z)]);
         }
 
-        public ProductionProgram NewProgram()
+        /// <summary>
+        /// ChangeProgram allows us to access the production program inside its declaration.
+        /// </summary>
+        public ProductionProgram NewProgram(Func<ProductionProgram, ProductionProgram> changeProgram)
         {
-            return new ProductionProgram(this);
+            return changeProgram(new ProductionProgram(this));
         }
 
         public ProductionProgram NewProgramBadMethodDestroyItASAP(Operation[] operations)

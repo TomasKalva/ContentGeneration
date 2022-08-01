@@ -126,9 +126,10 @@ namespace ShapeGrammar
 
             var reservations = CurrentNodes
                 .Select(node =>
-                    State.NewProgram()
+                    State.NewProgram(prog => prog
                         .Set(() => node.LE.CG().ExtrudeVer(Vector3Int.up, height).LE(AreaType.Reservation).GN(pr.sym.UpwardReservation(node)))
                         .NotTaken()
+                    )
                 );
             if (reservations.Any(prog => prog.Failed))
                 return SetFailed(true);
@@ -231,7 +232,7 @@ namespace ShapeGrammar
 
             if (condition)
             {
-                var startingProgram = State.NewProgram();
+                var startingProgram = State.NewProgram(prog => prog);
                 startingProgram.CurrentNodes = CurrentNodes;
                 startingProgram.Failed = Failed;
 

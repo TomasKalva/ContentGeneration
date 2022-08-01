@@ -15,7 +15,7 @@ namespace ShapeGrammar
         //public Symbol CreateFrom(params Node[] from) => new CreateFrom("CreateFrom", from.ToList());
         //public Symbol FloorGiver(Node giveTo) => new FloorGiver("FloorGiver", giveTo);
         public Symbol Room(bool plain = true, int floor = 0) => new Room("Room", plain, floor);
-        public Symbol DirectedRoom(Vector3Int direction, int floor = 0) => new DirectedRoom("DirectedRoom", false, floor, direction);
+        //public Symbol DirectedRoom(Vector3Int direction, int floor = 0) => new DirectedRoom("DirectedRoom", false, floor, direction);
         /// <summary>
         /// Serves as a space that can be turned into another part of a building or in a roof.
         /// </summary>
@@ -28,7 +28,7 @@ namespace ShapeGrammar
         public Symbol Garden { get; } = new Symbol("Garden");
 
         #region Graveyard
-        public Symbol Park { get; } = new Symbol("Graveyard");
+        public Symbol Park { get; } = new Symbol("Park");
         public Symbol ChapelEntrance { get; } = new Symbol("ChapelEntrance");
         public Symbol ChapelHall(Vector3Int direction) => new ChapelHall("ChapelHall", direction);
         public Symbol ChapelRoom(bool plain = true, int floor = 0) => new ChapelRoom("ChapelRoom", plain, floor);

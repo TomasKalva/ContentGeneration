@@ -124,6 +124,39 @@ namespace ShapeGrammar
                 //pr.ParkNextTo(pr.sym.Room(), () => ldk.qc.GetFlatBox(4, 4)),
                 //pr.DownwardPark(pr.sym.Park, 1, () => ldk.qc.GetFlatBox(3, 5)),
                 //pr.DownwardPark(pr.sym.Park, 1, () => ldk.qc.GetFlatBox(5, 4)),
+                /*
+                var crossRoofF = () => pr.Roof(AreaType.CrossRoof, 2);
+
+                Symbol townRoom
+
+                Symbol chapelEntrance
+                Symbol chapelRoom
+                Symbol park
+                DirectedSymbol hall
+                 
+                pr.NextTo(townRoom, chapelEntrance, crossRoofF(), () => ldk.qc.GetFlatBox(3, 3, 2), _ => ldk.con.ConnectByDoor),
+                pr.NextTo(park, chapelEntrance, crossRoofF(), () => ldk.qc.GetFlatBox(3, 3, 2), _ => ldk.con.ConnectByDoor),
+
+                pr.NextTo(park, park, pr.Empty(), () => ldk.qc.GetFlatBox(4, 4, 3)),
+
+
+
+                pr.ChapelHall(pr.sym.ChapelEntrance, 4, guideRandomly),
+                pr.ChapelHall(pr.sym.ChapelRoom(), 7, guideRandomly),
+                pr.ChapelHall(pr.sym.ChapelRoom(), 5, guideRandomly),
+
+                pr.ChapelRoom(3),
+                pr.ChapelNextFloor(3, 2),
+                pr.ChapelTowerTop(3),
+
+
+                
+                pr.NextTo(park, pr.sym.ChapelTowerTop, pr.Empty(), () => ldk.qc.GetFlatBox(5, 6, 3), ldk.con.ConnectByStairsOutside, heightChange: -5, minHeight: 3),
+                pr.NextTo(park, park, pr.Empty(), () => ldk.qc.GetFlatBox(5, 4, 3), ldk.con.ConnectByStairsOutside, heightChange: -1, minHeight: 3),
+                pr.NextTo(park, park, pr.Empty(), () => ldk.qc.GetFlatBox(3, 5, 3), ldk.con.ConnectByStairsOutside, heightChange: -1, minHeight: 3),
+                pr.NextTo(park, park, pr.Empty(), () => ldk.qc.GetFlatBox(4, 5, 3), ldk.con.ConnectByStairsOutside, heightChange: 2, minHeight: 3),
+                 
+                 */
                 pr.ChapelNextTo(pr.sym.Room(), () => ldk.qc.GetFlatBox(3, 3, 2)),
                 pr.ChapelNextTo(pr.sym.Park, () => ldk.qc.GetFlatBox(3, 3, 2)),
 

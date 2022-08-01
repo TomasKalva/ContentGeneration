@@ -54,9 +54,9 @@ namespace ShapeGrammar
                     var roomCubeGroup = room.LE.CG();
 
                     // Reduces number of characters (withou spaces) from ~800 to ~480, from 34 lines to 22
-                    return state.NewProgram()
+                    return state.NewProgram(prog => prog
                         .SelectOne(
-                            state.NewProgram()
+                            state.NewProgram(subProg => subProg
                                 .Directional(ExtensionMethods.HorizontalDirections().Shuffle(),
                                     dir =>
                                         roomCubeGroup
@@ -69,7 +69,8 @@ namespace ShapeGrammar
                                         .GN(sym.Courtyard, sym.FullFloorMarker)
                                 )
                                 .NotTaken()
-                                .CanBeFounded(),
+                                .CanBeFounded()
+                                ),
                             out var courtyard
                         )
                         .PlaceCurrentFrom(room)
@@ -78,7 +79,8 @@ namespace ShapeGrammar
                         .PlaceCurrentFrom(courtyard)
 
                         .FindPath(() => ldk.con.ConnectByDoor(room.LE, courtyard.LE).GN(sym.ConnectionMarker), out var door)
-                        .PlaceCurrentFrom(room, courtyard);
+                        .PlaceCurrentFrom(room, courtyard)
+                        );
                      
                 });
         }
@@ -93,9 +95,9 @@ namespace ShapeGrammar
                     var courtyard = pp.Param;
                     var courtyardGroup = courtyard.LE.CG();
 
-                    return state.NewProgram()
+                    return state.NewProgram(prog => prog
                         .SelectOne(
-                            state.NewProgram()
+                            state.NewProgram(subProg => subProg
                                 .Set(
                                     () => courtyardGroup
                                         .AllSpecialCorners().CG()
@@ -114,7 +116,8 @@ namespace ShapeGrammar
                                     .LE(AreaType.Yard).GN(sym.Courtyard, sym.FullFloorMarker)
                                 )
                                 .NotTaken()
-                                .CanBeFounded(),
+                                .CanBeFounded()
+                                ),
                             out var newCourtyard
                         )
                         .PlaceCurrentFrom(courtyard)
@@ -123,7 +126,8 @@ namespace ShapeGrammar
                         .PlaceCurrentFrom(newCourtyard)
 
                         .FindPath(() => ldk.con.ConnectByStairsInside(courtyard.LE, newCourtyard.LE).GN(sym.ConnectionMarker), out var p)
-                        .PlaceCurrentFrom(courtyard, newCourtyard);
+                        .PlaceCurrentFrom(courtyard, newCourtyard)
+                        );
                 });
         }
 
@@ -137,9 +141,9 @@ namespace ShapeGrammar
                     var courtyard = pp.Param;
                     var courtyardCG = courtyard.LE.CG();
                     
-                    return state.NewProgram()
+                    return state.NewProgram(prog => prog
                         .SelectOne(
-                            state.NewProgram()
+                            state.NewProgram(subProg => subProg
                                 .Directional(ExtensionMethods.HorizontalDirections().Shuffle(),
                                     dir =>
                                     {
@@ -161,7 +165,8 @@ namespace ShapeGrammar
                                 )
                                 .NonEmpty()
                                 .NotTaken()
-                                .CanBeFounded(),
+                                .CanBeFounded()
+                                ),
                             out var bridge
                         )
                         .PlaceCurrentFrom(courtyard)
@@ -173,7 +178,8 @@ namespace ShapeGrammar
                             bridge.LE,
                             bridge.GetSymbol<Bridge>().Direction
                             ).GN(sym.Foundation))
-                        .PlaceCurrentFrom(bridge);
+                        .PlaceCurrentFrom(bridge)
+                        );
                 });
         }
 
@@ -189,7 +195,7 @@ namespace ShapeGrammar
                     
                     var dir = bridge.GetSymbol<Bridge>().Direction;
 
-                    return state.NewProgram()
+                    return state.NewProgram(prog => prog
                         .Set(() => courtyardCubeGroup
                             .ExtrudeDir(dir, 4)
                             .LE(AreaType.Bridge).GN(sym.Bridge(dir), sym.FullFloorMarker),
@@ -206,7 +212,8 @@ namespace ShapeGrammar
                             newBridge.LE,
                             newBridge.GetSymbol<Bridge>().Direction
                             ).GN(sym.Foundation))
-                        .PlaceCurrentFrom(newBridge);
+                        .PlaceCurrentFrom(newBridge)
+                        );
                      
                 });
         }
@@ -222,7 +229,7 @@ namespace ShapeGrammar
                     var bridgeCubeGroup = bridge.LE.CG();
                     var dir = bridge.GetSymbol<Bridge>().Direction;
 
-                    return state.NewProgram()
+                    return state.NewProgram(prog => prog
                         .Set(
                             () => bridgeCubeGroup
                             .ExtrudeDir(dir, 4)
@@ -241,14 +248,15 @@ namespace ShapeGrammar
                         .PlaceCurrentFrom(newCourtyard)
 
                         .EmptyPath()
-                        .PlaceCurrentFrom(bridge, newCourtyard);
+                        .PlaceCurrentFrom(bridge, newCourtyard)
+                        );
                     
                 });
         }
 
         public Production RoomNextTo(Symbol nextToWhat, Func<LevelElement> roomF)
         {
-            return FullFloorNextTo(nextToWhat, sym.Room(), roomF,
+            return FullFloorPlaceNear(nextToWhat, sym.Room(), roomF,
                 (program, _) => program,
                 (program, newRoom) => program
                         .Set(() => newRoom)
@@ -272,9 +280,9 @@ namespace ShapeGrammar
                     var createdRoom = toF();
                     
                     // reduced from 1450 to 1050 characters, from 80 lines to 34 lines
-                    return state.NewProgram()
+                    return state.NewProgram(prog => prog
                         .SelectOne(
-                            state.NewProgram()
+                            state.NewProgram(subProg => subProg
                                 .Directional(pathGuide.SelectDirections(what.LE),
                                     dir => whatCG.CubeGroupMaxLayer(Vector3Int.down).ExtrudeDir(dir, 10, false).LE().GN()
                                 )
@@ -289,6 +297,7 @@ namespace ShapeGrammar
                                     })
                                 .Change(
                                     newRoomDown => newRoomDown.LE.MoveBottomTo(whatCG.LeftBottomBack().y).GN(sym.Room(), sym.FullFloorMarker)
+                                )
                                 ),
                                 out var newRoom
                         )
@@ -305,7 +314,8 @@ namespace ShapeGrammar
                         )
 
                         .FindPath(() => ldk.con.ConnectByBridge(state.WorldState.Added)(what.LE, newRoom.LE).GN(sym.ConnectionMarker), out var bridge)
-                        .PlaceCurrentFrom(what, newRoom);
+                        .PlaceCurrentFrom(what, newRoom)
+                        );
                      
                 });
         }
@@ -320,13 +330,13 @@ namespace ShapeGrammar
                     var what = pp.Param;
                     var whatCG = what.LE.CG();
 
-                    return state.NewProgram()
+                    return state.NewProgram(prog => prog
                         .SelectOne(
-                            state.NewProgram()
+                            state.NewProgram(subProg => subProg
                                 .Set(() => roomFromToF().GN())
                                 .MoveNearTo(what)
                                 .Change(node => node.LE.GN(sym.Room(false, 1), sym.FullFloorMarker))
-                                ,
+                                ),
                             out var newRoom
                         )
                         .PlaceCurrentFrom(what)
@@ -348,7 +358,8 @@ namespace ShapeGrammar
 
                         // The door doesn't get overwritten by apply style only because it has higher priority, which doesn't feel robust enough
                         .FindPath(() => ldk.con.ConnectByFall(newRoom.LE, bottomRoom.LE).GN(), out var fall)
-                        .PlaceCurrentFrom(bottomRoom, newRoom);
+                        .PlaceCurrentFrom(bottomRoom, newRoom)
+                        );
 
                 });
         }
@@ -377,13 +388,13 @@ namespace ShapeGrammar
                     var fromCG = from.LE.CG();
                     var toCG = to.LE.CG();
 
-                    return state.NewProgram()
+                    return state.NewProgram(prog => prog
                         .SelectOne(
-                            state.NewProgram()
+                            state.NewProgram(subProg => subProg
                                 .Set(() => roomFromF().GN())
                                 .MoveNearTo(to)
                                 .Change(node => node.LE.MoveBy(Vector3Int.up).GN(sym.Room(false, 1), sym.FullFloorMarker))
-                                ,
+                                ),
                             out var newRoom
                         )
                         .PlaceCurrentFrom(from)
@@ -399,7 +410,8 @@ namespace ShapeGrammar
                         .PlaceCurrentFrom(from, newRoom)
 
                         .FindPath(() => ldk.con.ConnectByFall(newRoom.LE, to.LE).GN(), out var fall)
-                        .PlaceCurrentFrom(to, newRoom);
+                        .PlaceCurrentFrom(to, newRoom)
+                        );
                 });
         }
 
@@ -508,7 +520,7 @@ namespace ShapeGrammar
                     var roomReservation = pp.Param;
                     var roomBelow = roomReservation.GetSymbol<UpwardReservation>().RoomBelow;
 
-                    return state.NewProgram()
+                    return state.NewProgram(prog => prog
                         .Set(() => roomReservation.LE.SetAreaType(AreaType.Room)
                             .GN(
                                 sym.Room(true, roomBelow.GetSymbol<Room>().Floor + 1),
@@ -521,7 +533,8 @@ namespace ShapeGrammar
                         .PlaceCurrentFrom(nextFloor)
 
                         .FindPath(() => ldk.con.ConnectByWallStairsIn(roomBelow.LE, nextFloor.LE).GN(sym.ConnectionMarker), out var stairs)
-                        .PlaceCurrentFrom(roomBelow, nextFloor);
+                        .PlaceCurrentFrom(roomBelow, nextFloor)
+                        );
                 });
         }
 
@@ -639,30 +652,33 @@ namespace ShapeGrammar
 
         #region Graveyard
 
-        public Production FullFloorNextTo(Symbol nextToWhat, Symbol newAreaSym, 
-            Func<LevelElement> parkF, 
+        public Production FullFloorPlaceNear(
+            Symbol nearWhat, 
+            Symbol newAreaSym, 
+            Func<LevelElement> newAreaF, 
             Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPositionedNear,
             Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPlaced,
             ConnectionNotIntersecting connectionNotIntersecting)
         {
             return new Production(
-                $"{newAreaSym}_NextTo_{nextToWhat.Name}",
-                new ProdParamsManager().AddNodeSymbols(nextToWhat),
+                $"{newAreaSym.Name}_NextTo_{nearWhat.Name}",
+                new ProdParamsManager().AddNodeSymbols(nearWhat),
                 (state, pp) =>
                 {
                     var what = pp.Param;
                     var whatCG = what.LE.CG();
 
-                    return state.NewProgram()
+                    return state.NewProgram(prog => prog
                         .SelectOne(
-                            state.NewProgram()
-                                .Set(() => parkF().GN())
+                            state.NewProgram(subProg => subProg
+                                .Set(() => newAreaF().GN())
                                 .MoveNearTo(what)
                                 .CurrentFirst(out var newArea)
                                 .RunIf(true,
                                     thisProg => fromFloorNodeAfterPositionedNear(thisProg, newArea)
                                 )
-                                .Change(node => node.LE.GN(newAreaSym, sym.FullFloorMarker)),
+                                .Change(node => node.LE.GN(newAreaSym, sym.FullFloorMarker))
+                                ),
                             out var newPark
                             )
                         .PlaceCurrentFrom(what)
@@ -680,31 +696,40 @@ namespace ShapeGrammar
                                 (state.WorldState.Added.Merge(foundation.LE))
                                 (newPark.LE, what.LE)
                                 .GN(sym.ConnectionMarker), out var door)
-                        .PlaceCurrentFrom(what, newPark);
+                        .PlaceCurrentFrom(what, newPark)
+                        );
                 });
         }
 
         public Production ParkNextTo(Symbol nextToWhat, Func<LevelElement> parkF)
         {
-            return FullFloorNextTo(nextToWhat, sym.Park, () => parkF().SetAreaType(AreaType.Garden),
+            return FullFloorPlaceNear(nextToWhat, sym.Park, () => parkF().SetAreaType(AreaType.Garden),
                 (program, _) => program, 
                 (program, _) => program,
                  _ => ldk.con.ConnectByDoor);
         }
 
+        public Func<ProductionProgram, Node, ProductionProgram> Roof(AreaType roofType, int roofHeight)
+        {
+            return (program, area) => program
+                                .Set(() => area.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.CrossRoof).GN(sym.Roof))
+                                .NotTaken();
+        }
+
         public Production ChapelNextTo(Symbol nextToWhat, Func<LevelElement> chapelEntranceF)
         {
-            return FullFloorNextTo(nextToWhat, sym.ChapelEntrance, () => chapelEntranceF().SetAreaType(AreaType.Room),
+            return FullFloorPlaceNear(nextToWhat, sym.ChapelEntrance, () => chapelEntranceF().SetAreaType(AreaType.Room),
                 (program, _) => program,
                 (program, chapelEntrance) => program
                                 .Set(() => chapelEntrance.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.CrossRoof).GN(sym.Roof))
+                                .NotTaken()
                                 .PlaceCurrentFrom(chapelEntrance),
                  _ => ldk.con.ConnectByDoor);
         }
 
         public Production Park(Symbol nextToWhat, int heightChangeAmount, int minHeight, Func<LevelElement> parkF)
         {
-            return FullFloorNextTo(nextToWhat, sym.Park, () => parkF().SetAreaType(AreaType.Garden),
+            return FullFloorPlaceNear(nextToWhat, sym.Park, () => parkF().SetAreaType(AreaType.Garden),
                 (program, park) => program
                         .Set(() => park)
                         .Change(park => park
@@ -730,15 +755,16 @@ namespace ShapeGrammar
                     var from = pp.Param;
                     var fromCG = from.LE.CG();
 
-                    return state.NewProgram()
+                    return state.NewProgram(prog => prog
                         .SelectOne(
-                            state.NewProgram()
+                            state.NewProgram(subProg => subProg
                                 .Directional(pathGuideFromSelected(from).SelectDirections(from.LE),
                                     dir =>
                                         nodeFromExtrudedDirection(from.LE.CG().ExtrudeDir(dir, length), dir)
                                 )
                                 .NotTaken()
-                                .CanBeFounded(),
+                                .CanBeFounded()
+                                ),
                             out var newChapelHall
                             )
                         .PlaceCurrentFrom(from)
@@ -752,7 +778,8 @@ namespace ShapeGrammar
                         .FindPath(() => 
                         connectionNotIntersecting(state.WorldState.Added.Merge(foundation.LE))
                             (newChapelHall.LE, from.LE).GN(sym.ConnectionMarker), out var door)
-                        .PlaceCurrentFrom(from, newChapelHall);
+                        .PlaceCurrentFrom(from, newChapelHall)
+                        );
                 });
         }
 
@@ -811,7 +838,7 @@ namespace ShapeGrammar
                     var roomBelow = pp.Param.GetSymbol<UpwardReservation>().RoomBelow;
                     var roomBelowFloor = roomBelow.GetSymbol<ChapelRoom>().Floor;
 
-                    return state.NewProgram()
+                    return state.NewProgram(prog => prog
                         .Condition(() => toExtrude >= 0)
                         .Set(() => reservation)
                         .Change(res => res.LE.CG()
@@ -825,7 +852,8 @@ namespace ShapeGrammar
                         .PlaceCurrentFrom(nextFloor)
 
                         .FindPath(() => ldk.con.ConnectByStairsInside(nextFloor.LE, roomBelow.LE).GN(sym.ConnectionMarker), out var stairs)
-                        .PlaceCurrentFrom(roomBelow, nextFloor);
+                        .PlaceCurrentFrom(roomBelow, nextFloor)
+                        );
                 });
         }
 
@@ -845,7 +873,7 @@ namespace ShapeGrammar
                     var reservation = pp.Param;
                     var roomBelow = pp.Param.GetSymbol<UpwardReservation>().RoomBelow;
 
-                    return state.NewProgram()
+                    return state.NewProgram(prog => prog
                         .Set(() => reservation.LE.SetAreaType(AreaType.Colonnade).GN(sym.ChapelTowerTop, sym.FullFloorMarker))
                         .CurrentFirst(out var towerTop)
                         .ReplaceNodes(reservation)
@@ -854,9 +882,22 @@ namespace ShapeGrammar
                         .PlaceCurrentFrom(towerTop)
 
                         .FindPath(() => ldk.con.ConnectByStairsInside(towerTop.LE, roomBelow.LE).GN(sym.ConnectionMarker), out var stairs)
-                        .PlaceCurrentFrom(roomBelow, towerTop);
+                        .PlaceCurrentFrom(roomBelow, towerTop)
+                        );
                 });
         }
+
+        #endregion
+
+        #region Castle
+        /*
+        public Production TowerBottomNextTo(Symbol nextToWhat, Func<LevelElement> towerBottomF)
+        {
+            return FullFloorNextTo(nextToWhat, sym.Park, () => parkF().SetAreaType(AreaType.Garden),
+                (program, _) => program,
+                (program, _) => program,
+                 _ => ldk.con.ConnectByDoor);
+        }*/
 
         #endregion
     }
