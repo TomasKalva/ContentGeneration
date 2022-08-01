@@ -45,7 +45,7 @@ namespace ShapeGrammar
         /// </summary>
         public LevelGroupElement MoveToNotOverlap(LevelGroupElement levelGroupElement)
         {
-            return MoveLevelGroup(levelGroupElement, (moved, le) => le.NotIntersecting(moved).Ms, moves => moves.FirstOrDefault());
+            return MoveLevelGroup(levelGroupElement, (moved, le) => le.MovesToNotIntersectXZ(moved).Ms, moves => moves.FirstOrDefault());
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace ShapeGrammar
         /// </summary>
         public LevelElement MoveToNotOverlap(LevelElement fixedElement, LevelElement toMove)
         {
-            var bothMoved = MoveLevelGroup(new LevelGroupElement(fixedElement.Grid, AreaType.None, fixedElement, toMove), (moved, le) => le.NotIntersecting(moved).Ms, moves => moves.FirstOrDefault());
+            var bothMoved = MoveLevelGroup(new LevelGroupElement(fixedElement.Grid, AreaType.None, fixedElement, toMove), (moved, le) => le.MovesToNotIntersectXZ(moved).Ms, moves => moves.FirstOrDefault());
             return bothMoved.LevelElements[1];
         }
 

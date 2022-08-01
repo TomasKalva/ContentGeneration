@@ -20,6 +20,7 @@ namespace ShapeGrammar
             this.sym = sym;
         }
 
+        /*
         public Production CreateNewHouse(int bottomHeight)
         {
             return new Production(
@@ -41,6 +42,11 @@ namespace ShapeGrammar
                         state.Add(movedRoom).SetTo(reservation)
                     });
                 });
+        }*/
+        
+        public Production CreateNewHouse(int bottomHeight)
+        {
+            return Place(sym.Room(), 3, () => ldk.sgShapes.Room(new Box2Int(0, 0, 5, 5).InflateY(0, 2)), Reserve(2, sym.UpwardReservation));
         }
 
         public Production CourtyardFromRoom()
@@ -702,20 +708,38 @@ namespace ShapeGrammar
                 .OpNew();
         }
 
-        /*
-        public Func<ProductionProgram, Node, ProductionProgram> Roof(AreaType roofType, int roofHeight)
-        {
-            return (program, area) => program
-                                .Set(() => area.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(roofType).GN(sym.Roof))
-                                .NotTaken();
-        }*/
-
         LevelElement AllBlocking(ShapeGrammarState state, ProductionProgram prog, Grid<Cube> grid) 
             => state.WorldState.Added.Merge(prog.AppliedOperations.SelectMany(op => op.To.Select(n => n.LE)).ToLevelGroupElement(grid));
 
         #endregion
 
         #region Operations
+
+        public Production Place(Symbol newSymbol, int bottomHeight, Func<LevelElement> leF, Func<ProductionProgram, Node, ProductionProgram> fromNodeAfterPlaced)
+        {
+            return new Production(
+                $"Place {newSymbol.Name}",
+                new ProdParamsManager(),
+                (state, pp) =>
+                {
+                    return state.NewProgram(
+                        prog => prog
+                            .Set(() => leF()
+                                .MoveBottomTo(bottomHeight)
+                                .MovesToNotIntersectXZ(state.WorldState.Added.LevelElements)
+                                .TryMove()
+                                .GN(newSymbol, sym.FullFloorMarker))
+                            .CurrentFirst(out var first)
+                            .PlaceCurrentFrom(state.Root)
+
+                            .Found()
+                            .PlaceCurrentFrom(first)
+
+                            .RunIf(true, prog => fromNodeAfterPlaced(prog, first))
+                            );
+                });
+        }
+
         public Production FullFloorPlaceNear(
             Symbol nearWhat,
             Symbol newAreaSym,
@@ -875,55 +899,9 @@ namespace ShapeGrammar
                     Empty(),
                     ldk.con.ConnectByBalconyStairsOutside
                 );
-            /*return new Production(
-                "BridgeFromCourtyard",
-                new ProdParamsManager().AddNodeSymbols(sym.Courtyard),
-                (state, pp) =>
-                {
-                    var courtyard = pp.Param;
-                    var courtyardCG = courtyard.LE.CG();
-
-                    return state.NewProgram(prog => prog
-                        .SelectOne(
-                            state.NewProgram(subProg => subProg
-                                .Directional(ExtensionMethods.HorizontalDirections().Shuffle(),
-                                    dir =>
-                                    {
-                                        var orthDir = dir.OrthogonalHorizontalDirs().First();
-                                        var width = courtyardCG.ExtentsDir(orthDir);
-                                        var bridgeWidth = 3;
-                                        var shrinkL = (int)Mathf.Floor((width - bridgeWidth) / 2f);
-                                        var shrinkR = (int)Mathf.Ceil((width - bridgeWidth) / 2f);
-
-                                        return courtyardCG
-                                            .ExtrudeDir(dir, 4)
-                                            .OpSub()
-                                                .ExtrudeDir(orthDir, -shrinkL)
-                                                .ExtrudeDir(-orthDir, -shrinkR)
-                                            .OpNew()
-
-                                            .LE(AreaType.Bridge).GN(sym.Bridge(dir), sym.FullFloorMarker);
-                                    }
-                                )
-                                .NonEmpty()
-                                .NotTaken()
-                                .CanBeFounded()
-                                ),
-                            out var bridge
-                        )
-                        .PlaceCurrentFrom(courtyard)
-
-                        .EmptyPath()
-                        .PlaceCurrentFrom(courtyard, bridge)
-
-                        .Set(() => ldk.sgShapes.BridgeFoundation(
-                            bridge.LE,
-                            bridge.GetSymbol<Bridge>().Direction
-                            ).GN(sym.Foundation))
-                        .PlaceCurrentFrom(bridge)
-                        );
-                });*/
         }
+
+
 
         #region Graveyard
 

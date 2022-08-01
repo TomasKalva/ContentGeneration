@@ -148,7 +148,7 @@ namespace ShapeGrammar
                 if (!Ms.Any())
                     return null;
 
-                var move = Ms.GetRandom();
+                var move = Ms.First();
                 return LE.MoveBy(move);
             }
         }
@@ -206,7 +206,7 @@ namespace ShapeGrammar
         /// <summary>
         /// Returns all (infinitely many) possible moves so that this doesn't intersect toNotIntersect.
         /// </summary>
-        public LEMoves NotIntersecting(IEnumerable<LevelElement> toNotIntersect)
+        public LEMoves MovesToNotIntersectXZ(IEnumerable<LevelElement> toNotIntersect)
         {
             var forbiddenMoves = new HashSet<Vector3Int>();
             toNotIntersect.ForEach(le => MovesToIntersect(le).Ms.ForEach(v => forbiddenMoves.Add(v)));
