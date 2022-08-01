@@ -121,7 +121,7 @@ namespace ShapeGrammar
                 pr.FullFloorPlaceNear(
                     nearWhatSym,
                     pr.sym.Park,
-                    () => leF(),
+                    () => leF().SetAreaType(AreaType.Garden),
                     pr.MoveVertically(heighChange, minHeight),
                     pr.Empty(),
                     ldk.con.ConnectByBalconyStairsOutside);
@@ -170,7 +170,7 @@ namespace ShapeGrammar
                 pr.ChapelNextTo(pr.sym.Room(), () => ldk.qc.GetFlatBox(3, 3, 2)),
                 pr.ChapelNextTo(pr.sym.Park, () => ldk.qc.GetFlatBox(3, 3, 2)),
 
-                pr.ParkNextTo(pr.sym.Park, () => ldk.qc.GetFlatBox(4, 4, 3)),
+                parkNear(pr.sym.Park, 0, 0, () => ldk.qc.GetFlatBox(4, 4, 3)),
 
                 pr.ChapelHall(pr.sym.ChapelEntrance, 4, guideRandomly),
                 pr.ChapelHall(pr.sym.ChapelRoom(), 7, guideRandomly),

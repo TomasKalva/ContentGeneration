@@ -659,8 +659,7 @@ namespace ShapeGrammar
             return (program, node) => program
                         .Set(() => node)
                         .Change(park => park
-                                .LE.MoveBottomBy(heightChange, minHeight).CG()
-                                .LE(AreaType.Garden).GN());
+                                .LE.MoveBottomBy(heightChange, minHeight).GN());
         }
 
         /// <summary>
@@ -703,24 +702,24 @@ namespace ShapeGrammar
                                 )
                                 .Change(node => node.LE.GN(newAreaSym, sym.FullFloorMarker))
                                 ),
-                            out var newPark
+                            out var newNode
                             )
                         .PlaceCurrentFrom(what)
 
                         .Found(out var foundation)
-                        .PlaceCurrentFrom(newPark)
+                        .PlaceCurrentFrom(newNode)
 
                         .RunIf(true,
-                            thisProg => fromFloorNodeAfterPlaced(thisProg, newPark)
+                            thisProg => fromFloorNodeAfterPlaced(thisProg, newNode)
                         )
 
                         //Replace with open connection
                         .FindPath(() => 
                             connectionNotIntersecting
                                 (state.WorldState.Added.Merge(prog.AppliedOperations.SelectMany(op => op.To.Select(n => n.LE)).ToLevelGroupElement(what.LE.Grid)))
-                                (newPark.LE, what.LE)
+                                (newNode.LE, what.LE)
                                 .GN(sym.ConnectionMarker), out var door)
-                        .PlaceCurrentFrom(what, newPark)
+                        .PlaceCurrentFrom(what, newNode)
                         );
                 });
         }
