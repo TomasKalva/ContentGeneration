@@ -130,11 +130,20 @@ namespace ShapeGrammar
             Func<int, Production> chapelNextFloor = height =>
                 pr.TakeUpwardReservation(
                     pr.sym.UpwardReservation(default),
-                    floor => pr.sym.ChapelRoom(true, floor),
+                    nextFloor => nextFloor.LE(AreaType.Room).GN(pr.sym.ChapelRoom(), pr.sym.FullFloorMarker),
                     height,
-                    1000,
+                    13,
                     pr.Reserve(2, pr.sym.UpwardReservation),
-                    _ => ldk.con.ConnectByStairsInside);
+                    _ => ldk.con.ConnectByWallStairsIn);
+
+            Func<int, Production> chapelTowerTop = height =>
+                pr.TakeUpwardReservation(
+                    pr.sym.UpwardReservation(default),
+                    nextFloor => nextFloor.LE(AreaType.Colonnade).GN(pr.sym.ChapelTowerTop, pr.sym.FullFloorMarker),
+                    2,
+                    100,
+                    pr.PointyRoof(height),
+                    _ => ldk.con.ConnectByWallStairsIn);
 
             return new ProductionList
             (
@@ -190,8 +199,9 @@ namespace ShapeGrammar
 
 
                 //pr.ChapelNextFloor(3, 2),
-                chapelNextFloor(3),
-                pr.ChapelTowerTop(3),
+                chapelNextFloor(3),// now it takes ANY upward reservation - even from hall
+                chapelTowerTop(6),
+                //pr.ChapelTowerTop(3),
 
                 parkNear(pr.sym.ChapelTowerTop, -5, 3, () => ldk.qc.GetFlatBox(5, 6, 3)),
                 parkNear(pr.sym.Park, -1, 3, () => ldk.qc.GetFlatBox(5, 4, 3)),

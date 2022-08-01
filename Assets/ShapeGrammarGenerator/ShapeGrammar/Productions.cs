@@ -679,6 +679,14 @@ namespace ShapeGrammar
                         .PlaceCurrentFrom(node);
         }
 
+        public Func<ProductionProgram, Node, ProductionProgram> PointyRoof(int roofHeight)
+        {
+            return (program, towerTop) => program
+                        .Set(() => towerTop)
+                        .Change(towerTop => towerTop.LE.CG().ExtrudeVer(Vector3Int.up, roofHeight).LE(AreaType.PointyRoof).GN(sym.Roof))
+                        .PlaceCurrentFrom(towerTop);
+        }
+
         LevelElement AllBlocking(ShapeGrammarState state, ProductionProgram prog, Grid<Cube> grid) 
             => state.WorldState.Added.Merge(prog.AppliedOperations.SelectMany(op => op.To.Select(n => n.LE)).ToLevelGroupElement(grid));
 
@@ -857,31 +865,30 @@ namespace ShapeGrammar
 
         public Production TakeUpwardReservation(
             Symbol reservationSymbol, 
-            Func<int, Symbol> newSymbolFromFloor, 
+            Func<CubeGroup, Node> nodeFromExtrudedUp, 
             int nextFloorHeight, 
-            int maxFloor,
+            int maxBottomHeight,
             Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPlaced,
             ConnectionNotIntersecting connection)
         {
             return new Production(
-                $"TakeReservation_{reservationSymbol.Name}_{newSymbolFromFloor(0).Name}",
+                $"TakeReservation_{reservationSymbol.Name}",
                 new ProdParamsManager()
                     .AddNodeSymbols(reservationSymbol)
-                    /*.SetCondition((state, pp) =>
+                    .SetCondition((state, pp) =>
                     {
-                        var roomBelow = pp.Param.GetSymbol<UpwardReservation>().RoomBelow.GetSymbol<ChapelRoom>();
+                        return pp.Param.LE.CG().RightTopFront().y + 1 <= maxBottomHeight;
+                        /*var roomBelow = pp.Param.GetSymbol<UpwardReservation>().RoomBelow.GetSymbol<ChapelRoom>();
                         return
                             roomBelow != null &&
-                            roomBelow.Floor < maxFloor;
-                    })*/,
+                            roomBelow.Floor < maxFloor;*/
+                    }),
                 (state, pp) =>
                 {
                     var reservation = pp.Param;
                     var reservationCG = reservation.LE.CG();
                     var toExtrude = nextFloorHeight - 1;
                     var roomBelow = pp.Param.GetSymbol<UpwardReservation>().RoomBelow;
-                    Debug.Log($"Taking upward reservation {toExtrude}");
-                    //var roomBelowFloor = roomBelow.GetSymbol<ChapelRoom>().Floor;
 
                     return state.NewProgram(prog => prog
                         .Condition(() => toExtrude >= 0)
@@ -895,7 +902,7 @@ namespace ShapeGrammar
                         .NotTaken()
                         .Set(() => extendedReservation)
 
-                        .Change(extr => extr.LE.SetAreaType(AreaType.Room).GN(newSymbolFromFloor(0)/*roomBelowFloor*/, sym.FullFloorMarker))
+                        .Change(extr => nodeFromExtrudedUp(extr.LE.CG())/*.GN(nodeFromExtrudedUp(0), sym.FullFloorMarker)*/)
                         .CurrentFirst(out var nextFloor)
                         .ReplaceNodes(reservation)
 

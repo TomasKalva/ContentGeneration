@@ -37,7 +37,7 @@ namespace ShapeGrammar
 
         CubeGroup WallSpaceInside(LevelElement le)
         {
-            var boundaryWall = le.CG().AllBoundaryFacesH().Where(face => face.FaceType == FACE_HOR.Wall).CG();
+            var boundaryWall = le.CG().AllBoundaryFacesH()/*.Where(face => face.FaceType == FACE_HOR.Wall)*/.CG();
             return boundaryWall.ExtrudeHor(false);
         }
 
