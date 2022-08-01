@@ -245,7 +245,7 @@ namespace ShapeGrammar
             return ExtensionMethods.HorizontalDirections().Shuffle();
         }
     }
-
+    /*
     public class ConstDirectionPathGuide : PathGuide
     {
         Vector3Int Direction { get; }
@@ -265,6 +265,7 @@ namespace ShapeGrammar
             return Direction.ToEnumerable();
         }
     }
+    */
 
     public class PointPathGuide : PathGuide
     {

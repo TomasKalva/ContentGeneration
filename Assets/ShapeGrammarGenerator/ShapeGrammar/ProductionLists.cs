@@ -108,8 +108,8 @@ namespace ShapeGrammar
                 pr.ChapelNextTo(pr.sym.Park, () => ldk.qc.GetFlatBox(3, 3, 2)),
                 pr.ChapelHall(pr.sym.ChapelEntrance, 6, guideRandomly),
                 pr.ChapelHall(pr.sym.ChapelRoom(), 6, guideRandomly),
-                pr.ChapelRoom(3),
-                pr.ChapelNextFloor(3, 2)
+                pr.ChapelRoom(3)
+                //pr.ChapelNextFloor(3, 2)
             );
         }
 
@@ -124,6 +124,16 @@ namespace ShapeGrammar
                     () => leF().SetAreaType(AreaType.Garden),
                     pr.MoveVertically(heighChange, minHeight),
                     pr.Empty(),
+                    ldk.con.ConnectByBalconyStairsOutside,
+                    1);
+
+            Func<Symbol, int, Func<LevelElement>, Production> chapelEntranceNear = (nearWhatSym, roofHeight, leF) =>
+                pr.FullFloorPlaceNear(
+                    nearWhatSym,
+                    pr.sym.ChapelEntrance,
+                    () => leF().SetAreaType(AreaType.Room),
+                    pr.Empty(),
+                    pr.Roof(AreaType.CrossRoof, roofHeight),
                     ldk.con.ConnectByBalconyStairsOutside,
                     1);
 
@@ -142,7 +152,7 @@ namespace ShapeGrammar
                     nextFloor => nextFloor.LE(AreaType.Colonnade).GN(pr.sym.ChapelTowerTop, pr.sym.FullFloorMarker),
                     2,
                     100,
-                    pr.PointyRoof(height),
+                    pr.Roof(AreaType.PointyRoof, height),
                     _ => ldk.con.ConnectByWallStairsIn);
 
             return new ProductionList
@@ -186,8 +196,9 @@ namespace ShapeGrammar
                 pr.NextTo(park, park, pr.Empty(), () => ldk.qc.GetFlatBox(4, 5, 3), ldk.con.ConnectByStairsOutside, heightChange: 2, minHeight: 3),
                  
                  */
-                pr.ChapelNextTo(pr.sym.Room(), () => ldk.qc.GetFlatBox(3, 3, 2)),
-                pr.ChapelNextTo(pr.sym.Park, () => ldk.qc.GetFlatBox(3, 3, 2)),
+
+                chapelEntranceNear(pr.sym.Room(), 3, () => ldk.qc.GetFlatBox(3, 3, 2)),
+                chapelEntranceNear(pr.sym.Park, 3, () => ldk.qc.GetFlatBox(3, 3, 2)),
 
                 parkNear(pr.sym.Park, 0, 0, () => ldk.qc.GetFlatBox(4, 4, 3)),
 
@@ -215,7 +226,7 @@ namespace ShapeGrammar
             var guideRandomly = new RandomPathGuide();
             return new ProductionList
             (
-                pr.ChapelTowerTop(3),
+                //pr.ChapelTowerTop(3),
                 pr.Roof()
             );
         }
