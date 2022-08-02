@@ -142,7 +142,7 @@ namespace ShapeGrammar
                     pr.sym.UpwardReservation(default),
                     nextFloor => nextFloor.LE(AreaType.Room).GN(pr.sym.ChapelRoom(), pr.sym.FullFloorMarker),
                     height,
-                    13,
+                    16,
                     pr.Reserve(2, pr.sym.UpwardReservation),
                     _ => ldk.con.ConnectByWallStairsIn);
 
@@ -210,16 +210,17 @@ namespace ShapeGrammar
 
                 pr.ChapelRoom(3),
 
+                pr.RoomDown(pr.sym.ChapelRoom()),
 
                 //pr.ChapelNextFloor(3, 2),
                 chapelNextFloor(3),// now it takes ANY upward reservation - even from hall
                 chapelTowerTop(6),
                 //pr.ChapelTowerTop(3),
 
-                parkNear(pr.sym.ChapelTowerTop, -5, 3, () => ldk.qc.GetFlatBox(5, 6, 3)),
-                parkNear(pr.sym.Park, -1, 3, () => ldk.qc.GetFlatBox(5, 4, 3)),
+                parkNear(pr.sym.ChapelTowerTop, -5, 3, () => ldk.qc.GetFlatBox(5, 6, 3))
+                /*parkNear(pr.sym.Park, -1, 3, () => ldk.qc.GetFlatBox(5, 4, 3)),
                 parkNear(pr.sym.Park, -1, 3, () => ldk.qc.GetFlatBox(3, 5, 3)),
-                parkNear(pr.sym.Park, 2, 3, () => ldk.qc.GetFlatBox(4, 5, 3))
+                parkNear(pr.sym.Park, 2, 3, () => ldk.qc.GetFlatBox(4, 5, 3))*/
             );
         }
 

@@ -20,30 +20,6 @@ namespace ShapeGrammar
             this.sym = sym;
         }
 
-        /*
-        public Production CreateNewHouse(int bottomHeight)
-        {
-            return new Production(
-                "CreateNewHouse",
-                new ProdParamsManager(),
-                (state, pp) =>
-                {
-                    var root = state.Root;
-                    var room = ldk.sgShapes.Room(new Box2Int(0, 0, 5, 5).InflateY(bottomHeight, bottomHeight + 2));
-                    var movedRoom = ldk.pl.MoveToNotOverlap(state.WorldState.Added, room).GN(sym.Room(), sym.FullFloorMarker);
-                    var foundation = ldk.sgShapes.Foundation(movedRoom.LE).GN(sym.Foundation);
-                    var reservation = movedRoom.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.Reservation).GN(sym.UpwardReservation(movedRoom));
-
-
-                    return state.NewProgramBadMethodDestroyItASAP(new[]
-                    {
-                        state.Add(root).SetTo(movedRoom),
-                        state.Add(movedRoom).SetTo(foundation),
-                        state.Add(movedRoom).SetTo(reservation)
-                    });
-                });
-        }*/
-        
         public Production CreateNewHouse(int bottomHeight)
         {
             return Place(sym.Room(), 3, () => ldk.sgShapes.Room(new Box2Int(0, 0, 5, 5).InflateY(0, 2)), Reserve(2, sym.UpwardReservation));
@@ -87,7 +63,6 @@ namespace ShapeGrammar
                         .FindPath(() => ldk.con.ConnectByDoor(room.LE, courtyard.LE).GN(sym.ConnectionMarker), out var door)
                         .PlaceCurrentFrom(room, courtyard)
                         );
-                     
                 });
         }
 
@@ -885,7 +860,72 @@ namespace ShapeGrammar
                         );
                 });
         }
+        /*
+        IEnumerable<Symbol> SymbolsUnder(Node node)
+        {
+            return node.LE.CG().ExtrudeDir(Vector3Int.down, 1).
+        }*/
+        Node FindFoundation(Node node)
+        {
+            node.Derived.ForEach(child =>
+            {
+                Debug.Log($"Symbols under:");
+                child.Print(new PrintingState()).Show();
+                Debug.Log($"end");
+            });
+            return node.Derived.Where(child => child.HasSymbols(sym.Foundation)).FirstOrDefault();
+        }
 
+
+        public Production FromDownwardFoundation(
+            Symbol fromSymbol,
+            Func<CubeGroup, Node> nodeFromExtrudedDown,
+            int floorHeight,
+            int minBottomHeight,
+            ConnectionNotIntersecting connection)
+        {
+            return new Production(
+                $"FromDownwardFoundation_{fromSymbol.Name}",
+                new ProdParamsManager()
+                    .AddNodeSymbols(fromSymbol)
+                    .SetCondition((state, pp) =>
+                    {
+                        var foundationBelow = FindFoundation(pp.Param);
+                        Debug.Log($"Checking from downward foundation: foundation below = {foundationBelow}");
+                        return 
+                            foundationBelow != null &&
+                            pp.Param.LE.CG().LeftBottomBack().y - floorHeight >= minBottomHeight;
+                    }),
+                (state, pp) =>
+                {
+                    var upFloor = pp.Param;
+                    var foundationBelow = FindFoundation(pp.Param);
+                    Debug.Log("Applying from downward foundation");
+
+                    return state.NewProgram(prog => prog
+                        .Set(() => upFloor)
+                        .Change(res => res.LE.CG().BottomLayer()
+                            .ExtrudeDir(Vector3Int.down, floorHeight).LE().GN())
+                        .CurrentFirst(out var extendedDown)
+
+                        // Only check if the part outside of the reservation was not taken yet
+                        .Set(() => extendedDown.LE.Minus(foundationBelow.LE).GN())
+                        .NotTaken()
+                        .Set(() => extendedDown)
+
+                        .Change(extr => nodeFromExtrudedDown(extr.LE.CG()))
+                        .CurrentFirst(out var downFloor)
+                        .ReplaceNodes(foundationBelow)
+
+                        .Found()
+                        .PlaceCurrentFrom(downFloor)
+
+                        .FindPath(() => connection(AllBlocking(state, prog, upFloor.LE.Grid))
+                            (downFloor.LE, upFloor.LE).GN(sym.ConnectionMarker), out var stairs)
+                        .PlaceCurrentFrom(upFloor, downFloor)
+                        );
+                });
+        }
 
         #endregion
 
@@ -901,7 +941,16 @@ namespace ShapeGrammar
                 );
         }
 
-
+        public Production RoomDown(Symbol from)
+        {
+            return FromDownwardFoundation(
+                    from,
+                    cg => cg.LE(AreaType.Room).GN(sym.FullFloorMarker, sym.ChapelRoom()),
+                    2,
+                    3,
+                    _ => ldk.con.ConnectByWallStairsIn
+                );
+        }
 
         #region Graveyard
 
@@ -951,11 +1000,6 @@ namespace ShapeGrammar
                 (extrLE, dir) => extrLE.LE(AreaType.Room).GN(sym.ChapelHall(dir), sym.FullFloorMarker),
                 length,
                 Reserve(2, sym.UpwardReservation),
-                /*(program, newChapelHall) =>
-                    program
-                        .Set(() => newChapelHall)
-                        .ReserveUpward(2, sym.UpwardReservation)
-                        .PlaceCurrentFrom(newChapelHall),*/
                 _ => ldk.con.ConnectByDoor
                 );
         }
@@ -968,11 +1012,6 @@ namespace ShapeGrammar
                 (extrLE, dir) => extrLE.LE(AreaType.Room).GN(sym.ChapelRoom(), sym.FullFloorMarker),
                 extrusionLength,
                 Reserve(2, sym.UpwardReservation),
-                /*(program, newChapel) =>
-                    program
-                        .Set(() => newChapel)
-                        .ReserveUpward(2, sym.UpwardReservation)
-                        .PlaceCurrentFrom(newChapel),*/
                 _ => ldk.con.ConnectByDoor
                 );
         }
