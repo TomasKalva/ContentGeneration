@@ -139,7 +139,7 @@ namespace ShapeGrammar
 
             Func<int, Production> chapelNextFloor = height =>
                 pr.TakeUpwardReservation(
-                    pr.sym.UpwardReservation(default),
+                    pr.sym.ChapelRoom(),
                     nextFloor => nextFloor.LE(AreaType.Room).GN(pr.sym.ChapelRoom(), pr.sym.FullFloorMarker),
                     height,
                     16,
@@ -148,7 +148,7 @@ namespace ShapeGrammar
 
             Func<int, Production> chapelTowerTop = height =>
                 pr.TakeUpwardReservation(
-                    pr.sym.UpwardReservation(default),
+                    pr.sym.Room(),
                     nextFloor => nextFloor.LE(AreaType.Colonnade).GN(pr.sym.ChapelTowerTop, pr.sym.FullFloorMarker),
                     2,
                     100,

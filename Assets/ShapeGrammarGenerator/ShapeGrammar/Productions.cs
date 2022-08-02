@@ -493,14 +493,14 @@ namespace ShapeGrammar
                     .AddNodeSymbols(sym.UpwardReservation(null))
                     .SetCondition((state, pp) =>
                     {
-                        var roomBelow = pp.Param.GetSymbol<UpwardReservation>(sym.UpwardReservation(null)).RoomBelow.GetSymbol<Room>(sym.Room());
+                        var roomBelow = pp.Param.GetSymbol<UpwardReservation>(sym.UpwardReservation(null)).SomethingBelow.GetSymbol<Room>(sym.Room());
                         return roomBelow != null && roomBelow.Plain && roomBelow.Floor <= 1;
                     })
                     ,
                 (state, pp) =>
                 {
                     var roomReservation = pp.Param;
-                    var roomBelow = roomReservation.GetSymbol<UpwardReservation>(sym.UpwardReservation(null)).RoomBelow;
+                    var roomBelow = roomReservation.GetSymbol<UpwardReservation>(sym.UpwardReservation(null)).SomethingBelow;
 
                     return state.NewProgram(prog => prog
                         .Set(() => roomReservation.LE.SetAreaType(AreaType.Room)
@@ -818,11 +818,14 @@ namespace ShapeGrammar
             ConnectionNotIntersecting connection)
         {
             return new Production(
-                $"TakeReservation_{reservationSymbol.Name}",
+                $"TakeUpwardReservation_{reservationSymbol.Name}",
                 new ProdParamsManager()
-                    .AddNodeSymbols(reservationSymbol)
+                    .AddNodeSymbols(sym.UpwardReservation(null))
                     .SetCondition((state, pp) =>
                     {
+                        bool correctBelowSymbol = 
+                            pp.Param.GetSymbol(sym.UpwardReservation(null))
+                            .SomethingBelow.GetSymbol(reservationSymbol) != null;
                         return pp.Param.LE.CG().RightTopFront().y + 1 <= maxBottomHeight;
                         /*var roomBelow = pp.Param.GetSymbol<UpwardReservation>().RoomBelow.GetSymbol<ChapelRoom>();
                         return
@@ -834,7 +837,7 @@ namespace ShapeGrammar
                     var reservation = pp.Param;
                     var reservationCG = reservation.LE.CG();
                     var toExtrude = nextFloorHeight - 1;
-                    var roomBelow = pp.Param.GetSymbol<UpwardReservation>(sym.UpwardReservation(null)).RoomBelow;
+                    var roomBelow = pp.Param.GetSymbol<UpwardReservation>(sym.UpwardReservation(null)).SomethingBelow;
 
                     return state.NewProgram(prog => prog
                         .Condition(() => toExtrude >= 0)
@@ -867,12 +870,6 @@ namespace ShapeGrammar
         }*/
         Node FindFoundation(Node node)
         {
-            node.Derived.ForEach(child =>
-            {
-                Debug.Log($"Symbols under:");
-                child.Print(new PrintingState()).Show();
-                Debug.Log($"end");
-            });
             return node.Derived.Where(child => child.HasSymbols(sym.Foundation)).FirstOrDefault();
         }
 
@@ -891,7 +888,6 @@ namespace ShapeGrammar
                     .SetCondition((state, pp) =>
                     {
                         var foundationBelow = FindFoundation(pp.Param);
-                        Debug.Log($"Checking from downward foundation: foundation below = {foundationBelow}");
                         return 
                             foundationBelow != null &&
                             pp.Param.LE.CG().LeftBottomBack().y - floorHeight >= minBottomHeight;
@@ -1019,7 +1015,7 @@ namespace ShapeGrammar
         public Production ChapelNextFloor(int nextFloorHeight, int maxFloor)
         {
             return TakeUpwardReservation(
-                    sym.UpwardReservation(default),
+                    sym.ChapelRoom(),
                     nextFloor => nextFloor.LE(AreaType.Room).GN(sym.ChapelRoom(), sym.FullFloorMarker),
                     nextFloorHeight,
                     maxFloor,

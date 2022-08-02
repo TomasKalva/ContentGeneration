@@ -156,11 +156,11 @@ namespace ShapeGrammar
 
     public class UpwardReservation : Symbol
     {
-        public Node RoomBelow { get; }
+        public Node SomethingBelow { get; }
 
         public UpwardReservation(string name, Node roomBelow) : base(name)
         {
-            RoomBelow = roomBelow;
+            SomethingBelow = roomBelow;
         }
     }
 }
