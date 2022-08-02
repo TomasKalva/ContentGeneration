@@ -122,6 +122,7 @@ namespace ShapeGrammar
                     (cg, dir) => AlterInOrthogonalDirection(cg, dir, 3).LE(AreaType.Colonnade).GN(sym.Bridge(dir), sym.FullFloorMarker),
                     6,
                     Empty(),
+                    Empty(),
                     _ => ldk.con.ConnectByDoor
                 );
         }
@@ -134,6 +135,7 @@ namespace ShapeGrammar
                     (cg, dir) => AlterInOrthogonalDirection(cg, dir, 7).LE(AreaType.Yard).GN(sym.Courtyard, sym.FullFloorMarker),
                     6,
                     Empty(),
+                    Empty(),
                     _ => ldk.con.ConnectByDoor
                 );
         }
@@ -145,6 +147,7 @@ namespace ShapeGrammar
                     node => node.GetSymbol(sym.Bridge()).Direction.ToEnumerable(),
                     (cg, dir) => cg.LE(AreaType.Colonnade).GN(sym.Bridge(dir), sym.FullFloorMarker),
                     5,
+                    Empty(),
                     Empty(),
                     _ => ldk.con.ConnectByDoor
                 );
@@ -196,60 +199,17 @@ namespace ShapeGrammar
                     .Change(node => 
                         ldk.sgShapes.IslandExtrudeIter(node.LE.CG().BottomLayer(), 2, 0.7f)
                             .LE(AreaType.Garden).Minus(prog.State.WorldState.Added)
-                            /* To remove disconnected we have to make sure that the or
+                            //To remove disconnected we have to make sure that the or
                             .MapGeom(cg => cg
-                                .SplitToConnected().ArgMax(cg => cg.Cubes.Count)
+                                .SplitToConnected().First(cg => cg.Intersects(node.LE.CG()))//node..ArgMax(cg => cg.Cubes.Count)
                                 .OpAdd().ExtrudeVer(Vector3Int.up, 3))
-                            */
+                            
                             .GN(sym.Garden, sym.FullFloorMarker)
                         ),
                 Empty(),
                 ldk.con.ConnectByBalconyStairsOutside,
                 1
                 );
-            /*return new Production(
-                "GardenFromCourtyard",
-                new ProdParamsManager()
-                    .AddNodeSymbols(sym.Courtyard),
-                (state, pp) =>
-                {
-                    var courtyard = pp.Param;
-                    var courtyardCubeGroup = courtyard.LE.CG();
-
-                    var possibleStartCubes = courtyardCubeGroup.CubeGroupMaxLayer(Vector3Int.down).ExtrudeHor().MoveBy(3 * Vector3Int.down).NotTaken();
-                    if (!possibleStartCubes.Cubes.Any())
-                        return null;
-
-                    var gardens =
-                        ExtensionMethods.HorizontalDirections().Shuffle()
-                        .Select(dir =>
-                            ldk.sgShapes.IslandExtrudeIter(possibleStartCubes.CubeGroupMaxLayer(dir), 3, 0.7f)
-                            .LE(AreaType.Garden).Minus(state.WorldState.Added)
-                            .MapGeom(cg => cg
-                                .SplitToConnected().ArgMax(cg => cg.Cubes.Count)
-                                .OpAdd().ExtrudeVer(Vector3Int.up, 3))
-                            .GN(sym.Garden, sym.FullFloorMarker)
-                        )
-                        //todo: remove cubes that can't be founded directly instead of asking about the whole group at the end
-                        .Where(garden => garden.LE.Cubes().Count() >= 8 && state.CanBeFounded(garden.LE));
-
-                    if (!gardens.Any())
-                        return null;
-
-                    var garden = gardens.FirstOrDefault();
-
-                    garden.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
-
-                    var cliffFoundation = ldk.sgShapes.CliffFoundation(garden.LE).GN(sym.Foundation);
-                    var stairs = ldk.con.ConnectByElevator(courtyard.LE, garden.LE).GN(sym.ConnectionMarker);
-
-                    return state.NewProgramBadMethodDestroyItASAP(new[]
-                    {
-                        state.Add(courtyard).SetTo(garden),
-                        state.Add(garden).SetTo(cliffFoundation),
-                        state.Add(garden, courtyard).SetTo(stairs),
-                    });
-                });*/
         }
 
         #endregion
@@ -621,6 +581,7 @@ namespace ShapeGrammar
             Func<Node, IEnumerable<Vector3Int>> directionsFromSelected,
             Func<CubeGroup, Vector3Int, Node> nodeFromExtrudedDirection,
             int length,
+            Func<ProductionProgram, Node, ProductionProgram> afterNodeCreated,
             Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPlaced,
             ConnectionNotIntersecting connectionNotIntersecting)
         {
@@ -640,7 +601,10 @@ namespace ShapeGrammar
                                         nodeFromExtrudedDirection(from.LE.CG().ExtrudeDir(dir, length), dir)
                                 )
                                 .NotTaken()
+                                .CurrentFirst(out var created)
                                 .CanBeFounded()
+
+                                .RunIf(true, p => afterNodeCreated(p, created))
                                 ),
                             out var newChapelHall
                             )
@@ -816,6 +780,53 @@ namespace ShapeGrammar
 
                 });
         }
+        /*
+        public Production LayerAroundFrom(
+            Symbol from,
+            Symbol to,
+            int layerSize,
+            Func<Node, LevelElement> layerToTo,
+            Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPlaced,
+            ConnectionNotIntersecting connection
+            )
+        {
+            return new Production(
+                $"ExtendBridgeFromTo_{from.Name}_{to.Name}",
+                new ProdParamsManager().AddNodeSymbols(from),
+                (state, pp) =>
+                {
+                    var what = pp.Param;
+                    var whatCG = what.LE.CG();
+
+                    // reduced from 1450 to 1050 characters, from 80 lines to 34 lines
+                    return state.NewProgram(prog => prog
+                        .SelectOne(
+                            
+                            state.NewProgram(subProg => subProg
+                                .Directional(ExtensionMethods.HorizontalDirections(),
+                                    dir => what.LE.CG().BottomLayer().ExtrudeDir(dir, layerSize).LE().GN()
+                                )
+                                .DontIntersectAdded()
+                                .Change(node => layerToTo(node).Minus(state.WorldState.Added).GN(to))
+                                ),
+                                out var newNode
+                        )
+                        .PlaceCurrentFrom(what)
+
+                        .Found()
+                        .PlaceCurrentFrom(newNode)
+
+                        .RunIf(true,
+                            thisProg => fromFloorNodeAfterPlaced(thisProg, newNode)
+                        )
+
+                        .FindPath(() => connection(AllBlocking(state, prog, what.LE.Grid))
+                            (what.LE, newNode.LE).GN(sym.ConnectionMarker), out var stairs)
+                        .PlaceCurrentFrom(what, newNode)
+                        );
+
+                });
+        }*/
 
         #endregion
 
@@ -850,6 +861,7 @@ namespace ShapeGrammar
                 node => pathGuide.SelectDirections(node.LE),
                 (extrLE, dir) => extrLE.LE(AreaType.Room).GN(sym.ChapelHall(dir), sym.FullFloorMarker),
                 length,
+                Empty(),
                 Reserve(2, sym.UpwardReservation),
                 _ => ldk.con.ConnectByDoor
                 );
@@ -862,6 +874,7 @@ namespace ShapeGrammar
                 node => node.GetSymbol(sym.ChapelHall(default)).Direction.ToEnumerable(),
                 (cg, dir) => cg.LE(AreaType.Room).GN(sym.ChapelRoom, sym.FullFloorMarker),
                 extrusionLength,
+                Empty(),
                 Reserve(2, sym.UpwardReservation),
                 _ => ldk.con.ConnectByDoor
                 );
@@ -926,6 +939,7 @@ namespace ShapeGrammar
                 (cg, dir) => AlterInOrthogonalDirection(cg, dir, 2).LE(AreaType.FlatRoof).GN(sym.WallTop(dir), sym.FullFloorMarker),
                 length,
                 Empty(),
+                    Empty(),
                 _ => ldk.con.ConnectByDoor
                 );
 
@@ -935,6 +949,7 @@ namespace ShapeGrammar
                 node => node.GetSymbol(sym.WallTop(default)).Direction.ToEnumerable(),
                 (cg, dir) => AlterInOrthogonalDirection(cg, dir, width).LE(AreaType.Room).GN(sym.TowerTop, sym.FullFloorMarker),
                 length,
+                Empty(),
                 Reserve(2, sym.UpwardReservation),
                 _ => ldk.con.ConnectByDoor
                 );
@@ -947,7 +962,31 @@ namespace ShapeGrammar
                     MoveVertically(heightChange, minBottomHeight),
                     Reserve(2, sym.UpwardReservation),
                     ldk.con.ConnectByBalconyStairsOutside,
-                    heightChange);
+                    distance
+                );
+
+        public Production GardenAround(Symbol from)
+            => Extrude(
+                    from,
+                    _ => ExtensionMethods.HorizontalDirections(),
+                    (cg, dir) => cg.LE(AreaType.Garden).GN(sym.Garden, sym.FullFloorMarker),
+                    1,
+                    (prog, node) => 
+                        prog.Set(() => ldk.sgShapes
+                            .IslandExtrudeIter(node.LE.CG().BottomLayer(), 2, 0.7f)
+                            .LE(AreaType.Garden)
+                            .Minus(prog.State.WorldState.Added)
+                            .MapGeom(cg => cg
+                                .SplitToConnected().First(cg => cg.Intersects(node.LE.CG()))
+                            )
+                            .GN(sym.Garden, sym.FullFloorMarker)
+                        )
+                        .NotTaken()
+                        .CanBeFounded(),
+                    Empty(),
+                    ldk.con.ConnectByBalconyStairsOutside
+                    );
+
         #endregion
     }
 }

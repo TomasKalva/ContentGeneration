@@ -173,13 +173,14 @@ namespace ShapeGrammar
                 pr.TowerBottomNear(pr.sym.Garden, () => ldk.qc.GetFlatBox(3, 3, 7)),
 
                 pr.UpwardTowerTop(2),
-                pr.WallTop(pr.sym.TowerTop, 7, 2, pathGuide),
-                pr.WallTop(pr.sym.TowerTop, 12, 2, pathGuide),
+                pr.WallTop(pr.sym.TowerTop, 5, 2, pathGuide),
+                pr.WallTop(pr.sym.TowerTop, 8, 2, pathGuide),
                 pr.TowerTopFromWallTop(4, 4),
-                pr.RoomDown(pr.sym.TowerTop, pr.sym.TowerBottom, 7, 3),
+                pr.RoomDown(pr.sym.TowerTop, pr.sym.TowerBottom, 5, 3),
 
-                pr.GardenFrom(pr.sym.TowerBottom, () => ldk.qc.GetFlatBox(4, 4, 1)),
-                pr.TowerTopNear(pr.sym.TowerTop, 3, -2, 3, () => ldk.qc.GetFlatBox(3, 3, 1))
+                //pr.GardenFrom(pr.sym.TowerBottom, () => ldk.qc.GetFlatBox(4, 4, 1)),
+                pr.TowerTopNear(pr.sym.TowerTop, 4, 0, 3, () => ldk.qc.GetFlatBox(3, 3, 2)),
+                pr.GardenAround(pr.sym.TowerBottom)
             );
         }
 
