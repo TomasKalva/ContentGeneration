@@ -157,7 +157,7 @@ namespace ShapeGrammar
 
                         .Set(() => ldk.sgShapes.BridgeFoundation(
                             bridge.LE,
-                            bridge.GetSymbol<Bridge>().Direction
+                            bridge.GetSymbol<Bridge>(sym.Bridge()).Direction
                             ).GN(sym.Foundation))
                         .PlaceCurrentFrom(bridge)
                         );
@@ -174,7 +174,7 @@ namespace ShapeGrammar
                     var bridge = pp.Param;
                     var courtyardCubeGroup = bridge.LE.CG();
                     
-                    var dir = bridge.GetSymbol<Bridge>().Direction;
+                    var dir = bridge.GetSymbol<Bridge>(sym.Bridge()).Direction;
 
                     return state.NewProgram(prog => prog
                         .Set(() => courtyardCubeGroup
@@ -191,7 +191,7 @@ namespace ShapeGrammar
 
                         .Set(() => ldk.sgShapes.BridgeFoundation(
                             newBridge.LE,
-                            newBridge.GetSymbol<Bridge>().Direction
+                            newBridge.GetSymbol<Bridge>(sym.Bridge()).Direction
                             ).GN(sym.Foundation))
                         .PlaceCurrentFrom(newBridge)
                         );
@@ -208,7 +208,7 @@ namespace ShapeGrammar
                 {
                     var bridge = pp.Param;
                     var bridgeCubeGroup = bridge.LE.CG();
-                    var dir = bridge.GetSymbol<Bridge>().Direction;
+                    var dir = bridge.GetSymbol<Bridge>(sym.Bridge()).Direction;
 
                     return state.NewProgram(prog => prog
                         .Set(
@@ -493,19 +493,19 @@ namespace ShapeGrammar
                     .AddNodeSymbols(sym.UpwardReservation(null))
                     .SetCondition((state, pp) =>
                     {
-                        var roomBelow = pp.Param.GetSymbol<UpwardReservation>().RoomBelow.GetSymbol<Room>();
+                        var roomBelow = pp.Param.GetSymbol<UpwardReservation>(sym.UpwardReservation(null)).RoomBelow.GetSymbol<Room>(sym.Room());
                         return roomBelow != null && roomBelow.Plain && roomBelow.Floor <= 1;
                     })
                     ,
                 (state, pp) =>
                 {
                     var roomReservation = pp.Param;
-                    var roomBelow = roomReservation.GetSymbol<UpwardReservation>().RoomBelow;
+                    var roomBelow = roomReservation.GetSymbol<UpwardReservation>(sym.UpwardReservation(null)).RoomBelow;
 
                     return state.NewProgram(prog => prog
                         .Set(() => roomReservation.LE.SetAreaType(AreaType.Room)
                             .GN(
-                                sym.Room(true, roomBelow.GetSymbol<Room>().Floor + 1),
+                                sym.Room(true, roomBelow.GetSymbol<Room>(sym.Room()).Floor + 1),
                                 sym.FullFloorMarker),
                                 out var nextFloor
                         )
@@ -834,7 +834,7 @@ namespace ShapeGrammar
                     var reservation = pp.Param;
                     var reservationCG = reservation.LE.CG();
                     var toExtrude = nextFloorHeight - 1;
-                    var roomBelow = pp.Param.GetSymbol<UpwardReservation>().RoomBelow;
+                    var roomBelow = pp.Param.GetSymbol<UpwardReservation>(sym.UpwardReservation(null)).RoomBelow;
 
                     return state.NewProgram(prog => prog
                         .Condition(() => toExtrude >= 0)
@@ -1008,12 +1008,23 @@ namespace ShapeGrammar
         {
             return Extrude(
                 sym.ChapelHall(default),
-                node => node.GetSymbol<ChapelHall>().Direction.ToEnumerable(),
+                node => node.GetSymbol(sym.ChapelHall(default)).Direction.ToEnumerable(),
                 (extrLE, dir) => extrLE.LE(AreaType.Room).GN(sym.ChapelRoom(), sym.FullFloorMarker),
                 extrusionLength,
                 Reserve(2, sym.UpwardReservation),
                 _ => ldk.con.ConnectByDoor
                 );
+        }
+
+        public Production ChapelNextFloor(int nextFloorHeight, int maxFloor)
+        {
+            return TakeUpwardReservation(
+                    sym.UpwardReservation(default),
+                    nextFloor => nextFloor.LE(AreaType.Room).GN(sym.ChapelRoom(), sym.FullFloorMarker),
+                    nextFloorHeight,
+                    maxFloor,
+                    Reserve(2, sym.UpwardReservation),
+                    _ => ldk.con.ConnectByWallStairsIn);
         }
 
         /*

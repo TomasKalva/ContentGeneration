@@ -14,23 +14,23 @@ namespace ShapeGrammar
         public Symbol ExtrudeUp { get; } = new Symbol("ExtrudeUp");
         //public Symbol CreateFrom(params Node[] from) => new CreateFrom("CreateFrom", from.ToList());
         //public Symbol FloorGiver(Node giveTo) => new FloorGiver("FloorGiver", giveTo);
-        public Symbol Room(bool plain = true, int floor = 0) => new Room("Room", plain, floor);
+        public Room Room(bool plain = true, int floor = 0) => new Room("Room", plain, floor);
         //public Symbol DirectedRoom(Vector3Int direction, int floor = 0) => new DirectedRoom("DirectedRoom", false, floor, direction);
         /// <summary>
         /// Serves as a space that can be turned into another part of a building or in a roof.
         /// </summary>
-        public Symbol UpwardReservation(Node roomBelow) => new UpwardReservation("RoomReservation", roomBelow);
+        public UpwardReservation UpwardReservation(Node roomBelow) => new UpwardReservation("RoomReservation", roomBelow);
         public Symbol Terrace { get; } = new Symbol("Terrace");
         public Symbol Roof { get; } = new Symbol("Roof");
         public Symbol Courtyard { get; } = new Symbol("Courtyard");
         public Symbol Foundation { get; } = new Symbol("Foundation");
-        public Symbol Bridge(Vector3Int direction = default) => new Bridge("Bridge", direction);
+        public Bridge Bridge(Vector3Int direction = default) => new Bridge("Bridge", direction);
         public Symbol Garden { get; } = new Symbol("Garden");
 
         #region Graveyard
         public Symbol Park { get; } = new Symbol("Park");
         public Symbol ChapelEntrance { get; } = new Symbol("ChapelEntrance");
-        public Symbol ChapelHall(Vector3Int direction) => new ChapelHall("ChapelHall", direction);
+        public DirectionalSymbol ChapelHall(Vector3Int direction) => new DirectionalSymbol("ChapelHall", direction);
         public Symbol ChapelRoom(bool plain = true, int floor = 0) => new ChapelRoom("ChapelRoom", plain, floor);
         public Symbol ChapelTowerTop { get; } = new Symbol("ChapelTowerTop");
         #endregion
@@ -60,11 +60,11 @@ namespace ShapeGrammar
 
 
 
-    public class ChapelHall : Symbol
+    public class DirectionalSymbol : Symbol
     {
         public Vector3Int Direction { get; }
         
-        public ChapelHall(string name, Vector3Int direction) : base(name)
+        public DirectionalSymbol(string name, Vector3Int direction) : base(name)
         {
             Direction = direction;
         }

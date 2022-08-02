@@ -205,13 +205,13 @@ namespace ShapeGrammar
                 //parkNear(pr.sym.Park, 0, 0, () => ldk.qc.GetFlatBox(4, 4, 3)),
 
                 pr.ChapelHall(pr.sym.ChapelEntrance, 4, guideRandomly),
-                /*
+                
                 pr.ChapelHall(pr.sym.ChapelRoom(), 7, guideRandomly),
                 pr.ChapelHall(pr.sym.ChapelRoom(), 5, guideRandomly),
 
                 pr.ChapelRoom(3),
 
-                pr.RoomDown(pr.sym.ChapelRoom()),*/
+                pr.RoomDown(pr.sym.ChapelRoom()),
 
                 //pr.ChapelNextFloor(3, 2),
                 chapelNextFloor(3),// now it takes ANY upward reservation - even from hall

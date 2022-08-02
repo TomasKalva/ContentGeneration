@@ -78,9 +78,9 @@ namespace ShapeGrammar
             return state;
         }
 
-        public SymbolT GetSymbol<SymbolT>() where SymbolT : Symbol
+        public SymbolT GetSymbol<SymbolT>(SymbolT symbolType) where SymbolT : Symbol
         {
-            return Symbols.SelectNN(symbol => symbol as SymbolT).FirstOrDefault();
+            return Symbols.SelectNN(symbol => symbol as SymbolT).Where(symbol => symbol.Name == symbolType.Name).FirstOrDefault();
         }
 
         public void AddDerived(Node derived)
