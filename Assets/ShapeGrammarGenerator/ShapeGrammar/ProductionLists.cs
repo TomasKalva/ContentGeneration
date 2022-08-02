@@ -26,7 +26,7 @@ namespace ShapeGrammar
                 pr.BridgeFromCourtyard(),
                 pr.ExtendBridge(),
                 pr.CourtyardFromBridge(),
-                pr.AddNextFloor(),
+                //pr.AddNextFloor(),
                 pr.RoomNextTo(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
                 
                 //pr.ExtendHouse(ldk.tr.GetFloorConnector(lge => ldk.tr.SplittingFloorPlan(lge, 2))), // Creates area for the node doesn't exist error
@@ -38,7 +38,7 @@ namespace ShapeGrammar
                 //pr.RoomFallDown(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
                 //pr.TowerFallDown(pr.sym.Courtyard, pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
 
-                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
+                pr.ExtendBridgeTo(pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
 
                 pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             );
@@ -56,10 +56,10 @@ namespace ShapeGrammar
         {
             return new ProductionList
             (
-                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
+                pr.ExtendBridgeTo(pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
                 pr.ExtendBridgeTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
                 pr.RoomNextTo(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-                pr.RoomNextTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
+                pr.RoomNextTo(pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             );
         }
 
@@ -67,7 +67,7 @@ namespace ShapeGrammar
         {
             return new ProductionList
             (
-                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
+                pr.ExtendBridgeTo(pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
                 pr.ExtendBridgeTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             );
         }
@@ -77,8 +77,8 @@ namespace ShapeGrammar
             return new ProductionList
             (
                 //pr.GardenFromCourtyard(),
-                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 5, 3, 4))),
-                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden), addFloorAbove: false),
+                pr.ExtendBridgeTo(pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 5, 3, 4))),
+                pr.ExtendBridgeTo(pr.sym.Room, () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden), addFloorAbove: false),
                 pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 4, 3, 5)))
             );
         }
@@ -88,8 +88,8 @@ namespace ShapeGrammar
             return new ProductionList
             (
                 //pr.GardenFromCourtyard(),
-                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), guide),
-                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden), guide, addFloorAbove: false),
+                pr.ExtendBridgeTo(pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), guide),
+                pr.ExtendBridgeTo(pr.sym.Room, () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden), guide, addFloorAbove: false),
                 pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             );
         }
@@ -102,13 +102,14 @@ namespace ShapeGrammar
                 //pr.GardenFromCourtyard(),
                 //pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
                 //pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden), addFloorAbove: false),
-                pr.ParkNextTo(pr.sym.Room(), () => ldk.qc.GetFlatBox(4, 4, 3)),
+                /*pr.ParkNextTo(pr.sym.Room(), () => ldk.qc.GetFlatBox(4, 4, 3)),
                 pr.Park(pr.sym.Park, -1, 3, () => ldk.qc.GetFlatBox(3, 5, 3)),
                 pr.Park(pr.sym.Park, -1, 3, () => ldk.qc.GetFlatBox(5, 4, 3)),
                 pr.ChapelNextTo(pr.sym.Park, () => ldk.qc.GetFlatBox(3, 3, 2)),
                 pr.ChapelHall(pr.sym.ChapelEntrance, 6, guideRandomly),
                 pr.ChapelHall(pr.sym.ChapelRoom(), 6, guideRandomly),
                 pr.ChapelRoom(3)
+                */
                 //pr.ChapelNextFloor(3, 2)
             );
         }
@@ -139,8 +140,8 @@ namespace ShapeGrammar
 
             Func<int, Production> chapelNextFloor = height =>
                 pr.TakeUpwardReservation(
-                    pr.sym.ChapelRoom(),
-                    nextFloor => nextFloor.LE(AreaType.Room).GN(pr.sym.ChapelRoom(), pr.sym.FullFloorMarker),
+                    pr.sym.ChapelRoom,
+                    nextFloor => nextFloor.LE(AreaType.Room).GN(pr.sym.ChapelRoom, pr.sym.FullFloorMarker),
                     height,
                     16,
                     pr.Reserve(2, pr.sym.UpwardReservation),
@@ -148,7 +149,7 @@ namespace ShapeGrammar
 
             Func<int, Production> chapelTowerTop = height =>
                 pr.TakeUpwardReservation(
-                    pr.sym.ChapelRoom(),
+                    pr.sym.ChapelRoom,
                     nextFloor => nextFloor.LE(AreaType.Colonnade).GN(pr.sym.ChapelTowerTop, pr.sym.FullFloorMarker),
                     2,
                     100,
@@ -199,19 +200,19 @@ namespace ShapeGrammar
 
                 //pr.BridgeFrom(pr.sym.Park, guideRandomly),
 
-                chapelEntranceNear(pr.sym.Room(), 3, () => ldk.qc.GetFlatBox(3, 3, 2)),
+                chapelEntranceNear(pr.sym.Room, 3, () => ldk.qc.GetFlatBox(3, 3, 2)),
                 chapelEntranceNear(pr.sym.Park, 3, () => ldk.qc.GetFlatBox(3, 3, 2)),
 
                 //parkNear(pr.sym.Park, 0, 0, () => ldk.qc.GetFlatBox(4, 4, 3)),
 
                 pr.ChapelHall(pr.sym.ChapelEntrance, 4, guideRandomly),
                 
-                pr.ChapelHall(pr.sym.ChapelRoom(), 7, guideRandomly),
-                pr.ChapelHall(pr.sym.ChapelRoom(), 5, guideRandomly),
+                pr.ChapelHall(pr.sym.ChapelRoom, 7, guideRandomly),
+                pr.ChapelHall(pr.sym.ChapelRoom, 5, guideRandomly),
 
                 pr.ChapelRoom(3),
 
-                pr.RoomDown(pr.sym.ChapelRoom()),
+                pr.RoomDown(pr.sym.ChapelRoom),
 
                 //pr.ChapelNextFloor(3, 2),
                 chapelNextFloor(3),// now it takes ANY upward reservation - even from hall
@@ -255,7 +256,7 @@ namespace ShapeGrammar
         {
             return new ProductionList
             (
-                pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 10, 3, 10)))
+                pr.ExtendBridgeTo(pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 10, 3, 10)))
             );
         }
     }

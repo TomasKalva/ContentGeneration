@@ -14,7 +14,8 @@ namespace ShapeGrammar
         public Symbol ExtrudeUp { get; } = new Symbol("ExtrudeUp");
         //public Symbol CreateFrom(params Node[] from) => new CreateFrom("CreateFrom", from.ToList());
         //public Symbol FloorGiver(Node giveTo) => new FloorGiver("FloorGiver", giveTo);
-        public Room Room(bool plain = true, int floor = 0) => new Room("Room", plain, floor);
+        public Symbol Room { get; } = new Symbol("Room");
+        public Symbol BrokenFloorRoom { get; } = new Symbol("BrokenFloorRoom");
         //public Symbol DirectedRoom(Vector3Int direction, int floor = 0) => new DirectedRoom("DirectedRoom", false, floor, direction);
         /// <summary>
         /// Serves as a space that can be turned into another part of a building or in a roof.
@@ -31,7 +32,7 @@ namespace ShapeGrammar
         public Symbol Park { get; } = new Symbol("Park");
         public Symbol ChapelEntrance { get; } = new Symbol("ChapelEntrance");
         public DirectionalSymbol ChapelHall(Vector3Int direction) => new DirectionalSymbol("ChapelHall", direction);
-        public Symbol ChapelRoom(bool plain = true, int floor = 0) => new ChapelRoom("ChapelRoom", plain, floor);
+        public Symbol ChapelRoom { get; } = new Symbol("ChapelRoom");
         public Symbol ChapelTowerTop { get; } = new Symbol("ChapelTowerTop");
         #endregion
 
@@ -127,23 +128,18 @@ namespace ShapeGrammar
 
     public class Room : Symbol
     {
-        public bool Plain { get; set; }
-        public int Floor { get; set; }
-
-        public Room(string name, bool plain, int floor) : base(name)
+        public Room(string name) : base(name)
         {
-            Plain = plain;
-            Floor = floor;
         }
     }
-
+    /*
     public class ChapelRoom : Room
     {
         public ChapelRoom(string name, bool plain, int floor) : base(name, plain, floor)
         {
         }
-    }
-
+    }*/
+    /*
     public class DirectedRoom : Room
     {
         public Vector3Int Direction { get; set; }
@@ -152,7 +148,7 @@ namespace ShapeGrammar
         {
             Direction = direction;
         }
-    }
+    }*/
 
     public class UpwardReservation : Symbol
     {

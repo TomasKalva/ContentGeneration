@@ -22,14 +22,14 @@ namespace ShapeGrammar
 
         public Production CreateNewHouse(int bottomHeight)
         {
-            return Place(sym.Room(), 3, () => ldk.sgShapes.Room(new Box2Int(0, 0, 5, 5).InflateY(0, 2)), Reserve(2, sym.UpwardReservation));
+            return Place(sym.Room, 3, () => ldk.sgShapes.Room(new Box2Int(0, 0, 5, 5).InflateY(0, 2)), Reserve(2, sym.UpwardReservation));
         }
 
         public Production CourtyardFromRoom()
         {
             return new Production(
                 "CourtyardFromRoom",
-                new ProdParamsManager().AddNodeSymbols(sym.Room()),
+                new ProdParamsManager().AddNodeSymbols(sym.Room),
                 (state, pp) =>
                 {
                     var room = pp.Param;
@@ -237,7 +237,7 @@ namespace ShapeGrammar
 
         public Production RoomNextTo(Symbol nextToWhat, Func<LevelElement> roomF)
         {
-            return FullFloorPlaceNear(nextToWhat, sym.Room(), roomF,
+            return FullFloorPlaceNear(nextToWhat, sym.Room, roomF,
                 (program, _) => program,
                 (program, newRoom) => program
                         .Set(() => newRoom)
@@ -278,7 +278,7 @@ namespace ShapeGrammar
                                         return pathGuide.SelectMove(validMoves).TryMove()?.GN();
                                     })
                                 .Change(
-                                    newRoomDown => newRoomDown.LE.MoveBottomTo(whatCG.LeftBottomBack().y).GN(sym.Room(), sym.FullFloorMarker)
+                                    newRoomDown => newRoomDown.LE.MoveBottomTo(whatCG.LeftBottomBack().y).GN(sym.Room, sym.FullFloorMarker)
                                 )
                                 ),
                                 out var newRoom
@@ -317,7 +317,7 @@ namespace ShapeGrammar
                             state.NewProgram(subProg => subProg
                                 .Set(() => roomFromToF().GN())
                                 .MoveNearTo(what, 1)
-                                .Change(node => node.LE.GN(sym.Room(false, 1), sym.FullFloorMarker))
+                                .Change(node => node.LE.GN(sym.BrokenFloorRoom, sym.FullFloorMarker))
                                 ),
                             out var newRoom
                         )
@@ -327,7 +327,7 @@ namespace ShapeGrammar
                         .PlaceCurrentFrom(what)
                         
                         .Set(() =>
-                            newRoom.LE.CG().ExtrudeVer(Vector3Int.down, 2).LE(AreaType.Room).GN(sym.Room(false, 0), sym.FullFloorMarker),
+                            newRoom.LE.CG().ExtrudeVer(Vector3Int.down, 2).LE(AreaType.Room).GN(sym.Room, sym.FullFloorMarker),
                             out var bottomRoom
                         )
                         .PlaceCurrentFrom(newRoom)
@@ -375,7 +375,7 @@ namespace ShapeGrammar
                             state.NewProgram(subProg => subProg
                                 .Set(() => roomFromF().GN())
                                 .MoveNearTo(to, 1)
-                                .Change(node => node.LE.MoveBy(Vector3Int.up).GN(sym.Room(false, 1), sym.FullFloorMarker))
+                                .Change(node => node.LE.MoveBy(Vector3Int.up).GN(sym.Room, sym.FullFloorMarker))
                                 ),
                             out var newRoom
                         )
@@ -402,7 +402,7 @@ namespace ShapeGrammar
             return new Production(
                 "ExtendHouse",
                 new ProdParamsManager()
-                    .AddNodeSymbols(sym.Room()),
+                    .AddNodeSymbols(sym.Room),
                 (state, pp) =>
                 {
                     var room = pp.Param;
@@ -415,7 +415,7 @@ namespace ShapeGrammar
                         (dir, roomCubeGroup
                         .ExtrudeDir(dir, 6)
                         .LE(AreaType.Room)
-                        .GN(sym.Room(false))))
+                        .GN(sym.Room)))
                         // fail if no such object exists
                         .Where(dirNode => dirNode.Item2.LE.CG().AllAreNotTaken() && state.CanBeFounded(dirNode.Item2.LE));
 
@@ -484,7 +484,7 @@ namespace ShapeGrammar
                         )*/
                 });
         }
-
+        /*
         public Production AddNextFloor()
         {
             return new Production(
@@ -518,7 +518,7 @@ namespace ShapeGrammar
                         .PlaceCurrentFrom(roomBelow, nextFloor)
                         );
                 });
-        }
+        }*/
 
         public Production GardenFromCourtyard()
         {
@@ -892,7 +892,6 @@ namespace ShapeGrammar
                 {
                     var upFloor = pp.Param;
                     var foundationBelow = FindFoundation(pp.Param);
-                    Debug.Log("Applying from downward foundation");
 
                     return state.NewProgram(prog => prog
                         .Set(() => upFloor)
@@ -937,7 +936,7 @@ namespace ShapeGrammar
         {
             return FromDownwardFoundation(
                     from,
-                    cg => cg.LE(AreaType.Room).GN(sym.FullFloorMarker, sym.ChapelRoom()),
+                    cg => cg.LE(AreaType.Room).GN(sym.FullFloorMarker, sym.ChapelRoom),
                     2,
                     3,
                     _ => ldk.con.ConnectByWallStairsIn
@@ -1001,7 +1000,7 @@ namespace ShapeGrammar
             return Extrude(
                 sym.ChapelHall(default),
                 node => node.GetSymbol(sym.ChapelHall(default)).Direction.ToEnumerable(),
-                (extrLE, dir) => extrLE.LE(AreaType.Room).GN(sym.ChapelRoom(), sym.FullFloorMarker),
+                (extrLE, dir) => extrLE.LE(AreaType.Room).GN(sym.ChapelRoom, sym.FullFloorMarker),
                 extrusionLength,
                 Reserve(2, sym.UpwardReservation),
                 _ => ldk.con.ConnectByDoor
@@ -1011,8 +1010,8 @@ namespace ShapeGrammar
         public Production ChapelNextFloor(int nextFloorHeight, int maxFloor)
         {
             return TakeUpwardReservation(
-                    sym.ChapelRoom(),
-                    nextFloor => nextFloor.LE(AreaType.Room).GN(sym.ChapelRoom(), sym.FullFloorMarker),
+                    sym.ChapelRoom,
+                    nextFloor => nextFloor.LE(AreaType.Room).GN(sym.ChapelRoom, sym.FullFloorMarker),
                     nextFloorHeight,
                     maxFloor,
                     Reserve(2, sym.UpwardReservation),
