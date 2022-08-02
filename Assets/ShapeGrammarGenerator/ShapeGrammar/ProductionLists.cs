@@ -20,35 +20,41 @@ namespace ShapeGrammar
         public ProductionList TestingProductions()
         {
             var pathGuide = new RandomPathGuide();
+            Func<LevelElement>[] roomFs = new Func<LevelElement>[]
+            {
+                () => ldk.qc.GetFlatBox(3, 5, 2),
+                () => ldk.qc.GetFlatBox(6, 4, 3),
+            };
             return new ProductionList
             (
                 
                 pr.CourtyardFromRoom(),
                 pr.CourtyardFromCourtyardCorner(),
-                /*
-                pr.BridgeFromCourtyard(),
+                
+                pr.BridgeFrom(pr.sym.Courtyard, pathGuide),
                 pr.ExtendBridge(),
                 pr.CourtyardFromBridge(),
-                */
+                
 
                 pr.RoomNextFloor(pr.sym.Room, pr.sym.Room, 2, 13),
                 pr.RoomDown(pr.sym.Room, pr.sym.Room, 2, 3),
-                pr.RoomNextTo(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
+
+                //pr.RoomNextTo(pr.sym.Courtyard, roomFs.GetRandom()),
 
                 //pr.ExtendHouse(ldk.tr.GetFloorConnector(lge => ldk.tr.SplittingFloorPlan(lge, 2))), // Creates area for the node doesn't exist error
                 //pr.GardenFromCourtyard(),
-                pr.RoomNextTo(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 4, 2, 5))),
-                pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
+                pr.RoomNextTo(pr.sym.Courtyard, roomFs.GetRandom()),
+                //pr.RoomNextTo(pr.sym.Garden, roomFs.GetRandom()),
 
                 // these productions make the world untraversable
                 //pr.RoomFallDown(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
                 //pr.TowerFallDown(pr.sym.Courtyard, pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
 
-                pr.ExtendBridgeToRoom(pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide),
-                pr.ExtendBridgeToGarden(pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide),
-                pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
+                pr.ExtendBridgeToRoom(pr.sym.Room, roomFs.GetRandom(), pathGuide),
+                pr.ExtendBridgeToGarden(pr.sym.Room, roomFs.GetRandom(), pathGuide),
+                pr.RoomNextTo(pr.sym.Garden, roomFs.GetRandom())
 
-                pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
+                //pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             );
         }
 

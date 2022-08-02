@@ -112,132 +112,48 @@ namespace ShapeGrammar
                 });
         }
 
-        public Production BridgeFromCourtyard()
+        public Production BridgeFrom(Symbol from, PathGuide pathGuide)
         {
-            return new Production(
-                "BridgeFromCourtyard",
-                new ProdParamsManager().AddNodeSymbols(sym.Courtyard),
-                (state, pp) =>
-                {
-                    var courtyard = pp.Param;
-                    var courtyardCG = courtyard.LE.CG();
-                    
-                    return state.NewProgram(prog => prog
-                        .SelectOne(
-                            state.NewProgram(subProg => subProg
-                                .Directional(ExtensionMethods.HorizontalDirections().Shuffle(),
-                                    dir =>
-                                    {
-                                        var orthDir = dir.OrthogonalHorizontalDirs().First();
-                                        var width = courtyardCG.ExtentsDir(orthDir);
-                                        var bridgeWidth = 3;
-                                        var shrinkL = (int)Mathf.Floor((width - bridgeWidth) / 2f);
-                                        var shrinkR = (int)Mathf.Ceil((width - bridgeWidth) / 2f);
-
-                                        return courtyardCG
-                                            .ExtrudeDir(dir, 4)
-                                            .OpSub()
-                                                .ExtrudeDir(orthDir, -shrinkL)
-                                                .ExtrudeDir(-orthDir, -shrinkR)
-                                            .OpNew()
-
-                                            .LE(AreaType.Bridge).GN(sym.Bridge(dir), sym.FullFloorMarker);
-                                    }
-                                )
-                                .NonEmpty()
-                                .NotTaken()
-                                .CanBeFounded()
-                                ),
-                            out var bridge
-                        )
-                        .PlaceCurrentFrom(courtyard)
-
-                        .EmptyPath()
-                        .PlaceCurrentFrom(courtyard, bridge)
-
-                        .Set(() => ldk.sgShapes.BridgeFoundation(
-                            bridge.LE,
-                            bridge.GetSymbol(sym.Bridge()).Direction
-                            ).GN(sym.Foundation))
-                        .PlaceCurrentFrom(bridge)
-                        );
-                });
+            return Extrude(
+                    from,
+                    node => pathGuide.SelectDirections(node.LE),
+                    (cg, dir) => AlterInOrthogonalDirection(cg, dir, 3).LE(AreaType.Colonnade).GN(sym.Bridge(dir), sym.FullFloorMarker),
+                    6,
+                    Empty(),
+                    _ => ldk.con.ConnectByDoor
+                );
         }
 
         public Production ExtendBridge()
         {
-            return new Production(
-                "ExtendBridge",
-                new ProdParamsManager().AddNodeSymbols(sym.Bridge()),
-                (state, pp) =>
-                {
-                    var bridge = pp.Param;
-                    var courtyardCubeGroup = bridge.LE.CG();
-                    
-                    var dir = bridge.GetSymbol(sym.Bridge()).Direction;
-
-                    return state.NewProgram(prog => prog
-                        .Set(() => courtyardCubeGroup
-                            .ExtrudeDir(dir, 4)
-                            .LE(AreaType.Bridge).GN(sym.Bridge(dir), sym.FullFloorMarker),
-                            out var newBridge
-                        )
-                        .NotTaken()
-                        .CanBeFounded()
-                        .PlaceCurrentFrom(bridge)
-
-                        .EmptyPath()
-                        .PlaceCurrentFrom(bridge, newBridge)
-
-                        .Set(() => ldk.sgShapes.BridgeFoundation(
-                            newBridge.LE,
-                            newBridge.GetSymbol(sym.Bridge()).Direction
-                            ).GN(sym.Foundation))
-                        .PlaceCurrentFrom(newBridge)
-                        );
-                     
-                });
+            return Extrude(
+                    sym.Bridge(),
+                    node => node.GetSymbol(sym.Bridge()).Direction.ToEnumerable(),
+                    (cg, dir) => AlterInOrthogonalDirection(cg, dir, 7).LE(AreaType.Yard).GN(sym.Courtyard, sym.FullFloorMarker),
+                    6,
+                    Empty(),
+                    _ => ldk.con.ConnectByDoor
+                );
         }
 
         public Production CourtyardFromBridge()
         {
-            return new Production(
-                "CourtyardFromBridge",
-                new ProdParamsManager().AddNodeSymbols(sym.Bridge()),
-                (state, pp) =>
-                {
-                    var bridge = pp.Param;
-                    var bridgeCubeGroup = bridge.LE.CG();
-                    var dir = bridge.GetSymbol<DirectionalSymbol>(sym.Bridge()).Direction;
-
-                    return state.NewProgram(prog => prog
-                        .Set(
-                            () => bridgeCubeGroup
-                            .ExtrudeDir(dir, 4)
-                            .OpAdd()
-                                .ExtrudeDir(dir.OrthogonalHorizontalDirs().First(), 1)
-                                .ExtrudeDir(dir.OrthogonalHorizontalDirs().Last(), 1)
-                            .OpNew()
-                            .LE(AreaType.Yard).GN(sym.Courtyard, sym.FullFloorMarker),
-                            out var newCourtyard
-                        )
-                        .NotTaken()
-                        .CanBeFounded()
-                        .PlaceCurrentFrom(bridge)
-
-                        .Found()
-                        .PlaceCurrentFrom(newCourtyard)
-
-                        .EmptyPath()
-                        .PlaceCurrentFrom(bridge, newCourtyard)
-                        );
-                    
-                });
+            return Extrude(
+                    sym.Bridge(),
+                    node => node.GetSymbol(sym.Bridge()).Direction.ToEnumerable(),
+                    (cg, dir) => cg.LE(AreaType.Colonnade).GN(sym.Bridge(dir), sym.FullFloorMarker),
+                    5,
+                    Empty(),
+                    _ => ldk.con.ConnectByDoor
+                );
         }
 
         public Production RoomNextTo(Symbol nextToWhat, Func<LevelElement> roomF)
         {
-            return FullFloorPlaceNear(nextToWhat, sym.Room, roomF,
+            return FullFloorPlaceNear(
+                nextToWhat, 
+                sym.Room, 
+                () => roomF().SetAreaType(AreaType.Room),
                 (program, _) => program,
                 (program, newRoom) => program
                         .Set(() => newRoom)
@@ -579,7 +495,27 @@ namespace ShapeGrammar
                         .PlaceCurrentFrom(towerTop);
         }
 
-        public CubeGroup ShrinkInOrthogonalDirection(CubeGroup cg, Vector3Int dir, int newWidth)
+        public CubeGroup AlterInOrthogonalDirection(CubeGroup cg, Vector3Int dir, int newWidth)
+        {
+            var orthDir = dir.OrthogonalHorizontalDirs().First();
+            var width = cg.ExtentsDir(orthDir);
+            var shrinkL = (int)Mathf.Floor((width - newWidth) / 2f);
+            var shrinkR = (int)Mathf.Ceil((width - newWidth) / 2f);
+
+            return newWidth < width ? 
+                cg.OpSub()
+                    .ExtrudeDir(orthDir, -shrinkL)
+                    .ExtrudeDir(-orthDir, -shrinkR)
+                .OpNew() 
+                : 
+                cg.OpAdd()
+                    .ExtrudeDir(orthDir, -shrinkL)
+                    .ExtrudeDir(-orthDir, -shrinkR)
+                .OpNew()
+                ;
+        }
+        /*
+        public CubeGroup ExtendInOrthogonalDirection(CubeGroup cg, Vector3Int dir, int newWidth)
         {
             var orthDir = dir.OrthogonalHorizontalDirs().First();
             var width = cg.ExtentsDir(orthDir);
@@ -591,7 +527,7 @@ namespace ShapeGrammar
                     .ExtrudeDir(orthDir, -shrinkL)
                     .ExtrudeDir(-orthDir, -shrinkR)
                 .OpNew();
-        }
+        }*/
 
         LevelElement AllBlocking(ShapeGrammarState state, ProductionProgram prog, Grid<Cube> grid) 
             => state.WorldState.Added.Merge(prog.AppliedOperations.SelectMany(op => op.To.Select(n => n.LE)).ToLevelGroupElement(grid));
@@ -873,14 +809,6 @@ namespace ShapeGrammar
                         .RunIf(true,
                             thisProg => fromFloorNodeAfterPlaced(thisProg, newNode)
                         )
-                        
-                        /*
-                        .RunIf(addFloorAbove,
-                            thisProg => thisProg
-                                .Set(() => newNode)
-                                .ReserveUpward(2, sym.UpwardReservation)
-                                .PlaceCurrentFrom(newNode)
-                        )*/
 
                         .FindPath(() => ldk.con.ConnectByBridge(state.WorldState.Added)(what.LE, newNode.LE).GN(sym.ConnectionMarker), out var bridge)
                         .PlaceCurrentFrom(what, newNode)
@@ -890,18 +818,6 @@ namespace ShapeGrammar
         }
 
         #endregion
-
-        public Production BridgeFrom(Symbol from, PathGuide pathGuide)
-        {
-            return Extrude(
-                    from,
-                    node => pathGuide.SelectDirections(node.LE),
-                    (cg, dir) => ShrinkInOrthogonalDirection(cg, dir, 3).LE(AreaType.Colonnade).GN(sym.Bridge(dir), sym.FullFloorMarker),
-                    6,
-                    Empty(),
-                    ldk.con.ConnectByBalconyStairsOutside
-                );
-        }
 
         public Production RoomDown(Symbol from, Symbol to, int belowRoomHeight, int minFloorHeight)
         {
