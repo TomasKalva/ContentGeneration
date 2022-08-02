@@ -51,7 +51,7 @@ namespace ShapeGrammar
                             .ForEach(parent => parent.AddSymbol(pr.sym.ReturnToMarker))
                     )
                     .AppendLinear(
-                        new ProductionList(pr.GardenFromCourtyard()),
+                        new ProductionList(pr.GardenFrom(pr.sym.Courtyard, () => ldk.qc.GetFlatBox(3, 3, 3))),
                         1, NodesQueries.All
                     )
                     .AppendLinear(

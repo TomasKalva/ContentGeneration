@@ -20,6 +20,8 @@ namespace ShapeGrammar
             this.sym = sym;
         }
 
+        #region Town
+
         public Production CreateNewHouse(int bottomHeight)
         {
             return Place(sym.Room, 3, () => ldk.sgShapes.Room(new Box2Int(0, 0, 5, 5).InflateY(0, 2)), Reserve(2, sym.UpwardReservation));
@@ -181,6 +183,76 @@ namespace ShapeGrammar
                 () => leF().SetAreaType(AreaType.Garden),
                 pathGuide,
                 Empty());
+
+
+
+        public Production GardenFrom(Symbol from, Func<LevelElement> leF)
+        {
+            return FullFloorPlaceNear(
+                from,
+                sym.Garden,
+                leF,
+                (prog, node) => MoveVertically(-2, 3)(prog, node)
+                    .Change(node => 
+                        ldk.sgShapes.IslandExtrudeIter(node.LE.CG().BottomLayer(), 2, 0.7f)
+                            .LE(AreaType.Garden).Minus(prog.State.WorldState.Added)
+                            /* To remove disconnected we have to make sure that the one with the original box stays
+                            .MapGeom(cg => cg
+                                .SplitToConnected().ArgMax(cg => cg.Cubes.Count)
+                                .OpAdd().ExtrudeVer(Vector3Int.up, 3))
+                            */
+                            .GN(sym.Garden, sym.FullFloorMarker)
+                        ),
+                Empty(),
+                ldk.con.ConnectByBalconyStairsOutside,
+                1
+                );
+            /*return new Production(
+                "GardenFromCourtyard",
+                new ProdParamsManager()
+                    .AddNodeSymbols(sym.Courtyard),
+                (state, pp) =>
+                {
+                    var courtyard = pp.Param;
+                    var courtyardCubeGroup = courtyard.LE.CG();
+
+                    var possibleStartCubes = courtyardCubeGroup.CubeGroupMaxLayer(Vector3Int.down).ExtrudeHor().MoveBy(3 * Vector3Int.down).NotTaken();
+                    if (!possibleStartCubes.Cubes.Any())
+                        return null;
+
+                    var gardens =
+                        ExtensionMethods.HorizontalDirections().Shuffle()
+                        .Select(dir =>
+                            ldk.sgShapes.IslandExtrudeIter(possibleStartCubes.CubeGroupMaxLayer(dir), 3, 0.7f)
+                            .LE(AreaType.Garden).Minus(state.WorldState.Added)
+                            .MapGeom(cg => cg
+                                .SplitToConnected().ArgMax(cg => cg.Cubes.Count)
+                                .OpAdd().ExtrudeVer(Vector3Int.up, 3))
+                            .GN(sym.Garden, sym.FullFloorMarker)
+                        )
+                        //todo: remove cubes that can't be founded directly instead of asking about the whole group at the end
+                        .Where(garden => garden.LE.Cubes().Count() >= 8 && state.CanBeFounded(garden.LE));
+
+                    if (!gardens.Any())
+                        return null;
+
+                    var garden = gardens.FirstOrDefault();
+
+                    garden.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
+
+                    var cliffFoundation = ldk.sgShapes.CliffFoundation(garden.LE).GN(sym.Foundation);
+                    var stairs = ldk.con.ConnectByElevator(courtyard.LE, garden.LE).GN(sym.ConnectionMarker);
+
+                    return state.NewProgramBadMethodDestroyItASAP(new[]
+                    {
+                        state.Add(courtyard).SetTo(garden),
+                        state.Add(garden).SetTo(cliffFoundation),
+                        state.Add(garden, courtyard).SetTo(stairs),
+                    });
+                });*/
+        }
+
+        #endregion
 
         public Production RoomFallDown(Symbol nextToWhat, Func<LevelElement> roomFromToF)
         {
@@ -362,78 +434,6 @@ namespace ShapeGrammar
                                 .CanBeFounded(),
                             out var newRoom
                         )*/
-                });
-        }
-
-        public Production GardenFromCourtyard()
-        {
-            return new Production(
-                "GardenFromCourtyard",
-                new ProdParamsManager()
-                    .AddNodeSymbols(sym.Courtyard),
-                (state, pp) =>
-                {
-                    var courtyard = pp.Param;
-                    var courtyardCubeGroup = courtyard.LE.CG();
-
-                    var possibleStartCubes = courtyardCubeGroup.CubeGroupMaxLayer(Vector3Int.down).ExtrudeHor().MoveBy(3 * Vector3Int.down).NotTaken();
-                    if (!possibleStartCubes.Cubes.Any())
-                        return null;
-                    
-                    var gardens =
-                        ExtensionMethods.HorizontalDirections().Shuffle()
-                        .Select(dir =>
-                            ldk.sgShapes.IslandExtrudeIter(possibleStartCubes.CubeGroupMaxLayer(dir), 3, 0.7f)
-                            .LE(AreaType.Garden).Minus(state.WorldState.Added)
-                            .MapGeom(cg => cg
-                                .SplitToConnected().ArgMax(cg => cg.Cubes.Count)
-                                .OpAdd().ExtrudeVer(Vector3Int.up, 3))
-                            .GN(sym.Garden, sym.FullFloorMarker)
-                        )
-                        //todo: remove cubes that can't be founded directly instead of asking about the whole group at the end
-                        .Where(garden => garden.LE.Cubes().Count() >= 8 && state.CanBeFounded(garden.LE));
-
-                    if (!gardens.Any())
-                        return null;
-
-                    var garden = gardens.FirstOrDefault();
-
-                    garden.LE.ApplyGrammarStyleRules(ldk.houseStyleRules);
-
-                    var cliffFoundation = ldk.sgShapes.CliffFoundation(garden.LE).GN(sym.Foundation);
-                    var stairs = ldk.con.ConnectByElevator(courtyard.LE, garden.LE).GN(sym.ConnectionMarker);
-
-                    return state.NewProgramBadMethodDestroyItASAP(new[]
-                    {
-                        state.Add(courtyard).SetTo(garden),
-                        state.Add(garden).SetTo(cliffFoundation),
-                        state.Add(garden, courtyard).SetTo(stairs),
-                    });
-                    /*
-                    return state.NewProgram()
-                        .SelectOne(
-                            state.NewProgram()
-                                //.Set(() => courtyardCubeGroup.CubeGroupMaxLayer(Vector3Int.down).ExtrudeHor().MoveBy(3 * Vector3Int.down).LE().GN())
-                                .Directional(ExtensionMethods.HorizontalDirections().Shuffle(),
-                                    dir =>
-                                        ldk.sgShapes.IslandExtrudeIter(possibleStartCubes.CubeGroupMaxLayer(dir), 3, 0.7f)
-                                            .LE(AreaType.Garden).Minus(state.WorldState.Added)
-                                            .MapGeom(cg => cg
-                                                .SplitToConnected().ArgMax(cg => cg.Cubes.Count)
-                                                .OpAdd().ExtrudeVer(Vector3Int.up, 3))
-                                            .GN(sym.Garden, sym.FullFloorMarker)
-                                )
-                                .Where(garden => garden.LE.Cubes().Count() >= 8)
-                                .CanBeFounded(),
-                            out var garden
-                        )
-                        .PlaceNodes(courtyard)
-                        
-                        .Set(() => ldk.sgShapes.CliffFoundation(garden.LE).GN(sym.Foundation))
-                        .PlaceNodes(garden)
-
-                        .FindPath(() => ldk.con.ConnectByElevator(courtyard.LE, garden.LE).GN(), out var elevator)
-                        .PlaceNodes(garden, courtyard)*/
                 });
         }
 

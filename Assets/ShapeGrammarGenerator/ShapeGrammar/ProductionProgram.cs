@@ -15,7 +15,7 @@ namespace ShapeGrammar
         public static StyleRules StyleRules { get; set; }
 
 
-        ShapeGrammarState State { get; }
+        public ShapeGrammarState State { get; }
         public bool Failed { get; private set; }
 
         /// <summary>
