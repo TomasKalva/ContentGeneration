@@ -143,12 +143,17 @@ namespace ShapeGrammar
                 return Intersect(LE.MovesInDistanceXZ(toThis, dist).Ms);
             }
 
-            public LevelElement TryMove()
+            /// <summary>
+            /// Moves the level element by a random move and returns it.
+            /// If no move exists, returns null.
+            /// </summary>
+            /// <param name="randomFromFirstCount">Cap the maximum number of moves for selection.</param>
+            public LevelElement TryMove(int randomFromFirstCount = 10_000)
             {
                 if (!Ms.Any())
                     return null;
 
-                var move = Ms.First();
+                var move = Ms.Take(randomFromFirstCount).GetRandom();
                 return LE.MoveBy(move);
             }
         }
@@ -198,7 +203,7 @@ namespace ShapeGrammar
         {
             var cg = CG();
             var toThisCg = toThis.CG();
-            var intersectClose = toThisCg.MinkowskiMinus(cg.AllBoundaryFacesH().Extrude(dist - 1, false).Merge(toThisCg)).Where(move => move.y == 0);
+            var intersectClose = toThisCg.MinkowskiMinus(cg.AllBoundaryFacesH().Extrude(dist - 1, false).Merge(cg)).Where(move => move.y == 0);
             var intersectNear = toThisCg.MinkowskiMinus(cg.AllBoundaryFacesH().Extrude(dist, false)).Where(move => move.y == 0);
             return new LEMoves(this, intersectNear.SetMinus(intersectClose));
         }
