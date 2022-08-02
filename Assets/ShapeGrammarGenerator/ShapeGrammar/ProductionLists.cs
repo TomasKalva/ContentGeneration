@@ -118,111 +118,29 @@ namespace ShapeGrammar
         {
             var guideRandomly = new RandomPathGuide();
 
-            Func<Symbol, int, int, Func<LevelElement>, Production> parkNear = (nearWhatSym, heighChange, minHeight, leF) =>
-                pr.FullFloorPlaceNear(
-                    nearWhatSym,
-                    pr.sym.Park,
-                    () => leF().SetAreaType(AreaType.Garden),
-                    pr.MoveVertically(heighChange, minHeight),
-                    pr.Empty(),
-                    ldk.con.ConnectByBalconyStairsOutside,
-                    1);
-
-            Func<Symbol, int, Func<LevelElement>, Production> chapelEntranceNear = (nearWhatSym, roofHeight, leF) =>
-                pr.FullFloorPlaceNear(
-                    nearWhatSym,
-                    pr.sym.ChapelEntrance,
-                    () => leF().SetAreaType(AreaType.Room),
-                    pr.Empty(),
-                    pr.Roof(AreaType.CrossRoof, roofHeight),
-                    ldk.con.ConnectByBalconyStairsOutside,
-                    1);
-
-            Func<int, Production> chapelNextFloor = height =>
-                pr.TakeUpwardReservation(
-                    pr.sym.ChapelRoom,
-                    nextFloor => nextFloor.LE(AreaType.Room).GN(pr.sym.ChapelRoom, pr.sym.FullFloorMarker),
-                    height,
-                    16,
-                    pr.Reserve(2, pr.sym.UpwardReservation),
-                    _ => ldk.con.ConnectByWallStairsIn);
-
-            Func<int, Production> chapelTowerTop = height =>
-                pr.TakeUpwardReservation(
-                    pr.sym.ChapelRoom,
-                    nextFloor => nextFloor.LE(AreaType.Colonnade).GN(pr.sym.ChapelTowerTop, pr.sym.FullFloorMarker),
-                    2,
-                    100,
-                    pr.Roof(AreaType.PointyRoof, height),
-                    _ => ldk.con.ConnectByWallStairsIn);
-
             return new ProductionList
             (
-                //pr.GardenFromCourtyard(),
                 //pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
                 //pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden), addFloorAbove: false),
-                //pr.ParkNextTo(pr.sym.Room(), () => ldk.qc.GetFlatBox(4, 4)),
-                //pr.DownwardPark(pr.sym.Park, 1, () => ldk.qc.GetFlatBox(3, 5)),
-                //pr.DownwardPark(pr.sym.Park, 1, () => ldk.qc.GetFlatBox(5, 4)),
-                /*
-                var crossRoofF = () => pr.Roof(AreaType.CrossRoof, 2);
 
-                Symbol townRoom
-
-                Symbol chapelEntrance
-                Symbol chapelRoom
-                Symbol park
-                DirectedSymbol hall
-                 
-                pr.NextTo(townRoom, chapelEntrance, crossRoofF(), () => ldk.qc.GetFlatBox(3, 3, 2), _ => ldk.con.ConnectByDoor),
-                pr.NextTo(park, chapelEntrance, crossRoofF(), () => ldk.qc.GetFlatBox(3, 3, 2), _ => ldk.con.ConnectByDoor),
-
-                pr.NextTo(park, park, pr.Empty(), () => ldk.qc.GetFlatBox(4, 4, 3)),
-
-
+                pr.ChapelEntranceNextTo(pr.sym.Room, 3, () => ldk.qc.GetFlatBox(3, 3, 2)),
+                pr.ChapelEntranceNextTo(pr.sym.Park, 3, () => ldk.qc.GetFlatBox(3, 3, 2)),
 
                 pr.ChapelHall(pr.sym.ChapelEntrance, 4, guideRandomly),
-                pr.ChapelHall(pr.sym.ChapelRoom(), 7, guideRandomly),
-                pr.ChapelHall(pr.sym.ChapelRoom(), 5, guideRandomly),
 
-                pr.ChapelRoom(3),
-                pr.ChapelNextFloor(3, 2),
-                pr.ChapelTowerTop(3),
-
-
-                
-                pr.NextTo(park, pr.sym.ChapelTowerTop, pr.MoveVertically(-5, 3), pr.Empty(), () => ldk.qc.GetFlatBox(5, 6, 3), ldk.con.ConnectByStairsOutside, heightChange: -5, minHeight: 3),
-                pr.NextTo(park, park, pr.Empty(), () => ldk.qc.GetFlatBox(5, 4, 3), ldk.con.ConnectByStairsOutside, heightChange: -1, minHeight: 3),
-                pr.NextTo(park, park, pr.Empty(), () => ldk.qc.GetFlatBox(3, 5, 3), ldk.con.ConnectByStairsOutside, heightChange: -1, minHeight: 3),
-                pr.NextTo(park, park, pr.Empty(), () => ldk.qc.GetFlatBox(4, 5, 3), ldk.con.ConnectByStairsOutside, heightChange: 2, minHeight: 3),
-                 
-                 */
-
-                //pr.BridgeFrom(pr.sym.Park, guideRandomly),
-
-                chapelEntranceNear(pr.sym.Room, 3, () => ldk.qc.GetFlatBox(3, 3, 2)),
-                chapelEntranceNear(pr.sym.Park, 3, () => ldk.qc.GetFlatBox(3, 3, 2)),
-
-                //parkNear(pr.sym.Park, 0, 0, () => ldk.qc.GetFlatBox(4, 4, 3)),
-
-                pr.ChapelHall(pr.sym.ChapelEntrance, 4, guideRandomly),
-                
                 pr.ChapelHall(pr.sym.ChapelRoom, 7, guideRandomly),
                 pr.ChapelHall(pr.sym.ChapelRoom, 5, guideRandomly),
 
                 pr.ChapelRoom(3),
 
-                pr.RoomDown(pr.sym.ChapelRoom),
+                pr.RoomDown(pr.sym.ChapelRoom, pr.sym.ChapelRoom),
 
-                //pr.ChapelNextFloor(3, 2),
-                chapelNextFloor(3),// now it takes ANY upward reservation - even from hall
-                chapelTowerTop(6),
-                //pr.ChapelTowerTop(3),
+                pr.ChapelNextFloor(3, 16),
+                pr.ChapelTowerTop(2, 3),
 
-                parkNear(pr.sym.ChapelTowerTop, -5, 3, () => ldk.qc.GetFlatBox(5, 6, 3))
-                /*parkNear(pr.sym.Park, -1, 3, () => ldk.qc.GetFlatBox(5, 4, 3)),
-                parkNear(pr.sym.Park, -1, 3, () => ldk.qc.GetFlatBox(3, 5, 3)),
-                parkNear(pr.sym.Park, 2, 3, () => ldk.qc.GetFlatBox(4, 5, 3))*/
+                pr.ParkNear(pr.sym.ChapelTowerTop, -5, 3, () => ldk.qc.GetFlatBox(5, 6, 3)),
+                pr.ParkNear(pr.sym.ChapelTowerTop, -1, 3, () => ldk.qc.GetFlatBox(5, 6, 3)),
+                pr.ParkNear(pr.sym.ChapelTowerTop, 2, 3, () => ldk.qc.GetFlatBox(5, 6, 3))
             );
         }
 
