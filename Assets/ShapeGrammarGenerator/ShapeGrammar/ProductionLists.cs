@@ -148,7 +148,7 @@ namespace ShapeGrammar
 
             Func<int, Production> chapelTowerTop = height =>
                 pr.TakeUpwardReservation(
-                    pr.sym.Room(),
+                    pr.sym.ChapelRoom(),
                     nextFloor => nextFloor.LE(AreaType.Colonnade).GN(pr.sym.ChapelTowerTop, pr.sym.FullFloorMarker),
                     2,
                     100,

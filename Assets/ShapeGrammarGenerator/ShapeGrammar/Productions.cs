@@ -826,11 +826,7 @@ namespace ShapeGrammar
                         bool correctBelowSymbol = 
                             pp.Param.GetSymbol(sym.UpwardReservation(null))
                             .SomethingBelow.GetSymbol(reservationSymbol) != null;
-                        return pp.Param.LE.CG().RightTopFront().y + 1 <= maxBottomHeight;
-                        /*var roomBelow = pp.Param.GetSymbol<UpwardReservation>().RoomBelow.GetSymbol<ChapelRoom>();
-                        return
-                            roomBelow != null &&
-                            roomBelow.Floor < maxFloor;*/
+                        return correctBelowSymbol && pp.Param.LE.CG().RightTopFront().y + 1 <= maxBottomHeight;
                     }),
                 (state, pp) =>
                 {
