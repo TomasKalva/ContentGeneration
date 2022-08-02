@@ -248,59 +248,23 @@ namespace ShapeGrammar
                 );
         }
 
-        public Production ExtendBridgeTo(Symbol from, Func<LevelElement> toF, PathGuide pathGuide = null, bool addFloorAbove = true)
-        {
-            pathGuide ??= new RandomPathGuide();
-            return new Production(
-                $"ExtendBridgeTo",
-                new ProdParamsManager().AddNodeSymbols(from),
-                (state, pp) =>
-                {
-                    var what = pp.Param;
-                    var whatCG = what.LE.CG();
+        public Production ExtendBridgeToRoom(Symbol from, Func<LevelElement> leF, PathGuide pathGuide)
+            => ExtendBridgeTo(
+                from,
+                sym.Room,
+                10,
+                () => leF().SetAreaType(AreaType.Room),
+                pathGuide,
+                Reserve(2, sym.UpwardReservation));
 
-                    var createdRoom = toF();
-                    
-                    // reduced from 1450 to 1050 characters, from 80 lines to 34 lines
-                    return state.NewProgram(prog => prog
-                        .SelectOne(
-                            state.NewProgram(subProg => subProg
-                                .Directional(pathGuide.SelectDirections(what.LE),
-                                    dir => whatCG.CubeGroupMaxLayer(Vector3Int.down).ExtrudeDir(dir, 10, false).LE().GN()
-                                )
-                                .DontIntersectAdded()
-                                .Change(boundingBox => boundingBox.LE.MoveBottomTo(0).GN())
-                                .Change(boundingBox =>
-                                    {
-                                        var validMoves = createdRoom.MoveBottomTo(0)
-                                            .MovesToIntersect(boundingBox.LE).XZ()
-                                            .DontIntersect(state.VerticallyTaken);
-                                        return pathGuide.SelectMove(validMoves).TryMove()?.GN();
-                                    })
-                                .Change(
-                                    newRoomDown => newRoomDown.LE.MoveBottomTo(whatCG.LeftBottomBack().y).GN(sym.Room, sym.FullFloorMarker)
-                                )
-                                ),
-                                out var newRoom
-                        )
-                        .PlaceCurrentFrom(what)
-
-                        .Found()
-                        .PlaceCurrentFrom(newRoom)
-
-                        .RunIf(addFloorAbove,
-                            thisProg => thisProg
-                                .Set(() => newRoom)
-                                .ReserveUpward(2, sym.UpwardReservation)
-                                .PlaceCurrentFrom(newRoom)
-                        )
-
-                        .FindPath(() => ldk.con.ConnectByBridge(state.WorldState.Added)(what.LE, newRoom.LE).GN(sym.ConnectionMarker), out var bridge)
-                        .PlaceCurrentFrom(what, newRoom)
-                        );
-                     
-                });
-        }
+        public Production ExtendBridgeToGarden(Symbol from, Func<LevelElement> leF, PathGuide pathGuide)
+            => ExtendBridgeTo(
+                from,
+                sym.Garden,
+                10,
+                () => leF().SetAreaType(AreaType.Garden),
+                pathGuide,
+                Empty());
 
         public Production RoomFallDown(Symbol nextToWhat, Func<LevelElement> roomFromToF)
         {
@@ -484,41 +448,6 @@ namespace ShapeGrammar
                         )*/
                 });
         }
-        /*
-        public Production AddNextFloor()
-        {
-            return new Production(
-                "AddNextFloor",
-                new ProdParamsManager()
-                    .AddNodeSymbols(sym.UpwardReservation(null))
-                    .SetCondition((state, pp) =>
-                    {
-                        var roomBelow = pp.Param.GetSymbol<UpwardReservation>(sym.UpwardReservation(null)).SomethingBelow.GetSymbol<Room>(sym.Room());
-                        return roomBelow != null && roomBelow.Plain && roomBelow.Floor <= 1;
-                    })
-                    ,
-                (state, pp) =>
-                {
-                    var roomReservation = pp.Param;
-                    var roomBelow = roomReservation.GetSymbol<UpwardReservation>(sym.UpwardReservation(null)).SomethingBelow;
-
-                    return state.NewProgram(prog => prog
-                        .Set(() => roomReservation.LE.SetAreaType(AreaType.Room)
-                            .GN(
-                                sym.Room(true, roomBelow.GetSymbol<Room>(sym.Room()).Floor + 1),
-                                sym.FullFloorMarker),
-                                out var nextFloor
-                        )
-                        .ReplaceNodes(roomReservation)
-
-                        .ReserveUpward(2, sym.UpwardReservation)
-                        .PlaceCurrentFrom(nextFloor)
-
-                        .FindPath(() => ldk.con.ConnectByWallStairsIn(roomBelow.LE, nextFloor.LE).GN(sym.ConnectionMarker), out var stairs)
-                        .PlaceCurrentFrom(roomBelow, nextFloor)
-                        );
-                });
-        }*/
 
         public Production GardenFromCourtyard()
         {
@@ -612,25 +541,6 @@ namespace ShapeGrammar
         }
 
 
-        /*
-        public Production ExtrudeRoof()
-        {
-            return new Production(
-                state => state.WithActiveSymbols(sym.Terrace) != null,
-                state =>
-                {
-                    var terrace = state.WithActiveSymbols(sym.Terrace);
-                    if (terrace.Derived.Where(derNode => derNode.HasActiveSymbols(sym.Roof)).Any())
-                        return null;
-
-                    var roof = terrace.LevelElement.CubeGroup().ExtrudeDir(Vector3Int.up).LevelElement(AreaType.Roof);
-                    return new[]
-                    {
-                        state.Add(terrace).SetTo(roof.GrammarNode(sym.Roof)),
-                    };
-                }
-                );
-        }*/
         #region Utility
 
         /// <summary>
@@ -685,6 +595,11 @@ namespace ShapeGrammar
 
         LevelElement AllBlocking(ShapeGrammarState state, ProductionProgram prog, Grid<Cube> grid) 
             => state.WorldState.Added.Merge(prog.AppliedOperations.SelectMany(op => op.To.Select(n => n.LE)).ToLevelGroupElement(grid));
+
+        Node FindFoundation(Node node)
+        {
+            return node.Derived.Where(child => child.HasSymbols(sym.Foundation)).FirstOrDefault();
+        }
 
         #endregion
 
@@ -859,15 +774,6 @@ namespace ShapeGrammar
                         );
                 });
         }
-        /*
-        IEnumerable<Symbol> SymbolsUnder(Node node)
-        {
-            return node.LE.CG().ExtrudeDir(Vector3Int.down, 1).
-        }*/
-        Node FindFoundation(Node node)
-        {
-            return node.Derived.Where(child => child.HasSymbols(sym.Foundation)).FirstOrDefault();
-        }
 
 
         public Production FromDownwardFoundation(
@@ -918,6 +824,71 @@ namespace ShapeGrammar
                 });
         }
 
+        public Production ExtendBridgeTo(
+            Symbol from,
+            Symbol to,
+            int distance,
+            Func<LevelElement> toF,
+            PathGuide pathGuide,
+            Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPlaced
+            )
+        {
+            return new Production(
+                $"ExtendBridgeFromTo_{from.Name}_{to.Name}",
+                new ProdParamsManager().AddNodeSymbols(from),
+                (state, pp) =>
+                {
+                    var what = pp.Param;
+                    var whatCG = what.LE.CG();
+
+                    var createdRoom = toF();
+
+                    // reduced from 1450 to 1050 characters, from 80 lines to 34 lines
+                    return state.NewProgram(prog => prog
+                        .SelectOne(
+                            state.NewProgram(subProg => subProg
+                                .Directional(pathGuide.SelectDirections(what.LE),
+                                    dir => whatCG.CubeGroupMaxLayer(Vector3Int.down).ExtrudeDir(dir, distance, false).LE().GN()
+                                )
+                                .DontIntersectAdded()
+                                .Change(boundingBox => boundingBox.LE.MoveBottomTo(0).GN())
+                                .Change(boundingBox =>
+                                {
+                                    var validMoves = createdRoom.MoveBottomTo(0)
+                                        .MovesToIntersect(boundingBox.LE).XZ()
+                                        .DontIntersect(state.VerticallyTaken);
+                                    return pathGuide.SelectMove(validMoves).TryMove()?.GN();
+                                })
+                                .Change(
+                                    newRoomDown => newRoomDown.LE.MoveBottomTo(whatCG.LeftBottomBack().y).GN(to, sym.FullFloorMarker)
+                                )
+                                ),
+                                out var newNode
+                        )
+                        .PlaceCurrentFrom(what)
+
+                        .Found()
+                        .PlaceCurrentFrom(newNode)
+
+                        .RunIf(true,
+                            thisProg => fromFloorNodeAfterPlaced(thisProg, newNode)
+                        )
+                        
+                        /*
+                        .RunIf(addFloorAbove,
+                            thisProg => thisProg
+                                .Set(() => newNode)
+                                .ReserveUpward(2, sym.UpwardReservation)
+                                .PlaceCurrentFrom(newNode)
+                        )*/
+
+                        .FindPath(() => ldk.con.ConnectByBridge(state.WorldState.Added)(what.LE, newNode.LE).GN(sym.ConnectionMarker), out var bridge)
+                        .PlaceCurrentFrom(what, newNode)
+                        );
+
+                });
+        }
+
         #endregion
 
         public Production BridgeFrom(Symbol from, PathGuide pathGuide)
@@ -932,15 +903,26 @@ namespace ShapeGrammar
                 );
         }
 
-        public Production RoomDown(Symbol from, Symbol to)
+        public Production RoomDown(Symbol from, Symbol to, int belowRoomHeight, int minFloorHeight)
         {
             return FromDownwardFoundation(
                     from,
                     cg => cg.LE(AreaType.Room).GN(sym.FullFloorMarker, to),
-                    2,
-                    3,
+                    belowRoomHeight,
+                    minFloorHeight,
                     _ => ldk.con.ConnectByWallStairsIn
                 );
+        }
+
+        public Production RoomNextFloor(Symbol from, Symbol to, int nextFloorHeight, int maxFloorHeight)
+        {
+            return TakeUpwardReservation(
+                    from,
+                    nextFloor => nextFloor.LE(AreaType.Room).GN(to, sym.FullFloorMarker),
+                    nextFloorHeight,
+                    maxFloorHeight,
+                    Reserve(2, sym.UpwardReservation),
+                    _ => ldk.con.ConnectByWallStairsIn);
         }
 
         #region Graveyard
@@ -971,13 +953,7 @@ namespace ShapeGrammar
 
         public Production ChapelNextFloor(int nextFloorHeight, int maxFloor)
         {
-            return TakeUpwardReservation(
-                    sym.ChapelRoom,
-                    nextFloor => nextFloor.LE(AreaType.Room).GN(sym.ChapelRoom, sym.FullFloorMarker),
-                    nextFloorHeight,
-                    maxFloor,
-                    Reserve(2, sym.UpwardReservation),
-                    _ => ldk.con.ConnectByWallStairsIn);
+            return RoomNextFloor(sym.ChapelRoom, sym.ChapelRoom, nextFloorHeight, maxFloor);
         }
 
         public Production ChapelTowerTop(int towerTopHeight, int roofHeight, int maxHeight = 100)
