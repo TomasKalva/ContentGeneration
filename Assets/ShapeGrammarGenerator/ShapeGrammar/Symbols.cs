@@ -9,11 +9,19 @@ namespace ShapeGrammar
 {
     public class Symbols
     {
-        public Symbol BrokenFloor { get; } = new Symbol("BrokenFloor");
-        public Symbol ConnectTo(Node to) => new ConnectTo("ConnectTo", to);
-        public Symbol ExtrudeUp { get; } = new Symbol("ExtrudeUp");
+        //public Symbol BrokenFloor { get; } = new Symbol("BrokenFloor");
+        //public Symbol ConnectTo(Node to) => new ConnectTo("ConnectTo", to);
+        //public Symbol ExtrudeUp { get; } = new Symbol("ExtrudeUp");
         //public Symbol CreateFrom(params Node[] from) => new CreateFrom("CreateFrom", from.ToList());
         //public Symbol FloorGiver(Node giveTo) => new FloorGiver("FloorGiver", giveTo);
+
+        #region Common symbols
+        public Symbol Foundation { get; } = new Symbol("Foundation");
+        #endregion
+
+
+
+
         public Symbol Room { get; } = new Symbol("Room");
         public Symbol BrokenFloorRoom { get; } = new Symbol("BrokenFloorRoom");
         //public Symbol DirectedRoom(Vector3Int direction, int floor = 0) => new DirectedRoom("DirectedRoom", false, floor, direction);
@@ -24,8 +32,7 @@ namespace ShapeGrammar
         public Symbol Terrace { get; } = new Symbol("Terrace");
         public Symbol Roof { get; } = new Symbol("Roof");
         public Symbol Courtyard { get; } = new Symbol("Courtyard");
-        public Symbol Foundation { get; } = new Symbol("Foundation");
-        public Bridge Bridge(Vector3Int direction = default) => new Bridge("Bridge", direction);
+        public DirectionalSymbol Bridge(Vector3Int direction = default) => new DirectionalSymbol("Bridge", direction);
         public Symbol Garden { get; } = new Symbol("Garden");
 
         #region Graveyard
@@ -35,6 +42,7 @@ namespace ShapeGrammar
         public Symbol ChapelRoom { get; } = new Symbol("ChapelRoom");
         public Symbol ChapelTowerTop { get; } = new Symbol("ChapelTowerTop");
         #endregion
+
 
         public Symbol StartMarker { get; } = new Marker("Start");
         public Symbol EndMarker { get; } = new Marker("End");
@@ -105,50 +113,6 @@ namespace ShapeGrammar
             From = from;
         }
     }
-
-    public class FloorGiver : Symbol
-    {
-        public Node GiveTo { get; }
-
-        public FloorGiver(string name, Node giveTo) : base(name)
-        {
-            GiveTo = giveTo;
-        }
-    }
-
-    public class Bridge : Symbol
-    {
-        public Vector3Int Direction { get; }
-
-        public Bridge(string name, Vector3Int direction) : base(name)
-        {
-            Direction = direction;
-        }
-    }
-
-    public class Room : Symbol
-    {
-        public Room(string name) : base(name)
-        {
-        }
-    }
-    /*
-    public class ChapelRoom : Room
-    {
-        public ChapelRoom(string name, bool plain, int floor) : base(name, plain, floor)
-        {
-        }
-    }*/
-    /*
-    public class DirectedRoom : Room
-    {
-        public Vector3Int Direction { get; set; }
-
-        public DirectedRoom(string name, bool plain, int floor, Vector3Int direction) : base(name, plain, floor)
-        {
-            Direction = direction;
-        }
-    }*/
 
     public class UpwardReservation : Symbol
     {

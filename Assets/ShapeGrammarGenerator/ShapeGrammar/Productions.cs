@@ -157,7 +157,7 @@ namespace ShapeGrammar
 
                         .Set(() => ldk.sgShapes.BridgeFoundation(
                             bridge.LE,
-                            bridge.GetSymbol<Bridge>(sym.Bridge()).Direction
+                            bridge.GetSymbol(sym.Bridge()).Direction
                             ).GN(sym.Foundation))
                         .PlaceCurrentFrom(bridge)
                         );
@@ -174,7 +174,7 @@ namespace ShapeGrammar
                     var bridge = pp.Param;
                     var courtyardCubeGroup = bridge.LE.CG();
                     
-                    var dir = bridge.GetSymbol<Bridge>(sym.Bridge()).Direction;
+                    var dir = bridge.GetSymbol(sym.Bridge()).Direction;
 
                     return state.NewProgram(prog => prog
                         .Set(() => courtyardCubeGroup
@@ -191,7 +191,7 @@ namespace ShapeGrammar
 
                         .Set(() => ldk.sgShapes.BridgeFoundation(
                             newBridge.LE,
-                            newBridge.GetSymbol<Bridge>(sym.Bridge()).Direction
+                            newBridge.GetSymbol(sym.Bridge()).Direction
                             ).GN(sym.Foundation))
                         .PlaceCurrentFrom(newBridge)
                         );
@@ -208,7 +208,7 @@ namespace ShapeGrammar
                 {
                     var bridge = pp.Param;
                     var bridgeCubeGroup = bridge.LE.CG();
-                    var dir = bridge.GetSymbol<Bridge>(sym.Bridge()).Direction;
+                    var dir = bridge.GetSymbol<DirectionalSymbol>(sym.Bridge()).Direction;
 
                     return state.NewProgram(prog => prog
                         .Set(
