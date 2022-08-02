@@ -340,7 +340,7 @@ namespace ShapeGrammar
             Env.Execute(roofGrammar);
             */
 
-            Env.Line(Gr.PrL.TestingProductions(), NodesQueries.All, 40, out var _);
+            Env.Line(Gr.PrL.Castle(), NodesQueries.All, 40, out var _);
             /*Env.Line(Gr.PrL.TestingProductions(), NodesQueries.All, 10, out var _);
             Env.Line(Gr.PrL.TestingProductions(), NodesQueries.All, 10, out var _);
             Env.Line(Gr.PrL.TestingProductions(), NodesQueries.All, 10, out var _);

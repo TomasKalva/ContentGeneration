@@ -43,6 +43,11 @@ namespace ShapeGrammar
         public Symbol ChapelTowerTop { get; } = new Symbol("ChapelTowerTop");
         #endregion
 
+        #region Castle
+        public Symbol TowerBottom { get; } = new Symbol("TowerBottom");
+        public Symbol TowerTop { get; } = new Symbol("TowerTop");
+        public DirectionalSymbol WallTop(Vector3Int direction) => new DirectionalSymbol("WallTop", direction);
+        #endregion
 
         public Symbol StartMarker { get; } = new Marker("Start");
         public Symbol EndMarker { get; } = new Marker("End");

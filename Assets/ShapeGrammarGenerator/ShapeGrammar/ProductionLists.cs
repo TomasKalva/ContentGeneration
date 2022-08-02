@@ -27,7 +27,6 @@ namespace ShapeGrammar
             };
             return new ProductionList
             (
-                
                 pr.CourtyardFromRoom(),
                 pr.CourtyardFromCourtyardCorner(),
                 
@@ -39,9 +38,6 @@ namespace ShapeGrammar
                 pr.RoomNextFloor(pr.sym.Room, pr.sym.Room, 2, 13),
                 pr.RoomDown(pr.sym.Room, pr.sym.Room, 2, 3),
 
-                //pr.RoomNextTo(pr.sym.Courtyard, roomFs.GetRandom()),
-
-                //pr.ExtendHouse(ldk.tr.GetFloorConnector(lge => ldk.tr.SplittingFloorPlan(lge, 2))), // Creates area for the node doesn't exist error
                 pr.GardenFrom(pr.sym.Courtyard, boxFs.GetRandom()),
                 pr.RoomNextTo(pr.sym.Courtyard, boxFs.GetRandom()),
 
@@ -128,7 +124,7 @@ namespace ShapeGrammar
             );
         }
 
-        public ProductionList Chappels()
+        public ProductionList Chapels()
         {
             var guideRandomly = new RandomPathGuide();
 
@@ -165,6 +161,25 @@ namespace ShapeGrammar
             (
                 //pr.ChapelTowerTop(3),
                 pr.Roof()
+            );
+        }
+
+        public ProductionList Castle()
+        {
+            var pathGuide = new RandomPathGuide();
+            return new ProductionList
+            (
+                pr.TowerBottomNear(pr.sym.Room, () => ldk.qc.GetFlatBox(3, 3, 5)),
+                pr.TowerBottomNear(pr.sym.Garden, () => ldk.qc.GetFlatBox(3, 3, 7)),
+
+                pr.UpwardTowerTop(2),
+                pr.WallTop(pr.sym.TowerTop, 7, 2, pathGuide),
+                pr.WallTop(pr.sym.TowerTop, 12, 2, pathGuide),
+                pr.TowerTopFromWallTop(4, 4),
+                pr.RoomDown(pr.sym.TowerTop, pr.sym.TowerBottom, 7, 3),
+
+                pr.GardenFrom(pr.sym.TowerBottom, () => ldk.qc.GetFlatBox(4, 4, 1)),
+                pr.TowerTopNear(pr.sym.TowerTop, 3, -2, 3, () => ldk.qc.GetFlatBox(3, 3, 1))
             );
         }
 

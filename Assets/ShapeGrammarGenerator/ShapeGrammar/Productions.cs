@@ -196,7 +196,7 @@ namespace ShapeGrammar
                     .Change(node => 
                         ldk.sgShapes.IslandExtrudeIter(node.LE.CG().BottomLayer(), 2, 0.7f)
                             .LE(AreaType.Garden).Minus(prog.State.WorldState.Added)
-                            /* To remove disconnected we have to make sure that the one with the original box stays
+                            /* To remove disconnected we have to make sure that the or
                             .MapGeom(cg => cg
                                 .SplitToConnected().ArgMax(cg => cg.Cubes.Count)
                                 .OpAdd().ExtrudeVer(Vector3Int.up, 3))
@@ -860,7 +860,7 @@ namespace ShapeGrammar
             return Extrude(
                 sym.ChapelHall(default),
                 node => node.GetSymbol(sym.ChapelHall(default)).Direction.ToEnumerable(),
-                (extrLE, dir) => extrLE.LE(AreaType.Room).GN(sym.ChapelRoom, sym.FullFloorMarker),
+                (cg, dir) => cg.LE(AreaType.Room).GN(sym.ChapelRoom, sym.FullFloorMarker),
                 extrusionLength,
                 Reserve(2, sym.UpwardReservation),
                 _ => ldk.con.ConnectByDoor
@@ -868,9 +868,8 @@ namespace ShapeGrammar
         }
 
         public Production ChapelNextFloor(int nextFloorHeight, int maxFloor)
-        {
-            return RoomNextFloor(sym.ChapelRoom, sym.ChapelRoom, nextFloorHeight, maxFloor);
-        }
+            => RoomNextFloor(sym.ChapelRoom, sym.ChapelRoom, nextFloorHeight, maxFloor);
+        
 
         public Production ChapelTowerTop(int towerTopHeight, int roofHeight, int maxHeight = 100)
         {
@@ -906,15 +905,49 @@ namespace ShapeGrammar
         #endregion
 
         #region Castle
-        /*
-        public Production TowerBottomNextTo(Symbol nextToWhat, Func<LevelElement> towerBottomF)
-        {
-            return FullFloorNextTo(nextToWhat, sym.Park, () => parkF().SetAreaType(AreaType.Garden),
-                (program, _) => program,
-                (program, _) => program,
-                 _ => ldk.con.ConnectByDoor);
-        }*/
+        
+        public Production TowerBottomNear(Symbol nearWhatSym, Func<LevelElement> towerBottomF)
+            => FullFloorPlaceNear(
+                    nearWhatSym,
+                    sym.TowerBottom,
+                    () => towerBottomF().SetAreaType(AreaType.Room),
+                    Empty(),
+                    Reserve(2, sym.UpwardReservation),
+                    ldk.con.ConnectByBalconyStairsOutside,
+                    3);
 
+        public Production UpwardTowerTop(int nextFloorHeight)
+            => RoomNextFloor(sym.TowerBottom, sym.TowerTop, nextFloorHeight, 100);
+
+        public Production WallTop(Symbol extrudeFrom, int length, int width, PathGuide pathGuide)
+            => Extrude(
+                extrudeFrom,
+                node => pathGuide.SelectDirections(node.LE),
+                (cg, dir) => AlterInOrthogonalDirection(cg, dir, 2).LE(AreaType.FlatRoof).GN(sym.WallTop(dir), sym.FullFloorMarker),
+                length,
+                Empty(),
+                _ => ldk.con.ConnectByDoor
+                );
+
+        public Production TowerTopFromWallTop(int length, int width)
+            => Extrude(
+                sym.WallTop(default),
+                node => node.GetSymbol(sym.WallTop(default)).Direction.ToEnumerable(),
+                (cg, dir) => AlterInOrthogonalDirection(cg, dir, width).LE(AreaType.Room).GN(sym.TowerTop, sym.FullFloorMarker),
+                length,
+                Reserve(2, sym.UpwardReservation),
+                _ => ldk.con.ConnectByDoor
+                );
+
+        public Production TowerTopNear(Symbol nearWhatSym, int distance, int heightChange, int minBottomHeight, Func<LevelElement> towerTopF)
+            => FullFloorPlaceNear(
+                    nearWhatSym,
+                    sym.TowerTop,
+                    () => towerTopF().SetAreaType(AreaType.Room),
+                    MoveVertically(heightChange, minBottomHeight),
+                    Reserve(2, sym.UpwardReservation),
+                    ldk.con.ConnectByBalconyStairsOutside,
+                    heightChange);
         #endregion
     }
 }
