@@ -154,6 +154,16 @@ namespace ShapeGrammar
             );
         }
 
+        public ProductionList ChapelsDetails()
+        {
+            var guideRandomly = new RandomPathGuide();
+
+            return new ProductionList
+            (
+                pr.ChapelSides(2)
+            );
+        }
+
         public ProductionList GraveyardPostprocess()
         {
             var guideRandomly = new RandomPathGuide();

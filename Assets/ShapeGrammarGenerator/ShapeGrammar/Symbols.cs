@@ -41,6 +41,7 @@ namespace ShapeGrammar
         public DirectionalSymbol ChapelHall(Vector3Int direction) => new DirectionalSymbol("ChapelHall", direction);
         public Symbol ChapelRoom { get; } = new Symbol("ChapelRoom");
         public Symbol ChapelTowerTop { get; } = new Symbol("ChapelTowerTop");
+        public Symbol ChapelSide(Vector3Int direction) => new DirectionalSymbol("ChapelSide", direction);
         #endregion
 
         #region Castle

@@ -345,6 +345,7 @@ namespace ShapeGrammar
             Env.Line(Gr.PrL.TestingProductions(), NodesQueries.All, 10, out var _);
             Env.Line(Gr.PrL.TestingProductions(), NodesQueries.All, 10, out var _);
             Env.Line(Gr.PrL.TestingProductions(), NodesQueries.All, 10, out var _);*/
+            Env.BranchRandomly(Gr.PrL.ChapelsDetails(), 4, out var _);
             Env.Execute(new AllGrammar(Gr.PrL.GraveyardPostprocess()));
 
             var allAreas = State.TraversableAreas;

@@ -153,8 +153,8 @@ namespace ShapeGrammar
         public Production RoomNextTo(Symbol nextToWhat, Func<LevelElement> roomF)
         {
             return FullFloorPlaceNear(
-                nextToWhat, 
-                sym.Room, 
+                nextToWhat,
+                sym.Room,
                 () => roomF().SetAreaType(AreaType.Room),
                 (program, _) => program,
                 (program, newRoom) => program
@@ -193,14 +193,14 @@ namespace ShapeGrammar
                 sym.Garden,
                 leF,
                 (prog, node) => MoveVertically(-2, 3)(prog, node)
-                    .Change(node => 
+                    .Change(node =>
                         ldk.sgShapes.IslandExtrudeIter(node.LE.CG().BottomLayer(), 2, 0.7f)
                             .LE(AreaType.Garden).Minus(prog.State.WorldState.Added)
                             //To remove disconnected we have to make sure that the or
                             .MapGeom(cg => cg
                                 .SplitToConnected().First(cg => cg.Intersects(node.LE.CG()))//node..ArgMax(cg => cg.Cubes.Count)
                                 .OpAdd().ExtrudeVer(Vector3Int.up, 3))
-                            
+
                             .GN(sym.Garden, sym.FullFloorMarker)
                         ),
                 Empty(),
@@ -231,16 +231,16 @@ namespace ShapeGrammar
                             out var newRoom
                         )
                         .PlaceCurrentFrom(what)
-                        
+
                         .ReserveUpward(2, sym.UpwardReservation)
                         .PlaceCurrentFrom(what)
-                        
+
                         .Set(() =>
                             newRoom.LE.CG().ExtrudeVer(Vector3Int.down, 2).LE(AreaType.Room).GN(sym.Room, sym.FullFloorMarker),
                             out var bottomRoom
                         )
                         .PlaceCurrentFrom(newRoom)
-                        
+
                         .Found()
                         .PlaceCurrentFrom(bottomRoom)
 
@@ -265,7 +265,7 @@ namespace ShapeGrammar
                 new ProdParamsManager()
                     .AddNodeSymbols(from, sym.FullFloorMarker)
                     .AddNodeSymbols(to, sym.FullFloorMarker)
-                    .SetCondition((state, pp) => 
+                    .SetCondition((state, pp) =>
                     {
                         var (from, to) = pp;
                         return true
@@ -459,12 +459,12 @@ namespace ShapeGrammar
             var shrinkL = (int)Mathf.Floor((width - newWidth) / 2f);
             var shrinkR = (int)Mathf.Ceil((width - newWidth) / 2f);
 
-            return newWidth < width ? 
+            return newWidth < width ?
                 cg.OpSub()
                     .ExtrudeDir(orthDir, -shrinkL)
                     .ExtrudeDir(-orthDir, -shrinkR)
-                .OpNew() 
-                : 
+                .OpNew()
+                :
                 cg.OpAdd()
                     .ExtrudeDir(orthDir, -shrinkL)
                     .ExtrudeDir(-orthDir, -shrinkR)
@@ -486,7 +486,7 @@ namespace ShapeGrammar
                 .OpNew();
         }*/
 
-        LevelElement AllBlocking(ShapeGrammarState state, ProductionProgram prog, Grid<Cube> grid) 
+        LevelElement AllBlocking(ShapeGrammarState state, ProductionProgram prog, Grid<Cube> grid)
             => state.WorldState.Added.Merge(prog.AppliedOperations.SelectMany(op => op.To.Select(n => n.LE)).ToLevelGroupElement(grid));
 
         Node FindFoundation(Node node)
@@ -634,7 +634,7 @@ namespace ShapeGrammar
                     .AddNodeSymbols(sym.UpwardReservation(null))
                     .SetCondition((state, pp) =>
                     {
-                        bool correctBelowSymbol = 
+                        bool correctBelowSymbol =
                             pp.Param.GetSymbol(sym.UpwardReservation(null))
                             .SomethingBelow.GetSymbol(reservationSymbol) != null;
                         return correctBelowSymbol && pp.Param.LE.CG().RightTopFront().y + 1 <= maxBottomHeight;
@@ -686,7 +686,7 @@ namespace ShapeGrammar
                     .SetCondition((state, pp) =>
                     {
                         var foundationBelow = FindFoundation(pp.Param);
-                        return 
+                        return
                             foundationBelow != null &&
                             pp.Param.LE.CG().LeftBottomBack().y - floorHeight >= minBottomHeight;
                     }),
@@ -876,7 +876,7 @@ namespace ShapeGrammar
 
         public Production ChapelNextFloor(int nextFloorHeight, int maxFloor)
             => RoomNextFloor(sym.ChapelRoom, sym.ChapelRoom, nextFloorHeight, maxFloor);
-        
+
 
         public Production ChapelTowerTop(int towerTopHeight, int roofHeight, int maxHeight = 100)
         {
@@ -899,7 +899,7 @@ namespace ShapeGrammar
                     ldk.con.ConnectByBalconyStairsOutside,
                     1);
 
-        public Production ParkNear(Symbol nearWhatSym, int heighChange, int minHeight, Func<LevelElement> leF) 
+        public Production ParkNear(Symbol nearWhatSym, int heighChange, int minHeight, Func<LevelElement> leF)
             => FullFloorPlaceNear(
                     nearWhatSym,
                     sym.Park,
@@ -909,10 +909,26 @@ namespace ShapeGrammar
                     ldk.con.ConnectByBalconyStairsOutside,
                     1);
 
+        public Production ChapelSides(int width)
+            => Extrude(
+                sym.ChapelHall(default),
+                node => node.GetSymbol(sym.ChapelHall(default)).Direction.ToEnumerable(),
+                (cg, dir) =>
+                {
+                    var orthDir = ExtensionMethods.OrthogonalHorizontalDir(dir);
+                    return cg.ExtrudeDir(orthDir, width)
+                                .OpSub().ExtrudeDir(Vector3Int.up, -1).OpNew()
+                                .LE(AreaType.Room).GN(sym.ChapelSide(orthDir), sym.FullFloorMarker);
+                },
+                Empty(),
+                Reserve(2, sym.UpwardReservation),
+                _ => ldk.con.ConnectByDoor
+                );
+
         #endregion
 
         #region Castle
-        
+
         public Production TowerBottomNear(Symbol nearWhatSym, Func<LevelElement> towerBottomF)
             => FullFloorPlaceNear(
                     nearWhatSym,
