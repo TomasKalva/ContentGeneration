@@ -149,8 +149,8 @@ namespace ShapeGrammar
                 pr.ChapelTowerTop(2, 3),
 
                 pr.ParkNear(pr.sym.ChapelTowerTop, -5, 3, () => ldk.qc.GetFlatBox(5, 6, 3)),
-                pr.ParkNear(pr.sym.ChapelTowerTop, -1, 3, () => ldk.qc.GetFlatBox(5, 6, 3)),
-                pr.ParkNear(pr.sym.ChapelTowerTop, 2, 3, () => ldk.qc.GetFlatBox(5, 6, 3))
+                pr.ParkNear(pr.sym.Park, -1, 3, () => ldk.qc.GetFlatBox(5, 6, 3)),
+                pr.ParkNear(pr.sym.Park, 2, 3, () => ldk.qc.GetFlatBox(5, 6, 3))
             );
         }
 
