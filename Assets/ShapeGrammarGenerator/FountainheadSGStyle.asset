@@ -16,16 +16,12 @@ MonoBehaviour:
   faceHorObjectStyles:
   - objectType: 0
     obj: {fileID: 8594859122993566305, guid: bd7da799e6f6955498a2d5333059ca3e, type: 3}
-  - objectType: 4
-    obj: {fileID: 3198293653778189731, guid: a4dc48d88ef1c494c827cca91d51e97c, type: 3}
   - objectType: 2
-    obj: {fileID: 6391615050704664683, guid: 9b07f3f0c265011448a777651bf0458b, type: 3}
+    obj: {fileID: 3198293653778189731, guid: a4dc48d88ef1c494c827cca91d51e97c, type: 3}
   - objectType: 1
     obj: {fileID: 1661161323035768896, guid: 38ce534bf516e1f4283b57a411932d39, type: 3}
-  - objectType: 5
+  - objectType: 3
     obj: {fileID: 237132792799230450, guid: 627bbb96138ecd444a6a157749e64090, type: 3}
-  - objectType: 6
-    obj: {fileID: 8594859122993566305, guid: bd7da799e6f6955498a2d5333059ca3e, type: 3}
   faceVerObjectStyles:
   - objectType: 0
     obj: {fileID: 8594859122993566305, guid: bd7da799e6f6955498a2d5333059ca3e, type: 3}

@@ -166,12 +166,8 @@ namespace ShapeGrammar
     {
         Nothing,
         Railing,
-        Fence,
-        Window,
         Wall,
         Door,
-        Open,
-        Special
     }
 
     public enum FACE_VER

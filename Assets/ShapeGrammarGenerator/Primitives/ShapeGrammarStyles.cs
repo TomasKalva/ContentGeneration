@@ -60,14 +60,6 @@ namespace ShapeGrammar
             return roomArea;
         }
 
-        public CubeGroup BridgeStyle(CubeGroup roomArea)
-        {
-            roomArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Floor);
-            roomArea.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Open);
-            roomArea.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.Nothing);
-            return roomArea;
-        }
-
         public CubeGroup NoFloor(CubeGroup roomArea)
         {
             roomArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(FACE_VER.Nothing);

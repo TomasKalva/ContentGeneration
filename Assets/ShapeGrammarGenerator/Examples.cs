@@ -59,7 +59,7 @@ namespace ShapeGrammar
                 new StyleRule(g => g.WithAreaType(AreaType.Elevator), g => g.SetGrammarStyle(area => sgStyles.ElevatorStyle(area, lib))),
                 new StyleRule(g => g.WithAreaType(AreaType.Fall), g => g.SetGrammarStyle(area => sgStyles.FallStyle(area))),
                 new StyleRule(g => g.WithAreaType(AreaType.Door), g => g.SetGrammarStyle(sgStyles.DoorStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.Bridge), g => g.SetGrammarStyle(sgStyles.BridgeStyle)),
+                new StyleRule(g => g.WithAreaType(AreaType.Bridge), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.NoFloor), g => g.SetGrammarStyle(sgStyles.NoFloor))
             );
             wc = new WorldChanging(this);
