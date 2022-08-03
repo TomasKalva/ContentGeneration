@@ -200,7 +200,7 @@ namespace ShapeGrammar
 
                 //pr.GardenFrom(pr.sym.TowerBottom, () => ldk.qc.GetFlatBox(4, 4, 1)),
                 pr.TowerTopNear(pr.sym.TowerTop, 4, 0, 3, () => ldk.qc.GetFlatBox(3, 3, 2)),
-                pr.GardenAround(pr.sym.TowerBottom)
+                pr.GardenFrom(pr.sym.TowerBottom)
             );
         }
 
@@ -210,7 +210,8 @@ namespace ShapeGrammar
 
             return new ProductionList
             (
-                pr.SideWall(2)
+                //pr.SideWall(2)
+                pr.WatchPostNear(pr.sym.WallTop(default), 1, -3, 4, () => ldk.qc.GetFlatBox(3, 3, 1))
             );
         }
 

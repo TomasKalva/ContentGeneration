@@ -989,14 +989,14 @@ namespace ShapeGrammar
                     distance
                 );
 
-        public Production GardenAround(Symbol from)
+        public Production GardenFrom(Symbol from)
             => Extrude(
                     from,
                     _ => ExtensionMethods.HorizontalDirections(),
                     (cg, dir) => cg.ExtrudeDir(dir, 1).LE(AreaType.Garden).GN(sym.Garden, sym.FullFloorMarker),
                     (prog, node) => 
                         prog.Set(() => ldk.sgShapes
-                            .IslandExtrudeIter(node.LE.CG().BottomLayer(), 2, 0.7f)
+                            .IslandExtrudeIter(node.LE.CG().BottomLayer(), 3, 0.7f)
                             .LE(AreaType.Garden)
                             .Minus(prog.State.WorldState.Added)
                             .MapGeom(cg => cg
@@ -1010,6 +1010,9 @@ namespace ShapeGrammar
                     ldk.con.ConnectByBalconyStairsOutside
                     );
 
+        /// <summary>
+        /// Todo: make the pathfinding work correctly.
+        /// </summary>
         public Production SideWall(int width)
             => Extrude(
                 sym.ChapelHall(default),
@@ -1023,6 +1026,17 @@ namespace ShapeGrammar
                 Empty(),//MoveVertically(0, 5),
                 Empty(),
                 _ => ldk.con.ConnectByDoor
+                );
+
+        public Production WatchPostNear(Symbol nearWhatSym, int distance, int heightChange, int minBottomHeight, Func<LevelElement> towerTopF)
+            => FullFloorPlaceNear(
+                    nearWhatSym,
+                    sym.WatchPost,
+                    () => towerTopF().SetAreaType(AreaType.FlatRoof),
+                    MoveVertically(heightChange, minBottomHeight),
+                    Empty(),
+                    ldk.con.ConnectByBalconyStairsOutside,
+                    distance
                 );
 
         #endregion

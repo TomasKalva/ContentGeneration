@@ -48,7 +48,9 @@ namespace ShapeGrammar
         public Symbol TowerBottom { get; } = new Symbol("TowerBottom");
         public Symbol TowerTop { get; } = new Symbol("TowerTop");
         public DirectionalSymbol WallTop(Vector3Int direction) => new DirectionalSymbol("WallTop", direction);
+
         public DirectionalSymbol SideWallTop(Vector3Int direction) => new DirectionalSymbol("SideWallTop", direction);
+        public Symbol WatchPost { get; } = new Symbol("WatchPost");
         #endregion
 
         public Symbol StartMarker { get; } = new Marker("Start");
