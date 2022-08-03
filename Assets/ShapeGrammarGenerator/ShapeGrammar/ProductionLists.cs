@@ -57,7 +57,8 @@ namespace ShapeGrammar
 
             return new ProductionList
             (
-                pr.TerraceFrom(pr.sym.Room)
+                pr.TerraceFrom(pr.sym.Room),
+                pr.BalconyFrom(pr.sym.Room)
             );
         }
 
@@ -170,7 +171,8 @@ namespace ShapeGrammar
 
             return new ProductionList
             (
-                pr.ChapelSides(2)
+                pr.ChapelSides(2),
+                pr.BalconyFrom(pr.sym.ChapelRoom)
             );
         }
 

@@ -595,7 +595,8 @@ namespace ShapeGrammar
             Func<CubeGroup, Vector3Int, Node> extrudeNodeFromDirection,
             Func<ProductionProgram, Node, ProductionProgram> afterNodeCreated,
             Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPlaced,
-            ConnectionNotIntersecting connectionNotIntersecting)
+            ConnectionNotIntersecting connectionNotIntersecting,
+            bool placeFoundation = true)
         {
             return new Production(
                 $"Extrude{extrudeFrom}",
@@ -622,20 +623,21 @@ namespace ShapeGrammar
                             )
                         .PlaceCurrentFrom(from)
 
-                        .Found(out var foundation)
-                        .PlaceCurrentFrom(newChapelHall)
+                        .RunIf(placeFoundation, newProg => newProg
+                            .Found()
+                            .PlaceCurrentFrom(newChapelHall)
+                        )
 
                         .RunIf(true, newProg =>
                             fromFloorNodeAfterPlaced(newProg, newChapelHall))
 
                         .FindPath(() =>
-                        connectionNotIntersecting(state.WorldState.Added.Merge(foundation.LE))
+                        connectionNotIntersecting(AllBlocking(state, prog, from.LE.CG().Grid))
                             (newChapelHall.LE, from.LE).GN(sym.ConnectionMarker), out var door)
                         .PlaceCurrentFrom(from, newChapelHall)
                         );
                 });
         }
-
         public Production TakeUpwardReservation(
             Symbol reservationSymbol,
             Func<CubeGroup, Node> nodeFromExtrudedUp,
@@ -941,6 +943,16 @@ namespace ShapeGrammar
                 _ => ldk.con.ConnectByDoor
                 );
 
+        public Production BalconyFrom(Symbol from)
+            => Extrude(
+                from,
+                node => ExtensionMethods.HorizontalDirections(),
+                (cg, dir) => cg.ExtrudeDir(dir, 1).LE(AreaType.FlatRoof).GN(sym.Balcony(dir), sym.FullFloorMarker),
+                Empty(),
+                Empty(),
+                _ => ldk.con.ConnectByDoor,
+                false
+                );
         #endregion
 
         #region Castle

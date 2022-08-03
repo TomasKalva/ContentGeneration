@@ -34,6 +34,7 @@ namespace ShapeGrammar
         public Symbol Courtyard { get; } = new Symbol("Courtyard");
         public DirectionalSymbol Bridge(Vector3Int direction = default) => new DirectionalSymbol("Bridge", direction);
         public Symbol Garden { get; } = new Symbol("Garden");
+        public DirectionalSymbol Balcony(Vector3Int direction) => new DirectionalSymbol("Balcony", direction);
 
         #region Graveyard
         public Symbol Park { get; } = new Symbol("Park");
@@ -41,7 +42,7 @@ namespace ShapeGrammar
         public DirectionalSymbol ChapelHall(Vector3Int direction) => new DirectionalSymbol("ChapelHall", direction);
         public Symbol ChapelRoom { get; } = new Symbol("ChapelRoom");
         public Symbol ChapelTowerTop { get; } = new Symbol("ChapelTowerTop");
-        public Symbol ChapelSide(Vector3Int direction) => new DirectionalSymbol("ChapelSide", direction);
+        public DirectionalSymbol ChapelSide(Vector3Int direction) => new DirectionalSymbol("ChapelSide", direction);
         #endregion
 
         #region Castle
