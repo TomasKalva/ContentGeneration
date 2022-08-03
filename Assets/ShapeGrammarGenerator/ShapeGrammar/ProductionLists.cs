@@ -17,7 +17,7 @@ namespace ShapeGrammar
             this.pr = pr;
         }
 
-        public ProductionList TestingProductions()
+        public ProductionList Town()
         {
             var pathGuide = new RandomPathGuide();
             Func<LevelElement>[] boxFs = new Func<LevelElement>[]
@@ -48,6 +48,16 @@ namespace ShapeGrammar
                 pr.ExtendBridgeToRoom(pr.sym.Room, boxFs.GetRandom(), pathGuide),
                 pr.ExtendBridgeToGarden(pr.sym.Room, boxFs.GetRandom(), pathGuide),
                 pr.RoomNextTo(pr.sym.Garden, boxFs.GetRandom())
+            );
+        }
+
+        public ProductionList TownDetails()
+        {
+            var guideRandomly = new RandomPathGuide();
+
+            return new ProductionList
+            (
+                pr.TerraceFrom(pr.sym.Room)
             );
         }
 

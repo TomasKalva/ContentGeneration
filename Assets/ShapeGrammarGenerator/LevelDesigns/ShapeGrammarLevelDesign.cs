@@ -72,7 +72,7 @@ namespace ShapeGrammar
                         state => state.Root.AllDerived().ForEach(parent => parent.RemoveSymbolByName(pr.sym.ReturnToMarker))
                     );
 
-            var shapeGrammar = new RandomGrammar(prL.TestingProductions(), 20);
+            var shapeGrammar = new RandomGrammar(prL.Town(), 20);
             var randGardenGrammar = new RandomGrammar(prL.Garden(), 1);
 
             var graveyardGrammar = new RandomGrammar(prL.Graveyard(), 10);

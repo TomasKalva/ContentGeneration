@@ -209,6 +209,22 @@ namespace ShapeGrammar
                 );
         }
 
+        public Production TerraceFrom(Symbol from)
+            => Extrude(
+                from,
+                // accept only nodes that have height at least 3
+                node => node.LE.CG().ExtentsDir(Vector3Int.up) >= 3 ? 
+                    ExtensionMethods.HorizontalDirections() : 
+                    new Vector3Int[0],
+                (cg, dir) 
+                    => AlterInOrthogonalDirection(cg.ExtrudeDir(dir, 2).BottomLayer()
+                            .OpAdd().ExtrudeDir(Vector3Int.up).OpNew(), dir, 3)
+                                .LE(AreaType.Colonnade).GN(sym.Terrace(dir), sym.FullFloorMarker),
+                Empty(),
+                Reserve(2, sym.UpwardReservation),
+                _ => ldk.con.ConnectByDoor
+                );
+
         #endregion
 
         public Production RoomFallDown(Symbol nextToWhat, Func<LevelElement> roomFromToF)

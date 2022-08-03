@@ -29,7 +29,7 @@ namespace ShapeGrammar
         /// Serves as a space that can be turned into another part of a building or in a roof.
         /// </summary>
         public UpwardReservation UpwardReservation(Node roomBelow) => new UpwardReservation("RoomReservation", roomBelow);
-        public Symbol Terrace { get; } = new Symbol("Terrace");
+        public Symbol Terrace(Vector3Int direction) => new DirectionalSymbol("Terrace", direction);
         public Symbol Roof { get; } = new Symbol("Roof");
         public Symbol Courtyard { get; } = new Symbol("Courtyard");
         public DirectionalSymbol Bridge(Vector3Int direction = default) => new DirectionalSymbol("Bridge", direction);

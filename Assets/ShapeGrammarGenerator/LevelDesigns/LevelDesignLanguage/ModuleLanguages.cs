@@ -227,7 +227,7 @@ namespace ShapeGrammar
         {
             var grammarState = State.GrammarState;
 
-            var shapeGrammar = new RandomGrammar(Gr.PrL.TestingProductions(), 20);
+            var shapeGrammar = new RandomGrammar(Gr.PrL.Town(), 20);
             var randGardenGrammar = new RandomGrammar(Gr.PrL.Garden(), 1);
             var graveyardGrammar = new RandomGrammar(Gr.PrL.Graveyard(), 10);
             var graveyardPostprocessGrammar = new AllGrammar(Gr.PrL.GraveyardPostprocess());
@@ -340,12 +340,12 @@ namespace ShapeGrammar
             Env.Execute(roofGrammar);
             */
 
-            Env.Line(Gr.PrL.Chapels(), NodesQueries.All, 40, out var _);
+            Env.Line(Gr.PrL.Town(), NodesQueries.All, 40, out var _);
             /*Env.Line(Gr.PrL.TestingProductions(), NodesQueries.All, 10, out var _);
             Env.Line(Gr.PrL.TestingProductions(), NodesQueries.All, 10, out var _);
             Env.Line(Gr.PrL.TestingProductions(), NodesQueries.All, 10, out var _);
             Env.Line(Gr.PrL.TestingProductions(), NodesQueries.All, 10, out var _);*/
-            Env.BranchRandomly(Gr.PrL.ChapelsDetails(), 4, out var _);
+            Env.BranchRandomly(Gr.PrL.TownDetails(), 4, out var _);
             Env.Execute(new AllGrammar(Gr.PrL.GraveyardPostprocess()));
 
             var allAreas = State.TraversableAreas;
@@ -622,7 +622,7 @@ namespace ShapeGrammar
 
         public void LinearWithKey(FactionEnvironment fe, int progress)
         {
-            L.PatternLanguage.BranchWithKey(NodesQueries.LastCreated, 4, Gr.PrL.TestingProductions(), out var lockedArea, out var linearPath);
+            L.PatternLanguage.BranchWithKey(NodesQueries.LastCreated, 4, Gr.PrL.Town(), out var lockedArea, out var linearPath);
 
             var itemPlacer = PlO.RandomAreasPlacer(new UniformDistr(3, 4), ItemsToPlace(fe, 3));
             itemPlacer.Place(linearPath);
@@ -634,7 +634,7 @@ namespace ShapeGrammar
 
         public void BranchesWithKey(FactionEnvironment fe, int progress)
         {
-            L.PatternLanguage.RandomBranchingWithKeys(4, Gr.PrL.TestingProductions(), out var lockedArea, out var branches);
+            L.PatternLanguage.RandomBranchingWithKeys(4, Gr.PrL.Town(), out var lockedArea, out var branches);
 
             var itemPlacer = PlO.RandomAreasPlacer(new UniformDistr(3, 4), ItemsToPlace(fe, 3));
             itemPlacer.Place(branches);
