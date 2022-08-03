@@ -204,6 +204,16 @@ namespace ShapeGrammar
             );
         }
 
+        public ProductionList CastleDetails()
+        {
+            var guideRandomly = new RandomPathGuide();
+
+            return new ProductionList
+            (
+                pr.SideWall(2)
+            );
+        }
+
         public ProductionList ConnectBack()
         {
             return new ProductionList

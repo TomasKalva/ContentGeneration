@@ -614,9 +614,9 @@ namespace ShapeGrammar
                                 )
                                 .NotTaken()
                                 .CurrentFirst(out var created)
-                                .CanBeFounded()
 
                                 .RunIf(true, p => afterNodeCreated(p, created))
+                                .CanBeFounded()
                                 ),
                             out var newChapelHall
                             )
@@ -964,7 +964,7 @@ namespace ShapeGrammar
                 node => pathGuide.SelectDirections(node.LE),
                 (cg, dir) => AlterInOrthogonalDirection(cg.ExtrudeDir(dir, length), dir, 2).LE(AreaType.FlatRoof).GN(sym.WallTop(dir), sym.FullFloorMarker),
                 Empty(),
-                    Empty(),
+                Empty(),
                 _ => ldk.con.ConnectByDoor
                 );
 
@@ -1009,6 +1009,21 @@ namespace ShapeGrammar
                     Empty(),
                     ldk.con.ConnectByBalconyStairsOutside
                     );
+
+        public Production SideWall(int width)
+            => Extrude(
+                sym.ChapelHall(default),
+                node => node.GetSymbol(sym.ChapelHall(default)).Direction.ToEnumerable(),
+                (cg, dir) =>
+                {
+                    var orthDir = ExtensionMethods.OrthogonalHorizontalDir(dir);
+                    return cg.ExtrudeDir(orthDir, width)
+                                .LE(AreaType.FlatRoof).GN(sym.SideWallTop(orthDir), sym.FullFloorMarker);
+                },
+                Empty(),//MoveVertically(0, 5),
+                Empty(),
+                _ => ldk.con.ConnectByDoor
+                );
 
         #endregion
     }
