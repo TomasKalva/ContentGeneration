@@ -1,4 +1,5 @@
-﻿using ShapeGrammar;
+﻿using ContentGeneration.Assets.UI;
+using ShapeGrammar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,16 +18,16 @@ namespace Assets.ShapeGrammarGenerator
         public bool Resolved { get; set; } = false;
     }
 
-    public interface ICubePrimitivePlacer<CubePrimitiveT> where CubePrimitiveT : GridPrimitive
+    public interface IGridPrimitivePlacer<GridPrimitiveT> where GridPrimitiveT : GridPrimitive 
     {
-        public abstract void PlacePrimitive(CubePrimitiveT otherPrimitive);
+        public abstract void PlacePrimitive(IGridGeometryOwner worldGeometry, Facet facet, GridPrimitiveT otherPrimitive);
     }
     #region Horizontal primitives
-    public abstract class HorFacePrimitive : GridPrimitive, ICubePrimitivePlacer<HorFacePrimitive>
+    public abstract class HorFacePrimitive : GridPrimitive, IGridPrimitivePlacer<HorFacePrimitive>
     {
         public FACE_HOR FaceType { get; }
 
-        public abstract void PlacePrimitive(HorFacePrimitive otherPrimitive);
+        public abstract void PlacePrimitive(IGridGeometryOwner worldGeometry, Facet facet, HorFacePrimitive otherPrimitive);
     }
 
     public class WallPrimitive : HorFacePrimitive
@@ -40,7 +41,7 @@ namespace Assets.ShapeGrammarGenerator
             OutsideWall = outsideWall;
         }
 
-        public override void PlacePrimitive(HorFacePrimitive otherPrimitive)
+        public override void PlacePrimitive(IGridGeometryOwner worldGeometry, Facet facet, HorFacePrimitive otherPrimitive)
         {
             throw new NotImplementedException();
         }
@@ -55,7 +56,7 @@ namespace Assets.ShapeGrammarGenerator
             Face = face;
         }
 
-        public override void PlacePrimitive(HorFacePrimitive otherPrimitive)
+        public override void PlacePrimitive(IGridGeometryOwner worldGeometry, Facet facet, HorFacePrimitive otherPrimitive)
         {
             throw new NotImplementedException();
         }
@@ -63,7 +64,7 @@ namespace Assets.ShapeGrammarGenerator
     #endregion
 
     #region Vertical cube primitives
-    public class VerFacePrimitive : GridPrimitive, ICubePrimitivePlacer<VerFacePrimitive>
+    public class VerFacePrimitive : GridPrimitive, IGridPrimitivePlacer<VerFacePrimitive>
     {
         public FACE_VER FaceType { get; protected set; }
 
@@ -73,7 +74,7 @@ namespace Assets.ShapeGrammarGenerator
             Priority = 0;
         }
 
-        public virtual void PlacePrimitive(VerFacePrimitive otherPrimitive) { }
+        public virtual void PlacePrimitive(IGridGeometryOwner worldGeometry, Facet facet, VerFacePrimitive otherPrimitive) { }
     }
 
     public class FloorPrimitive : VerFacePrimitive
@@ -89,15 +90,21 @@ namespace Assets.ShapeGrammarGenerator
             Priority = 1;
         }
 
-        public override void PlacePrimitive(VerFacePrimitive otherPrimitive)
+        public override void PlacePrimitive(IGridGeometryOwner geometryOwner, Facet face, VerFacePrimitive otherPrimitive)
         {
-            /*
-            var offset = Vector3.up * Math.Max(0, Direction.y);
-            var obj = Floor.transform;
+            var cubePosition = face.MyCube.Position;
+            var scale = geometryOwner.WorldGeometry.WorldScale;
+
+            var offset = Vector3.up * Math.Max(0, face.Direction.y);
+            //var obj = Style.GetFaceVer(FaceType);
+            var obj = Floor.New().transform;
+
 
             obj.localScale = scale * Vector3.one;
-            obj.localPosition = (cubePosition + offset) * scale;
-            */
+            obj.localPosition = (cubePosition + offset) * scale; 
+
+            geometryOwner.AddArchitectureElement(obj);
+            face.OnObjectCreated(obj);
         }
     }
 
@@ -109,19 +116,19 @@ namespace Assets.ShapeGrammarGenerator
             Priority = 2;
         }
 
-        public override void PlacePrimitive(VerFacePrimitive otherPrimitive)
+        public override void PlacePrimitive(IGridGeometryOwner worldGeometry, Facet facet, VerFacePrimitive otherPrimitive)
         {
-            throw new NotImplementedException();
+            // No object to create => don't do anything
         }
     }
     #endregion
 
     #region Corner primitives
-    public abstract class CornerFacePrimitive : GridPrimitive, ICubePrimitivePlacer<CornerFacePrimitive>
+    public abstract class CornerFacePrimitive : GridPrimitive, IGridPrimitivePlacer<CornerFacePrimitive>
     {
         protected CORNER FaceType { get; }
 
-        public abstract void PlacePrimitive(CornerFacePrimitive otherPrimitive);
+        public abstract void PlacePrimitive(IGridGeometryOwner worldGeometry, Facet facet, CornerFacePrimitive otherPrimitive);
     }
 
     public class CornerFaceExclusivePrimitive : CornerFacePrimitive
@@ -133,7 +140,7 @@ namespace Assets.ShapeGrammarGenerator
             Face = face;
         }
 
-        public override void PlacePrimitive(CornerFacePrimitive otherPrimitive)
+        public override void PlacePrimitive(IGridGeometryOwner worldGeometry, Facet facet, CornerFacePrimitive otherPrimitive)
         {
             throw new NotImplementedException();
         }
@@ -152,7 +159,7 @@ namespace Assets.ShapeGrammarGenerator
             Top = top;
         }
 
-        public override void PlacePrimitive(CornerFacePrimitive otherPrimitive)
+        public override void PlacePrimitive(IGridGeometryOwner worldGeometry, Facet facet, CornerFacePrimitive otherPrimitive)
         {
             throw new NotImplementedException();
         }
@@ -160,11 +167,11 @@ namespace Assets.ShapeGrammarGenerator
     #endregion
 
     #region Cube primitives
-    public abstract class CubePrimitive : GridPrimitive, ICubePrimitivePlacer<CubePrimitive>
+    public abstract class CubePrimitive : GridPrimitive, IGridPrimitivePlacer<CubePrimitive>
     {
         protected CORNER FaceType { get; }
 
-        public abstract void PlacePrimitive(CubePrimitive otherPrimitive);
+        public abstract void PlacePrimitive(IGridGeometryOwner worldGeometry, Facet facet, CubePrimitive otherPrimitive);
     }
 
     public class CubeExclusivePrimitive : CubePrimitive
@@ -176,7 +183,7 @@ namespace Assets.ShapeGrammarGenerator
             Object = obj;
         }
 
-        public override void PlacePrimitive(CubePrimitive otherPrimitive)
+        public override void PlacePrimitive(IGridGeometryOwner worldGeometry, Facet facet, CubePrimitive otherPrimitive)
         {
             throw new NotImplementedException();
         }

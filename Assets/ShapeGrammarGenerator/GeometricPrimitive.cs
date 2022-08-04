@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class GeometricPrimitive : MonoBehaviour
 {
-    public Transform Object => transform;
+    /// <summary>
+    /// Returns a copy of this object.
+    /// </summary>
+    public GeometricPrimitive New() => Instantiate(this);
 
 }

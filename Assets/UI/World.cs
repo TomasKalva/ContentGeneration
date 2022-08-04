@@ -12,7 +12,16 @@ using System.Linq;
 
 namespace ContentGeneration.Assets.UI
 {
-    public class World : INotifyPropertyChanged
+    /// <summary>
+    /// Used for placing the grid geometry.
+    /// </summary>
+    public interface IGridGeometryOwner
+    {
+        void AddArchitectureElement(Transform el);
+        WorldGeometry WorldGeometry { get; }
+    }
+
+    public class World : INotifyPropertyChanged, IGridGeometryOwner
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public Transform ArchitectureParent { get; }

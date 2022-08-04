@@ -23,14 +23,23 @@ public class GeometricPrimitives : ScriptableObject
     }
 #endif
 
-    public GeometricPrimitive WallDoor;
-    public GeometricPrimitive BrickWall;
-    public GeometricPrimitive CobblestoneFloor;
-    public GeometricPrimitive Railing;
-    public GeometricPrimitive RailingPillar;
-    public GeometricPrimitive BeamBottom;
-    public GeometricPrimitive BeamMiddle;
-    public GeometricPrimitive BeamTop;
-    public GeometricPrimitive Stairs;
+    [SerializeField]
+    public GeometricPrimitive wallDoor;
+    [SerializeField]
+    public GeometricPrimitive brickWall;
+    [SerializeField]
+    public GeometricPrimitive cobblestoneFloor;
+    [SerializeField]
+    public GeometricPrimitive railing;
+    [SerializeField]
+    public GeometricPrimitive railingPillar;
+    [SerializeField]
+    public GeometricPrimitive beamBottom;
+    [SerializeField]
+    public GeometricPrimitive beamMiddle;
+    [SerializeField]
+    public GeometricPrimitive beamTop;
+    [SerializeField]
+    public GeometricPrimitive stairs;
 
 }

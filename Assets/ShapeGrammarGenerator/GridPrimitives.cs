@@ -17,31 +17,31 @@ namespace Assets.ShapeGrammarGenerator
         }
 
         public WallPrimitive HouseWall()
-            => new WallPrimitive(gp.BrickWall, gp.BrickWall);// todo: replace two sided walls with only one sided ones
+            => new WallPrimitive(gp.brickWall, gp.brickWall);// todo: replace two sided walls with only one sided ones
 
         public HorFaceExclusivePrimitive Door()
-            => new HorFaceExclusivePrimitive(gp.WallDoor);//todo: replace with actual door primitive
+            => new HorFaceExclusivePrimitive(gp.wallDoor);//todo: replace with actual door primitive
 
         public HorFaceExclusivePrimitive Railing()
-            => new HorFaceExclusivePrimitive(gp.Railing);
+            => new HorFaceExclusivePrimitive(gp.railing);
 
 
         public CornerFaceExclusivePrimitive RailingPillar()
-            => new CornerFaceExclusivePrimitive(gp.RailingPillar);
+            => new CornerFaceExclusivePrimitive(gp.railingPillar);
 
         public BeamPrimitive Beam()
-            => new BeamPrimitive(gp.BeamBottom, gp.BeamMiddle, gp.BeamTop);
+            => new BeamPrimitive(gp.beamBottom, gp.beamMiddle, gp.beamTop);
 
 
         public FloorPrimitive Floor()
-            => new FloorPrimitive(gp.CobblestoneFloor, gp.CobblestoneFloor);// todo: make floor one sided and add ceiling
+            => new FloorPrimitive(gp.cobblestoneFloor, gp.cobblestoneFloor);// todo: make floor one sided and add ceiling
 
         public NoFloorPrimitive NoFloor()
             => new NoFloorPrimitive();// todo: make floor one sided and add ceiling
 
 
         public CubeExclusivePrimitive StairPrimitive()
-            => new CubeExclusivePrimitive(gp.Stairs);
+            => new CubeExclusivePrimitive(gp.stairs);
 
 
         public GridPrimitivesStyle DefaultStyle() => new GridPrimitivesStyle()

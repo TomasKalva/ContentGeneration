@@ -155,22 +155,22 @@ namespace ShapeGrammar
     public class WorldGeometry
     {
         public Transform WorldParent { get; }
-        float worldScale;
+        public float WorldScale { get; }
 
         public WorldGeometry(Transform worldParent, float worldScale)
         {
             this.WorldParent = worldParent;
-            this.worldScale = worldScale;
+            this.WorldScale = worldScale;
         }
 
         public Vector3 GridToWorld(Vector3 gridPos)
         {
-            return WorldParent.position + worldScale * gridPos;
+            return WorldParent.position + WorldScale * gridPos;
         }
 
         public Vector3 WorldToGrid(Vector3 worldPos)
         {
-            return (worldPos - WorldParent.position) / worldScale;
+            return (worldPos - WorldParent.position) / WorldScale;
         }
     }
 }
