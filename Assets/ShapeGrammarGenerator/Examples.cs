@@ -38,7 +38,7 @@ namespace ShapeGrammar
             paths = new Paths(grid);
             con = new Connections(grid);
             tr = new Transformations(this);
-            ars = new AreaStyles(new GridPrimitives(gp));
+            ars = new AreaStyles(new GridPrimitives(gp), sgStyles);
             houseStyleRules = new StyleRules(
                 new StyleRule(g => g.WithAreaType(AreaType.Room), g => g.SetGrammarStyle(sgStyles.PlainRoomStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Reservation), g => g.SetGrammarStyle(sgStyles.EmptyStyle)),
