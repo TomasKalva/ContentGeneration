@@ -79,11 +79,6 @@ namespace Assets.ShapeGrammarGenerator
 
         public override void PlacePrimitive(IGridGeometryOwner geometryOwner, Facet facet, HorFacePrimitive otherPrimitive)
         {
-            /*
-            var otherFaceType = OtherCube.FacesHor(-Direction).FaceType;
-            if (FaceType < otherFaceType)
-                return;*/
-
             var cubePosition = facet.MyCube.Position;
             var scale = geometryOwner.WorldGeometry.WorldScale;
             var offset = (Vector3)facet.Direction * 0.5f;
