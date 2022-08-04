@@ -322,7 +322,7 @@ namespace ShapeGrammar
                         );
                 });
         }
-
+        /*
         public Production ExtendHouse(FloorConnector floorConnector)
         {
             return new Production(
@@ -393,23 +393,8 @@ namespace ShapeGrammar
                         state.Add(newHouse).SetTo(start.GN(), middleGn, end.GN()),
                         state.Replace(middleGn).SetTo(path.GN())
                     });
-                    /*
-                    return state.NewProgram()
-                        .SelectOne(
-                            state.NewProgram()
-                                .Directional(ExtensionMethods.HorizontalDirections().Shuffle(),
-                                    dir =>
-                                        roomCubeGroup
-                                        .ExtrudeDir(dir, 6)
-                                        .LE(AreaType.Room)
-                                        .GN(sym.DirectedRoom(0, dir))
-                                )
-                                .NotTaken()
-                                .CanBeFounded(),
-                            out var newRoom
-                        )*/
                 });
-        }
+        }*/
 
         public Production Roof()
         {

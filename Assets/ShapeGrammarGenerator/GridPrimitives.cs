@@ -36,6 +36,9 @@ namespace Assets.ShapeGrammarGenerator
         public FloorPrimitive Floor()
             => new FloorPrimitive(gp.CobblestoneFloor, gp.CobblestoneFloor);// todo: make floor one sided and add ceiling
 
+        public NoFloorPrimitive NoFloor()
+            => new NoFloorPrimitive();// todo: make floor one sided and add ceiling
+
 
         public CubeExclusivePrimitive StairPrimitive()
             => new CubeExclusivePrimitive(gp.Stairs);
@@ -43,25 +46,27 @@ namespace Assets.ShapeGrammarGenerator
 
         public GridPrimitivesStyle DefaultStyle() => new GridPrimitivesStyle()
         {
-            Door = Door(),
-            Wall = HouseWall(),
-            Railing = Railing(),
-            RailingPillar = RailingPillar(),
-            Beam = Beam(),
-            Floor = Floor(),
-            Stairs = StairPrimitive(),
+            Door = Door,
+            Wall = HouseWall,
+            Railing = Railing,
+            RailingPillar = RailingPillar,
+            Beam = Beam,
+            Floor = Floor,
+            NoFloor = NoFloor,
+            Stairs = StairPrimitive,
         };
     }
 
     public class GridPrimitivesStyle
     {
-        public HorFacePrimitive Door { get; set; }
-        public HorFacePrimitive Wall { get; set; }
-        public HorFacePrimitive Railing { get; set; }
-        public CornerFacePrimitive RailingPillar { get; set; }
-        public CornerFacePrimitive Beam { get; set; }
-        public VerFacePrimitive Floor { get; set; }
-        public CubePrimitive Stairs { get; set; }
+        public Func<HorFacePrimitive> Door { get; set; }
+        public Func<HorFacePrimitive> Wall { get; set; }
+        public Func<HorFacePrimitive> Railing { get; set; }
+        public Func<CornerFacePrimitive> RailingPillar { get; set; }
+        public Func<CornerFacePrimitive> Beam { get; set; }
+        public Func<VerFacePrimitive> Floor { get; set; }
+        public Func<VerFacePrimitive> NoFloor { get; set; }
+        public Func<CubePrimitive> Stairs { get; set; }
     }
 
 

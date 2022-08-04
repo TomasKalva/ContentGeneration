@@ -4,12 +4,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Assets.ShapeGrammarGenerator
 {
     public abstract class GridPrimitive
     {
-        public int Priority { get; }
+        public int Priority { get; protected set; }
+        /// <summary>
+        /// True if the facet of this primitive was already resolved.
+        /// </summary>
+        public bool Resolved { get; set; } = false;
     }
 
     public interface ICubePrimitivePlacer<CubePrimitiveT> where CubePrimitiveT : GridPrimitive
@@ -58,11 +63,17 @@ namespace Assets.ShapeGrammarGenerator
     #endregion
 
     #region Vertical cube primitives
-    public abstract class VerFacePrimitive : GridPrimitive, ICubePrimitivePlacer<VerFacePrimitive>
+    public class VerFacePrimitive : GridPrimitive, ICubePrimitivePlacer<VerFacePrimitive>
     {
-        protected FACE_VER FaceType { get; }
+        public FACE_VER FaceType { get; protected set; }
 
-        public abstract void PlacePrimitive(VerFacePrimitive otherPrimitive);
+        public VerFacePrimitive()
+        {
+            FaceType = FACE_VER.Nothing;
+            Priority = 0;
+        }
+
+        public virtual void PlacePrimitive(VerFacePrimitive otherPrimitive) { }
     }
 
     public class FloorPrimitive : VerFacePrimitive
@@ -74,6 +85,28 @@ namespace Assets.ShapeGrammarGenerator
         {
             Floor = floor;
             Ceiling = ceiling;
+            FaceType = FACE_VER.Floor;
+            Priority = 1;
+        }
+
+        public override void PlacePrimitive(VerFacePrimitive otherPrimitive)
+        {
+            /*
+            var offset = Vector3.up * Math.Max(0, Direction.y);
+            var obj = Floor.transform;
+
+            obj.localScale = scale * Vector3.one;
+            obj.localPosition = (cubePosition + offset) * scale;
+            */
+        }
+    }
+
+    public class NoFloorPrimitive : VerFacePrimitive
+    {
+        public NoFloorPrimitive()
+        {
+            FaceType = FACE_VER.Nothing;
+            Priority = 2;
         }
 
         public override void PlacePrimitive(VerFacePrimitive otherPrimitive)

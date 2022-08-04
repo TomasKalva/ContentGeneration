@@ -27,45 +27,39 @@ namespace ShapeGrammar
             Grid = grid;
             Position = position;
             Facets = new Dictionary<Vector3Int, Facet>();
-            SetHorizontalFaces(() => new FaceHor());
-            SetVerticalFaces(() => new FaceVer());
-            SetCorners(() => new Corner());
+            SetHorizontalFaces();
+            SetVerticalFaces();
+            SetCorners();
             Object = CUBE.Nothing;
             Changed = false;
         }
 
-        public Cube SetHorizontalFaces(Func<FaceHor> faceFac)
+        public Cube SetHorizontalFaces()
         {
             ExtensionMethods.HorizontalDirections().ForEach(dir =>
             {
-                var face = faceFac();
+                var face = new FaceHor(this, dir);
                 Facets.TryAdd(dir, face);
-                face.Direction = dir;
-                face.MyCube = this;
             });
             return this;
         }
 
-        public Cube SetVerticalFaces(Func<FaceVer> faceFac)
+        public Cube SetVerticalFaces()
         {
             ExtensionMethods.VerticalDirections().ForEach(dir =>
             {
-                var face = faceFac();
+                var face = new FaceVer(this, dir);
                 Facets.TryAdd(dir, face);
-                face.Direction = dir;
-                face.MyCube = this;
             });
             return this;
         }
 
-        public Cube SetCorners(Func<Corner> cornerFac)
+        public Cube SetCorners()
         {
             ExtensionMethods.HorizontalDiagonals().ForEach(dir =>
             {
-                var corner = cornerFac();
+                var corner = new Corner(this, dir);
                 Facets.TryAdd(dir, corner);
-                corner.Direction = dir;
-                corner.MyCube = this;
             });
             return this;
         }

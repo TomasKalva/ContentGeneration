@@ -479,9 +479,9 @@ namespace ShapeGrammar
         {
         }
 
-        public FaceVerGroup Fill(FACE_VER faceType)
+        public FaceVerGroup Fill(Func<VerFacePrimitive> facePrimitiveF)
         {
-            Facets.ForEach(face => face.FaceType = faceType);
+            Facets.ForEach(face => face.FacePrimitive = facePrimitiveF());
             return this;
         }
 

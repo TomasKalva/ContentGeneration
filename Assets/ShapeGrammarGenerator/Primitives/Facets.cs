@@ -13,11 +13,18 @@ namespace ShapeGrammar
 
     public abstract class Facet
     {
-        public Vector3Int Direction { get; set; }
+
+        public Vector3Int Direction { get; }
         public ShapeGrammarObjectStyle Style { get; set; }
-        public Cube MyCube { get; set; }
+        public Cube MyCube { get; }
         public Cube OtherCube => MyCube.Grid[MyCube.Position + Direction];
         public Action<Transform> OnObjectCreated { get; set; } = _ => { };
+
+        protected Facet(Cube myCube, Vector3Int direction)
+        {
+            Direction = direction;
+            MyCube = myCube;
+        }
 
         public abstract void Generate(float cubeSide, World world, Vector3Int cubePosition);
 
@@ -36,18 +43,6 @@ namespace ShapeGrammar
 
     public class FaceHor : Facet
     {
-        /*
-        private HorFacePrimitive facePrimitive;
-
-        public HorFacePrimitive FacePrimitive
-        {
-            get => facePrimitive;
-            set
-            {
-                facePrimitive = value;
-                MyCube.Changed = true;
-            }
-        }*/
 
         private FACE_HOR faceType;
 
@@ -59,6 +54,10 @@ namespace ShapeGrammar
                 faceType = value;
                 MyCube.Changed = true;
             }
+        }
+
+        public FaceHor(Cube myCube, Vector3Int direction) : base(myCube, direction)
+        {
         }
 
         public override void Generate(float scale, World world, Vector3Int cubePosition)
@@ -98,22 +97,37 @@ namespace ShapeGrammar
 
     public class FaceVer : Facet
     {
-        private FACE_VER faceType;
+        private VerFacePrimitive facePrimitive;
 
-        public FACE_VER FaceType
+
+        public VerFacePrimitive FacePrimitive
         {
-            get => faceType;
+            get => facePrimitive;
             set
             {
-                faceType = value;
+                facePrimitive = value;
                 MyCube.Changed = true;
             }
+        }
+
+        public FACE_VER FaceType => FacePrimitive.FaceType;
+
+        public FaceVer(Cube myCube, Vector3Int direction) : base(myCube, direction)
+        {
+            FacePrimitive = new VerFacePrimitive();
         }
 
         public override void Generate(float scale, World world, Vector3Int cubePosition)
         {
             if (Style == null)
                 return;
+            /*
+            var otherFace = OtherCube.FacesVer(-Direction);
+            var primitives = new VerFacePrimitive[2] { FacePrimitive, otherFace.FacePrimitive };
+            var winningPrimitive = primitives.ArgMax(p => p.Priority);
+            var losingPrimitive = primitives.Others(winningPrimitive).First();
+            winningPrimitive.PlacePrimitive(losingPrimitive);
+            */
 
             var offset = Vector3.up * Math.Max(0, Direction.y);
             var obj = Style.GetFaceVer(FaceType);
@@ -143,6 +157,10 @@ namespace ShapeGrammar
                 cornerType = value;
                 MyCube.Changed = true;
             }
+        }
+
+        public Corner(Cube myCube, Vector3Int direction) : base(myCube, direction)
+        {
         }
 
         public override void Generate(float scale, World world, Vector3Int cubePosition)

@@ -26,8 +26,6 @@ namespace Assets.ShapeGrammarGenerator
 
         public static  AreaStyle FlatRoof() => new AreaStyle("FlatRoof", gm.DefaultStyle(), gpp.FlatRoofStyle);
 
-        public static AreaStyle Balcony() => new AreaStyle("Balcony", gm.DefaultStyle(), gpp.FlatRoofStyle);
-
         public static  AreaStyle GableRoof() => new AreaStyle("FlatRoof", gm.DefaultStyle(), gpp.FlatRoofStyle);// new AreaStyle("GableRoof", sgStyles.GableRoofStyle);
 
         public static  AreaStyle PointyRoof() => new AreaStyle("FlatRoof", gm.DefaultStyle(), gpp.FlatRoofStyle);// new AreaStyle("PointyRoof", area => );
@@ -66,6 +64,6 @@ namespace Assets.ShapeGrammarGenerator
 
         public static  AreaStyle Bridge() => new AreaStyle("Bridge", gm.DefaultStyle(), gpp.FlatRoofStyle);
 
-        public static  AreaStyle NoFloor() => new AreaStyle("NoFloor", gm.DefaultStyle(), gpp.NoFloor);
+        //public static  AreaStyle NoFloor() => new AreaStyle("NoFloor", gm.DefaultStyle(), gpp.NoFloor);
     }
 }
