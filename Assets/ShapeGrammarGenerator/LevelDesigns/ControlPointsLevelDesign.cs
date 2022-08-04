@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.ShapeGrammarGenerator;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,21 +16,21 @@ namespace ShapeGrammar
         }
 
         public override LevelElement CreateLevel()
-        {
-            var root = new LevelGroupElement(ldk.grid, AreaType.WorldRoot);
+        {/*
+            var root = new LevelGroupElement(ldk.grid, AreaStyles.WorldRoot());
 
             // Create ground layout of the tower
             var yard = ldk.qc.GetBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(30, 30)).InflateY(0, 1));
 
             var controlPoints = ControlPoints(yard, 10);
-            var controlLine = ConnectByLine(controlPoints).LE(AreaType.Debug);
+            var controlLine = ConnectByLine(controlPoints).LE(AreaStyles.Debug());
 
             var smallDistr = new SlopeDistr(center: 6, width: 3, rightness: 0.3f);
             //var boxSequence = ExtensionMethods.BoxSequence(() => ExtensionMethods.RandomBox(new Vector2Int(3, 3), new Vector2Int(8, 8)));
             var smallBoxSequence = ExtensionMethods.BoxSequence(() => ExtensionMethods.RandomBox(smallDistr, smallDistr));
             var largeDistr = new SlopeDistr(center: 10, width: 3, rightness: 0.3f);
             var largeBoxSequence = ExtensionMethods.BoxSequence(() => ExtensionMethods.RandomBox(largeDistr, largeDistr));
-            var houses = ldk.qc.FlatBoxes(smallBoxSequence.Take(7).Concat(largeBoxSequence).Take(10).Shuffle(), 10).Select(le => le.SetAreaType(AreaType.House));
+            var houses = ldk.qc.FlatBoxes(smallBoxSequence.Take(7).Concat(largeBoxSequence).Take(10).Shuffle(), 10).Select(le => le.SetAreaType(AreaStyle.House));
             //houses = houses.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => ldk.sgShapes.CompositeHouse(4));
 
             houses = ldk.pl.MoveLevelGroup(houses,
@@ -38,17 +39,18 @@ namespace ShapeGrammar
                     //var prev = moved.Any() ? moved.FirstOrDefault() : controlPoints.Cubes.FirstOrDefault().Group().LevelElement();
                     //var movesToPrev = le.MovesNearXZ(prev);
                     var movesOnLine = le.MovesToIntersect(controlLine).Ms;
-                    var possibleMoves = le.DontIntersect(/*movesToPrev.SetIntersect(*/movesOnLine/*)*/, moved).Ms;
+                    var possibleMoves = le.DontIntersect(movesOnLine, moved).Ms;
                     return possibleMoves;
                 },
                 moves => moves.GetRandom());
 
-            houses = houses.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => ldk.sgShapes.SimpleHouseWithFoundation(g.CG(), UnityEngine.Random.Range(3, 7)));
+            houses = houses.ReplaceLeafsGrp(g => g.AreaStyle == AreaStyles.Room(), g => ldk.sgShapes.SimpleHouseWithFoundation(g.CG(), UnityEngine.Random.Range(3, 7)));
 
-            root = root.AddAll(/*controlLine, controlPoints.MoveBy(Vector3Int.up).LevelElement(AreaType.Debug),*/ houses);
+            root = root.AddAll(houses);
             root.ApplyGrammarStyleRules(ldk.houseStyleRules);
 
-            return root;
+            return root;*/
+            return new LevelGeometryElement(ldk.grid, AreaStyles.Room(), new CubeGroup(ldk.grid, new List<Cube>()));
         }
 
         public CubeGroup ControlPoints(CubeGroup bounds, int count)

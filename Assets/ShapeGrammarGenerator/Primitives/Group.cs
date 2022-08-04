@@ -1,4 +1,5 @@
-﻿using ShapeGrammar;
+﻿using Assets.ShapeGrammarGenerator;
+using ShapeGrammar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -131,12 +132,12 @@ namespace ShapeGrammar
             return new CubeGroup(Grid, validCubes.ToList());
         }
 
-        public LevelGeometryElement LE(AreaType areaType = null)
+        public LevelGeometryElement LE(AreaStyle areaType = null)
         {
             if(areaType == null)
             {
                 // AreaType.None is not a constant so it can't be a default value
-                areaType = AreaType.None;
+                areaType = AreaStyles.None();
             }
             return new LevelGeometryElement(Grid, areaType, this);
         }
@@ -260,7 +261,7 @@ namespace ShapeGrammar
             return Split(dir, relDists.Select(relDist => Mathf.RoundToInt((minMaxDist * relDist))).ToArray());
         }
 
-        public CubeGroup SetGrammarStyle(StyleSetter styleSetter)
+        public CubeGroup SetGrammarStyle(ApplyStyle styleSetter)
         {
             styleSetter(this);
             Cubes.ForEach(cube => cube.Changed = true);

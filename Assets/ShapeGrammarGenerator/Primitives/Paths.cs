@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.ShapeGrammarGenerator;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,7 +34,7 @@ namespace ShapeGrammar
 
             pathCubes = Thicken(pathCubes, thickness, area1.Merge(area2).CG());
 
-            var path = pathCubes.LE(AreaType.Path);
+            var path = pathCubes.LE(AreaStyles.Path());
             var foundation = sgShapes.Foundation(path);
 
             return path.Merge(foundation);
@@ -55,9 +56,9 @@ namespace ShapeGrammar
             var surrounding = notIntersecting.Merge(area2).CG();
             pathCubes = Thicken(pathCubes, thickness, surrounding).Minus(surrounding);
 
-            return pathCubes.LE(AreaType.Path);
+            return pathCubes.LE(AreaStyles.Path());
         }
-
+        /*
         public LevelGeometryElement WalkableElevator(LevelElement area1, LevelElement area2)
         {
             var starting = area1.CG().BottomLayer();
@@ -71,8 +72,8 @@ namespace ShapeGrammar
                 return null;
             }
 
-            return pathCubes.LE(AreaType.Elevator);
-        }
+            return pathCubes.LE(AreaStyle.Elevator);
+        }*/
 
         /// <summary>
         /// Path doesn't go through the starting group.

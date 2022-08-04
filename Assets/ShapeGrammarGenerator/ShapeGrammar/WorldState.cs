@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.ShapeGrammarGenerator;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,7 +20,7 @@ namespace ShapeGrammar
         public WorldState(LevelElement last, Grid<Cube> grid, TransformPushed afterPushed)
         {
             Grid = grid;
-            Added = new LevelGroupElement(grid, AreaType.None);
+            Added = new LevelGroupElement(grid, AreaStyles.None());
             Last = last;
             AfterPushed = afterPushed;
         }

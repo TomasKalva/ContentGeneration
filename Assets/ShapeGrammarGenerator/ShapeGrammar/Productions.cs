@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.ShapeGrammarGenerator;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -49,7 +50,7 @@ namespace ShapeGrammar
                                             .ExtrudeHor().ExtrudeHor().Minus(roomCubeGroup)
                                         .OpNew()
 
-                                        .LE(AreaType.Yard)
+                                        .LE(AreaStyles.Yard())
                                         .GN(sym.Courtyard, sym.FullFloorMarker)
                                 )
                                 .NotTaken()
@@ -96,7 +97,7 @@ namespace ShapeGrammar
                                         .ExtrudeVer(Vector3Int.up, 2)
                                     .OpNew()
                                         .MoveBy(2 * Vector3Int.down)
-                                    .LE(AreaType.Yard).GN(sym.Courtyard, sym.FullFloorMarker)
+                                    .LE(AreaStyles.Yard()).GN(sym.Courtyard, sym.FullFloorMarker)
                                 )
                                 .NotTaken()
                                 .CanBeFounded()
@@ -119,7 +120,7 @@ namespace ShapeGrammar
             return Extrude(
                     from,
                     node => pathGuide.SelectDirections(node.LE),
-                    (cg, dir) => AlterInOrthogonalDirection(cg.ExtrudeDir(dir, 6), dir, 3).LE(AreaType.Colonnade).GN(sym.Bridge(dir), sym.FullFloorMarker),
+                    (cg, dir) => AlterInOrthogonalDirection(cg.ExtrudeDir(dir, 6), dir, 3).LE(AreaStyles.Colonnade()).GN(sym.Bridge(dir), sym.FullFloorMarker),
                     Empty(),
                     Empty(),
                     _ => ldk.con.ConnectByDoor
@@ -131,7 +132,7 @@ namespace ShapeGrammar
             return Extrude(
                     sym.Bridge(),
                     node => node.GetSymbol(sym.Bridge()).Direction.ToEnumerable(),
-                    (cg, dir) => AlterInOrthogonalDirection(cg.ExtrudeDir(dir, 6), dir, 7).LE(AreaType.Yard).GN(sym.Courtyard, sym.FullFloorMarker),
+                    (cg, dir) => AlterInOrthogonalDirection(cg.ExtrudeDir(dir, 6), dir, 7).LE(AreaStyles.Yard()).GN(sym.Courtyard, sym.FullFloorMarker),
                     Empty(),
                     Empty(),
                     _ => ldk.con.ConnectByDoor
@@ -143,7 +144,7 @@ namespace ShapeGrammar
             return Extrude(
                     sym.Bridge(),
                     node => node.GetSymbol(sym.Bridge()).Direction.ToEnumerable(),
-                    (cg, dir) => cg.ExtrudeDir(dir, 5).LE(AreaType.Colonnade).GN(sym.Bridge(dir), sym.FullFloorMarker),
+                    (cg, dir) => cg.ExtrudeDir(dir, 5).LE(AreaStyles.Colonnade()).GN(sym.Bridge(dir), sym.FullFloorMarker),
                     Empty(),
                     Empty(),
                     _ => ldk.con.ConnectByDoor
@@ -155,7 +156,7 @@ namespace ShapeGrammar
             return FullFloorPlaceNear(
                 nextToWhat,
                 sym.Room,
-                () => roomF().SetAreaType(AreaType.Room),
+                () => roomF().SetAreaType(AreaStyles.Room()),
                 (program, _) => program,
                 (program, newRoom) => program
                         .Set(() => newRoom)
@@ -171,7 +172,7 @@ namespace ShapeGrammar
                 from,
                 sym.Room,
                 10,
-                () => leF().SetAreaType(AreaType.Room),
+                () => leF().SetAreaType(AreaStyles.Room()),
                 pathGuide,
                 Reserve(2, sym.UpwardReservation));
 
@@ -180,7 +181,7 @@ namespace ShapeGrammar
                 from,
                 sym.Garden,
                 10,
-                () => leF().SetAreaType(AreaType.Garden),
+                () => leF().SetAreaType(AreaStyles.Garden()),
                 pathGuide,
                 Empty());
 
@@ -195,7 +196,7 @@ namespace ShapeGrammar
                 (prog, node) => MoveVertically(-2, 3)(prog, node)
                     .Change(node =>
                         ldk.sgShapes.IslandExtrudeIter(node.LE.CG().BottomLayer(), 2, 0.7f)
-                            .LE(AreaType.Garden).Minus(prog.State.WorldState.Added)
+                            .LE(AreaStyles.Garden()).Minus(prog.State.WorldState.Added)
                             //To remove disconnected we have to make sure that the or
                             .MapGeom(cg => cg
                                 .SplitToConnected().First(cg => cg.Intersects(node.LE.CG()))//node..ArgMax(cg => cg.Cubes.Count)
@@ -219,7 +220,7 @@ namespace ShapeGrammar
                 (cg, dir) 
                     => AlterInOrthogonalDirection(cg.ExtrudeDir(dir, 2).BottomLayer()
                             .OpAdd().ExtrudeDir(Vector3Int.up).OpNew(), dir, 3)
-                                .LE(AreaType.Colonnade).GN(sym.Terrace(dir), sym.FullFloorMarker),
+                                .LE(AreaStyles.Colonnade()).GN(sym.Terrace(dir), sym.FullFloorMarker),
                 Empty(),
                 Reserve(2, sym.UpwardReservation),
                 _ => ldk.con.ConnectByDoor
@@ -252,7 +253,7 @@ namespace ShapeGrammar
                         .PlaceCurrentFrom(what)
 
                         .Set(() =>
-                            newRoom.LE.CG().ExtrudeVer(Vector3Int.down, 2).LE(AreaType.Room).GN(sym.Room, sym.FullFloorMarker),
+                            newRoom.LE.CG().ExtrudeVer(Vector3Int.down, 2).LE(AreaStyles.Room()).GN(sym.Room, sym.FullFloorMarker),
                             out var bottomRoom
                         )
                         .PlaceCurrentFrom(newRoom)
@@ -339,7 +340,7 @@ namespace ShapeGrammar
                         // create a new object
                         (dir, roomCubeGroup
                         .ExtrudeDir(dir, 6)
-                        .LE(AreaType.Room)
+                        .LE(AreaStyles.Room())
                         .GN(sym.Room)))
                         // fail if no such object exists
                         .Where(dirNode => dirNode.Item2.LE.CG().AllAreNotTaken() && state.CanBeFounded(dirNode.Item2.LE));
@@ -356,24 +357,24 @@ namespace ShapeGrammar
                     (LevelGeometryElement, LevelGeometryElement, LevelGeometryElement) startMiddleEnd()
                     {
                         var startMiddleEnd = newHouse.LE
-                            .Split(dir, AreaType.None, 1)
+                            .Split(dir, AreaStyles.None(), 1)
                             .ReplaceLeafsGrp(1,
-                                large => large.Split(-dir, AreaType.None, 1))
+                                large => large.Split(-dir, AreaStyles.None(), 1))
                             .ReplaceLeafsGrp(2,
-                                middle => middle.SetAreaType(AreaType.Colonnade));
+                                middle => middle.SetAreaType(AreaStyles.Colonnade()));
                         var les = startMiddleEnd.Leafs().ToList();
                         return (les[0], les[2], les[1]);
                     }
                     var (start, middle, end) = startMiddleEnd();
 
-                    var middleGn = middle.SetAreaType(AreaType.NoFloor).GN();
-                    var path = floorConnector(start, middle, end).SetAreaType(AreaType.Platform);
+                    var middleGn = middle.SetAreaType(AreaStyles.NoFloor()).GN();
+                    var path = floorConnector(start, middle, end).SetAreaType(AreaStyles.Platform());
                     //ldk.con.ConnectByStairsInside(start, end, newHouse.LevelElement);
 
                     var door = ldk.con.ConnectByDoor(room.LE, start).GN();
 
                     //todo: test if the reservation is ok
-                    var reservation = newHouse.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaType.Reservation).GN(sym.UpwardReservation(newHouse));
+                    var reservation = newHouse.LE.CG().ExtrudeVer(Vector3Int.up, 2).LE(AreaStyles.Reservation()).GN(sym.UpwardReservation(newHouse));
                     // and modify the dag
                     var foundation = ldk.sgShapes.Foundation(newHouse.LE).GN(sym.Foundation);
                     var startFoundation = ldk.sgShapes.Foundation(start).GN(sym.Foundation);
@@ -419,7 +420,7 @@ namespace ShapeGrammar
                 (state, pp) =>
                 {
                     var roomReservation = pp.Param;
-                    var roof = roomReservation.LE.SetAreaType(AreaType.GableRoof).GN(sym.Roof);
+                    var roof = roomReservation.LE.SetAreaType(AreaStyles.GableRoof()).GN(sym.Roof);
 
                     // and modify the dag
                     return state.NewProgramBadMethodDestroyItASAP(new[]
@@ -459,7 +460,7 @@ namespace ShapeGrammar
                         .PlaceCurrentFrom(node);
         }
 
-        public Func<ProductionProgram, Node, ProductionProgram> Roof(AreaType roofType, int roofHeight)
+        public Func<ProductionProgram, Node, ProductionProgram> Roof(AreaStyle roofType, int roofHeight)
         {
             return (program, towerTop) => program
                         .Set(() => towerTop)
@@ -848,7 +849,7 @@ namespace ShapeGrammar
         {
             return FromDownwardFoundation(
                     from,
-                    cg => cg.LE(AreaType.Room).GN(sym.FullFloorMarker, to),
+                    cg => cg.LE(AreaStyles.Room()).GN(sym.FullFloorMarker, to),
                     belowRoomHeight,
                     minFloorHeight,
                     _ => ldk.con.ConnectByWallStairsIn
@@ -859,7 +860,7 @@ namespace ShapeGrammar
         {
             return TakeUpwardReservation(
                     from,
-                    nextFloor => nextFloor.LE(AreaType.Room).GN(to, sym.FullFloorMarker),
+                    nextFloor => nextFloor.LE(AreaStyles.Room()).GN(to, sym.FullFloorMarker),
                     nextFloorHeight,
                     maxFloorHeight,
                     Reserve(2, sym.UpwardReservation),
@@ -873,7 +874,7 @@ namespace ShapeGrammar
             return Extrude(
                 extrudeFrom,
                 node => pathGuide.SelectDirections(node.LE),
-                (cg, dir) => cg.ExtrudeDir(dir, length).LE(AreaType.Room).GN(sym.ChapelHall(dir), sym.FullFloorMarker),
+                (cg, dir) => cg.ExtrudeDir(dir, length).LE(AreaStyles.Room()).GN(sym.ChapelHall(dir), sym.FullFloorMarker),
                 Empty(),
                 Reserve(2, sym.UpwardReservation),
                 _ => ldk.con.ConnectByDoor
@@ -885,7 +886,7 @@ namespace ShapeGrammar
             return Extrude(
                 sym.ChapelHall(default),
                 node => node.GetSymbol(sym.ChapelHall(default)).Direction.ToEnumerable(),
-                (cg, dir) => cg.ExtrudeDir(dir, extrusionLength).LE(AreaType.Room).GN(sym.ChapelRoom, sym.FullFloorMarker),
+                (cg, dir) => cg.ExtrudeDir(dir, extrusionLength).LE(AreaStyles.Room()).GN(sym.ChapelRoom, sym.FullFloorMarker),
                 Empty(),
                 Reserve(2, sym.UpwardReservation),
                 _ => ldk.con.ConnectByDoor
@@ -900,10 +901,10 @@ namespace ShapeGrammar
         {
             return TakeUpwardReservation(
                     sym.ChapelRoom,
-                    nextFloor => nextFloor.LE(AreaType.Colonnade).GN(sym.ChapelTowerTop, sym.FullFloorMarker),
+                    nextFloor => nextFloor.LE(AreaStyles.Colonnade()).GN(sym.ChapelTowerTop, sym.FullFloorMarker),
                     towerTopHeight,
                     maxHeight,
-                    Roof(AreaType.PointyRoof, roofHeight),
+                    Roof(AreaStyles.PointyRoof(), roofHeight),
                     _ => ldk.con.ConnectByWallStairsIn);
         }
 
@@ -911,9 +912,9 @@ namespace ShapeGrammar
             => FullFloorPlaceNear(
                     nextToWhatSymbol,
                     sym.ChapelEntrance,
-                    () => leF().SetAreaType(AreaType.Room),
+                    () => leF().SetAreaType(AreaStyles.Room()),
                     Empty(),
-                    Roof(AreaType.CrossRoof, roofHeight),
+                    Roof(AreaStyles.CrossRoof(), roofHeight),
                     ldk.con.ConnectByBalconyStairsOutside,
                     1);
 
@@ -921,7 +922,7 @@ namespace ShapeGrammar
             => FullFloorPlaceNear(
                     nearWhatSym,
                     sym.Park,
-                    () => leF().SetAreaType(AreaType.Garden),
+                    () => leF().SetAreaType(AreaStyles.Garden()),
                     MoveVertically(heighChange, minHeight),
                     Empty(),
                     ldk.con.ConnectByBalconyStairsOutside,
@@ -936,7 +937,7 @@ namespace ShapeGrammar
                     var orthDir = ExtensionMethods.OrthogonalHorizontalDir(dir);
                     return cg.ExtrudeDir(orthDir, width)
                                 .OpSub().ExtrudeDir(Vector3Int.up, -1).OpNew()
-                                .LE(AreaType.Room).GN(sym.ChapelSide(orthDir), sym.FullFloorMarker);
+                                .LE(AreaStyles.Room()).GN(sym.ChapelSide(orthDir), sym.FullFloorMarker);
                 },
                 Empty(),
                 Reserve(2, sym.UpwardReservation),
@@ -947,7 +948,7 @@ namespace ShapeGrammar
             => Extrude(
                 from,
                 node => ExtensionMethods.HorizontalDirections(),
-                (cg, dir) => cg.ExtrudeDir(dir, 1).LE(AreaType.FlatRoof).GN(sym.Balcony(dir), sym.FullFloorMarker),
+                (cg, dir) => cg.ExtrudeDir(dir, 1).LE(AreaStyles.FlatRoof()).GN(sym.Balcony(dir), sym.FullFloorMarker),
                 Empty(),
                 Empty(),
                 _ => ldk.con.ConnectByDoor,
@@ -961,7 +962,7 @@ namespace ShapeGrammar
             => FullFloorPlaceNear(
                     nearWhatSym,
                     sym.TowerBottom,
-                    () => towerBottomF().SetAreaType(AreaType.Room),
+                    () => towerBottomF().SetAreaType(AreaStyles.Room()),
                     Empty(),
                     Reserve(2, sym.UpwardReservation),
                     ldk.con.ConnectByBalconyStairsOutside,
@@ -974,7 +975,7 @@ namespace ShapeGrammar
             => Extrude(
                 extrudeFrom,
                 node => pathGuide.SelectDirections(node.LE),
-                (cg, dir) => AlterInOrthogonalDirection(cg.ExtrudeDir(dir, length), dir, 2).LE(AreaType.FlatRoof).GN(sym.WallTop(dir), sym.FullFloorMarker),
+                (cg, dir) => AlterInOrthogonalDirection(cg.ExtrudeDir(dir, length), dir, 2).LE(AreaStyles.FlatRoof()).GN(sym.WallTop(dir), sym.FullFloorMarker),
                 Empty(),
                 Empty(),
                 _ => ldk.con.ConnectByDoor
@@ -984,7 +985,7 @@ namespace ShapeGrammar
             => Extrude(
                 sym.WallTop(default),
                 node => node.GetSymbol(sym.WallTop(default)).Direction.ToEnumerable(),
-                (cg, dir) => AlterInOrthogonalDirection(cg.ExtrudeDir(dir, length), dir, width).LE(AreaType.Room).GN(sym.TowerTop, sym.FullFloorMarker),
+                (cg, dir) => AlterInOrthogonalDirection(cg.ExtrudeDir(dir, length), dir, width).LE(AreaStyles.Room()).GN(sym.TowerTop, sym.FullFloorMarker),
                 Empty(),
                 Reserve(2, sym.UpwardReservation),
                 _ => ldk.con.ConnectByDoor
@@ -994,7 +995,7 @@ namespace ShapeGrammar
             => FullFloorPlaceNear(
                     nearWhatSym,
                     sym.TowerTop,
-                    () => towerTopF().SetAreaType(AreaType.Room),
+                    () => towerTopF().SetAreaType(AreaStyles.Room()),
                     MoveVertically(heightChange, minBottomHeight),
                     Reserve(2, sym.UpwardReservation),
                     ldk.con.ConnectByBalconyStairsOutside,
@@ -1005,11 +1006,11 @@ namespace ShapeGrammar
             => Extrude(
                     from,
                     _ => ExtensionMethods.HorizontalDirections(),
-                    (cg, dir) => cg.ExtrudeDir(dir, 1).LE(AreaType.Garden).GN(sym.Garden, sym.FullFloorMarker),
+                    (cg, dir) => cg.ExtrudeDir(dir, 1).LE(AreaStyles.Garden()).GN(sym.Garden, sym.FullFloorMarker),
                     (prog, node) => 
                         prog.Set(() => ldk.sgShapes
                             .IslandExtrudeIter(node.LE.CG().BottomLayer(), 3, 0.7f)
-                            .LE(AreaType.Garden)
+                            .LE(AreaStyles.Garden())
                             .Minus(prog.State.WorldState.Added)
                             .MapGeom(cg => cg
                                 .SplitToConnected().First(cg => cg.Intersects(node.LE.CG()))
@@ -1033,7 +1034,7 @@ namespace ShapeGrammar
                 {
                     var orthDir = ExtensionMethods.OrthogonalHorizontalDir(dir);
                     return cg.ExtrudeDir(orthDir, width)
-                                .LE(AreaType.FlatRoof).GN(sym.SideWallTop(orthDir), sym.FullFloorMarker);
+                                .LE(AreaStyles.FlatRoof()).GN(sym.SideWallTop(orthDir), sym.FullFloorMarker);
                 },
                 Empty(),//MoveVertically(0, 5),
                 Empty(),
@@ -1044,7 +1045,7 @@ namespace ShapeGrammar
             => FullFloorPlaceNear(
                     nearWhatSym,
                     sym.WatchPost,
-                    () => towerTopF().SetAreaType(AreaType.FlatRoof),
+                    () => towerTopF().SetAreaType(AreaStyles.FlatRoof()),
                     MoveVertically(heightChange, minBottomHeight),
                     Empty(),
                     ldk.con.ConnectByBalconyStairsOutside,

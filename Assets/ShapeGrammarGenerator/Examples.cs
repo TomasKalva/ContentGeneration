@@ -18,11 +18,10 @@ namespace ShapeGrammar
         public QueryContext qc { get; }
         public ShapeGrammarStyles sgStyles { get; }
         public ShapeGrammarShapes sgShapes { get; }
-        public AreaStyles ars { get; }
         public Placement pl { get; }
         public Paths paths { get; }
         public Transformations tr { get; }
-        public StyleRules houseStyleRules { get; }
+        public StyleApplier houseStyleRules { get; }
         public WorldChanging wc { get; }
         public Connections con { get; }
 
@@ -38,32 +37,32 @@ namespace ShapeGrammar
             paths = new Paths(grid);
             con = new Connections(grid);
             tr = new Transformations(this);
-            ars = new AreaStyles(new GridPrimitives(gp), sgStyles);
-            houseStyleRules = new StyleRules(
-                new StyleRule(g => g.WithAreaType(AreaType.Room), g => g.SetGrammarStyle(sgStyles.PlainRoomStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.Reservation), g => g.SetGrammarStyle(sgStyles.EmptyStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.OpenRoom), g => g.SetGrammarStyle(sgStyles.OpenRoomStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.FlatRoof), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.GableRoof), g => g.SetGrammarStyle(area => sgStyles.GableRoofStyle(area, lib))),
-                new StyleRule(g => g.WithAreaType(AreaType.PointyRoof), g => g.SetGrammarStyle(area => sgStyles.PointyRoofStyle(area, lib))),
-                new StyleRule(g => g.WithAreaType(AreaType.CrossRoof), g => g.SetGrammarStyle(area => sgStyles.CrossRoofStyle(area, lib))),
-                new StyleRule(g => g.WithAreaType(AreaType.Foundation), g => g.SetGrammarStyle(sgStyles.FoundationStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.Path), g => g.SetGrammarStyle(sgStyles.StairsPathStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.Garden), g => g.SetGrammarStyle(sgStyles.GardenStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.Yard), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.WallTop), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.Wall), g => g.SetGrammarStyle(sgStyles.FoundationStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.CliffFoundation), g => g.SetGrammarStyle(sgStyles.CliffFoundationStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.Empty), g => g.SetGrammarStyle(sgStyles.EmptyStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.Inside), g => g.SetGrammarStyle(sgStyles.RoomStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.Platform), g => g.SetGrammarStyle(sgStyles.PlatformStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.Debug), g => g.SetGrammarStyle(sgStyles.RoomStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.Colonnade), g => g.SetGrammarStyle(sgStyles.ColonnadeStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.Elevator), g => g.SetGrammarStyle(area => sgStyles.ElevatorStyle(area, lib))),
-                new StyleRule(g => g.WithAreaType(AreaType.Fall), g => g.SetGrammarStyle(area => sgStyles.FallStyle(area))),
-                new StyleRule(g => g.WithAreaType(AreaType.Door), g => g.SetGrammarStyle(sgStyles.DoorStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.Bridge), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
-                new StyleRule(g => g.WithAreaType(AreaType.NoFloor), g => g.SetGrammarStyle(sgStyles.NoFloor))
+            AreaStyles.Initialize(new GridPrimitives(gp), sgStyles);
+            houseStyleRules = new StyleApplier(
+                /*new StyleRule(g => g.WithAreaType(AreaStyles.Room()), g => g.SetGrammarStyle(sgStyles.PlainRoomStyle)),
+                new StyleRule(g => g.WithAreaType(AreaStyles.Reservation()), g => g.SetGrammarStyle(sgStyles.EmptyStyle)),
+                new StyleRule(g => g.WithAreaType(AreaStyles.OpenRoom()), g => g.SetGrammarStyle(sgStyles.OpenRoomStyle)),
+                new StyleRule(g => g.WithAreaType(AreaStyles.FlatRoof()), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
+                new StyleRule(g => g.WithAreaType(AreaStyles.GableRoof()), g => g.SetGrammarStyle(area => sgStyles.GableRoofStyle(area, lib))),
+                new StyleRule(g => g.WithAreaType(AreaStyles.PointyRoof()), g => g.SetGrammarStyle(area => sgStyles.PointyRoofStyle(area, lib))),
+                new StyleRule(g => g.WithAreaType(AreaStyles.CrossRoof()), g => g.SetGrammarStyle(area => sgStyles.CrossRoofStyle(area, lib))),
+                new StyleRule(g => g.WithAreaType(AreaStyles.Foundation()), g => g.SetGrammarStyle(sgStyles.FoundationStyle)),
+                new StyleRule(g => g.WithAreaType(AreaStyles.Path()), g => g.SetGrammarStyle(sgStyles.StairsPathStyle)),
+                new StyleRule(g => g.WithAreaType(AreaStyles.Garden()), g => g.SetGrammarStyle(sgStyles.GardenStyle)),
+                new StyleRule(g => g.WithAreaType(AreaStyles.Yard()), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
+                new StyleRule(g => g.WithAreaType(AreaStyles.WallTop()), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
+                new StyleRule(g => g.WithAreaType(AreaStyles.Wall()), g => g.SetGrammarStyle(sgStyles.FoundationStyle)),
+                new StyleRule(g => g.WithAreaType(AreaStyles.CliffFoundation()), g => g.SetGrammarStyle(sgStyles.CliffFoundationStyle)),
+                new StyleRule(g => g.WithAreaType(AreaStyles.Empty()), g => g.SetGrammarStyle(sgStyles.EmptyStyle)),
+                new StyleRule(g => g.WithAreaType(AreaStyles.Inside()), g => g.SetGrammarStyle(sgStyles.RoomStyle)),
+                new StyleRule(g => g.WithAreaType(AreaStyles.Platform()), g => g.SetGrammarStyle(sgStyles.PlatformStyle)),
+                new StyleRule(g => g.WithAreaType(AreaStyles.Debug()), g => g.SetGrammarStyle(sgStyles.RoomStyle)),
+                new StyleRule(g => g.WithAreaType(AreaStyles.Colonnade()), g => g.SetGrammarStyle(sgStyles.ColonnadeStyle)),
+                new StyleRule(g => g.WithAreaType(AreaStyle.Elevator), g => g.SetGrammarStyle(area => sgStyles.ElevatorStyle(area, lib))),
+                new StyleRule(g => g.WithAreaType(AreaStyles.Fall()), g => g.SetGrammarStyle(area => sgStyles.FallStyle(area))),
+                new StyleRule(g => g.WithAreaType(AreaStyles.Door()), g => g.SetGrammarStyle(sgStyles.DoorStyle)),
+                new StyleRule(g => g.WithAreaType(AreaStyles.Bridge()), g => g.SetGrammarStyle(sgStyles.FlatRoofStyle)),
+                new StyleRule(g => g.WithAreaType(AreaStyles.NoFloor()), g => g.SetGrammarStyle(sgStyles.NoFloor))*/
             );
             wc = new WorldChanging(this);
         }
@@ -73,7 +72,7 @@ namespace ShapeGrammar
     {
         public Examples(ShapeGrammarObjectStyle defaultHouseStyle, ShapeGrammarObjectStyle gardenStyle, GeometricPrimitives gp, Transform worldParent, Libraries lib) : base(defaultHouseStyle, gardenStyle, gp, worldParent, lib)
         { }
-        
+        /*
         public void IslandAndHouses()
         {
             // island
@@ -83,21 +82,21 @@ namespace ShapeGrammar
             // house
             var house = sgShapes.SimpleHouseWithFoundation(new Box2Int(new Vector2Int(2, 2), new Vector2Int(8, 5)), 5);
 
-            var houseBottom = house.WithAreaType(AreaType.Foundation).FirstOrDefault().CG().CubeGroupLayer(Vector3Int.down);
+            var houseBottom = house.WithAreaType(AreaStyles.Foundation()).FirstOrDefault().CG().CubeGroupLayer(Vector3Int.down);
             var houseToIslandDir = island.MinkowskiMinus(houseBottom).GetRandom();
             house = house.MoveBy(houseToIslandDir);
 
             house.ApplyGrammarStyleRules(houseStyleRules);
 
             // wall
-            var wallTop = island.ExtrudeHor(true, false).Minus(island).MoveBy(Vector3Int.up).SetGrammarStyle(sgStyles.FlatRoofStyle).LE(AreaType.Wall);
-            sgShapes.Foundation(wallTop).SetGrammarStyle(sgStyles.FoundationStyle);
+            var wallTop = island.ExtrudeHor(true, false).Minus(island).MoveBy(Vector3Int.up).SetGrammarStyle(sgStyles.FlatRoofStyle).LE(AreaStyles.Wall());
+            sgShapes.Foundation(wallTop).SetAreaType(AreaStyles.Foundation()).ApplyStyle();
 
             // balcony
-            var balconyRoom = house.WithAreaType(AreaType.Room).FirstOrDefault();
-            var balcony = sgShapes.BalconyWide(balconyRoom.CG()).LE(AreaType.Balcony);
-            house = house.ReplaceLeafsGrp(le => le == balconyRoom, le => new LevelGroupElement(grid, AreaType.None, balconyRoom, balcony));
-            house.WithAreaType(AreaType.Balcony).FirstOrDefault().SetGrammarStyle(cg => sgStyles.BalconyStyle(cg, house.WithAreaType(AreaType.Room).FirstOrDefault().CG()));
+            var balconyRoom = house.WithAreaType(AreaStyles.Room()).FirstOrDefault();
+            var balcony = sgShapes.BalconyWide(balconyRoom.CG()).LE(AreaStyles.Balcony());
+            house = house.ReplaceLeafsGrp(le => le == balconyRoom, le => new LevelGroupElement(grid, AreaStyles.None(), balconyRoom, balcony));
+            house.WithAreaType(AreaStyles.Balcony()).FirstOrDefault().SetGrammarStyle(cg => sgStyles.BalconyStyle(cg, house.WithAreaType(AreaStyles.Room()).FirstOrDefault().CG()));
 
             // house 2
             var house2 = house.MoveBy(Vector3Int.right * 8).ApplyGrammarStyleRules(houseStyleRules);
@@ -108,15 +107,16 @@ namespace ShapeGrammar
                 .BoundaryFacesH(Vector3Int.back).Facets.FirstOrDefault();
             var house3 = house2.CG().Symmetrize(symmetryFace).SetGrammarStyle(sgStyles.RoomStyle);
         }
+        */
 
         public LevelElement Island()
         {
             var island = sgShapes.IslandExtrudeIter(grid[0, 0, 0].Group(), 13, 0.3f);
 
             // wall
-            var wallTop = island.ExtrudeHor(true, false).Minus(island).MoveBy(Vector3Int.up).LE(AreaType.WallTop);
+            var wallTop = island.ExtrudeHor(true, false).Minus(island).MoveBy(Vector3Int.up).LE(AreaStyles.WallTop());
             var foundation = sgShapes.Foundation(wallTop);
-            var total = new LevelGroupElement(grid, AreaType.None, island.LE(AreaType.Garden), foundation, wallTop);
+            var total = new LevelGroupElement(grid, AreaStyles.None(), island.LE(AreaStyles.Garden()), foundation, wallTop);
 
             total.ApplyGrammarStyleRules(houseStyleRules);
 
@@ -143,7 +143,7 @@ namespace ShapeGrammar
             housesRoofs = housesRoofs.Select(houseRoof =>
                     qc.RaiseRandomly(houseRoof as LevelGroupElement, () => UnityEngine.Random.Range(1, 4))
                     .Select(part => sgShapes.TurnIntoHouse(part.CG()))
-                    .SetChildrenAreaType(AreaType.Room));
+                    .SetChildrenAreaType(AreaStyles.Room()));
             
             housesRoofs.ApplyGrammarStyleRules(houseStyleRules);
             
@@ -180,7 +180,7 @@ namespace ShapeGrammar
         {
             var boxSequence = ExtensionMethods.BoxSequence(() => ExtensionMethods.RandomBox(new Vector2Int(3, 3), new Vector2Int(5, 5)));
             var town = pl.MoveToNotOverlap(qc.FlatBoxes(boxSequence, 16));
-            town = town.Select(le => le.SetAreaType(AreaType.Room));
+            town = town.Select(le => le.SetAreaType(AreaStyles.Room()));
             town.ApplyGrammarStyleRules(houseStyleRules);
         }
 
@@ -193,8 +193,8 @@ namespace ShapeGrammar
 
 
             // add paths between floors
-            var floors = tower.WithAreaType(AreaType.Room);
-            var floorsAndRoof = floors.Concat(tower.WithAreaType(AreaType.FlatRoof));
+            var floors = tower.WithAreaType(AreaStyles.Room());
+            var floorsAndRoof = floors.Concat(tower.WithAreaType(AreaStyles.FlatRoof()));
             floors.ForEach(floor =>
             {
                 var upperFloor = floor.NeighborsInDirection(Vector3Int.up, floorsAndRoof).FirstOrDefault();
@@ -252,17 +252,17 @@ namespace ShapeGrammar
 
         public LevelElement Surrounded()
         {
-            var root = new LevelGroupElement(grid, AreaType.WorldRoot);
+            var root = new LevelGroupElement(grid, AreaStyles.Room());
 
             // Create ground layout of the tower
-            var yard = qc.GetBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)).InflateY(0, 1)).LE(AreaType.Garden);
+            var yard = qc.GetBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)).InflateY(0, 1)).LE(AreaStyles.Garden());
 
 
             var boxSequence = ExtensionMethods.BoxSequence(() => ExtensionMethods.RandomBox(new Vector2Int(3, 3), new Vector2Int(7, 7)));
-            var houses = qc.FlatBoxes(boxSequence, 6).Select(le => le.SetAreaType(AreaType.House));
+            var houses = qc.FlatBoxes(boxSequence, 6).Select(le => le.SetAreaType(AreaStyles.Room()));
             
             houses = pl.SurroundWith(yard, houses);
-            houses = houses.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => sgShapes.SimpleHouseWithFoundation(g.CG(), 3));
+            houses = houses.ReplaceLeafsGrp(g => g.AreaStyle == AreaStyles.Room(), g => sgShapes.SimpleHouseWithFoundation(g.CG(), 3));
 
             var wall = sgShapes.WallAround(yard, 2).Minus(houses);
 
@@ -311,17 +311,17 @@ namespace ShapeGrammar
         {
             var houseBox = qc.GetFlatBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 8)), 0);
             
-            var box = houseBox.CG().ExtrudeVer(Vector3Int.up, 10).LE(AreaType.Room);
-            var splitBox = box.SplitRel(Vector3Int.right, AreaType.None, 0.5f).SplitRel(Vector3Int.up, AreaType.Room, 0.5f);
+            var box = houseBox.CG().ExtrudeVer(Vector3Int.up, 10).LE(AreaStyles.Room());
+            var splitBox = box.SplitRel(Vector3Int.right, AreaStyles.None(), 0.5f).SplitRel(Vector3Int.up, AreaStyles.Room(), 0.5f);
 
             var wall = splitBox.Leafs().ElementAt(0);
 
             var empty = splitBox.Leafs().ElementAt(3);
 
             splitBox
-                .ReplaceLeafsGrp(0, le => le.SetAreaType(AreaType.Wall))
-                .ReplaceLeafsGrp(1, le => le.SetAreaType(AreaType.OpenRoom))
-                .ReplaceLeafsGrp(3, le => le.SetAreaType(AreaType.Empty))
+                .ReplaceLeafsGrp(0, le => le.SetAreaType(AreaStyles.Wall()))
+                .ReplaceLeafsGrp(1, le => le.SetAreaType(AreaStyles.OpenRoom()))
+                .ReplaceLeafsGrp(3, le => le.SetAreaType(AreaStyles.Empty()))
                 .ApplyGrammarStyleRules(houseStyleRules);
         }
 
@@ -332,12 +332,12 @@ namespace ShapeGrammar
             Func<LevelGeometryElement, LevelElement> brokenFloor = (floor) =>
             {
                 var floorPlan = tr.SplittingFloorPlan(floor, 4);
-                var partlyBrokenFloor = tr.PickAndConnect(floorPlan, tr.PickWithChance(0.5f)).ReplaceLeafs(le => le.AreaType != AreaType.Empty, le => le.SetAreaType(AreaType.Platform));
+                var partlyBrokenFloor = tr.PickAndConnect(floorPlan, tr.PickWithChance(0.5f)).ReplaceLeafs(le => le.AreaStyle != AreaStyles.Empty(), le => le.SetAreaType(AreaStyles.Platform()));
                 return partlyBrokenFloor;
             };
 
-            var house = floorBox.CG().ExtrudeVer(Vector3Int.up, 15).LE(AreaType.Room);
-            var houseFloors = house.SplitRel(Vector3Int.up, AreaType.None, 0.2f, 0.5f, 0.7f).ReplaceLeafsGrp(_ => true, le => brokenFloor(le));
+            var house = floorBox.CG().ExtrudeVer(Vector3Int.up, 15).LE(AreaStyles.Room());
+            var houseFloors = house.SplitRel(Vector3Int.up, AreaStyles.None(), 0.2f, 0.5f, 0.7f).ReplaceLeafsGrp(_ => true, le => brokenFloor(le));
 
             houseFloors.ApplyGrammarStyleRules(houseStyleRules);
 
@@ -355,16 +355,16 @@ namespace ShapeGrammar
 
         public LevelElement DebugPlatform()
         {
-            var platform = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 1)).SetAreaType(AreaType.Platform);
+            var platform = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 1)).SetAreaType(AreaStyles.Platform());
 
             platform.ApplyGrammarStyleRules(houseStyleRules);
             return platform;
         }
-
+        /*
         public LevelElement ConnectByElevator()
         {
-            var bottomPlatform = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 5)).SetAreaType(AreaType.Platform);
-            var topPlatform = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(5, 10)).SetAreaType(AreaType.Platform);
+            var bottomPlatform = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 5)).SetAreaType(AreaStyles.Platform());
+            var topPlatform = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(5, 10)).SetAreaType(AreaStyles.Platform());
 
             bottomPlatform.ApplyGrammarStyleRules(houseStyleRules);
             topPlatform.ApplyGrammarStyleRules(houseStyleRules);
@@ -374,12 +374,12 @@ namespace ShapeGrammar
             path.ApplyGrammarStyleRules(houseStyleRules);
 
             return topPlatform;
-        }
+        }*/
 
         public LevelElement ConnectByDoor()
         {
-            var room1 = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 5)).SetAreaType(AreaType.Room);
-            var room2 = sgShapes.Room(new Box2Int(new Vector2Int(4, 0), new Vector2Int(8, 4)).InflateY(0, 5)).SetAreaType(AreaType.Room);
+            var room1 = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 5)).SetAreaType(AreaStyles.Room());
+            var room2 = sgShapes.Room(new Box2Int(new Vector2Int(4, 0), new Vector2Int(8, 4)).InflateY(0, 5)).SetAreaType(AreaStyles.Room());
 
             room1.ApplyGrammarStyleRules(houseStyleRules);
             room2.ApplyGrammarStyleRules(houseStyleRules);

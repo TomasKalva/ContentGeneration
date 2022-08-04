@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.ShapeGrammarGenerator;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace ShapeGrammar
     {
         public static LevelDevelopmentKit ldk { get; set; }
         public static Productions pr { get; set; }
-        public static StyleRules StyleRules { get; set; }
+        public static StyleApplier StyleRules { get; set; }
 
 
         public ShapeGrammarState State { get; }
@@ -128,7 +129,7 @@ namespace ShapeGrammar
             var reservations = CurrentNodes
                 .Select(node =>
                     State.NewProgram(prog => prog
-                        .Set(() => node.LE.CG().ExtrudeVer(Vector3Int.up, height).LE(AreaType.Reservation).GN(reservationSymbolF(node)))
+                        .Set(() => node.LE.CG().ExtrudeVer(Vector3Int.up, height).LE(AreaStyles.Reservation()).GN(reservationSymbolF(node)))
                         .NotTaken()
                     )
                 );

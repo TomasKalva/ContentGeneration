@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.ShapeGrammarGenerator;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,7 +38,7 @@ namespace ShapeGrammar
                 }
                 return moved;
             });
-            return new LevelGroupElement(levelGroupElement.Grid, AreaType.None, movedElements.ToList());
+            return new LevelGroupElement(levelGroupElement.Grid, AreaStyles.None(), movedElements.ToList());
         }
 
         /// <summary>
@@ -53,7 +54,7 @@ namespace ShapeGrammar
         /// </summary>
         public LevelElement MoveToNotOverlap(LevelElement fixedElement, LevelElement toMove)
         {
-            var bothMoved = MoveLevelGroup(new LevelGroupElement(fixedElement.Grid, AreaType.None, fixedElement, toMove), (moved, le) => le.MovesToNotIntersectXZ(moved).Ms, moves => moves.FirstOrDefault());
+            var bothMoved = MoveLevelGroup(new LevelGroupElement(fixedElement.Grid, AreaStyles.None(), fixedElement, toMove), (moved, le) => le.MovesToNotIntersectXZ(moved).Ms, moves => moves.FirstOrDefault());
             return bothMoved.LevelElements[1];
         }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.ShapeGrammarGenerator;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,11 +24,11 @@ namespace ShapeGrammar
         public LevelGroupElement SubdivideRoom(LevelGeometryElement box, Vector3Int horDir, float width)
         {
 
-            var splitBox = box.SplitRel(horDir, AreaType.None, width).SplitRel(Vector3Int.up, AreaType.Room, 0.5f);
+            var splitBox = box.SplitRel(horDir, AreaStyles.None(), width).SplitRel(Vector3Int.up, AreaStyles.Room(), 0.5f);
             return splitBox
-                .ReplaceLeafsGrp(0, le => le.SetAreaType(AreaType.Wall))
-                .ReplaceLeafsGrp(1, le => le.SetAreaType(AreaType.OpenRoom))
-                .ReplaceLeafsGrp(3, le => le.SetAreaType(AreaType.Empty));
+                .ReplaceLeafsGrp(0, le => le.SetAreaType(AreaStyles.Wall()))
+                .ReplaceLeafsGrp(1, le => le.SetAreaType(AreaStyles.OpenRoom()))
+                .ReplaceLeafsGrp(3, le => le.SetAreaType(AreaStyles.Empty()));
         }
 
         public LevelGroupElement SplittingFloorPlan(LevelGeometryElement box, int maxRoomSize)
@@ -38,13 +39,13 @@ namespace ShapeGrammar
         public Picker PickWithChance(float pickProb)
         {
             return lge =>
-                lge.LevelElements.Select(le => UnityEngine.Random.Range(0f, 1f) < pickProb ? le : le.SetAreaType(AreaType.Empty)).ToLevelGroupElement(lge.Grid);
+                lge.LevelElements.Select(le => UnityEngine.Random.Range(0f, 1f) < pickProb ? le : le.SetAreaType(AreaStyles.Empty())).ToLevelGroupElement(lge.Grid);
         }
 
         public Picker Dropper(int dropCount)
         {
             return lge =>
-                lge.LevelElements.Shuffle().Select((le, i) => i >= dropCount ? le : le.SetAreaType(AreaType.Empty)).ToLevelGroupElement(lge.Grid);
+                lge.LevelElements.Shuffle().Select((le, i) => i >= dropCount ? le : le.SetAreaType(AreaStyles.Empty())).ToLevelGroupElement(lge.Grid);
         }
 
         public Picker DropUntilDisconnected(LevelElement start, LevelElement middle, LevelElement end)
@@ -60,7 +61,7 @@ namespace ShapeGrammar
         {
             var picked = picker(floorPlan);
             var nonEmpty = picked.NonEmpty().CG().SplitToConnected().ToLevelGroupElement(floorPlan.Grid);
-            var empty = picked.Empty().CG().SplitToConnected().ToLevelGroupElement(floorPlan.Grid).ReplaceLeafs(_ => true, le => le.SetAreaType(AreaType.Empty));
+            var empty = picked.Empty().CG().SplitToConnected().ToLevelGroupElement(floorPlan.Grid).ReplaceLeafs(_ => true, le => le.SetAreaType(AreaStyles.Empty()));
             return nonEmpty.Merge(empty);
         }
 
@@ -68,9 +69,9 @@ namespace ShapeGrammar
         {
             var floorBox = box.CG().CubeGroupMaxLayer(Vector3Int.down);
             var house = box;
-            var allFloors = house.Split(Vector3Int.up, AreaType.None, floors);
+            var allFloors = house.Split(Vector3Int.up, AreaStyles.None(), floors);
             var houseFloors = allFloors.ReplaceLeafsGrp(le => le != allFloors.Leafs().ElementAt(0), le => floorCreator(le))
-                    .ReplaceLeafsGrp(0, le => le.SetAreaType(AreaType.Room));
+                    .ReplaceLeafsGrp(0, le => le.SetAreaType(AreaStyles.Room()));
             
             return houseFloors;
         }
@@ -78,7 +79,7 @@ namespace ShapeGrammar
         public LevelGroupElement BrokenFloor(LevelGeometryElement box)
         {
             var floorPlan = SplittingFloorPlan(box, 3);
-            var partlyBrokenFloor = PickAndConnect(floorPlan, Dropper(2)).ReplaceLeafsGrp(le => le.AreaType != AreaType.Empty, le => le.SetAreaType(AreaType.Platform));
+            var partlyBrokenFloor = PickAndConnect(floorPlan, Dropper(2)).ReplaceLeafsGrp(le => le.AreaStyle != AreaStyles.Empty(), le => le.SetAreaType(AreaStyles.Platform()));
             return partlyBrokenFloor;
         }
 
@@ -87,7 +88,7 @@ namespace ShapeGrammar
             return (start, middle, end) => 
             {
                 Picker picker = DropUntilDisconnected(start, middle, end);
-                return PickAndConnect(partitioner(middle), picker).Leafs().Where(le => le.AreaType != AreaType.Empty).ToLevelGroupElement(start.Grid);
+                return PickAndConnect(partitioner(middle), picker).Leafs().Where(le => le.AreaStyle != AreaStyles.Empty()).ToLevelGroupElement(start.Grid);
             };
         }
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.ShapeGrammarGenerator;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,7 +32,7 @@ namespace ShapeGrammar
                             from fl2 in fl1.NeighborsHor().Where(neighbor => area2FloorSet.Contains(neighbor))
                             select new []{ fl1, fl2 };
             return neighbors.Any() ?
-                neighbors.GetRandom().ToCubeGroup(le1.Grid).LE(AreaType.Door) :
+                neighbors.GetRandom().ToCubeGroup(le1.Grid).LE(AreaStyles.Door()) :
                 null;
         }
 
@@ -47,7 +48,7 @@ namespace ShapeGrammar
             var space2 = WallSpaceInside(le2);
             Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.StairsNeighbors(), space1.Merge(space2));
             var path = paths.ConnectByPath(space1.BottomLayer(), space2.BottomLayer(), neighbors);
-            return path != null ? path.LE(AreaType.Path) : null;
+            return path != null ? path.LE(AreaStyles.Path()) : null;
         }
 
         /// <summary>
@@ -77,10 +78,10 @@ namespace ShapeGrammar
                 var searchSpace = WallSpaceOutside(le1).Merge(WallSpaceOutside(le2)).Merge(start).Merge(end);
                 Neighbors<PathNode> neighbors = PathNode.NotIn(PathNode.BoundedBy(PathNode.StairsNeighbors(), searchSpace), notIntersecting.CG().Minus(end));
                 var path = paths.ConnectByPath(start, end, neighbors);
-                return path != null ? path.LE(AreaType.Path) : null;
+                return path != null ? path.LE(AreaStyles.Path()) : null;
             };
         }
-
+        /*
         public LevelGeometryElement ConnectByElevator(LevelElement le1, LevelElement le2)
         {
             var space1 = le1.CG();
@@ -89,9 +90,9 @@ namespace ShapeGrammar
             var end = space2.BottomLayer();
             Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.ElevatorNeighbors(end), space1.Merge(space2));
             var path = paths.ConnectByPath(start, end, neighbors);
-            return path != null ? path.LE(AreaType.Elevator) : null;
+            return path != null ? path.LE(AreaStyles.Elevator) : null;
         }
-
+        */
         public LevelGeometryElement ConnectByFall(LevelElement from, LevelElement to)
         {
             var space1 = from.CG();
@@ -100,7 +101,7 @@ namespace ShapeGrammar
             var end = space2.BottomLayer();
             Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.ElevatorNeighbors(end), space1.Merge(space2));
             var path = paths.ConnectByPath(start, end, neighbors);
-            return path != null ? path.LE(AreaType.Fall) : null;
+            return path != null ? path.LE(AreaStyles.Fall()) : null;
         }
 
         public Connection ConnectByBalconyStairsOutside(LevelElement notIntersecting)
@@ -121,7 +122,7 @@ namespace ShapeGrammar
                             notIntersectingCG
                     );
                 var path = paths.ConnectByPath(start, end, neighbors);
-                return path != null ? path.LE(AreaType.Path) : null;
+                return path != null ? path.LE(AreaStyles.Path()) : null;
             };
         }
 
@@ -133,7 +134,7 @@ namespace ShapeGrammar
                 var space2 = le2.CG();
                 Neighbors<PathNode> neighbors = PathNode.NotIn(PathNode.StraightHorizontalNeighbors(), notIntersecting.CG());
                 var path = paths.ConnectByPath(space1.BottomLayer(), space2.BottomLayer(), neighbors);
-                return path != null ? path.LE(AreaType.Path) : null;
+                return path != null ? path.LE(AreaStyles.Path()) : null;
             };
         }
 
@@ -151,7 +152,7 @@ namespace ShapeGrammar
             var end = space2.BottomLayer();
             Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.StairsNeighbors(), space1.Merge(space2).Merge(bounds.CG()));
             var path = paths.ConnectByPath(start, end, neighbors);
-            return path != null ? path.LE(AreaType.Path) : null;
+            return path != null ? path.LE(AreaStyles.Path()) : null;
         }
     }
 }

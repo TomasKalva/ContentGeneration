@@ -1,4 +1,5 @@
-﻿using ContentGeneration.Assets.UI;
+﻿using Assets.ShapeGrammarGenerator;
+using ContentGeneration.Assets.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -146,7 +147,7 @@ namespace ShapeGrammar
         public LevelGeometryElement GetFlatBox(Box2Int box, int y = 0)
         {
             var cubes = (box.InflateY(0, 1) + y * Vector3Int.up).Select(i => QueriedGrid[i]).ToList();
-            return new CubeGroup(QueriedGrid, cubes).LE(AreaType.None);
+            return new CubeGroup(QueriedGrid, cubes).LE(AreaStyles.None());
         }
 
         /// <summary>
@@ -198,7 +199,7 @@ namespace ShapeGrammar
                 var dir = lengthX < lengthZ ?
                     Vector3Int.forward : Vector3Int.right;
                 var relDist = UnityEngine.Random.Range(0.3f, 0.7f);
-                var splitGroup = levelElement.SplitRel(dir, levelElement.AreaType, relDist);
+                var splitGroup = levelElement.SplitRel(dir, levelElement.AreaStyle, relDist);
                 return splitGroup.Select(lg => RecursivelySplitXZImpl((LevelGeometryElement)lg, maxSide));
             }
         }
@@ -220,14 +221,14 @@ namespace ShapeGrammar
             else
             {
                 var relDist = UnityEngine.Random.Range(0.3f, 0.7f);
-                var splitGroup = levelElement.SplitRel(maxLengthDir, levelElement.AreaType, relDist);
+                var splitGroup = levelElement.SplitRel(maxLengthDir, levelElement.AreaStyle, relDist);
                 return splitGroup.Select(lg => RecursivelySplitImpl((LevelGeometryElement)lg, maxSide));
             }
         }
 
         public LevelGroupElement FlatBoxes(IEnumerable<Box2Int> boxes, int count)
         {
-            return new LevelGroupElement(QueriedGrid, AreaType.None, boxes.Select(box => GetFlatBox(box)).Take(count).ToList<LevelElement>());
+            return new LevelGroupElement(QueriedGrid, AreaStyles.None(), boxes.Select(box => GetFlatBox(box)).Take(count).ToList<LevelElement>());
         }
 
         public LevelGroupElement FlatBoxes(int minSize, int maxSize, int count)
@@ -238,14 +239,14 @@ namespace ShapeGrammar
 
         public LevelGroupElement LiftRandomly(LevelGroupElement lge, Func<int> liftingF)
         {
-            var newGroups = lge.LevelElements.Select(g => new CubeGroup(g.Grid, g.MoveBy(Vector3Int.up * liftingF()).Cubes().ToList()).LE(g.AreaType));
-            return new LevelGroupElement(lge.Grid, lge.AreaType, newGroups.ToList<LevelElement>());
+            var newGroups = lge.LevelElements.Select(g => new CubeGroup(g.Grid, g.MoveBy(Vector3Int.up * liftingF()).Cubes().ToList()).LE(g.AreaStyle));
+            return new LevelGroupElement(lge.Grid, lge.AreaStyle, newGroups.ToList<LevelElement>());
         }
 
         public LevelGroupElement RaiseRandomly(LevelGroupElement lge, Func<int> liftingF)
         {
-            var newGroups = lge.LevelElements.Select(g => new CubeGroup(g.Grid, g.Cubes().Concat(g.CG().ExtrudeVer(Vector3Int.up, liftingF()).Cubes).ToList()).LE(g.AreaType));
-            return new LevelGroupElement(lge.Grid, lge.AreaType, newGroups.ToList<LevelElement>());
+            var newGroups = lge.LevelElements.Select(g => new CubeGroup(g.Grid, g.Cubes().Concat(g.CG().ExtrudeVer(Vector3Int.up, liftingF()).Cubes).ToList()).LE(g.AreaStyle));
+            return new LevelGroupElement(lge.Grid, lge.AreaStyle, newGroups.ToList<LevelElement>());
         }
 
         public CubeGroup GetPlatform(Box2Int areaXZ, int posY)
@@ -317,7 +318,7 @@ namespace ShapeGrammar
                 }
                 groups = newGroups;
             }
-            return new LevelGroupElement(QueriedGrid, AreaType.None, groups.Select(g => g.LE()).ToList<LevelElement>());
+            return new LevelGroupElement(QueriedGrid, AreaStyles.None(), groups.Select(g => g.LE()).ToList<LevelElement>());
         }
     }
 

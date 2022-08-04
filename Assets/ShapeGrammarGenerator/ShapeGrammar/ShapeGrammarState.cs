@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.ShapeGrammarGenerator;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -394,9 +395,9 @@ namespace ShapeGrammar
             printingState.Show();
         }
 
-        public void ShowVerticallyTaken(StyleRules houseStyleRules)
+        public void ShowVerticallyTaken(StyleApplier houseStyleRules)
         {
-            VerticallyTaken.SetAreaType(AreaType.Garden).ApplyGrammarStyleRules(houseStyleRules);
+            VerticallyTaken.SetAreaType(AreaStyles.Garden()).ApplyGrammarStyleRules(houseStyleRules);
         }
         #endregion
 

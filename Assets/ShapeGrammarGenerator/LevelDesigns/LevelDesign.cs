@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.ShapeGrammarGenerator;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -32,7 +33,7 @@ namespace ShapeGrammar
         {
             return addingState =>
             {
-                var group = new LevelGroupElement(ldk.grid, AreaType.None);
+                var group = new LevelGroupElement(ldk.grid, AreaStyles.None());
 
                 Func<LevelElement> smallBox = () =>
                 {
@@ -74,20 +75,20 @@ namespace ShapeGrammar
 
                 Func<LevelElement> surrounded = () =>
                 {
-                    var surrounded = new LevelGroupElement(ldk.grid, AreaType.None);
+                    var surrounded = new LevelGroupElement(ldk.grid, AreaStyles.None());
 
                     // Create ground layout of the tower
-                    var yard = ldk.qc.GetBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)).InflateY(0, 1)).LE(AreaType.Garden);
+                    var yard = ldk.qc.GetBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)).InflateY(0, 1)).LE(AreaStyles.Garden());
 
                     var boxSequence = ExtensionMethods.BoxSequence(() => ExtensionMethods.RandomBox(new Vector2Int(3, 3), new Vector2Int(7, 7)));
-                    var houses = ldk.qc.FlatBoxes(boxSequence, 6).Select(le => le.SetAreaType(AreaType.House));
+                    var houses = ldk.qc.FlatBoxes(boxSequence, 6).Select(le => le.SetAreaType(AreaStyles.Room()));
 
                     houses = ldk.pl.SurroundWith(yard, houses);
-                    houses = houses.ReplaceLeafsGrp(g => g.AreaType == AreaType.House, g => ldk.sgShapes.SimpleHouseWithFoundation(g.CG(), 3));
+                    houses = houses.ReplaceLeafsGrp(g => g.AreaStyle == AreaStyles.Room(), g => ldk.sgShapes.SimpleHouseWithFoundation(g.CG(), 3));
 
                     var wall = ldk.sgShapes.WallAround(yard, 2).Minus(houses);
 
-                    surrounded = surrounded.AddAll(yard.CG().ExtrudeVer(Vector3Int.up, 2).Merge(yard.CG()).LE(AreaType.Garden), houses, wall);
+                    surrounded = surrounded.AddAll(yard.CG().ExtrudeVer(Vector3Int.up, 2).Merge(yard.CG()).LE(AreaStyles.Garden()), houses, wall);
                     return surrounded;
                 };
 
@@ -96,9 +97,9 @@ namespace ShapeGrammar
                     var island = ldk.sgShapes.IslandExtrudeIter(ldk.grid[0, 0, 0].Group(), 13, 0.3f);
 
                     // wall
-                    var wallTop = island.ExtrudeHor(true, false).Minus(island).MoveBy(Vector3Int.up).LE(AreaType.WallTop);
+                    var wallTop = island.ExtrudeHor(true, false).Minus(island).MoveBy(Vector3Int.up).LE(AreaStyles.WallTop());
                     var foundation = ldk.sgShapes.Foundation(wallTop);
-                    return new LevelGroupElement(ldk.grid, AreaType.None, island.LE(AreaType.Garden), foundation, wallTop);
+                    return new LevelGroupElement(ldk.grid, AreaStyles.None(), island.LE(AreaStyles.Garden()), foundation, wallTop);
                 };
 
                 var wc = ldk.wc;

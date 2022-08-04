@@ -1,4 +1,5 @@
-﻿using ShapeGrammar;
+﻿using Assets.ShapeGrammarGenerator;
+using ShapeGrammar;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -78,7 +79,7 @@ static class ExtensionMethods
 
     public static LevelGroupElement ToLevelGroupElement(this IEnumerable<CubeGroup> enumerable, ShapeGrammar.Grid<Cube> grid)
     {
-        return enumerable.Select(g => new LevelGeometryElement(g.Grid, AreaType.None, g)).ToLevelGroupElement(grid);
+        return enumerable.Select(g => new LevelGeometryElement(g.Grid, AreaStyles.None(), g)).ToLevelGroupElement(grid);
     }
 
     public static LevelGroupElement ToLevelGroupElement(this IEnumerable<LevelElement> enumerable, ShapeGrammar.Grid<Cube> grid)
@@ -88,7 +89,7 @@ static class ExtensionMethods
 
     public static LevelGroupElement ToLevelGroupElement(this List<LevelElement> list, ShapeGrammar.Grid<Cube> grid)
     {
-        return new LevelGroupElement(grid, AreaType.None, list);
+        return new LevelGroupElement(grid, AreaStyles.None(), list);
     }
 
     public static IEnumerable<T> ToEnumerable<T>(this T t)
