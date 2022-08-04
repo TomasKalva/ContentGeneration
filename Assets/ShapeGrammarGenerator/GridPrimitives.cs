@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Assets.ShapeGrammarGenerator
 {
-    public class CubePrimitives
+    public class GridPrimitives
     {
         GeometricPrimitives gp;
 
-        public CubePrimitives(GeometricPrimitives gp)
+        public GridPrimitives(GeometricPrimitives gp)
         {
             this.gp = gp;
         }
@@ -19,15 +19,15 @@ namespace Assets.ShapeGrammarGenerator
         public WallPrimitive HouseWall()
             => new WallPrimitive(gp.BrickWall, gp.BrickWall);// todo: replace two sided walls with only one sided ones
 
-        public HorExclusivePrimitive Door()
-            => new HorExclusivePrimitive(gp.WallDoor);//todo: replace with actual door primitive
+        public HorFaceExclusivePrimitive Door()
+            => new HorFaceExclusivePrimitive(gp.WallDoor);//todo: replace with actual door primitive
 
-        public HorExclusivePrimitive Railing()
-            => new HorExclusivePrimitive(gp.Railing);
+        public HorFaceExclusivePrimitive Railing()
+            => new HorFaceExclusivePrimitive(gp.Railing);
 
 
-        public CornerExclusivePrimitive RailingPillar()
-            => new CornerExclusivePrimitive(gp.RailingPillar);
+        public CornerFaceExclusivePrimitive RailingPillar()
+            => new CornerFaceExclusivePrimitive(gp.RailingPillar);
 
         public BeamPrimitive Beam()
             => new BeamPrimitive(gp.BeamBottom, gp.BeamMiddle, gp.BeamTop);
@@ -35,6 +35,10 @@ namespace Assets.ShapeGrammarGenerator
 
         public FloorPrimitive Floor()
             => new FloorPrimitive(gp.CobblestoneFloor, gp.CobblestoneFloor);// todo: make floor one sided and add ceiling
+
+
+        public CubeExclusivePrimitive StairPrimitive()
+            => new CubeExclusivePrimitive(gp.Stairs);
     }
 
     
