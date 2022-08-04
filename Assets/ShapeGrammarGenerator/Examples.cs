@@ -16,7 +16,7 @@ namespace ShapeGrammar
         public WorldGeometry wg { get; }
         public Grid<Cube> grid { get; }
         public QueryContext qc { get; }
-        public ShapeGrammarStyles sgStyles { get; }
+        public GridPrimitivesPlacement sgStyles { get; }
         public ShapeGrammarShapes sgShapes { get; }
         public Placement pl { get; }
         public Paths paths { get; }
@@ -31,7 +31,7 @@ namespace ShapeGrammar
             wg = new WorldGeometry(worldParent, 2.8f);
             grid = new Grid<Cube>(new Vector3Int(20, 10, 20), (grid, pos) => new Cube(grid, pos));
             qc = new QueryContext(grid);
-            sgStyles = new ShapeGrammarStyles(grid, DefaultHouseStyle, gardenStyle);
+            sgStyles = new GridPrimitivesPlacement(grid, DefaultHouseStyle, gardenStyle);
             sgShapes = new ShapeGrammarShapes(grid);
             pl = new Placement(grid);
             paths = new Paths(grid);
@@ -183,7 +183,7 @@ namespace ShapeGrammar
             town = town.Select(le => le.SetAreaType(AreaStyles.Room()));
             town.ApplyGrammarStyleRules(houseStyleRules);
         }
-
+        /*
         public LevelElement Tower()
         {
             var towerLayout = qc.GetBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 1));
@@ -209,7 +209,7 @@ namespace ShapeGrammar
                 path.SetGrammarStyle(sgStyles.StairsPathStyle);
             });
             return tower;
-        }
+        }*/
 
         public LevelElement TwoConnectedTowers()
         {
@@ -272,6 +272,7 @@ namespace ShapeGrammar
             return root;
         }
 
+        /*
         public void TestingPaths()
         {
             // testing paths
@@ -281,7 +282,7 @@ namespace ShapeGrammar
             Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.StairsNeighbors(), box);
             var path = paths.ConnectByPath(start, end, neighbors);
             path.SetGrammarStyle(sgStyles.StairsPathStyle);
-        }
+        }*/
 
         public void ControlPointDesign()
         {

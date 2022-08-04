@@ -261,12 +261,14 @@ namespace ShapeGrammar
             return Split(dir, relDists.Select(relDist => Mathf.RoundToInt((minMaxDist * relDist))).ToArray());
         }
 
+        /*
         public CubeGroup SetGrammarStyle(ApplyStyle styleSetter)
         {
             styleSetter(this);
             Cubes.ForEach(cube => cube.Changed = true);
             return this;
         }
+        */
 
         public CubeGroup Fill(CUBE cubeObject)
         {

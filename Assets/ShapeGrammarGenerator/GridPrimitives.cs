@@ -39,7 +39,30 @@ namespace Assets.ShapeGrammarGenerator
 
         public CubeExclusivePrimitive StairPrimitive()
             => new CubeExclusivePrimitive(gp.Stairs);
+
+
+        public GridPrimitivesStyle DefaultStyle() => new GridPrimitivesStyle()
+        {
+            Door = Door(),
+            Wall = HouseWall(),
+            Railing = Railing(),
+            RailingPillar = RailingPillar(),
+            Beam = Beam(),
+            Floor = Floor(),
+            Stairs = StairPrimitive(),
+        };
     }
 
-    
+    public class GridPrimitivesStyle
+    {
+        public HorFacePrimitive Door { get; set; }
+        public HorFacePrimitive Wall { get; set; }
+        public HorFacePrimitive Railing { get; set; }
+        public CornerFacePrimitive RailingPillar { get; set; }
+        public CornerFacePrimitive Beam { get; set; }
+        public VerFacePrimitive Floor { get; set; }
+        public CubePrimitive Stairs { get; set; }
+    }
+
+
 }

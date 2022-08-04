@@ -19,7 +19,7 @@ namespace Assets.ShapeGrammarGenerator
     #region Horizontal primitives
     public abstract class HorFacePrimitive : GridPrimitive, ICubePrimitivePlacer<HorFacePrimitive>
     {
-        protected FACE_HOR FaceType { get; }
+        public FACE_HOR FaceType { get; }
 
         public abstract void PlacePrimitive(HorFacePrimitive otherPrimitive);
     }
@@ -81,25 +81,6 @@ namespace Assets.ShapeGrammarGenerator
             throw new NotImplementedException();
         }
     }
-
-    public class BeamPrimitive : VerFacePrimitive
-    {
-        GeometricPrimitive Bottom { get; }
-        GeometricPrimitive Middle { get; }
-        GeometricPrimitive Top { get; }
-
-        public BeamPrimitive(GeometricPrimitive bottom, GeometricPrimitive middle, GeometricPrimitive top)
-        {
-            Bottom = bottom;
-            Middle = middle;
-            Top = top;
-        }
-
-        public override void PlacePrimitive(VerFacePrimitive otherPrimitive)
-        {
-            throw new NotImplementedException();
-        }
-    }
     #endregion
 
     #region Corner primitives
@@ -117,6 +98,25 @@ namespace Assets.ShapeGrammarGenerator
         public CornerFaceExclusivePrimitive(GeometricPrimitive face)
         {
             Face = face;
+        }
+
+        public override void PlacePrimitive(CornerFacePrimitive otherPrimitive)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class BeamPrimitive : CornerFacePrimitive
+    {
+        GeometricPrimitive Bottom { get; }
+        GeometricPrimitive Middle { get; }
+        GeometricPrimitive Top { get; }
+
+        public BeamPrimitive(GeometricPrimitive bottom, GeometricPrimitive middle, GeometricPrimitive top)
+        {
+            Bottom = bottom;
+            Middle = middle;
+            Top = top;
         }
 
         public override void PlacePrimitive(CornerFacePrimitive otherPrimitive)

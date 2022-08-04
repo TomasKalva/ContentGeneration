@@ -1,4 +1,5 @@
-﻿using ContentGeneration.Assets.UI;
+﻿using Assets.ShapeGrammarGenerator;
+using ContentGeneration.Assets.UI;
 using ShapeGrammar;
 using System;
 using System.Collections.Generic;
@@ -35,9 +36,22 @@ namespace ShapeGrammar
 
     public class FaceHor : Facet
     {
+        /*
+        private HorFacePrimitive facePrimitive;
+
+        public HorFacePrimitive FacePrimitive
+        {
+            get => facePrimitive;
+            set
+            {
+                facePrimitive = value;
+                MyCube.Changed = true;
+            }
+        }*/
+
         private FACE_HOR faceType;
 
-        public FACE_HOR FaceType
+        public FACE_HOR FaceType// => FacePrimitive.FaceType;
         {
             get => faceType;
             set
