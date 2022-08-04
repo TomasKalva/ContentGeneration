@@ -21,6 +21,9 @@ namespace ShapeGrammar
         ShapeGrammarObjectStyle GardenStyle;
 
         [SerializeField]
+        GeometricPrimitives GeometricPrimitives;
+
+        [SerializeField]
         protected Libraries libraries;
 
         float worldScale;
@@ -62,7 +65,7 @@ namespace ShapeGrammar
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 
-            var examples = new Examples(DefaultHouseStyle, GardenStyle, world.ArchitectureParent, libraries);
+            var examples = new Examples(DefaultHouseStyle, GardenStyle, GeometricPrimitives, world.ArchitectureParent, libraries);
             var levelRoot = examples.TestMoveInDistXZ();
             examples.grid.Generate(worldScale, world);
 

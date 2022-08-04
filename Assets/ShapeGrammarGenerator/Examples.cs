@@ -1,4 +1,5 @@
-﻿using ContentGeneration.Assets.UI;
+﻿using Assets.ShapeGrammarGenerator;
+using ContentGeneration.Assets.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace ShapeGrammar
         public QueryContext qc { get; }
         public ShapeGrammarStyles sgStyles { get; }
         public ShapeGrammarShapes sgShapes { get; }
+        public AreaStyles ars { get; }
         public Placement pl { get; }
         public Paths paths { get; }
         public Transformations tr { get; }
@@ -24,7 +26,7 @@ namespace ShapeGrammar
         public WorldChanging wc { get; }
         public Connections con { get; }
 
-        public LevelDevelopmentKit(ShapeGrammarObjectStyle defaultHouseStyle, ShapeGrammarObjectStyle gardenStyle, Transform worldParent, Libraries lib)
+        public LevelDevelopmentKit(ShapeGrammarObjectStyle defaultHouseStyle, ShapeGrammarObjectStyle gardenStyle, GeometricPrimitives gp, Transform worldParent, Libraries lib)
         {
             DefaultHouseStyle = defaultHouseStyle;
             wg = new WorldGeometry(worldParent, 2.8f);
@@ -36,6 +38,7 @@ namespace ShapeGrammar
             paths = new Paths(grid);
             con = new Connections(grid);
             tr = new Transformations(this);
+            ars = new AreaStyles(new GeometryMakers(gp));
             houseStyleRules = new StyleRules(
                 new StyleRule(g => g.WithAreaType(AreaType.Room), g => g.SetGrammarStyle(sgStyles.PlainRoomStyle)),
                 new StyleRule(g => g.WithAreaType(AreaType.Reservation), g => g.SetGrammarStyle(sgStyles.EmptyStyle)),
@@ -68,7 +71,7 @@ namespace ShapeGrammar
 
     public class Examples : LevelDevelopmentKit
     {
-        public Examples(ShapeGrammarObjectStyle defaultHouseStyle, ShapeGrammarObjectStyle gardenStyle, Transform worldParent, Libraries lib) : base(defaultHouseStyle, gardenStyle, worldParent, lib)
+        public Examples(ShapeGrammarObjectStyle defaultHouseStyle, ShapeGrammarObjectStyle gardenStyle, GeometricPrimitives gp, Transform worldParent, Libraries lib) : base(defaultHouseStyle, gardenStyle, gp, worldParent, lib)
         { }
         
         public void IslandAndHouses()

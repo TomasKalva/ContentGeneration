@@ -23,6 +23,9 @@ namespace ShapeGrammar
         ShapeGrammarObjectStyle GardenStyle;
 
         [SerializeField]
+        GeometricPrimitives GeometricPrimitives;
+
+        [SerializeField]
         protected Libraries libraries;
 
         MyLanguage GameLanguage;
@@ -80,7 +83,7 @@ namespace ShapeGrammar
 
 
 
-            var ldk = new LevelDevelopmentKit(DefaultHouseStyle, GardenStyle, worldParent, libraries);
+            var ldk = new LevelDevelopmentKit(DefaultHouseStyle, GardenStyle, GeometricPrimitives, worldParent, libraries);
 
             // Declaration
             {
