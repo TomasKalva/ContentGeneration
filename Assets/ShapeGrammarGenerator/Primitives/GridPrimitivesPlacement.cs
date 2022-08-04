@@ -26,7 +26,7 @@ namespace ShapeGrammar
 
         public CubeGroup RoomStyle(GridPrimitivesStyle gpStyle, CubeGroup roomArea)
         {
-            roomArea.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Wall);
+            roomArea.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(gpStyle.Wall);
             roomArea.CubeGroupMaxLayer(Vector3Int.down).BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(gpStyle.Floor);
             roomArea.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.Pillar);
             return roomArea;
@@ -35,7 +35,7 @@ namespace ShapeGrammar
         public CubeGroup ColonnadeStyle(GridPrimitivesStyle gpStyle, CubeGroup colonadeArea)
         {
             var floorPart = colonadeArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(gpStyle.Floor).CG();
-            floorPart.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Railing);
+            floorPart.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(gpStyle.Railing);
             colonadeArea.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.Pillar);
             return colonadeArea;
         }
@@ -48,7 +48,7 @@ namespace ShapeGrammar
 
         public CubeGroup PlainRoomStyle(GridPrimitivesStyle gpStyle, CubeGroup roomArea)
         {
-            roomArea.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Wall);
+            roomArea.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(gpStyle.Wall);
             roomArea.AllSpecialCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.Pillar);
             roomArea.CubeGroupMaxLayer(Vector3Int.down).BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(gpStyle.Floor);
             return roomArea;
@@ -78,7 +78,7 @@ namespace ShapeGrammar
         {
             var floorParth = roomArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultGardenStyle).Fill(gpStyle.Floor).CG();
 
-            floorParth.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Railing);
+            floorParth.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(gpStyle.Railing);
             floorParth.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.RailingPillar);
             return roomArea;
         }
@@ -86,7 +86,7 @@ namespace ShapeGrammar
         public CubeGroup FlatRoofStyle(GridPrimitivesStyle gpStyle, CubeGroup roofArea)
         {
             var floorParth = roofArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(gpStyle.Floor).CG();
-            floorParth.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Railing);
+            floorParth.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(gpStyle.Railing);
             floorParth.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.RailingPillar);
             return roofArea;
         }
@@ -99,14 +99,14 @@ namespace ShapeGrammar
 
         public CubeGroup FoundationStyle(GridPrimitivesStyle gpStyle, CubeGroup foundationArea)
         {
-            foundationArea.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Wall);
+            foundationArea.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(gpStyle.Wall);
             foundationArea.AllSpecialCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.Pillar);
             return foundationArea;
         }
 
         public CubeGroup CliffFoundationStyle(GridPrimitivesStyle gpStyle, CubeGroup foundationArea)
         {
-            foundationArea.AllBoundaryFacesH().SetStyle(DefaultGardenStyle).Fill(FACE_HOR.Wall);
+            foundationArea.AllBoundaryFacesH().SetStyle(DefaultGardenStyle).Fill(gpStyle.Wall);
             foundationArea.AllSpecialCorners().SetStyle(DefaultGardenStyle).Fill(CORNER.Pillar);
             return foundationArea;
         }
@@ -127,7 +127,7 @@ namespace ShapeGrammar
         {
             platformArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(gpStyle.Floor);
             var platformTop = platformArea.BottomLayer();
-            platformTop.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Railing);
+            platformTop.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(gpStyle.Railing);
             platformTop.SpecialCorners(ExtensionMethods.HorizontalDirections().ToArray())
                 .MoveBy(-Vector3Int.up)
                 .MoveInDirUntil(Vector3Int.down, corner => corner.MyCube.Position.y < 0)
@@ -179,11 +179,11 @@ namespace ShapeGrammar
                 }
                 if (faceH.FaceType == FACE_HOR.Wall || otherFace.FaceType == FACE_HOR.Wall)
                 {
-                    faceH.FaceType = FACE_HOR.Door;
-                    otherFace.FaceType = FACE_HOR.Nothing;
+                    faceH.FacePrimitive = gpStyle.Door();
+                    //otherFace.FaceType = FACE_HOR.Nothing;
                     return;
                 }
-                faceH.FaceType = FACE_HOR.Nothing;
+                faceH.FacePrimitive = gpStyle.NoWall();
             });
 
             //hor.Intersect(path.AllBoundaryFacesH()).SetStyle(ObjectStyle).Fill(FACE_HOR.Railing);
@@ -221,7 +221,7 @@ namespace ShapeGrammar
             shaftFloors.Fill(gpStyle.NoFloor).SetStyle(DefaultHouseStyle);
 
             // no walls between horizontal
-            var horFacesInside = fallArea.InsideFacesH().SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Nothing);
+            var horFacesInside = fallArea.InsideFacesH().SetStyle(DefaultHouseStyle).Fill(gpStyle.NoWall);
 
             return fallArea;
         }
@@ -230,8 +230,8 @@ namespace ShapeGrammar
         {
             Debug.Assert(doorFromFirst.Cubes.Count() == 2);
 
-            doorFromFirst.Cubes.First().Group().NeighborsInGroupH(doorFromFirst).SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Door);
-            doorFromFirst.Cubes.Skip(1).First().Group().NeighborsInGroupH(doorFromFirst).SetStyle(DefaultHouseStyle).Fill(FACE_HOR.Nothing);
+            doorFromFirst.Cubes.First().Group().NeighborsInGroupH(doorFromFirst).SetStyle(DefaultHouseStyle).Fill(gpStyle.Door);
+            //doorFromFirst.Cubes.Skip(1).First().Group().NeighborsInGroupH(doorFromFirst).SetStyle(DefaultHouseStyle).Fill(gpStyle.NoWall);
 
             return doorFromFirst;
         }

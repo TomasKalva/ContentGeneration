@@ -433,9 +433,9 @@ namespace ShapeGrammar
         {
         }
 
-        public FaceHorGroup Fill(FACE_HOR faceType)
+        public FaceHorGroup Fill(Func<HorFacePrimitive> facePrimitiveF)
         {
-            Facets.ForEach(face => face.FaceType = faceType);
+            Facets.ForEach(face => face.FacePrimitive = facePrimitiveF());
             return this;
         }
 

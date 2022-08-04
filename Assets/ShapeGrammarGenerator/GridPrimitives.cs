@@ -20,10 +20,13 @@ namespace Assets.ShapeGrammarGenerator
             => new WallPrimitive(gp.brickWall, gp.brickWall);// todo: replace two sided walls with only one sided ones
 
         public HorFaceExclusivePrimitive Door()
-            => new HorFaceExclusivePrimitive(gp.wallDoor);//todo: replace with actual door primitive
+            => new HorFaceExclusivePrimitive(gp.wallDoor, FACE_HOR.Door, 3);//todo: replace with actual door primitive
 
         public HorFaceExclusivePrimitive Railing()
-            => new HorFaceExclusivePrimitive(gp.railing);
+            => new HorFaceExclusivePrimitive(gp.railing, FACE_HOR.Railing, 1);
+
+        public NoWallPrimitive NoWall()
+            => new NoWallPrimitive();// todo: replace two sided walls with only one sided ones
 
 
         public CornerFaceExclusivePrimitive RailingPillar()
@@ -49,6 +52,7 @@ namespace Assets.ShapeGrammarGenerator
             Door = Door,
             Wall = HouseWall,
             Railing = Railing,
+            NoWall = NoWall,
             RailingPillar = RailingPillar,
             Beam = Beam,
             Floor = Floor,
@@ -62,6 +66,7 @@ namespace Assets.ShapeGrammarGenerator
         public Func<HorFacePrimitive> Door { get; set; }
         public Func<HorFacePrimitive> Wall { get; set; }
         public Func<HorFacePrimitive> Railing { get; set; }
+        public Func<HorFacePrimitive> NoWall { get; set; }
         public Func<CornerFacePrimitive> RailingPillar { get; set; }
         public Func<CornerFacePrimitive> Beam { get; set; }
         public Func<VerFacePrimitive> Floor { get; set; }

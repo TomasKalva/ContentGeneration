@@ -43,21 +43,23 @@ namespace ShapeGrammar
 
     public class FaceHor : Facet
     {
+        private HorFacePrimitive facePrimitive;
 
-        private FACE_HOR faceType;
-
-        public FACE_HOR FaceType// => FacePrimitive.FaceType;
+        public HorFacePrimitive FacePrimitive
         {
-            get => faceType;
+            get => facePrimitive;
             set
             {
-                faceType = value;
+                facePrimitive = value;
                 MyCube.Changed = true;
             }
         }
 
+        public FACE_HOR FaceType => FacePrimitive.FaceType;
+
         public FaceHor(Cube myCube, Vector3Int direction) : base(myCube, direction)
         {
+            FacePrimitive = new HorFacePrimitive();
         }
 
         public override void Generate(float scale, World world, Vector3Int cubePosition)
@@ -65,6 +67,17 @@ namespace ShapeGrammar
             if (Style == null)
                 return;
 
+            if (FacePrimitive.Resolved)
+                return;
+
+            var otherFace = OtherCube.FacesHor(-Direction);
+            var primitives = new HorFacePrimitive[2] { FacePrimitive, otherFace.FacePrimitive };
+            var winningPrimitive = primitives.ArgMax(p => p.Priority);
+            var losingPrimitive = primitives.Others(winningPrimitive).First();
+            winningPrimitive.PlacePrimitive(world, this, losingPrimitive);
+
+            primitives.ForEach(primitive => primitive.Resolved = true);
+            /*
             var otherFaceType = OtherCube.FacesHor(-Direction).FaceType;
             if (FaceType < otherFaceType)
                 return;
@@ -78,7 +91,7 @@ namespace ShapeGrammar
             
             world.AddArchitectureElement(obj);
 
-            OnObjectCreated(obj);
+            OnObjectCreated(obj);*/
         }
 
         public IEnumerable<Corner> Corners()
@@ -98,7 +111,6 @@ namespace ShapeGrammar
     public class FaceVer : Facet
     {
         private VerFacePrimitive facePrimitive;
-
 
         public VerFacePrimitive FacePrimitive
         {
@@ -121,28 +133,17 @@ namespace ShapeGrammar
         {
             if (Style == null)
                 return;
-            
+
+            if (FacePrimitive.Resolved)
+                return;
+
             var otherFace = OtherCube.FacesVer(-Direction);
             var primitives = new VerFacePrimitive[2] { FacePrimitive, otherFace.FacePrimitive };
             var winningPrimitive = primitives.ArgMax(p => p.Priority);
             var losingPrimitive = primitives.Others(winningPrimitive).First();
             winningPrimitive.PlacePrimitive(world, this, losingPrimitive);
-            
 
-
-            /*
-            var cubePosition = MyCube.Position;
-            var scale = world.WorldGeometry.WorldScale;
-
-            var offset = Vector3.up * Math.Max(0, Direction.y);
-            var obj = Style.GetFaceVer(FaceType);
-
-            obj.localScale = scale * Vector3.one;
-            obj.localPosition = (cubePosition + offset) * scale;
-
-            world.AddArchitectureElement(obj);*/
-
-            //OnObjectCreated(obj);
+            primitives.ForEach(primitive => primitive.Resolved = true);
         }
 
         public FaceVer MoveBy(Vector3Int offset) => MoveBy<FaceVer>(offset);

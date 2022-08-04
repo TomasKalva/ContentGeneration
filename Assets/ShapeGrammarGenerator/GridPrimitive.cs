@@ -23,11 +23,17 @@ namespace Assets.ShapeGrammarGenerator
         public abstract void PlacePrimitive(IGridGeometryOwner worldGeometry, Facet facet, GridPrimitiveT otherPrimitive);
     }
     #region Horizontal primitives
-    public abstract class HorFacePrimitive : GridPrimitive, IGridPrimitivePlacer<HorFacePrimitive>
+    public class HorFacePrimitive : GridPrimitive, IGridPrimitivePlacer<HorFacePrimitive>
     {
-        public FACE_HOR FaceType { get; }
+        public HorFacePrimitive()
+        {
+            FaceType = FACE_HOR.Nothing;
+            Priority = 0;
+        }
 
-        public abstract void PlacePrimitive(IGridGeometryOwner worldGeometry, Facet facet, HorFacePrimitive otherPrimitive);
+        public FACE_HOR FaceType { get; protected set; }
+
+        public virtual void PlacePrimitive(IGridGeometryOwner worldGeometry, Facet facet, HorFacePrimitive otherPrimitive) { }
     }
 
     public class WallPrimitive : HorFacePrimitive
@@ -39,11 +45,24 @@ namespace Assets.ShapeGrammarGenerator
         {
             InsideWall = insideWall;
             OutsideWall = outsideWall;
+            FaceType = FACE_HOR.Wall;
+            Priority = 2;
         }
 
-        public override void PlacePrimitive(IGridGeometryOwner worldGeometry, Facet facet, HorFacePrimitive otherPrimitive)
+        public override void PlacePrimitive(IGridGeometryOwner geometryOwner, Facet facet, HorFacePrimitive otherPrimitive)
         {
-            throw new NotImplementedException();
+            //todo: replace with the correct implementation
+            var cubePosition = facet.MyCube.Position;
+            var scale = geometryOwner.WorldGeometry.WorldScale;
+            var offset = (Vector3)facet.Direction * 0.5f;
+            var obj = InsideWall.New().transform;
+
+            obj.localScale = scale * Vector3.one;
+            obj.localPosition = (cubePosition + offset) * scale;
+            obj.rotation = Quaternion.LookRotation(facet.Direction, Vector3.up);
+
+            geometryOwner.AddArchitectureElement(obj);
+            facet.OnObjectCreated(obj);
         }
     }
 
@@ -51,14 +70,45 @@ namespace Assets.ShapeGrammarGenerator
     {
         GeometricPrimitive Face { get; }
 
-        public HorFaceExclusivePrimitive(GeometricPrimitive face)
+        public HorFaceExclusivePrimitive(GeometricPrimitive face, FACE_HOR faceType, int priority)
         {
             Face = face;
+            Priority = priority;
+            FaceType = faceType;
+        }
+
+        public override void PlacePrimitive(IGridGeometryOwner geometryOwner, Facet facet, HorFacePrimitive otherPrimitive)
+        {
+            /*
+            var otherFaceType = OtherCube.FacesHor(-Direction).FaceType;
+            if (FaceType < otherFaceType)
+                return;*/
+
+            var cubePosition = facet.MyCube.Position;
+            var scale = geometryOwner.WorldGeometry.WorldScale;
+            var offset = (Vector3)facet.Direction * 0.5f;
+            var obj = Face.New().transform;
+
+            obj.localScale = scale * Vector3.one;
+            obj.localPosition = (cubePosition + offset) * scale;
+            obj.rotation = Quaternion.LookRotation(facet.Direction, Vector3.up);
+
+            geometryOwner.AddArchitectureElement(obj);
+            facet.OnObjectCreated(obj);
+        }
+    }
+
+    public class NoWallPrimitive : HorFacePrimitive
+    {
+        public NoWallPrimitive()
+        {
+            FaceType = FACE_HOR.Nothing;
+            Priority = 4;
         }
 
         public override void PlacePrimitive(IGridGeometryOwner worldGeometry, Facet facet, HorFacePrimitive otherPrimitive)
         {
-            throw new NotImplementedException();
+            // No object to create => don't do anything
         }
     }
     #endregion
@@ -74,7 +124,7 @@ namespace Assets.ShapeGrammarGenerator
             Priority = 0;
         }
 
-        public virtual void PlacePrimitive(IGridGeometryOwner worldGeometry, Facet facet, VerFacePrimitive otherPrimitive) { }
+        public virtual void PlacePrimitive(IGridGeometryOwner geometryOwner, Facet facet, VerFacePrimitive otherPrimitive) { }
     }
 
     public class FloorPrimitive : VerFacePrimitive
@@ -94,12 +144,9 @@ namespace Assets.ShapeGrammarGenerator
         {
             var cubePosition = face.MyCube.Position;
             var scale = geometryOwner.WorldGeometry.WorldScale;
-
             var offset = Vector3.up * Math.Max(0, face.Direction.y);
-            //var obj = Style.GetFaceVer(FaceType);
+
             var obj = Floor.New().transform;
-
-
             obj.localScale = scale * Vector3.one;
             obj.localPosition = (cubePosition + offset) * scale; 
 
