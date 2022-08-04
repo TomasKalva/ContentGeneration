@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1203116446052783209}
   - component: {fileID: 5585020274817696108}
   - component: {fileID: -2979926724727582506}
+  - component: {fileID: 7535480479660805566}
   m_Layer: 12
   m_Name: PointyRoof
   m_TagString: Untagged
@@ -99,3 +100,15 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 8632015658226757953, guid: 5d0c71da1aa2bd64c81a1b32b3660c52, type: 3}
+--- !u!114 &7535480479660805566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1965606181303167676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c2b7c3e9e2ffdc40b304ca4a2d16bfa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

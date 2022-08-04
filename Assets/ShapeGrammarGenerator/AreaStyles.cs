@@ -8,9 +8,9 @@ namespace Assets.ShapeGrammarGenerator
 {
     public class AreaStyles
     {
-        GeometryMakers gm;
+        CubePrimitives gm;
 
-        public AreaStyles(GeometryMakers gm)
+        public AreaStyles(CubePrimitives gm)
         {
             this.gm = gm;
         }

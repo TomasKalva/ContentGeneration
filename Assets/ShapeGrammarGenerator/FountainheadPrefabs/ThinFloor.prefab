@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8196174369041797693}
   - component: {fileID: 1694972826158950540}
   - component: {fileID: 6860055782296935232}
+  - component: {fileID: 5542625160886458980}
   m_Layer: 12
   m_Name: ThinFloor
   m_TagString: Untagged
@@ -97,3 +98,15 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 0.10298876, z: 1}
   m_Center: {x: 5.513092e-25, y: -0.05149438, z: -6.8152243e-25}
+--- !u!114 &5542625160886458980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3347196906772508310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c2b7c3e9e2ffdc40b304ca4a2d16bfa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

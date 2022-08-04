@@ -23,14 +23,14 @@ public class GeometricPrimitives : ScriptableObject
     }
 #endif
 
-    public Transform WallDoor;
-    public Transform BrickWall;
-    public Transform CobblestoneFloor;
-    public Transform Railing;
-    public Transform RailingPillar;
-    public Transform BeamBottom;
-    public Transform BeamMiddle;
-    public Transform BeamTop;
-    public Transform Stairs;
+    public GeometricPrimitive WallDoor;
+    public GeometricPrimitive BrickWall;
+    public GeometricPrimitive CobblestoneFloor;
+    public GeometricPrimitive Railing;
+    public GeometricPrimitive RailingPillar;
+    public GeometricPrimitive BeamBottom;
+    public GeometricPrimitive BeamMiddle;
+    public GeometricPrimitive BeamTop;
+    public GeometricPrimitive Stairs;
 
 }
