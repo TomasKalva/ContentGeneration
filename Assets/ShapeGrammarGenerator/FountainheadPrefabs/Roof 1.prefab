@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7911588637246309288}
   - component: {fileID: 7911588637246309291}
   - component: {fileID: -497469053964653166}
-  - component: {fileID: -4167516687460494041}
+  - component: {fileID: 8798057177368778506}
   m_Layer: 12
   m_Name: Roof 1
   m_TagString: Untagged
@@ -101,7 +101,7 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 3825537616867340382, guid: 5d0c71da1aa2bd64c81a1b32b3660c52, type: 3}
---- !u!114 &-4167516687460494041
+--- !u!114 &8798057177368778506
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -110,6 +110,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 7911588637246309290}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c2b7c3e9e2ffdc40b304ca4a2d16bfa, type: 3}
+  m_Script: {fileID: 11500000, guid: 524bf1f0c36e1534ea710571688c90f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

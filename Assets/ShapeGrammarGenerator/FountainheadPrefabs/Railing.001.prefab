@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1450304430027237160}
   - component: {fileID: 4578690447580535146}
   - component: {fileID: 9199111731112260611}
-  - component: {fileID: 506894457783360263}
+  - component: {fileID: 876146423463043957}
   m_Layer: 0
   m_Name: Railing.001
   m_TagString: Untagged
@@ -98,7 +98,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.9711242, y: 0.4999668, z: 0.0912309}
   m_Center: {x: -0.0004710555, y: 0.19584218, z: 0.001884386}
---- !u!114 &506894457783360263
+--- !u!114 &876146423463043957
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -107,6 +107,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1983433101197062673}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c2b7c3e9e2ffdc40b304ca4a2d16bfa, type: 3}
+  m_Script: {fileID: 11500000, guid: 524bf1f0c36e1534ea710571688c90f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

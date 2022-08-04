@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3352810698672278595}
   - component: {fileID: 9188248284321713681}
   - component: {fileID: 4220900612625813622}
-  - component: {fileID: -4632144716988612045}
+  - component: {fileID: -281885087177443011}
   m_Layer: 12
   m_Name: CrossRoof
   m_TagString: Untagged
@@ -101,7 +101,7 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -4013080261472645877, guid: 5d0c71da1aa2bd64c81a1b32b3660c52, type: 3}
---- !u!114 &-4632144716988612045
+--- !u!114 &-281885087177443011
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -110,6 +110,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 8626127803228284872}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c2b7c3e9e2ffdc40b304ca4a2d16bfa, type: 3}
+  m_Script: {fileID: 11500000, guid: 524bf1f0c36e1534ea710571688c90f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

@@ -9,15 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b106c27c5cc8d64293192fd9180ee56, type: 3}
+  m_Script: {fileID: 11500000, guid: 0bb9eff3dd5efc44ba8fb31ef809eb20, type: 3}
   m_Name: GeometricPrimitives
   m_EditorClassIdentifier: 
-  wallDoor: {fileID: 7562719346071428680, guid: 627bbb96138ecd444a6a157749e64090, type: 3}
+  wallDoor: {fileID: -8342775008284480774, guid: 627bbb96138ecd444a6a157749e64090, type: 3}
   brickWall: {fileID: 3764113671630828798, guid: a4dc48d88ef1c494c827cca91d51e97c, type: 3}
-  cobblestoneFloor: {fileID: 5542625160886458980, guid: 4c5c97c565bab6044b9b119aec2e97cc, type: 3}
-  railing: {fileID: 506894457783360263, guid: 38ce534bf516e1f4283b57a411932d39, type: 3}
-  railingPillar: {fileID: -3965326972991549547, guid: ccc81cb49b003844bbb97ded28f796ed, type: 3}
-  beamBottom: {fileID: 5332347149814602949, guid: 3b551a368e8ee2344b940d6619d435ce, type: 3}
-  beamMiddle: {fileID: 5332347149814602949, guid: 3b551a368e8ee2344b940d6619d435ce, type: 3}
-  beamTop: {fileID: 5332347149814602949, guid: 3b551a368e8ee2344b940d6619d435ce, type: 3}
-  stairs: {fileID: -4856231313121909457, guid: 8478bb57d13fda64286b87706a03ec10, type: 3}
+  cobblestoneFloor: {fileID: -152337017728516849, guid: 4c5c97c565bab6044b9b119aec2e97cc, type: 3}
+  railing: {fileID: 876146423463043957, guid: 38ce534bf516e1f4283b57a411932d39, type: 3}
+  railingPillar: {fileID: 3973095455055399144, guid: ccc81cb49b003844bbb97ded28f796ed, type: 3}
+  beamBottom: {fileID: -3025781043452578236, guid: 3b551a368e8ee2344b940d6619d435ce, type: 3}
+  beamMiddle: {fileID: -3025781043452578236, guid: 3b551a368e8ee2344b940d6619d435ce, type: 3}
+  beamTop: {fileID: -3025781043452578236, guid: 3b551a368e8ee2344b940d6619d435ce, type: 3}
+  stairs: {fileID: 2509556157168084794, guid: 8478bb57d13fda64286b87706a03ec10, type: 3}
