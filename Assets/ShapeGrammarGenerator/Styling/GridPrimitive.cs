@@ -64,32 +64,19 @@ namespace Assets.ShapeGrammarGenerator
             Priority = 2;
         }
 
-
-
         public override void PlacePrimitive(IGridGeometryOwner geometryOwner, Facet facet, HorFacePrimitive otherPrimitive)
         {
             if(otherPrimitive is WallPrimitive otherWallPrimitive)
             {
-                PlaceHorizontally(geometryOwner, facet, InsideWall, facet.Direction);
-                PlaceHorizontally(geometryOwner, facet, OutsideWall, -facet.Direction);
+                //todo: replace with the correct implementation
+                PlaceHorizontally(geometryOwner, facet, InsideWall, -facet.Direction);
+                PlaceHorizontally(geometryOwner, facet, otherWallPrimitive.InsideWall, facet.Direction);
             }
             else
             {
-                PlaceHorizontally(geometryOwner, facet, InsideWall, facet.Direction);
-                PlaceHorizontally(geometryOwner, facet, OutsideWall, -facet.Direction);
+                PlaceHorizontally(geometryOwner, facet, InsideWall, -facet.Direction);
+                PlaceHorizontally(geometryOwner, facet, OutsideWall, facet.Direction);
             }
-            //todo: replace with the correct implementation
-            /*var cubePosition = facet.MyCube.Position;
-            var scale = geometryOwner.WorldGeometry.WorldScale;
-            var offset = (Vector3)facet.Direction * 0.5f;
-            var obj = InsideWall.New().transform;
-
-            obj.localScale = scale * Vector3.one;
-            obj.localPosition = (cubePosition + offset) * scale;
-            obj.rotation = Quaternion.LookRotation(facet.Direction, Vector3.up);
-
-            geometryOwner.AddArchitectureElement(obj);
-            facet.OnObjectCreated(obj);*/
         }
     }
 

@@ -17,7 +17,7 @@ namespace Assets.ShapeGrammarGenerator
         }
 
         public WallPrimitive HouseWall()
-            => new WallPrimitive(gp.oneSidedWall, gp.oneSidedWall);// todo: replace two sided walls with only one sided ones
+            => new WallPrimitive(gp.oneSidedWallInside, gp.oneSidedWall);// todo: replace two sided walls with only one sided ones
 
         public HorFaceExclusivePrimitive Door()
             => new HorFaceExclusivePrimitive(gp.wallDoor, FACE_HOR.Door, 3);//todo: replace with actual door primitive

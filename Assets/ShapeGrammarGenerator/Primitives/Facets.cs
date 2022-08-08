@@ -73,6 +73,10 @@ namespace ShapeGrammar
             var otherFace = OtherCube.FacesHor(-Direction);
             var primitives = new HorFacePrimitive[2] { FacePrimitive, otherFace.FacePrimitive };
             var winningPrimitive = primitives.ArgMax(p => p.Priority);
+            // Place stuff only from view of winning primitive
+            if (winningPrimitive != FacePrimitive)
+                return;
+
             var losingPrimitive = primitives.Others(winningPrimitive).First();
             winningPrimitive.PlacePrimitive(world, this, losingPrimitive);
 
@@ -140,6 +144,10 @@ namespace ShapeGrammar
             var otherFace = OtherCube.FacesVer(-Direction);
             var primitives = new VerFacePrimitive[2] { FacePrimitive, otherFace.FacePrimitive };
             var winningPrimitive = primitives.ArgMax(p => p.Priority);
+            // Place stuff only from view of winning primitive
+            if (winningPrimitive != FacePrimitive)
+                return;
+
             var losingPrimitive = primitives.Others(winningPrimitive).First();
             winningPrimitive.PlacePrimitive(world, this, losingPrimitive);
 

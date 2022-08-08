@@ -30,6 +30,8 @@ public class GeometricPrimitives : ScriptableObject
     [SerializeField]
     public GeometricPrimitive oneSidedWall;
     [SerializeField]
+    public GeometricPrimitive oneSidedWallInside;
+    [SerializeField]
     public GeometricPrimitive cobblestoneFloor;
     [SerializeField]
     public GeometricPrimitive oneSidedFloor;
