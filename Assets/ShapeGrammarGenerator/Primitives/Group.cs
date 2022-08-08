@@ -270,11 +270,11 @@ namespace ShapeGrammar
         }
         */
 
-        public CubeGroup Fill(CUBE cubeObject)
+        public CubeGroup Fill(CubePrimitive cubePrimitive)
         {
             Cubes.ForEach(cube =>
             {
-                cube.Object = cubeObject;
+                cube.CubePrimitive = cubePrimitive;
                 cube.Changed = true;
             });
             return this;

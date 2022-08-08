@@ -1,4 +1,5 @@
-﻿using Assets.Util;
+﻿using Assets.ShapeGrammarGenerator;
+using Assets.Util;
 using ContentGeneration.Assets.UI;
 using System;
 using System.Collections.Generic;
@@ -9,15 +10,32 @@ using UnityEngine;
 
 namespace ShapeGrammar
 {
-    public class Cube
+    public class Cube : IFacet
     {
+        Cube IFacet.MyCube => this;
+        Vector3Int IFacet.Direction => Vector3Int.zero;
+        Action<Transform> IFacet.OnObjectCreated { get; } = _ => { };
+
         public Grid<Cube> Grid { get; }
         public Vector3Int Position { get; }
         public Dictionary<Vector3Int, Facet> Facets { get; }
         public FaceHor FacesHor(Vector3Int dir) => Facets[dir] as FaceHor;
         public FaceVer FacesVer(Vector3Int dir) => Facets[dir] as FaceVer;
         public Corner Corners(Vector3Int dir) => Facets[dir] as Corner;
-        public CUBE Object;
+
+
+        private CubePrimitive cubePrimitive;
+
+        public CubePrimitive CubePrimitive
+        {
+            get => cubePrimitive;
+            set
+            {
+                cubePrimitive = value;
+                Changed = true;
+            }
+        }
+        public CUBE CubeType => CubePrimitive.CubeType;
         public Vector3Int ObjectDir;
         public bool Changed { get; set; }
         public ShapeGrammarObjectStyle Style { get; set; }
@@ -30,7 +48,7 @@ namespace ShapeGrammar
             SetHorizontalFaces();
             SetVerticalFaces();
             SetCorners();
-            Object = CUBE.Nothing;
+            CubePrimitive = new CubePrimitive();// CUBE.Nothing;
             Changed = false;
         }
 
@@ -73,27 +91,30 @@ namespace ShapeGrammar
 
             foreach (var facet in Facets.Values)
             {
-                facet.Generate(scale, world, Position);
+                facet.Generate(scale, world);
             }
         }
 
         public void GenerateObject(float cubeSide, World world)
         {
+            CubePrimitive.PlacePrimitive(world, this, null);
+
+            /*
             if (Style == null)
             {
-                if(Object != CUBE.Nothing)
+                if(CubeType != CUBE.Nothing)
                 {
-                    Debug.LogError($"Trying to create an object {Object} when no style is set!");
+                    Debug.LogError($"Trying to create an object {CubeType} when no style is set!");
                 }
                 return;
             }
 
-            var obj = Style.GetCube(Object);
+            var obj = Style.GetCube(CubeType);
 
             obj.localScale = cubeSide * Vector3.one;
             obj.localPosition = ((Vector3)Position) * cubeSide;
             obj.rotation = Quaternion.LookRotation(ObjectDir, Vector3.up);
-            world.AddArchitectureElement(obj);
+            world.AddArchitectureElement(obj);*/
         }
 
         public Cube MoveBy(Vector3Int offset)

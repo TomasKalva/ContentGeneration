@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Assets.ShapeGrammarGenerator
 {
@@ -43,8 +44,8 @@ namespace Assets.ShapeGrammarGenerator
             => new NoFloorPrimitive();// todo: make floor one sided and add ceiling
 
 
-        public CubeExclusivePrimitive StairPrimitive()
-            => new CubeExclusivePrimitive(gp.stairs);
+        public CubeExclusivePrimitive StairPrimitive(Vector3Int direction)
+            => new CubeExclusivePrimitive(gp.stairs, direction);
 
 
         public GridPrimitivesStyle DefaultStyle() => new GridPrimitivesStyle()
@@ -71,7 +72,7 @@ namespace Assets.ShapeGrammarGenerator
         public Func<CornerFacetPrimitive> Beam { get; set; }
         public Func<VerFacePrimitive> Floor { get; set; }
         public Func<VerFacePrimitive> NoFloor { get; set; }
-        public Func<CubePrimitive> Stairs { get; set; }
+        public Func<Vector3Int, CubePrimitive> Stairs { get; set; }
     }
 
 

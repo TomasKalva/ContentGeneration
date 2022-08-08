@@ -11,7 +11,14 @@ using UnityEngine;
 namespace ShapeGrammar
 {
 
-    public abstract class Facet
+    public interface IFacet
+    {
+        Cube MyCube { get; }
+        Vector3Int Direction { get; }
+        Action<Transform> OnObjectCreated { get; }
+    }
+
+    public abstract class Facet : IFacet
     {
 
         public Vector3Int Direction { get; }
@@ -26,7 +33,7 @@ namespace ShapeGrammar
             MyCube = myCube;
         }
 
-        public abstract void Generate(float cubeSide, World world, Vector3Int cubePosition);
+        public abstract void Generate(float cubeSide, World world);
 
         public FacetT MoveBy<FacetT>(Vector3Int offset) where FacetT : Facet
         {
@@ -62,7 +69,7 @@ namespace ShapeGrammar
             FacePrimitive = new HorFacePrimitive();
         }
 
-        public override void Generate(float scale, World world, Vector3Int cubePosition)
+        public override void Generate(float scale, World world)
         {
             if (Style == null)
                 return;
@@ -133,7 +140,7 @@ namespace ShapeGrammar
             FacePrimitive = new VerFacePrimitive();
         }
 
-        public override void Generate(float _, World world, Vector3Int _1)
+        public override void Generate(float _, World world)
         {
             if (Style == null)
                 return;
@@ -180,7 +187,7 @@ namespace ShapeGrammar
             FacePrimitive = new CornerFacetPrimitive();
         }
 
-        public override void Generate(float scale, World world, Vector3Int cubePosition)
+        public override void Generate(float scale, World world)
         {
             if (Style == null)
                 return;
@@ -208,23 +215,6 @@ namespace ShapeGrammar
 
             primitives.ForEach(primitive => primitive.Resolved = true);
 
-
-
-
-
-            /*
-            if (Style == null)
-                return;
-
-            var offset = (Vector3)Direction * 0.5f;
-            var obj = Style.GetCorner(CornerType);
-
-            obj.localScale = scale * Vector3.one;
-            obj.localPosition = (cubePosition + offset) * scale;
-
-            world.AddArchitectureElement(obj);
-
-            OnObjectCreated(obj);*/
         }
 
         public Corner MoveBy(Vector3Int offset) => MoveBy<Corner>(offset);

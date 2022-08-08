@@ -201,8 +201,8 @@ namespace ShapeGrammar
                         var stairsDirection = dirTo.y > 0 ? -dirFrom : dirFrom;
 
                         stairsCube.Style = this.DefaultHouseStyle;
-                        stairsCube.Object = CUBE.Stairs;
-                        stairsCube.ObjectDir = stairsDirection;
+                        stairsCube.CubePrimitive = gpStyle.Stairs(stairsDirection);
+                        //stairsCube.ObjectDir = stairsDirection;
                     }
                 }
             );
