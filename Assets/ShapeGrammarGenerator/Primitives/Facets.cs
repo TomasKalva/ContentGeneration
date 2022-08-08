@@ -173,7 +173,7 @@ namespace ShapeGrammar
             }
         }
 
-        public CORNER CornerType => FacePrimitive.FaceType;
+        public CORNER CornerType => FacePrimitive.CornerType;
 
         public Corner(Cube myCube, Vector3Int direction) : base(myCube, direction)
         {
@@ -259,7 +259,7 @@ namespace ShapeGrammar
     public enum CORNER
     {
         Nothing,
-        Pillar,
+        Beam,
         RailingPillar
     }
 

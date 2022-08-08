@@ -178,11 +178,11 @@ namespace Assets.ShapeGrammarGenerator
     #region Corner primitives
     public class CornerFacetPrimitive : GridPrimitive, IGridPrimitivePlacer<CornerFacetPrimitive>
     {
-        public CORNER FaceType { get; }
+        public CORNER CornerType { get; protected set; }
 
         public CornerFacetPrimitive()
         {
-            FaceType = CORNER.Nothing;
+            CornerType = CORNER.Nothing;
             Priority = 0;
         }
 
@@ -207,23 +207,16 @@ namespace Assets.ShapeGrammarGenerator
     {
         GeometricPrimitive Corner { get; }
 
-        public CornerFaceExclusivePrimitive(GeometricPrimitive face)
+        public CornerFaceExclusivePrimitive(GeometricPrimitive face, CORNER cornerType)
         {
+            Priority = 1;
             Corner = face;
+            CornerType = cornerType;
         }
 
         public override void PlacePrimitive(IGridGeometryOwner worldGeometry, Facet facet, CornerFacetPrimitive otherPrimitive)
         {
             PlaceCorner(worldGeometry, facet, Corner);
-            /*var offset = (Vector3)Direction * 0.5f;
-            var obj = Style.GetCorner(CornerType);
-
-            obj.localScale = scale * Vector3.one;
-            obj.localPosition = (cubePosition + offset) * scale;
-
-            world.AddArchitectureElement(obj);
-
-            OnObjectCreated(obj);*/
         }
     }
 
@@ -235,14 +228,41 @@ namespace Assets.ShapeGrammarGenerator
 
         public BeamPrimitive(GeometricPrimitive bottom, GeometricPrimitive middle, GeometricPrimitive top)
         {
+            Priority = 2;
             Bottom = bottom;
             Middle = middle;
             Top = top;
+            CornerType = CORNER.Beam;
         }
 
         public override void PlacePrimitive(IGridGeometryOwner worldGeometry, Facet facet, CornerFacetPrimitive otherPrimitive)
         {
-            PlaceCorner(worldGeometry, facet, Middle);
+            var cornerDirection = facet.Direction;
+            var below = facet.MyCube.NeighborsDirections(Vector3Int.down.ToEnumerable()).Select(cube => cube.Corners(cornerDirection)).First().CornerType;
+            var above = facet.MyCube.NeighborsDirections(Vector3Int.up.ToEnumerable()).Select(cube => cube.Corners(cornerDirection)).First().CornerType;
+            //todo: rewrite ugly branching
+            if(below == CORNER.Beam)
+            {
+                if(above == CORNER.Beam)
+                {
+                    PlaceCorner(worldGeometry, facet, Middle);
+                }
+                else
+                {
+                    PlaceCorner(worldGeometry, facet, Top);
+                }
+            }
+            else
+            {
+                if (above == CORNER.Beam)
+                {
+                    PlaceCorner(worldGeometry, facet, Bottom);
+                }
+                else
+                {
+                    PlaceCorner(worldGeometry, facet, Middle);
+                }
+            }
         }
     }
     #endregion

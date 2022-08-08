@@ -22,7 +22,7 @@ MonoBehaviour:
   railing: {fileID: 876146423463043957, guid: 38ce534bf516e1f4283b57a411932d39, type: 3}
   cladding: {fileID: 3764113671630828798, guid: ab057c7e5ed61b44e9afc8e9c79b6f6d, type: 3}
   railingPillar: {fileID: 3973095455055399144, guid: ccc81cb49b003844bbb97ded28f796ed, type: 3}
-  beamBottom: {fileID: -3025781043452578236, guid: 3b551a368e8ee2344b940d6619d435ce, type: 3}
+  beamBottom: {fileID: -3025781043452578236, guid: 49a59bcfd8177f34a9fb97d1238f0577, type: 3}
   beamMiddle: {fileID: -3025781043452578236, guid: 3b551a368e8ee2344b940d6619d435ce, type: 3}
-  beamTop: {fileID: -3025781043452578236, guid: 3b551a368e8ee2344b940d6619d435ce, type: 3}
+  beamTop: {fileID: -3025781043452578236, guid: f2135e95214912d42a78c28b67987492, type: 3}
   stairs: {fileID: 2509556157168084794, guid: 8478bb57d13fda64286b87706a03ec10, type: 3}

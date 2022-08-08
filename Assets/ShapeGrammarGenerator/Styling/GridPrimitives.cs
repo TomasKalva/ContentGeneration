@@ -30,7 +30,7 @@ namespace Assets.ShapeGrammarGenerator
 
 
         public CornerFaceExclusivePrimitive RailingPillar()
-            => new CornerFaceExclusivePrimitive(gp.railingPillar);
+            => new CornerFaceExclusivePrimitive(gp.railingPillar, CORNER.RailingPillar);
 
         public BeamPrimitive Beam()
             => new BeamPrimitive(gp.beamBottom, gp.beamMiddle, gp.beamTop);
