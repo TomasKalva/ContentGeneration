@@ -50,7 +50,7 @@ public class GeometricPrimitives : ScriptableObject
 
     #region Floors
     [SerializeField]
-    public GeometricPrimitive cobblestoneFloor;
+    public GeometricPrimitive woodenFullFloor;
     [SerializeField]
     public GeometricPrimitive oneSidedFloor;
     [SerializeField]

@@ -42,7 +42,10 @@ namespace Assets.ShapeGrammarGenerator
 
 
         public FloorPrimitive Floor()
-            => new FloorPrimitive(gp.oneSidedFloor, gp.oneSidedCeiling);// todo: make floor one sided and add ceiling
+            => new FloorPrimitive(gp.oneSidedFloor, gp.oneSidedCeiling);
+
+        public FloorPrimitive PathFullFloor()
+            => new FloorPrimitive(gp.woodenFullFloor, gp.empty);
 
         public NoFloorPrimitive NoFloor()
             => new NoFloorPrimitive();// todo: make floor one sided and add ceiling
@@ -63,6 +66,7 @@ namespace Assets.ShapeGrammarGenerator
             RailingPillar = RailingPillar,
             Beam = Beam,
             Floor = Floor,
+            PathFullFloor = PathFullFloor,
             NoFloor = NoFloor,
             Stairs = StairPrimitive,
         };
@@ -79,6 +83,7 @@ namespace Assets.ShapeGrammarGenerator
         public Func<CornerFacetPrimitive> RailingPillar { get; set; }
         public Func<CornerFacetPrimitive> Beam { get; set; }
         public Func<VerFacePrimitive> Floor { get; set; }
+        public Func<VerFacePrimitive> PathFullFloor { get; set; }
         public Func<VerFacePrimitive> NoFloor { get; set; }
         public Func<Vector3Int, CubePrimitive> Stairs { get; set; }
     }

@@ -148,7 +148,7 @@ namespace ShapeGrammar
                     return false;
                 }
             );
-            hor.BoundaryFacesV(Vector3Int.down).Fill(gpStyle.Floor);
+            hor.BoundaryFacesV(Vector3Int.down).Fill(gpStyle.PathFullFloor);
 
             var verTop = path.Cubes.Where3(
                 (prev, cube, next) =>
