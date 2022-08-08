@@ -15,6 +15,7 @@ MonoBehaviour:
   wallDoor: {fileID: -8342775008284480774, guid: 627bbb96138ecd444a6a157749e64090, type: 3}
   brickWall: {fileID: 3764113671630828798, guid: a4dc48d88ef1c494c827cca91d51e97c, type: 3}
   oneSidedWall: {fileID: 3764113671630828798, guid: 36fd51c45345a1342b1968ce4c5bf983, type: 3}
+  oneSidedWallInside: {fileID: 3764113671630828798, guid: 6445a1600664d634ca6c5df9871d5371, type: 3}
   cobblestoneFloor: {fileID: -152337017728516849, guid: 4c5c97c565bab6044b9b119aec2e97cc, type: 3}
   oneSidedFloor: {fileID: -152337017728516849, guid: 44cceaca9231ab049a0f48df9d97ea94, type: 3}
   oneSidedCeiling: {fileID: -152337017728516849, guid: 05204ed2f6c90934ca6aae7b83f1809e, type: 3}

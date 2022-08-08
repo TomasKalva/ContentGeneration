@@ -161,24 +161,58 @@ namespace ShapeGrammar
 
     public class Corner : Facet
     {
-        private CORNER cornerType;
+        private CornerFacetPrimitive facePrimitive;
 
-        public CORNER CornerType
+        public CornerFacetPrimitive FacePrimitive
         {
-            get => cornerType;
+            get => facePrimitive;
             set
             {
-                cornerType = value;
+                facePrimitive = value;
                 MyCube.Changed = true;
             }
         }
 
+        public CORNER CornerType => FacePrimitive.FaceType;
+
         public Corner(Cube myCube, Vector3Int direction) : base(myCube, direction)
         {
+            FacePrimitive = new CornerFacetPrimitive();
         }
 
         public override void Generate(float scale, World world, Vector3Int cubePosition)
         {
+            if (Style == null)
+                return;
+
+            if (FacePrimitive.Resolved)
+                return;
+
+            var dir = Direction;
+            var myPosition = MyCube.Position;
+            var middle = new Vector3Int(dir.x, 0, dir.z);
+            var directions = new Vector3Int[4] {
+                new Vector3Int(0, 0, 0),
+                new Vector3Int(0, 0, dir.z),
+                new Vector3Int(dir.x, 0, 0),
+                new Vector3Int(dir.x, 0, dir.z)
+            };
+            var primitives = directions.Select(direction => MyCube.Grid[myPosition + direction].Corners(middle - 2 * direction).FacePrimitive).ToList();
+            var winningPrimitive = primitives.ArgMax(p => p.Priority);
+            // Place stuff only from view of winning primitive
+            if (winningPrimitive != FacePrimitive)
+                return;
+
+            var losingPrimitive = primitives.Others(winningPrimitive).First();
+            winningPrimitive.PlacePrimitive(world, this, losingPrimitive);
+
+            primitives.ForEach(primitive => primitive.Resolved = true);
+
+
+
+
+
+            /*
             if (Style == null)
                 return;
 
@@ -190,7 +224,7 @@ namespace ShapeGrammar
 
             world.AddArchitectureElement(obj);
 
-            OnObjectCreated(obj);
+            OnObjectCreated(obj);*/
         }
 
         public Corner MoveBy(Vector3Int offset) => MoveBy<Corner>(offset);

@@ -502,9 +502,9 @@ namespace ShapeGrammar
         {
         }
 
-        public CornerGroup Fill(CORNER cornerType)
+        public CornerGroup Fill(Func<CornerFacetPrimitive> cornerPrimitiveF)
         {
-            Facets.ForEach(corner => corner.CornerType = cornerType);
+            Facets.ForEach(corner => corner.FacePrimitive = cornerPrimitiveF());
             return this;
         }
 

@@ -176,29 +176,58 @@ namespace Assets.ShapeGrammarGenerator
     #endregion
 
     #region Corner primitives
-    public abstract class CornerFacePrimitive : GridPrimitive, IGridPrimitivePlacer<CornerFacePrimitive>
+    public class CornerFacetPrimitive : GridPrimitive, IGridPrimitivePlacer<CornerFacetPrimitive>
     {
-        protected CORNER FaceType { get; }
+        public CORNER FaceType { get; }
 
-        public abstract void PlacePrimitive(IGridGeometryOwner worldGeometry, Facet facet, CornerFacePrimitive otherPrimitive);
+        public CornerFacetPrimitive()
+        {
+            FaceType = CORNER.Nothing;
+            Priority = 0;
+        }
+
+        public virtual void PlacePrimitive(IGridGeometryOwner worldGeometry, Facet facet, CornerFacetPrimitive otherPrimitive) { }
+
+        protected void PlaceCorner(IGridGeometryOwner geometryOwner, Facet facet, GeometricPrimitive toPlace)
+        {
+            var cubePosition = facet.MyCube.Position;
+            var scale = geometryOwner.WorldGeometry.WorldScale;
+            var offset = (Vector3)facet.Direction * 0.5f;
+
+            var obj = toPlace.New().transform;
+            obj.localScale = scale * Vector3.one;
+            obj.localPosition = (cubePosition + offset) * scale;
+
+            geometryOwner.AddArchitectureElement(obj);
+            facet.OnObjectCreated(obj);
+        }
     }
 
-    public class CornerFaceExclusivePrimitive : CornerFacePrimitive
+    public class CornerFaceExclusivePrimitive : CornerFacetPrimitive
     {
-        GeometricPrimitive Face { get; }
+        GeometricPrimitive Corner { get; }
 
         public CornerFaceExclusivePrimitive(GeometricPrimitive face)
         {
-            Face = face;
+            Corner = face;
         }
 
-        public override void PlacePrimitive(IGridGeometryOwner worldGeometry, Facet facet, CornerFacePrimitive otherPrimitive)
+        public override void PlacePrimitive(IGridGeometryOwner worldGeometry, Facet facet, CornerFacetPrimitive otherPrimitive)
         {
-            throw new NotImplementedException();
+            PlaceCorner(worldGeometry, facet, Corner);
+            /*var offset = (Vector3)Direction * 0.5f;
+            var obj = Style.GetCorner(CornerType);
+
+            obj.localScale = scale * Vector3.one;
+            obj.localPosition = (cubePosition + offset) * scale;
+
+            world.AddArchitectureElement(obj);
+
+            OnObjectCreated(obj);*/
         }
     }
 
-    public class BeamPrimitive : CornerFacePrimitive
+    public class BeamPrimitive : CornerFacetPrimitive
     {
         GeometricPrimitive Bottom { get; }
         GeometricPrimitive Middle { get; }
@@ -211,9 +240,9 @@ namespace Assets.ShapeGrammarGenerator
             Top = top;
         }
 
-        public override void PlacePrimitive(IGridGeometryOwner worldGeometry, Facet facet, CornerFacePrimitive otherPrimitive)
+        public override void PlacePrimitive(IGridGeometryOwner worldGeometry, Facet facet, CornerFacetPrimitive otherPrimitive)
         {
-            throw new NotImplementedException();
+            PlaceCorner(worldGeometry, facet, Middle);
         }
     }
     #endregion

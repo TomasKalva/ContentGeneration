@@ -67,8 +67,8 @@ namespace Assets.ShapeGrammarGenerator
         public Func<HorFacePrimitive> Wall { get; set; }
         public Func<HorFacePrimitive> Railing { get; set; }
         public Func<HorFacePrimitive> NoWall { get; set; }
-        public Func<CornerFacePrimitive> RailingPillar { get; set; }
-        public Func<CornerFacePrimitive> Beam { get; set; }
+        public Func<CornerFacetPrimitive> RailingPillar { get; set; }
+        public Func<CornerFacetPrimitive> Beam { get; set; }
         public Func<VerFacePrimitive> Floor { get; set; }
         public Func<VerFacePrimitive> NoFloor { get; set; }
         public Func<CubePrimitive> Stairs { get; set; }

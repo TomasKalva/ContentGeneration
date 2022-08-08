@@ -28,7 +28,7 @@ namespace ShapeGrammar
         {
             roomArea.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(gpStyle.Wall);
             roomArea.CubeGroupMaxLayer(Vector3Int.down).BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(gpStyle.Floor);
-            roomArea.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.Pillar);
+            roomArea.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(gpStyle.Beam);
             return roomArea;
         }
 
@@ -36,20 +36,20 @@ namespace ShapeGrammar
         {
             var floorPart = colonadeArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(gpStyle.Floor).CG();
             floorPart.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(gpStyle.Railing);
-            colonadeArea.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.Pillar);
+            colonadeArea.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(gpStyle.Beam);
             return colonadeArea;
         }
 
         public CubeGroup ReservationHighlighterStyle(GridPrimitivesStyle gpStyle, CubeGroup colonadeArea)
         {
-            colonadeArea.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.Pillar);
+            colonadeArea.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(gpStyle.Beam);
             return colonadeArea;
         }
 
         public CubeGroup PlainRoomStyle(GridPrimitivesStyle gpStyle, CubeGroup roomArea)
         {
             roomArea.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(gpStyle.Wall);
-            roomArea.AllSpecialCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.Pillar);
+            roomArea.AllSpecialCorners().SetStyle(DefaultHouseStyle).Fill(gpStyle.Beam);
             roomArea.CubeGroupMaxLayer(Vector3Int.down).BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(gpStyle.Floor);
             return roomArea;
         }
@@ -79,7 +79,7 @@ namespace ShapeGrammar
             var floorParth = roomArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultGardenStyle).Fill(gpStyle.Floor).CG();
 
             floorParth.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(gpStyle.Railing);
-            floorParth.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.RailingPillar);
+            floorParth.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(gpStyle.RailingPillar);
             return roomArea;
         }
 
@@ -87,7 +87,7 @@ namespace ShapeGrammar
         {
             var floorParth = roofArea.BoundaryFacesV(Vector3Int.down).SetStyle(DefaultHouseStyle).Fill(gpStyle.Floor).CG();
             floorParth.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(gpStyle.Railing);
-            floorParth.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.RailingPillar);
+            floorParth.AllBoundaryCorners().SetStyle(DefaultHouseStyle).Fill(gpStyle.RailingPillar);
             return roofArea;
         }
 
@@ -100,14 +100,14 @@ namespace ShapeGrammar
         public CubeGroup FoundationStyle(GridPrimitivesStyle gpStyle, CubeGroup foundationArea)
         {
             foundationArea.AllBoundaryFacesH().SetStyle(DefaultHouseStyle).Fill(gpStyle.Wall);
-            foundationArea.AllSpecialCorners().SetStyle(DefaultHouseStyle).Fill(CORNER.Pillar);
+            foundationArea.AllSpecialCorners().SetStyle(DefaultHouseStyle).Fill(gpStyle.Beam);
             return foundationArea;
         }
 
         public CubeGroup CliffFoundationStyle(GridPrimitivesStyle gpStyle, CubeGroup foundationArea)
         {
             foundationArea.AllBoundaryFacesH().SetStyle(DefaultGardenStyle).Fill(gpStyle.Wall);
-            foundationArea.AllSpecialCorners().SetStyle(DefaultGardenStyle).Fill(CORNER.Pillar);
+            foundationArea.AllSpecialCorners().SetStyle(DefaultGardenStyle).Fill(gpStyle.Beam);
             return foundationArea;
         }
 
@@ -118,7 +118,7 @@ namespace ShapeGrammar
             platformTop.SpecialCorners(ExtensionMethods.HorizontalDirections().ToArray())
                 .MoveBy(-Vector3Int.up)
                 .MoveInDirUntil(Vector3Int.down, corner => corner.MyCube.Position.y < 0)
-                .SetStyle(DefaultHouseStyle).Fill(CORNER.Pillar);
+                .SetStyle(DefaultHouseStyle).Fill(gpStyle.Beam);
 
             return platformArea;
         }
@@ -131,7 +131,7 @@ namespace ShapeGrammar
             platformTop.SpecialCorners(ExtensionMethods.HorizontalDirections().ToArray())
                 .MoveBy(-Vector3Int.up)
                 .MoveInDirUntil(Vector3Int.down, corner => corner.MyCube.Position.y < 0)
-                .SetStyle(DefaultHouseStyle).Fill(CORNER.Pillar);
+                .SetStyle(DefaultHouseStyle).Fill(gpStyle.Beam);
 
             return platformArea;
         }
