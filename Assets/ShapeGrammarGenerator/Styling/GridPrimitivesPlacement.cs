@@ -230,8 +230,8 @@ namespace ShapeGrammar
             return doorFromFirst;
         }
 
-        /*
-        CubeGroup RoofStyle(GridPrimitivesStyle gpStyle, CubeGroup roofArea, Func<Vector3, Transform> roofF)
+        
+        CubeGroup RoofStyle(CubeGroup roofArea, GeometricPrimitive roofPrim)
         {
             var extents = roofArea.Extents();
             var halfExtents = ((Vector3)extents) / 2f;
@@ -242,7 +242,8 @@ namespace ShapeGrammar
                 rot = 90;
             }
 
-            var roof = roofF(extents); 
+            var roof = roofPrim.New().transform;
+            roof.transform.localScale = Vector3.Scale(roof.transform.localScale, extents);
 
             var lbb = roofArea.LeftBottomBack();
             var center = new Vector3(lbb.x + halfExtents.x - 0.5f, lbb.y, lbb.z + halfExtents.z - 0.5f);
@@ -252,11 +253,12 @@ namespace ShapeGrammar
             return roofArea;
         }
 
-        public CubeGroup GableRoofStyle(GridPrimitivesStyle gpStyle, CubeGroup roofArea, Libraries lib)
+        public CubeGroup GableRoofStyle(GridPrimitivesStyle gpStyle, CubeGroup roofArea)
         {
-            return RoofStyle(roofArea, lib.InteractiveObjects.GableRoof);
+            roofArea.BottomLayer().AllBoundaryFacesH().Fill(gpStyle.Cladding);
+            return RoofStyle(roofArea, gpStyle.GableRoof());
         }
-
+        /*
         public CubeGroup PointyRoofStyle(GridPrimitivesStyle gpStyle, CubeGroup roofArea, Libraries lib)
         {
             return RoofStyle(roofArea, lib.InteractiveObjects.PointyRoof);

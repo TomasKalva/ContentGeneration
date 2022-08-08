@@ -74,4 +74,15 @@ public class GeometricPrimitives : ScriptableObject
     [SerializeField]
     public GeometricPrimitive stairs;
     #endregion
+
+    #region
+    [SerializeField]
+    public GeometricPrimitive gableRoof;
+    [SerializeField]
+    public GeometricPrimitive pointyRoof;
+    [SerializeField]
+    public GeometricPrimitive crossRoof;
+    [SerializeField]
+    public GeometricPrimitive oneDirectionRoof;
+    #endregion
 }

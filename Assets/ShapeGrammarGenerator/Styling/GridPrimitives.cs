@@ -29,6 +29,8 @@ namespace Assets.ShapeGrammarGenerator
 
         public HorFaceExclusivePrimitive Railing()
             => new HorFaceExclusivePrimitive(gp.railing, FACE_HOR.Railing, 1);
+        public HorFaceExclusivePrimitive Cladding()
+            => new HorFaceExclusivePrimitive(gp.cladding, FACE_HOR.Railing, 0.5f);
 
         public NoWallPrimitive NoWall()
             => new NoWallPrimitive();
@@ -54,24 +56,37 @@ namespace Assets.ShapeGrammarGenerator
         public CubeExclusivePrimitive StairPrimitive(Vector3Int direction)
             => new CubeExclusivePrimitive(gp.stairs, direction);
 
-
         public GridPrimitivesStyle DefaultStyle() => new GridPrimitivesStyle()
         {
             Door = Door,
+
             Wall = HouseWall,
             FoundationWall = FoundationWall,
             CladdedWall = CladdedWall,
-            Railing = Railing,
             NoWall = NoWall,
+
+            Railing = Railing,
+            Cladding = Cladding,
+
             RailingPillar = RailingPillar,
             Beam = Beam,
+
             Floor = Floor,
             PathFullFloor = PathFullFloor,
             NoFloor = NoFloor,
+
             Stairs = StairPrimitive,
+
+            DirectionalRoof = _ => gp.oneDirectionRoof,
+            CrossRoof = () => gp.crossRoof,
+            PointyRoof = () => gp.pointyRoof,
+            GableRoof = () => gp.gableRoof,
         };
     }
 
+    /// <summary>
+    /// Factories for the primitives, because each primitive contains a flag if it was resolved already.
+    /// </summary>
     public class GridPrimitivesStyle
     {
         public Func<HorFacePrimitive> Door { get; set; }
@@ -79,6 +94,7 @@ namespace Assets.ShapeGrammarGenerator
         public Func<HorFacePrimitive> FoundationWall { get; set; }
         public Func<HorFacePrimitive> CladdedWall { get; set; }
         public Func<HorFacePrimitive> Railing { get; set; }
+        public Func<HorFacePrimitive> Cladding { get; set; }
         public Func<HorFacePrimitive> NoWall { get; set; }
         public Func<CornerFacetPrimitive> RailingPillar { get; set; }
         public Func<CornerFacetPrimitive> Beam { get; set; }
@@ -86,6 +102,10 @@ namespace Assets.ShapeGrammarGenerator
         public Func<VerFacePrimitive> PathFullFloor { get; set; }
         public Func<VerFacePrimitive> NoFloor { get; set; }
         public Func<Vector3Int, CubePrimitive> Stairs { get; set; }
+        public Func<Vector3Int, GeometricPrimitive> DirectionalRoof { get; set; }
+        public Func<GeometricPrimitive> CrossRoof { get; set; }
+        public Func<GeometricPrimitive> PointyRoof { get; set; }
+        public Func<GeometricPrimitive> GableRoof { get; set; }
     }
 
 

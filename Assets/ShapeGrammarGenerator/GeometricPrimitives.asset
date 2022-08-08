@@ -28,3 +28,7 @@ MonoBehaviour:
   beamMiddle: {fileID: -3025781043452578236, guid: 3b551a368e8ee2344b940d6619d435ce, type: 3}
   beamTop: {fileID: -3025781043452578236, guid: f2135e95214912d42a78c28b67987492, type: 3}
   stairs: {fileID: 2509556157168084794, guid: 8478bb57d13fda64286b87706a03ec10, type: 3}
+  gableRoof: {fileID: 8798057177368778506, guid: de186beae02a2da48acf935e96f699b8, type: 3}
+  pointyRoof: {fileID: -606982149753653071, guid: f3aab967e0176cd4d9fff34e02c4dd0b, type: 3}
+  crossRoof: {fileID: -281885087177443011, guid: f44c4b75be3442740b29bff3b5efe341, type: 3}
+  oneDirectionRoof: {fileID: 8723091135839471183, guid: 2d193beea0c28e34fad31b323d2e1022, type: 3}

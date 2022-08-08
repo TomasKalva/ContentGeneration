@@ -101,7 +101,7 @@ namespace Assets.ShapeGrammarGenerator
     {
         GeometricPrimitive Face { get; }
 
-        public HorFaceExclusivePrimitive(GeometricPrimitive face, FACE_HOR faceType, int priority)
+        public HorFaceExclusivePrimitive(GeometricPrimitive face, FACE_HOR faceType, float priority)
         {
             Face = face;
             Priority = priority;
