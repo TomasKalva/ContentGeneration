@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Assets.ShapeGrammarGenerator
 {
@@ -26,11 +27,13 @@ namespace Assets.ShapeGrammarGenerator
 
         public static  AreaStyle FlatRoof() => new AreaStyle("FlatRoof", gm.DefaultStyle(), gpp.FlatRoofStyle);
 
-        public static  AreaStyle GableRoof() => new AreaStyle("GableRoof", gm.DefaultStyle(), gpp.GableRoofStyle);// new AreaStyle("GableRoof", sgStyles.GableRoofStyle);
+        public static  AreaStyle GableRoof() => new AreaStyle("GableRoof", gm.DefaultStyle(), gpp.GableRoofStyle);
 
-        public static  AreaStyle PointyRoof() => new AreaStyle("PointyRoof", gm.DefaultStyle(), gpp.FlatRoofStyle);// new AreaStyle("PointyRoof", area => );
+        public static  AreaStyle PointyRoof() => new AreaStyle("PointyRoof", gm.DefaultStyle(), gpp.PointyRoofStyle);
 
-        public static  AreaStyle CrossRoof() => new AreaStyle("CrossRoof", gm.DefaultStyle(), gpp.FlatRoofStyle);// new AreaStyle("CrossRoof", area => );
+        public static  AreaStyle CrossRoof() => new AreaStyle("CrossRoof", gm.DefaultStyle(), gpp.CrossRoofStyle);
+
+        public static AreaStyle DirectionalRoof(Vector3Int direction) => new AreaStyle("DirectionalRoof", gm.DefaultStyle(), (gpStyle, roofArea) => gpp.DirectionalRoofStyle(gpStyle, roofArea, direction));
 
         public static  AreaStyle Foundation() => new AreaStyle("Foundation", gm.DefaultStyle(), gpp.FoundationStyle);
 

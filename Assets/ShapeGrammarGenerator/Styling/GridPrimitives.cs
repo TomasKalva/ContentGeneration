@@ -77,7 +77,7 @@ namespace Assets.ShapeGrammarGenerator
 
             Stairs = StairPrimitive,
 
-            DirectionalRoof = _ => gp.oneDirectionRoof,
+            DirectionalRoof = () => gp.oneDirectionRoof,
             CrossRoof = () => gp.crossRoof,
             PointyRoof = () => gp.pointyRoof,
             GableRoof = () => gp.gableRoof,
@@ -102,7 +102,7 @@ namespace Assets.ShapeGrammarGenerator
         public Func<VerFacePrimitive> PathFullFloor { get; set; }
         public Func<VerFacePrimitive> NoFloor { get; set; }
         public Func<Vector3Int, CubePrimitive> Stairs { get; set; }
-        public Func<Vector3Int, GeometricPrimitive> DirectionalRoof { get; set; }
+        public Func<GeometricPrimitive> DirectionalRoof { get; set; }
         public Func<GeometricPrimitive> CrossRoof { get; set; }
         public Func<GeometricPrimitive> PointyRoof { get; set; }
         public Func<GeometricPrimitive> GableRoof { get; set; }
