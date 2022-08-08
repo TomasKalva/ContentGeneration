@@ -14,8 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wallDoor: {fileID: -8342775008284480774, guid: 627bbb96138ecd444a6a157749e64090, type: 3}
   brickWall: {fileID: 3764113671630828798, guid: a4dc48d88ef1c494c827cca91d51e97c, type: 3}
+  oneSidedWall: {fileID: 3764113671630828798, guid: 36fd51c45345a1342b1968ce4c5bf983, type: 3}
   cobblestoneFloor: {fileID: -152337017728516849, guid: 4c5c97c565bab6044b9b119aec2e97cc, type: 3}
+  oneSidedFloor: {fileID: -152337017728516849, guid: 44cceaca9231ab049a0f48df9d97ea94, type: 3}
+  oneSidedCeiling: {fileID: -152337017728516849, guid: 05204ed2f6c90934ca6aae7b83f1809e, type: 3}
   railing: {fileID: 876146423463043957, guid: 38ce534bf516e1f4283b57a411932d39, type: 3}
+  cladding: {fileID: 3764113671630828798, guid: ab057c7e5ed61b44e9afc8e9c79b6f6d, type: 3}
   railingPillar: {fileID: 3973095455055399144, guid: ccc81cb49b003844bbb97ded28f796ed, type: 3}
   beamBottom: {fileID: -3025781043452578236, guid: 3b551a368e8ee2344b940d6619d435ce, type: 3}
   beamMiddle: {fileID: -3025781043452578236, guid: 3b551a368e8ee2344b940d6619d435ce, type: 3}

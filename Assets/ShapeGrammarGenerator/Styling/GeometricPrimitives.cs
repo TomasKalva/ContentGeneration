@@ -28,9 +28,17 @@ public class GeometricPrimitives : ScriptableObject
     [SerializeField]
     public GeometricPrimitive brickWall;
     [SerializeField]
+    public GeometricPrimitive oneSidedWall;
+    [SerializeField]
     public GeometricPrimitive cobblestoneFloor;
     [SerializeField]
+    public GeometricPrimitive oneSidedFloor;
+    [SerializeField]
+    public GeometricPrimitive oneSidedCeiling;
+    [SerializeField]
     public GeometricPrimitive railing;
+    [SerializeField]
+    public GeometricPrimitive cladding;
     [SerializeField]
     public GeometricPrimitive railingPillar;
     [SerializeField]
