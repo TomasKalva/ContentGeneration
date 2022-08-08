@@ -38,21 +38,20 @@ namespace ShapeGrammar
         public CUBE CubeType => CubePrimitive.CubeType;
         public Vector3Int ObjectDir;
         public bool Changed { get; set; }
-        public ShapeGrammarObjectStyle Style { get; set; }
 
         public Cube(Grid<Cube> grid, Vector3Int position)
         {
             Grid = grid;
             Position = position;
             Facets = new Dictionary<Vector3Int, Facet>();
-            SetHorizontalFaces();
-            SetVerticalFaces();
-            SetCorners();
-            CubePrimitive = new CubePrimitive();// CUBE.Nothing;
+            CreateHorizontalFaces();
+            CreateVerticalFaces();
+            CreateCorners();
+            CubePrimitive = new CubePrimitive();
             Changed = false;
         }
 
-        public Cube SetHorizontalFaces()
+        public Cube CreateHorizontalFaces()
         {
             ExtensionMethods.HorizontalDirections().ForEach(dir =>
             {
@@ -62,7 +61,7 @@ namespace ShapeGrammar
             return this;
         }
 
-        public Cube SetVerticalFaces()
+        public Cube CreateVerticalFaces()
         {
             ExtensionMethods.VerticalDirections().ForEach(dir =>
             {
@@ -72,7 +71,7 @@ namespace ShapeGrammar
             return this;
         }
 
-        public Cube SetCorners()
+        public Cube CreateCorners()
         {
             ExtensionMethods.HorizontalDiagonals().ForEach(dir =>
             {
@@ -87,34 +86,12 @@ namespace ShapeGrammar
             if (!Changed)
                 return;
 
-            GenerateObject(scale, world);
+            CubePrimitive.PlacePrimitive(world, this, null);
 
             foreach (var facet in Facets.Values)
             {
                 facet.Generate(scale, world);
             }
-        }
-
-        public void GenerateObject(float cubeSide, World world)
-        {
-            CubePrimitive.PlacePrimitive(world, this, null);
-
-            /*
-            if (Style == null)
-            {
-                if(CubeType != CUBE.Nothing)
-                {
-                    Debug.LogError($"Trying to create an object {CubeType} when no style is set!");
-                }
-                return;
-            }
-
-            var obj = Style.GetCube(CubeType);
-
-            obj.localScale = cubeSide * Vector3.one;
-            obj.localPosition = ((Vector3)Position) * cubeSide;
-            obj.rotation = Quaternion.LookRotation(ObjectDir, Vector3.up);
-            world.AddArchitectureElement(obj);*/
         }
 
         public Cube MoveBy(Vector3Int offset)
@@ -145,26 +122,6 @@ namespace ShapeGrammar
         public IEnumerable<Cube> NeighborsDirections(IEnumerable<Vector3Int> directions)
         {
             return directions.Select(dir => Grid[Position + dir]); ;
-        }
-
-        public CubeGroup LineTo(Cube other)
-        {
-            // todo: use faster algorithm than a*
-
-            Neighbors<Cube> neighbors =
-                cube => ExtensionMethods.Directions()
-                    .Select(dir => cube.Grid[cube.Position + dir]);
-            // create graph for searching for the path
-            var graph = new ImplicitGraph<Cube>(neighbors);
-            var graphAlgs = new GraphAlgorithms<Cube, Edge<Cube>, ImplicitGraph<Cube>>(graph);
-
-            var path = graphAlgs.FindPath(
-                new Cube[1] { this }, 
-                cube => cube == other,
-                (c0, c1) => (c0.Position - c1.Position).sqrMagnitude,
-                c => (c.Position - other.Position).Sum(x => Mathf.Abs(x)),
-                EqualityComparer<Cube>.Default);
-            return path.ToCubeGroup(Grid);
         }
     }
 }

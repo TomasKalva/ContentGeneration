@@ -11,8 +11,6 @@ namespace ShapeGrammar
 {
     public class LevelDevelopmentKit
     {
-        public ShapeGrammarObjectStyle DefaultHouseStyle { get; }
-        public ShapeGrammarObjectStyle GardenStyle { get; }
         public WorldGeometry wg { get; }
         public Grid<Cube> grid { get; }
         public QueryContext qc { get; }
@@ -25,13 +23,12 @@ namespace ShapeGrammar
         public WorldChanging wc { get; }
         public Connections con { get; }
 
-        public LevelDevelopmentKit(ShapeGrammarObjectStyle defaultHouseStyle, ShapeGrammarObjectStyle gardenStyle, GeometricPrimitives gp, Transform worldParent, Libraries lib)
+        public LevelDevelopmentKit(GeometricPrimitives gp, Transform worldParent, Libraries lib)
         {
-            DefaultHouseStyle = defaultHouseStyle;
             wg = new WorldGeometry(worldParent, 2.8f);
             grid = new Grid<Cube>(new Vector3Int(20, 10, 20), (grid, pos) => new Cube(grid, pos));
             qc = new QueryContext(grid);
-            sgStyles = new GridPrimitivesPlacement(grid, DefaultHouseStyle, gardenStyle);
+            sgStyles = new GridPrimitivesPlacement(grid);
             sgShapes = new ShapeGrammarShapes(grid);
             pl = new Placement(grid);
             paths = new Paths(grid);
@@ -70,7 +67,7 @@ namespace ShapeGrammar
 
     public class Examples : LevelDevelopmentKit
     {
-        public Examples(ShapeGrammarObjectStyle defaultHouseStyle, ShapeGrammarObjectStyle gardenStyle, GeometricPrimitives gp, Transform worldParent, Libraries lib) : base(defaultHouseStyle, gardenStyle, gp, worldParent, lib)
+        public Examples(GeometricPrimitives gp, Transform worldParent, Libraries lib) : base(gp, worldParent, lib)
         { }
         /*
         public void IslandAndHouses()

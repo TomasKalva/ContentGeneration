@@ -22,7 +22,6 @@ namespace ShapeGrammar
     {
 
         public Vector3Int Direction { get; }
-        public ShapeGrammarObjectStyle Style { get; set; }
         public Cube MyCube { get; }
         public Cube OtherCube => MyCube.Grid[MyCube.Position + Direction];
         public Action<Transform> OnObjectCreated { get; set; } = _ => { };
@@ -71,9 +70,6 @@ namespace ShapeGrammar
 
         public override void Generate(float scale, World world)
         {
-            if (Style == null)
-                return;
-
             if (FacePrimitive.Resolved)
                 return;
 
@@ -142,9 +138,6 @@ namespace ShapeGrammar
 
         public override void Generate(float _, World world)
         {
-            if (Style == null)
-                return;
-
             if (FacePrimitive.Resolved)
                 return;
 
@@ -189,9 +182,6 @@ namespace ShapeGrammar
 
         public override void Generate(float scale, World world)
         {
-            if (Style == null)
-                return;
-
             if (FacePrimitive.Resolved)
                 return;
 

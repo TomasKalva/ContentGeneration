@@ -89,9 +89,29 @@ namespace ShapeGrammar
             return controlPoints.ToCubeGroup(bounds.Grid);
         }
 
+        public CubeGroup LineTo(Cube cube, Cube other)
+        {
+            // todo: use faster algorithm than a*
+
+            Neighbors<Cube> neighbors =
+                cube => ExtensionMethods.Directions()
+                    .Select(dir => cube.Grid[cube.Position + dir]);
+            // create graph for searching for the path
+            var graph = new ImplicitGraph<Cube>(neighbors);
+            var graphAlgs = new GraphAlgorithms<Cube, Edge<Cube>, ImplicitGraph<Cube>>(graph);
+
+            var path = graphAlgs.FindPath(
+                new Cube[1] { cube },
+                cube => cube == other,
+                (c0, c1) => (c0.Position - c1.Position).sqrMagnitude,
+                c => (c.Position - other.Position).Sum(x => Mathf.Abs(x)),
+                EqualityComparer<Cube>.Default);
+            return path.ToCubeGroup(cube.Grid);
+        }
+
         public CubeGroup ConnectByLine(CubeGroup controlPoints)
         {
-            return controlPoints.Cubes.Select2((c0, c1) => c0.LineTo(c1)).ToCubeGroup();
+            return controlPoints.Cubes.Select2((c0, c1) => LineTo(c0, c1)).ToCubeGroup();
         }
     }
 }

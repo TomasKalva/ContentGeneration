@@ -17,12 +17,6 @@ namespace ShapeGrammar
         Transform worldParent;
 
         [SerializeField]
-        ShapeGrammarObjectStyle DefaultHouseStyle;
-
-        [SerializeField]
-        ShapeGrammarObjectStyle GardenStyle;
-
-        [SerializeField]
         GeometricPrimitives GeometricPrimitives;
 
         [SerializeField]
@@ -83,7 +77,7 @@ namespace ShapeGrammar
 
 
 
-            var ldk = new LevelDevelopmentKit(DefaultHouseStyle, GardenStyle, GeometricPrimitives, worldParent, libraries);
+            var ldk = new LevelDevelopmentKit(GeometricPrimitives, worldParent, libraries);
 
             // Declaration
             {

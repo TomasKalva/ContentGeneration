@@ -261,15 +261,6 @@ namespace ShapeGrammar
             return Split(dir, relDists.Select(relDist => Mathf.RoundToInt((minMaxDist * relDist))).ToArray());
         }
 
-        /*
-        public CubeGroup SetGrammarStyle(ApplyStyle styleSetter)
-        {
-            styleSetter(this);
-            Cubes.ForEach(cube => cube.Changed = true);
-            return this;
-        }
-        */
-
         public CubeGroup Fill(CubePrimitive cubePrimitive)
         {
             Cubes.ForEach(cube =>
@@ -277,12 +268,6 @@ namespace ShapeGrammar
                 cube.CubePrimitive = cubePrimitive;
                 cube.Changed = true;
             });
-            return this;
-        }
-
-        public CubeGroup SetStyle(ShapeGrammarObjectStyle style)
-        {
-            Cubes.ForEach(face => face.Style = style);
             return this;
         }
 
@@ -439,12 +424,6 @@ namespace ShapeGrammar
             return this;
         }
 
-        public FaceHorGroup SetStyle(ShapeGrammarObjectStyle style)
-        {
-            Facets.ForEach(face => face.Style = style);
-            return this;
-        }
-
         public CornerGroup Corners()
         {
             return new CornerGroup(Grid, Facets.SelectManyNN(faceHor => faceHor.Corners()).Distinct().ToList());
@@ -485,11 +464,6 @@ namespace ShapeGrammar
             return this;
         }
 
-        public FaceVerGroup SetStyle(ShapeGrammarObjectStyle style)
-        {
-            Facets.ForEach(face => face.Style = style);
-            return this;
-        }
         public FaceVerGroup Where(Func<FaceVer, bool> pred) => new FaceVerGroup(Grid, Facets.Where(pred).ToList());
         public FaceVerGroup Intersect(FaceVerGroup faceVGroup) => new FaceVerGroup(Grid, Facets.Intersect(faceVGroup.Facets).ToList());
         public FaceVerGroup Neighboring(CubeGroup cubeGroup) => new FaceVerGroup(Grid, NeighboringIE(cubeGroup).ToList());
@@ -505,12 +479,6 @@ namespace ShapeGrammar
         public CornerGroup Fill(Func<CornerFacetPrimitive> cornerPrimitiveF)
         {
             Facets.ForEach(corner => corner.FacePrimitive = cornerPrimitiveF());
-            return this;
-        }
-
-        public CornerGroup SetStyle(ShapeGrammarObjectStyle style)
-        {
-            Facets.ForEach(corner => corner.Style = style);
             return this;
         }
 

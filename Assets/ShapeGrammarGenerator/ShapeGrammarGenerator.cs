@@ -15,12 +15,6 @@ namespace ShapeGrammar
         Transform worldParent;
 
         [SerializeField]
-        ShapeGrammarObjectStyle DefaultHouseStyle;
-
-        [SerializeField]
-        ShapeGrammarObjectStyle GardenStyle;
-
-        [SerializeField]
         GeometricPrimitives GeometricPrimitives;
 
         [SerializeField]
@@ -65,7 +59,7 @@ namespace ShapeGrammar
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 
-            var examples = new Examples(DefaultHouseStyle, GardenStyle, GeometricPrimitives, world.ArchitectureParent, libraries);
+            var examples = new Examples(GeometricPrimitives, world.ArchitectureParent, libraries);
             var levelRoot = examples.TestMoveInDistXZ();
             examples.grid.Generate(worldScale, world);
 
