@@ -222,7 +222,12 @@ namespace ShapeGrammar
                             .OpAdd().ExtrudeDir(Vector3Int.up).OpNew(), dir, 3)
                                 .LE(AreaStyles.Colonnade()).GN(sym.Terrace(dir), sym.FullFloorMarker),
                 Empty(),
-                Reserve(2, sym.UpwardReservation),
+                (program, terrace) => program
+                        .Set(() => terrace.LE.CG().ExtrudeVer(Vector3Int.up, 1).LE(AreaStyles.DirectionalRoof(terrace.GetSymbol(sym.Terrace(default)).Direction)).GN(sym.Roof))
+                        .NotTaken()
+                        .PlaceCurrentFrom(terrace),
+                //Roof(AreaStyles.GableRoof(), 2),
+                //Reserve(1, sym.UpwardReservation),
                 _ => ldk.con.ConnectByDoor
                 );
 
@@ -447,11 +452,11 @@ namespace ShapeGrammar
 
         public Func<ProductionProgram, Node, ProductionProgram> Roof(AreaStyle roofType, int roofHeight)
         {
-            return (program, towerTop) => program
-                        .Set(() => towerTop)
+            return (program, roof) => program
+                        .Set(() => roof)
                         .Change(towerTop => towerTop.LE.CG().ExtrudeVer(Vector3Int.up, roofHeight).LE(roofType).GN(sym.Roof))
                         .NotTaken()
-                        .PlaceCurrentFrom(towerTop);
+                        .PlaceCurrentFrom(roof);
         }
 
         public CubeGroup AlterInOrthogonalDirection(CubeGroup cg, Vector3Int dir, int newWidth)
@@ -624,6 +629,7 @@ namespace ShapeGrammar
                         );
                 });
         }
+
         public Production TakeUpwardReservation(
             Symbol reservationSymbol,
             Func<CubeGroup, Node> nodeFromExtrudedUp,
