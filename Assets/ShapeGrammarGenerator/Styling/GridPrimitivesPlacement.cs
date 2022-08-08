@@ -23,6 +23,7 @@ namespace ShapeGrammar
         public CubeGroup RoomStyle(GridPrimitivesStyle gpStyle, CubeGroup roomArea)
         {
             roomArea.AllBoundaryFacesH().Fill(gpStyle.Wall);
+            roomArea.BottomLayer().AllBoundaryFacesH().Fill(gpStyle.CladdedWall);
             roomArea.CubeGroupMaxLayer(Vector3Int.down).BoundaryFacesV(Vector3Int.down).Fill(gpStyle.Floor);
             roomArea.AllBoundaryCorners().Fill(gpStyle.Beam);
             return roomArea;
@@ -45,6 +46,7 @@ namespace ShapeGrammar
         public CubeGroup PlainRoomStyle(GridPrimitivesStyle gpStyle, CubeGroup roomArea)
         {
             roomArea.AllBoundaryFacesH().Fill(gpStyle.Wall);
+            roomArea.BottomLayer().AllBoundaryFacesH().Fill(gpStyle.CladdedWall);
             roomArea.AllSpecialCorners().Fill(gpStyle.Beam);
             roomArea.CubeGroupMaxLayer(Vector3Int.down).BoundaryFacesV(Vector3Int.down).Fill(gpStyle.Floor);
             return roomArea;
@@ -95,14 +97,14 @@ namespace ShapeGrammar
 
         public CubeGroup FoundationStyle(GridPrimitivesStyle gpStyle, CubeGroup foundationArea)
         {
-            foundationArea.AllBoundaryFacesH().Fill(gpStyle.Wall);
+            foundationArea.AllBoundaryFacesH().Fill(gpStyle.FoundationWall);
             foundationArea.AllSpecialCorners().Fill(gpStyle.Beam);
             return foundationArea;
         }
 
         public CubeGroup CliffFoundationStyle(GridPrimitivesStyle gpStyle, CubeGroup foundationArea)
         {
-            foundationArea.AllBoundaryFacesH().Fill(gpStyle.Wall);
+            foundationArea.AllBoundaryFacesH().Fill(gpStyle.FoundationWall);
             foundationArea.AllSpecialCorners().Fill(gpStyle.Beam);
             return foundationArea;
         }

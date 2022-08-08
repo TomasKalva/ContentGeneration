@@ -12,9 +12,6 @@ namespace ShapeGrammar
 {
     public class Cube : IFacet
     {
-        Cube IFacet.MyCube => this;
-        Vector3Int IFacet.Direction => Vector3Int.zero;
-        Action<Transform> IFacet.OnObjectCreated { get; } = _ => { };
 
         public Grid<Cube> Grid { get; }
         public Vector3Int Position { get; }
@@ -38,6 +35,10 @@ namespace ShapeGrammar
         public CUBE CubeType => CubePrimitive.CubeType;
         public Vector3Int ObjectDir;
         public bool Changed { get; set; }
+
+        Cube IFacet.MyCube => this;
+        Vector3Int IFacet.Direction => Vector3Int.zero;
+        Action<Transform> IFacet.OnObjectCreated { get; } = _ => { };
 
         public Cube(Grid<Cube> grid, Vector3Int position)
         {

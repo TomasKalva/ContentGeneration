@@ -24,23 +24,41 @@ public class GeometricPrimitives : ScriptableObject
 #endif
 
     [SerializeField]
+    public GeometricPrimitive empty;
+    [SerializeField]
     public GeometricPrimitive wallDoor;
+
+    #region Walls
     [SerializeField]
     public GeometricPrimitive brickWall;
     [SerializeField]
-    public GeometricPrimitive oneSidedWall;
+    public GeometricPrimitive woodenWall;
     [SerializeField]
-    public GeometricPrimitive oneSidedWallInside;
+    public GeometricPrimitive tiledWall;
+    [SerializeField]
+    public GeometricPrimitive stoneWall;
+    #endregion
+
+
+    #region Railings
+    [SerializeField]
+    public GeometricPrimitive railing;
+    [SerializeField]
+    public GeometricPrimitive cladding;
+    #endregion
+
+
+    #region Floors
     [SerializeField]
     public GeometricPrimitive cobblestoneFloor;
     [SerializeField]
     public GeometricPrimitive oneSidedFloor;
     [SerializeField]
     public GeometricPrimitive oneSidedCeiling;
-    [SerializeField]
-    public GeometricPrimitive railing;
-    [SerializeField]
-    public GeometricPrimitive cladding;
+    #endregion
+
+
+    #region Pillars
     [SerializeField]
     public GeometricPrimitive railingPillar;
     [SerializeField]
@@ -49,7 +67,11 @@ public class GeometricPrimitives : ScriptableObject
     public GeometricPrimitive beamMiddle;
     [SerializeField]
     public GeometricPrimitive beamTop;
+    #endregion
+
+
+    #region Stairs
     [SerializeField]
     public GeometricPrimitive stairs;
-
+    #endregion
 }

@@ -11,7 +11,7 @@ namespace Assets.ShapeGrammarGenerator
 {
     public abstract class GridPrimitive
     {
-        public int Priority { get; protected set; }
+        public float Priority { get; protected set; }
         /// <summary>
         /// True if the facet of this primitive was already resolved.
         /// </summary>
@@ -77,6 +77,23 @@ namespace Assets.ShapeGrammarGenerator
                 PlaceHorizontally(geometryOwner, facet, InsideWall, -facet.Direction);
                 PlaceHorizontally(geometryOwner, facet, OutsideWall, facet.Direction);
             }
+        }
+    }
+
+    public class CladdedWallPrimitive : WallPrimitive
+    {
+        GeometricPrimitive Cladding { get; }
+
+        public CladdedWallPrimitive(GeometricPrimitive insideWall, GeometricPrimitive outsideWall, GeometricPrimitive cladding) : base(insideWall, outsideWall)
+        {
+            Cladding = cladding;
+            Priority = 1.5f;
+        }
+
+        public override void PlacePrimitive(IGridGeometryOwner geometryOwner, IFacet facet, HorFacePrimitive otherPrimitive)
+        {
+            base.PlacePrimitive(geometryOwner, facet, otherPrimitive);
+            PlaceHorizontally(geometryOwner, facet, Cladding, facet.Direction);
         }
     }
 
