@@ -93,17 +93,7 @@ namespace Assets.ShapeGrammarGenerator
 
         public override void PlacePrimitive(IGridGeometryOwner geometryOwner, Facet facet, HorFacePrimitive otherPrimitive)
         {
-            var cubePosition = facet.MyCube.Position;
-            var scale = geometryOwner.WorldGeometry.WorldScale;
-            var offset = (Vector3)facet.Direction * 0.5f;
-            var obj = Face.New().transform;
-
-            obj.localScale = scale * Vector3.one;
-            obj.localPosition = (cubePosition + offset) * scale;
-            obj.rotation = Quaternion.LookRotation(facet.Direction, Vector3.up);
-
-            geometryOwner.AddArchitectureElement(obj);
-            facet.OnObjectCreated(obj);
+            PlaceHorizontally(geometryOwner, facet, Face, facet.Direction);
         }
     }
 
@@ -134,6 +124,20 @@ namespace Assets.ShapeGrammarGenerator
         }
 
         public virtual void PlacePrimitive(IGridGeometryOwner geometryOwner, Facet facet, VerFacePrimitive otherPrimitive) { }
+
+        protected void PlaceVertically(IGridGeometryOwner geometryOwner, Facet facet, GeometricPrimitive toPlace)
+        {
+            var cubePosition = facet.MyCube.Position;
+            var scale = geometryOwner.WorldGeometry.WorldScale;
+            var offset = Vector3.up * Math.Max(0, facet.Direction.y);
+
+            var obj = toPlace.New().transform;
+            obj.localScale = scale * Vector3.one;
+            obj.localPosition = (cubePosition + offset) * scale;
+
+            geometryOwner.AddArchitectureElement(obj);
+            facet.OnObjectCreated(obj);
+        }
     }
 
     public class FloorPrimitive : VerFacePrimitive
@@ -151,16 +155,8 @@ namespace Assets.ShapeGrammarGenerator
 
         public override void PlacePrimitive(IGridGeometryOwner geometryOwner, Facet face, VerFacePrimitive otherPrimitive)
         {
-            var cubePosition = face.MyCube.Position;
-            var scale = geometryOwner.WorldGeometry.WorldScale;
-            var offset = Vector3.up * Math.Max(0, face.Direction.y);
-
-            var obj = Floor.New().transform;
-            obj.localScale = scale * Vector3.one;
-            obj.localPosition = (cubePosition + offset) * scale; 
-
-            geometryOwner.AddArchitectureElement(obj);
-            face.OnObjectCreated(obj);
+            PlaceVertically(geometryOwner, face, Floor);
+            PlaceVertically(geometryOwner, face, Ceiling);
         }
     }
 
