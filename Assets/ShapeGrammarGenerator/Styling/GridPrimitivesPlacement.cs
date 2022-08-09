@@ -165,7 +165,11 @@ namespace ShapeGrammar
                     return dirTo.y > 0 || dirFrom.y < 0;
                     }).ToCubeGroup(GridView);
 
-            // todo: iterate all vertical cubes and place railing around if found floor
+            // place railing around if found floor
+            var verTopWithFloor = verTop.Where(cube => cube.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor);
+            verTopWithFloor.AllBoundaryFacesH().FillIfEmpty(gpStyle.Railing);
+            verTopWithFloor.AllBoundaryCorners().FillIfEmpty(gpStyle.RailingPillar);
+
             // empty vertical faces between cubes
             verTop.BoundaryFacesV(Vector3Int.down).Fill(gpStyle.NoFloor);
 
