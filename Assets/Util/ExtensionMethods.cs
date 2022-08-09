@@ -62,6 +62,11 @@ static class ExtensionMethods
         return list;
     }
 
+    public static IEnumerable<T> SkipLast<T>(this IEnumerable<T> enumerable, int skipCount)
+    {
+        return enumerable.Reverse().Skip(skipCount).Reverse();
+    }
+
     public static CubeGroup ToCubeGroup(this IEnumerable<Cube> enumerable, ShapeGrammar.Grid<Cube> grid)
     {
         return enumerable.ToList().ToCubeGroup(grid);

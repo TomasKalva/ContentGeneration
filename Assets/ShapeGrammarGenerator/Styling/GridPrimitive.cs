@@ -114,28 +114,6 @@ namespace Assets.ShapeGrammarGenerator
         }
     }
 
-    /*
-    public class DoorPrimitive : HorFacePrimitive
-    {
-        Dictionary<FACE_HOR, GeometricPrimitive> HorFaceTypeToDoor { get; }
-
-        public DoorPrimitive(GeometricPrimitive wallDoor, GeometricPrimitive railingDoor)
-        {
-            HorFaceTypeToDoor = new Dictionary<FACE_HOR, GeometricPrimitive>()
-            {
-                {FACE_HOR.Wall, wallDoor },
-                {FACE_HOR.Railing, railingDoor },
-            };
-            Priority = 3;
-            FaceType = FACE_HOR.Door;
-        }
-
-        public override void PlacePrimitive(IGridGeometryOwner geometryOwner, IFacet facet, HorFacePrimitive otherPrimitive)
-        {
-            PlaceHorizontally(geometryOwner, facet, HorFaceTypeToDoor, facet.Direction);
-        }
-    }*/
-
     public class NoWallPrimitive : HorFacePrimitive
     {
         public NoWallPrimitive()

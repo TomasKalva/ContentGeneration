@@ -424,6 +424,18 @@ namespace ShapeGrammar
             return this;
         }
 
+        public FaceHorGroup FillIfEmpty(Func<HorFacePrimitive> facePrimitiveF)
+        {
+            Facets.ForEach(face =>
+            {
+                if (face.FaceType == FACE_HOR.Nothing)
+                {
+                    face.FacePrimitive = facePrimitiveF();
+                }
+            });
+            return this;
+        }
+
         public CornerGroup Corners()
         {
             return new CornerGroup(Grid, Facets.SelectManyNN(faceHor => faceHor.Corners()).Distinct().ToList());
@@ -479,6 +491,18 @@ namespace ShapeGrammar
         public CornerGroup Fill(Func<CornerFacetPrimitive> cornerPrimitiveF)
         {
             Facets.ForEach(corner => corner.FacePrimitive = cornerPrimitiveF());
+            return this;
+        }
+
+        public CornerGroup FillIfEmpty(Func<CornerFacetPrimitive> facePrimitiveF)
+        {
+            Facets.ForEach(face =>
+            {
+                if (face.CornerType == CORNER.Nothing)
+                {
+                    face.FacePrimitive = facePrimitiveF();
+                }
+            });
             return this;
         }
 

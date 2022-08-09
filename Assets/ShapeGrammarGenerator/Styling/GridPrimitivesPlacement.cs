@@ -136,19 +136,26 @@ namespace ShapeGrammar
 
         public CubeGroup StairsPathStyle(GridPrimitivesStyle gpStyle, CubeGroup path)
         {
-            var hor = path.Where3Cycle(
+            // find cubes with floor
+            var floorCubes = path.Where3Cycle(
                 (prev, cube, next) => 
                 {
-                    var dirTo = cube.Position - prev.Position;
-                    var dirFrom = next.Position - cube.Position;
-                    if(dirTo.y == 0 && dirFrom.y == 0)
+                    var verDirTo = cube.Position.y - prev.Position.y;
+                    var verDirFrom = next.Position.y - cube.Position.y;
+                    if(verDirTo == 0 && verDirFrom == 0)
                     {
                         return true;
                     }
                     return false;
                 }
             );
-            hor.BoundaryFacesV(Vector3Int.down).Fill(gpStyle.PathFullFloor);
+            floorCubes.BoundaryFacesV(Vector3Int.down).Fill(gpStyle.PathFullFloor);
+            var horFacesInside = path.InsideFacesH();
+
+            // add railing
+            var middleFloorCubes = floorCubes.Cubes.Skip(1).SkipLast(1).ToCubeGroup(GridView);
+            middleFloorCubes.AllBoundaryFacesH().Minus(horFacesInside).FillIfEmpty(gpStyle.Railing);
+            middleFloorCubes.AllBoundaryCorners().FillIfEmpty(gpStyle.RailingPillar);
 
             var verTop = path.Cubes.Where3(
                 (prev, cube, next) =>
@@ -158,12 +165,13 @@ namespace ShapeGrammar
                     return dirTo.y > 0 || dirFrom.y < 0;
                     }).ToCubeGroup(GridView);
 
+            // todo: iterate all vertical cubes and place railing around if found floor
             // empty vertical faces between cubes
             verTop.BoundaryFacesV(Vector3Int.down).Fill(gpStyle.NoFloor);
 
             // empty horizontal faces between cubes
-            var horFacesInside = path.InsideFacesH().Facets;
-            horFacesInside.ForEach(faceH =>
+            //var horFacesInside = path.InsideFacesH().Facets;
+            horFacesInside.Facets.ForEach(faceH =>
             {
                 //faceH.FaceType = FACE_HOR.Door;
                 //return;
@@ -176,13 +184,11 @@ namespace ShapeGrammar
                 if (faceH.FaceType == FACE_HOR.Wall || otherFace.FaceType == FACE_HOR.Wall)
                 {
                     faceH.FacePrimitive = gpStyle.Door();
-                    //otherFace.FaceType = FACE_HOR.Nothing;
                     return;
                 }
                 if (faceH.FaceType == FACE_HOR.Railing || otherFace.FaceType == FACE_HOR.Railing)
                 {
                     faceH.FacePrimitive = gpStyle.RailingDoor();
-                    //otherFace.FaceType = FACE_HOR.Nothing;
                     return;
                 }
                 faceH.FacePrimitive = gpStyle.NoWall();
