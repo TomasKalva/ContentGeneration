@@ -84,21 +84,6 @@ namespace ShapeGrammar
             winningPrimitive.PlacePrimitive(world, this, losingPrimitive);
 
             primitives.ForEach(primitive => primitive.Resolved = true);
-            /*
-            var otherFaceType = OtherCube.FacesHor(-Direction).FaceType;
-            if (FaceType < otherFaceType)
-                return;
-
-            var offset = (Vector3)Direction * 0.5f;
-            var obj = Style.GetFaceHor(FaceType);
-
-            obj.localScale = scale * Vector3.one;
-            obj.localPosition = (cubePosition + offset) * scale;
-            obj.rotation = Quaternion.LookRotation(Direction, Vector3.up);
-            
-            world.AddArchitectureElement(obj);
-
-            OnObjectCreated(obj);*/
         }
 
         public IEnumerable<Corner> Corners()

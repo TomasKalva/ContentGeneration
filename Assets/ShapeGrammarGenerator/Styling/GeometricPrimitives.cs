@@ -27,6 +27,8 @@ public class GeometricPrimitives : ScriptableObject
     public GeometricPrimitive empty;
     [SerializeField]
     public GeometricPrimitive wallDoor;
+    [SerializeField]
+    public GeometricPrimitive railingDoor;
 
     #region Walls
     [SerializeField]

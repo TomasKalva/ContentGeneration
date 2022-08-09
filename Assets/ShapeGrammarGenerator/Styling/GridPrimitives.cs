@@ -26,6 +26,8 @@ namespace Assets.ShapeGrammarGenerator
 
         public HorFaceExclusivePrimitive Door()
             => new HorFaceExclusivePrimitive(gp.wallDoor, FACE_HOR.Door, 3);//todo: replace with actual door primitive
+        public HorFaceExclusivePrimitive RailingDoor()
+            => new HorFaceExclusivePrimitive(gp.railingDoor, FACE_HOR.Door, 3);
 
         public HorFaceExclusivePrimitive Railing()
             => new HorFaceExclusivePrimitive(gp.railing, FACE_HOR.Railing, 1);
@@ -59,6 +61,7 @@ namespace Assets.ShapeGrammarGenerator
         public GridPrimitivesStyle DefaultStyle() => new GridPrimitivesStyle()
         {
             Door = Door,
+            RailingDoor = RailingDoor,
 
             Wall = HouseWall,
             FoundationWall = FoundationWall,
@@ -90,6 +93,7 @@ namespace Assets.ShapeGrammarGenerator
     public class GridPrimitivesStyle
     {
         public Func<HorFacePrimitive> Door { get; set; }
+        public Func<HorFacePrimitive> RailingDoor { get; set; }
         public Func<HorFacePrimitive> Wall { get; set; }
         public Func<HorFacePrimitive> FoundationWall { get; set; }
         public Func<HorFacePrimitive> CladdedWall { get; set; }

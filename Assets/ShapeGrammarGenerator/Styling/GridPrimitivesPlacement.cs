@@ -179,6 +179,12 @@ namespace ShapeGrammar
                     //otherFace.FaceType = FACE_HOR.Nothing;
                     return;
                 }
+                if (faceH.FaceType == FACE_HOR.Railing || otherFace.FaceType == FACE_HOR.Railing)
+                {
+                    faceH.FacePrimitive = gpStyle.RailingDoor();
+                    //otherFace.FaceType = FACE_HOR.Nothing;
+                    return;
+                }
                 faceH.FacePrimitive = gpStyle.NoWall();
             });
 
