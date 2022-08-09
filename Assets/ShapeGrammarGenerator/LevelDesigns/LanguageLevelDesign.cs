@@ -35,7 +35,6 @@ namespace ShapeGrammar
                 var sym = new Symbols();
                 ProductionProgram.pr = new Productions(ldk, sym);
                 ProductionProgram.ldk = ldk;
-                ProductionProgram.StyleRules = ldk.houseStyleRules;
 
                 language = new MyLanguage(new LanguageParams(lib, gr, languageState));
 

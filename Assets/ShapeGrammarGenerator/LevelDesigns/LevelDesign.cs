@@ -137,7 +137,7 @@ namespace ShapeGrammar
             int length = 6;
 
             var start = ldk.qc.GetBox(new Box3Int(Vector3Int.zero, Vector3Int.one)).ExtrudeVer(Vector3Int.up, 10).LE();
-            WorldState state = new WorldState(start, ldk.grid, le => le.ApplyGrammarStyleRules(ldk.houseStyleRules)/*.MoveBy((heightDistr.Sample() - le.CubeGroup().CubeGroupMaxLayer(Vector3Int.down).Cubes.FirstOrDefault().Position.y)* Vector3Int.up)*/);
+            WorldState state = new WorldState(start, ldk.grid, le => le.ApplyGrammarStyleRules()/*.MoveBy((heightDistr.Sample() - le.CubeGroup().CubeGroupMaxLayer(Vector3Int.down).Cubes.FirstOrDefault().Position.y)* Vector3Int.up)*/);
             
 
             var addedLine = LinearCurveDesign(start, length)(state);

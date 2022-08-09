@@ -80,9 +80,9 @@ namespace ShapeGrammar
             return this;
         }
 
-        public LevelElement ApplyGrammarStyleRules(StyleApplier styleRules)
+        public LevelElement ApplyGrammarStyleRules()
         {
-            styleRules.Apply(this);
+            Leafs().ForEach(le => le.ApplyStyle());
             return this;
         }
 

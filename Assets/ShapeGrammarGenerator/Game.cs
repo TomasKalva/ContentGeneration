@@ -90,7 +90,6 @@ namespace ShapeGrammar
                     var sym = new Symbols();
                     ProductionProgram.pr = new Productions(ldk, sym);
                     ProductionProgram.ldk = ldk;
-                    ProductionProgram.StyleRules = ldk.houseStyleRules;
 
                     GameLanguage = new MyLanguage(new LanguageParams(libraries, gr, languageState));
 

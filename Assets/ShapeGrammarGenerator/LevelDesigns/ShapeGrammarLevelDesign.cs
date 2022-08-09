@@ -21,7 +21,6 @@ namespace ShapeGrammar
             var pr = new Productions(ldk, new Symbols());
             ProductionProgram.pr = pr;
             ProductionProgram.ldk = ldk;
-            ProductionProgram.StyleRules = ldk.houseStyleRules;
 
             var grammarState = new ShapeGrammarState(ldk);
             var prL = new ProductionLists(ldk, pr);

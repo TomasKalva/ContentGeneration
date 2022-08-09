@@ -291,7 +291,7 @@ namespace ShapeGrammar
             var grid = ldk.grid;
             var empty = LevelElement.Empty(grid);
             Root = new Node(empty, new List<Symbol>());
-            WorldState = new WorldState(empty, grid, le => le.ApplyGrammarStyleRules(ldk.houseStyleRules)).TryPush(empty);
+            WorldState = new WorldState(empty, grid, le => le.ApplyGrammarStyleRules()).TryPush(empty);
             OffersFoundation = new Grid<bool>(new Vector3Int(10, 1, 10), (_1, _2) => true);
             CubeToNode = new Grid<Node>(new Vector3Int(10, 10, 10), (_1, _2) => null);
             VerticallyTaken = LevelElement.Empty(grid);
@@ -395,9 +395,9 @@ namespace ShapeGrammar
             printingState.Show();
         }
 
-        public void ShowVerticallyTaken(StyleApplier houseStyleRules)
+        public void ShowVerticallyTaken()
         {
-            VerticallyTaken.SetAreaType(AreaStyles.Garden()).ApplyGrammarStyleRules(houseStyleRules);
+            VerticallyTaken.SetAreaType(AreaStyles.Garden()).ApplyGrammarStyleRules();
         }
         #endregion
 

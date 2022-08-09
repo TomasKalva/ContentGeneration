@@ -93,7 +93,7 @@ namespace ShapeGrammar
             
              */
 
-
+            
             State.LC.AddEvent(
                 new LevelConstructionEvent(90,
                 () =>
@@ -342,13 +342,14 @@ namespace ShapeGrammar
             Env.Execute(roofGrammar);
             */
 
-            Env.Line(Gr.PrL.Town(), NodesQueries.All, 40, out var _);
+            //Env.Line(Gr.PrL.Town(), NodesQueries.All, 40, out var _);
+            
             /*Env.Line(Gr.PrL.TestingProductions(), NodesQueries.All, 10, out var _);
             Env.Line(Gr.PrL.TestingProductions(), NodesQueries.All, 10, out var _);
             Env.Line(Gr.PrL.TestingProductions(), NodesQueries.All, 10, out var _);
             Env.Line(Gr.PrL.TestingProductions(), NodesQueries.All, 10, out var _);*/
 
-            Env.BranchRandomly(Gr.PrL.TownDetails(), 8, out var _);
+            //Env.BranchRandomly(Gr.PrL.TownDetails(), 8, out var _);
             Env.Execute(new AllGrammar(Gr.PrL.GraveyardPostprocess()));
 
             var allAreas = State.TraversableAreas;

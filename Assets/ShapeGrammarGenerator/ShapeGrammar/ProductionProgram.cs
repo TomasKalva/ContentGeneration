@@ -13,7 +13,6 @@ namespace ShapeGrammar
     {
         public static LevelDevelopmentKit ldk { get; set; }
         public static Productions pr { get; set; }
-        public static StyleApplier StyleRules { get; set; }
 
 
         public ShapeGrammarState State { get; }
