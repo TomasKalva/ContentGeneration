@@ -122,8 +122,9 @@ namespace ShapeGrammar
                     node => pathGuide.SelectDirections(node.LE),
                     (cg, dir) => AlterInOrthogonalDirection(cg.ExtrudeDir(dir, 6), dir, 3).LE(AreaStyles.Colonnade()).GN(sym.Bridge(dir), sym.FullFloorMarker),
                     Empty(),
-                    Empty(),
-                    _ => ldk.con.ConnectByDoor
+                    (program, bridgeTop) => BridgeFoundation(bridgeTop.GetSymbol(sym.Bridge(default)).Direction)(program, bridgeTop),
+                    _ => ldk.con.ConnectByDoor,
+                    false
                 );
         }
 
@@ -132,10 +133,11 @@ namespace ShapeGrammar
             return Extrude(
                     sym.Bridge(),
                     node => node.GetSymbol(sym.Bridge()).Direction.ToEnumerable(),
-                    (cg, dir) => AlterInOrthogonalDirection(cg.ExtrudeDir(dir, 6), dir, 7).LE(AreaStyles.Yard()).GN(sym.Courtyard, sym.FullFloorMarker),
+                    (cg, dir) => cg.ExtrudeDir(dir, 5).LE(AreaStyles.Colonnade()).GN(sym.Bridge(dir), sym.FullFloorMarker),
                     Empty(),
-                    Empty(),
-                    _ => ldk.con.ConnectByDoor
+                    (program, bridgeTop) => BridgeFoundation(bridgeTop.GetSymbol(sym.Bridge(default)).Direction)(program, bridgeTop),
+                    _ => ldk.con.ConnectByDoor,
+                    false
                 );
         }
 
@@ -144,7 +146,7 @@ namespace ShapeGrammar
             return Extrude(
                     sym.Bridge(),
                     node => node.GetSymbol(sym.Bridge()).Direction.ToEnumerable(),
-                    (cg, dir) => cg.ExtrudeDir(dir, 5).LE(AreaStyles.Colonnade()).GN(sym.Bridge(dir), sym.FullFloorMarker),
+                    (cg, dir) => AlterInOrthogonalDirection(cg.ExtrudeDir(dir, 6), dir, 7).LE(AreaStyles.Yard()).GN(sym.Courtyard, sym.FullFloorMarker),
                     Empty(),
                     Empty(),
                     _ => ldk.con.ConnectByDoor
@@ -457,6 +459,14 @@ namespace ShapeGrammar
                         .Change(towerTop => towerTop.LE.CG().ExtrudeVer(Vector3Int.up, roofHeight).LE(roofType).GN(sym.Roof))
                         .NotTaken()
                         .PlaceCurrentFrom(roof);
+        }
+
+        public Func<ProductionProgram, Node, ProductionProgram> BridgeFoundation(Vector3Int bridgeDirection)
+        {
+            return (program, bridgeTop) => program
+                        .Set(() => ldk.sgShapes.BridgeFoundation(bridgeTop.LE, bridgeDirection).GN(sym.Foundation))
+                        .NotTaken()
+                        .PlaceCurrentFrom(bridgeTop);
         }
 
         public CubeGroup AlterInOrthogonalDirection(CubeGroup cg, Vector3Int dir, int newWidth)
