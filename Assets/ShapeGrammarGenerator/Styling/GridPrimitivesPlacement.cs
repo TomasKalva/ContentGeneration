@@ -272,25 +272,25 @@ namespace ShapeGrammar
         public CubeGroup GableRoofStyle(GridPrimitivesStyle gpStyle, CubeGroup roofArea)
         {
             roofArea.BottomLayer().AllBoundaryFacesH().Fill(gpStyle.Cladding);
-            return PlaceInDirection(roofArea, gpStyle.GableRoof(), DefaultRoofDirection(roofArea));
+            return PlaceInDirection(roofArea, gpStyle.GableRoof, DefaultRoofDirection(roofArea));
         }
         
         public CubeGroup PointyRoofStyle(GridPrimitivesStyle gpStyle, CubeGroup roofArea)
         {
             roofArea.BottomLayer().AllBoundaryFacesH().Fill(gpStyle.Cladding);
-            return PlaceInDirection(roofArea, gpStyle.PointyRoof(), Vector3Int.forward);
+            return PlaceInDirection(roofArea, gpStyle.PointyRoof, Vector3Int.forward);
         }
 
         public CubeGroup CrossRoofStyle(GridPrimitivesStyle gpStyle, CubeGroup roofArea)
         {
             roofArea.BottomLayer().AllBoundaryFacesH().Fill(gpStyle.Cladding);
-            return PlaceInDirection(roofArea, gpStyle.CrossRoof(), Vector3Int.forward);
+            return PlaceInDirection(roofArea, gpStyle.CrossRoof, Vector3Int.forward);
         }
 
         public CubeGroup DirectionalRoofStyle(GridPrimitivesStyle gpStyle, CubeGroup roofArea, Vector3Int direction)
         {
             roofArea.BottomLayer().AllBoundaryFacesH().Fill(gpStyle.Cladding);
-            return PlaceInDirection(roofArea, gpStyle.DirectionalRoof(), direction);
+            return PlaceInDirection(roofArea, gpStyle.DirectionalRoof, direction);
         }
     }
 }

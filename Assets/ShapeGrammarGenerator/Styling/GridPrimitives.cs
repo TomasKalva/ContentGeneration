@@ -46,7 +46,7 @@ namespace Assets.ShapeGrammarGenerator
 
 
         public FloorPrimitive Floor()
-            => new FloorPrimitive(gp.oneSidedFloor, gp.oneSidedCeiling);
+            => new FloorPrimitive(gp.stoneTiledFloor, gp.oneSidedCeiling);
 
         public FloorPrimitive PathFullFloor()
             => new FloorPrimitive(gp.woodenFullFloor, gp.empty);
@@ -80,13 +80,13 @@ namespace Assets.ShapeGrammarGenerator
 
             Stairs = StairPrimitive,
 
-            DirectionalRoof = () => gp.oneDirectionRoof,
-            CrossRoof = () => gp.crossRoof,
-            PointyRoof = () => gp.pointyRoof,
-            GableRoof = () => gp.gableRoof,
+            DirectionalRoof = gp.oneDirectionRoof,
+            CrossRoof = gp.crossRoof,
+            PointyRoof = gp.pointyRoof,
+            GableRoof = gp.gableRoof,
 
-            BridgeTop = () => gp.bridgeTop,
-            BridgeBottom = () => gp.bridgeBottom,
+            BridgeTop = gp.bridgeTop,
+            BridgeBottom = gp.bridgeBottom,
         };
     }
 
@@ -109,12 +109,12 @@ namespace Assets.ShapeGrammarGenerator
         public Func<VerFacePrimitive> PathFullFloor { get; set; }
         public Func<VerFacePrimitive> NoFloor { get; set; }
         public Func<Vector3Int, CubePrimitive> Stairs { get; set; }
-        public Func<GeometricPrimitive> DirectionalRoof { get; set; }
-        public Func<GeometricPrimitive> CrossRoof { get; set; }
-        public Func<GeometricPrimitive> PointyRoof { get; set; }
-        public Func<GeometricPrimitive> GableRoof { get; set; }
-        public Func<GeometricPrimitive> BridgeTop { get; set; }
-        public Func<GeometricPrimitive> BridgeBottom { get; set; }
+        public GeometricPrimitive DirectionalRoof { get; set; }
+        public GeometricPrimitive CrossRoof { get; set; }
+        public GeometricPrimitive PointyRoof { get; set; }
+        public GeometricPrimitive GableRoof { get; set; }
+        public GeometricPrimitive BridgeTop { get; set; }
+        public GeometricPrimitive BridgeBottom { get; set; }
     }
 
 

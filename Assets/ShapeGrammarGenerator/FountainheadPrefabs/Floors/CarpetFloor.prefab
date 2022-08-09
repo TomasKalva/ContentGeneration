@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6860055782296935232}
   - component: {fileID: -152337017728516849}
   m_Layer: 12
-  m_Name: OneSidedFloor
+  m_Name: CarpetFloor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e28dc812e97615847b191184747b1f68, type: 2}
+  - {fileID: 2100000, guid: 5bbe8b97b74252b40ae7813d788d180e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

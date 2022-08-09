@@ -54,7 +54,21 @@ public class GeometricPrimitives : ScriptableObject
     [SerializeField]
     public GeometricPrimitive woodenFullFloor;
     [SerializeField]
-    public GeometricPrimitive oneSidedFloor;
+    public GeometricPrimitive stoneTiledFloor;
+    [SerializeField]
+    public GeometricPrimitive cobblestoneFloor;
+    [SerializeField]
+    public GeometricPrimitive ornamentedFloor;
+    [SerializeField]
+    public GeometricPrimitive carpetFloor;
+    [SerializeField]
+    public GeometricPrimitive evenTiledFloor;
+    [SerializeField]
+    public GeometricPrimitive grassFloor;
+    [SerializeField]
+    public GeometricPrimitive dirtFloor;
+    [SerializeField]
+    public GeometricPrimitive marbleFloor;
     [SerializeField]
     public GeometricPrimitive oneSidedCeiling;
     #endregion

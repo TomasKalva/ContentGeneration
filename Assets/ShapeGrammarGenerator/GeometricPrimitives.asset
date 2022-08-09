@@ -22,7 +22,14 @@ MonoBehaviour:
   railing: {fileID: 876146423463043957, guid: 38ce534bf516e1f4283b57a411932d39, type: 3}
   cladding: {fileID: 3764113671630828798, guid: ab057c7e5ed61b44e9afc8e9c79b6f6d, type: 3}
   woodenFullFloor: {fileID: -152337017728516849, guid: 4c5c97c565bab6044b9b119aec2e97cc, type: 3}
-  oneSidedFloor: {fileID: -152337017728516849, guid: 44cceaca9231ab049a0f48df9d97ea94, type: 3}
+  stoneTiledFloor: {fileID: -152337017728516849, guid: 7d65618955ac0ea47b9d2ee4353c85b1, type: 3}
+  cobblestoneFloor: {fileID: -152337017728516849, guid: 44cceaca9231ab049a0f48df9d97ea94, type: 3}
+  ornamentedFloor: {fileID: -152337017728516849, guid: e450a9f503a889e4288e2a9bb18dabf1, type: 3}
+  carpetFloor: {fileID: -152337017728516849, guid: 5de73c6b7161bd0428f64286397c67c2, type: 3}
+  evenTiledFloor: {fileID: -152337017728516849, guid: 34fd990ae0af489439591115ab1137e0, type: 3}
+  grassFloor: {fileID: -152337017728516849, guid: 1984f6c6377bf7a4ba8b5e3241d5d719, type: 3}
+  dirtFloor: {fileID: -152337017728516849, guid: d4d25a7f48bb9cf45b6a690cfeff5ded, type: 3}
+  marbleFloor: {fileID: -152337017728516849, guid: 3095f6a978d4b11449276c0fa2a1d22e, type: 3}
   oneSidedCeiling: {fileID: -152337017728516849, guid: 05204ed2f6c90934ca6aae7b83f1809e, type: 3}
   railingPillar: {fileID: 3973095455055399144, guid: ccc81cb49b003844bbb97ded28f796ed, type: 3}
   beamBottom: {fileID: -3025781043452578236, guid: 49a59bcfd8177f34a9fb97d1238f0577, type: 3}
@@ -34,3 +41,4 @@ MonoBehaviour:
   crossRoof: {fileID: -281885087177443011, guid: f44c4b75be3442740b29bff3b5efe341, type: 3}
   oneDirectionRoof: {fileID: 8723091135839471183, guid: 2d193beea0c28e34fad31b323d2e1022, type: 3}
   bridgeTop: {fileID: 7838852636306108382, guid: c0147165dd0bf9a4cb1994264fe2ee41, type: 3}
+  bridgeBottom: {fileID: 7838852636306108382, guid: dce147e7e7d01c74b84919cd5b6c00fe, type: 3}
