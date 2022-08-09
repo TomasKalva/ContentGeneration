@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GeometricPrimitives
   m_EditorClassIdentifier: 
   empty: {fileID: 5652275661959312811, guid: df0bba3dd5c09784683447305975721f, type: 3}
-  wallDoor: {fileID: -8342775008284480774, guid: 627bbb96138ecd444a6a157749e64090, type: 3}
+  wallDoor: {fileID: -8342775008284480774, guid: bac84fd7825d2984cb1c962a4c878eed, type: 3}
   brickWall: {fileID: 3764113671630828798, guid: ec05327582746e64fb6bf6fc1fab9864, type: 3}
   woodenWall: {fileID: 3764113671630828798, guid: 61b3322b68d1a3146baefbf1251f40dd, type: 3}
   tiledWall: {fileID: 3764113671630828798, guid: d13b103f9025a63488d190387a1de6e7, type: 3}
