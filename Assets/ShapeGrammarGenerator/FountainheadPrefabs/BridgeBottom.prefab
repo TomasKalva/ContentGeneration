@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7001871458610389802}
   - component: {fileID: 7838852636306108382}
   m_Layer: 0
-  m_Name: Bridge
+  m_Name: BridgeBottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -42,7 +42,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6777130626186640927}
-  m_Mesh: {fileID: 674340280032488212, guid: 30f30bf4873750c429ecd25f8467c155, type: 3}
+  m_Mesh: {fileID: 2876029007990053440, guid: 30f30bf4873750c429ecd25f8467c155, type: 3}
 --- !u!23 &6777130626186640926
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -63,9 +63,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 65d15370685cae14dbcfb66e395cbc80, type: 2}
   - {fileID: 2100000, guid: 58d730c3fbcee814aa025565e3e2d858, type: 2}
-  - {fileID: 2100000, guid: e28dc812e97615847b191184747b1f68, type: 2}
+  - {fileID: 2100000, guid: 65d15370685cae14dbcfb66e395cbc80, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -100,7 +99,7 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 674340280032488212, guid: 30f30bf4873750c429ecd25f8467c155, type: 3}
+  m_Mesh: {fileID: 2876029007990053440, guid: 30f30bf4873750c429ecd25f8467c155, type: 3}
 --- !u!114 &7838852636306108382
 MonoBehaviour:
   m_ObjectHideFlags: 0

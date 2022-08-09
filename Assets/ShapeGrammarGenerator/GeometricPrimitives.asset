@@ -33,3 +33,4 @@ MonoBehaviour:
   pointyRoof: {fileID: -606982149753653071, guid: f3aab967e0176cd4d9fff34e02c4dd0b, type: 3}
   crossRoof: {fileID: -281885087177443011, guid: f44c4b75be3442740b29bff3b5efe341, type: 3}
   oneDirectionRoof: {fileID: 8723091135839471183, guid: 2d193beea0c28e34fad31b323d2e1022, type: 3}
+  bridgeTop: {fileID: 7838852636306108382, guid: c0147165dd0bf9a4cb1994264fe2ee41, type: 3}

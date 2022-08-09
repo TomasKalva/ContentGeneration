@@ -84,6 +84,9 @@ namespace Assets.ShapeGrammarGenerator
             CrossRoof = () => gp.crossRoof,
             PointyRoof = () => gp.pointyRoof,
             GableRoof = () => gp.gableRoof,
+
+            BridgeTop = () => gp.bridgeTop,
+            BridgeBottom = () => gp.bridgeBottom,
         };
     }
 
@@ -110,6 +113,8 @@ namespace Assets.ShapeGrammarGenerator
         public Func<GeometricPrimitive> CrossRoof { get; set; }
         public Func<GeometricPrimitive> PointyRoof { get; set; }
         public Func<GeometricPrimitive> GableRoof { get; set; }
+        public Func<GeometricPrimitive> BridgeTop { get; set; }
+        public Func<GeometricPrimitive> BridgeBottom { get; set; }
     }
 
 

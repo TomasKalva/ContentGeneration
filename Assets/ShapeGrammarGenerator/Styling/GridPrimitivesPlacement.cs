@@ -251,45 +251,46 @@ namespace ShapeGrammar
             var extents = roofArea.Extents();
             return extents.x > extents.z ? Vector3Int.right : Vector3Int.forward;
         }
-        CubeGroup RoofStyle(CubeGroup roofArea, GeometricPrimitive roofPrim, Vector3Int direction)
+
+        public CubeGroup PlaceInDirection(CubeGroup area, GeometricPrimitive roofPrim, Vector3Int direction)
         {
-            var extents = roofArea.Extents();
+            var extents = area.Extents();
             var halfExtents = ((Vector3)extents) / 2f;
             var scaleExtents = direction.x == 0 ? extents : new Vector3Int(extents.z, extents.y, extents.x);
 
-            var roof = roofPrim.New().transform;
-            roof.transform.localScale = Vector3.Scale(roof.transform.localScale, scaleExtents);
+            var obj = roofPrim.New().transform;
+            obj.transform.localScale = Vector3.Scale(obj.transform.localScale, scaleExtents);
 
-            var lbb = roofArea.LeftBottomBack();
+            var lbb = area.LeftBottomBack();
             var center = new Vector3(lbb.x + halfExtents.x - 0.5f, lbb.y, lbb.z + halfExtents.z - 0.5f);
 
-            roof.position = center * 2.8f;
-            roof.rotation = Quaternion.LookRotation(direction);
-            return roofArea;
+            obj.position = center * 2.8f;
+            obj.rotation = Quaternion.LookRotation(direction);
+            return area;
         }
 
         public CubeGroup GableRoofStyle(GridPrimitivesStyle gpStyle, CubeGroup roofArea)
         {
             roofArea.BottomLayer().AllBoundaryFacesH().Fill(gpStyle.Cladding);
-            return RoofStyle(roofArea, gpStyle.GableRoof(), DefaultRoofDirection(roofArea));
+            return PlaceInDirection(roofArea, gpStyle.GableRoof(), DefaultRoofDirection(roofArea));
         }
         
         public CubeGroup PointyRoofStyle(GridPrimitivesStyle gpStyle, CubeGroup roofArea)
         {
             roofArea.BottomLayer().AllBoundaryFacesH().Fill(gpStyle.Cladding);
-            return RoofStyle(roofArea, gpStyle.PointyRoof(), Vector3Int.forward);
+            return PlaceInDirection(roofArea, gpStyle.PointyRoof(), Vector3Int.forward);
         }
 
         public CubeGroup CrossRoofStyle(GridPrimitivesStyle gpStyle, CubeGroup roofArea)
         {
             roofArea.BottomLayer().AllBoundaryFacesH().Fill(gpStyle.Cladding);
-            return RoofStyle(roofArea, gpStyle.CrossRoof(), Vector3Int.forward);
+            return PlaceInDirection(roofArea, gpStyle.CrossRoof(), Vector3Int.forward);
         }
 
         public CubeGroup DirectionalRoofStyle(GridPrimitivesStyle gpStyle, CubeGroup roofArea, Vector3Int direction)
         {
             roofArea.BottomLayer().AllBoundaryFacesH().Fill(gpStyle.Cladding);
-            return RoofStyle(roofArea, gpStyle.DirectionalRoof(), direction);
+            return PlaceInDirection(roofArea, gpStyle.DirectionalRoof(), direction);
         }
     }
 }

@@ -77,7 +77,7 @@ public class GeometricPrimitives : ScriptableObject
     public GeometricPrimitive stairs;
     #endregion
 
-    #region
+    #region Objects
     [SerializeField]
     public GeometricPrimitive gableRoof;
     [SerializeField]
@@ -86,5 +86,9 @@ public class GeometricPrimitives : ScriptableObject
     public GeometricPrimitive crossRoof;
     [SerializeField]
     public GeometricPrimitive oneDirectionRoof;
+    [SerializeField]
+    public GeometricPrimitive bridgeTop;
+    [SerializeField]
+    public GeometricPrimitive bridgeBottom;
     #endregion
 }

@@ -101,10 +101,10 @@ namespace ShapeGrammar
                     .MoveBy(Vector3Int.down))
             .LE(AreaStyles.Foundation());
 
-        public LevelElement BridgeFoundation(LevelElement bridgeBeFounded, Vector3Int bridgeDirection)
+        public LevelElement BridgeFoundation(LevelElement bridgeToBeFounded, Vector3Int bridgeDirection)
         {
             var foundation = qc.MoveDownUntilGround(
-                bridgeBeFounded.CG()
+                bridgeToBeFounded.CG()
                     .CubeGroupLayer(Vector3Int.down)
                     .MoveBy(Vector3Int.down));
             var topBottom = foundation.Split(Vector3Int.down, 2);
@@ -117,13 +117,13 @@ namespace ShapeGrammar
                     .ExtrudeDir(-bridgeDirection, -1)
                     .OpNew();
                 return new LevelGroupElement(Grid, AreaStyles.None(),
-                    top.LE(AreaStyles.Room()),
-                    bottom.Minus(bottomHole).LE(AreaStyles.Foundation())
+                    top.LE(AreaStyles.BridgeTopFoundation(bridgeDirection)),
+                    bottom.Minus(bottomHole).LE(AreaStyles.BridgeBottomFoundation(bridgeDirection))
                     );
             }
             else
             {
-                return top.LE(AreaStyles.Room());
+                return top.LE(AreaStyles.Foundation());
             }
         }
 
