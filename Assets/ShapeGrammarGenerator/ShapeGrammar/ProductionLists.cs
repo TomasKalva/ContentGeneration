@@ -172,7 +172,7 @@ namespace ShapeGrammar
 
             return new ProductionList
             (
-                pr.ChapelSides(2),
+                pr.ChapelSide(2),
                 pr.BalconyFrom(pr.sym.ChapelRoom)
             );
         }

@@ -929,7 +929,7 @@ namespace ShapeGrammar
                     ldk.con.ConnectByBalconyStairsOutside,
                     1);
 
-        public Production ChapelSides(int width)
+        public Production ChapelSide(int width)
             => Extrude(
                 sym.ChapelHall(default),
                 node => node.GetSymbol(sym.ChapelHall(default)).Direction.ToEnumerable(),
@@ -941,7 +941,10 @@ namespace ShapeGrammar
                                 .LE(AreaStyles.Room()).GN(sym.ChapelSide(orthDir), sym.FullFloorMarker);
                 },
                 Empty(),
-                Reserve(2, sym.UpwardReservation),
+                (program, chapelSide) => program
+                        .Set(() => chapelSide.LE.CG().ExtrudeVer(Vector3Int.up, 1).LE(AreaStyles.DirectionalRoof(chapelSide.GetSymbol(sym.ChapelSide(default)).Direction)).GN(sym.Roof))
+                        .NotTaken()
+                        .PlaceCurrentFrom(chapelSide),
                 _ => ldk.con.ConnectByDoor
                 );
 
