@@ -21,8 +21,37 @@ namespace ShapeGrammar
             paths = new Paths(grid);
         }
 
+        #region Helper methods
+        /// <summary>
+        /// Cubes on inside part of the wall.
+        /// </summary>
+        CubeGroup WallSpaceInside(LevelElement le)
+        {
+            var boundaryWall = le.CG().AllBoundaryFacesH().CG();
+            return boundaryWall.ExtrudeHor(false);
+        }
+
+        /// <summary>
+        /// Cubes on outside part of the wall.
+        /// </summary>
+        CubeGroup WallSpaceOutside(LevelElement le)
+        {
+            var inside = le.CG();
+            var boundaryWall = inside.AllBoundaryFacesH().CG();
+            return boundaryWall.ExtrudeHor(true).Cubes.SetMinus(inside.Cubes).ToCubeGroup(le.Grid);
+        }
+
+        /// <summary>
+        /// Horizontal edges of the area which contain floor.
+        /// </summary>
+        CubeGroup AreaEdgesWithFloor(LevelElement le)
+        {
+            return le.CG().ExtrudeHor(outside: false).BottomLayer();
+        }
+        #endregion
+
         // todo: add other paths level element to the api
-        public delegate Connection ConnectionNotIntersecting(LevelElement notIntersected);
+        public delegate Connection ConnectionNotIntersecting(LevelElement alreadyAdded);
         public delegate LevelGeometryElement Connection(LevelElement le1, LevelElement le2);
 
         /// <summary>
@@ -44,15 +73,6 @@ namespace ShapeGrammar
         }
 
         /// <summary>
-        /// Cubes on inside part of the wall.
-        /// </summary>
-        CubeGroup WallSpaceInside(LevelElement le)
-        {
-            var boundaryWall = le.CG().AllBoundaryFacesH().CG();
-            return boundaryWall.ExtrudeHor(false);
-        }
-
-        /// <summary>
         /// Creates stairs between cubes of the elements. The stairs don't leave the elements.
         /// </summary>
         public Connection ConnectByWallStairsIn(LevelElement _)
@@ -69,27 +89,9 @@ namespace ShapeGrammar
         }
 
         /// <summary>
-        /// Cubes on outside part of the wall.
-        /// </summary>
-        CubeGroup WallSpaceOutside(LevelElement le)
-        {
-            var inside = le.CG();
-            var boundaryWall = inside.AllBoundaryFacesH().CG();
-            return boundaryWall.ExtrudeHor(true).Cubes.SetMinus(inside.Cubes).ToCubeGroup(le.Grid);
-        }
-
-        /// <summary>
-        /// Horizontal edges of the area which contain floor.
-        /// </summary>
-        CubeGroup AreaEdgesWithFloor(LevelElement le)
-        {
-            return le.CG().ExtrudeHor(outside: false).BottomLayer();
-        }
-
-        /// <summary>
         /// Connects level elements by stairs outside of the area faces.
         /// </summary>
-        public Connection ConnectByWallStairsOut(LevelElement notIntersecting)
+        public Connection ConnectByWallStairsOut(LevelElement alreadyAdded)
         {
             return (le1, le2) =>
             {
@@ -102,7 +104,7 @@ namespace ShapeGrammar
                             PathNode.StairsNeighbors(), 
                             searchSpace
                         ), 
-                        notIntersecting.CG().Minus(end)
+                        alreadyAdded.CG().Minus(end)
                     );
                 var path = paths.ConnectByPath(start, end, neighbors);
                 return path != null ? path.LE(AreaStyles.Path()) : null;
@@ -139,7 +141,7 @@ namespace ShapeGrammar
         }
 
 
-        public Connection ConnectByBalconyStairsOutside(LevelElement notIntersecting)
+        public Connection ConnectByBalconyStairsOutside(LevelElement alreadyAdded)
         {
             return (le1, le2) =>
             {
@@ -150,7 +152,7 @@ namespace ShapeGrammar
                 var balconySpaceStart = WallSpaceOutside(le1.CG().BottomLayer().LE());
                 var balconySpaceEnd = WallSpaceOutside(le2.CG().BottomLayer().LE());
 
-                var notIntersectingCG = notIntersecting.CG().Minus(end);
+                var notIntersectingCG = alreadyAdded.CG().Minus(end);
                 Neighbors<PathNode> neighbors =
                     PathNode.NotIn(
                             PathNode.BalconyStairsBalconyNeighbors(start, end, balconySpaceStart, balconySpaceEnd),
@@ -161,13 +163,14 @@ namespace ShapeGrammar
             };
         }
 
-        public Connection ConnectByBridge(LevelElement notIntersecting)
+        public Connection ConnectByBridge(LevelElement alreadyAdded)
         {
             return (le1, le2) =>
             {
                 var space1 = le1.CG();
                 var space2 = le2.CG();
-                Neighbors<PathNode> neighbors = PathNode.NotIn(PathNode.StraightHorizontalNeighbors(), notIntersecting.CG());
+                var notIntersectingCG = alreadyAdded.CG().Minus(space2);
+                Neighbors<PathNode> neighbors = PathNode.NotIn(PathNode.StraightHorizontalNeighbors(), notIntersectingCG);
                 var path = paths.ConnectByPath(space1.BottomLayer(), space2.BottomLayer(), neighbors);
                 return path != null ? path.LE(AreaStyles.Path()) : null;
             };
@@ -182,15 +185,11 @@ namespace ShapeGrammar
         {
             return (le1, le2) =>
             {
-                /*
-                if (bounds == null)
-                    bounds = LevelElement.Empty(Grid);*/
-
                 var space1 = le1.CG();
                 var space2 = le2.CG();
                 var start = space1.BottomLayer();
                 var end = space2.BottomLayer();
-                Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.StairsNeighbors(), space1.Merge(space2)/*.Merge(bounds.CG())*/);
+                Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.StairsNeighbors(), space1.Merge(space2));
                 var path = paths.ConnectByPath(start, end, neighbors);
                 return path != null ? path.LE(AreaStyles.Path()) : null;
             };

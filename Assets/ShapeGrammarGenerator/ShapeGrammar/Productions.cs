@@ -800,7 +800,9 @@ namespace ShapeGrammar
                             thisProg => fromFloorNodeAfterPlaced(thisProg, newNode)
                         )
 
-                        .FindPath(() => ldk.con.ConnectByBridge(state.WorldState.Added)(what.LE, newNode.LE).GN(sym.ConnectionMarker), out var bridge)
+                        .FindPath(() => 
+                        ldk.con.ConnectByBridge(AllBlocking(state, prog, what.LE.Grid))
+                            (what.LE, newNode.LE).GN(sym.ConnectionMarker), out var bridge)
                         .PlaceCurrentFrom(what, newNode)
                         );
 
