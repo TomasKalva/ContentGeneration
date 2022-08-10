@@ -174,8 +174,9 @@ namespace ShapeGrammar
                 var notIntersectingCG = alreadyAdded.CG().Minus(end);
                 Neighbors<PathNode> neighbors = PathNode.PreserveConnectivity(
                     PathNode.NotIn(
-                            PathNode.BalconyStairsBalconyNeighbors(start, end, balconySpaceStart, balconySpaceEnd),
-                            notIntersectingCG
+                        //PathNode.BalconyStairsBalconyNeighbors(start, end, balconySpaceStart, balconySpaceEnd),
+                        PathNode.StairsNeighbors(),
+                        notIntersectingCG
                     ),
                     le1.CG(), le2.CG(), existingPaths.LevelElements.Select(le => le.CG())
                 );

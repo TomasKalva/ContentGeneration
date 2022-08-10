@@ -883,7 +883,7 @@ namespace ShapeGrammar
         {
             return TakeUpwardReservation(
                     from,
-                    nextFloor => nextFloor.LE(AreaStyles.Platform()).GN(to, sym.FullFloorMarker),
+                    nextFloor => nextFloor.LE(AreaStyles.Room()).GN(to, sym.FullFloorMarker),
                     nextFloorHeight,
                     maxFloorHeight,
                     Reserve(2, sym.UpwardReservation),

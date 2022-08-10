@@ -342,7 +342,7 @@ namespace ShapeGrammar
             Env.Execute(roofGrammar);
             */
 
-            Env.Line(Gr.PrL.SuperMegaTower(), NodesQueries.All, 40, out var _);
+            Env.Line(Gr.PrL.Castle(), NodesQueries.All, 40, out var _);
             //Env.BranchRandomly(Gr.PrL.Town(), 40, out var _);
 
             /*Env.Line(Gr.PrL.TestingProductions(), NodesQueries.All, 10, out var _);
@@ -350,7 +350,7 @@ namespace ShapeGrammar
             Env.Line(Gr.PrL.TestingProductions(), NodesQueries.All, 10, out var _);
             Env.Line(Gr.PrL.TestingProductions(), NodesQueries.All, 10, out var _);*/
 
-            Env.BranchRandomly(Gr.PrL.ChapelsDetails(), 8, out var _);
+            Env.BranchRandomly(Gr.PrL.CastleDetails(), 8, out var _);
             Env.Execute(new AllGrammar(Gr.PrL.GraveyardPostprocess()));
 
             var allAreas = State.TraversableAreas;
