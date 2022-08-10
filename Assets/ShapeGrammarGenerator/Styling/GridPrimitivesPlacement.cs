@@ -37,6 +37,20 @@ namespace ShapeGrammar
             return colonadeArea;
         }
 
+        public CubeGroup BridgeStyle(GridPrimitivesStyle gpStyle, CubeGroup bridgeArea, Vector3Int bridgeDirection)
+        {
+            var floorPart = bridgeArea.BoundaryFacesV(Vector3Int.down).Fill(gpStyle.Floor).CG();
+            floorPart.AllBoundaryFacesH().Fill(gpStyle.Railing);
+            floorPart.AllBoundaryCorners().Fill(gpStyle.RailingPillar);
+
+            // remove railing and pillars from the incoming direction
+            var incomingFloor = floorPart.OpAdd().ExtrudeDir(-bridgeDirection).OpNew();
+            incomingFloor.FacesH(ExtensionMethods.HorizontalDirections().ToArray()).Minus(incomingFloor.AllBoundaryFacesH()).Fill(gpStyle.NoWall);
+            incomingFloor.Corners(ExtensionMethods.HorizontalDirections().ToArray()).Minus(incomingFloor.AllBoundaryCorners()).Fill(gpStyle.NoPillar);
+
+            return bridgeArea;
+        }
+
         public CubeGroup ReservationHighlighterStyle(GridPrimitivesStyle gpStyle, CubeGroup colonadeArea)
         {
             colonadeArea.AllBoundaryCorners().Fill(gpStyle.Beam);

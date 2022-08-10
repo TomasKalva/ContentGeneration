@@ -39,10 +39,13 @@ namespace Assets.ShapeGrammarGenerator
 
 
         public CornerFaceExclusivePrimitive RailingPillar()
-            => new CornerFaceExclusivePrimitive(gp.railingPillar, CORNER.RailingPillar);
+            => new CornerFaceExclusivePrimitive(gp.railingPillar, CORNER.RailingPillar, 1f);
 
         public BeamPrimitive Beam()
             => new BeamPrimitive(gp.beamBottom, gp.beamMiddle, gp.beamTop);
+
+        public CornerFaceExclusivePrimitive NoPillar()
+            => new CornerFaceExclusivePrimitive(gp.empty, CORNER.Nothing, 3f);
 
 
         public FloorPrimitive Floor()
@@ -73,6 +76,7 @@ namespace Assets.ShapeGrammarGenerator
 
             RailingPillar = RailingPillar,
             Beam = Beam,
+            NoPillar = NoPillar,
 
             Floor = Floor,
             PathFullFloor = PathFullFloor,
@@ -105,6 +109,7 @@ namespace Assets.ShapeGrammarGenerator
         public Func<HorFacePrimitive> NoWall { get; set; }
         public Func<CornerFacetPrimitive> RailingPillar { get; set; }
         public Func<CornerFacetPrimitive> Beam { get; set; }
+        public Func<CornerFacetPrimitive> NoPillar { get; set; }
         public Func<VerFacePrimitive> Floor { get; set; }
         public Func<VerFacePrimitive> PathFullFloor { get; set; }
         public Func<VerFacePrimitive> NoFloor { get; set; }

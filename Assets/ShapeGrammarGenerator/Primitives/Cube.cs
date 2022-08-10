@@ -32,8 +32,6 @@ namespace ShapeGrammar
                 Changed = true;
             }
         }
-        public CUBE CubeType => CubePrimitive.CubeType;
-        public Vector3Int ObjectDir;
         public bool Changed { get; set; }
 
         Cube IFacet.MyCube => this;

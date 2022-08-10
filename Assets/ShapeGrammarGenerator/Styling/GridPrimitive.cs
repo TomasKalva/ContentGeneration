@@ -224,9 +224,9 @@ namespace Assets.ShapeGrammarGenerator
     {
         GeometricPrimitive Corner { get; }
 
-        public CornerFaceExclusivePrimitive(GeometricPrimitive face, CORNER cornerType)
+        public CornerFaceExclusivePrimitive(GeometricPrimitive face, CORNER cornerType, float priority)
         {
-            Priority = 1;
+            Priority = priority;
             Corner = face;
             CornerType = cornerType;
         }

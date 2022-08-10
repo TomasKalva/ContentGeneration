@@ -124,7 +124,7 @@ namespace ShapeGrammar
             return Extrude(
                     from,
                     node => pathGuide.SelectDirections(node.LE),
-                    (cg, dir) => AlterInOrthogonalDirection(cg.ExtrudeDir(dir, 6), dir, 3).LE(AreaStyles.Colonnade()).GN(sym.Bridge(dir), sym.FullFloorMarker),
+                    (cg, dir) => AlterInOrthogonalDirection(cg.ExtrudeDir(dir, 6), dir, 3).LE(AreaStyles.BridgeTop(dir)).GN(sym.Bridge(dir), sym.FullFloorMarker),
                     Empty(),
                     (program, bridgeTop) => BridgeFoundation(bridgeTop.GetSymbol(sym.Bridge(default)).Direction)(program, bridgeTop),
                     ldk.con.ConnectByDoor,
@@ -137,7 +137,7 @@ namespace ShapeGrammar
             return Extrude(
                     sym.Bridge(),
                     node => node.GetSymbol(sym.Bridge()).Direction.ToEnumerable(),
-                    (cg, dir) => cg.ExtrudeDir(dir, 5).LE(AreaStyles.Colonnade()).GN(sym.Bridge(dir), sym.FullFloorMarker),
+                    (cg, dir) => cg.ExtrudeDir(dir, 5).LE(AreaStyles.BridgeTop(dir)).GN(sym.Bridge(dir), sym.FullFloorMarker),
                     Empty(),
                     (program, bridgeTop) => BridgeFoundation(bridgeTop.GetSymbol(sym.Bridge(default)).Direction)(program, bridgeTop),
                     ldk.con.ConnectByDoor,
@@ -1034,9 +1034,6 @@ namespace ShapeGrammar
                     ldk.con.ConnectByDoor
                     );
 
-        /// <summary>
-        /// Todo: make the pathfinding work correctly.
-        /// </summary>
         public Production SideWall(int width)
             => Extrude(
                 sym.WallTop(default),
