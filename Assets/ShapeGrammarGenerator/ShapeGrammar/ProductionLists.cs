@@ -213,7 +213,7 @@ namespace ShapeGrammar
 
             return new ProductionList
             (
-                //pr.SideWall(2)
+                pr.SideWall(2),
                 pr.WatchPostNear(pr.sym.WallTop(default), 1, -3, 4, () => ldk.qc.GetFlatBox(3, 3, 1))
             );
         }

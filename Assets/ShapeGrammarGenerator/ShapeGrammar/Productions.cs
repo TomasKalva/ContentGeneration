@@ -433,7 +433,7 @@ namespace ShapeGrammar
             return (program, node) => program
                         .Set(() => node)
                         .Change(node => node
-                                .LE.MoveBottomBy(heightChange, minHeight).GN());
+                                .LE.MoveBottomBy(heightChange, minHeight).GN(node.GetSymbols.ToArray()));
         }
 
         /// <summary>
@@ -600,7 +600,7 @@ namespace ShapeGrammar
             bool placeFoundation = true)
         {
             return new Production(
-                $"Extrude{extrudeFrom}",
+                $"ExtrudeFrom_{extrudeFrom.Name}",
                 new ProdParamsManager().AddNodeSymbols(extrudeFrom),
                 (state, pp) =>
                 {
@@ -1032,17 +1032,18 @@ namespace ShapeGrammar
         /// </summary>
         public Production SideWall(int width)
             => Extrude(
-                sym.ChapelHall(default),
-                node => node.GetSymbol(sym.ChapelHall(default)).Direction.ToEnumerable(),
+                sym.WallTop(default),
+                node => node.GetSymbol(sym.WallTop(default)).Direction.ToEnumerable(),
                 (cg, dir) =>
                 {
                     var orthDir = ExtensionMethods.OrthogonalHorizontalDir(dir);
                     return cg.ExtrudeDir(orthDir, width)
                                 .LE(AreaStyles.FlatRoof()).GN(sym.SideWallTop(orthDir), sym.FullFloorMarker);
                 },
-                Empty(),//MoveVertically(0, 5),
+                MoveVertically(-2, 5),
                 Empty(),
-                _ => ldk.con.ConnectByDoor
+                ldk.con.ConnectByBalconyStairsOutside
+                //_ => ldk.con.ConnectByDoor
                 );
 
         public Production WatchPostNear(Symbol nearWhatSym, int distance, int heightChange, int minBottomHeight, Func<LevelElement> towerTopF)

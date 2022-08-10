@@ -20,6 +20,7 @@ namespace ShapeGrammar
     public class Node : Printable
     {
         List<Symbol> Symbols { get; }
+        public IEnumerable<Symbol> GetSymbols => Symbols;
         HashSet<string> SymbolNames { get; }
 
         public LevelElement LE { get; set; }
