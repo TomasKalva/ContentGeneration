@@ -355,7 +355,7 @@ namespace ShapeGrammar
             room1.ApplyGrammarStyleRules();
             room2.ApplyGrammarStyleRules();
 
-            var connection = con.ConnectByDoor(room1, room2);
+            var connection = con.ConnectByDoor(null)(room1, room2);
 
             connection.ApplyGrammarStyleRules();
 

@@ -44,7 +44,7 @@ namespace ShapeGrammar
 
                 // these productions make the world untraversable
                 //pr.RoomFallDown(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-                //pr.TowerFallDown(pr.sym.Courtyard, pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
+                pr.TowerFallDown(pr.sym.Room, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
 
                 pr.ExtendBridgeToRoom(pr.sym.Room, boxFs.GetRandom(), pathGuide),
                 pr.ExtendBridgeToGarden(pr.sym.Room, boxFs.GetRandom(), pathGuide),

@@ -116,15 +116,16 @@ namespace ShapeGrammar
             var heuristicsV = endGroup.Cubes.GetRandom();
             var path = graphAlgs.FindPath(
                 starting,
-                pn => goal.Contains(pn.cube) && pn.prevVerMove == 0,
+                // the path always ends with horizontal move
+                pn => goal.Contains(pn.cube) && pn.prevVerMove == 0, 
                 (pn0, pn1) => (pn0.cube.Position - pn1.cube.Position).sqrMagnitude,
                 pn => (pn.cube.Position - heuristicsV.Position).Sum(x => Mathf.Abs(x)),
                 PathNode.Comparer,
+                // cap the number of iterations
                 10_000);
 
             var pathCubes = path == null ? starting.GetRandom().cube.Group().Cubes : path.Select(pn => pn.cube).ToList();
             // drop first and last element
-            //pathCubes = pathCubes.Skip(1).Reverse().Skip(1).Reverse().ToList();
             return new CubeGroup(Grid, pathCubes);
         }
     }

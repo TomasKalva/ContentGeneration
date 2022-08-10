@@ -97,7 +97,7 @@ namespace ShapeGrammar
             return NotRepeatingCubes(repeatingCubesNeighbors);
         }
 
-        public static Neighbors<PathNode> ElevatorNeighbors(CubeGroup end)
+        public static Neighbors<PathNode> FallNeighbors(CubeGroup end)
         {
             var horizontal = HorizontalNeighbors();
             var vertical = VerticalNeighbors();
