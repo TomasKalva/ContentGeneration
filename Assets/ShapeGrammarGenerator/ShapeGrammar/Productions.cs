@@ -566,7 +566,7 @@ namespace ShapeGrammar
             Func<LevelElement> newAreaF,
             Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPositionedNear,
             Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPlaced,
-            ConnectionNotIntersecting connectionNotIntersecting,
+            ConnectionFromAddedAndPaths connectionNotIntersecting,
             int dist)
         {
             return new Production(
@@ -616,7 +616,7 @@ namespace ShapeGrammar
             Func<CubeGroup, Vector3Int, Node> extrudeNodeFromDirection,
             Func<ProductionProgram, Node, ProductionProgram> afterNodeCreated,
             Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPlaced,
-            ConnectionNotIntersecting connectionNotIntersecting,
+            ConnectionFromAddedAndPaths connectionNotIntersecting,
             bool placeFoundation = true)
         {
             return new Production(
@@ -666,7 +666,7 @@ namespace ShapeGrammar
             int nextFloorHeight,
             int maxBottomHeight,
             Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPlaced,
-            ConnectionNotIntersecting connection)
+            ConnectionFromAddedAndPaths connection)
         {
             return new Production(
                 $"TakeUpwardReservation_{reservationSymbol.Name}",
@@ -717,7 +717,7 @@ namespace ShapeGrammar
             Func<CubeGroup, Node> nodeFromExtrudedDown,
             int floorHeight,
             int minBottomHeight,
-            ConnectionNotIntersecting connection)
+            ConnectionFromAddedAndPaths connection)
         {
             return new Production(
                 $"FromDownwardFoundation_{fromSymbol.Name}",
@@ -879,7 +879,7 @@ namespace ShapeGrammar
                 );
         }
 
-        public Production RoomNextFloor(Symbol from, Symbol to, int nextFloorHeight, int maxFloorHeight, ConnectionNotIntersecting connection)
+        public Production RoomNextFloor(Symbol from, Symbol to, int nextFloorHeight, int maxFloorHeight, ConnectionFromAddedAndPaths connection)
         {
             return TakeUpwardReservation(
                     from,

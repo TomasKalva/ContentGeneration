@@ -51,7 +51,7 @@ namespace ShapeGrammar
         #endregion
 
         // todo: add other paths level element to the api
-        public delegate Connection ConnectionNotIntersecting(LevelElement alreadyAdded, LevelElement existingPaths);
+        public delegate Connection ConnectionFromAddedAndPaths(LevelElement alreadyAdded, LevelElement existingPaths);
         public delegate LevelGeometryElement Connection(LevelElement le1, LevelElement le2);
 
         /// <summary>
@@ -82,7 +82,10 @@ namespace ShapeGrammar
                 var space1 = WallSpaceInside(le1);
                 var space2 = WallSpaceInside(le2);
 
-                Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.StairsNeighbors(), space1.Merge(space2));
+                Neighbors<PathNode> neighbors = PathNode.PreserveConnectivity(
+                    PathNode.BoundedBy(PathNode.StairsNeighbors(), space1.Merge(space2)),
+                    space1, space2, existingPaths.CG()
+                );
                 var path = paths.ConnectByPath(space1.BottomLayer(), space2.BottomLayer(), neighbors);
                 return path != null ? path.LE(AreaStyles.Path()) : null;
             };
