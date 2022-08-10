@@ -134,6 +134,29 @@ namespace ShapeGrammar
             return platformArea;
         }
 
+        /// <summary>
+        /// Returns horizontal connection between two neighboring cubes. The connection will fit well into the context
+        /// given by the face.
+        /// </summary>
+        HorFacePrimitive GetFittingConnection(GridPrimitivesStyle gpStyle, FaceHor faceH)
+        {
+            var otherFace = faceH.OtherFacet();
+
+            if (faceH.FaceType == FACE_HOR.Door || otherFace.FaceType == FACE_HOR.Door)
+            {
+                return faceH.FacePrimitive;
+            }
+            if (faceH.FaceType == FACE_HOR.Wall || otherFace.FaceType == FACE_HOR.Wall)
+            {
+                return gpStyle.Door();
+            }
+            if (faceH.FaceType == FACE_HOR.Railing || otherFace.FaceType == FACE_HOR.Railing)
+            {
+                return gpStyle.RailingDoor();
+            }
+            return gpStyle.NoWall();
+        }
+
         public CubeGroup StairsPathStyle(GridPrimitivesStyle gpStyle, CubeGroup path)
         {
             // find cubes with floor
@@ -179,23 +202,8 @@ namespace ShapeGrammar
             {
                 //faceH.FaceType = FACE_HOR.Door;
                 //return;
-                var otherFace = faceH.OtherFacet();
 
-                if (faceH.FaceType == FACE_HOR.Door || otherFace.FaceType == FACE_HOR.Door)
-                {
-                    return;
-                }
-                if (faceH.FaceType == FACE_HOR.Wall || otherFace.FaceType == FACE_HOR.Wall)
-                {
-                    faceH.FacePrimitive = gpStyle.Door();
-                    return;
-                }
-                if (faceH.FaceType == FACE_HOR.Railing || otherFace.FaceType == FACE_HOR.Railing)
-                {
-                    faceH.FacePrimitive = gpStyle.RailingDoor();
-                    return;
-                }
-                faceH.FacePrimitive = gpStyle.NoWall();
+                faceH.FacePrimitive = GetFittingConnection(gpStyle, faceH);
             });
 
             //hor.Intersect(path.AllBoundaryFacesH()).SetStyle(ObjectStyle).Fill(FACE_HOR.Railing);
@@ -236,14 +244,16 @@ namespace ShapeGrammar
             return fallArea;
         }
 
-        public CubeGroup DoorStyle(GridPrimitivesStyle gpStyle, CubeGroup doorFromFirst)
+        public CubeGroup ConnectionStyle(GridPrimitivesStyle gpStyle, CubeGroup twoNeighbors)
         {
-            Debug.Assert(doorFromFirst.Cubes.Count() == 2);
+            Debug.Assert(twoNeighbors.Cubes.Count() == 2);
 
-            doorFromFirst.Cubes.First().Group().NeighborsInGroupH(doorFromFirst).Fill(gpStyle.Door);
-            //doorFromFirst.Cubes.Skip(1).First().Group().NeighborsInGroupH(doorFromFirst).Fill(gpStyle.NoWall);
+            twoNeighbors.Cubes.First().Group().NeighborsInGroupH(twoNeighbors).Facets
+                .ForEach(faceH => 
+                    faceH.FacePrimitive = GetFittingConnection(gpStyle, faceH)
+                );
 
-            return doorFromFirst;
+            return twoNeighbors;
         }
 
         Vector3Int DefaultRoofDirection(CubeGroup roofArea)

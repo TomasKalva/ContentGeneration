@@ -63,7 +63,7 @@ namespace Assets.ShapeGrammarGenerator
 
         public static  AreaStyle Fall() => new AreaStyle("Fall", gm.DefaultStyle(), gpp.FallStyle);
 
-        public static  AreaStyle Door() => new AreaStyle("Door", gm.DefaultStyle(), gpp.DoorStyle);
+        public static  AreaStyle Door() => new AreaStyle("Door", gm.DefaultStyle(), gpp.ConnectionStyle);
 
         public static  AreaStyle Bridge() => new AreaStyle("Bridge", gm.DefaultStyle(), gpp.FlatRoofStyle);
         public static AreaStyle BridgeTopFoundation(Vector3Int bridgeDirection) => new AreaStyle("BridgeTopFoundation", gm.DefaultStyle(), (gpStyle, roofArea) => gpp.PlaceInDirection(roofArea, gpStyle.BridgeTop, bridgeDirection));
