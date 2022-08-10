@@ -51,13 +51,13 @@ namespace ShapeGrammar
         #endregion
 
         // todo: add other paths level element to the api
-        public delegate Connection ConnectionFromAddedAndPaths(LevelElement alreadyAdded, LevelElement existingPaths);
+        public delegate Connection ConnectionFromAddedAndPaths(LevelElement alreadyAdded, LevelGroupElement existingPaths);
         public delegate LevelGeometryElement Connection(LevelElement le1, LevelElement le2);
 
         /// <summary>
         /// Creates door between two cubes of bottom layer of the elements.
         /// </summary>
-        public Connection ConnectByDoor(LevelElement _, LevelElement existingPaths)
+        public Connection ConnectByDoor(LevelElement _, LevelGroupElement existingPaths)
         {
             return (le1, le2) =>
             {
@@ -68,7 +68,7 @@ namespace ShapeGrammar
                         PathNode.HorizontalNeighbors(),
                         space1.Merge(space2)
                     ),
-                    le1.CG(), le2.CG(), existingPaths.CG()
+                    le1.CG(), le2.CG(), existingPaths.LevelElements.Select(le => le.CG())
                 );
                 var path = paths.ConnectByPath(space1.BottomLayer(), space2.BottomLayer(), neighbors);
                 return path != null ? path.LE(AreaStyles.Path()) : null;
@@ -87,7 +87,7 @@ namespace ShapeGrammar
         /// <summary>
         /// Creates stairs between cubes of the elements. The stairs don't leave the elements.
         /// </summary>
-        public Connection ConnectByWallStairsIn(LevelElement _, LevelElement existingPaths)
+        public Connection ConnectByWallStairsIn(LevelElement _, LevelGroupElement existingPaths)
         {
             return (le1, le2) =>
             {
@@ -96,7 +96,7 @@ namespace ShapeGrammar
 
                 Neighbors<PathNode> neighbors = PathNode.PreserveConnectivity(
                     PathNode.BoundedBy(PathNode.StairsNeighbors(), space1.Merge(space2)),
-                    le1.CG(), le2.CG(), existingPaths.CG()
+                    le1.CG(), le2.CG(), existingPaths.LevelElements.Select(le => le.CG())
                 );
                 var path = paths.ConnectByPath(space1.BottomLayer(), space2.BottomLayer(), neighbors);
                 return path != null ? path.LE(AreaStyles.Path()) : null;
@@ -106,7 +106,7 @@ namespace ShapeGrammar
         /// <summary>
         /// Connects level elements by stairs outside of the area faces.
         /// </summary>
-        public Connection ConnectByWallStairsOut(LevelElement alreadyAdded, LevelElement existingPaths)
+        public Connection ConnectByWallStairsOut(LevelElement alreadyAdded, LevelGroupElement existingPaths)
         {
             return (le1, le2) =>
             {
@@ -120,7 +120,7 @@ namespace ShapeGrammar
                             searchSpace
                         ), 
                         alreadyAdded.CG().Minus(end)),
-                    le1.CG(), le2.CG(), existingPaths.CG()
+                    le1.CG(), le2.CG(), existingPaths.LevelElements.Select(le => le.CG())
                 );
                 var path = paths.ConnectByPath(start, end, neighbors);
                 return path != null ? path.LE(AreaStyles.Path()) : null;
@@ -142,7 +142,7 @@ namespace ShapeGrammar
         /// <summary>
         /// Connects the level elements by straight vertical fall.
         /// </summary>
-        public Connection ConnectByFall(LevelElement _, LevelElement existingPaths)
+        public Connection ConnectByFall(LevelElement _, LevelGroupElement existingPaths)
         {
             return (from, to) =>
             {
@@ -152,7 +152,7 @@ namespace ShapeGrammar
                 var end = space2.BottomLayer();
                 Neighbors<PathNode> neighbors = PathNode.PreserveConnectivity(
                     PathNode.BoundedBy(PathNode.FallNeighbors(end), space1.Merge(space2)),
-                    from.CG(), to.CG(), existingPaths.CG()
+                    from.CG(), to.CG(), existingPaths.LevelElements.Select(le => le.CG())
                     );
                 var path = paths.ConnectByPath(start, end, neighbors);
                 return path != null ? path.LE(AreaStyles.Fall()) : null;
@@ -160,7 +160,7 @@ namespace ShapeGrammar
         }
 
 
-        public Connection ConnectByBalconyStairsOutside(LevelElement alreadyAdded, LevelElement existingPaths)
+        public Connection ConnectByBalconyStairsOutside(LevelElement alreadyAdded, LevelGroupElement existingPaths)
         {
             return (le1, le2) =>
             {
@@ -177,14 +177,14 @@ namespace ShapeGrammar
                             PathNode.BalconyStairsBalconyNeighbors(start, end, balconySpaceStart, balconySpaceEnd),
                             notIntersectingCG
                     ),
-                    le1.CG(), le2.CG(), existingPaths.CG()
+                    le1.CG(), le2.CG(), existingPaths.LevelElements.Select(le => le.CG())
                 );
                 var path = paths.ConnectByPath(start, end, neighbors);
                 return path != null ? path.LE(AreaStyles.Path()) : null;
             };
         }
 
-        public Connection ConnectByBridge(LevelElement alreadyAdded, LevelElement existingPaths)
+        public Connection ConnectByBridge(LevelElement alreadyAdded, LevelGroupElement existingPaths)
         {
             return (le1, le2) =>
             {
@@ -193,7 +193,7 @@ namespace ShapeGrammar
                 var notIntersectingCG = alreadyAdded.CG().Minus(space2);
                 Neighbors<PathNode> neighbors = PathNode.PreserveConnectivity(
                     PathNode.NotIn(PathNode.StraightHorizontalNeighbors(), notIntersectingCG),
-                    le1.CG(), le2.CG(), existingPaths.CG()
+                    le1.CG(), le2.CG(), existingPaths.LevelElements.Select(le => le.CG())
                 );
                 var path = paths.ConnectByPath(space1.BottomLayer(), space2.BottomLayer(), neighbors);
                 return path != null ? path.LE(AreaStyles.Path()) : null;
@@ -205,7 +205,7 @@ namespace ShapeGrammar
             => ConnectByStairsInside(le1, le2, null);
         */
 
-        public Connection ConnectByStairsInside(LevelElement _, LevelElement existingPaths)
+        public Connection ConnectByStairsInside(LevelElement _, LevelGroupElement existingPaths)
         {
             return (le1, le2) =>
             {
@@ -215,7 +215,7 @@ namespace ShapeGrammar
                 var end = space2.BottomLayer();
                 Neighbors<PathNode> neighbors = PathNode.PreserveConnectivity(
                     PathNode.BoundedBy(PathNode.StairsNeighbors(), space1.Merge(space2)),
-                    le1.CG(), le2.CG(), existingPaths.CG()
+                    le1.CG(), le2.CG(), existingPaths.LevelElements.Select(le => le.CG())
                 );
                 var path = paths.ConnectByPath(start, end, neighbors);
                 return path != null ? path.LE(AreaStyles.Path()) : null;

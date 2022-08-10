@@ -518,7 +518,7 @@ namespace ShapeGrammar
         LevelElement AllAlreadyExisting(ShapeGrammarState state, ProductionProgram prog)
             => state.WorldState.Added.Merge(prog.AppliedOperations.SelectMany(op => op.To.Select(n => n.LE)).ToLevelGroupElement(ldk.grid));
 
-        LevelElement AllExistingPaths(ShapeGrammarState state, ProductionProgram prog)
+        LevelGroupElement AllExistingPaths(ShapeGrammarState state, ProductionProgram prog)
         {
             var alreadyDerivedNodes = state.Root.AllDerived();
             var programNodes = prog.AppliedOperations.SelectMany(op => op.To);
@@ -883,7 +883,7 @@ namespace ShapeGrammar
         {
             return TakeUpwardReservation(
                     from,
-                    nextFloor => nextFloor.LE(AreaStyles.Room()).GN(to, sym.FullFloorMarker),
+                    nextFloor => nextFloor.LE(AreaStyles.Platform()).GN(to, sym.FullFloorMarker),
                     nextFloorHeight,
                     maxFloorHeight,
                     Reserve(2, sym.UpwardReservation),

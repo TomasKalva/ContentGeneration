@@ -42,7 +42,7 @@ namespace ShapeGrammar
             }
             //world.AddEnemy(libraries.Enemies.MayanSwordsman(), new Vector3(0, 1, 0));
             //world.AddEnemy(libraries.Enemies.DragonMan(), new Vector3(0, 1, 0));
-            //UnityEngine.Random.InitState(42);
+            UnityEngine.Random.InitState(42);
 
             // todo: make this initialization less annoying
             var playerState = new ContentGeneration.Assets.UI.Model.PlayerCharacterState();

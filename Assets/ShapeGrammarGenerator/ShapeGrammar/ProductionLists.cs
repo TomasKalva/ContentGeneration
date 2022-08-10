@@ -166,6 +166,24 @@ namespace ShapeGrammar
             );
         }
 
+        public ProductionList SuperMegaTower()
+        {
+            var guideRandomly = new RandomPathGuide();
+
+            return new ProductionList
+            (
+                //pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
+                //pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden), addFloorAbove: false),
+
+                pr.ChapelEntranceNextTo(pr.sym.Room, 3, () => ldk.qc.GetFlatBox(3, 3, 2)),
+
+                pr.ChapelHall(pr.sym.ChapelEntrance, 4, guideRandomly),
+
+                pr.ChapelRoom(3),
+                pr.ChapelNextFloor(3, 10000)
+            );
+        }
+
         public ProductionList ChapelsDetails()
         {
             var guideRandomly = new RandomPathGuide();

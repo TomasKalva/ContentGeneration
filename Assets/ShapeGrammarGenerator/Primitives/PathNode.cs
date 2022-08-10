@@ -86,7 +86,7 @@ namespace ShapeGrammar
         ///     - each path has ordered cubes from start to end
         ///     - each path has at least 2 cubes
         /// </summary>
-        static Cube[] FindPathEndsInFloor(CubeGroup floor, CubeGroup[] paths) 
+        static IEnumerable<Cube> FindPathEndsInFloor(CubeGroup floor, IEnumerable<CubeGroup> paths) 
         {
             var pathEnds =
                 paths.Select(path => path.Cubes.First()).Concat(
@@ -96,14 +96,17 @@ namespace ShapeGrammar
             return pathEnds.SetIntersect(floor.Cubes).ToArray();
         }
 
-        static bool StaysConnected(CubeGroup floor, PathNode newNode)
+        /// <summary>
+        /// All path ends must belong to the floor group.
+        /// </summary>
+        static bool StaysConnected(CubeGroup floor, IEnumerable<Cube> pathEnds, PathNode newNode)
         {
             var newFloor = floor.Cubes.Except(newNode.ReversePath()).ToCubeGroup(floor.Grid);
             return 
                 // floor doesn't get disconnected
                 newFloor.SplitToConnected().Count() <= 1 && 
-                // new node is next to a cube of new floor
-                newNode.cube.NeighborsHor().SetIntersect(newFloor.Cubes).Any();
+                // all path ends in the floor are still connected to the new floor
+                pathEnds.All(pathEnd => pathEnd.NeighborsHor().SetIntersect(newFloor.Cubes).Any());
         }
         /*
         static Neighbors<PathNode> DontSplitToMultiple(HashSet<Cube> floorSet1, HashSet<Cube> floorSet2, )
@@ -116,29 +119,32 @@ namespace ShapeGrammar
                                 StaysConnected(floor2,  pn.ReversePath()) :
                                 true);*/
 
-        public static Neighbors<PathNode> PreserveConnectivity(Neighbors<PathNode> neighbors, CubeGroup cg1, CubeGroup cg2, CubeGroup otherPaths)
+        public static Neighbors<PathNode> PreserveConnectivity(Neighbors<PathNode> neighbors, CubeGroup cg1, CubeGroup cg2, IEnumerable<CubeGroup> otherPaths)
         {
-            var floor1 = cg1.BottomLayer().Minus(otherPaths);
-            var floor2 = cg2.BottomLayer().Minus(otherPaths);
+            var allPathsGroup = otherPaths.SelectMany(cg => cg.Cubes).ToCubeGroup(cg1.Grid);
+            Debug.Log($"number of paths: {otherPaths.Count()}");
+
+            var floor1 = cg1.BottomLayer().Minus(allPathsGroup);
+            var floor2 = cg2.BottomLayer().Minus(allPathsGroup);
             var floorSet1 = new HashSet<Cube>(floor1.Cubes);
             var floorSet2 = new HashSet<Cube>(floor2.Cubes);
 
-            //var pathEndsInFloor1 = FindPathEndsInFloor(floor1, otherPaths);
-            //var pathEndsInFloor2 = FindPathEndsInFloor(floor2, otherPaths);
+            var pathEndsInFloor1 = FindPathEndsInFloor(floor1, otherPaths);
+            var pathEndsInFloor2 = FindPathEndsInFloor(floor2, otherPaths);
 
             //var floorWithoutPathEnds1 = floor1.Minus(otherPaths);
             //var allPathsGroup = otherPaths.SelectMany(cg => cg.Cubes).ToCubeGroup(cg1.Grid);
             return NotIn(
                 pathNode =>
                     neighbors(pathNode)
-                    /*.Where(pn =>
+                    .Where(pn =>
                         floorSet1.Contains(pn.cube) ?
-                            StaysConnected(floor1, pn) :
+                            StaysConnected(floor1, pathEndsInFloor1, pn) :
                             floorSet2.Contains(pn.cube) ?
-                                StaysConnected(floor2, pn) :
+                                StaysConnected(floor2, pathEndsInFloor2, pn) :
                                 true
-                    )*/,
-                otherPaths
+                    ),
+                allPathsGroup
                 );
         }
 
