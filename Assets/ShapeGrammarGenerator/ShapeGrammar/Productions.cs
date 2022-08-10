@@ -857,7 +857,7 @@ namespace ShapeGrammar
                 );
         }
 
-        public Production RoomNextFloor(Symbol from, Symbol to, int nextFloorHeight, int maxFloorHeight)
+        public Production RoomNextFloor(Symbol from, Symbol to, int nextFloorHeight, int maxFloorHeight, ConnectionNotIntersecting connection)
         {
             return TakeUpwardReservation(
                     from,
@@ -865,7 +865,8 @@ namespace ShapeGrammar
                     nextFloorHeight,
                     maxFloorHeight,
                     Reserve(2, sym.UpwardReservation),
-                    _ => ldk.con.ConnectByWallStairsIn);
+                    connection
+                    );
         }
 
         #region Graveyard
@@ -895,7 +896,7 @@ namespace ShapeGrammar
         }
 
         public Production ChapelNextFloor(int nextFloorHeight, int maxFloor)
-            => RoomNextFloor(sym.ChapelRoom, sym.ChapelRoom, nextFloorHeight, maxFloor);
+            => RoomNextFloor(sym.ChapelRoom, sym.ChapelRoom, nextFloorHeight, maxFloor, _ => ldk.con.ConnectByWallStairsIn);
 
 
         public Production ChapelTowerTop(int towerTopHeight, int roofHeight, int maxHeight = 100)
@@ -973,7 +974,7 @@ namespace ShapeGrammar
                     3);
 
         public Production UpwardTowerTop(int nextFloorHeight)
-            => RoomNextFloor(sym.TowerBottom, sym.TowerTop, nextFloorHeight, 100);
+            => RoomNextFloor(sym.TowerBottom, sym.TowerTop, nextFloorHeight, 100, _ => ldk.con.ConnectByWallStairsIn);
 
         public Production WallTop(Symbol extrudeFrom, int length, int width, PathGuide pathGuide)
             => Extrude(
@@ -1043,7 +1044,6 @@ namespace ShapeGrammar
                 MoveVertically(-2, 5),
                 Empty(),
                 ldk.con.ConnectByBalconyStairsOutside
-                //_ => ldk.con.ConnectByDoor
                 );
 
         public Production WatchPostNear(Symbol nearWhatSym, int distance, int heightChange, int minBottomHeight, Func<LevelElement> towerTopF)

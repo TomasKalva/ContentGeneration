@@ -24,6 +24,9 @@ namespace ShapeGrammar
         public delegate Connection ConnectionNotIntersecting(LevelElement notIntersected);
         public delegate LevelGeometryElement Connection(LevelElement le1, LevelElement le2);
 
+        /// <summary>
+        /// Creates door between two cubes of bottom layer of the elements.
+        /// </summary>
         public LevelGeometryElement ConnectByDoor(LevelElement le1, LevelElement le2)
         {
             var area1Floor = le1.CG().BottomLayer();
@@ -36,12 +39,18 @@ namespace ShapeGrammar
                 null;
         }
 
+        /// <summary>
+        /// Cubes on inside part of the wall.
+        /// </summary>
         CubeGroup WallSpaceInside(LevelElement le)
         {
-            var boundaryWall = le.CG().AllBoundaryFacesH()/*.Where(face => face.FaceType == FACE_HOR.Wall)*/.CG();
+            var boundaryWall = le.CG().AllBoundaryFacesH().CG();
             return boundaryWall.ExtrudeHor(false);
         }
 
+        /// <summary>
+        /// Creates stairs between cubes of the elements. The stairs don't leave the elements.
+        /// </summary>
         public LevelGeometryElement ConnectByWallStairsIn(LevelElement le1, LevelElement le2)
         {
             var space1 = WallSpaceInside(le1);
@@ -57,7 +66,7 @@ namespace ShapeGrammar
         CubeGroup WallSpaceOutside(LevelElement le)
         {
             var inside = le.CG();
-            var boundaryWall = inside.AllBoundaryFacesH().Where(face => face.FaceType == FACE_HOR.Wall).CG();
+            var boundaryWall = inside.AllBoundaryFacesH().CG();
             return boundaryWall.ExtrudeHor(true).Cubes.SetMinus(inside.Cubes).ToCubeGroup(le.Grid);
         }
 
@@ -75,7 +84,7 @@ namespace ShapeGrammar
             {
                 var start = AreaEdgesWithFloor(le1);
                 var end = AreaEdgesWithFloor(le2);
-                var searchSpace = WallSpaceOutside(le1).Merge(WallSpaceOutside(le2)).Merge(start).Merge(end);
+                var searchSpace = WallSpaceOutside(le1.Merge(le2)).Merge(start).Merge(end);
                 Neighbors<PathNode> neighbors = PathNode.NotIn(PathNode.BoundedBy(PathNode.StairsNeighbors(), searchSpace), notIntersecting.CG().Minus(end));
                 var path = paths.ConnectByPath(start, end, neighbors);
                 return path != null ? path.LE(AreaStyles.Path()) : null;
@@ -141,7 +150,7 @@ namespace ShapeGrammar
         public LevelGeometryElement ConnectByStairsInside(LevelElement le1, LevelElement le2)
             => ConnectByStairsInside(le1, le2, null);
 
-            public LevelGeometryElement ConnectByStairsInside(LevelElement le1, LevelElement le2, LevelElement bounds = null)
+        public LevelGeometryElement ConnectByStairsInside(LevelElement le1, LevelElement le2, LevelElement bounds = null)
         {
             if (bounds == null)
                 bounds = LevelElement.Empty(Grid);
@@ -154,5 +163,23 @@ namespace ShapeGrammar
             var path = paths.ConnectByPath(start, end, neighbors);
             return path != null ? path.LE(AreaStyles.Path()) : null;
         }
+        /*
+        public Connection ConnectByStairs(LevelElement notIntersecting)
+        {
+            return (le1, le2) =>
+            {
+                // todo: the path can moved through both start and end so it isn't connected just by balconies, maybe fix this
+                var start = le1.CG();
+                var end = le2.CG();
+
+                Neighbors<PathNode> neighbors =
+                    PathNode.NotIn(
+                            PathNode.StairsNeighbors(),
+                            notIntersecting.CG()
+                    );
+                var path = paths.ConnectByPath(start, end, neighbors);
+                return path != null ? path.LE(AreaStyles.Path()) : null;
+            };
+        }*/
     }
 }

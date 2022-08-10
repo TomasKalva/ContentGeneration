@@ -36,7 +36,7 @@ namespace ShapeGrammar
                 pr.CourtyardFromBridge(),
                 
 
-                pr.RoomNextFloor(pr.sym.Room, pr.sym.Room, 2, 13),
+                pr.RoomNextFloor(pr.sym.Room, pr.sym.Room, 2, 13, ldk.con.ConnectByWallStairsOut),
                 pr.RoomDown(pr.sym.Room, pr.sym.Room, 2, 3),
 
                 pr.GardenFrom(pr.sym.Courtyard, boxFs.GetRandom()),
