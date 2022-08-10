@@ -206,7 +206,7 @@ namespace ShapeGrammar
 
         public override PrintingState Print(PrintingState state)
         {
-            state.PrintLine("Replace");
+            state.PrintIndent("Replace");
             PrintNodes(state);
             return state;
         }

@@ -388,7 +388,7 @@ namespace ShapeGrammar
             var foundation = sgShapes.Foundation(room1.Merge(room2));
             foundation.ApplyGrammarStyleRules();
 
-            var path = con.ConnectByBalconyStairsOutside(foundation, /*LevelElement.Empty(grid)*/null)(room1, room2);
+            var path = con.ConnectByStairsOutside(foundation, /*LevelElement.Empty(grid)*/null)(room1, room2);
 
             path.ApplyGrammarStyleRules();
             

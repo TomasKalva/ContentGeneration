@@ -211,7 +211,7 @@ namespace ShapeGrammar
                             .GN(sym.Garden, sym.FullFloorMarker)
                         ),
                 Empty(),
-                ldk.con.ConnectByBalconyStairsOutside,
+                ldk.con.ConnectByStairsOutside,
                 1
                 );
         }
@@ -232,8 +232,6 @@ namespace ShapeGrammar
                         .Set(() => terrace.LE.CG().ExtrudeVer(Vector3Int.up, 1).LE(AreaStyles.DirectionalRoof(terrace.GetSymbol(sym.Terrace(default)).Direction)).GN(sym.Roof))
                         .NotTaken()
                         .PlaceCurrentFrom(terrace),
-                //Roof(AreaStyles.GableRoof(), 2),
-                //Reserve(1, sym.UpwardReservation),
                 ldk.con.ConnectByDoor
                 );
 
@@ -330,7 +328,7 @@ namespace ShapeGrammar
                         .PlaceCurrentFrom(newRoom)
 
                         .FindPath(() => 
-                        ldk.con.ConnectByBalconyStairsOutside(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
+                        ldk.con.ConnectByStairsOutside(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
                             (from.LE, newRoom.LE).GN(sym.ConnectionMarker), out var stairs)
                         .PlaceCurrentFrom(from, newRoom)
 
@@ -500,20 +498,6 @@ namespace ShapeGrammar
                 .OpNew()
                 ;
         }
-        /*
-        public CubeGroup ExtendInOrthogonalDirection(CubeGroup cg, Vector3Int dir, int newWidth)
-        {
-            var orthDir = dir.OrthogonalHorizontalDirs().First();
-            var width = cg.ExtentsDir(orthDir);
-            var shrinkL = Math.Max(0, (int)Mathf.Floor((width - newWidth) / 2f));
-            var shrinkR = Math.Max(0, (int)Mathf.Ceil((width - newWidth) / 2f));
-
-            return cg
-                .OpSub()
-                    .ExtrudeDir(orthDir, -shrinkL)
-                    .ExtrudeDir(-orthDir, -shrinkR)
-                .OpNew();
-        }*/
 
         LevelElement AllAlreadyExisting(ShapeGrammarState state, ProductionProgram prog)
             => state.WorldState.Added.Merge(prog.AppliedOperations.SelectMany(op => op.To.Select(n => n.LE)).ToLevelGroupElement(ldk.grid));
@@ -939,7 +923,7 @@ namespace ShapeGrammar
                     () => leF().SetAreaType(AreaStyles.Room()),
                     Empty(),
                     Roof(AreaStyles.CrossRoof(), roofHeight),
-                    ldk.con.ConnectByBalconyStairsOutside,
+                    ldk.con.ConnectByStairsOutside,
                     1);
 
         public Production ParkNear(Symbol nearWhatSym, int heighChange, int minHeight, Func<LevelElement> leF)
@@ -949,7 +933,7 @@ namespace ShapeGrammar
                     () => leF().SetAreaType(AreaStyles.Garden()),
                     MoveVertically(heighChange, minHeight),
                     Empty(),
-                    ldk.con.ConnectByBalconyStairsOutside,
+                    ldk.con.ConnectByStairsOutside,
                     1);
 
         public Production ChapelSide(int width)
@@ -992,7 +976,7 @@ namespace ShapeGrammar
                     () => towerBottomF().SetAreaType(AreaStyles.Room()),
                     Empty(),
                     Reserve(2, sym.UpwardReservation),
-                    ldk.con.ConnectByBalconyStairsOutside,
+                    ldk.con.ConnectByStairsOutside,
                     3);
 
         public Production UpwardTowerTop(int nextFloorHeight)
@@ -1025,7 +1009,7 @@ namespace ShapeGrammar
                     () => towerTopF().SetAreaType(AreaStyles.Room()),
                     MoveVertically(heightChange, minBottomHeight),
                     Reserve(2, sym.UpwardReservation),
-                    ldk.con.ConnectByBalconyStairsOutside,
+                    ldk.con.ConnectByStairsOutside,
                     distance
                 );
 
@@ -1047,7 +1031,7 @@ namespace ShapeGrammar
                         .NotTaken()
                         .CanBeFounded(),
                     Empty(),
-                    ldk.con.ConnectByBalconyStairsOutside
+                    ldk.con.ConnectByDoor
                     );
 
         /// <summary>
@@ -1065,7 +1049,7 @@ namespace ShapeGrammar
                 },
                 MoveVertically(-2, 5),
                 Empty(),
-                ldk.con.ConnectByBalconyStairsOutside
+                ldk.con.ConnectByStairsOutside
                 );
 
         public Production WatchPostNear(Symbol nearWhatSym, int distance, int heightChange, int minBottomHeight, Func<LevelElement> towerTopF)
@@ -1075,7 +1059,7 @@ namespace ShapeGrammar
                     () => towerTopF().SetAreaType(AreaStyles.FlatRoof()),
                     MoveVertically(heightChange, minBottomHeight),
                     Empty(),
-                    ldk.con.ConnectByBalconyStairsOutside,
+                    ldk.con.ConnectByStairsOutside,
                     distance
                 );
 
