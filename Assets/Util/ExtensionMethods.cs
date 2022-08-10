@@ -415,6 +415,9 @@ static class ExtensionMethods
         first.Zip(second, (f, s) => (f, s)).ForEach((pair) => action(pair.f, pair.s));
     }
 
+    /// <summary>
+    /// Selects from pairs of consecutive items.
+    /// </summary>
     public static IEnumerable<U> Select2<T, U>(this IEnumerable<T> enumerable, Func<T, T, U> selector)
     {
         var first = enumerable;

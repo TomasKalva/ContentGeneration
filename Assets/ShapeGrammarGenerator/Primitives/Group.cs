@@ -292,9 +292,19 @@ namespace ShapeGrammar
             return BoundaryFacesH(ExtensionMethods.HorizontalDirections().ToArray());
         }
 
-        public FaceHorGroup InsideFacesH()
+        public FaceHorGroup ConsecutiveInsideFacesH()
         {
-            return new FaceHorGroup(Grid, FacesH(ExtensionMethods.HorizontalDirections().ToArray()).Facets.SetMinus(AllBoundaryFacesH().Facets).ToList());
+            return new FaceHorGroup(Grid,
+                Cubes.Select2((first, second) =>
+                    {
+                        var dir = second.Position - first.Position;
+                        return dir.y == 0 ? 
+                            new FaceHor[2] { first.FacesHor(dir), second.FacesHor(-dir) } : 
+                            Enumerable.Empty<FaceHor>();
+                    })
+                    .SelectMany(faces => faces)
+                    .ToList()
+                );
         }
 
         public FaceHorGroup NeighborsInGroupH(CubeGroup cubes)

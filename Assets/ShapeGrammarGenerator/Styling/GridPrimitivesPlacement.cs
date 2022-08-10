@@ -173,7 +173,7 @@ namespace ShapeGrammar
                 }
             );
             floorCubes.BoundaryFacesV(Vector3Int.down).Fill(gpStyle.PathFullFloor);
-            var horFacesInside = path.InsideFacesH();
+            var horFacesInside = path.ConsecutiveInsideFacesH();
 
             // add railing
             var middleFloorCubes = floorCubes.Cubes.Skip(1).SkipLast(1).ToCubeGroup(GridView);
@@ -239,7 +239,7 @@ namespace ShapeGrammar
             shaftFloors.Fill(gpStyle.NoFloor);
 
             // no walls between horizontal
-            var horFacesInside = fallArea.InsideFacesH().Fill(gpStyle.NoWall);
+            var horFacesInside = fallArea.ConsecutiveInsideFacesH().Fill(gpStyle.NoWall);
 
             return fallArea;
         }
