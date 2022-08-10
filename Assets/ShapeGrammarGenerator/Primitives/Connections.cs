@@ -61,6 +61,18 @@ namespace ShapeGrammar
         {
             return (le1, le2) =>
             {
+                var space1 = WallSpaceInside(le1);
+                var space2 = WallSpaceInside(le2);
+                Neighbors<PathNode> neighbors = PathNode.PreserveConnectivity(
+                    PathNode.BoundedBy(
+                        PathNode.HorizontalNeighbors(),
+                        space1.Merge(space2)
+                    ),
+                    le1.CG(), le2.CG(), existingPaths.CG()
+                );
+                var path = paths.ConnectByPath(space1.BottomLayer(), space2.BottomLayer(), neighbors);
+                return path != null ? path.LE(AreaStyles.Path()) : null;
+                /*
                 var area1Floor = le1.CG().BottomLayer();
                 var area2FloorSet = new HashSet<Cube>(le2.CG().BottomLayer().Cubes);
                 var neighbors = from fl1 in area1Floor.Cubes
@@ -68,7 +80,7 @@ namespace ShapeGrammar
                                 select new[] { fl1, fl2 };
                 return neighbors.Any() ?
                     neighbors.GetRandom().ToCubeGroup(le1.Grid).LE(AreaStyles.Connection()) :
-                    null;
+                    null;*/
             };
         }
 
@@ -84,7 +96,7 @@ namespace ShapeGrammar
 
                 Neighbors<PathNode> neighbors = PathNode.PreserveConnectivity(
                     PathNode.BoundedBy(PathNode.StairsNeighbors(), space1.Merge(space2)),
-                    space1, space2, existingPaths.CG()
+                    le1.CG(), le2.CG(), existingPaths.CG()
                 );
                 var path = paths.ConnectByPath(space1.BottomLayer(), space2.BottomLayer(), neighbors);
                 return path != null ? path.LE(AreaStyles.Path()) : null;
@@ -101,14 +113,15 @@ namespace ShapeGrammar
                 var start = AreaEdgesWithFloor(le1);
                 var end = AreaEdgesWithFloor(le2);
                 var searchSpace = WallSpaceOutside(le1.Merge(le2)).Merge(start).Merge(end);
-                Neighbors<PathNode> neighbors = 
+                Neighbors<PathNode> neighbors = PathNode.PreserveConnectivity(
                     PathNode.NotIn(
                         PathNode.BoundedBy(
                             PathNode.StairsNeighbors(), 
                             searchSpace
                         ), 
-                        alreadyAdded.CG().Minus(end)
-                    );
+                        alreadyAdded.CG().Minus(end)),
+                    le1.CG(), le2.CG(), existingPaths.CG()
+                );
                 var path = paths.ConnectByPath(start, end, neighbors);
                 return path != null ? path.LE(AreaStyles.Path()) : null;
             };
@@ -137,7 +150,10 @@ namespace ShapeGrammar
                 var space2 = to.CG();
                 var start = space1.BottomLayer();
                 var end = space2.BottomLayer();
-                Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.FallNeighbors(end), space1.Merge(space2));
+                Neighbors<PathNode> neighbors = PathNode.PreserveConnectivity(
+                    PathNode.BoundedBy(PathNode.FallNeighbors(end), space1.Merge(space2)),
+                    from.CG(), to.CG(), existingPaths.CG()
+                    );
                 var path = paths.ConnectByPath(start, end, neighbors);
                 return path != null ? path.LE(AreaStyles.Fall()) : null;
             };
@@ -156,11 +172,13 @@ namespace ShapeGrammar
                 var balconySpaceEnd = WallSpaceOutside(le2.CG().BottomLayer().LE());
 
                 var notIntersectingCG = alreadyAdded.CG().Minus(end);
-                Neighbors<PathNode> neighbors =
+                Neighbors<PathNode> neighbors = PathNode.PreserveConnectivity(
                     PathNode.NotIn(
                             PathNode.BalconyStairsBalconyNeighbors(start, end, balconySpaceStart, balconySpaceEnd),
                             notIntersectingCG
-                    );
+                    ),
+                    le1.CG(), le2.CG(), existingPaths.CG()
+                );
                 var path = paths.ConnectByPath(start, end, neighbors);
                 return path != null ? path.LE(AreaStyles.Path()) : null;
             };
@@ -173,7 +191,10 @@ namespace ShapeGrammar
                 var space1 = le1.CG();
                 var space2 = le2.CG();
                 var notIntersectingCG = alreadyAdded.CG().Minus(space2);
-                Neighbors<PathNode> neighbors = PathNode.NotIn(PathNode.StraightHorizontalNeighbors(), notIntersectingCG);
+                Neighbors<PathNode> neighbors = PathNode.PreserveConnectivity(
+                    PathNode.NotIn(PathNode.StraightHorizontalNeighbors(), notIntersectingCG),
+                    le1.CG(), le2.CG(), existingPaths.CG()
+                );
                 var path = paths.ConnectByPath(space1.BottomLayer(), space2.BottomLayer(), neighbors);
                 return path != null ? path.LE(AreaStyles.Path()) : null;
             };
@@ -192,11 +213,15 @@ namespace ShapeGrammar
                 var space2 = le2.CG();
                 var start = space1.BottomLayer();
                 var end = space2.BottomLayer();
-                Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.StairsNeighbors(), space1.Merge(space2));
+                Neighbors<PathNode> neighbors = PathNode.PreserveConnectivity(
+                    PathNode.BoundedBy(PathNode.StairsNeighbors(), space1.Merge(space2)),
+                    le1.CG(), le2.CG(), existingPaths.CG()
+                );
                 var path = paths.ConnectByPath(start, end, neighbors);
                 return path != null ? path.LE(AreaStyles.Path()) : null;
             };
         }
+
         /*
         public Connection ConnectByStairs(LevelElement notIntersecting)
         {
