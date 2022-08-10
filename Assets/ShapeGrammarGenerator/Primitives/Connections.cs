@@ -51,13 +51,13 @@ namespace ShapeGrammar
         #endregion
 
         // todo: add other paths level element to the api
-        public delegate Connection ConnectionNotIntersecting(LevelElement alreadyAdded);
+        public delegate Connection ConnectionNotIntersecting(LevelElement alreadyAdded, LevelElement existingPaths);
         public delegate LevelGeometryElement Connection(LevelElement le1, LevelElement le2);
 
         /// <summary>
         /// Creates door between two cubes of bottom layer of the elements.
         /// </summary>
-        public Connection ConnectByDoor(LevelElement _)
+        public Connection ConnectByDoor(LevelElement _, LevelElement existingPaths)
         {
             return (le1, le2) =>
             {
@@ -75,7 +75,7 @@ namespace ShapeGrammar
         /// <summary>
         /// Creates stairs between cubes of the elements. The stairs don't leave the elements.
         /// </summary>
-        public Connection ConnectByWallStairsIn(LevelElement _)
+        public Connection ConnectByWallStairsIn(LevelElement _, LevelElement existingPaths)
         {
             return (le1, le2) =>
             {
@@ -91,7 +91,7 @@ namespace ShapeGrammar
         /// <summary>
         /// Connects level elements by stairs outside of the area faces.
         /// </summary>
-        public Connection ConnectByWallStairsOut(LevelElement alreadyAdded)
+        public Connection ConnectByWallStairsOut(LevelElement alreadyAdded, LevelElement existingPaths)
         {
             return (le1, le2) =>
             {
@@ -126,7 +126,7 @@ namespace ShapeGrammar
         /// <summary>
         /// Connects the level elements by straight vertical fall.
         /// </summary>
-        public Connection ConnectByFall(LevelElement _)
+        public Connection ConnectByFall(LevelElement _, LevelElement existingPaths)
         {
             return (from, to) =>
             {
@@ -141,7 +141,7 @@ namespace ShapeGrammar
         }
 
 
-        public Connection ConnectByBalconyStairsOutside(LevelElement alreadyAdded)
+        public Connection ConnectByBalconyStairsOutside(LevelElement alreadyAdded, LevelElement existingPaths)
         {
             return (le1, le2) =>
             {
@@ -163,7 +163,7 @@ namespace ShapeGrammar
             };
         }
 
-        public Connection ConnectByBridge(LevelElement alreadyAdded)
+        public Connection ConnectByBridge(LevelElement alreadyAdded, LevelElement existingPaths)
         {
             return (le1, le2) =>
             {
@@ -181,7 +181,7 @@ namespace ShapeGrammar
             => ConnectByStairsInside(le1, le2, null);
         */
 
-        public Connection ConnectByStairsInside(LevelElement _)
+        public Connection ConnectByStairsInside(LevelElement _, LevelElement existingPaths)
         {
             return (le1, le2) =>
             {

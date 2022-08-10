@@ -52,7 +52,7 @@ namespace ShapeGrammar
         {
             return lge =>
             {
-                var path = ldk.con.ConnectByStairsInside(null)(start, end/*, middle*/).CG();
+                var path = ldk.con.ConnectByStairsInside(null, null)(start, end/*, middle*/).CG();
                 return lge.Leafs().Where(le => le.CG().Intersects(path)).ToLevelGroupElement(lge.Grid);
             };
         }

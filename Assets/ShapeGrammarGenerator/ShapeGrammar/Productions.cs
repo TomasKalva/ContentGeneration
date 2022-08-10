@@ -64,7 +64,7 @@ namespace ShapeGrammar
                         .PlaceCurrentFrom(courtyard)
 
                         .FindPath(() => 
-                        ldk.con.ConnectByDoor(AllBlocking(state, prog, courtyard.LE.Grid))
+                        ldk.con.ConnectByDoor(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
                             (room.LE, courtyard.LE).GN(sym.ConnectionMarker), out var door)
                         .PlaceCurrentFrom(room, courtyard)
                         );
@@ -112,7 +112,7 @@ namespace ShapeGrammar
                         .PlaceCurrentFrom(newCourtyard)
 
                         .FindPath(() => 
-                        ldk.con.ConnectByStairsInside(AllBlocking(state, prog, courtyard.LE.Grid))
+                        ldk.con.ConnectByStairsInside(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
                             (courtyard.LE, newCourtyard.LE).GN(sym.ConnectionMarker), out var p)
                         .PlaceCurrentFrom(courtyard, newCourtyard)
                         );
@@ -273,13 +273,13 @@ namespace ShapeGrammar
                         .PlaceCurrentFrom(bottomRoom)
 
                         .FindPath(() => 
-                        ldk.con.ConnectByDoor(AllBlocking(state, prog, what.LE.Grid))
+                        ldk.con.ConnectByDoor(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
                             (newRoom.LE, what.LE).GN(sym.ConnectionMarker), out var door)
                         .PlaceCurrentFrom(newRoom, what)
 
                         // The door doesn't get overwritten by apply style only because it has higher priority, which doesn't feel robust enough
                         .FindPath(() => 
-                        ldk.con.ConnectByFall(AllBlocking(state, prog, what.LE.Grid))
+                        ldk.con.ConnectByFall(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
                             (newRoom.LE, bottomRoom.LE).GN(), out var fall)
                         .PlaceCurrentFrom(bottomRoom, newRoom)
                         );
@@ -329,11 +329,13 @@ namespace ShapeGrammar
                         .ReserveUpward(2, sym.UpwardReservation, out var reservation)
                         .PlaceCurrentFrom(newRoom)
 
-                        .FindPath(() => ldk.con.ConnectByBalconyStairsOutside(state.WorldState.Added.Merge(foundation.LE).Merge(reservation.LE))(from.LE, newRoom.LE).GN(sym.ConnectionMarker), out var stairs)
+                        .FindPath(() => 
+                        ldk.con.ConnectByBalconyStairsOutside(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
+                            (from.LE, newRoom.LE).GN(sym.ConnectionMarker), out var stairs)
                         .PlaceCurrentFrom(from, newRoom)
 
                         .FindPath(() => 
-                        ldk.con.ConnectByFall(AllBlocking(state, prog, from.LE.Grid))
+                        ldk.con.ConnectByFall(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
                             (newRoom.LE, to.LE).GN(), out var fall)
                         .PlaceCurrentFrom(to, newRoom)
                         );
@@ -513,8 +515,16 @@ namespace ShapeGrammar
                 .OpNew();
         }*/
 
-        LevelElement AllBlocking(ShapeGrammarState state, ProductionProgram prog, Grid<Cube> grid)
-            => state.WorldState.Added.Merge(prog.AppliedOperations.SelectMany(op => op.To.Select(n => n.LE)).ToLevelGroupElement(grid));
+        LevelElement AllAlreadyExisting(ShapeGrammarState state, ProductionProgram prog)
+            => state.WorldState.Added.Merge(prog.AppliedOperations.SelectMany(op => op.To.Select(n => n.LE)).ToLevelGroupElement(ldk.grid));
+
+        LevelElement AllExistingPaths(ShapeGrammarState state, ProductionProgram prog)
+        {
+            var alreadyDerivedNodes = state.Root.AllDerived();
+            var programNodes = prog.AppliedOperations.SelectMany(op => op.To);
+            var allNodes = alreadyDerivedNodes.Concat(programNodes);
+            return allNodes.Where(node => node.HasSymbols(sym.ConnectionMarker)).Select(node => node.LE).ToLevelGroupElement(ldk.grid);
+        }
 
         Node FindFoundation(Node node)
         {
@@ -592,7 +602,7 @@ namespace ShapeGrammar
                         //Replace with open connection
                         .FindPath(() =>
                             connectionNotIntersecting
-                                (AllBlocking(state, prog, what.LE.Grid))
+                                (AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
                                 (newNode.LE, what.LE)
                                 .GN(sym.ConnectionMarker), out var door)
                         .PlaceCurrentFrom(what, newNode)
@@ -643,7 +653,7 @@ namespace ShapeGrammar
                             fromFloorNodeAfterPlaced(newProg, newChapelHall))
 
                         .FindPath(() =>
-                        connectionNotIntersecting(AllBlocking(state, prog, from.LE.CG().Grid))
+                        connectionNotIntersecting(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
                             (newChapelHall.LE, from.LE).GN(sym.ConnectionMarker), out var door)
                         .PlaceCurrentFrom(from, newChapelHall)
                         );
@@ -694,7 +704,7 @@ namespace ShapeGrammar
 
                         .RunIf(true, prog => fromFloorNodeAfterPlaced(prog, nextFloor))
 
-                        .FindPath(() => connection(AllBlocking(state, prog, reservation.LE.Grid))
+                        .FindPath(() => connection(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
                             (nextFloor.LE, roomBelow.LE).GN(sym.ConnectionMarker), out var stairs)
                         .PlaceCurrentFrom(roomBelow, nextFloor)
                         );
@@ -743,7 +753,7 @@ namespace ShapeGrammar
                         .Found()
                         .PlaceCurrentFrom(downFloor)
 
-                        .FindPath(() => connection(AllBlocking(state, prog, upFloor.LE.Grid))
+                        .FindPath(() => connection(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
                             (downFloor.LE, upFloor.LE).GN(sym.ConnectionMarker), out var stairs)
                         .PlaceCurrentFrom(upFloor, downFloor)
                         );
@@ -801,7 +811,7 @@ namespace ShapeGrammar
                         )
 
                         .FindPath(() => 
-                        ldk.con.ConnectByBridge(AllBlocking(state, prog, what.LE.Grid))
+                        ldk.con.ConnectByBridge(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
                             (what.LE, newNode.LE).GN(sym.ConnectionMarker), out var bridge)
                         .PlaceCurrentFrom(what, newNode)
                         );
