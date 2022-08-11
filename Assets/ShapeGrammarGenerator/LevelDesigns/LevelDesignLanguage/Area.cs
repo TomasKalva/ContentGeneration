@@ -34,10 +34,29 @@ namespace ShapeGrammar
             InteractiveObjectStates.Add(interactiveObject);
         }
 
+        CharacterState AddWaitForPlayerBehavior(World world, CharacterState enemy)
+        {
+            var worldGeometry = world.WorldGeometry;
+            var gotoPosition = worldGeometry.GridToWorld(Node.LE.CG().BottomLayer().Cubes.GetRandom().Position);
+            //L.Lib.InteractiveObjects.AscensionKiln().MakeGeometry().transform.position = gotoPosition; // visualization of waiting spots
+            var thisAreaPositions = new HashSet<Vector3Int>(Node.LE.CG().Cubes.Select(c => c.Position));
+            enemy.Behaviors.AddBehavior(
+                new Wait(
+                    _ =>
+                    {
+                        var playerGridPosition = Vector3Int.RoundToInt(worldGeometry.WorldToGrid(GameViewModel.ViewModel.PlayerState.Agent.transform.position));
+                        return !thisAreaPositions.Contains(playerGridPosition);
+                    },
+                    _ => gotoPosition
+                    )
+                );
+            return enemy;
+        }
+
         public void AddEnemy(CharacterState enemy)
         {
             // define behavior that makes enemies only go after player, if he's in their area
-            var gotoPosition = L.State.Ldk.wg.GridToWorld(Node.LE.CG().BottomLayer().Cubes.GetRandom().Position);
+            /*var gotoPosition = L.State.Ldk.wg.GridToWorld(Node.LE.CG().BottomLayer().Cubes.GetRandom().Position);
             //L.Lib.InteractiveObjects.AscensionKiln().MakeGeometry().transform.position = gotoPosition; // visualization of waiting spots
             var thisAreaPositions = new HashSet<Vector3Int>(Node.LE.CG().Cubes.Select(c => c.Position));
             enemy.Behaviors.AddBehavior(
@@ -49,13 +68,14 @@ namespace ShapeGrammar
                     },
                     _ => gotoPosition
                     )
-                );
+                );*/
             EnemyStates.Add(enemy);
         }
 
-        public virtual void InstantiateAll(WorldGeometry gg, World world)
+        public virtual void InstantiateAll(World world)
         {
             var flooredCubes = new Stack<Cube>(Node.LE.CG().BottomLayer().Cubes.Shuffle());
+            var worldGeometry = world.WorldGeometry;
 
             foreach (var ios in InteractiveObjectStates)
             {
@@ -65,7 +85,7 @@ namespace ShapeGrammar
                     break;
                 }
                 ios.MakeGeometry();
-                ios.InteractiveObject.transform.position = gg.GridToWorld(flooredCubes.Pop().Position);
+                ios.InteractiveObject.transform.position = worldGeometry.GridToWorld(flooredCubes.Pop().Position);
 
                 world.AddInteractiveObject(ios);
             }
@@ -77,8 +97,9 @@ namespace ShapeGrammar
                     Debug.LogError("Not enough empty cubes");
                     break;
                 }
+                AddWaitForPlayerBehavior(world, enemy);
                 enemy.MakeGeometry();
-                enemy.Agent.transform.position = gg.GridToWorld(flooredCubes.Pop().Position);
+                enemy.Agent.transform.position = worldGeometry.GridToWorld(flooredCubes.Pop().Position);
 
                 world.AddEnemy(enemy);
             }

@@ -11,7 +11,6 @@ namespace ShapeGrammar
 {
     public class LevelDevelopmentKit
     {
-        public WorldGeometry wg { get; }
         public Grid<Cube> grid { get; }
         public QueryContext qc { get; }
         public GridPrimitivesPlacement sgStyles { get; }
@@ -24,7 +23,6 @@ namespace ShapeGrammar
 
         public LevelDevelopmentKit(GeometricPrimitives gp, Transform worldParent, Libraries lib)
         {
-            wg = new WorldGeometry(worldParent, 2.8f);
             grid = new Grid<Cube>(new Vector3Int(20, 10, 20), (grid, pos) => new Cube(grid, pos));
             qc = new QueryContext(grid);
             sgStyles = new GridPrimitivesPlacement(grid);

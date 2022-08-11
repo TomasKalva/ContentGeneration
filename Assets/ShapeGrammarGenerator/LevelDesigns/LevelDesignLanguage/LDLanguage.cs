@@ -92,7 +92,7 @@ namespace ShapeGrammar
 
         public void Instantiate()
         {
-            State.TraversableAreas.ForEach(area => area.InstantiateAll(State.Ldk.wg, State.World));
+            State.TraversableAreas.ForEach(area => area.InstantiateAll(State.World));
         }
     }
 

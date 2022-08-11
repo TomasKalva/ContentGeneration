@@ -10,18 +10,20 @@ using UnityEngine;
 namespace ShapeGrammar
 {
 
-    public class LanguageLevelDesign : LevelDesign
+    public class LanguageLevelDesign
     {
+        LevelDevelopmentKit ldk;
         Libraries lib;
         World world;
 
-        public LanguageLevelDesign(LevelDevelopmentKit ldk, Libraries lib, World world) : base(ldk)
+        public LanguageLevelDesign(LevelDevelopmentKit ldk, Libraries lib, World world)
         {
+            this.ldk = ldk;
             this.lib = lib;
             this.world = world;
         }
 
-        public override LevelElement CreateLevel()
+        public LevelElement CreateLevel()
         {
             // Declaration
             MyLanguage language;
@@ -51,7 +53,7 @@ namespace ShapeGrammar
             var playerState = GameViewModel.ViewModel.PlayerState;
             playerState.OnUpdate = () =>
             {
-                var playerGridPosition = Vector3Int.RoundToInt(language.State.Ldk.wg.WorldToGrid(GameViewModel.ViewModel.PlayerState.Agent.transform.position));
+                var playerGridPosition = Vector3Int.RoundToInt(world.WorldGeometry.WorldToGrid(GameViewModel.ViewModel.PlayerState.Agent.transform.position));
                 var playerNode = language.State.GrammarState.GetNode(playerGridPosition);
                 spacePartitioning.Update(playerNode);
             };

@@ -8,15 +8,18 @@ using UnityEngine;
 namespace ShapeGrammar
 {
 
-    public class ShapeGrammarLevelDesign : LevelDesign
+    public class ShapeGrammarLevelDesign
     {
-        public ShapeGrammarLevelDesign(LevelDevelopmentKit ldk) : base(ldk)
+        LevelDevelopmentKit ldk;
+
+        public ShapeGrammarLevelDesign(LevelDevelopmentKit ldk)
         {
+            this.ldk = ldk;
         }
 
 
 
-        public override LevelElement CreateLevel()
+        public LevelElement CreateLevel()
         {
             var pr = new Productions(ldk, new Symbols());
             ProductionProgram.pr = pr;

@@ -127,7 +127,7 @@ namespace ShapeGrammar
             var spacePartitioning = new SpacePartitioning(GameLanguage.State.TraversabilityGraph);
             playerState.OnUpdate = () =>
             {
-                var playerGridPosition = Vector3Int.RoundToInt(GameLanguage.State.Ldk.wg.WorldToGrid(GameViewModel.ViewModel.PlayerState.Agent.transform.position));
+                var playerGridPosition = Vector3Int.RoundToInt(worldGeometry.WorldToGrid(GameViewModel.ViewModel.PlayerState.Agent.transform.position));
                 var playerNode = GameLanguage.State.GrammarState.GetNode(playerGridPosition);
                 spacePartitioning.Update(playerNode);
             };
