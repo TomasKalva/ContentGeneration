@@ -130,12 +130,10 @@ namespace ShapeGrammar
     public class QueryContext
     {
         Grid<Cube> QueriedGrid { get; }
-        Placement pl { get; }
 
         public QueryContext(Grid<Cube> queriedGrid)
         {
             QueriedGrid = queriedGrid;
-            pl = new Placement(queriedGrid);
         }
 
         public CubeGroup GetBox(Box3Int box)

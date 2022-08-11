@@ -10,15 +10,11 @@ namespace ShapeGrammar
 {
     public class Connections
     {
-        Grid<Cube> Grid { get; }
-        ShapeGrammarShapes sgShapes { get; }
         Paths paths { get; }
 
-        public Connections(Grid<Cube> grid)
+        public Connections()
         {
-            Grid = grid;
-            sgShapes = new ShapeGrammarShapes(grid);
-            paths = new Paths(grid);
+            paths = new Paths();
         }
 
         #region Helper methods

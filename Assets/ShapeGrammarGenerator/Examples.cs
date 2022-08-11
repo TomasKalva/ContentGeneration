@@ -24,7 +24,7 @@ namespace ShapeGrammar
             qc = new QueryContext(grid);
             sgShapes = new ShapeGrammarShapes(grid);
             pl = new Placement(grid);
-            con = new Connections(grid);
+            con = new Connections();
             tr = new Transformations(this);
             AreaStyles.Initialize(new GridPrimitives(gp), new GridPrimitivesPlacement(grid));
         }

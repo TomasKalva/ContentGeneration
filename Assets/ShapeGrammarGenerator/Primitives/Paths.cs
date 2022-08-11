@@ -10,14 +10,6 @@ namespace ShapeGrammar
 {
     public class Paths
     {
-        Grid<Cube> Grid { get; }
-        ShapeGrammarShapes sgShapes { get; }
-
-        public Paths(Grid<Cube> grid)
-        {
-            Grid = grid;
-            sgShapes = new ShapeGrammarShapes(grid);
-        }
         /*
         public LevelGroupElement WalkableWallPathH(LevelElement area1, LevelElement area2, int thickness)
         {
@@ -129,7 +121,7 @@ namespace ShapeGrammar
 
             var pathCubes = path == null ? starting.GetRandom().cube.Group().Cubes : path.Select(pn => pn.cube).ToList();
             // drop first and last element
-            return new CubeGroup(Grid, pathCubes);
+            return new CubeGroup(startGroup.Grid, pathCubes);
         }
     }
 }
