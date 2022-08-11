@@ -324,14 +324,6 @@ namespace Assets.ShapeGrammarGenerator
         public override void PlacePrimitive(IGridGeometryOwner worldGeometry, IFacet facet, CubePrimitive otherPrimitive)
         {
             PlaceCube(worldGeometry, facet, Object, Direction);
-
-            /*
-            var obj = Style.GetCube(CubeType);
-
-            obj.localScale = cubeSide * Vector3.one;
-            obj.localPosition = ((Vector3)Position) * cubeSide;
-            obj.rotation = Quaternion.LookRotation(ObjectDir, Vector3.up);
-            world.AddArchitectureElement(obj);*/
         }
     }
     #endregion

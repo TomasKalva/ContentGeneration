@@ -7,21 +7,21 @@ using System.Threading.Tasks;
 
 namespace Assets.ShapeGrammarGenerator
 {
-    public delegate CubeGroup ApplyStyle(GridPrimitivesStyle gridPrimitivesStyle, CubeGroup target);
+    public delegate CubeGroup PlacePrimitives(GridPrimitivesStyle gridPrimitivesStyle, CubeGroup target);
 
     public class AreaStyle
     {
         public string Name { get; }
-        ApplyStyle ApplyStyleF { get; }
+        PlacePrimitives PlacePrimitivesF { get; }
         GridPrimitivesStyle GridPrimitivesStyle { get; }
 
-        public AreaStyle(string name, GridPrimitivesStyle gridPrimitiveStyle, ApplyStyle applyStyle)
+        public AreaStyle(string name, GridPrimitivesStyle gridPrimitiveStyle, PlacePrimitives applyStyle)
         {
             Name = name;
-            ApplyStyleF = applyStyle;
+            PlacePrimitivesF = applyStyle;
             GridPrimitivesStyle = gridPrimitiveStyle;
         }
 
-        public CubeGroup ApplyStyle(CubeGroup cg) => ApplyStyleF(GridPrimitivesStyle, cg);
+        public CubeGroup ApplyStyle(CubeGroup cg) => PlacePrimitivesF(GridPrimitivesStyle, cg);
     }
 }

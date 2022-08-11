@@ -253,19 +253,19 @@ namespace ShapeGrammar
             var path = paths.ConnectByPath(start, end, neighbors);
             path.SetGrammarStyle(sgStyles.StairsPathStyle);
         }*/
-
+        /*
         public void ControlPointDesign()
         {
             var controlPointsDesign = new ControlPointsLevelDesign(this);
             controlPointsDesign.CreateLevel();
-        }
-
+        }*/
+        /*
         public LevelElement CurveDesign()
         {
             var CurveDesign = new CurvesLevelDesign(this);
             return CurveDesign.CreateLevel();
         }
-
+        */
         public LevelElement ShapeGrammarDesign()
         {
             var ShapeGrammarLevelDesign = new ShapeGrammarLevelDesign(this);
