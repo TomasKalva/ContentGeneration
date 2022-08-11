@@ -18,7 +18,7 @@ namespace ShapeGrammar
             Grid = grid;
             sgShapes = new ShapeGrammarShapes(grid);
         }
-
+        /*
         public LevelGroupElement WalkableWallPathH(LevelElement area1, LevelElement area2, int thickness)
         {
             var starting = area1.CG().BottomLayer();
@@ -58,6 +58,7 @@ namespace ShapeGrammar
 
             return pathCubes.LE(AreaStyles.Path());
         }
+        */
         /*
         public LevelGeometryElement WalkableElevator(LevelElement area1, LevelElement area2)
         {
@@ -78,11 +79,13 @@ namespace ShapeGrammar
         /// <summary>
         /// Path doesn't go through the starting group.
         /// </summary>
+        /*
         public CubeGroup ConnectByPathFS(CubeGroup starting, CubeGroup ending, Neighbors<PathNode> neighbors)
         {
             neighbors = PathNode.NotIn(neighbors, starting);
             return ConnectByPath(starting, ending, neighbors);
         }
+        */
 
         public CubeGroup Thicken(CubeGroup pathCubes, int thickness, CubeGroup notIntersecting)
         {

@@ -51,6 +51,7 @@ namespace ShapeGrammar
             };
         }
 
+        /*
         public ChangeWorld PathTo(Func<LevelElement> elementF)
         {
             return (worldState) =>
@@ -67,7 +68,7 @@ namespace ShapeGrammar
                 var newElement = new LevelGroupElement(worldState.Last.Grid, AreaStyles.None(), path, area);
                 return worldState.TryPush(newElement);
             };
-        }
+        }*/
 
         public ChangeWorld SubdivideRoom()
         {

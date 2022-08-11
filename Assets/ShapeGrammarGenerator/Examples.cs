@@ -13,10 +13,8 @@ namespace ShapeGrammar
     {
         public Grid<Cube> grid { get; }
         public QueryContext qc { get; }
-        public GridPrimitivesPlacement sgStyles { get; }
         public ShapeGrammarShapes sgShapes { get; }
         public Placement pl { get; }
-        public Paths paths { get; }
         public Transformations tr { get; }
         public WorldChanging wc { get; }
         public Connections con { get; }
@@ -25,13 +23,11 @@ namespace ShapeGrammar
         {
             grid = new Grid<Cube>(new Vector3Int(20, 10, 20), (grid, pos) => new Cube(grid, pos));
             qc = new QueryContext(grid);
-            sgStyles = new GridPrimitivesPlacement(grid);
             sgShapes = new ShapeGrammarShapes(grid);
             pl = new Placement(grid);
-            paths = new Paths(grid);
             con = new Connections(grid);
             tr = new Transformations(this);
-            AreaStyles.Initialize(new GridPrimitives(gp), sgStyles);
+            AreaStyles.Initialize(new GridPrimitives(gp), new GridPrimitivesPlacement(grid));
             wc = new WorldChanging(this);
         }
     }
@@ -179,6 +175,7 @@ namespace ShapeGrammar
             return tower;
         }*/
 
+        /*
         public LevelElement TwoConnectedTowers()
         {
             // Create ground layout of the tower
@@ -198,8 +195,9 @@ namespace ShapeGrammar
             sgShapes.AddBalcony(tower).ApplyGrammarStyleRules();
 
             return tower.Merge(tower2, path);
-        }
+        }*/
 
+        /*
         public LevelElement ManyConnectedTowers()
         {
             // Create ground layout of the tower
@@ -216,7 +214,7 @@ namespace ShapeGrammar
             towers.ForEach2Cycle((t1, t2) => paths.WalkableWallPathH(t1, t2, 1).ApplyGrammarStyleRules());
 
             return towers.ToLevelGroupElement(grid);
-        }
+        }*/
 
         public LevelElement Surrounded()
         {
