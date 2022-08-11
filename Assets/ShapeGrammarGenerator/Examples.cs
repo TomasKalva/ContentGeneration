@@ -16,7 +16,6 @@ namespace ShapeGrammar
         public ShapeGrammarShapes sgShapes { get; }
         public Placement pl { get; }
         public Transformations tr { get; }
-        public WorldChanging wc { get; }
         public Connections con { get; }
 
         public LevelDevelopmentKit(GeometricPrimitives gp, Transform worldParent, Libraries lib)
@@ -28,7 +27,6 @@ namespace ShapeGrammar
             con = new Connections(grid);
             tr = new Transformations(this);
             AreaStyles.Initialize(new GridPrimitives(gp), new GridPrimitivesPlacement(grid));
-            wc = new WorldChanging(this);
         }
     }
 
