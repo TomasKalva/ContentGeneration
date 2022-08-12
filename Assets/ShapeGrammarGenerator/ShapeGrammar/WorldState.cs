@@ -44,24 +44,6 @@ namespace ShapeGrammar
             });
         }
 
-        public WorldState AddUntilCan(ChangeWorld adder, int maxIterations)
-        {
-            var newAddingState = this;
-            int counter = 0;
-            while (true)
-            {
-                if (counter++ > maxIterations)
-                    return newAddingState;
-
-                var newState = adder(newAddingState);
-
-                if (newState == newAddingState)
-                    return newAddingState;
-                else
-                    newAddingState = newState;
-            }
-        }
-
         public WorldState TryPush(LevelElement le)
         {
             if (le == null)
@@ -69,26 +51,6 @@ namespace ShapeGrammar
 
             var newLe = AfterPushed(le);
             return new WorldState(Added.Merge(newLe), newLe, Grid, AfterPushed);
-        }
-
-        public WorldState TryPushIntersecting(LevelElement le)
-        {
-            if (le == null)
-                return this;
-
-            var newLe = AfterPushed(le);
-            var added = Added.MinusInPlace(newLe);
-            return new WorldState(added.Merge(newLe), newLe, Grid, AfterPushed);
-        }
-
-        public WorldState SetElement(LevelElement le)
-        {
-            return new WorldState(Added, le, Grid, AfterPushed);
-        }
-
-        public WorldState ChangeAdded(LevelGroupElement newAdded)
-        {
-            return new WorldState(newAdded, Last, Grid, AfterPushed);
         }
     }
 }

@@ -123,5 +123,18 @@ namespace ShapeGrammar
             // drop first and last element
             return new CubeGroup(startGroup.Grid, pathCubes);
         }
+
+        public CubeGroup ConnectByConnectivityPreservingPath(CubeGroup startGroup, CubeGroup endGroup, CubeGroup startAreaFloor, CubeGroup endAreaFloor, Neighbors<PathNode> neighbors, LevelGroupElement existingPaths)
+        {
+            var existingPathsCgs = existingPaths.LevelElements.Select(le => le.CG());
+            return ConnectByPath(
+                // Preserve connectivity for the starting nodes
+                PathNode.PreserveConnectivity(
+                    _ => startGroup.Cubes.Select(startCube => new PathNode(null, startCube)), startAreaFloor, endAreaFloor, existingPathsCgs)(null)
+                    .Select(pathNode => pathNode.cube).ToCubeGroup(startGroup.Grid),
+                endGroup,
+                // Preserve connectivity for all the other nodes
+                PathNode.PreserveConnectivity(neighbors, startAreaFloor, endAreaFloor, existingPathsCgs));
+        }
     }
 }
