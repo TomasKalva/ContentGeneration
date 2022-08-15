@@ -19,6 +19,8 @@ MonoBehaviour:
   woodenWall: {fileID: 3764113671630828798, guid: 61b3322b68d1a3146baefbf1251f40dd, type: 3}
   tiledWall: {fileID: 3764113671630828798, guid: d13b103f9025a63488d190387a1de6e7, type: 3}
   stoneWall: {fileID: 3764113671630828798, guid: c3b09b1e3fbfdaf44906b0f9311c5c68, type: 3}
+  cementedWall: {fileID: 3764113671630828798, guid: 27c018d82e24cdd47bc3bc6722f5cf9e, type: 3}
+  pipedWall: {fileID: 3764113671630828798, guid: 0f2087bc3aa014a4f91ba2ce3441933c, type: 3}
   railing: {fileID: 876146423463043957, guid: 38ce534bf516e1f4283b57a411932d39, type: 3}
   cladding: {fileID: 3764113671630828798, guid: ab057c7e5ed61b44e9afc8e9c79b6f6d, type: 3}
   woodenFullFloor: {fileID: -152337017728516849, guid: 4c5c97c565bab6044b9b119aec2e97cc, type: 3}

@@ -61,7 +61,7 @@ namespace ShapeGrammar
                     return true;
                 }));
             */
-            L.FactionsLanguage.InitializeFactions(3);
+            //L.FactionsLanguage.InitializeFactions(3);
 
             /*
             State.LC.AddEvent(
@@ -94,7 +94,7 @@ namespace ShapeGrammar
             
              */
 
-            /*
+            
             State.LC.AddEvent(
                 new LevelConstructionEvent(90,
                 () =>
@@ -102,7 +102,7 @@ namespace ShapeGrammar
                     L.TestingLanguage.GrammarTesting();
                     return true;
                 }));
-            */
+            
         }
     }
 
@@ -344,9 +344,9 @@ namespace ShapeGrammar
             Env.Execute(roofGrammar);
             */
 
-            Env.Line(Gr.PrL.Town(), NodesQueries.All, 10, out var _);
+            //Env.Line(Gr.PrL.Town(), NodesQueries.All, 10, out var _);
             Env.Line(Gr.PrL.Chapels(), NodesQueries.All, 10, out var _);
-            Env.Line(Gr.PrL.Castle(), NodesQueries.All, 10, out var _);
+            //Env.Line(Gr.PrL.Castle(), NodesQueries.All, 10, out var _);
             //Env.BranchRandomly(Gr.PrL.Town(), 40, out var _);
 
             /*Env.Line(Gr.PrL.TestingProductions(), NodesQueries.All, 10, out var _);
@@ -535,10 +535,6 @@ namespace ShapeGrammar
                     Lib.Items.AllWeapons().ToList(),
                     new List<List<Func<ItemState>>>()
                     {
-                        /*new List<Func<ItemState>>()
-                        {
-
-                        },*/
                         new List<Func<ItemState>>()
                         {
                             spellItems.FireBolt,

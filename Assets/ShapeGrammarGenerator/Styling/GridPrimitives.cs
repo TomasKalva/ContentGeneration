@@ -10,58 +10,64 @@ namespace Assets.ShapeGrammarGenerator
 {
     public class GridPrimitives
     {
-        GeometricPrimitives gp;
+        public GeometricPrimitives GP { get; }
 
         public GridPrimitives(GeometricPrimitives gp)
         {
-            this.gp = gp;
+            this.GP = gp;
         }
 
         public WallPrimitive HouseWall()
-            => new WallPrimitive(gp.woodenWall, gp.brickWall);
+            => new WallPrimitive(GP.woodenWall, GP.brickWall);
+        public WallPrimitive Wall(GeometricPrimitive insideWall, GeometricPrimitive outsideWall)
+            => new WallPrimitive(insideWall, outsideWall);
         public WallPrimitive FoundationWall()
-            => new WallPrimitive(gp.empty, gp.stoneWall);
+            => new WallPrimitive(GP.empty, GP.stoneWall);
+        public CladdedWallPrimitive CladdedWall(GeometricPrimitive insideWall, GeometricPrimitive outsideWall)
+            => new CladdedWallPrimitive(insideWall, outsideWall, GP.cladding);
         public CladdedWallPrimitive CladdedWall()
-            => new CladdedWallPrimitive(gp.woodenWall, gp.brickWall, gp.cladding);
+            => new CladdedWallPrimitive(GP.woodenWall, GP.brickWall, GP.cladding);
 
         public HorFaceExclusivePrimitive Door()
-            => new HorFaceExclusivePrimitive(gp.wallDoor, FACE_HOR.Door, 3);//todo: replace with actual door primitive
+            => new HorFaceExclusivePrimitive(GP.wallDoor, FACE_HOR.Door, 3);//todo: replace with actual door primitive
         public HorFaceExclusivePrimitive RailingDoor()
-            => new HorFaceExclusivePrimitive(gp.railingDoor, FACE_HOR.Door, 3);
+            => new HorFaceExclusivePrimitive(GP.railingDoor, FACE_HOR.Door, 3);
 
         public HorFaceExclusivePrimitive Railing()
-            => new HorFaceExclusivePrimitive(gp.railing, FACE_HOR.Railing, 1);
+            => new HorFaceExclusivePrimitive(GP.railing, FACE_HOR.Railing, 1);
         public HorFaceExclusivePrimitive Cladding()
-            => new HorFaceExclusivePrimitive(gp.cladding, FACE_HOR.Railing, 0.5f);
+            => new HorFaceExclusivePrimitive(GP.cladding, FACE_HOR.Railing, 0.5f);
 
         public NoWallPrimitive NoWall()
             => new NoWallPrimitive();
 
 
         public CornerFaceExclusivePrimitive RailingPillar()
-            => new CornerFaceExclusivePrimitive(gp.railingPillar, CORNER.RailingPillar, 1f);
+            => new CornerFaceExclusivePrimitive(GP.railingPillar, CORNER.RailingPillar, 1f);
 
         public BeamPrimitive Beam()
-            => new BeamPrimitive(gp.beamBottom, gp.beamMiddle, gp.beamTop);
+            => new BeamPrimitive(GP.beamBottom, GP.beamMiddle, GP.beamTop);
 
         public CornerFaceExclusivePrimitive NoPillar()
-            => new CornerFaceExclusivePrimitive(gp.empty, CORNER.Nothing, 3f);
+            => new CornerFaceExclusivePrimitive(GP.empty, CORNER.Nothing, 3f);
 
 
+        public FloorPrimitive Floor(GeometricPrimitive floor, GeometricPrimitive ceiling)
+            => new FloorPrimitive(floor, ceiling);
         public FloorPrimitive Floor()
-            => new FloorPrimitive(gp.stoneTiledFloor, gp.oneSidedCeiling);
+            => new FloorPrimitive(GP.stoneTiledFloor, GP.oneSidedCeiling);
 
         public FloorPrimitive PathFullFloor()
-            => new FloorPrimitive(gp.woodenFullFloor, gp.empty);
+            => new FloorPrimitive(GP.woodenFullFloor, GP.empty);
 
         public NoFloorPrimitive NoFloor()
             => new NoFloorPrimitive();// todo: make floor one sided and add ceiling
 
 
         public CubeExclusivePrimitive StairPrimitive(Vector3Int direction)
-            => new CubeExclusivePrimitive(gp.stairs, direction);
+            => new CubeExclusivePrimitive(GP.stairs, direction);
 
-        public GridPrimitivesStyle DefaultStyle() => new GridPrimitivesStyle()
+        public GridPrimitivesStyle TownStyle() => new GridPrimitivesStyle()
         {
             Door = Door,
             RailingDoor = RailingDoor,
@@ -84,14 +90,23 @@ namespace Assets.ShapeGrammarGenerator
 
             Stairs = StairPrimitive,
 
-            DirectionalRoof = gp.oneDirectionRoof,
-            CrossRoof = gp.crossRoof,
-            PointyRoof = gp.pointyRoof,
-            GableRoof = gp.gableRoof,
+            DirectionalRoof = GP.oneDirectionRoof,
+            CrossRoof = GP.crossRoof,
+            PointyRoof = GP.pointyRoof,
+            GableRoof = GP.gableRoof,
 
-            BridgeTop = gp.bridgeTop,
-            BridgeBottom = gp.bridgeBottom,
+            BridgeTop = GP.bridgeTop,
+            BridgeBottom = GP.bridgeBottom,
         };
+
+        public GridPrimitivesStyle ChapelStyle() => TownStyle()
+            .SetFloor(() => Floor(GP.ornamentedFloor, GP.oneSidedCeiling))
+            .SetWall(() => Wall(GP.pipedWall, GP.cementedWall))
+            .SetCladdedWall(() => CladdedWall(GP.pipedWall, GP.cementedWall));
+
+        public GridPrimitivesStyle GardenStyle() => TownStyle()
+            .SetFloor(() => Floor(GP.grassFloor, GP.oneSidedCeiling));
+
     }
 
     /// <summary>
@@ -102,8 +117,19 @@ namespace Assets.ShapeGrammarGenerator
         public Func<HorFacePrimitive> Door { get; set; }
         public Func<HorFacePrimitive> RailingDoor { get; set; }
         public Func<HorFacePrimitive> Wall { get; set; }
+        public GridPrimitivesStyle SetWall(Func<HorFacePrimitive> wall)
+        {
+            Wall = wall;
+            return this;
+        }
+
         public Func<HorFacePrimitive> FoundationWall { get; set; }
         public Func<HorFacePrimitive> CladdedWall { get; set; }
+        public GridPrimitivesStyle SetCladdedWall(Func<HorFacePrimitive> claddedWall)
+        {
+            CladdedWall = claddedWall;
+            return this;
+        }
         public Func<HorFacePrimitive> Railing { get; set; }
         public Func<HorFacePrimitive> Cladding { get; set; }
         public Func<HorFacePrimitive> NoWall { get; set; }
@@ -111,6 +137,12 @@ namespace Assets.ShapeGrammarGenerator
         public Func<CornerFacetPrimitive> Beam { get; set; }
         public Func<CornerFacetPrimitive> NoPillar { get; set; }
         public Func<VerFacePrimitive> Floor { get; set; }
+        public GridPrimitivesStyle SetFloor(Func<VerFacePrimitive> floor)
+        {
+            Floor = floor;
+            return this;
+        }
+
         public Func<VerFacePrimitive> PathFullFloor { get; set; }
         public Func<VerFacePrimitive> NoFloor { get; set; }
         public Func<Vector3Int, CubePrimitive> Stairs { get; set; }

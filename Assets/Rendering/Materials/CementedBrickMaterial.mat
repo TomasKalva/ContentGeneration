@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7093331774119988026
+--- !u!114 &-2055102476939459013
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: BrickWallMaterialNew
+  m_Name: CementedBrickMaterial
   m_Shader: {fileID: -6465566751694194690, guid: a11a8adc87c9152428dc1db5314f5dda, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -77,7 +77,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture2D:
-        m_Texture: {fileID: 2800000, guid: 225d19d9d69b30e48b82b08c480967b2, type: 3}
+        m_Texture: {fileID: 2800000, guid: a2821ea1bf6dc154d89c00e3c8b30f11, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -94,7 +94,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - NormalOffset: 0.3
+    - NormalOffset: 0.31
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1

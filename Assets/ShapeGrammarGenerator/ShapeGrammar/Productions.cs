@@ -856,7 +856,7 @@ namespace ShapeGrammar
         {
             return FromDownwardFoundation(
                     from,
-                    cg => cg.LE(AreaStyles.Room()).GN(sym.FullFloorMarker, to),
+                    cg => cg.LE(AreaStyles.Room(AreaStyles.ChapelStyle)).GN(sym.FullFloorMarker, to),
                     belowRoomHeight,
                     minFloorHeight,
                     ldk.con.ConnectByWallStairsIn
@@ -882,7 +882,7 @@ namespace ShapeGrammar
             return Extrude(
                 extrudeFrom,
                 node => pathGuide.SelectDirections(node.LE),
-                (cg, dir) => cg.ExtrudeDir(dir, length).LE(AreaStyles.Room()).GN(sym.ChapelHall(dir), sym.FullFloorMarker),
+                (cg, dir) => cg.ExtrudeDir(dir, length).LE(AreaStyles.Room(AreaStyles.ChapelStyle)).GN(sym.ChapelHall(dir), sym.FullFloorMarker),
                 Empty(),
                 Reserve(2, sym.UpwardReservation),
                 ldk.con.ConnectByDoor
@@ -894,7 +894,7 @@ namespace ShapeGrammar
             return Extrude(
                 sym.ChapelHall(default),
                 node => node.GetSymbol(sym.ChapelHall(default)).Direction.ToEnumerable(),
-                (cg, dir) => cg.ExtrudeDir(dir, extrusionLength).LE(AreaStyles.Room()).GN(sym.ChapelRoom, sym.FullFloorMarker),
+                (cg, dir) => cg.ExtrudeDir(dir, extrusionLength).LE(AreaStyles.Room(AreaStyles.ChapelStyle)).GN(sym.ChapelRoom, sym.FullFloorMarker),
                 Empty(),
                 Reserve(2, sym.UpwardReservation),
                 ldk.con.ConnectByDoor
@@ -902,17 +902,24 @@ namespace ShapeGrammar
         }
 
         public Production ChapelNextFloor(int nextFloorHeight, int maxFloor)
-            => RoomNextFloor(sym.ChapelRoom, sym.ChapelRoom, nextFloorHeight, maxFloor, ldk.con.ConnectByWallStairsIn);
+            => TakeUpwardReservation(
+                    sym.ChapelRoom,
+                    nextFloor => nextFloor.LE(AreaStyles.Room(AreaStyles.ChapelStyle)).GN(sym.ChapelRoom, sym.FullFloorMarker),
+                    nextFloorHeight,
+                    maxFloor,
+                    Reserve(2, sym.UpwardReservation),
+                    ldk.con.ConnectByWallStairsIn
+                    );
 
 
         public Production ChapelTowerTop(int towerTopHeight, int roofHeight, int maxHeight = 100)
         {
             return TakeUpwardReservation(
                     sym.ChapelRoom,
-                    nextFloor => nextFloor.LE(AreaStyles.Colonnade()).GN(sym.ChapelTowerTop, sym.FullFloorMarker),
+                    nextFloor => nextFloor.LE(AreaStyles.Colonnade(AreaStyles.ChapelStyle)).GN(sym.ChapelTowerTop, sym.FullFloorMarker),
                     towerTopHeight,
                     maxHeight,
-                    Roof(AreaStyles.PointyRoof(), roofHeight),
+                    Roof(AreaStyles.PointyRoof(AreaStyles.ChapelStyle), roofHeight),
                     ldk.con.ConnectByWallStairsIn);
         }
 
@@ -920,7 +927,7 @@ namespace ShapeGrammar
             => FullFloorPlaceNear(
                     nextToWhatSymbol,
                     sym.ChapelEntrance,
-                    () => leF().SetAreaType(AreaStyles.Room()),
+                    () => leF().SetAreaType(AreaStyles.Room(AreaStyles.ChapelStyle)),
                     Empty(),
                     Roof(AreaStyles.CrossRoof(), roofHeight),
                     ldk.con.ConnectByStairsOutside,

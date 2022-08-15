@@ -121,20 +121,27 @@ namespace ShapeGrammar
 
         public ProductionList Chapels()
         {
-            var guideRandomly = new RandomPathGuide();
+            var pathGuide = new RandomPathGuide();
 
             return new ProductionList
             (
                 // Connection from other grammars
-                pr.ExtendBridgeToRoom(pr.sym.FullFloorMarker, pr.sym.ChapelRoom, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), guideRandomly),
+                pr.ExtendBridgeTo(
+                    pr.sym.FullFloorMarker,
+                    pr.sym.ChapelRoom,
+                    4,
+                    () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)).SetAreaType(AreaStyles.Room(AreaStyles.ChapelStyle)),
+                    pathGuide,
+                    pr.Reserve(2, pr.sym.UpwardReservation)),
+                //.ExtendBridgeToRoom(pr.sym.FullFloorMarker, pr.sym.ChapelRoom, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)).SetAreaType(AreaStyles.Room(AreaStyles.ChapelStyle)), pathGuide),
 
                 pr.ChapelEntranceNextTo(pr.sym.Room, 3, () => ldk.qc.GetFlatBox(3, 3, 2)),
                 pr.ChapelEntranceNextTo(pr.sym.Park, 3, () => ldk.qc.GetFlatBox(3, 3, 2)),
 
-                pr.ChapelHall(pr.sym.ChapelEntrance, 4, guideRandomly),
+                pr.ChapelHall(pr.sym.ChapelEntrance, 4, pathGuide),
 
-                pr.ChapelHall(pr.sym.ChapelRoom, 7, guideRandomly),
-                pr.ChapelHall(pr.sym.ChapelRoom, 5, guideRandomly),
+                pr.ChapelHall(pr.sym.ChapelRoom, 7, pathGuide),
+                pr.ChapelHall(pr.sym.ChapelRoom, 5, pathGuide),
 
                 pr.ChapelRoom(3),
 

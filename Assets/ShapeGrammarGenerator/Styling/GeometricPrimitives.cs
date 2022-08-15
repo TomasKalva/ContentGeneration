@@ -39,6 +39,10 @@ public class GeometricPrimitives : ScriptableObject
     public GeometricPrimitive tiledWall;
     [SerializeField]
     public GeometricPrimitive stoneWall;
+    [SerializeField]
+    public GeometricPrimitive cementedWall;
+    [SerializeField]
+    public GeometricPrimitive pipedWall;
     #endregion
 
 
