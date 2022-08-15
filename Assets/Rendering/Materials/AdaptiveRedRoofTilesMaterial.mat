@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7093331774119988026
+--- !u!114 &-5643310191262341466
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,8 +20,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Pebbles
-  m_Shader: {fileID: -6465566751694194690, guid: a11a8adc87c9152428dc1db5314f5dda, type: 3}
+  m_Name: AdaptiveRedRoofTilesMaterial
+  m_Shader: {fileID: -6465566751694194690, guid: eca75d0843dd9514cb625d9520be732d, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
@@ -64,6 +64,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _NormalFromTexture_a79cc399a0cb4b0cbf99886c80941389_Texture_0:
+        m_Texture: {fileID: 2800000, guid: a4dea0bd3ace4fb459accbff8f8b3046, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -72,12 +76,16 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_75b6b289ad614f0ebea22d1ec3e4833b_Texture_1:
+        m_Texture: {fileID: 2800000, guid: a4dea0bd3ace4fb459accbff8f8b3046, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture2D:
-        m_Texture: {fileID: 2800000, guid: 71b3d05eef828384786f9a393128145b, type: 3}
+        m_Texture: {fileID: 2800000, guid: afe53c5c9108a6b4b8d7b1670b8a3635, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -110,6 +118,7 @@ Material:
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _Metallic: 0
+    - _NormalOffset: 0.29
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
@@ -123,9 +132,10 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - UVScale: {r: 2, g: 2, b: 0, a: 0}
+    - UVScale: {r: 3, g: 3, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+    - _UVScale: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []

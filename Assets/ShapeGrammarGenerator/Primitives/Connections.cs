@@ -64,7 +64,7 @@ namespace ShapeGrammar
                         space1.Merge(space2)
                 );
                 var path = paths.ConnectByConnectivityPreservingPath(space1.BottomLayer(), space2.BottomLayer(), le1.CG().BottomLayer(), le2.CG().BottomLayer(), neighbors, existingPaths);
-                return path != null ? path.LE(AreaStyles.Path()) : null;
+                return path != null ? path.LE(AreaStyles.Connection()) : null;
             };
         }
 

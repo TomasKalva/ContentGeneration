@@ -21,8 +21,8 @@ namespace Assets.ShapeGrammarGenerator
             => new WallPrimitive(GP.woodenWall, GP.brickWall);
         public WallPrimitive Wall(GeometricPrimitive insideWall, GeometricPrimitive outsideWall)
             => new WallPrimitive(insideWall, outsideWall);
-        public WallPrimitive FoundationWall()
-            => new WallPrimitive(GP.empty, GP.stoneWall);
+        public WallPrimitive FoundationWall(GeometricPrimitive wall)
+            => new WallPrimitive(GP.empty, wall);
         public CladdedWallPrimitive CladdedWall(GeometricPrimitive insideWall, GeometricPrimitive outsideWall)
             => new CladdedWallPrimitive(insideWall, outsideWall, GP.cladding);
         public CladdedWallPrimitive CladdedWall()
@@ -73,7 +73,7 @@ namespace Assets.ShapeGrammarGenerator
             RailingDoor = RailingDoor,
 
             Wall = HouseWall,
-            FoundationWall = FoundationWall,
+            FoundationWall = () => FoundationWall(GP.stoneWall),
             CladdedWall = CladdedWall,
             NoWall = NoWall,
 
@@ -105,6 +105,7 @@ namespace Assets.ShapeGrammarGenerator
             .SetCladdedWall(() => CladdedWall(GP.pipedWall, GP.cementedWall));
 
         public GridPrimitivesStyle GardenStyle() => TownStyle()
+            .SetFoundationWall(() => FoundationWall(GP.barkWall))
             .SetFloor(() => Floor(GP.grassFloor, GP.oneSidedCeiling));
 
     }
@@ -124,6 +125,12 @@ namespace Assets.ShapeGrammarGenerator
         }
 
         public Func<HorFacePrimitive> FoundationWall { get; set; }
+        public GridPrimitivesStyle SetFoundationWall(Func<HorFacePrimitive> foundationWall)
+        {
+            FoundationWall = foundationWall;
+            return this;
+        }
+
         public Func<HorFacePrimitive> CladdedWall { get; set; }
         public GridPrimitivesStyle SetCladdedWall(Func<HorFacePrimitive> claddedWall)
         {
