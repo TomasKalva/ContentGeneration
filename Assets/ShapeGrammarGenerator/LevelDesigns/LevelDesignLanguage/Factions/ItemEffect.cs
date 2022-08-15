@@ -31,6 +31,9 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
     public class Selector
     {
+        /// <summary>
+        /// Describes time elapsed since the hit of given character.
+        /// </summary>
         class Hit
         {
             public CharacterState Character;

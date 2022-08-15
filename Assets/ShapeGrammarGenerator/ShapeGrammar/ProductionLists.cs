@@ -28,6 +28,9 @@ namespace ShapeGrammar
             };
             return new ProductionList
             (
+                // Connection from other grammars
+                pr.ExtendBridgeToRoom(pr.sym.FullFloorMarker, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide),
+
                 pr.CourtyardFromRoom(),
                 pr.CourtyardFromCourtyardCorner(),
                 
@@ -44,10 +47,10 @@ namespace ShapeGrammar
 
                 // these productions make the world untraversable
                 //pr.RoomFallDown(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-                pr.TowerFallDown(pr.sym.Room, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
+                //pr.TowerFallDown(pr.sym.Room, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
 
-                pr.ExtendBridgeToRoom(pr.sym.Room, boxFs.GetRandom(), pathGuide),
-                pr.ExtendBridgeToGarden(pr.sym.Room, boxFs.GetRandom(), pathGuide),
+                pr.ExtendBridgeToRoom(pr.sym.Room, pr.sym.Room, boxFs.GetRandom(), pathGuide),
+                pr.ExtendBridgeToGarden(pr.sym.Room, pr.sym.Garden, boxFs.GetRandom(), pathGuide),
                 pr.RoomNextTo(pr.sym.Garden, boxFs.GetRandom())
             );
         }
@@ -76,8 +79,8 @@ namespace ShapeGrammar
             var pathGuide = new RandomPathGuide();
             return new ProductionList
             (
-                pr.ExtendBridgeToRoom(pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide),
-                pr.ExtendBridgeToGarden(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide),
+                pr.ExtendBridgeToRoom(pr.sym.Room, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide),
+                pr.ExtendBridgeToGarden(pr.sym.Garden, pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide),
                 pr.RoomNextTo(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
                 pr.RoomNextTo(pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             );
@@ -88,8 +91,8 @@ namespace ShapeGrammar
             var pathGuide = new RandomPathGuide();
             return new ProductionList
             (
-                pr.ExtendBridgeToRoom(pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide),
-                pr.ExtendBridgeToRoom(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide)
+                pr.ExtendBridgeToRoom(pr.sym.Room, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide),
+                pr.ExtendBridgeToRoom(pr.sym.Garden, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide)
             );
         }
 
@@ -99,8 +102,8 @@ namespace ShapeGrammar
             return new ProductionList
             (
                 //pr.GardenFromCourtyard(),
-                pr.ExtendBridgeToRoom(pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 5, 3, 4)), pathGuide),
-                pr.ExtendBridgeToGarden(pr.sym.Room, () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaStyles.Garden()), pathGuide),
+                pr.ExtendBridgeToRoom(pr.sym.Room, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 5, 3, 4)), pathGuide),
+                pr.ExtendBridgeToGarden(pr.sym.Room, pr.sym.Garden, () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaStyles.Garden()), pathGuide),
                 pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 4, 3, 5)))
             );
         }
@@ -110,29 +113,9 @@ namespace ShapeGrammar
             return new ProductionList
             (
                 //pr.GardenFromCourtyard(),
-                pr.ExtendBridgeToRoom(pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide),
-                pr.ExtendBridgeToGarden(pr.sym.Room, () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaStyles.Garden()), pathGuide),
+                pr.ExtendBridgeToRoom(pr.sym.Room, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide),
+                pr.ExtendBridgeToGarden(pr.sym.Room, pr.sym.Garden, () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaStyles.Garden()), pathGuide),
                 pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
-            );
-        }
-
-        public ProductionList Graveyard()
-        {
-            var guideRandomly = new RandomPathGuide();
-            return new ProductionList 
-            (
-                //pr.GardenFromCourtyard(),
-                //pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-                //pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden), addFloorAbove: false),
-                /*pr.ParkNextTo(pr.sym.Room(), () => ldk.qc.GetFlatBox(4, 4, 3)),
-                pr.Park(pr.sym.Park, -1, 3, () => ldk.qc.GetFlatBox(3, 5, 3)),
-                pr.Park(pr.sym.Park, -1, 3, () => ldk.qc.GetFlatBox(5, 4, 3)),
-                pr.ChapelNextTo(pr.sym.Park, () => ldk.qc.GetFlatBox(3, 3, 2)),
-                pr.ChapelHall(pr.sym.ChapelEntrance, 6, guideRandomly),
-                pr.ChapelHall(pr.sym.ChapelRoom(), 6, guideRandomly),
-                pr.ChapelRoom(3)
-                */
-                //pr.ChapelNextFloor(3, 2)
             );
         }
 
@@ -142,8 +125,8 @@ namespace ShapeGrammar
 
             return new ProductionList
             (
-                //pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-                //pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden), addFloorAbove: false),
+                // Connection from other grammars
+                pr.ExtendBridgeToRoom(pr.sym.FullFloorMarker, pr.sym.ChapelRoom, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), guideRandomly),
 
                 pr.ChapelEntranceNextTo(pr.sym.Room, 3, () => ldk.qc.GetFlatBox(3, 3, 2)),
                 pr.ChapelEntranceNextTo(pr.sym.Park, 3, () => ldk.qc.GetFlatBox(3, 3, 2)),
@@ -210,6 +193,9 @@ namespace ShapeGrammar
             var pathGuide = new RandomPathGuide();
             return new ProductionList
             (
+                // Connection from other grammars
+                pr.ExtendBridgeToGarden(pr.sym.FullFloorMarker, pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide),
+
                 pr.TowerBottomNear(pr.sym.Room, () => ldk.qc.GetFlatBox(3, 3, 5)),
                 pr.TowerBottomNear(pr.sym.Garden, () => ldk.qc.GetFlatBox(3, 3, 7)),
 

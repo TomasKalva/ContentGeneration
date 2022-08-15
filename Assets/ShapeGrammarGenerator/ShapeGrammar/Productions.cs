@@ -173,19 +173,19 @@ namespace ShapeGrammar
                 );
         }
 
-        public Production ExtendBridgeToRoom(Symbol from, Func<LevelElement> leF, PathGuide pathGuide)
+        public Production ExtendBridgeToRoom(Symbol from, Symbol roomSymbol, Func<LevelElement> leF, PathGuide pathGuide)
             => ExtendBridgeTo(
                 from,
-                sym.Room,
+                roomSymbol,
                 10,
                 () => leF().SetAreaType(AreaStyles.Room()),
                 pathGuide,
                 Reserve(2, sym.UpwardReservation));
 
-        public Production ExtendBridgeToGarden(Symbol from, Func<LevelElement> leF, PathGuide pathGuide)
+        public Production ExtendBridgeToGarden(Symbol from, Symbol gardenSymbol, Func<LevelElement> leF, PathGuide pathGuide)
             => ExtendBridgeTo(
                 from,
-                sym.Garden,
+                gardenSymbol,
                 10,
                 () => leF().SetAreaType(AreaStyles.Garden()),
                 pathGuide,

@@ -233,7 +233,7 @@ namespace ShapeGrammar
 
             var shapeGrammar = new RandomGrammar(Gr.PrL.Town(), 20);
             var randGardenGrammar = new RandomGrammar(Gr.PrL.Garden(), 1);
-            var graveyardGrammar = new RandomGrammar(Gr.PrL.Graveyard(), 10);
+            var graveyardGrammar = new RandomGrammar(Gr.PrL.Chapels(), 10);
             var graveyardPostprocessGrammar = new AllGrammar(Gr.PrL.GraveyardPostprocess());
             var roofGrammar = new AllGrammar(Gr.PrL.Roofs());
 
@@ -344,7 +344,9 @@ namespace ShapeGrammar
             Env.Execute(roofGrammar);
             */
 
-            Env.Line(Gr.PrL.Town(), NodesQueries.All, 40, out var _);
+            Env.Line(Gr.PrL.Town(), NodesQueries.All, 10, out var _);
+            Env.Line(Gr.PrL.Chapels(), NodesQueries.All, 10, out var _);
+            Env.Line(Gr.PrL.Castle(), NodesQueries.All, 10, out var _);
             //Env.BranchRandomly(Gr.PrL.Town(), 40, out var _);
 
             /*Env.Line(Gr.PrL.TestingProductions(), NodesQueries.All, 10, out var _);

@@ -77,7 +77,7 @@ namespace ShapeGrammar
             var shapeGrammar = new RandomGrammar(prL.Town(), 20);
             var randGardenGrammar = new RandomGrammar(prL.Garden(), 1);
 
-            var graveyardGrammar = new RandomGrammar(prL.Graveyard(), 10);
+            var graveyardGrammar = new RandomGrammar(prL.Chapels(), 10);
             var graveyardPostprocessGrammar = new AllGrammar(prL.GraveyardPostprocess());
             var roofGrammar = new AllGrammar(prL.Roofs());
 
