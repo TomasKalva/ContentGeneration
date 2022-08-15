@@ -60,8 +60,8 @@ namespace ShapeGrammar
                     L.AscendingLanguage.AscendingBranch(() => 100);
                     return true;
                 }));
-
-            L.FactionsLanguage.InitializeFactions(3);*/
+            */
+            L.FactionsLanguage.InitializeFactions(3);
 
             /*
             State.LC.AddEvent(
@@ -73,8 +73,8 @@ namespace ShapeGrammar
             );
             */
 
-            /*
             
+            /*
             State.LC.AddEvent(
                 new LevelConstructionEvent(5, () =>
                 {
@@ -94,7 +94,7 @@ namespace ShapeGrammar
             
              */
 
-            
+            /*
             State.LC.AddEvent(
                 new LevelConstructionEvent(90,
                 () =>
@@ -102,7 +102,7 @@ namespace ShapeGrammar
                     L.TestingLanguage.GrammarTesting();
                     return true;
                 }));
-            
+            */
         }
     }
 
@@ -267,7 +267,7 @@ namespace ShapeGrammar
                     var enemy = chF();
                     var stats = new CharacterStats()
                     {
-                        Will = 50,
+                        Will = 5,
                         Strength = 5,
                         Endurance = 5,
                         Agility = 10,
