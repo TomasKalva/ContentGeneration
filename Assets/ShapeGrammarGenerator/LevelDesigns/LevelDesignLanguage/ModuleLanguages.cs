@@ -61,7 +61,7 @@ namespace ShapeGrammar
                     return true;
                 }));
             */
-            //L.FactionsLanguage.InitializeFactions(3);
+            L.FactionsLanguage.InitializeFactions(2);
 
             /*
             State.LC.AddEvent(

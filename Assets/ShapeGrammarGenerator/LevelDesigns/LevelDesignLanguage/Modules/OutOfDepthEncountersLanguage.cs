@@ -46,6 +46,16 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             };
         }
 
+        public CharacterState EnhanceEnemy(CharacterState enemy, int level) 
+        {
+            var weaponF = GetWeapon(level).GetRandom();
+            return enemy
+                .SetStats(GetStats(level))
+                .SetLeftWeapon(weaponF())
+                .SetRightWeapon(weaponF())
+                .AddOnDeath(() => GameViewModel.ViewModel.PlayerState.Spirit += 3 * enemy.Health.Maximum);
+        }
+
         public IEnumerable<Func<ItemState>> UpgradeRewards(int _)
         {
             return 
@@ -89,31 +99,23 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 
         public void DifficultEncounter(int level)
         {
+            // Create first path to the encounter
             Env.Line(Gr.PrL.Town(), NodesQueries.All, 2, out var path);
 
-            Func<CharacterState, CharacterState> enhanceEnemy =
-                enemy =>
-                {
-                    var weaponF = GetWeapon(level).GetRandom();
-                    return enemy
-                        .SetStats(GetStats(level))
-                        .SetLeftWeapon(weaponF())
-                        .SetRightWeapon(weaponF())
-                        .AddOnDeath(() => GameViewModel.ViewModel.PlayerState.Spirit += 3 * enemy.Health.Maximum);
-                };
-
-            var key = L.PatternLanguage.CreateLockItems(State.UniqueNameGenerator.UniqueName("Soulbound Key"), 1, "Unlocks a door", out var unlock).First();
-
-
+            // Place the encounter
             var enemies = Encounters().GetRandom()().Enemies;
+            var arena = path.AreasList[1];
+            enemies.Select(enemy => EnhanceEnemy(enemy, level)).ForEach(enemy => arena.AddEnemy(enemy));
+
+            // Create a locked area after the encounter
+            var key = L.PatternLanguage.CreateLockItems(State.UniqueNameGenerator.UniqueName("Soulbound Key"), 1, "Unlocks a door", out var unlock).First();
+            L.PatternLanguage.LockedArea(_ => path.LastArea().Node.ToEnumerable(), unlock, out var locked);
+
+            // Give enemy key to the area
             var mainEnemy = enemies.First();
             mainEnemy.DropItem(Lib.InteractiveObjects.Item(key));
 
-            var arena = path.AreasList[1];
-            enemies.Select(enemy => enhanceEnemy(enemy)).ForEach(enemy => arena.AddEnemy(enemy));
-
-            L.PatternLanguage.LockedArea(_ => path.LastArea().Node.ToEnumerable(), unlock, out var locked);
-
+            // Place rewards
             var rewards = UpgradeRewards(level).ToList();
             rewards.Shuffle().Take(2).ForEach(reward =>
                 locked.Get.AddInteractiveObject(Lib.InteractiveObjects.Item(reward())));

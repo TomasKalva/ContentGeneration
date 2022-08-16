@@ -25,7 +25,9 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         /// </summary>
         public int Affinity { get; set; }
 
-        public int StartingBranchProgress => Math.Min(3, Affinity / 4);
+        public int MaxProgress { get; }
+
+        public int StartingBranchProgress => Math.Min(MaxProgress, Affinity / 4);
 
         public Faction(FactionConcepts concepts)
         {
@@ -237,6 +239,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
     delegate ByUser<Effect> EffectByFactionEnvironmentByUser(FactionEnvironment factionEnv);
 
+    /*
     class FactionScalingEffectLibrary
     {
         public List<Annotated<EffectByFactionEnvironmentByUser>> EffectsByUser { get; }
@@ -273,7 +276,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 FromPower("Regenerate health", "regenerates health to", p => eff.RegenerateHealth(5f + 2f * p, 2f)),
             };
         }
-    }
+    }*/
 
     class ScalingCharacterStats
     {

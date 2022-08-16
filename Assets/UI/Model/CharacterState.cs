@@ -32,6 +32,9 @@ namespace ContentGeneration.Assets.UI.Model
             OnDeath += onDeath;
             return this;
         }
+        /// <summary>
+        /// Character will drop the item upon death.
+        /// </summary>
         public CharacterState DropItem(InteractiveObjectState item)
         {
             OnDeath += () =>

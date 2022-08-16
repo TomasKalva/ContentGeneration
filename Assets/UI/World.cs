@@ -125,7 +125,10 @@ namespace ContentGeneration.Assets.UI
         {
             GameObject.Destroy(ArchitectureParent.gameObject);
             GameObject.Destroy(EntitiesParent.gameObject);
-            PlayerState.Agent?.Die();
+            if(PlayerState.Agent != null)
+            {
+                GameObject.Destroy(PlayerState.Agent.gameObject);
+            }//?.Die();
         }
 
         public void Created()

@@ -25,10 +25,6 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 
             var selectorLibrary = Lib.Selectors;
             var effectsLibrary = Lib.Effects;
-            var factionScalingEffectLibrary = new FactionScalingEffectLibrary(effectsLibrary);
-
-            // Make sure that item names are generated uniquely across all factions
-            //var uniqueNameGenerator = new UniqueNameGenerator();
 
 
             var spells = new Spells(Lib.Effects, Lib.Selectors, Lib.VFXs);
@@ -41,7 +37,14 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                     {
                             Gr.PrL.Garden
                     },
-                    Lib.Enemies.AllAgents().Shuffle().ToList(),
+                    new List<Func<CharacterState>>()
+                    {
+                        Lib.Enemies.MayanSwordsman,
+                        Lib.Enemies.MayanThrower,
+                        Lib.Enemies.SkinnyWoman,
+                        Lib.Enemies.Dog,
+                    }
+                    .Shuffle().ToList(),
                     Lib.Items.AllWeapons().ToList(),
                     new List<List<Func<ItemState>>>()
                     {
@@ -135,6 +138,29 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             yield return LinearBranch;
         }
 
+        IDistribution<int> EnemiesInAreaCount(int progress)
+        {
+            var maxEnemies = Math.Min(5, 3 + progress);
+            return new UniformIntDistr(1, maxEnemies);
+        }
+
+        void PlaceInEndArea(Area endArea, FactionEnvironment fe, int progress)
+        {
+            if (progress <= fe.FactionManifestation.Faction.MaxProgress - 1)
+            {
+                // Place creator of next environment
+                endArea.AddInteractiveObject(ProgressOfManifestation(fe.FactionManifestation));
+            }
+            else
+            {
+                // Manifestation is over => get reward
+                endArea.AddInteractiveObject(
+                    Lib.InteractiveObjects.Item(
+                        Lib.Items.NewItem($"Spirit of Lord", "This spirit belonged to some lord.")
+                            .OnUse(user => user.Spirit += 5000)));
+            }
+        }
+
         public void LinearWithKey(FactionEnvironment fe, int progress)
         {
             L.PatternLanguage.BranchWithKey(NodesQueries.LastCreated, 4, Gr.PrL.Town(), out var lockedArea, out var linearPath);
@@ -142,9 +168,10 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             var itemPlacer = PlO.RandomAreasPlacer(new UniformDistr(3, 4), ItemsToPlace(fe, 3));
             itemPlacer.Place(linearPath);
             itemPlacer.Place(lockedArea);
-            PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(linearPath);
+            PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), EnemiesInAreaCount(progress)).Place(linearPath);
 
-            lockedArea.Get.AddInteractiveObject(ProgressOfManifestation(fe.FactionManifestation));
+            PlaceInEndArea(lockedArea.Get, fe, progress);
+            //lockedArea.Get.AddInteractiveObject(ProgressOfManifestation(fe.FactionManifestation));
         }
 
         public void BranchesWithKey(FactionEnvironment fe, int progress)
@@ -154,20 +181,22 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             var itemPlacer = PlO.RandomAreasPlacer(new UniformDistr(3, 4), ItemsToPlace(fe, 3));
             itemPlacer.Place(branches);
             itemPlacer.Place(lockedArea);
-            PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(branches);
+            PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), EnemiesInAreaCount(progress)).Place(branches);
 
-            lockedArea.Get.AddInteractiveObject(ProgressOfManifestation(fe.FactionManifestation));
+            PlaceInEndArea(lockedArea.Get, fe, progress);
+            //lockedArea.Get.AddInteractiveObject(ProgressOfManifestation(fe.FactionManifestation));
         }
 
         public void RandomBranches(FactionEnvironment fe, int progress)
         {
-            Env.BranchRandomly(fe.ProductionList(), 5, out var path);
+            Env.BranchRandomly(fe.ProductionList(), 5, out var randomBranches);
 
             //PlO.ProgressFunctionPlacer(fe.CreateInteractiveObjectFactory(), new UniformIntDistr(1, 4)).Place(path);
-            PlO.RandomAreasPlacer(new UniformDistr(3, 6), ItemsToPlace(fe, 3)).Place(path);
-            PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(path);
+            PlO.RandomAreasPlacer(new UniformDistr(3, 6), ItemsToPlace(fe, 3)).Place(randomBranches);
+            PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), EnemiesInAreaCount(progress)).Place(randomBranches);
 
-            path.AreasList.GetRandom().AddInteractiveObject(ProgressOfManifestation(fe.FactionManifestation));
+            PlaceInEndArea(randomBranches.AreasList.GetRandom(), fe, progress);
+            //path.AreasList.GetRandom().AddInteractiveObject(ProgressOfManifestation(fe.FactionManifestation));
         }
 
         public void LinearBranch(FactionEnvironment fe, int progress)
@@ -176,9 +205,10 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 
             //PlO.ProgressFunctionPlacer(fe.CreateInteractiveObjectFactory(), new UniformIntDistr(1, 4)).Place(path);
             PlO.RandomAreasPlacer(new UniformDistr(3, 6), ItemsToPlace(fe, 3)).Place(path);
-            PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), new UniformIntDistr(1, 4)).Place(path);
+            PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), EnemiesInAreaCount(progress)).Place(path);
 
-            path.LastArea().AddInteractiveObject(ProgressOfManifestation(fe.FactionManifestation));
+            PlaceInEndArea(path.LastArea(), fe, progress);
+            //path.LastArea().AddInteractiveObject(ProgressOfManifestation(fe.FactionManifestation));
         }
     }
 }
