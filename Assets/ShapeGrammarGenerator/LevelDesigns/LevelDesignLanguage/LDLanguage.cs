@@ -140,13 +140,20 @@ namespace ShapeGrammar
                 Initialize();
                 initialized = true;
             }
-
+            
             if(activeNode == null)
             {
+                // Player is outside of all areas
                 return;
             }
 
-            var activeArea = traversabilityGraph.GetArea(activeNode);
+            var activeArea = traversabilityGraph.TryGetArea(activeNode);
+            if(activeArea == null)
+            {
+                // Player is in a non-traversable area
+                return;
+            }
+
             var currentAreas = traversabilityGraph.Neighbors(activeArea).Append(activeArea);
 
             // remove no longer active

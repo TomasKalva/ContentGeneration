@@ -159,13 +159,18 @@ namespace ShapeGrammar
 
         public Area GetArea(Node node)
         {
-            var area = Areas.Where(area => area.Node == node).FirstOrDefault();
+            var area = TryGetArea(node);
             if (area == null)
             {
                 node.Print(new PrintingState()).Show();
                 throw new InvalidOperationException($"Area for the node doesn't exist");
             }
             return area;
+        }
+
+        public Area TryGetArea(Node node)
+        {
+            return Areas.Where(area => area.Node == node).FirstOrDefault();
         }
 
         public bool AreConnected(Area from, Area to)
