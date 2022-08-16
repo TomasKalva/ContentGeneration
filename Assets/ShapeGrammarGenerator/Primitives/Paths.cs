@@ -1,10 +1,8 @@
-﻿using Assets.ShapeGrammarGenerator;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace ShapeGrammar
 {
@@ -96,6 +94,15 @@ namespace ShapeGrammar
             return pathCubes;
         }
 
+        StopCondition StopAfterIterationsOrTime(int maxIterations, float maxTimeS)
+        {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            return iterationsCount =>
+                    iterationsCount >= maxIterations ||
+                    stopwatch.ElapsedMilliseconds / 1000f > maxTimeS;
+        }
+
         public CubeGroup ConnectByPath(CubeGroup startGroup, CubeGroup endGroup, Neighbors<PathNode> neighbors)
         {
             Debug.Assert(startGroup.Cubes.Count > 0);
@@ -109,6 +116,8 @@ namespace ShapeGrammar
             var starting = startGroup.Cubes.Select(c => new PathNode(null, c));
 
             var heuristicsV = endGroup.Cubes.GetRandom();
+
+            var stopCondition = StopAfterIterationsOrTime(10_000, 1f);
             var path = graphAlgs.FindPath(
                 starting,
                 // the path always ends with horizontal move
@@ -117,10 +126,9 @@ namespace ShapeGrammar
                 pn => (pn.cube.Position - heuristicsV.Position).Sum(x => Mathf.Abs(x)),
                 PathNode.Comparer,
                 // cap the number of iterations
-                10_000);
+                stopCondition);
 
-            var pathCubes = path == null ? starting.GetRandom().cube.Group().Cubes : path.Select(pn => pn.cube).ToList();
-            // drop first and last element
+            var pathCubes = path.Select(pn => pn.cube).ToList();
             return new CubeGroup(startGroup.Grid, pathCubes);
         }
 

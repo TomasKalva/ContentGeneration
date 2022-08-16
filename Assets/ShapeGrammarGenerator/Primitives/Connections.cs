@@ -64,7 +64,7 @@ namespace ShapeGrammar
                         space1.Merge(space2)
                 );
                 var path = paths.ConnectByConnectivityPreservingPath(space1.BottomLayer(), space2.BottomLayer(), le1.CG().BottomLayer(), le2.CG().BottomLayer(), neighbors, existingPaths);
-                return path != null ? path.LE(AreaStyles.Connection()) : null;
+                return path.LE(AreaStyles.Connection());
             };
         }
 
@@ -80,7 +80,7 @@ namespace ShapeGrammar
 
                 Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.StairsNeighbors(), space1.Merge(space2));
                 var path = paths.ConnectByConnectivityPreservingPath(space1.BottomLayer(), space2.BottomLayer(), le1.CG().BottomLayer(), le2.CG().BottomLayer(), neighbors, existingPaths);
-                return path != null ? path.LE(AreaStyles.Path()) : null;
+                return path.LE(AreaStyles.Path());
             };
         }
 
@@ -102,7 +102,7 @@ namespace ShapeGrammar
                         ), 
                         alreadyAdded.CG().Minus(end));
                 var path = paths.ConnectByConnectivityPreservingPath(start, end, le1.CG().BottomLayer(), le2.CG().BottomLayer(), neighbors, existingPaths);
-                return path != null ? path.LE(AreaStyles.Path()) : null;
+                return path.LE(AreaStyles.Path());
             };
         }
 
@@ -120,7 +120,7 @@ namespace ShapeGrammar
                 Neighbors<PathNode> neighbors = 
                     PathNode.BoundedBy(PathNode.FallNeighbors(end), space1.Merge(space2));
                 var path = paths.ConnectByConnectivityPreservingPath(start, end, start, end, neighbors, existingPaths);
-                return path != null ? path.LE(AreaStyles.Fall()) : null;
+                return path.LE(AreaStyles.Fall());
             };
         }
 
@@ -142,7 +142,7 @@ namespace ShapeGrammar
                         notIntersectingCG
                     );
                 var path = paths.ConnectByConnectivityPreservingPath(start, end, le1.CG().BottomLayer(), le2.CG().BottomLayer(), neighbors, existingPaths);
-                return path != null ? path.LE(AreaStyles.Path()) : null;
+                return path.LE(AreaStyles.Path());
             };
         }
 
@@ -159,7 +159,7 @@ namespace ShapeGrammar
                 Neighbors<PathNode> neighbors = 
                     PathNode.NotIn(PathNode.StraightHorizontalNeighbors(), notIntersectingCG);
                 var path = paths.ConnectByConnectivityPreservingPath(space1.BottomLayer(), space2.BottomLayer(), le1.CG().BottomLayer(), le2.CG().BottomLayer(), neighbors, existingPaths);
-                return path != null ? path.LE(AreaStyles.Path()) : null;
+                return path.LE(AreaStyles.Path());
             };
         }
 
@@ -177,7 +177,7 @@ namespace ShapeGrammar
                 Neighbors<PathNode> neighbors = 
                     PathNode.BoundedBy(PathNode.StairsNeighbors(), space1.Merge(space2));
                 var path = paths.ConnectByConnectivityPreservingPath(start, end, le1.CG().BottomLayer(), le2.CG().BottomLayer(), neighbors, existingPaths);
-                return path != null ? path.LE(AreaStyles.Path()) : null;
+                return path.LE(AreaStyles.Path());
             };
         }
     }

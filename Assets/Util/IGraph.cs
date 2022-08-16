@@ -1,4 +1,5 @@
-﻿using PommaLabs.Hippie;
+﻿using Assets.ShapeGrammarGenerator.ShapeGrammar;
+using PommaLabs.Hippie;
 using SD.Tools.Algorithmia.PriorityQueues;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+
+public delegate bool StopCondition(int iterationsCount);
 
 public class Edge<VertexT> : IEdge<VertexT> where VertexT : class
 {
@@ -189,7 +192,11 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
     /// <summary>
     /// Starting vertices have to be disjoint with the vertices reachable by path, because they have distance 0!
     /// </summary>
-    public IEnumerable<EdgeT> EdgeAStar(IEnumerable<VertexT> starting, Func<VertexT, VertexT, float> dist, Func<VertexT, float> distTodistToHeuristics, IEqualityComparer<VertexT> comparer, int maxIterations = int.MaxValue)
+    public IEnumerable<EdgeT> EdgeAStar(
+        IEnumerable<VertexT> starting, 
+        Func<VertexT, VertexT, float> dist, 
+        Func<VertexT, float> distTodistToHeuristics, 
+        IEqualityComparer<VertexT> comparer)
     {
         var found = new HashSet<VertexT>(comparer);
         var distFrom = new Dictionary<VertexT, float>(comparer);
@@ -207,15 +214,10 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
             }
         });
 
-        var i = 0;
         while (fringe.Any())
         {
             var edge = fringe.RemoveMin().Value;
             
-            if(i++ >= maxIterations)
-            {
-                throw new InvalidOperationException($"Can't find path within {maxIterations} iterations");
-            }
             if (found.Contains(edge.To))
                 continue;
 
@@ -230,16 +232,29 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
         }
     }
 
+
     /// <summary>
-    /// Starting vertices have to be disjoint with the vertices reachable by path, because they have distance 0!
+    /// Starting vertices have to be disjoint with the vertices reachable by path, because they have distance 0.
     /// </summary>
-    public IEnumerable<VertexT> FindPath(IEnumerable<VertexT> starting, Func<VertexT, bool> isGoal, Func<VertexT, VertexT, float> dist, Func<VertexT, float> distToHeuristics, IEqualityComparer<VertexT> comparer, int maxIterations = int.MaxValue)
+    public IEnumerable<VertexT> FindPath(
+        IEnumerable<VertexT> starting, 
+        Func<VertexT, bool> isGoal, 
+        Func<VertexT, VertexT, float> dist, 
+        Func<VertexT, float> distToHeuristics, 
+        IEqualityComparer<VertexT> comparer,
+        StopCondition stopCondition)
     {
         var prev = new Dictionary<VertexT, VertexT>(comparer);
         starting.ForEach(startV => prev.Add(startV, null));
 
-        foreach (var edge in EdgeAStar(starting, dist, distToHeuristics, comparer, maxIterations))
+        var iterationsCount = 0;
+        foreach (var edge in EdgeAStar(starting, dist, distToHeuristics, comparer))
         {
+            if (stopCondition(iterationsCount++))
+            {
+                throw new PathNotFoundException($"Can't find path, stopped after {iterationsCount} iterations");
+            }
+
             if (prev.ContainsKey(edge.To))
                 continue;
 
@@ -259,7 +274,7 @@ public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where
                 return path;
             }
         }
-        return null;
+        throw new PathNotFoundException($"No path exists");
     }
 
     /// <summary>

@@ -1,4 +1,5 @@
 ﻿using Assets.ShapeGrammarGenerator;
+using Assets.ShapeGrammarGenerator.ShapeGrammar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,8 +63,16 @@ namespace ShapeGrammar
             if (Failed) 
                 return this;
 
-            path = pathFinder();
-            Debug.Assert(path != null);
+            try
+            {
+                path = pathFinder();
+            }
+            catch(PathNotFoundException ex)
+            {
+                Debug.Log(ex.Message);
+                Failed = true;
+                return this;
+            }
             CurrentNodes = path.ToEnumerable().ToList();
 
             return this;

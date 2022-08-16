@@ -101,7 +101,8 @@ namespace ShapeGrammar
                 {
                     L.TestingLanguage.GrammarTesting();
                     return true;
-                }));
+                })
+            );
             
         }
     }
@@ -345,7 +346,7 @@ namespace ShapeGrammar
             */
 
             //Env.Line(Gr.PrL.Town(), NodesQueries.All, 10, out var _);
-            Env.Line(Gr.PrL.Chapels(), NodesQueries.All, 10, out var _);
+            Env.Line(Gr.PrL.Chapels(), NodesQueries.All, 40, out var _);
             //Env.Line(Gr.PrL.Castle(), NodesQueries.All, 10, out var _);
             //Env.BranchRandomly(Gr.PrL.Town(), 40, out var _);
 
