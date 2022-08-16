@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ContentGeneration.Assets.UI.Model
 {
@@ -161,9 +162,10 @@ namespace ContentGeneration.Assets.UI.Model
             Versatility = Versatility;
         }
 
-        public static IEnumerable<StatManipulation<Action<CharacterStats>>> StatIncreases()
+        static CharacterStats()
         {
-            return new[] {
+            /*
+            StatIncreases = new[] {
                 new StatManipulation<Action<CharacterStats>>(Stat.Will, ch => ch.Will++),
                 new StatManipulation<Action<CharacterStats>>(Stat.Strength, ch => ch.Strength++),
                 new StatManipulation<Action<CharacterStats>>(Stat.Endurance, ch => ch.Endurance++),
@@ -171,21 +173,24 @@ namespace ContentGeneration.Assets.UI.Model
                 new StatManipulation<Action<CharacterStats>>(Stat.Posture, ch => ch.Posture++),
                 new StatManipulation<Action<CharacterStats>>(Stat.Resistances, ch => ch.Resistances++),
                 new StatManipulation<Action<CharacterStats>>(Stat.Versatility, ch => ch.Versatility++),
+            };*/
+            StatChanges = new Dictionary<Stat, StatManipulation<Action<CharacterStats, int>>>() {
+                {Stat.Will, new StatManipulation<Action<CharacterStats, int>>(Stat.Will, (ch, val) => ch.Will += val) },
+                {Stat.Strength, new StatManipulation<Action<CharacterStats, int>>(Stat.Strength, (ch, val) => ch.Strength += val) },
+                {Stat.Endurance, new StatManipulation<Action<CharacterStats, int>>(Stat.Endurance, (ch, val) => ch.Endurance += val) },
+                {Stat.Agility, new StatManipulation<Action<CharacterStats, int>>(Stat.Agility, (ch, val) => ch.Agility += val) },
+                {Stat.Posture, new StatManipulation<Action<CharacterStats, int>>(Stat.Posture, (ch, val) => ch.Posture += val) },
+                {Stat.Resistances, new StatManipulation<Action<CharacterStats, int>>(Stat.Resistances, (ch, val) => ch.Resistances += val) },
+                {Stat.Versatility, new StatManipulation<Action<CharacterStats, int>>(Stat.Versatility, (ch, val) => ch.Versatility += val) },
             };
+            StatIncreases = StatChanges.Values.Select(statChange => 
+                new StatManipulation<Action<CharacterStats>>(statChange.Stat, stats => statChange.Manipulate(stats, 1)))
+                .ToArray();
         }
 
-        public static IEnumerable<StatManipulation<Action<CharacterStats, int>>> StatChanges()
-        {
-            return new[] {
-                new StatManipulation<Action<CharacterStats, int>>(Stat.Will, (ch, val) => ch.Will += val),
-                new StatManipulation<Action<CharacterStats, int>>(Stat.Strength, (ch, val) => ch.Strength += val),
-                new StatManipulation<Action<CharacterStats, int>>(Stat.Endurance, (ch, val) => ch.Endurance += val),
-                new StatManipulation<Action<CharacterStats, int>>(Stat.Agility, (ch, val) => ch.Agility += val),
-                new StatManipulation<Action<CharacterStats, int>>(Stat.Posture, (ch, val) => ch.Posture += val),
-                new StatManipulation<Action<CharacterStats, int>>(Stat.Resistances, (ch, val) => ch.Resistances += val),
-                new StatManipulation<Action<CharacterStats, int>>(Stat.Versatility, (ch, val) => ch.Versatility += val),
-            };
-        }
+        public static StatManipulation<Action<CharacterStats>>[] StatIncreases { get; }
+
+        public static Dictionary<Stat, StatManipulation<Action<CharacterStats, int>>> StatChanges { get; }
     }
 
     public enum Stat

@@ -105,6 +105,12 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
+        public CharacterState SetStats(CharacterStats stats)
+        {
+            Stats = stats;
+            return this;
+        }
+
         public Action OnUpdate { get; set; }
 
         public DamageTaken DamageTaken { get; }
@@ -270,6 +276,26 @@ namespace ContentGeneration.Assets.UI.Model
                 return null;
 
             return item.EquipToFree(Inventory, firstSlot);
+        }
+
+        public CharacterState SetLeftWeapon(WeaponItem weapon)
+        {
+            Inventory.LeftWeapon.Item = weapon;
+            if (Agent != null)
+            {
+                Agent.SynchronizeWithState(this);
+            }
+            return this;
+        }
+
+        public CharacterState SetRightWeapon(WeaponItem weapon)
+        {
+            Inventory.RightWeapon.Item = weapon;
+            if (Agent != null)
+            {
+                Agent.SynchronizeWithState(this);
+            }
+            return this;
         }
         #endregion
 

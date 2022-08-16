@@ -288,7 +288,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
         public Effect DamagePosture(float postureDamage)
         {
-            return ch => ch.DamageTaken.AddDamage(postureDamage);
+            return ch => ch.Poise -= postureDamage;
         }
 
         public Effect Damage(DamageDealt damage)

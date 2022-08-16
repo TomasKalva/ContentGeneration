@@ -208,7 +208,8 @@ namespace ShapeGrammar
         public TestingLanguage TestingLanguage { get; private set; }
         public FactionsLanguage FactionsLanguage { get; private set; }
         public AscendingLanguage AscendingLanguage { get; private set; }
-
+        public OutOfDepthEncountersLanguage OutOfDepthEncountersLanguage { get; private set; }
+        
         Languages()
         {
         }
@@ -224,6 +225,7 @@ namespace ShapeGrammar
             TestingLanguage = new TestingLanguage(tools);
             FactionsLanguage = new FactionsLanguage(tools);
             AscendingLanguage = new AscendingLanguage(tools);
+            OutOfDepthEncountersLanguage = new OutOfDepthEncountersLanguage(tools);
         }
     }
 

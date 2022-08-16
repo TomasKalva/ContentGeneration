@@ -61,7 +61,7 @@ namespace ShapeGrammar
                     return true;
                 }));
             */
-            L.FactionsLanguage.InitializeFactions(3);
+            //L.FactionsLanguage.InitializeFactions(3);
 
             /*
             State.LC.AddEvent(
@@ -73,7 +73,7 @@ namespace ShapeGrammar
             );
             */
 
-            
+
             /*
             State.LC.AddEvent(
                 new LevelConstructionEvent(5, () =>
@@ -104,6 +104,15 @@ namespace ShapeGrammar
                 })
             );
             */
+            State.LC.AddEvent(
+                new LevelConstructionEvent(90,
+                () =>
+                {
+                    L.OutOfDepthEncountersLanguage.DifficultEncounter(0);
+                    return false;
+                })
+            );
+            
         }
     }
 

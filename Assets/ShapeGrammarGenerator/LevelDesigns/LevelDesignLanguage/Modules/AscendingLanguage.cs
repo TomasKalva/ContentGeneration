@@ -23,7 +23,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
         {
             Env.One(Gr.PrL.Garden(), NodesQueries.All, out var ascending_area);
 
-            var statsIncreases = CharacterStats.StatIncreases();
+            var statsIncreases = CharacterStats.StatIncreases;
 
             int ascensionPrice = startingAscensionPrice();
 

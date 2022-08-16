@@ -80,7 +80,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
         {
             Env.One(Gr.PrL.Garden(), NodesQueries.LastCreated, out var level_up_area);
 
-            var statIncreaseItems = CharacterStats.StatIncreases().Select(statIncrease =>
+            var statIncreaseItems = CharacterStats.StatIncreases.Select(statIncrease =>
                 new ItemState()
                 {
                     Name = statIncrease.Stat.ToString(),

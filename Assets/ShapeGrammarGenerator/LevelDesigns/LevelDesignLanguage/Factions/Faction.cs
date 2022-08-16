@@ -264,7 +264,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             EffectsByUser = new List<Annotated<EffectByFactionEnvironmentByUser>>()
             {
                 FromPower("Heal", "heals", p => eff.Heal(5f + 5f * p)),
-                FromPower("Chaos", "gives chaose damage", p => eff.Damage(new DamageDealt(DamageType.Chaos, 10f + 5f * p))),
+                FromPower("Chaos", "gives chaos damage", p => eff.Damage(new DamageDealt(DamageType.Chaos, 10f + 5f * p))),
                 FromPower("Dark", "gives dark damage", p => eff.Damage(new DamageDealt(DamageType.Dark, 10f + 5f * p))),
                 FromPower("Divine", "gives divine damage", p => eff.Damage(new DamageDealt(DamageType.Divine, 10f + 5f * p))),
                 FromPower("Give spirit", "gives spirit to", p => eff.GiveSpirit(10f + 2f * p)),
@@ -286,7 +286,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 Versatility = 5 * manifestationProgress
             };
 
-            var statChanges = CharacterStats.StatChanges();
+            var statChanges = CharacterStats.StatChanges;
             var randomisedStats = new Stat[]
             {
                 Stat.Endurance,
@@ -296,7 +296,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             };
             var increasedStats = randomisedStats.Take(manifestationProgress).ToHashSet();
 
-            statChanges.Where(sc => increasedStats.Contains(sc.Stat))
+            randomisedStats.Select(stat => statChanges[stat])//statChanges.Where(sc => increasedStats.Contains(sc.Stat))
                 .ForEach(sc => sc.Manipulate(stats, 4 + 4 * manifestationProgress));
 
             return stats;

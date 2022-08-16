@@ -29,7 +29,7 @@ public class WeaponItem : ItemState
             character =>
             {
                 Debug.Log($"{Name} is being used");
-                character.Inventory.RightWeapon.Item = this;//.SetItemToSlot(SlotType.RightWeapon, this);
+                character.Inventory.RightWeapon.Item = this;
             };
     }
 
@@ -43,7 +43,7 @@ public class WeaponItem : ItemState
     {
         owner.World.CreateOccurence(
                 Weapon.HitSelectorByDuration(damageDuration)(owner),
-                BaseEffects.Select(effectByUser => effectByUser(owner)).ToArray()
+                BaseEffects.Concat(UpgradeEffects).Select(effectByUser => effectByUser(owner)).ToArray()
             );
     }
 }
