@@ -27,9 +27,19 @@ namespace ContentGeneration.Assets.UI.Model
         public GeometryMaker<Agent> GeometryMaker { get; set; }
 
         public Action OnDeath { get; private set; }
-        public CharacterState SetOnDeath(Action onDeath)
+        public CharacterState AddOnDeath(Action onDeath)
         {
-            OnDeath = onDeath;
+            OnDeath += onDeath;
+            return this;
+        }
+        public CharacterState DropItem(InteractiveObjectState item)
+        {
+            OnDeath += () =>
+            {
+                item.MakeGeometry().transform.position = Agent.transform.position;
+
+                World.AddInteractiveObject(item);
+            };
             return this;
         }
 

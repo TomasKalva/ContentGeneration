@@ -49,7 +49,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
         public IEnumerable<Func<ItemState>> UpgradeRewards(int _)
         {
             return 
-                new Stat[3] 
+                new Stat[3]
                 { 
                     Stat.Will, 
                     Stat.Strength, 
@@ -89,7 +89,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 
         public void DifficultEncounter(int level)
         {
-            Env.Line(Gr.PrL.Town(), NodesQueries.All, 3, out var path);
+            Env.Line(Gr.PrL.Town(), NodesQueries.All, 2, out var path);
 
             Func<CharacterState, CharacterState> enhanceEnemy =
                 enemy =>
@@ -99,17 +99,24 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                         .SetStats(GetStats(level))
                         .SetLeftWeapon(weaponF())
                         .SetRightWeapon(weaponF())
-                        .SetOnDeath(() => GameViewModel.ViewModel.PlayerState.Spirit += 3 * enemy.Health.Maximum);
+                        .AddOnDeath(() => GameViewModel.ViewModel.PlayerState.Spirit += 3 * enemy.Health.Maximum);
                 };
 
-            var enemies = Encounters().GetRandom()();
+            var key = L.PatternLanguage.CreateLockItems(State.UniqueNameGenerator.UniqueName("Soulbound Key"), 1, "Unlocks a door", out var unlock).First();
+
+
+            var enemies = Encounters().GetRandom()().Enemies;
+            var mainEnemy = enemies.First();
+            mainEnemy.DropItem(Lib.InteractiveObjects.Item(key));
 
             var arena = path.AreasList[1];
-            enemies.Enemies.Select(enemy => enhanceEnemy(enemy)).ForEach(enemy => arena.AddEnemy(enemy));
+            enemies.Select(enemy => enhanceEnemy(enemy)).ForEach(enemy => arena.AddEnemy(enemy));
+
+            L.PatternLanguage.LockedArea(_ => path.LastArea().Node.ToEnumerable(), unlock, out var locked);
 
             var rewards = UpgradeRewards(level).ToList();
             rewards.Shuffle().Take(2).ForEach(reward =>
-                path.LastArea().AddInteractiveObject(Lib.InteractiveObjects.Item(reward())));
+                locked.Get.AddInteractiveObject(Lib.InteractiveObjects.Item(reward())));
         }
     }
 }
