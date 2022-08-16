@@ -5,16 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assets.InteractiveObject
+public class AscensionKiln : InteractiveObjectState<Kiln>
 {
-    public class AscensionKiln : InteractiveObjectState<Kiln>
-    {
-        //Kiln Kiln => InteractiveObject.GetComponentInChildren<Kiln>();
+    //Kiln Kiln => InteractiveObject.GetComponentInChildren<Kiln>();
 
-        public override void Interact(global::Agent agent)
-        {
-            agent.CharacterState.Stamina.Maximum += 10f;
-            IntObj?.BurstFire();
-        }
+    public override void Interact(global::Agent agent)
+    {
+        agent.CharacterState.Stamina.Maximum += 10f;
+        IntObj?.BurstFire();
     }
 }

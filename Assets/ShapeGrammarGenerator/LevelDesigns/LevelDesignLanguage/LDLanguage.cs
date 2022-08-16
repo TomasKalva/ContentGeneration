@@ -1,4 +1,6 @@
-﻿using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
+﻿using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage;
+using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
+using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules;
 using ContentGeneration.Assets.UI;
 using ContentGeneration.Assets.UI.Model;
 using ContentGeneration.Assets.UI.Util;
@@ -201,7 +203,6 @@ namespace ShapeGrammar
         }
 
         public LevelLanguage LevelLanguage { get; private set; }
-        public BrothersLanguage BrothersLanguage { get; private set; }
         public FarmersLanguage FarmersLanguage { get; private set; }
         public PatternLanguage PatternLanguage { get; private set; }
         public TestingLanguage TestingLanguage { get; private set; }
@@ -218,7 +219,6 @@ namespace ShapeGrammar
         void Init(LanguageParams tools)
         {
             LevelLanguage = new LevelLanguage(tools);
-            BrothersLanguage = new BrothersLanguage(tools);
             FarmersLanguage = new FarmersLanguage(tools);
             PatternLanguage = new PatternLanguage(tools);
             TestingLanguage = new TestingLanguage(tools);

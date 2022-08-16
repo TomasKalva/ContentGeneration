@@ -5,10 +5,7 @@ using ShapeGrammar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-using static ShapeGrammar.FactionsLanguage;
+using static Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.FactionsLanguage;
 
 namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 {

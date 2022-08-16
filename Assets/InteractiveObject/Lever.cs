@@ -5,8 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assets.InteractiveObject
-{
     public class Lever : InteractiveObjectState
     {
         Action onPulled;
@@ -21,4 +19,3 @@ namespace Assets.InteractiveObject
             onPulled();
         }
     }
-}

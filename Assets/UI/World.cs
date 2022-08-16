@@ -1,4 +1,3 @@
-using Assets.InteractiveObject;
 using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using ShapeGrammar;
 using UnityEngine;

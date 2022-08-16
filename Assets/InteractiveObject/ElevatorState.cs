@@ -5,8 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assets.InteractiveObject
-{
     public class ElevatorState : ObjectState
     {
         public bool Up { get; private set; }
@@ -33,4 +31,3 @@ namespace Assets.InteractiveObject
             Elevator?.Move();
         }
     }
-}
