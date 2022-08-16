@@ -209,7 +209,9 @@ namespace ShapeGrammar
         public FactionsLanguage FactionsLanguage { get; private set; }
         public AscendingLanguage AscendingLanguage { get; private set; }
         public OutOfDepthEncountersLanguage OutOfDepthEncountersLanguage { get; private set; }
+        public DetailsLanguage DetailsLanguage { get; private set; }
         
+
         Languages()
         {
         }
@@ -226,6 +228,7 @@ namespace ShapeGrammar
             FactionsLanguage = new FactionsLanguage(tools);
             AscendingLanguage = new AscendingLanguage(tools);
             OutOfDepthEncountersLanguage = new OutOfDepthEncountersLanguage(tools);
+            DetailsLanguage = new DetailsLanguage(tools);
         }
     }
 

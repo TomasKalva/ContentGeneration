@@ -63,6 +63,13 @@ namespace ShapeGrammar
             */
             L.FactionsLanguage.InitializeFactions(2);
 
+            State.LC.AddEvent(
+                new LevelConstructionEvent(0, () =>
+                {
+                    L.DetailsLanguage.AddDetails(0);
+                    return false;
+                })
+            );
             /*
             State.LC.AddEvent(
                 new LevelConstructionEvent(10, () =>

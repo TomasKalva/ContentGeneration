@@ -35,7 +35,9 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             var concepts = new FactionConcepts(
                     new List<Func<ProductionList>>()
                     {
-                            Gr.PrL.Garden
+                            Gr.PrL.Town,
+                            Gr.PrL.Castle,
+                            Gr.PrL.Chapels,
                     },
                     new List<Func<CharacterState>>()
                     {
