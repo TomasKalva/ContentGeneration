@@ -177,7 +177,7 @@ namespace ShapeGrammar
             => ExtendBridgeTo(
                 from,
                 roomSymbol,
-                10,
+                5,
                 () => leF().SetAreaType(AreaStyles.Room()),
                 pathGuide,
                 Reserve(2, sym.UpwardReservation));
@@ -186,7 +186,7 @@ namespace ShapeGrammar
             => ExtendBridgeTo(
                 from,
                 gardenSymbol,
-                10,
+                5,
                 () => leF().SetAreaType(AreaStyles.Garden()),
                 pathGuide,
                 Empty());
@@ -298,14 +298,14 @@ namespace ShapeGrammar
             int distance)
         {
             return new Production(
-                $"TowerFallDown_{from.Name}",
+                $"ConnectByRoom",
                 new ProdParamsManager()
                     .AddNodeSymbols(from, sym.FullFloorMarker)
                     .AddNodeSymbols(to, sym.FullFloorMarker)
                     .SetCondition((state, pp) =>
                     {
                         var (from, to) = pp;
-                        return to.LE.CG().Extents().y >= 2;
+                        return true;// to.LE.CG().Extents().y >= 2;
                             //to.GetSymbol<Room>().Plain
                             //&& from.LE.CG().MinkowskiMinus(to.LE.CG()).Min(v => v.AbsSum()) < 5
                             ;
@@ -319,7 +319,7 @@ namespace ShapeGrammar
                     Debug.Log("trying to apply tower fall down");
 
                     return state.NewProgram(prog => prog
-                        .SelectFirstOne(
+                        .SelectRandomOne(
                             state.NewProgram(subProg => subProg
                                 .Set(() => roomFromF().GN())
                                 .MoveNearTo(to, distance)

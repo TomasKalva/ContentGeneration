@@ -18,6 +18,7 @@ namespace ShapeGrammar
 
         public ShapeGrammarState State { get; }
         public bool Failed { get; private set; }
+        public string FailMessage { get; private set; }
 
         /// <summary>
         /// The grammar currently operates on these nodes.
@@ -33,9 +34,11 @@ namespace ShapeGrammar
             this.State = state;
         }
 
-        ProductionProgram SetFailed(bool value)
+        ProductionProgram SetFailed(bool value, string failMessage)
         {
             Failed = value;
+            FailMessage = failMessage;
+            Debug.Log($"Production failed: {failMessage}");
             return this;
         }
 
@@ -49,7 +52,7 @@ namespace ShapeGrammar
                 return this;
 
             if(!program.CurrentNodes.Any())
-                return SetFailed(true);
+                return SetFailed(true, $"{nameof(SelectRandomOne)}: no current nodes exist");
 
             var node = program.CurrentNodes.GetRandom();
             CurrentNodes = node.ToEnumerable().ToList();
@@ -67,7 +70,7 @@ namespace ShapeGrammar
                 return this;
 
             if (!program.CurrentNodes.Any())
-                return SetFailed(true);
+                return SetFailed(true, $"{nameof(SelectFirstOne)}: no current nodes exist");
 
             var node = program.CurrentNodes.First();
             CurrentNodes = node.ToEnumerable().ToList();
@@ -87,9 +90,7 @@ namespace ShapeGrammar
             }
             catch(PathNotFoundException ex)
             {
-                Debug.Log(ex.Message);
-                Failed = true;
-                return this;
+                return SetFailed(true, $"Can't find path: {ex.Message}");
             }
             CurrentNodes = path.ToEnumerable().ToList();
 
@@ -105,7 +106,7 @@ namespace ShapeGrammar
                 return this;
 
             if (!CurrentNodes.Any())
-                return SetFailed(true);
+                return SetFailed(true, $"{nameof(PlaceCurrentFrom)}: no current nodes exist");
 
             var op = State.Add(from).SetTo(CurrentNodes.ToArray());
             AppliedOperations.Add(op);
@@ -118,7 +119,7 @@ namespace ShapeGrammar
                 return this;
 
             if (!CurrentNodes.Any())
-                return SetFailed(true);
+                return SetFailed(true, $"{nameof(ReplaceNodes)}: no current nodes exist");
 
             var op = State.Replace(from).SetTo(CurrentNodes.ToArray());
             AppliedOperations.Add(op);
@@ -160,7 +161,7 @@ namespace ShapeGrammar
                     )
                 );
             if (reservations.Any(prog => prog.Failed))
-                return SetFailed(true);
+                return SetFailed(true, $"{nameof(ReserveUpward)}: subprogram failed");
 
             CurrentNodes = reservations
                 .Where(prog => !prog.Failed)
@@ -233,7 +234,7 @@ namespace ShapeGrammar
 
             first = CurrentNodes.FirstOrDefault();
             if (first == null)
-                return SetFailed(true);
+                return SetFailed(true, $"{nameof(CurrentFirst)}: no current nodes exist");
 
             return this;
         }
@@ -244,7 +245,7 @@ namespace ShapeGrammar
                 return this;
 
             if (!condF())
-                return SetFailed(true);
+                return SetFailed(true, "Condition failed");
 
             return this;
         }
@@ -312,14 +313,24 @@ namespace ShapeGrammar
         /// </summary>
         public ProductionProgram MoveNearTo(Node targetNode, int dist)
         {
+            if(CurrentNodes.Count() != 1)
+            {
+                throw new InvalidOperationException($"{nameof(MoveNearTo)} only works for 1 node.");
+            }
+
             Change(node =>
             {
                 var nodeOnGround = node.LE.MoveBottomTo(0);
                 var targeOnGround = targetNode.LE.MoveBottomTo(0);
 
-                return nodeOnGround
-                    .MovesInDistanceXZ(targeOnGround, dist)
-                    .DontIntersect(State.VerticallyTaken)
+                var movesInDistance = nodeOnGround
+                    .MovesInDistanceXZ(targeOnGround, dist);
+                Debug.Log("Moves in distance: " + movesInDistance.Ms.Count());
+
+                var validMoves = movesInDistance
+                    .DontIntersect(State.VerticallyTaken);
+                Debug.Log("Valid moves count" + validMoves.Ms.Count());
+                return validMoves
                     .TryMove()?.GN();
             })
             // Move node to level of target node

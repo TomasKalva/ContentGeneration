@@ -204,8 +204,8 @@ namespace ShapeGrammar
         {
             var cg = CG();
             var toThisCg = toThis.CG();
-            var intersectClose = toThisCg.MinkowskiMinus(cg.AllBoundaryFacesH().Extrude(dist - 1, false).Merge(cg)).Where(move => move.y == 0);
-            var intersectNear = toThisCg.MinkowskiMinus(cg.AllBoundaryFacesH().Extrude(dist, false)).Where(move => move.y == 0);
+            var intersectClose = toThisCg.MinkowskiMinus(cg.ExtrudeHorOut(dist - 1, false).Merge(cg)).Where(move => move.y == 0);
+            var intersectNear = toThisCg.MinkowskiMinus(cg.ExtrudeHorOut(dist, false)).Where(move => move.y == 0);
             return new LEMoves(this, intersectNear.SetMinus(intersectClose));
         }
 
