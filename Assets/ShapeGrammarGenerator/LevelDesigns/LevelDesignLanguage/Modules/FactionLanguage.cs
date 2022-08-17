@@ -35,8 +35,8 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             var concepts = new FactionConcepts(
                     new List<Func<ProductionList>>()
                     {
-                            Gr.PrL.Town,
-                            Gr.PrL.Castle,
+                            //Gr.PrL.Town,
+                            //Gr.PrL.Castle,
                             Gr.PrL.Chapels,
                     },
                     new List<Func<CharacterState>>()
@@ -89,13 +89,17 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                 var faction = new Faction(concepts);
 
                 State.LC.AddEvent(
-                    new LevelConstructionEvent(5, () =>
-                    {
-                        var factionManifestation = faction.GetFactionManifestation();
-                        var factionEnvironment = factionManifestation.GetFactionEnvironment();
-                        branches.GetRandom()(factionEnvironment, faction.StartingBranchProgress);
-                        return false;
-                    })
+                    new LevelConstructionEvent(
+                        $"Start Manifestation",
+                        5, 
+                        () =>
+                        {
+                            var factionManifestation = faction.GetFactionManifestation();
+                            var factionEnvironment = factionManifestation.GetFactionEnvironment();
+                            branches.GetRandom()(factionEnvironment, faction.StartingBranchProgress);
+                            return false;
+                        }
+                    )
                 );
             });
         }
@@ -165,7 +169,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 
         public void LinearWithKey(FactionEnvironment fe, int progress)
         {
-            L.PatternLanguage.BranchWithKey(NodesQueries.LastCreated, 4, Gr.PrL.Town(), out var lockedArea, out var linearPath);
+            L.PatternLanguage.BranchWithKey(NodesQueries.LastCreated, 4, fe.ProductionList(), out var lockedArea, out var linearPath);
 
             var itemPlacer = PlO.RandomAreasPlacer(new UniformDistr(3, 4), ItemsToPlace(fe, 3));
             itemPlacer.Place(linearPath);
@@ -178,7 +182,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 
         public void BranchesWithKey(FactionEnvironment fe, int progress)
         {
-            L.PatternLanguage.RandomBranchingWithKeys(4, Gr.PrL.Town(), out var lockedArea, out var branches);
+            L.PatternLanguage.RandomBranchingWithKeys(4, fe.ProductionList(), out var lockedArea, out var branches);
 
             var itemPlacer = PlO.RandomAreasPlacer(new UniformDistr(3, 4), ItemsToPlace(fe, 3));
             itemPlacer.Place(branches);

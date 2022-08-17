@@ -88,7 +88,7 @@ namespace ShapeGrammar
             {
                 shapeGrammarState.ActiveNodes = shapeGrammarState.Root.AllDerived();
                 var applicable = Productions.Get.Shuffle();
-                newNodes = Produce(shapeGrammarState, applicable, "Roofs done");
+                newNodes = Produce(shapeGrammarState, applicable, "All grammar finished");
             }
             while (newNodes != null);
             return CreatedNodes;

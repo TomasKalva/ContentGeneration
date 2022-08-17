@@ -70,6 +70,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             Progress++;
             levelConstructor.AddEvent(
                 new LevelConstructionEvent(
+                    $"{nameof(ContinueManifestation)} {Progress}",
                     10 + Progress,
                     () =>
                     {
@@ -189,11 +190,6 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                     Spells
                 );
         }
-
-        /*public Environment(int progress)
-        {
-
-        }*/
     }
 
     class UniqueNameGenerator

@@ -58,12 +58,16 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 
             // Add the same branch to the next level
             State.LC.AddEvent(
-                new LevelConstructionEvent(90,
-                () =>
-                {
-                    L.AscendingLanguage.AscendingBranch(() => ascensionPrice);
-                    return true;
-                }));
+                new LevelConstructionEvent(
+                    $"Ascending branch",
+                    90,
+                    () =>
+                    {
+                        L.AscendingLanguage.AscendingBranch(() => ascensionPrice);
+                        return true;
+                    }
+                )
+            );
         }
     }
 }

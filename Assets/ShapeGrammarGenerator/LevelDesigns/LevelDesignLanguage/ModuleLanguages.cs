@@ -19,11 +19,15 @@ namespace ShapeGrammar
         public void MyWorldStart()
         {
             State.LC.AddEvent(
-                new LevelConstructionEvent(100, () =>
-                {
-                    L.LevelLanguage.LevelStart(out var startArea);
-                    return false;
-                }) 
+                new LevelConstructionEvent(
+                    $"Level Start", 
+                    100, 
+                    () =>
+                    {
+                        L.LevelLanguage.LevelStart(out var startArea);
+                        return false;
+                    }
+                ) 
             );
 
             /*State.LC.AddEvent(5, () =>
@@ -44,11 +48,15 @@ namespace ShapeGrammar
 
             
             State.LC.AddEvent(
-                new LevelConstructionEvent(0, () =>
-                {
-                    L.LevelLanguage.LevelEnd();
-                    return false;
-                })
+                new LevelConstructionEvent(
+                    $"Level End", 
+                    0, 
+                    () =>
+                    {
+                        L.LevelLanguage.LevelPathSegment();
+                        return false;
+                    }
+                )
             );
 
             /*
@@ -61,15 +69,22 @@ namespace ShapeGrammar
                     return true;
                 }));
             */
+
+            /*
             L.FactionsLanguage.InitializeFactions(2);
 
             State.LC.AddEvent(
-                new LevelConstructionEvent(0, () =>
-                {
-                    L.DetailsLanguage.AddDetails(0);
-                    return false;
-                })
-            );
+                new LevelConstructionEvent(
+                    $"Add Details",
+                    0, 
+                    () =>
+                    {
+                        L.DetailsLanguage.AddDetails(0);
+                        return false;
+                    }
+                )
+            );*/
+
             /*
             State.LC.AddEvent(
                 new LevelConstructionEvent(10, () =>
@@ -111,14 +126,19 @@ namespace ShapeGrammar
                 })
             );
             */
+
+            /*
             State.LC.AddEvent(
-                new LevelConstructionEvent(90,
-                () =>
-                {
-                    L.OutOfDepthEncountersLanguage.DifficultEncounter(0);
-                    return false;
-                })
-            );
+                new LevelConstructionEvent(
+                    $"Out of depth encounter",
+                    90,
+                    () =>
+                    {
+                        L.OutOfDepthEncountersLanguage.DifficultEncounter(0);
+                        return false;
+                    }
+                )
+            );*/
             
         }
     }
@@ -136,6 +156,15 @@ namespace ShapeGrammar
         public void LevelPathSegment()
         {
 
+            Env.Line(Gr.PrL.Town(), NodesQueries.All, 6, out var pathToShortcut);
+            var shortcutArea = pathToShortcut.LastArea();
+
+            Env.Line(Gr.PrL.Town(), _ => shortcutArea.Node.ToEnumerable(), 5, out var pathToEnd);
+            var end = pathToEnd.LastArea();
+
+            end.AddInteractiveObject(
+                Lib.InteractiveObjects.Transporter()
+                );
         }
 
         public void LevelEnd()

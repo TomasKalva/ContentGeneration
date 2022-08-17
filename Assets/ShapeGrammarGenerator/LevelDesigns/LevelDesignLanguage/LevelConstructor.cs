@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace ShapeGrammar
 {
@@ -27,11 +28,12 @@ namespace ShapeGrammar
             oldEvents.OrderBy(ev => -ev.Priority).ForEach(ev =>
             {
                 //todo: check if the world is not too big yet
-
+                Debug.Log($"Starting: {ev.Name}");
                 if (!ev.Handle())
                 {
                     LevelConstructionEvents.Add(ev);
                 }
+                Debug.Log($"Finished: {ev.Name}");
             });
         }
 
@@ -47,12 +49,14 @@ namespace ShapeGrammar
     public delegate bool LevelConstruction();
     public class LevelConstructionEvent
     {
+        public string Name { get; }
         public int Priority { get; }
         Condition Condition { get; }
         LevelConstruction Construction { get; }
 
-        public LevelConstructionEvent(int priority, LevelConstruction construction, Condition condition = null)
+        public LevelConstructionEvent(string name, int priority, LevelConstruction construction, Condition condition = null)
         {
+            Name = name;
             Priority = priority;
             Construction = construction;
             Condition = condition == null ? () => true : condition;
