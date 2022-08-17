@@ -112,11 +112,8 @@ namespace ShapeGrammar
         {
             return new ProductionList
             (
-                //pr.GardenFromCourtyard(),
-                pr.ExtendBridgeToRoom(pr.sym.Room, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide),
-                pr.ExtendBridgeToGarden(pr.sym.Room, pr.sym.Garden, () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaStyles.Garden()), pathGuide),
-                pr.ExtendBridgeToRoom(pr.sym.Garden, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide)
-                //pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
+                pr.ExtendBridgeToRoom(pr.sym.FullFloorMarker, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide),
+                pr.ExtendBridgeToGarden(pr.sym.FullFloorMarker, pr.sym.Garden, () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaStyles.Garden()), pathGuide)
             );
         }
 

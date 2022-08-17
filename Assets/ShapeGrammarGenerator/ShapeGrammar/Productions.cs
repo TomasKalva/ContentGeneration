@@ -291,14 +291,14 @@ namespace ShapeGrammar
         public Production TowerFallDown(Symbol from, Symbol to, Func<LevelElement> roomFromF)
         {
             return new Production(
-                $"RoomNextTo{from.Name}",
+                $"TowerFallDown_{from.Name}",
                 new ProdParamsManager()
                     .AddNodeSymbols(from, sym.FullFloorMarker)
                     .AddNodeSymbols(to, sym.FullFloorMarker)
                     .SetCondition((state, pp) =>
                     {
                         var (from, to) = pp;
-                        return true
+                        return to.LE.CG().Extents().y >= 2;
                             //to.GetSymbol<Room>().Plain
                             //&& from.LE.CG().MinkowskiMinus(to.LE.CG()).Min(v => v.AbsSum()) < 5
                             ;
@@ -308,6 +308,8 @@ namespace ShapeGrammar
                     var (from, to) = pp;
                     var fromCG = from.LE.CG();
                     var toCG = to.LE.CG();
+
+                    Debug.Log("trying to apply tower fall down");
 
                     return state.NewProgram(prog => prog
                         .SelectFirstOne(

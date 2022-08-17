@@ -1,4 +1,5 @@
-﻿using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
+﻿using Assets.ShapeGrammarGenerator;
+using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using Assets.Util;
 using ContentGeneration.Assets.UI.Model;
 using ContentGeneration.Assets.UI.Util;
@@ -155,9 +156,10 @@ namespace ShapeGrammar
 
         public void ThisShouldGuideBack(Node backToThis)
         {
-
             var guideRandomly = new RandomPathGuide();
             var guideToPoint = new PointPathGuide(State.GrammarState, state => new Vector3Int(0, 0, 50));
+
+            // define path guide
             var guideBack = new PointPathGuide(State.GrammarState,
                 state =>
                 {
@@ -168,12 +170,15 @@ namespace ShapeGrammar
                     return Vector3Int.RoundToInt(targetPoint);
                 });
 
-            var targetedLowGarden = Gr.PrL.GuidedGarden(guideToPoint);
+            // create targeted grammar
+            var targetedLowGarden = Gr.PrL.GuidedGarden(guideBack);
 
             //var shapeGrammar = new CustomGrammarEvaluator(productionList, 20, null, state => state.LastCreated);
 
+            // mark the target location with a symbol
             backToThis.AddSymbol(Gr.Sym.ReturnToMarker);
 
+            // define a grammar that moves to the target
             var targetedGardenGrammar =
                 new GrammarSequence()
                     /*.SetStartHandler(
@@ -182,28 +187,34 @@ namespace ShapeGrammar
                             .ForEach(parent => parent.AddSymbol(Gr.Sym.ReturnToMarker))
                     )*/
                     .AppendLinear(
-                        new ProductionList(Gr.Pr.ExtendBridgeToRoom(Gr.Sym.FullFloorMarker, Gr.Sym.Room, () => State.Ldk.qc.GetFlatBox(3, 3, 3), guideToPoint)),
+                        new ProductionList(Gr.Pr.ExtendBridgeToRoom(Gr.Sym.FullFloorMarker, Gr.Sym.Room, () => State.Ldk.qc.GetFlatBox(3, 3, 3), guideBack)),
                         1, NodesQueries.LastCreated
                     )
+                    
                     .AppendLinear(
                         targetedLowGarden,
-                        4, NodesQueries.LastCreated
+                        2, NodesQueries.LastCreated
                     )
+                    
+                    /*
                     .AppendLinear(
-                        new ProductionList(Gr.Pr.TowerFallDown(Gr.Sym.FullFloorMarker, Gr.Sym.ReturnToMarker, () => State.Ldk.qc.GetFlatBox(3, 3, 3))),
-                        1, NodesQueries.LastCreated
-                    )
-                    /*.AppendStartEnd(
+                        1, NodesQueries.All
+                    )*/
+
+                    .AppendStartEnd(
                         Gr.Sym,
-                        Gr.PrL.ConnectBack(),
+                        new ProductionList(Gr.Pr.TowerFallDown(Gr.Sym.StartMarker, Gr.Sym.EndMarker, () => State.Ldk.qc.GetFlatBox(3, 3, 3).SetAreaType(AreaStyles.Room()))),
                         state => state.LastCreated,
                         state => state.WithSymbols(Gr.Sym.ReturnToMarker)
-                    )*/
+                    )
                     /*.SetEndHandler(
                         state => state.Root.AllDerived().ForEach(parent => parent.RemoveSymbolByName(Gr.Sym.ReturnToMarker))
                     )*/;
 
+            // execute the grammar
             Env.Execute(targetedGardenGrammar);
+
+            // remove the marking symbols
             backToThis.RemoveSymbolByName(Gr.Sym.ReturnToMarker);
         }
 
@@ -214,7 +225,9 @@ namespace ShapeGrammar
             var first = pathToShortcut.AreasList.First();
             var shortcutArea = pathToShortcut.LastArea();
 
-            ThisShouldGuideBack(first.Node);
+            //ThisShouldGuideBack(first.Node);
+
+            Env.MoveFromTo(pathGuide => Gr.PrL.GuidedGarden(pathGuide), 2, shortcutArea.Node.ToEnumerable(), first.Node.ToEnumerable(), out var shortcut);
 
             /*Env.Line(Gr.PrL.Town(), _ => shortcutArea.Node.ToEnumerable(), 5, out var pathToEnd);
             var end = pathToEnd.LastArea();
