@@ -153,18 +153,75 @@ namespace ShapeGrammar
             area.Get.Node.AddSymbol(Gr.Sym.LevelStartMarker);
         }
 
+        public void ThisShouldGuideBack(Node backToThis)
+        {
+
+            var guideRandomly = new RandomPathGuide();
+            var guideToPoint = new PointPathGuide(State.GrammarState, state => new Vector3Int(0, 0, 50));
+            var guideBack = new PointPathGuide(State.GrammarState,
+                state =>
+                {
+                    // todo: fix null reference exception
+                    var returnToNodes = state.WithSymbols(Gr.Sym.ReturnToMarker);
+                    var currentNodesCenter = state.LastCreated.Select(node => node.LE).ToLevelGroupElement(State.Ldk.grid).CG().Center();
+                    var targetPoint = returnToNodes.SelectMany(n => n.LE.Cubes()).ArgMin(cube => (cube.Position - currentNodesCenter).AbsSum()).Position;
+                    return Vector3Int.RoundToInt(targetPoint);
+                });
+
+            var targetedLowGarden = Gr.PrL.GuidedGarden(guideToPoint);
+
+            //var shapeGrammar = new CustomGrammarEvaluator(productionList, 20, null, state => state.LastCreated);
+
+            backToThis.AddSymbol(Gr.Sym.ReturnToMarker);
+
+            var targetedGardenGrammar =
+                new GrammarSequence()
+                    /*.SetStartHandler(
+                        state => state
+                            .LastCreated.SelectMany(node => node.AllDerivedFrom()).Distinct()
+                            .ForEach(parent => parent.AddSymbol(Gr.Sym.ReturnToMarker))
+                    )*/
+                    .AppendLinear(
+                        new ProductionList(Gr.Pr.ExtendBridgeToRoom(Gr.Sym.FullFloorMarker, Gr.Sym.Room, () => State.Ldk.qc.GetFlatBox(3, 3, 3), guideToPoint)),
+                        1, NodesQueries.LastCreated
+                    )
+                    .AppendLinear(
+                        targetedLowGarden,
+                        4, NodesQueries.LastCreated
+                    )
+                    .AppendLinear(
+                        new ProductionList(Gr.Pr.TowerFallDown(Gr.Sym.FullFloorMarker, Gr.Sym.ReturnToMarker, () => State.Ldk.qc.GetFlatBox(3, 3, 3))),
+                        1, NodesQueries.LastCreated
+                    )
+                    /*.AppendStartEnd(
+                        Gr.Sym,
+                        Gr.PrL.ConnectBack(),
+                        state => state.LastCreated,
+                        state => state.WithSymbols(Gr.Sym.ReturnToMarker)
+                    )*/
+                    /*.SetEndHandler(
+                        state => state.Root.AllDerived().ForEach(parent => parent.RemoveSymbolByName(Gr.Sym.ReturnToMarker))
+                    )*/;
+
+            Env.Execute(targetedGardenGrammar);
+            backToThis.RemoveSymbolByName(Gr.Sym.ReturnToMarker);
+        }
+
         public void LevelPathSegment()
         {
 
             Env.Line(Gr.PrL.Town(), NodesQueries.All, 6, out var pathToShortcut);
+            var first = pathToShortcut.AreasList.First();
             var shortcutArea = pathToShortcut.LastArea();
 
-            Env.Line(Gr.PrL.Town(), _ => shortcutArea.Node.ToEnumerable(), 5, out var pathToEnd);
+            ThisShouldGuideBack(first.Node);
+
+            /*Env.Line(Gr.PrL.Town(), _ => shortcutArea.Node.ToEnumerable(), 5, out var pathToEnd);
             var end = pathToEnd.LastArea();
 
             end.AddInteractiveObject(
                 Lib.InteractiveObjects.Transporter()
-                );
+                );*/
         }
 
         public void LevelEnd()

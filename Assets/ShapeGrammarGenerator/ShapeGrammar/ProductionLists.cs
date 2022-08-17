@@ -18,9 +18,9 @@ namespace ShapeGrammar
             this.pr = pr;
         }
 
-        public ProductionList Town()
+        public ProductionList Town(PathGuide pathGuide = null)
         {
-            var pathGuide = new RandomPathGuide();
+            pathGuide ??= new RandomPathGuide();
             Func<LevelElement>[] boxFs = new Func<LevelElement>[]
             {
                 () => ldk.qc.GetFlatBox(3, 5, 2),
@@ -31,7 +31,7 @@ namespace ShapeGrammar
                 // Connection from other grammars
                 pr.ExtendBridgeToRoom(pr.sym.FullFloorMarker, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide),
 
-                pr.CourtyardFromRoom(),
+                pr.CourtyardFromRoom(pathGuide),
                 pr.CourtyardFromCourtyardCorner(),
                 
                 pr.BridgeFrom(pr.sym.Courtyard, pathGuide),
@@ -115,13 +115,14 @@ namespace ShapeGrammar
                 //pr.GardenFromCourtyard(),
                 pr.ExtendBridgeToRoom(pr.sym.Room, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide),
                 pr.ExtendBridgeToGarden(pr.sym.Room, pr.sym.Garden, () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaStyles.Garden()), pathGuide),
-                pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
+                pr.ExtendBridgeToRoom(pr.sym.Garden, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide)
+                //pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
             );
         }
 
-        public ProductionList Chapels()
+        public ProductionList Chapels(PathGuide pathGuide = null)
         {
-            var pathGuide = new RandomPathGuide();
+            pathGuide ??= new RandomPathGuide();
 
             return new ProductionList
             (
@@ -195,9 +196,9 @@ namespace ShapeGrammar
             );
         }
 
-        public ProductionList Castle()
+        public ProductionList Castle(PathGuide pathGuide = null)
         {
-            var pathGuide = new RandomPathGuide();
+            pathGuide ??= new RandomPathGuide();
             return new ProductionList
             (
                 // Connection from other grammars

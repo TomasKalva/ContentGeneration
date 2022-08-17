@@ -28,7 +28,7 @@ namespace ShapeGrammar
             return Place(sym.Room, 3, () => ldk.sgShapes.Room(new Box2Int(0, 0, 5, 5).InflateY(0, 2)), Reserve(2, sym.UpwardReservation));
         }
 
-        public Production CourtyardFromRoom()
+        public Production CourtyardFromRoom(PathGuide pathGuide)
         {
             return new Production(
                 "CourtyardFromRoom",
@@ -40,9 +40,9 @@ namespace ShapeGrammar
 
                     // Reduces number of characters (withou spaces) from ~800 to ~480, from 34 lines to 22
                     return state.NewProgram(prog => prog
-                        .SelectOne(
+                        .SelectFirstOne(
                             state.NewProgram(subProg => subProg
-                                .Directional(ExtensionMethods.HorizontalDirections().Shuffle(),
+                                .Directional(pathGuide.SelectDirections(room.LE),
                                     dir =>
                                         roomCubeGroup
                                         .CubeGroupMaxLayer(dir)
@@ -82,7 +82,7 @@ namespace ShapeGrammar
                     var courtyardGroup = courtyard.LE.CG();
 
                     return state.NewProgram(prog => prog
-                        .SelectOne(
+                        .SelectRandomOne(
                             state.NewProgram(subProg => subProg
                                 .Set(
                                     () => courtyardGroup
@@ -248,7 +248,7 @@ namespace ShapeGrammar
                     var whatCG = what.LE.CG();
 
                     return state.NewProgram(prog => prog
-                        .SelectOne(
+                        .SelectFirstOne(
                             state.NewProgram(subProg => subProg
                                 .Set(() => roomFromToF().GN())
                                 .MoveNearTo(what, 1)
@@ -310,7 +310,7 @@ namespace ShapeGrammar
                     var toCG = to.LE.CG();
 
                     return state.NewProgram(prog => prog
-                        .SelectOne(
+                        .SelectFirstOne(
                             state.NewProgram(subProg => subProg
                                 .Set(() => roomFromF().GN())
                                 .MoveNearTo(to, 1)
@@ -562,7 +562,7 @@ namespace ShapeGrammar
                     var whatCG = what.LE.CG();
 
                     return state.NewProgram(prog => prog
-                        .SelectOne(
+                        .SelectRandomOne(
                             state.NewProgram(subProg => subProg
                                 .Set(() => newAreaF().GN())
                                 .MoveNearTo(what, dist)
@@ -612,7 +612,7 @@ namespace ShapeGrammar
                     var fromCG = from.LE.CG();
 
                     return state.NewProgram(prog => prog
-                        .SelectOne(
+                        .SelectFirstOne(
                             state.NewProgram(subProg => subProg
                                 .Directional(directionsFromSelected(from),
                                     dir =>
@@ -765,7 +765,7 @@ namespace ShapeGrammar
 
                     // reduced from 1450 to 1050 characters, from 80 lines to 34 lines
                     return state.NewProgram(prog => prog
-                        .SelectOne(
+                        .SelectFirstOne(
                             state.NewProgram(subProg => subProg
                                 .Directional(pathGuide.SelectDirections(what.LE),
                                     dir => whatCG.CubeGroupMaxLayer(Vector3Int.down).ExtrudeDir(dir, distance, false).LE().GN()

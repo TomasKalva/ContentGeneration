@@ -42,7 +42,7 @@ namespace ShapeGrammar
         /// <summary>
         /// Keeps only one of the current nodes. Fails if no current nodes exist.
         /// </summary>
-        public ProductionProgram SelectOne(ProductionProgram program, out Node result)
+        public ProductionProgram SelectRandomOne(ProductionProgram program, out Node result)
         {
             result = null;
             if (Failed)
@@ -57,6 +57,24 @@ namespace ShapeGrammar
             return this;
         }
 
+        /// <summary>
+        /// Keeps only one of the current nodes. Fails if no current nodes exist.
+        /// </summary>
+        public ProductionProgram SelectFirstOne(ProductionProgram program, out Node result)
+        {
+            result = null;
+            if (Failed)
+                return this;
+
+            if (!program.CurrentNodes.Any())
+                return SetFailed(true);
+
+            var node = program.CurrentNodes.First();
+            CurrentNodes = node.ToEnumerable().ToList();
+            result = node;
+            return this;
+        }
+        
         public ProductionProgram FindPath(Func<Node> pathFinder, out Node path)
         {
             path = null;

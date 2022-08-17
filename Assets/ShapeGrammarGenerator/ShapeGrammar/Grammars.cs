@@ -209,7 +209,7 @@ namespace ShapeGrammar
         public override IEnumerable<Node> Evaluate(ShapeGrammarState shapeGrammarState)
         {
             StartHandler(shapeGrammarState);
-            var createdNodes = EvaluatorSequence.SelectMany(evaluator => evaluator.Evaluate(shapeGrammarState)).Evaluate();
+            var createdNodes = EvaluatorSequence.SelectMany(evaluator => evaluator.Evaluate(shapeGrammarState)).ToList();
             EndHandler(shapeGrammarState);
             return createdNodes;
         }
