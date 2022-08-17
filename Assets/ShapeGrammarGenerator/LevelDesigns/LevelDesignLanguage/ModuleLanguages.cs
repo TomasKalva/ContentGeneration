@@ -54,7 +54,7 @@ namespace ShapeGrammar
                     0, 
                     () =>
                     {
-                        L.LevelLanguage.LevelPathSegment();
+                        L.LevelLanguage.MainPath();
                         return false;
                     }
                 )
@@ -154,96 +154,39 @@ namespace ShapeGrammar
             area.Get.Node.AddSymbol(Gr.Sym.LevelStartMarker);
         }
 
-        public void ThisShouldGuideBack(Node backToThis)
+        public void MainPath()
         {
-            var guideRandomly = new RandomPathGuide();
-            var guideToPoint = new PointPathGuide(State.GrammarState, state => new Vector3Int(0, 0, 50));
-
-            // define path guide
-            var guideBack = new PointPathGuide(State.GrammarState,
-                state =>
-                {
-                    // todo: fix null reference exception
-                    var returnToNodes = state.WithSymbols(Gr.Sym.ReturnToMarker);
-                    var currentNodesCenter = state.LastCreated.Select(node => node.LE).ToLevelGroupElement(State.Ldk.grid).CG().Center();
-                    var targetPoint = returnToNodes.SelectMany(n => n.LE.Cubes()).ArgMin(cube => (cube.Position - currentNodesCenter).AbsSum()).Position;
-                    return Vector3Int.RoundToInt(targetPoint);
-                });
-
-            // create targeted grammar
-            var targetedLowGarden = Gr.PrL.GuidedGarden(guideBack);
-
-            //var shapeGrammar = new CustomGrammarEvaluator(productionList, 20, null, state => state.LastCreated);
-
-            // mark the target location with a symbol
-            backToThis.AddSymbol(Gr.Sym.ReturnToMarker);
-
-            // define a grammar that moves to the target
-            var targetedGardenGrammar =
-                new GrammarSequence()
-                    /*.SetStartHandler(
-                        state => state
-                            .LastCreated.SelectMany(node => node.AllDerivedFrom()).Distinct()
-                            .ForEach(parent => parent.AddSymbol(Gr.Sym.ReturnToMarker))
-                    )*/
-                    .AppendLinear(
-                        new ProductionList(Gr.Pr.ExtendBridgeToRoom(Gr.Sym.FullFloorMarker, Gr.Sym.Room, () => State.Ldk.qc.GetFlatBox(3, 3, 3), guideBack)),
-                        1, NodesQueries.LastCreated
-                    )
-                    
-                    .AppendLinear(
-                        targetedLowGarden,
-                        2, NodesQueries.LastCreated
-                    )
-                    
-                    /*
-                    .AppendLinear(
-                        1, NodesQueries.All
-                    )*/
-
-                    .AppendStartEnd(
-                        Gr.Sym,
-                        new ProductionList(Gr.Pr.TowerFallDown(Gr.Sym.StartMarker, Gr.Sym.EndMarker, () => State.Ldk.qc.GetFlatBox(3, 3, 3).SetAreaType(AreaStyles.Room()))),
-                        state => state.LastCreated,
-                        state => state.WithSymbols(Gr.Sym.ReturnToMarker)
-                    )
-                    /*.SetEndHandler(
-                        state => state.Root.AllDerived().ForEach(parent => parent.RemoveSymbolByName(Gr.Sym.ReturnToMarker))
-                    )*/;
-
-            // execute the grammar
-            Env.Execute(targetedGardenGrammar);
-
-            // remove the marking symbols
-            backToThis.RemoveSymbolByName(Gr.Sym.ReturnToMarker);
-        }
-
-        public void LevelPathSegment()
-        {
-
+            // Place first part of the main path
             Env.Line(Gr.PrL.Town(), NodesQueries.All, 6, out var pathToShortcut);
             var first = pathToShortcut.AreasList.First();
             var shortcutArea = pathToShortcut.LastArea();
 
-            //ThisShouldGuideBack(first.Node);
-
+            // Create a shortcut
             Env.MoveFromTo(pathGuide => Gr.PrL.GuidedGarden(pathGuide), 2, shortcutArea.Node.ToEnumerable(), first.Node.ToEnumerable(), out var shortcut);
 
-            /*Env.Line(Gr.PrL.Town(), _ => shortcutArea.Node.ToEnumerable(), 5, out var pathToEnd);
+            // Lock the shortcut
+            var shortcutKey = L.PatternLanguage.CreateLockItems(State.UniqueNameGenerator.UniqueName("Shortcut key"), 1, "Unlocks a shortcut", out var unlock).First();
+            shortcut.AreasList[0].AddInteractiveObject(Lib.InteractiveObjects.Item(shortcutKey));
+            L.PatternLanguage.LockArea(shortcut.LastArea(), unlock);
+
+            // Create second part of the main path
+            Env.Line(Gr.PrL.Town(), _ => shortcutArea.Node.ToEnumerable(), 5, out var pathToEnd);
             var end = pathToEnd.LastArea();
 
+            // Place transporter to the next level
             end.AddInteractiveObject(
                 Lib.InteractiveObjects.Transporter()
-                );*/
+                );
         }
 
+        /*
         public void LevelEnd()
         {
             Env.One(Gr.PrL.LevelEnd(), NodesQueries.All, out var area);
             area.Get.AddInteractiveObject(
                 Lib.InteractiveObjects.Transporter()
                 );
-        }
+        }*/
 
 
     }

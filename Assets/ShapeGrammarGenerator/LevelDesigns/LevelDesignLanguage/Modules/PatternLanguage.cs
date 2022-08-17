@@ -17,11 +17,55 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
         /// </summary>
         public delegate bool UnlockAction(PlayerCharacterState player);
 
+        /// <summary>
+        /// Locks the first edge leading to this area that contains door. If there is no such area, no locking will happen.
+        /// </summary>
+        public void LockArea(Area areaToLock, UnlockAction unlock)
+        {
+            var connection = State.TraversabilityGraph.EdgesTo(areaToLock).First();
+            // the door face exists because of the chosen grammar
+            var doorFace = connection.Path.LE.CG().ConsecutiveInsideFacesH().Where(faceH => faceH.FaceType == FACE_HOR.Door).Facets.FirstOrDefault();
+            if(doorFace == null)
+            {
+                return;
+            }
+
+            doorFace.OnObjectCreated += tr =>
+            {
+                var door = tr.GetComponentInChildren<Door>();
+                var doorState = (DoorState)door.State;
+
+                bool unlocked = false;
+                doorState.ActionOnInteract = (ios, player) =>
+                {
+                    if (unlocked)
+                    {
+                        ios.IntObj.SwitchPosition();
+                    }
+                    else
+                    {
+                        unlocked = unlock(player);
+
+                        if (unlocked)
+                        {
+                            Msg.Show("Door unlocked");
+                            ios.IntObj.SwitchPosition();
+                        }
+                        else
+                        {
+                            Msg.Show("Door is locked");
+                        }
+                    }
+                };
+            };
+        }
+
         public void LockedArea(NodesQuery startNodes, UnlockAction unlock, out SingleArea lockedArea)
         {
             Env.One(Gr.PrL.BlockedByDoor(), startNodes, out lockedArea);
             // the locked area has to be connected to some previous area
-            var connection = State.TraversabilityGraph.EdgesTo(lockedArea.Get).First();
+            LockArea(lockedArea.Get, unlock);
+            /*var connection = State.TraversabilityGraph.EdgesTo(lockedArea.Get).First();
             // the door face exists because of the chosen grammar
             var doorFace = connection.Path.LE.CG().ConsecutiveInsideFacesH().Where(faceH => faceH.FaceType == FACE_HOR.Door).Facets.First();
             doorFace.OnObjectCreated += tr =>
@@ -51,7 +95,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
                         }
                     }
                 };
-            };
+            };*/
         }
 
         public IEnumerable<ItemState> CreateLockItems(string name, int count, string description, out UnlockAction unlockAction)

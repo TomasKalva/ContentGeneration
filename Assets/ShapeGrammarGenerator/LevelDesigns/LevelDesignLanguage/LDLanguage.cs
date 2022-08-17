@@ -308,63 +308,34 @@ namespace ShapeGrammar
         /// <param name="targetedProductions">Productions that can be guided.</param>
         public void MoveFromTo(Func<PathGuide, ProductionList> targetedProductions, int pathLength, IEnumerable<Node> from, IEnumerable<Node> to, out LinearPath path)
         {
-            /*
-            var guideRandomly = new RandomPathGuide();
-            var guideToPoint = new PointPathGuide(State.GrammarState, state => new Vector3Int(0, 0, 50));
-            */
             // define path guide
             var guideBack = new PointPathGuide(LanguageState.GrammarState,
                 state =>
                 {
                     // todo: fix null reference exception
-                    var returnToNodes = to; // state.WithSymbols(L.Gr.Sym.ReturnToMarker);
+                    var returnToNodes = to; 
                     var currentNodesCenter = state.LastCreated.Select(node => node.LE).ToLevelGroupElement(LanguageState.Ldk.grid).CG().Center();
                     var targetPoint = returnToNodes.SelectMany(n => n.LE.Cubes()).ArgMin(cube => (cube.Position - currentNodesCenter).AbsSum()).Position;
                     return Vector3Int.RoundToInt(targetPoint);
                 });
 
-            // create targeted grammar
-            var targetedLowGarden = targetedProductions(guideBack);
-
-            //var shapeGrammar = new CustomGrammarEvaluator(productionList, 20, null, state => state.LastCreated);
-
-            // mark the target location with a symbol
-            //to.Node.AddSymbol(L.Gr.Sym.ReturnToMarker);
 
             // define a grammar that moves to the target
+            pathLength = Math.Max(1, pathLength);
             var targetedGardenGrammar =
                 new GrammarSequence()
-                    /*.SetStartHandler(
-                        state => state
-                            .LastCreated.SelectMany(node => node.AllDerivedFrom()).Distinct()
-                            .ForEach(parent => parent.AddSymbol(Gr.Sym.ReturnToMarker))
-                    )*/
-                    /*.AppendLinear(
-                        new ProductionList(L.Gr.Pr.ExtendBridgeToRoom(L.Gr.Sym.FullFloorMarker, L.Gr.Sym.Room, () => LanguageState.Ldk.qc.GetFlatBox(3, 3, 3), guideBack)),
-                        1, NodesQueries.LastCreated
-                    )
-                    */
                     .AppendLinear(
-                        targetedLowGarden,
-                        1, NodesQueries.LastCreated
+                        targetedProductions(guideBack),
+                        pathLength - 1, NodesQueries.LastCreated
                     )
-
-                    /*
-                    .AppendLinear(
-                        1, NodesQueries.All
-                    )*/
-
                     .AppendStartEnd(
                         L.Gr.Sym,
-                        new ProductionList(L.Gr.Pr.TowerFallDown(L.Gr.Sym.StartMarker, L.Gr.Sym.EndMarker, () => LanguageState.Ldk.qc.GetFlatBox(3, 3, 3).SetAreaType(AreaStyles.Room()))),
+                        L.Gr.PrL.ConnectBack(),
                         state => state.LastCreated,
-                        state => to //state.WithSymbols(Gr.Sym.ReturnToMarker)
-                    )
-                    /*.SetEndHandler(
-                        state => state.Root.AllDerived().ForEach(parent => parent.RemoveSymbolByName(Gr.Sym.ReturnToMarker))
-                    )*/;
+                        state => to
+                    );
 
-            
+            // execute the grammar and get nodes
             var traversableNodes = GenerateAndTakeTraversable(targetedGardenGrammar);
             path = new LinearPath(traversableNodes.ToList());
         }

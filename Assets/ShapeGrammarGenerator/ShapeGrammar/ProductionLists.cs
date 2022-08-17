@@ -231,7 +231,14 @@ namespace ShapeGrammar
         {
             return new ProductionList
             (
-                pr.TowerFallDown(pr.sym.StartMarker, pr.sym.EndMarker, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
+                pr.ConnectByRoom(
+                    pr.sym.StartMarker, 
+                    pr.sym.EndMarker, 
+                    () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)),
+                    pr.Empty(),
+                    ldk.con.ConnectByStairsOutside,
+                    ldk.con.ConnectByStairsOutside,
+                    3)
             );
         }
 

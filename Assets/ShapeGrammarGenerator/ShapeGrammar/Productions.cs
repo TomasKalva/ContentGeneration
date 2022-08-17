@@ -288,7 +288,14 @@ namespace ShapeGrammar
         /// <summary>
         /// to has to have height at least 2
         /// </summary>
-        public Production TowerFallDown(Symbol from, Symbol to, Func<LevelElement> roomFromF)
+        public Production ConnectByRoom(
+            Symbol from, 
+            Symbol to, 
+            Func<LevelElement> roomFromF,
+            Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPositionedNear,
+            ConnectionFromAddedAndPaths connectFrom,
+            ConnectionFromAddedAndPaths connectTo,
+            int distance)
         {
             return new Production(
                 $"TowerFallDown_{from.Name}",
@@ -315,8 +322,12 @@ namespace ShapeGrammar
                         .SelectFirstOne(
                             state.NewProgram(subProg => subProg
                                 .Set(() => roomFromF().GN())
-                                .MoveNearTo(to, 1)
-                                .Change(node => node.LE.MoveBy(Vector3Int.up).GN(sym.Room, sym.FullFloorMarker))
+                                .MoveNearTo(to, distance)
+                                .CurrentFirst(out var newArea)
+                                .RunIf(true,
+                                    thisProg => fromFloorNodeAfterPositionedNear(thisProg, newArea)
+                                )
+                                .Change(node => node.LE/*.MoveBy(Vector3Int.up)*/.GN(sym.Room, sym.FullFloorMarker))
                                 ),
                             out var newRoom
                         )
@@ -329,13 +340,13 @@ namespace ShapeGrammar
                         .ReserveUpward(2, sym.UpwardReservation, out var reservation)
                         .PlaceCurrentFrom(newRoom)
 
-                        .FindPath(() => 
-                        ldk.con.ConnectByStairsOutside(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
+                        .FindPath(() =>
+                        connectFrom(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
                             (from.LE, newRoom.LE).GN(sym.ConnectionMarker), out var stairs)
                         .PlaceCurrentFrom(from, newRoom)
 
-                        .FindPath(() => 
-                        ldk.con.ConnectByFall(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
+                        .FindPath(() =>
+                        connectTo(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
                             (newRoom.LE, to.LE).GN(), out var fall)
                         .PlaceCurrentFrom(to, newRoom)
                         );
