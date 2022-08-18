@@ -23,4 +23,12 @@ public class Objects : ScriptableObject
 
     //public Transform spawnPoint;
     public Transform farmer;
+
+    [SerializeField]
+    Environment environment;
+
+    public Environment Environment()
+    {
+        return Instantiate(environment);
+    }
 }

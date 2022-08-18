@@ -218,7 +218,9 @@ namespace ShapeGrammar
         public AscendingLanguage AscendingLanguage { get; private set; }
         public OutOfDepthEncountersLanguage OutOfDepthEncountersLanguage { get; private set; }
         public DetailsLanguage DetailsLanguage { get; private set; }
+        public EnvironmentLanguage EnvironmentLanguage { get; private set; }
         
+
 
         Languages()
         {
@@ -237,6 +239,7 @@ namespace ShapeGrammar
             AscendingLanguage = new AscendingLanguage(tools);
             OutOfDepthEncountersLanguage = new OutOfDepthEncountersLanguage(tools);
             DetailsLanguage = new DetailsLanguage(tools);
+            EnvironmentLanguage = new EnvironmentLanguage(tools);
         }
     }
 

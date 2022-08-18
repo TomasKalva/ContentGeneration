@@ -5,17 +5,31 @@ using UnityEngine;
 public class Environment : MonoBehaviour
 {
     [SerializeField]
-    Renderer[] skyboxPlanes;
+    Transform skyParent;
 
-    // Start is called before the first frame update
-    void Start()
+    Renderer[] skyboxPlanes;
+    
+    [SerializeField]
+    Light sun;
+
+    public Light Sun => sun;
+
+    Color DefaultAmbientLight { get; set; }
+
+    void Awake()
     {
-        
+        skyboxPlanes = skyParent.GetComponentsInChildren<Renderer>();
+        DefaultAmbientLight = RenderSettings.ambientLight;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetSkyVariability(float value)
     {
-        
+        skyboxPlanes.ForEach(skyboxPlane => skyboxPlane.material.SetFloat("_InterpolateSky", value));
+    }
+
+    public void SetSkyBrightness(float value)
+    {
+        RenderSettings.ambientLight = value * DefaultAmbientLight;
+        //skyboxPlanes.ForEach(skyboxPlane => skyboxPlane.material.SetFloat("_InterpolateSky", value));
     }
 }

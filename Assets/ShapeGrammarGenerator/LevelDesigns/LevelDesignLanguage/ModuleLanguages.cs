@@ -31,6 +31,63 @@ namespace ShapeGrammar
                 ) 
             );
 
+            /*
+            State.LC.AddEvent(
+                new LevelConstructionEvent(
+                    $"Main path", 
+                    90, 
+                    () =>
+                    {
+                        L.LevelLanguage.MainPath(0);
+                        return false;
+                    }
+                )
+            );
+
+
+            
+            L.FactionsLanguage.InitializeFactions(2);
+            
+            State.LC.AddEvent(
+                new LevelConstructionEvent(
+                    $"Add Details",
+                    0, 
+                    () =>
+                    {
+                        L.DetailsLanguage.AddDetails(0);
+                        return false;
+                    }
+                )
+            );
+
+
+            
+            State.LC.AddEvent(
+                new LevelConstructionEvent(
+                    $"Out of depth encounter",
+                    80,
+                    () =>
+                    {
+                        L.OutOfDepthEncountersLanguage.DifficultEncounter(0);
+                        return false;
+                    }
+                )
+            );*/
+
+
+            State.LC.AddEvent(
+                new LevelConstructionEvent(
+                    $"Environment",
+                    0,
+                    () =>
+                    {
+                        L.EnvironmentLanguage.TestSky();
+                        return false;
+                    }
+                )
+            );
+
+
             /*State.LC.AddEvent(5, () =>
             {
                 L.FarmersLanguage.FarmerBranch(0);
@@ -47,19 +104,6 @@ namespace ShapeGrammar
             });
             */
 
-            
-            State.LC.AddEvent(
-                new LevelConstructionEvent(
-                    $"Main path", 
-                    90, 
-                    () =>
-                    {
-                        L.LevelLanguage.MainPath(0);
-                        return false;
-                    }
-                )
-            );
-
             /*
 
             State.LC.AddEvent(
@@ -70,21 +114,6 @@ namespace ShapeGrammar
                     return true;
                 }));
             */
-
-            
-            L.FactionsLanguage.InitializeFactions(2);
-            
-            State.LC.AddEvent(
-                new LevelConstructionEvent(
-                    $"Add Details",
-                    0, 
-                    () =>
-                    {
-                        L.DetailsLanguage.AddDetails(0);
-                        return false;
-                    }
-                )
-            );
 
             /*
             State.LC.AddEvent(
@@ -127,20 +156,6 @@ namespace ShapeGrammar
                 })
             );
             */
-
-            
-            State.LC.AddEvent(
-                new LevelConstructionEvent(
-                    $"Out of depth encounter",
-                    80,
-                    () =>
-                    {
-                        L.OutOfDepthEncountersLanguage.DifficultEncounter(0);
-                        return false;
-                    }
-                )
-            );
-            
         }
     }
 

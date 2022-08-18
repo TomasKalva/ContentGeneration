@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: Objects
   m_EditorClassIdentifier: 
   farmer: {fileID: 3307065043585355908, guid: 6a49633222cd2af468ba1be834475af5, type: 3}
+  environment: {fileID: 4770963502478050104, guid: f6c9bd3c69712bd47b17776b69822c80, type: 3}
