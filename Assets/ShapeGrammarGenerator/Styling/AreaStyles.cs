@@ -13,6 +13,7 @@ namespace Assets.ShapeGrammarGenerator
         static GridPrimitives gp { get; set; }
         static GridPrimitivesPlacement gpp { get; set; }
         public static GridPrimitivesStyle TownStyle => gp.TownStyle();
+        public static GridPrimitivesStyle YardStyle => gp.YardStyle();
         public static GridPrimitivesStyle ChapelStyle => gp.ChapelStyle();
         public static GridPrimitivesStyle GardenStyle => gp.GardenStyle();
         public static GridPrimitivesStyle CastleStyle => gp.CastleStyle();
@@ -31,7 +32,7 @@ namespace Assets.ShapeGrammarGenerator
 
         public static  AreaStyle OpenRoom() => new AreaStyle("OpenRoom", gp.TownStyle(), gpp.OpenRoomStyle);
 
-        public static  AreaStyle FlatRoof() => new AreaStyle("FlatRoof", gp.TownStyle(), gpp.FlatRoofStyle);
+        public static  AreaStyle FlatRoof(GridPrimitivesStyle style = null) => new AreaStyle("FlatRoof", GetStyle(style), gpp.FlatRoofStyle);
 
         public static  AreaStyle GableRoof() => new AreaStyle("GableRoof", gp.TownStyle(), gpp.GableRoofStyle);
 
@@ -47,7 +48,7 @@ namespace Assets.ShapeGrammarGenerator
 
         public static  AreaStyle Garden() => new AreaStyle("Garden", gp.GardenStyle(), gpp.GardenStyle);
 
-        public static  AreaStyle Yard() => new AreaStyle("Yard", gp.TownStyle(), gpp.FlatRoofStyle);
+        public static  AreaStyle Yard(GridPrimitivesStyle style = null) => new AreaStyle("Yard", GetStyle(style), gpp.FlatRoofStyle);
 
         public static  AreaStyle WallTop() => new AreaStyle("WallTop", gp.TownStyle(), gpp.FlatRoofStyle);
 

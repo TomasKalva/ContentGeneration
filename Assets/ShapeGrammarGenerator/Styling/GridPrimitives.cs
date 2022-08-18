@@ -99,6 +99,9 @@ namespace Assets.ShapeGrammarGenerator
             BridgeBottom = GP.bridgeBottom,
         };
 
+        public GridPrimitivesStyle YardStyle() => TownStyle()
+            .SetFloor(() => Floor(GP.cobblestoneFloor, GP.oneSidedCeiling));
+
         public GridPrimitivesStyle ChapelStyle() => TownStyle()
             .SetFloor(() => Floor(GP.ornamentedFloor, GP.oneSidedCeiling))
             .SetWall(() => Wall(GP.pipedWall, GP.bigBrickWall))

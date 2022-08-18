@@ -39,7 +39,7 @@ namespace ShapeGrammar
                 pr.CourtyardFromBridge(),
                 
 
-                pr.RoomNextFloor(pr.sym.Room, pr.sym.Room, 2, 13, ldk.con.ConnectByWallStairsOut),
+                pr.RoomNextFloor(pr.sym.Room, pr.sym.Room, AreaStyles.Room(AreaStyles.CastleStyle), 2, 13, ldk.con.ConnectByWallStairsOut),
                 pr.RoomDown(pr.sym.Room, pr.sym.Room, AreaStyles.Room(AreaStyles.TownStyle), 2, 3),
 
                 pr.GardenFrom(pr.sym.Courtyard, boxFs.GetRandom()),
@@ -202,8 +202,8 @@ namespace ShapeGrammar
                 // Connection from other grammars
                 pr.ExtendBridgeToGarden(pr.sym.FullFloorMarker, pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide),
 
-                pr.TowerBottomNear(pr.sym.Room, () => ldk.qc.GetFlatBox(3, 3, 5)),
-                pr.TowerBottomNear(pr.sym.Garden, () => ldk.qc.GetFlatBox(3, 3, 7)),
+                pr.TowerBottomNear(pr.sym.Room, () => ldk.qc.GetFlatBox(3, 3, 4)),
+                pr.TowerBottomNear(pr.sym.Garden, () => ldk.qc.GetFlatBox(3, 3, 4)),
 
                 pr.UpwardTowerTop(2),
                 pr.WallTop(pr.sym.TowerTop, 5, 2, pathGuide),

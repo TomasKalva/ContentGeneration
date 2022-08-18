@@ -42,7 +42,7 @@ namespace Assets.ShapeGrammarGenerator
             var offset = (Vector3)facet.Direction * 0.5f;
             var obj = toPlace.New().transform;
 
-            obj.localScale = scale * Vector3.one;
+            obj.localScale = scale * obj.localScale;
             obj.localPosition = (cubePosition + offset) * scale;
             obj.rotation = Quaternion.LookRotation(direction, Vector3.up);
 

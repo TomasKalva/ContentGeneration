@@ -73,7 +73,7 @@ namespace ShapeGrammar
                     }
                 )
             );
-
+            */
             
             State.LC.AddEvent(
                 new LevelConstructionEvent(
@@ -86,7 +86,7 @@ namespace ShapeGrammar
                     }
                 )
             );
-            */
+            
 
             /*State.LC.AddEvent(5, () =>
             {
