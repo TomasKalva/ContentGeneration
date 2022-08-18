@@ -50,11 +50,11 @@ namespace ShapeGrammar
             
             State.LC.AddEvent(
                 new LevelConstructionEvent(
-                    $"Level End", 
+                    $"Main path", 
                     90, 
                     () =>
                     {
-                        L.LevelLanguage.MainPath();
+                        L.LevelLanguage.MainPath(0);
                         return false;
                     }
                 )
@@ -73,7 +73,7 @@ namespace ShapeGrammar
 
             
             L.FactionsLanguage.InitializeFactions(2);
-            /*
+            
             State.LC.AddEvent(
                 new LevelConstructionEvent(
                     $"Add Details",
@@ -84,7 +84,7 @@ namespace ShapeGrammar
                         return false;
                     }
                 )
-            );*/
+            );
 
             /*
             State.LC.AddEvent(
@@ -128,18 +128,18 @@ namespace ShapeGrammar
             );
             */
 
-            /*
+            
             State.LC.AddEvent(
                 new LevelConstructionEvent(
                     $"Out of depth encounter",
-                    90,
+                    80,
                     () =>
                     {
                         L.OutOfDepthEncountersLanguage.DifficultEncounter(0);
                         return false;
                     }
                 )
-            );*/
+            );
             
         }
     }
@@ -162,14 +162,46 @@ namespace ShapeGrammar
                             () => Gr.PrL.Chapels(),
                     };
 
-        public void MainPath()
+        EnemyMaker BasicEnemyMaker()
         {
+            return new EnemyMaker(
+                level => new CharacterStats()
+                {
+                    Will = 0 + 1 * level,
+                    Strength = 4 + 3 * level,
+                    Versatility = 3 + 5 * level,
+                    Endurance = 3 + 5 * level,
+                    Agility = 5 + 5 * level,
+                    Posture = 1 + 2 * level,
+                    Resistances = 0 + level
+                },
+                new List<Func<WeaponItem>>()
+                {
+                    Lib.Items.Katana,
+                    Lib.Items.MayanSword,
+                    Lib.Items.Mace,
+                },
+                new List<Func<CharacterState>>()
+                {
+                    Lib.Enemies.MayanSwordsman,
+                    Lib.Enemies.MayanThrower,
+                    Lib.Enemies.SkinnyWoman,
+                }
+            );
+        }
+
+        public void MainPath(int level)
+        {
+            var enemyMaker = BasicEnemyMaker();
+
             // Place first part of the main path
             Env.Line(MainPathProductionLists().GetRandom()(), NodesQueries.All, 6, out var pathToShortcut);
-            var first = pathToShortcut.AreasList.First();
-            var shortcutArea = pathToShortcut.LastArea();
+            PlC.RandomAreaPlacer(new UniformDistr(1, 3), enemyMaker.GetRandomEnemy(level))
+                .Place(pathToShortcut);
 
             // Create a shortcut
+            var shortcutArea = pathToShortcut.LastArea();
+            var first = pathToShortcut.AreasList.First();
             Env.MoveFromTo(pathGuide => Gr.PrL.GuidedGarden(pathGuide), Gr.PrL.ConnectBack(), 2, shortcutArea.Node.ToEnumerable(), first.Node.ToEnumerable(), out var shortcut);
 
             // Lock the shortcut
@@ -179,9 +211,11 @@ namespace ShapeGrammar
 
             // Create second part of the main path
             Env.Line(Gr.PrL.Town(), _ => shortcutArea.Node.ToEnumerable(), 5, out var pathToEnd);
-            var end = pathToEnd.LastArea();
+            PlC.RandomAreaPlacer(new UniformDistr(1, 4), enemyMaker.GetRandomEnemy(level))
+                .Place(pathToEnd);
 
             // Place transporter to the next level
+            var end = pathToEnd.LastArea();
             end.AddInteractiveObject(
                 Lib.InteractiveObjects.Transporter()
                 );
@@ -263,4 +297,32 @@ namespace ShapeGrammar
         }
     }
 
+    class EnemyMaker
+    {
+        public Func<int, CharacterStats> CharacterStats { get; }
+        public IEnumerable<Func<WeaponItem>> Weapons { get; }
+        public IEnumerable<Func<CharacterState>> Enemies { get; }
+
+        public EnemyMaker(Func<int, CharacterStats> characterStats, IEnumerable<Func<WeaponItem>> weapons, IEnumerable<Func<CharacterState>> enemies)
+        {
+            CharacterStats = characterStats;
+            Weapons = weapons;
+            Enemies = enemies;
+        }
+
+        public Func<CharacterState> GetRandomEnemy(int level)
+        {
+            var weaponF = Weapons.GetRandom();
+            var enemyF = Enemies.GetRandom();
+            return () =>
+            {
+                var enemy = enemyF();
+                return enemy
+                    .SetStats(CharacterStats(level))
+                    .SetLeftWeapon(weaponF())
+                    .SetRightWeapon(weaponF())
+                    .AddOnDeath(() => GameViewModel.ViewModel.PlayerState.Spirit += enemy.Health.Maximum);
+            };
+        }
+    }
 }

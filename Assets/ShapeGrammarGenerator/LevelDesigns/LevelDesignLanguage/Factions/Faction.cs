@@ -97,9 +97,10 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             FactionManifestation = factionManifestation;
         }
 
-        public ProductionList ProductionList()
+        public ProductionList GetProductionList(PathGuide pathGuide = null)
         {
-            return Concepts.ProductionLists.GetRandom()();
+            pathGuide ??= new RandomPathGuide();
+            return Concepts.ProductionLists.GetRandom()(pathGuide);
         }
 
         /// <summary>
@@ -165,13 +166,13 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
     class FactionConcepts
     {
-        public List<Func<ProductionList>> ProductionLists { get; }
+        public List<Func<PathGuide, ProductionList>> ProductionLists { get; }
         public List<Func<CharacterState>> CharacterStates { get; }
         public List<Func<WeaponItem>> Weapons { get; }
         public List<List<Func<ItemState>>> Spells { get; }
 
         public FactionConcepts(
-            List<Func<ProductionList>> productionLists, 
+            List<Func<PathGuide, ProductionList>> productionLists, 
             List<Func<CharacterState>> characterStates, 
             List<Func<WeaponItem>> weapons,
             List<List<Func<ItemState>>> spells)
