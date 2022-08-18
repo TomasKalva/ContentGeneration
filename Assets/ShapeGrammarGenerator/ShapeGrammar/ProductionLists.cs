@@ -40,7 +40,7 @@ namespace ShapeGrammar
                 
 
                 pr.RoomNextFloor(pr.sym.Room, pr.sym.Room, 2, 13, ldk.con.ConnectByWallStairsOut),
-                pr.RoomDown(pr.sym.Room, pr.sym.Room, 2, 3),
+                pr.RoomDown(pr.sym.Room, pr.sym.Room, AreaStyles.Room(AreaStyles.TownStyle), 2, 3),
 
                 pr.GardenFrom(pr.sym.Courtyard, boxFs.GetRandom()),
                 pr.RoomNextTo(pr.sym.Courtyard, boxFs.GetRandom()),
@@ -143,10 +143,10 @@ namespace ShapeGrammar
 
                 pr.ChapelRoom(3),
 
-                pr.RoomDown(pr.sym.ChapelRoom, pr.sym.ChapelRoom, 2, 3),
+                pr.RoomDown(pr.sym.ChapelRoom, pr.sym.ChapelRoom, AreaStyles.Room(AreaStyles.ChapelStyle), 2, 3),
 
                 pr.ChapelNextFloor(3, 16),
-                pr.ChapelTowerTop(2, 3),
+                pr.ChapelTowerTop(3, 6),
 
                 pr.ParkNear(pr.sym.ChapelTowerTop, -5, 3, () => ldk.qc.GetFlatBox(5, 6, 3)),
                 pr.ParkNear(pr.sym.Park, -1, 3, () => ldk.qc.GetFlatBox(5, 6, 3)),
@@ -189,7 +189,8 @@ namespace ShapeGrammar
             return new ProductionList
             (
                 //pr.ChapelTowerTop(3),
-                pr.Roof()
+                pr.Roof(pr.sym.ChapelHall(default), 3, AreaStyles.GableRoof()),
+                pr.Roof(pr.sym.ChapelRoom, 3, AreaStyles.CrossRoof())
             );
         }
 
@@ -208,7 +209,7 @@ namespace ShapeGrammar
                 pr.WallTop(pr.sym.TowerTop, 5, 2, pathGuide),
                 pr.WallTop(pr.sym.TowerTop, 8, 2, pathGuide),
                 pr.TowerTopFromWallTop(4, 4),
-                pr.RoomDown(pr.sym.TowerTop, pr.sym.TowerBottom, 5, 3),
+                pr.RoomDown(pr.sym.TowerTop, pr.sym.TowerBottom, AreaStyles.Room(AreaStyles.CastleStyle), 5, 3),
 
                 //pr.GardenFrom(pr.sym.TowerBottom, () => ldk.qc.GetFlatBox(4, 4, 1)),
                 pr.TowerTopNear(pr.sym.TowerTop, 4, 0, 3, () => ldk.qc.GetFlatBox(3, 3, 2)),

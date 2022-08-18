@@ -180,5 +180,16 @@ namespace ShapeGrammar
                 return path.LE(AreaStyles.Path());
             };
         }
+
+        /// <summary>
+        /// Does nothing and returns empty level element.
+        /// </summary>
+        public Connection NoConnection(LevelElement _1, LevelGroupElement _2)
+        {
+            return (le1, le2) =>
+            {
+                return new CubeGroup(le1.Grid, new List<Cube>()).LE();
+            };
+        }
     }
 }

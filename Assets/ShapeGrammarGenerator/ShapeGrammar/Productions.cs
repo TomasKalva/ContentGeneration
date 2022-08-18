@@ -438,6 +438,16 @@ namespace ShapeGrammar
                 });
         }
 
+        public Production Roof(Symbol reservationSymbol, int roofHeight, AreaStyle roofAreaStyle)
+        {
+            return TakeUpwardReservation(
+                reservationSymbol,
+                cg => cg.LE(roofAreaStyle).GN(sym.Roof),
+                roofHeight,
+                int.MaxValue,
+                Empty(),
+                ldk.con.NoConnection);
+        }
 
         #region Utility
 
@@ -688,7 +698,7 @@ namespace ShapeGrammar
                         .NotTaken()
                         .Set(() => extendedReservation)
 
-                        .Change(extr => nodeFromExtrudedUp(extr.LE.CG())/*.GN(nodeFromExtrudedUp(0), sym.FullFloorMarker)*/)
+                        .Change(extr => nodeFromExtrudedUp(extr.LE.CG()))
                         .CurrentFirst(out var nextFloor)
                         .ReplaceNodes(reservation)
 
@@ -858,11 +868,11 @@ namespace ShapeGrammar
 
         #endregion
 
-        public Production RoomDown(Symbol from, Symbol to, int belowRoomHeight, int minFloorHeight)
+        public Production RoomDown(Symbol from, Symbol to, AreaStyle roomStyle, int belowRoomHeight, int minFloorHeight)
         {
             return FromDownwardFoundation(
                     from,
-                    cg => cg.LE(AreaStyles.Room(AreaStyles.ChapelStyle)).GN(sym.FullFloorMarker, to),
+                    cg => cg.LE(roomStyle).GN(sym.FullFloorMarker, to),
                     belowRoomHeight,
                     minFloorHeight,
                     ldk.con.ConnectByWallStairsIn

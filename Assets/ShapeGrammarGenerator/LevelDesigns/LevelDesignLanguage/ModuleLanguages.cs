@@ -72,9 +72,9 @@ namespace ShapeGrammar
                         return false;
                     }
                 )
-            );*/
+            );
 
-
+            
             State.LC.AddEvent(
                 new LevelConstructionEvent(
                     $"Environment",
@@ -86,7 +86,7 @@ namespace ShapeGrammar
                     }
                 )
             );
-
+            */
 
             /*State.LC.AddEvent(5, () =>
             {
@@ -146,16 +146,17 @@ namespace ShapeGrammar
             
              */
 
-            /*
             State.LC.AddEvent(
-                new LevelConstructionEvent(90,
+                new LevelConstructionEvent(
+                "Testing Grammars",
+                90,
                 () =>
                 {
                     L.TestingLanguage.GrammarTesting();
                     return true;
                 })
             );
-            */
+            
         }
     }
 

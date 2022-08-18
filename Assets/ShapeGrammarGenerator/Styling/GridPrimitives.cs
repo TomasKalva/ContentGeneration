@@ -84,7 +84,7 @@ namespace Assets.ShapeGrammarGenerator
             Beam = Beam,
             NoPillar = NoPillar,
 
-            Floor = Floor,
+            Floor = () => Floor(GP.evenTiledFloor, GP.oneSidedCeiling),
             PathFullFloor = PathFullFloor,
             NoFloor = NoFloor,
 
@@ -101,13 +101,17 @@ namespace Assets.ShapeGrammarGenerator
 
         public GridPrimitivesStyle ChapelStyle() => TownStyle()
             .SetFloor(() => Floor(GP.ornamentedFloor, GP.oneSidedCeiling))
-            .SetWall(() => Wall(GP.pipedWall, GP.cementedWall))
-            .SetCladdedWall(() => CladdedWall(GP.pipedWall, GP.cementedWall));
+            .SetWall(() => Wall(GP.pipedWall, GP.bigBrickWall))
+            .SetCladdedWall(() => CladdedWall(GP.pipedWall, GP.bigBrickWall));
 
         public GridPrimitivesStyle GardenStyle() => TownStyle()
             .SetFoundationWall(() => FoundationWall(GP.barkWall))
             .SetFloor(() => Floor(GP.grassFloor, GP.oneSidedCeiling));
 
+        public GridPrimitivesStyle CastleStyle() => TownStyle()
+            .SetFloor(() => Floor(GP.marbleFloor, GP.oneSidedCeiling))
+            .SetWall(() => Wall(GP.cementedWall, GP.cementedWall))
+            .SetCladdedWall(() => CladdedWall(GP.cementedWall, GP.cementedWall));
     }
 
     /// <summary>

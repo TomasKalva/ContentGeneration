@@ -19,7 +19,7 @@ public class Environment : MonoBehaviour
     void Awake()
     {
         skyboxPlanes = skyParent.GetComponentsInChildren<Renderer>();
-        DefaultAmbientLight = RenderSettings.ambientLight;
+        DefaultAmbientLight = new Color(0.5446778f, 0.6146909f, 0.754717f, 1.0f);//  RenderSettings.ambientLight;
     }
 
     public void SetSkyVariability(float value)
@@ -30,6 +30,5 @@ public class Environment : MonoBehaviour
     public void SetSkyBrightness(float value)
     {
         RenderSettings.ambientLight = value * DefaultAmbientLight;
-        //skyboxPlanes.ForEach(skyboxPlane => skyboxPlane.material.SetFloat("_InterpolateSky", value));
     }
 }

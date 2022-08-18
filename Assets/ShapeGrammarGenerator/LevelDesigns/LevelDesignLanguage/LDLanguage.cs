@@ -267,7 +267,10 @@ namespace ShapeGrammar
                                 .ToList();
             LanguageState.AddAreas(traversable);
             var connections = newNodes
-                                .Where(node => node.HasSymbols(Sym.ConnectionMarker))
+                                .Where(node => 
+                                        node.HasSymbols(Sym.ConnectionMarker) && 
+                                        node.LE.CG().Cubes.Any() // Connections with no cubes are ignored
+                                        )
                                 .ToList();
             LanguageState.AddConnections(connections);
             return traversable;

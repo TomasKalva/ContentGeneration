@@ -15,6 +15,7 @@ namespace Assets.ShapeGrammarGenerator
         public static GridPrimitivesStyle TownStyle => gp.TownStyle();
         public static GridPrimitivesStyle ChapelStyle => gp.ChapelStyle();
         public static GridPrimitivesStyle GardenStyle => gp.GardenStyle();
+        public static GridPrimitivesStyle CastleStyle => gp.CastleStyle();
 
         public static void Initialize(GridPrimitives gridPrimitives, GridPrimitivesPlacement gridPrimitivesPlacement)
         {

@@ -45,6 +45,8 @@ public class GeometricPrimitives : ScriptableObject
     public GeometricPrimitive pipedWall;
     [SerializeField]
     public GeometricPrimitive barkWall;
+    [SerializeField]
+    public GeometricPrimitive bigBrickWall;
     #endregion
 
 
