@@ -285,9 +285,6 @@ namespace ShapeGrammar
                 });
         }
 
-        /// <summary>
-        /// to has to have height at least 2
-        /// </summary>
         public Production ConnectByRoom(
             Symbol from, 
             Symbol to, 
@@ -295,7 +292,8 @@ namespace ShapeGrammar
             Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPositionedNear,
             ConnectionFromAddedAndPaths connectFrom,
             ConnectionFromAddedAndPaths connectTo,
-            int distance)
+            int distance,
+            Func<Node, Node, bool> fromToCondition)
         {
             return new Production(
                 $"ConnectByRoom",
@@ -305,18 +303,13 @@ namespace ShapeGrammar
                     .SetCondition((state, pp) =>
                     {
                         var (from, to) = pp;
-                        return true;// to.LE.CG().Extents().y >= 2;
-                            //to.GetSymbol<Room>().Plain
-                            //&& from.LE.CG().MinkowskiMinus(to.LE.CG()).Min(v => v.AbsSum()) < 5
-                            ;
+                        return fromToCondition(from, to);
                     }),
                 (state, pp) =>
                 {
                     var (from, to) = pp;
                     var fromCG = from.LE.CG();
                     var toCG = to.LE.CG();
-
-                    Debug.Log("trying to apply tower fall down");
 
                     return state.NewProgram(prog => prog
                         .SelectRandomOne(
@@ -327,7 +320,7 @@ namespace ShapeGrammar
                                 .RunIf(true,
                                     thisProg => fromFloorNodeAfterPositionedNear(thisProg, newArea)
                                 )
-                                .Change(node => node.LE/*.MoveBy(Vector3Int.up)*/.GN(sym.Room, sym.FullFloorMarker))
+                                .Change(node => node.LE.GN(sym.Room, sym.FullFloorMarker))
                                 ),
                             out var newRoom
                         )

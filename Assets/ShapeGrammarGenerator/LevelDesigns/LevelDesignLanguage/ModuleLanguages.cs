@@ -51,7 +51,7 @@ namespace ShapeGrammar
             State.LC.AddEvent(
                 new LevelConstructionEvent(
                     $"Level End", 
-                    0, 
+                    90, 
                     () =>
                     {
                         L.LevelLanguage.MainPath();
@@ -71,9 +71,9 @@ namespace ShapeGrammar
                 }));
             */
 
-            /*
+            
             L.FactionsLanguage.InitializeFactions(2);
-
+            /*
             State.LC.AddEvent(
                 new LevelConstructionEvent(
                     $"Add Details",
@@ -154,20 +154,28 @@ namespace ShapeGrammar
             area.Get.Node.AddSymbol(Gr.Sym.LevelStartMarker);
         }
 
+        public List<Func<ProductionList>> MainPathProductionLists() =>
+            new List<Func<ProductionList>>()
+                    {
+                            () => Gr.PrL.Town(),
+                            () => Gr.PrL.Castle(),
+                            () => Gr.PrL.Chapels(),
+                    };
+
         public void MainPath()
         {
             // Place first part of the main path
-            Env.Line(Gr.PrL.Town(), NodesQueries.All, 6, out var pathToShortcut);
+            Env.Line(MainPathProductionLists().GetRandom()(), NodesQueries.All, 6, out var pathToShortcut);
             var first = pathToShortcut.AreasList.First();
             var shortcutArea = pathToShortcut.LastArea();
 
             // Create a shortcut
-            Env.MoveFromTo(pathGuide => Gr.PrL.GuidedGarden(pathGuide), 2, shortcutArea.Node.ToEnumerable(), first.Node.ToEnumerable(), out var shortcut);
+            Env.MoveFromTo(pathGuide => Gr.PrL.GuidedGarden(pathGuide), Gr.PrL.ConnectBack(), 2, shortcutArea.Node.ToEnumerable(), first.Node.ToEnumerable(), out var shortcut);
 
             // Lock the shortcut
             var shortcutKey = L.PatternLanguage.CreateLockItems(State.UniqueNameGenerator.UniqueName("Shortcut key"), 1, "Unlocks a shortcut", out var unlock).First();
             shortcut.AreasList[0].AddInteractiveObject(Lib.InteractiveObjects.Item(shortcutKey));
-            L.PatternLanguage.LockArea(shortcut.LastArea(), unlock);
+            L.PatternLanguage.LockArea(shortcut.AreasList[1], unlock);
 
             // Create second part of the main path
             Env.Line(Gr.PrL.Town(), _ => shortcutArea.Node.ToEnumerable(), 5, out var pathToEnd);

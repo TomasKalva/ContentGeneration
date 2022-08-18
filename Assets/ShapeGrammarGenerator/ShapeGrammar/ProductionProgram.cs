@@ -325,11 +325,10 @@ namespace ShapeGrammar
 
                 var movesInDistance = nodeOnGround
                     .MovesInDistanceXZ(targeOnGround, dist);
-                Debug.Log("Moves in distance: " + movesInDistance.Ms.Count());
 
                 var validMoves = movesInDistance
                     .DontIntersect(State.VerticallyTaken);
-                Debug.Log("Valid moves count" + validMoves.Ms.Count());
+
                 return validMoves
                     .TryMove()?.GN();
             })

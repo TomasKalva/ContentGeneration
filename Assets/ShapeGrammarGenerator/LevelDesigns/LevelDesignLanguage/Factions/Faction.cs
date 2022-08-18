@@ -33,6 +33,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         {
             Concepts = concepts;
             Affinity = 0;
+            MaxProgress = 3;
         }
 
         public FactionManifestation GetFactionManifestation()

@@ -306,7 +306,7 @@ namespace ShapeGrammar
         /// Path length will be at least 1.
         /// </summary>
         /// <param name="targetedProductions">Productions that can be guided.</param>
-        public void MoveFromTo(Func<PathGuide, ProductionList> targetedProductions, int pathLength, IEnumerable<Node> from, IEnumerable<Node> to, out LinearPath path)
+        public void MoveFromTo(Func<PathGuide, ProductionList> targetedProductions, ProductionList connectBackProductions, int pathLength, IEnumerable<Node> from, IEnumerable<Node> to, out LinearPath path)
         {
             // define path guide
             var guideBack = new PointPathGuide(LanguageState.GrammarState,
@@ -330,7 +330,7 @@ namespace ShapeGrammar
                     )
                     .AppendStartEnd(
                         L.Gr.Sym,
-                        L.Gr.PrL.ConnectBack(),
+                        connectBackProductions,
                         state => state.LastCreated,
                         state => to
                     );

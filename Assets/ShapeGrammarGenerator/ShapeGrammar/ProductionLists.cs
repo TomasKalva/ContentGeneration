@@ -238,7 +238,24 @@ namespace ShapeGrammar
                     pr.Empty(),
                     ldk.con.ConnectByStairsOutside,
                     ldk.con.ConnectByStairsOutside,
-                    3)
+                    3,
+                    (_1, _2) => true)
+            );
+        }
+
+        public ProductionList OneWayConnectBack()
+        {
+            return new ProductionList
+            (
+                pr.ConnectByRoom(
+                    pr.sym.StartMarker,
+                    pr.sym.EndMarker,
+                    () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)),
+                    pr.MoveVertically(1, 2),
+                    ldk.con.ConnectByStairsOutside,
+                    ldk.con.ConnectByFall,
+                    1,
+                    (_, to) => to.LE.CG().Extents().y >= 2)
             );
         }
 
@@ -249,13 +266,5 @@ namespace ShapeGrammar
                 pr.Roof()
             );
         }
-        /*
-        public ProductionList TestinRoomFromRoom()
-        {
-            return new ProductionList
-            (
-                pr.ExtendBridgeTo(pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 10, 3, 10)))
-            );
-        }*/
     }
 }

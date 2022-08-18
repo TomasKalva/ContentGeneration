@@ -35,8 +35,8 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             var concepts = new FactionConcepts(
                     new List<Func<ProductionList>>()
                     {
-                            //() => Gr.PrL.Town(),
-                            //() => Gr.PrL.Castle(),
+                            () => Gr.PrL.Town(),
+                            () => Gr.PrL.Castle(),
                             () => Gr.PrL.Chapels(),
                     },
                     new List<Func<CharacterState>>()
@@ -207,7 +207,8 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 
         public void LinearBranch(FactionEnvironment fe, int progress)
         {
-            Env.Line(fe.ProductionList(), NodesQueries.All, 5, out var path);
+            //Env.Line(fe.ProductionList(), NodesQueries.All, 5, out var path);
+            Env.MoveFromTo(pathGuide => Gr.PrL.Chapels(pathGuide), Gr.PrL.OneWayConnectBack(), 5, NodesQueries.All(State.GrammarState), NodesQueries.All(State.GrammarState), out var path);
 
             //PlO.ProgressFunctionPlacer(fe.CreateInteractiveObjectFactory(), new UniformIntDistr(1, 4)).Place(path);
             PlO.RandomAreasPlacer(new UniformDistr(3, 6), ItemsToPlace(fe, 3)).Place(path);
