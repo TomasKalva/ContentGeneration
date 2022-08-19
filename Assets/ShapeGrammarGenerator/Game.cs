@@ -105,11 +105,11 @@ namespace ShapeGrammar
             // Stuff related to player initialization
             {
                 // enable disabling enemies in distance
-                var World = GameLanguage.State.World;
+                var world = GameLanguage.State.World;
                 var spacePartitioning = new SpacePartitioning(GameLanguage.State.TraversabilityGraph);
                 playerState.OnUpdate = () =>
                 {
-                    var playerGridPosition = Vector3Int.RoundToInt(World.WorldGeometry.WorldToGrid(GameViewModel.ViewModel.PlayerState.Agent.transform.position));
+                    var playerGridPosition = Vector3Int.RoundToInt(world.WorldGeometry.WorldToGrid(GameViewModel.ViewModel.PlayerState.Agent.transform.position));
                     var playerNode = GameLanguage.State.GrammarState.GetNode(playerGridPosition);
                     spacePartitioning.Update(playerNode);
                 };
@@ -123,11 +123,11 @@ namespace ShapeGrammar
                 var goodGraveCube = goodCubes.ElementAt(0);
                 var graveState = libraries.InteractiveObjects.Grave();
                 var grave = graveState.MakeGeometry();
-                grave.transform.position = World.WorldGeometry.GridToWorld(goodGraveCube.Position);
-                World.AddInteractiveObject(graveState);
-                World.Grave = graveState;
+                grave.transform.position = world.WorldGeometry.GridToWorld(goodGraveCube.Position);
+                world.AddInteractiveObject(graveState);
+                world.Grave = graveState;
 
-                World.InitializePlayer();
+                world.InitializePlayer();
             }
         }
 
@@ -136,25 +136,13 @@ namespace ShapeGrammar
             // Restart game language
 
             GameLanguage.State.Restart();
-            var World = GameLanguage.State.World;
-            GameViewModel.ViewModel.World = World;
+            var world = GameLanguage.State.World;
+            GameViewModel.ViewModel.World = world;
 
 
             // Generating the world
 
-            var stopwatch = new System.Diagnostics.Stopwatch();
-            stopwatch.Start();
-
-            GameLanguage.State.LC.Construct();
-
-            var ldk = GameLanguage.State.Ldk;
-            ldk.grid.Generate(World.WorldGeometry.WorldScale, World);
-
-            GameLanguage.Instantiate();
-
-
-            stopwatch.Stop();
-            Debug.Log(stopwatch.ElapsedMilliseconds);
+            GameLanguage.Generate();
 
             var grammarState = GameLanguage.State.GrammarState;
             var playerState = GameViewModel.ViewModel.PlayerState;

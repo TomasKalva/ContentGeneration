@@ -46,6 +46,11 @@ namespace ShapeGrammar
             World = CreateWorld();
         }
 
+        public void Instantiate()
+        {
+            TraversableAreas.ForEach(area => area.InstantiateAll(World));
+        }
+
         public void AddAreas(List<Area> areas)
         {
             TraversabilityGraph.Areas.AddRange(areas);
@@ -95,9 +100,28 @@ namespace ShapeGrammar
             L = Languages.Get(languageParams);
         }
 
+        /*
         public void Instantiate()
         {
             State.TraversableAreas.ForEach(area => area.InstantiateAll(State.World));
+        }*/
+
+        public void Generate()
+        {
+
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+
+
+            State.LC.Construct();
+
+            State.Ldk.grid.Generate(State.World);
+
+            State.Instantiate();
+
+
+            stopwatch.Stop();
+            Debug.Log(stopwatch.ElapsedMilliseconds);
         }
     }
 
