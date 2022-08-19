@@ -221,9 +221,10 @@ namespace ShapeGrammar
 
     }
 
+    public delegate T GeometryMaker<T>() where T : MonoBehaviour;
+    /*
     public class GeometryMaker<T> where T : MonoBehaviour
     {
-        T geometry;
         Func<T> GeometryF { get; }
 
         public GeometryMaker(Func<T> geometryF)
@@ -233,10 +234,10 @@ namespace ShapeGrammar
 
         public T CreateGeometry()
         {
-            geometry = GeometryF();
+            var geometry = GeometryF();
             return geometry;
         }
-    }
+    }*/
 
     #endregion
 

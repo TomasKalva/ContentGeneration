@@ -1,5 +1,6 @@
 using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using ContentGeneration.Assets.UI.Model;
+using ShapeGrammar;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,16 +11,29 @@ using UnityEngine.Events;
 [Serializable]
 public class WeaponItem : ItemState
 {
-    public Weapon Weapon { get; }
+    GeometryMaker<Weapon> WeaponMaker { get; }
+    Weapon _cachedWeapon { get; set; }
+    public Weapon Weapon 
+    {
+        get
+        {
+            if (_cachedWeapon == null)
+            {
+                _cachedWeapon = WeaponMaker();//.CreateGeometry();
+                _cachedWeapon.WeaponItem = this;
+            }
+            return _cachedWeapon;
+        }
+    }
     ByUser<Effect>[] BaseEffects { get; set; }
     List<ByUser<Effect>> UpgradeEffects { get; set; }
 
-    public WeaponItem(string name, string description, Weapon weapon, IEnumerable<ByUser<Effect>> baseEffects)
+    public WeaponItem(string name, string description, GeometryMaker<Weapon> weaponMaker, IEnumerable<ByUser<Effect>> baseEffects)
     {
         Name = name;
         Description = description;
-        Weapon = weapon; 
-        weapon.WeaponItem = this;
+        WeaponMaker = weaponMaker;
+        //weaponMaker.WeaponItem = this;
 
         BaseEffects = baseEffects.ToArray();
         UpgradeEffects = new List<ByUser<Effect>>();
