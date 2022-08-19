@@ -1,4 +1,5 @@
 ﻿using Assets.ShapeGrammarGenerator;
+using ContentGeneration.Assets.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -83,6 +84,20 @@ namespace ShapeGrammar
         public LevelElement ApplyGrammarStyles()
         {
             Leafs().ForEach(le => le.ApplyStyle());
+            return this;
+        }
+
+        public LevelElement CreateGeometry(IGridGeometryOwner geometryOwner)
+        {
+            Leafs().ForEach(
+                le =>
+                {
+                    var elemntsMaker = le.CG().MakeArchitectureElements;
+                    if(elemntsMaker != null)
+                    {
+                        geometryOwner.AddArchitectureElement(elemntsMaker());
+                    }
+                });
             return this;
         }
 

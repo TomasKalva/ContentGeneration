@@ -137,6 +137,7 @@ namespace ShapeGrammar
 
             State.GrammarState.WorldState.Added.ApplyGrammarStyles();
 
+            State.GrammarState.WorldState.Added.CreateGeometry(State.World);
             State.Ldk.grid.CreateGeometry(State.World);
 
             State.InstantiateAreas();

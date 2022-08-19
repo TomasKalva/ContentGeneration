@@ -278,18 +278,23 @@ namespace ShapeGrammar
 
         public CubeGroup PlaceInDirection(CubeGroup area, GeometricPrimitive roofPrim, Vector3Int direction)
         {
-            var extents = area.Extents();
-            var halfExtents = ((Vector3)extents) / 2f;
-            var scaleExtents = direction.x == 0 ? extents : new Vector3Int(extents.z, extents.y, extents.x);
+            area.MakeArchitectureElements =
+                () =>
+                {
+                    var extents = area.Extents();
+                    var halfExtents = ((Vector3)extents) / 2f;
+                    var scaleExtents = direction.x == 0 ? extents : new Vector3Int(extents.z, extents.y, extents.x);
 
-            var obj = roofPrim.New().transform;
-            obj.transform.localScale = Vector3.Scale(obj.transform.localScale, scaleExtents);
+                    var obj = roofPrim.New().transform;
+                    obj.transform.localScale = Vector3.Scale(obj.transform.localScale, scaleExtents);
 
-            var lbb = area.LeftBottomBack();
-            var center = new Vector3(lbb.x + halfExtents.x - 0.5f, lbb.y, lbb.z + halfExtents.z - 0.5f);
+                    var lbb = area.LeftBottomBack();
+                    var center = new Vector3(lbb.x + halfExtents.x - 0.5f, lbb.y, lbb.z + halfExtents.z - 0.5f);
 
-            obj.position = center * 2.8f;
-            obj.rotation = Quaternion.LookRotation(direction);
+                    obj.position = center * 2.8f;
+                    obj.rotation = Quaternion.LookRotation(direction);
+                    return obj;
+                };
             return area;
         }
 

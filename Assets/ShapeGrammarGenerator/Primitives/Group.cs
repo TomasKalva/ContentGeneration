@@ -1,4 +1,5 @@
 ﻿using Assets.ShapeGrammarGenerator;
+using ContentGeneration.Assets.UI;
 using ShapeGrammar;
 using System;
 using System.Collections.Generic;
@@ -51,6 +52,8 @@ namespace ShapeGrammar
             return sum / count;
         }
 
+        public Func<Transform> MakeArchitectureElements { get; set; }
+
         public delegate CubeGroup Constructor(CubeGroup existing, List<Cube> newCubes);
 
         /// <summary>
@@ -63,6 +66,7 @@ namespace ShapeGrammar
         {
             //Debug.Assert(cubes.Any());
             Cubes = cubes.Distinct().ToList();
+            MakeArchitectureElements = null;
             OpNew();
         }
 
