@@ -9,7 +9,7 @@ namespace ShapeGrammar
 {
     public class LevelConstructor
     {
-        List<LevelConstructionEvent> LevelConstructionEvents { get; }
+        List<LevelConstructionEvent> LevelConstructionEvents { get; set; }
 
         public LevelConstructor()
         {
@@ -23,18 +23,20 @@ namespace ShapeGrammar
 
         public void Construct()
         {
-            var oldEvents = LevelConstructionEvents.ToList();
-            LevelConstructionEvents.Clear();
-            oldEvents.OrderBy(ev => -ev.Priority).ForEach(ev =>
+            //var oldEvents = LevelConstructionEvents.ToList();
+            //LevelConstructionEvents.Clear();
+            var newEvents = new List<LevelConstructionEvent>();
+            LevelConstructionEvents.OrderBy(ev => -ev.Priority).ForEach(ev =>
             {
                 //todo: check if the world is not too big yet
                 Debug.Log($"Starting: {ev.Name}");
                 if (!ev.Handle())
                 {
-                    LevelConstructionEvents.Add(ev);
+                    newEvents.Add(ev);
                 }
                 Debug.Log($"Finished: {ev.Name}");
             });
+            LevelConstructionEvents = newEvents;
         }
 
         public void Destroy()

@@ -25,6 +25,10 @@ namespace ContentGeneration.Assets.UI
         public event PropertyChangedEventHandler PropertyChanged;
         public Transform ArchitectureParent { get; }
         public Transform EntitiesParent { get; }
+        /// <summary>
+        /// Contains objects such as sea and skybox.
+        /// </summary>
+        public Transform SpecialObjectsParent { get; }
 
         List<InteractiveObjectState> interactiveObjects;
         public ObservableCollection<CharacterState> Enemies { get; }
@@ -46,10 +50,16 @@ namespace ContentGeneration.Assets.UI
         {
             WorldGeometry = worldGeometry;
             var worldParent = worldGeometry.WorldParent;
+            
             ArchitectureParent = new GameObject("Architecture").transform;
             ArchitectureParent.SetParent(worldParent);
+            
             EntitiesParent = new GameObject("Entities").transform;
             EntitiesParent.SetParent(worldParent);
+            
+            SpecialObjectsParent = new GameObject("SpecialObjects").transform;
+            SpecialObjectsParent.SetParent(worldParent);
+
             Occurences = new OccurenceManager();
             PlayerState = playerState;
             PlayerState.World = this;
@@ -116,6 +126,11 @@ namespace ContentGeneration.Assets.UI
             architectureElements.Add(el);
         }
 
+        public void AddSpecialObject(Transform specialObject)
+        {
+            specialObject.SetParent(SpecialObjectsParent);
+        }
+
         public void OnPlayerDeath()
         {
             Grave.SpawnPlayer();
@@ -125,10 +140,11 @@ namespace ContentGeneration.Assets.UI
         {
             GameObject.Destroy(ArchitectureParent.gameObject);
             GameObject.Destroy(EntitiesParent.gameObject);
-            if(PlayerState.Agent != null)
+            GameObject.Destroy(SpecialObjectsParent.gameObject);
+            if (PlayerState.Agent != null)
             {
                 GameObject.Destroy(PlayerState.Agent.gameObject);
-            }//?.Die();
+            }
         }
 
         public void InitializePlayer()

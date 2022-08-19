@@ -58,14 +58,18 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
         public void CreateSky(int level)
         {
             var env = Lib.Objects.Environment();
+            State.World.AddSpecialObject(env.transform);
+
             var parameters = GetSkyParameter(level);
             parameters.Set(env);
             RenderSettings.sun = env.Sun;
+
         }
 
         public void TestSky()
         {
             var env = Lib.Objects.Environment();
+            State.World.AddSpecialObject(env.transform);
             Env.One(Gr.PrL.Town(), NodesQueries.All, out var area);
 
             GetSkyParameter(5).Set(env);

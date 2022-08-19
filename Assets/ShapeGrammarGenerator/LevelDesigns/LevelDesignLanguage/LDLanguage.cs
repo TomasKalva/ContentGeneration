@@ -100,15 +100,38 @@ namespace ShapeGrammar
             L = Languages.Get(languageParams);
         }
 
+        /// <summary>
+        /// Returns true iff constructing was success.
+        /// </summary>
+        bool TryConstruct()
+        {
+            try
+            {
+                State.Restart();
+                State.LC.Construct();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.Log(ex.Message);
+                return false;
+            }
+        }
+
         public void GenerateWorld()
         {
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 
-            State.Restart();
-
-
-            State.LC.Construct();
+            int constructionTries = 0;
+            while (!TryConstruct())
+            {
+                if(++constructionTries >= 5)
+                {
+                    break;
+                }
+            }
+            Debug.Log($"Number of construction tries: {constructionTries}");
 
             State.Ldk.grid.CreateGeometry(State.World);
 

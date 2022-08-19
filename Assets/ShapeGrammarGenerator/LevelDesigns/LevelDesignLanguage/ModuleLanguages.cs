@@ -31,9 +31,10 @@ namespace ShapeGrammar
                 ) 
             );
 
+            /*
             State.LC.AddEvent(
                 new LevelConstructionEvent(
-                    $"Level Start",
+                    $"Level End",
                     90,
                     () =>
                     {
@@ -41,9 +42,8 @@ namespace ShapeGrammar
                         return false;
                     }
                 )
-            );
+            );*/
 
-            /*
             State.LC.AddEvent(
                 new LevelConstructionEvent(
                     $"Main path", 
@@ -85,9 +85,7 @@ namespace ShapeGrammar
                     }
                 )
             );
-            */
-
-            /*
+            
             State.LC.AddEvent(
                 new LevelConstructionEvent(
                     $"Environment",
@@ -98,7 +96,7 @@ namespace ShapeGrammar
                         return false;
                     }
                 )
-            );*/
+            );
 
 
             /*State.LC.AddEvent(5, () =>
