@@ -57,9 +57,7 @@ static class ExtensionMethods
 
     public static IEnumerable<T> Evaluate<T>(this IEnumerable<T> enumerable)
     {
-        var list = new List<T>(enumerable.Count());
-        list.AddRange(enumerable);
-        return list;
+        return enumerable.ToList();
     }
 
     public static IEnumerable<T> SkipLast<T>(this IEnumerable<T> enumerable, int skipCount)

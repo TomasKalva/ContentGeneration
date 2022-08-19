@@ -198,7 +198,8 @@ namespace ShapeGrammar
                 node.Terminal = true;
             });
             var lge = To.Select(node => node.LE).ToLevelGroupElement(grammarState.WorldState.Grid);
-            grammarState.WorldState = grammarState.WorldState.ChangeAll(To.Select<Node, WorldState.ChangeWorld>(gn => ws => ws.TryPush(gn.LE)));
+            grammarState.WorldState = grammarState.WorldState.TryPush(lge);
+            //grammarState.WorldState = grammarState.WorldState.ChangeAll(To.Select<Node, WorldState.ChangeWorld>(gn => ws => ws.TryPush(gn.LE)));
             AddToCubeToNodes(grammarState);
             AddToFoundation(grammarState, lge);
             return To;
@@ -292,7 +293,7 @@ namespace ShapeGrammar
             var grid = ldk.grid;
             var empty = LevelElement.Empty(grid);
             Root = new Node(empty, new List<Symbol>());
-            WorldState = new WorldState(empty, grid, le => le.ApplyGrammarStyleRules()).TryPush(empty);
+            WorldState = new WorldState(empty, grid, le => le/*.ApplyGrammarStyleRules()*/).TryPush(empty);
             OffersFoundation = new Grid<bool>(new Vector3Int(10, 1, 10), (_1, _2) => true);
             CubeToNode = new Grid<Node>(new Vector3Int(10, 10, 10), (_1, _2) => null);
             VerticallyTaken = LevelElement.Empty(grid);
@@ -398,7 +399,7 @@ namespace ShapeGrammar
 
         public void ShowVerticallyTaken()
         {
-            VerticallyTaken.SetAreaType(AreaStyles.Garden()).ApplyGrammarStyleRules();
+            VerticallyTaken.SetAreaType(AreaStyles.Garden()).ApplyGrammarStyles();
         }
         #endregion
 

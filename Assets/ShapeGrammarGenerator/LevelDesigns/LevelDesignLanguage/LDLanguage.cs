@@ -135,6 +135,8 @@ namespace ShapeGrammar
             }
             Debug.Log($"Number of construction tries: {constructionTries}");
 
+            State.GrammarState.WorldState.Added.ApplyGrammarStyles();
+
             State.Ldk.grid.CreateGeometry(State.World);
 
             State.InstantiateAreas();

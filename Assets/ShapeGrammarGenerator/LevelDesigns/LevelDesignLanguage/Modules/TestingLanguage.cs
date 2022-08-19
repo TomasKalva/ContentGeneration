@@ -26,7 +26,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             var shapeGrammar = new RandomGrammar(Gr.PrL.Town(), 20);
             var randGardenGrammar = new RandomGrammar(Gr.PrL.Garden(), 1);
             var graveyardGrammar = new RandomGrammar(Gr.PrL.Chapels(), 10);
-            var graveyardPostprocessGrammar = new AllGrammar(Gr.PrL.GraveyardPostprocess());
+            var graveyardPostprocessGrammar = new AllGrammar(Gr.PrL.ChapelsPostprocess());
             var roofGrammar = new AllGrammar(Gr.PrL.Roofs());
 
             Env.Execute(shapeGrammar);
@@ -137,7 +137,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             */
 
             //Env.Line(Gr.PrL.Town(), NodesQueries.All, 10, out var _);
-            Env.Line(Gr.PrL.Castle(), NodesQueries.All, 30, out var _);
+            Env.Line(Gr.PrL.Chapels(), NodesQueries.All, 1, out var _);
             //Env.Line(Gr.PrL.Castle(), NodesQueries.All, 10, out var _);
             //Env.BranchRandomly(Gr.PrL.Town(), 40, out var _);
 
@@ -146,8 +146,8 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             Env.Line(Gr.PrL.TestingProductions(), NodesQueries.All, 10, out var _);
             Env.Line(Gr.PrL.TestingProductions(), NodesQueries.All, 10, out var _);*/
 
-            Env.BranchRandomly(Gr.PrL.CastleDetails(), 8, out var _);
-            //Env.Execute(new AllGrammar(Gr.PrL.GraveyardPostprocess()));
+            //Env.BranchRandomly(Gr.PrL.ChapelsDetails(), 8, out var _);
+            Env.Execute(new AllGrammar(Gr.PrL.ChapelsPostprocess()));
 
             var allAreas = State.TraversableAreas;
             //var objects = Enumerable.Range(0, 100)

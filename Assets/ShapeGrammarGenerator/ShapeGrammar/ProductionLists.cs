@@ -183,7 +183,7 @@ namespace ShapeGrammar
             );
         }
 
-        public ProductionList GraveyardPostprocess()
+        public ProductionList ChapelsPostprocess()
         {
             var guideRandomly = new RandomPathGuide();
             return new ProductionList

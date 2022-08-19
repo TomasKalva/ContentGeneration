@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace ShapeGrammar
 {
@@ -33,6 +34,7 @@ namespace ShapeGrammar
             AfterPushed = afterPushed;
         }
 
+        /*
         public WorldState ChangeAll(IEnumerable<ChangeWorld> adders)
         {
             return adders.Aggregate(this,
@@ -42,7 +44,7 @@ namespace ShapeGrammar
 
                 return newState.Last == null ? addingState : newState;
             });
-        }
+        }*/
 
         public WorldState TryPush(LevelElement le)
         {
@@ -50,6 +52,8 @@ namespace ShapeGrammar
                 return this;
 
             var newLe = AfterPushed(le);
+
+            Debug.Log(newLe.Print(0));
             return new WorldState(Added.Merge(newLe), newLe, Grid, AfterPushed);
         }
     }

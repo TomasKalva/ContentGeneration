@@ -80,7 +80,7 @@ namespace ShapeGrammar
             return this;
         }
 
-        public LevelElement ApplyGrammarStyleRules()
+        public LevelElement ApplyGrammarStyles()
         {
             Leafs().ForEach(le => le.ApplyStyle());
             return this;

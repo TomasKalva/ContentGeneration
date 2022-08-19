@@ -80,7 +80,7 @@ namespace ShapeGrammar
             var foundation = sgShapes.Foundation(wallTop);
             var total = new LevelGroupElement(grid, AreaStyles.None(), island.LE(AreaStyles.Garden()), foundation, wallTop);
 
-            total.ApplyGrammarStyleRules();
+            total.ApplyGrammarStyles();
 
             return total;
         }
@@ -92,7 +92,7 @@ namespace ShapeGrammar
             var bounds = qc.GetFlatBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(15, 15)));
             var town = qc.RemoveOverlap(pl.PlaceInside(bounds, flatBoxes));
             town = qc.LiftRandomly(town, () => 2 + UnityEngine.Random.Range(1, 4));
-            town = town.Select(g => sgShapes.SimpleHouseWithFoundation(g.CG(), 5).ApplyGrammarStyleRules());
+            town = town.Select(g => sgShapes.SimpleHouseWithFoundation(g.CG(), 5).ApplyGrammarStyles());
 
             // house roofs
             var housesRoofs = town.Select(le =>
@@ -107,7 +107,7 @@ namespace ShapeGrammar
                     .Select(part => sgShapes.TurnIntoHouse(part.CG()))
                     .SetChildrenAreaType(AreaStyles.Room()));
             
-            housesRoofs.ApplyGrammarStyleRules();
+            housesRoofs.ApplyGrammarStyles();
             
 
             // paths from room to roof
@@ -133,7 +133,7 @@ namespace ShapeGrammar
             var intSeq = new IntervalDistr(new IntSeqDistr(), 4, 10);
             town = qc.RaiseRandomly(town, intSeq.Sample);
             town = town.Select(le => sgShapes.TurnIntoHouse(le.CG()));// le.SetAreaType(AreaType.Room));
-            town.ApplyGrammarStyleRules();
+            town.ApplyGrammarStyles();
 
             return town;
         }
@@ -143,7 +143,7 @@ namespace ShapeGrammar
             var boxSequence = ExtensionMethods.BoxSequence(() => ExtensionMethods.RandomBox(new Vector2Int(3, 3), new Vector2Int(5, 5)));
             var town = pl.MoveToNotOverlap(qc.FlatBoxes(boxSequence, 16));
             town = town.Select(le => le.SetAreaType(AreaStyles.Room()));
-            town.ApplyGrammarStyleRules();
+            town.ApplyGrammarStyles();
         }
         /*
         public LevelElement Tower()
@@ -231,7 +231,7 @@ namespace ShapeGrammar
             var wall = sgShapes.WallAround(yard, 2).Minus(houses);
 
             root = root.AddAll(yard, houses, wall);
-            root.ApplyGrammarStyleRules();
+            root.ApplyGrammarStyles();
 
             return root;
         }
@@ -289,7 +289,7 @@ namespace ShapeGrammar
                 .ReplaceLeafsGrp(0, le => le.SetAreaType(AreaStyles.Wall()))
                 .ReplaceLeafsGrp(1, le => le.SetAreaType(AreaStyles.OpenRoom()))
                 .ReplaceLeafsGrp(3, le => le.SetAreaType(AreaStyles.Empty()))
-                .ApplyGrammarStyleRules();
+                .ApplyGrammarStyles();
         }
 
         public LevelElement PartlyBrokenFloorHouse()
@@ -306,7 +306,7 @@ namespace ShapeGrammar
             var house = floorBox.CG().ExtrudeVer(Vector3Int.up, 15).LE(AreaStyles.Room());
             var houseFloors = house.SplitRel(Vector3Int.up, AreaStyles.None(), 0.2f, 0.5f, 0.7f).ReplaceLeafsGrp(_ => true, le => brokenFloor(le));
 
-            houseFloors.ApplyGrammarStyleRules();
+            houseFloors.ApplyGrammarStyles();
 
             return houseFloors;
         }
@@ -316,7 +316,7 @@ namespace ShapeGrammar
             var floorBox = qc.GetFlatBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)), 0);
             var house = sgShapes.TurnIntoHouse(floorBox.CG().ExtrudeVer(Vector3Int.up, 3));
 
-            house.ApplyGrammarStyleRules();
+            house.ApplyGrammarStyles();
             return house;
         }
 
@@ -324,7 +324,7 @@ namespace ShapeGrammar
         {
             var platform = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 1)).SetAreaType(AreaStyles.Platform());
 
-            platform.ApplyGrammarStyleRules();
+            platform.ApplyGrammarStyles();
             return platform;
         }
         /*
@@ -348,12 +348,12 @@ namespace ShapeGrammar
             var room1 = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 5)).SetAreaType(AreaStyles.Room());
             var room2 = sgShapes.Room(new Box2Int(new Vector2Int(4, 0), new Vector2Int(8, 4)).InflateY(0, 5)).SetAreaType(AreaStyles.Room());
 
-            room1.ApplyGrammarStyleRules();
-            room2.ApplyGrammarStyleRules();
+            room1.ApplyGrammarStyles();
+            room2.ApplyGrammarStyles();
 
             var connection = con.ConnectByDoor(null, null)(room1, room2);
 
-            connection.ApplyGrammarStyleRules();
+            connection.ApplyGrammarStyles();
 
             return room2;
         }
@@ -363,12 +363,12 @@ namespace ShapeGrammar
             var bottomPlatform = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 5));
             var topPlatform = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(5, 10));
 
-            bottomPlatform.ApplyGrammarStyleRules();
-            topPlatform.ApplyGrammarStyleRules();
+            bottomPlatform.ApplyGrammarStyles();
+            topPlatform.ApplyGrammarStyles();
             
             var path = con.ConnectByWallStairsOut(LevelElement.Empty(grid), /*LevelElement.Empty(grid)*/null)(bottomPlatform, topPlatform);
 
-            path.ApplyGrammarStyleRules();
+            path.ApplyGrammarStyles();
             
             return topPlatform;
         }
@@ -378,15 +378,15 @@ namespace ShapeGrammar
             var room1 = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 5) + new Vector3Int(0, 2, 0));
             var room2 = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 5) + new Vector3Int(8, 4, 0));
 
-            room1.ApplyGrammarStyleRules();
-            room2.ApplyGrammarStyleRules();
+            room1.ApplyGrammarStyles();
+            room2.ApplyGrammarStyles();
 
             var foundation = sgShapes.Foundation(room1.Merge(room2));
-            foundation.ApplyGrammarStyleRules();
+            foundation.ApplyGrammarStyles();
 
             var path = con.ConnectByStairsOutside(foundation, /*LevelElement.Empty(grid)*/null)(room1, room2);
 
-            path.ApplyGrammarStyleRules();
+            path.ApplyGrammarStyles();
             
             return room1.Merge(room2).Merge(path).Merge(foundation);
         }
@@ -396,15 +396,15 @@ namespace ShapeGrammar
             var room1 = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 5) + new Vector3Int(0, 4, 0));
             var room2 = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 5) + new Vector3Int(8, 4, 0));
 
-            room1.ApplyGrammarStyleRules();
-            room2.ApplyGrammarStyleRules();
+            room1.ApplyGrammarStyles();
+            room2.ApplyGrammarStyles();
 
             var foundation = sgShapes.Foundation(room1.Merge(room2));
-            foundation.ApplyGrammarStyleRules();
+            foundation.ApplyGrammarStyles();
 
             var path = con.ConnectByBridge(foundation, null/*LevelElement.Empty(grid)*/)(room1, room2);
 
-            path.ApplyGrammarStyleRules();
+            path.ApplyGrammarStyles();
 
             return room1.Merge(room2).Merge(path).Merge(foundation);
         }
@@ -412,7 +412,7 @@ namespace ShapeGrammar
         public void CompositeHouse()
         {
             var house = sgShapes.CompositeHouse(/*new Box2Int(new Vector2Int(0, 0), new Vector2Int(10, 10)),*/ 6);
-            house.ApplyGrammarStyleRules();
+            house.ApplyGrammarStyles();
         }
 
         public LevelElement TestMoveInDistXZ()
@@ -420,8 +420,8 @@ namespace ShapeGrammar
             var room1 = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(0, 5));
             var room2 = sgShapes.Room(new Box2Int(new Vector2Int(0, 0), new Vector2Int(4, 4)).InflateY(1, 5));
 
-            room1.ApplyGrammarStyleRules();
-            room2.MovesInDistanceXZ(room1, 1).TryMove().ApplyGrammarStyleRules();
+            room1.ApplyGrammarStyles();
+            room2.MovesInDistanceXZ(room1, 1).TryMove().ApplyGrammarStyles();
 
             return room1;
         }
