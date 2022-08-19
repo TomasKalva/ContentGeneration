@@ -105,17 +105,19 @@ namespace ShapeGrammar
         /// </summary>
         bool TryConstruct()
         {
-            try
+            State.Restart();
+            return State.LC.TryConstruct();
+            /*try
             {
                 State.Restart();
-                State.LC.Construct();
+                State.LC.TryConstruct();
                 return true;
             }
             catch (Exception ex)
             {
                 Debug.Log(ex.Message);
                 return false;
-            }
+            }*/
         }
 
         public void GenerateWorld()
@@ -123,10 +125,10 @@ namespace ShapeGrammar
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 
-            int constructionTries = 0;
+            int constructionTries = 1;
             while (!TryConstruct())
             {
-                if(++constructionTries >= 5)
+                if(constructionTries++ >= 5)
                 {
                     break;
                 }
