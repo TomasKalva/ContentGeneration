@@ -29,6 +29,7 @@ namespace ContentGeneration.Assets.UI
         /// Contains objects such as sea and skybox.
         /// </summary>
         public Transform SpecialObjectsParent { get; }
+        public Transform CachedObjectsParent { get; }
 
         List<InteractiveObjectState> interactiveObjects;
         public ObservableCollection<CharacterState> Enemies { get; }
@@ -59,6 +60,9 @@ namespace ContentGeneration.Assets.UI
             
             SpecialObjectsParent = new GameObject("SpecialObjects").transform;
             SpecialObjectsParent.SetParent(worldParent);
+
+            CachedObjectsParent = new GameObject("CachedObjects").transform;
+            CachedObjectsParent.SetParent(worldParent);
 
             Occurences = new OccurenceManager();
             PlayerState = playerState;
@@ -129,6 +133,11 @@ namespace ContentGeneration.Assets.UI
         public void AddSpecialObject(Transform specialObject)
         {
             specialObject.SetParent(SpecialObjectsParent);
+        }
+
+        public void PutToCache(Transform specialObject)
+        {
+            specialObject.SetParent(CachedObjectsParent);
         }
 
         public void OnPlayerDeath()

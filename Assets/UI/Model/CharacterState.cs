@@ -48,7 +48,7 @@ namespace ContentGeneration.Assets.UI.Model
 
         public Agent MakeGeometry()
         {
-            var agent = GeometryMaker();//.CreateGeometry();
+            var agent = GeometryMaker();
             agent.CharacterState = this;
             return agent;
         }

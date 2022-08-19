@@ -72,18 +72,11 @@ namespace ShapeGrammar
 
 
             
-            State.LC.AddEvent("Testing enemies", 5, _ => L.TestingLanguage.StatsScalingOfEnemies());
+            //State.LC.AddEvent("Testing enemies", 5, _ => L.TestingLanguage.StatsScalingOfEnemies());
             
-            /*
-            State.LC.AddEvent(
-                new LevelConstructionEvent(90,
-                () =>
-                {
-                    L.TestingLanguage.Spells();
-                    return true;
-                }));
             
-             */
+            State.LC.AddEvent("Testing spells", 90, _ => L.TestingLanguage.Spells());
+             
 
             /*
             State.LC.AddEvent(

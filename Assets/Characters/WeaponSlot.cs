@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using ContentGeneration.Assets.UI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static Movement;
@@ -7,6 +8,11 @@ public class WeaponSlot : MonoBehaviour
 {
     [SerializeField]
     float weaponScale = 1f;
+
+    /// <summary>
+    /// To manage destruction of weapons correctly.
+    /// </summary>
+    public World World { private get; set; }
 
     Weapon weapon;
 
@@ -24,9 +30,8 @@ public class WeaponSlot : MonoBehaviour
     {
         if (weapon == null) return;
 
-        weapon.transform.SetParent(null);
+        World.PutToCache(weapon.transform);
         weapon.gameObject.SetActive(false);
-        //Destroy(weapon.gameObject);
     }
 
     void AddWeapon(Weapon newWeapon)
@@ -37,9 +42,7 @@ public class WeaponSlot : MonoBehaviour
             return;
         }
 
-        //var weapon = Instantiate(weapon, transform);
         newWeapon.transform.SetParent(transform);
-        //newWeapon.FindOwner();
         newWeapon.gameObject.SetActive(true);
 
         newWeapon.transform.localPosition = Vector3.zero;
@@ -53,6 +56,5 @@ public class WeaponSlot : MonoBehaviour
 
     private void Awake()
     {
-        weapon = GetComponentInChildren<Weapon>();
     }
 }

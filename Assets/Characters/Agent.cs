@@ -72,6 +72,14 @@ public class Agent : MonoBehaviour
 
     private void Start()
     {
+		if(leftWeaponSlot != null)
+		{
+			leftWeaponSlot.World = CharacterState.World;
+		}
+		if (rightWeaponSlot != null)
+		{
+			rightWeaponSlot.World = CharacterState.World;
+		}
 		SynchronizeWithState(CharacterState);
 		acting.UseItem.Inventory = CharacterState.Inventory;
 	}
