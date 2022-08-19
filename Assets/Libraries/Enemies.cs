@@ -27,7 +27,6 @@ public class Enemies : ScriptableObject
     [SerializeField]
     Libraries libraries;
 
-    public HumanAgent humanPrefab;
     public SculptureAgent sculpturePrefab;
     public MayanAgent mayanPrefab;
     public SkinnyWomanAgent skinnyWomanPrefab;
@@ -54,6 +53,7 @@ public class Enemies : ScriptableObject
         behaviors.AddBehavior(new Awareness(10, new Vector2(3.0f, 5.0f), 5f, 10f));
     }
 
+    /*
     public CharacterState Human()
     {
         var human = new CharacterState();
@@ -74,7 +74,7 @@ public class Enemies : ScriptableObject
         AddDefaultBehaviors(behaviors);
 
         return human;
-    }
+    }*/
     
     public CharacterState Sculpture()
     {

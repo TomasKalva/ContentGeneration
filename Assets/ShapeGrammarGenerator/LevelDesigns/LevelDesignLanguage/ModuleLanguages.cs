@@ -19,92 +19,23 @@ namespace ShapeGrammar
 
         public void MyWorldStart()
         {
-            State.LC.AddEvent(
-                new LevelConstructionEvent(
-                    $"Level Start", 
-                    100, 
-                    () =>
-                    {
-                        L.LevelLanguage.LevelStart(out var startArea);
-                        return false;
-                    }
-                ) 
-            );
+            State.LC.AddEvent($"Level Start", 100, level => L.LevelLanguage.LevelStart());
 
+            
+            //State.LC.AddEvent($"Level End", 90, level => L.LevelLanguage.LevelEnd());
             /*
-            State.LC.AddEvent(
-                new LevelConstructionEvent(
-                    $"Level End",
-                    90,
-                    () =>
-                    {
-                        L.LevelLanguage.LevelEnd();
-                        return false;
-                    }
-                )
-            );*/
-
-            State.LC.AddEvent(
-                new LevelConstructionEvent(
-                    $"Main path", 
-                    90, 
-                    () =>
-                    {
-                        L.LevelLanguage.MainPath(0);
-                        return false;
-                    }
-                )
-            );
-
-
+            State.LC.AddEvent( $"Main path", 90, level => L.LevelLanguage.MainPath(0));
             
             L.FactionsLanguage.InitializeFactions(2);
             
-            State.LC.AddEvent(
-                new LevelConstructionEvent(
-                    $"Add Details",
-                    0, 
-                    () =>
-                    {
-                        L.DetailsLanguage.AddDetails(0);
-                        return false;
-                    }
-                )
-            );
-
-
+            State.LC.AddEvent($"Add Details", 0, level => L.DetailsLanguage.AddDetails(0));
             
-            State.LC.AddEvent(
-                new LevelConstructionEvent(
-                    $"Out of depth encounter",
-                    80,
-                    () =>
-                    {
-                        L.OutOfDepthEncountersLanguage.DifficultEncounter(0);
-                        return false;
-                    }
-                )
-            );
+            State.LC.AddEvent($"Out of depth encounter", 80, level => L.OutOfDepthEncountersLanguage.DifficultEncounter(0));
+
+            State.LC.AddEvent($"Environment", 0, level => L.EnvironmentLanguage.TestSky(), true);
+            */
+            State.LC.AddEvent("Farmer branch", 5, level => L.FarmersLanguage.FarmerBranch(0));
             
-            State.LC.AddEvent(
-                new LevelConstructionEvent(
-                    $"Environment",
-                    0,
-                    () =>
-                    {
-                        L.EnvironmentLanguage.TestSky();
-                        return false;
-                    }
-                )
-            );
-
-
-            /*State.LC.AddEvent(5, () =>
-            {
-                L.FarmersLanguage.FarmerBranch(0);
-                return false;
-            });*/
-
 
             /*
             State.LC.AddEvent(5, () =>
@@ -176,9 +107,9 @@ namespace ShapeGrammar
     {
         public LevelLanguage(LanguageParams tools) : base(tools) { }
 
-        public void LevelStart(out SingleArea area)
+        public void LevelStart()
         {
-            Env.One(Gr.PrL.CreateNewHouse(), NodesQueries.All, out area);
+            Env.One(Gr.PrL.CreateNewHouse(), NodesQueries.All, out var area);
             area.Get.Node.AddSymbol(Gr.Sym.LevelStartMarker);
         }
 
@@ -319,7 +250,6 @@ namespace ShapeGrammar
             var enemyPlacer = PlC.RandomAreaPlacer(
                         new UniformIntDistr(1, 1),
                         (3, Lib.Enemies.Dog),
-                        (3, Lib.Enemies.Human),
                         (1, Lib.Enemies.Sculpture));
             enemyPlacer.Place(path_to_farmer.Concat(garden));
         }

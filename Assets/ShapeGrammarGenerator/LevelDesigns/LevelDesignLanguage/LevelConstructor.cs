@@ -17,16 +17,26 @@ namespace ShapeGrammar
         /// Events that are set during the construction by modules.
         /// </summary>
         List<LevelConstructionEvent> NewEvents { get; set; }
+        /// <summary>
+        /// Index of successfull LevelConstructor iteration. Indexed from 0.
+        /// </summary>
+        int Level { get; set; }
 
         public LevelConstructor()
         {
             LevelConstructionEvents = new List<LevelConstructionEvent>();
             NewEvents = new List<LevelConstructionEvent>();
+            Level = 0;
         }
 
         public void AddEvent(LevelConstructionEvent levelConstructionEvent)
         {
             NewEvents.Add(levelConstructionEvent);
+        }
+
+        public void AddEvent(string name, int priority, LevelConstruction construction, bool persistent = false)
+        {
+            NewEvents.Add(new LevelConstructionEvent(name, priority, construction, persistent));
         }
 
         /// <summary>
@@ -42,12 +52,14 @@ namespace ShapeGrammar
                 LevelConstructionEvents.OrderBy(ev => -ev.Priority).ForEach(ev =>
                 {
                     Debug.Log($"Starting: {ev.Name}");
-                    if (!ev.Handle())
+                    ev.Handle(Level);
+                    if (ev.Persistent)
                     {
                         NewEvents.Add(ev);
                     }
                     Debug.Log($"Finished: {ev.Name}");
                 });
+                Level++;
                 return true;
             }
             catch(Exception ex)
@@ -69,29 +81,25 @@ namespace ShapeGrammar
     /// <summary>
     /// Returns true if construction is finished.
     /// </summary>
-    public delegate bool LevelConstruction();
+    public delegate void LevelConstruction(int level);
     public class LevelConstructionEvent
     {
         public string Name { get; }
         public int Priority { get; }
-        Condition Condition { get; }
         LevelConstruction Construction { get; }
+        public bool Persistent { get; }
 
-        public LevelConstructionEvent(string name, int priority, LevelConstruction construction, Condition condition = null)
+        public LevelConstructionEvent(string name, int priority, LevelConstruction construction, bool persistent = false)
         {
             Name = name;
             Priority = priority;
             Construction = construction;
-            Condition = condition == null ? () => true : condition;
+            Persistent = persistent;
         }
 
-        public bool Handle()
+        public void Handle(int level)
         {
-            if (Condition())
-            {
-                return Construction();
-            }
-            return false;
+            Construction(level);
         }
     }
 

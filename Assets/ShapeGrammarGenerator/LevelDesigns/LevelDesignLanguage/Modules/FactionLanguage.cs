@@ -88,18 +88,12 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                 var factionConcepts = concepts.TakeSubset(3, 4);
                 var faction = new Faction(concepts);
 
-                State.LC.AddEvent(
-                    new LevelConstructionEvent(
-                        $"Start Manifestation",
-                        5, 
-                        () =>
-                        {
-                            var factionManifestation = faction.GetFactionManifestation();
-                            var factionEnvironment = factionManifestation.GetFactionEnvironment();
-                            branches.GetRandom()(factionEnvironment, faction.StartingBranchProgress);
-                            return false;
-                        }
-                    )
+                State.LC.AddEvent($"Start Manifestation", 5, level =>
+                    {
+                        var factionManifestation = faction.GetFactionManifestation();
+                        var factionEnvironment = factionManifestation.GetFactionEnvironment();
+                        branches.GetRandom()(factionEnvironment, faction.StartingBranchProgress);
+                    }
                 );
             });
         }
