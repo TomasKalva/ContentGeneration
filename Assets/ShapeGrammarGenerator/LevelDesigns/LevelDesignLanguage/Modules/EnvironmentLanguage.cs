@@ -52,7 +52,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
         }
 
         SkyParameters GetSkyParameter(int level)
-            => SkyParams[Mathf.Clamp(0, SkyParams.Length - 1, level)];
+            => SkyParams[Mathf.Clamp(level, 0, SkyParams.Length - 1)];
 
 
         public void CreateSky(int level)
@@ -66,17 +66,17 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 
         }
 
-        public void TestSky()
+        public void TestSky(int level)
         {
             var env = Lib.Objects.Environment();
             State.World.AddSpecialObject(env.transform);
             Env.One(Gr.PrL.Town(), NodesQueries.All, out var area);
 
-            GetSkyParameter(5).Set(env);
-
+            GetSkyParameter(level).Set(env);
+            
             Func<ItemState>[] skyChangingItems = SkyParams
                 .Select<SkyParameters, Func<ItemState>>((skyParams, i) => () => Lib.Items
-                 .NewItem($"Set sky {i}", "Sets sky to some texture")
+                 .NewItem($"Set sky {i}", $"Summon sky of {i}-th level")
                      .OnUse(user => skyParams.Set(env))).ToArray();
 
             area.Get.AddInteractiveObject(
@@ -87,6 +87,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                             )
                         )
                     );
+            
         }
     }
 }

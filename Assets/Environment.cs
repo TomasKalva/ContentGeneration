@@ -24,6 +24,7 @@ public class Environment : MonoBehaviour
 
     public void SetSkyVariability(float value)
     {
+        skyboxPlanes = skyParent.GetComponentsInChildren<Renderer>();
         skyboxPlanes.ForEach(skyboxPlane => skyboxPlane.material.SetFloat("_InterpolateSky", value));
     }
 

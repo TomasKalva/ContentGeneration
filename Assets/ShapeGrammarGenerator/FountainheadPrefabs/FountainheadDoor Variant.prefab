@@ -223,7 +223,7 @@ GameObject:
   - component: {fileID: 3418460660708015382}
   - component: {fileID: 3172359642046584015}
   - component: {fileID: 5631563924380078937}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: WallStone.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -777,7 +777,7 @@ GameObject:
   - component: {fileID: 5693933387153426340}
   - component: {fileID: 3230312307333934318}
   - component: {fileID: 745521031117288190}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: FancyWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -957,7 +957,7 @@ GameObject:
   - component: {fileID: 4532157715380736120}
   - component: {fileID: 6916684035694736199}
   - component: {fileID: 7536911355336887676}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: WallStone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
