@@ -10,7 +10,6 @@ using UnityEngine.Events;
 [Serializable]
 public class WeaponItem : ItemState
 {
-    float BaseDamage { get; }
     public Weapon Weapon { get; }
     ByUser<Effect>[] BaseEffects { get; set; }
     List<ByUser<Effect>> UpgradeEffects { get; set; }

@@ -5,35 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/*public class BoolState
-{
-	public bool prev;
-	public bool curr;
-
-	public void SetNext(bool next)
-    {
-		prev = curr;
-		curr = next;
-	}
-
-	public void Set(bool next)
-	{
-		curr = next;
-	}
-
-	public bool TrueNow()
-    {
-		return curr && !prev;
-	}
-
-	public bool FalseNow()
-	{
-		return !curr && prev;
-	}
-
-
-}*/
-
 [RequireComponent(typeof(Movement))]
 [RequireComponent(typeof(Acting))]
 [RequireComponent(typeof(AnimancerComponent))]

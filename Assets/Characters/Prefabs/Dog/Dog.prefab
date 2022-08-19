@@ -936,63 +936,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!1001 &3973406048463513577
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 2815407099910112334}
-    m_Modifications:
-    - target: {fileID: 4275990427343476699, guid: 6c042c00cd821074db51e59537b4182a, type: 3}
-      propertyPath: m_Name
-      value: MayanKnifeWeapon
-      objectReference: {fileID: 0}
-    - target: {fileID: 6216168194797011390, guid: 6c042c00cd821074db51e59537b4182a, type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6216168194797011390, guid: 6c042c00cd821074db51e59537b4182a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6216168194797011390, guid: 6c042c00cd821074db51e59537b4182a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6216168194797011390, guid: 6c042c00cd821074db51e59537b4182a, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6216168194797011390, guid: 6c042c00cd821074db51e59537b4182a, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6216168194797011390, guid: 6c042c00cd821074db51e59537b4182a, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6216168194797011390, guid: 6c042c00cd821074db51e59537b4182a, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6216168194797011390, guid: 6c042c00cd821074db51e59537b4182a, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6216168194797011390, guid: 6c042c00cd821074db51e59537b4182a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6216168194797011390, guid: 6c042c00cd821074db51e59537b4182a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6216168194797011390, guid: 6c042c00cd821074db51e59537b4182a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 6c042c00cd821074db51e59537b4182a, type: 3}
 --- !u!1001 &6169174117443510514
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1062,11 +1005,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}
---- !u!4 &2815407099910112334 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8254846310209840316, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}
-  m_PrefabInstance: {fileID: 6169174117443510514}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2815407099910112329 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8254846310209840315, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}

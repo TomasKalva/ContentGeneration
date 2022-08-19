@@ -26,7 +26,8 @@ namespace ShapeGrammar
 
             /*
             State.LC.AddEvent( $"Main path", 90, level => L.LevelLanguage.MainPath(level), true);
-            
+            */
+            /*
             L.FactionsLanguage.InitializeFactions(2);
             
             State.LC.AddEvent($"Add Details", 0, level => L.DetailsLanguage.AddDetails(level), true);
@@ -70,15 +71,9 @@ namespace ShapeGrammar
             */
 
 
-            /*
-            State.LC.AddEvent(
-                new LevelConstructionEvent(5, () =>
-                {
-                    L.TestingLanguage.StatsScalingOfEnemies();
-                    return false;
-                })
-            );
-            */
+            
+            State.LC.AddEvent("Testing enemies", 5, _ => L.TestingLanguage.StatsScalingOfEnemies());
+            
             /*
             State.LC.AddEvent(
                 new LevelConstructionEvent(90,
