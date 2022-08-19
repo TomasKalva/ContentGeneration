@@ -61,7 +61,7 @@ namespace ShapeGrammar
 
             var examples = new Examples(GeometricPrimitives, world.ArchitectureParent, libraries);
             var levelRoot = examples.TestMoveInDistXZ();
-            examples.grid.Generate(world);
+            examples.grid.CreateGeometry(world);
 
             stopwatch.Stop();
             Debug.Log(stopwatch.ElapsedMilliseconds);

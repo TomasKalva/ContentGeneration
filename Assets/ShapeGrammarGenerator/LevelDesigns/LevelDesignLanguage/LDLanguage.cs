@@ -46,7 +46,7 @@ namespace ShapeGrammar
             World = CreateWorld();
         }
 
-        public void Instantiate()
+        public void InstantiateAreas()
         {
             TraversableAreas.ForEach(area => area.InstantiateAll(World));
         }
@@ -100,24 +100,19 @@ namespace ShapeGrammar
             L = Languages.Get(languageParams);
         }
 
-        /*
-        public void Instantiate()
+        public void GenerateWorld()
         {
-            State.TraversableAreas.ForEach(area => area.InstantiateAll(State.World));
-        }*/
-
-        public void Generate()
-        {
-
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
+
+            State.Restart();
 
 
             State.LC.Construct();
 
-            State.Ldk.grid.Generate(State.World);
+            State.Ldk.grid.CreateGeometry(State.World);
 
-            State.Instantiate();
+            State.InstantiateAreas();
 
 
             stopwatch.Stop();

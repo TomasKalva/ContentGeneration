@@ -80,7 +80,7 @@ namespace ShapeGrammar
             return this;
         }
 
-        public void Generate(float scale, World world)
+        public void CreateGeometry(float scale, World world)
         {
             if (!Changed)
                 return;
@@ -89,7 +89,7 @@ namespace ShapeGrammar
 
             foreach (var facet in Facets.Values)
             {
-                facet.Generate(scale, world);
+                facet.CreateGeometry(scale, world);
             }
         }
 

@@ -133,27 +133,22 @@ namespace ShapeGrammar
 
         public void GoToNextLevel()
         {
-            // Restart game language
-
-            GameLanguage.State.Restart();
-            var world = GameLanguage.State.World;
-            GameViewModel.ViewModel.World = world;
-
-
             // Generating the world
 
-            GameLanguage.Generate();
+            GameLanguage.GenerateWorld();
+
+            GameViewModel.ViewModel.World = GameLanguage.State.World;
 
             var grammarState = GameLanguage.State.GrammarState;
-            var playerState = GameViewModel.ViewModel.PlayerState;
-            var levelRoot = grammarState.WorldState.Added;
-            PutPlayerToWorld(playerState, levelRoot);
 
             grammarState.Print(new PrintingState()).Show();
             grammarState.Stats.Print();
 
+            // Put player to the world
 
-            Debug.Log("Generating world");
+            var playerState = GameViewModel.ViewModel.PlayerState;
+            var levelRoot = grammarState.WorldState.Added;
+            PutPlayerToWorld(playerState, levelRoot);
 
         }
 

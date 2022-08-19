@@ -31,6 +31,18 @@ namespace ShapeGrammar
                 ) 
             );
 
+            State.LC.AddEvent(
+                new LevelConstructionEvent(
+                    $"Level Start",
+                    90,
+                    () =>
+                    {
+                        L.LevelLanguage.LevelEnd();
+                        return false;
+                    }
+                )
+            );
+
             /*
             State.LC.AddEvent(
                 new LevelConstructionEvent(
@@ -74,7 +86,8 @@ namespace ShapeGrammar
                 )
             );
             */
-            
+
+            /*
             State.LC.AddEvent(
                 new LevelConstructionEvent(
                     $"Environment",
@@ -85,8 +98,8 @@ namespace ShapeGrammar
                         return false;
                     }
                 )
-            );
-            
+            );*/
+
 
             /*State.LC.AddEvent(5, () =>
             {
@@ -146,6 +159,7 @@ namespace ShapeGrammar
             
              */
 
+            /*
             State.LC.AddEvent(
                 new LevelConstructionEvent(
                 "Testing Grammars",
@@ -155,8 +169,8 @@ namespace ShapeGrammar
                     L.TestingLanguage.GrammarTesting();
                     return true;
                 })
-            );
-            
+            );*/
+
         }
     }
 
@@ -237,14 +251,14 @@ namespace ShapeGrammar
                 );
         }
 
-        /*
+        
         public void LevelEnd()
         {
             Env.One(Gr.PrL.LevelEnd(), NodesQueries.All, out var area);
             area.Get.AddInteractiveObject(
                 Lib.InteractiveObjects.Transporter()
                 );
-        }*/
+        }
 
 
     }

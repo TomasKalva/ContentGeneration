@@ -119,10 +119,10 @@ namespace ShapeGrammar
             }
         }
 
-        public void Generate(World world)
+        public void CreateGeometry(World world)
         {
             var cubeSide = world.WorldGeometry.WorldScale;
-            ((IEnumerable<Cube>)this).ForEach(i => i.Generate(cubeSide, world));
+            ((IEnumerable<Cube>)this).ForEach(i => i.CreateGeometry(cubeSide, world));
             var interactiveArchitecture = world.ArchitectureParent.GetComponentsInChildren<InteractiveObject>().Select(io => io.State);
             interactiveArchitecture.ForEach(el => world.AddInteractiveObject(el));
         }

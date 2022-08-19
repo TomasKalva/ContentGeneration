@@ -32,7 +32,7 @@ namespace ShapeGrammar
             MyCube = myCube;
         }
 
-        public abstract void Generate(float cubeSide, World world);
+        public abstract void CreateGeometry(float cubeSide, World world);
 
         public FacetT MoveBy<FacetT>(Vector3Int offset) where FacetT : Facet
         {
@@ -68,7 +68,7 @@ namespace ShapeGrammar
             FacePrimitive = new HorFacePrimitive();
         }
 
-        public override void Generate(float scale, World world)
+        public override void CreateGeometry(float scale, World world)
         {
             if (FacePrimitive.Resolved)
                 return;
@@ -121,7 +121,7 @@ namespace ShapeGrammar
             FacePrimitive = new VerFacePrimitive();
         }
 
-        public override void Generate(float _, World world)
+        public override void CreateGeometry(float _, World world)
         {
             if (FacePrimitive.Resolved)
                 return;
@@ -165,7 +165,7 @@ namespace ShapeGrammar
             FacePrimitive = new CornerFacetPrimitive();
         }
 
-        public override void Generate(float scale, World world)
+        public override void CreateGeometry(float scale, World world)
         {
             if (FacePrimitive.Resolved)
                 return;
