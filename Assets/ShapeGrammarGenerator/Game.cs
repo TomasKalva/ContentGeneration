@@ -24,8 +24,6 @@ namespace ShapeGrammar
 
         MyLanguage GameLanguage;
 
-        World World { get; set; }
-
         private void Awake()
         {
             libraries.Initialize();
@@ -67,26 +65,27 @@ namespace ShapeGrammar
             GameViewModel.ViewModel.PlayerState = playerState;
         }
 
-        public void InitializeLevelConstructor()
+        public World CreateWorld()
         {
             var playerState = GameViewModel.ViewModel.PlayerState;
 
-            World = new World(
-                new WorldGeometry(worldParent, 2.8f), 
+            return new World(
+                new WorldGeometry(worldParent, 2.8f),
                 playerState
                 );
+        }
 
-
-
+        public void InitializeLevelConstructor()
+        {
             var ldk = new LevelDevelopmentKit(GeometricPrimitives, worldParent, libraries);
 
             // Declaration
             {
-                ShapeGrammarState grammarState = new ShapeGrammarState(ldk);
+                //ShapeGrammarState grammarState = new ShapeGrammarState(ldk);
                 {
                     var levelConstructor = new LevelConstructor();
-                    var languageState = new LanguageState(levelConstructor, ldk);
-                    languageState.Restart(World, grammarState);
+                    var languageState = new LanguageState(levelConstructor, ldk, CreateWorld);
+                    languageState.Restart();
                     var gr = new Grammars(ldk);
                     var sym = new Symbols();
                     ProductionProgram.pr = new Productions(ldk, sym);
@@ -106,6 +105,7 @@ namespace ShapeGrammar
             // Stuff related to player initialization
             {
                 // enable disabling enemies in distance
+                var World = GameLanguage.State.World;
                 var spacePartitioning = new SpacePartitioning(GameLanguage.State.TraversabilityGraph);
                 playerState.OnUpdate = () =>
                 {
@@ -134,16 +134,9 @@ namespace ShapeGrammar
         public void GoToNextLevel()
         {
             // Restart game language
-            var ldk = GameLanguage.State.Ldk;
-            var playerState = GameViewModel.ViewModel.PlayerState;
 
-            World = new World(
-                new WorldGeometry(worldParent, 2.8f),
-                playerState
-                );
-            var grammarState = new ShapeGrammarState(ldk);
-
-            GameLanguage.State.Restart(World, grammarState);
+            GameLanguage.State.Restart();
+            var World = GameLanguage.State.World;
             GameViewModel.ViewModel.World = World;
 
 
@@ -154,17 +147,17 @@ namespace ShapeGrammar
 
             GameLanguage.State.LC.Construct();
 
+            var ldk = GameLanguage.State.Ldk;
             ldk.grid.Generate(World.WorldGeometry.WorldScale, World);
 
             GameLanguage.Instantiate();
 
 
-
-
-
             stopwatch.Stop();
             Debug.Log(stopwatch.ElapsedMilliseconds);
 
+            var grammarState = GameLanguage.State.GrammarState;
+            var playerState = GameViewModel.ViewModel.PlayerState;
             var levelRoot = grammarState.WorldState.Added;
             PutPlayerToWorld(playerState, levelRoot);
 
@@ -178,6 +171,7 @@ namespace ShapeGrammar
 
         private void FixedUpdate()
         {
+            var World = GameLanguage.State.World;
             World.Update(Time.fixedDeltaTime);
         }
     }

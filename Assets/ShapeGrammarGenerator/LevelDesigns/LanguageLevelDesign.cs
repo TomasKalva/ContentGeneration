@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace ShapeGrammar
 {
-
+    /*
     public class LanguageLevelDesign
     {
         LevelDevelopmentKit ldk;
@@ -32,7 +32,7 @@ namespace ShapeGrammar
                 grammarState = new ShapeGrammarState(ldk);
                 var levelConstructor = new LevelConstructor();
                 var languageState = new LanguageState(levelConstructor, ldk);
-                languageState.Restart(world, grammarState);
+                languageState.Restart(world);
                 var gr = new Grammars(ldk);
                 var sym = new Symbols();
                 ProductionProgram.pr = new Productions(ldk, sym);
@@ -64,5 +64,5 @@ namespace ShapeGrammar
             var level = grammarState.WorldState.Added;
             return level;
         }
-    }
+    }*/
 }

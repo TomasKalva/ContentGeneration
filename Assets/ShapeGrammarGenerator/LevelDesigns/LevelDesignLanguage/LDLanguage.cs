@@ -25,23 +25,25 @@ namespace ShapeGrammar
         public LevelDevelopmentKit Ldk { get; set; }
         public UniqueNameGenerator UniqueNameGenerator { get; }
 
+        Func<World> CreateWorld { get; }
 
-        public LanguageState(LevelConstructor levelConstructor, LevelDevelopmentKit ldk)
+        public LanguageState(LevelConstructor levelConstructor, LevelDevelopmentKit ldk, Func<World> createWorld)
         {
             TraversabilityGraph = new TraversabilityGraph();
             LC = levelConstructor;
             Ldk = ldk;
             UniqueNameGenerator = new UniqueNameGenerator();
+            CreateWorld = createWorld;
         }
 
-        public void Restart(World world, ShapeGrammarState grammarState)
+        public void Restart()
         {
             World?.Destroy();
             Ldk.grid.Clear();
 
-            GrammarState = grammarState;
+            GrammarState = new ShapeGrammarState(Ldk);
             TraversabilityGraph = new TraversabilityGraph();
-            World = world;
+            World = CreateWorld();
         }
 
         public void AddAreas(List<Area> areas)

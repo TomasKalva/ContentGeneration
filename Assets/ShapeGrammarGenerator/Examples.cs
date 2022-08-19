@@ -266,11 +266,13 @@ namespace ShapeGrammar
             return ShapeGrammarLevelDesign.CreateLevel();
         }
 
+        /*
         public LevelElement LanguageDesign(Libraries lib, World world)
         {
             var LanguageLevelDesign = new LanguageLevelDesign(this, lib, world);
             return LanguageLevelDesign.CreateLevel();
         }
+        */
 
         public void SplitRoom()
         {
