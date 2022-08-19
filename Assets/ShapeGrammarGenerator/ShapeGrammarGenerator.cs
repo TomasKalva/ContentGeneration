@@ -104,7 +104,7 @@ namespace ShapeGrammar
             */
 
 
-            world.Created();
+            world.InitializePlayer();
 
         }
         /*

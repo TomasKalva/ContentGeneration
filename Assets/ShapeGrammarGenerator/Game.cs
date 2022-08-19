@@ -71,9 +71,10 @@ namespace ShapeGrammar
         {
             var playerState = GameViewModel.ViewModel.PlayerState;
 
-            var worldScale = 2.8f;
-            var worldGeometry = new WorldGeometry(worldParent, worldScale);
-            World = new World(worldGeometry, playerState);
+            World = new World(
+                new WorldGeometry(worldParent, 2.8f), 
+                playerState
+                );
 
 
 
@@ -100,86 +101,79 @@ namespace ShapeGrammar
             }
         }
 
+        void PutPlayerToWorld(PlayerCharacterState playerState, LevelElement entireLevel)
+        {
+            // Stuff related to player initialization
+            {
+                // enable disabling enemies in distance
+                var spacePartitioning = new SpacePartitioning(GameLanguage.State.TraversabilityGraph);
+                playerState.OnUpdate = () =>
+                {
+                    var playerGridPosition = Vector3Int.RoundToInt(World.WorldGeometry.WorldToGrid(GameViewModel.ViewModel.PlayerState.Agent.transform.position));
+                    var playerNode = GameLanguage.State.GrammarState.GetNode(playerGridPosition);
+                    spacePartitioning.Update(playerNode);
+                };
+
+
+
+                Debug.Log(entireLevel.Print(0));
+
+                var goodCubes = entireLevel.CG().WithFloor().Cubes
+                    .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor));
+                var goodGraveCube = goodCubes.ElementAt(0);
+                var graveState = libraries.InteractiveObjects.Grave();
+                var grave = graveState.MakeGeometry();
+                grave.transform.position = World.WorldGeometry.GridToWorld(goodGraveCube.Position);
+                World.AddInteractiveObject(graveState);
+                World.Grave = graveState;
+
+                World.InitializePlayer();
+            }
+        }
+
         public void GoToNextLevel()
         {
+            // Restart game language
             var ldk = GameLanguage.State.Ldk;
             var playerState = GameViewModel.ViewModel.PlayerState;
-            var worldScale = 2.8f;
-            var worldGeometry = new WorldGeometry(worldParent, worldScale);
-            World = new World(worldGeometry, playerState);
+
+            World = new World(
+                new WorldGeometry(worldParent, 2.8f),
+                playerState
+                );
             var grammarState = new ShapeGrammarState(ldk);
 
             GameLanguage.State.Restart(World, grammarState);
             GameViewModel.ViewModel.World = World;
+
+
+            // Generating the world
 
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 
             GameLanguage.State.LC.Construct();
 
-            ldk.grid.Generate(worldScale, World);
+            ldk.grid.Generate(World.WorldGeometry.WorldScale, World);
 
             GameLanguage.Instantiate();
 
 
 
-            // enable disabling enemies in distance
-            var spacePartitioning = new SpacePartitioning(GameLanguage.State.TraversabilityGraph);
-            playerState.OnUpdate = () =>
-            {
-                var playerGridPosition = Vector3Int.RoundToInt(worldGeometry.WorldToGrid(GameViewModel.ViewModel.PlayerState.Agent.transform.position));
-                var playerNode = GameLanguage.State.GrammarState.GetNode(playerGridPosition);
-                spacePartitioning.Update(playerNode);
-            };
-
-            grammarState.Print(new PrintingState()).Show();
-            grammarState.Stats.Print();
-
-            var levelRoot = grammarState.WorldState.Added;
 
 
             stopwatch.Stop();
             Debug.Log(stopwatch.ElapsedMilliseconds);
 
-            Debug.Log(levelRoot.Print(0));
+            var levelRoot = grammarState.WorldState.Added;
+            PutPlayerToWorld(playerState, levelRoot);
+
+            grammarState.Print(new PrintingState()).Show();
+            grammarState.Stats.Print();
+
 
             Debug.Log("Generating world");
 
-
-            /*
-            var elevator = libraries.InteractiveObjects.Elevator(1 * worldScale, false);
-            world.AddObject(elevator.Object, Vector3.zero);
-            */
-
-            var goodCubes = levelRoot.CG().WithFloor().Cubes
-                .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor));
-            var goodGraveCube = goodCubes.ElementAt(0);
-            var graveState = libraries.InteractiveObjects.Grave();
-            var grave = graveState.MakeGeometry();
-            grave.transform.position = worldGeometry.GridToWorld(goodGraveCube.Position);
-            World.AddInteractiveObject(graveState);
-            World.Grave = graveState;
-
-            //var goodTransporterCube = goodCubes.ElementAt(1);
-            //world.AddInteractiveObject(interactiveObjects.Transporter().MakeGeometry(), GridToWorld(goodTransporterCube.Position));
-
-            /*
-            var allEnemies = libraries.Enemies.AllAgents();
-            var enemyCubes = levelRoot.CG().WithFloor().Cubes.Shuffle().Take(10);
-            enemyCubes.ForEach(cube => world.AddEnemy(allEnemies.GetRandom()().MakeGeometry(), GridToWorld(cube.Position)));
-            
-            
-            var itemCubes = levelRoot.CG().WithFloor().Cubes.Shuffle().Take(10);
-            itemCubes.ForEach(cube => world.AddItem(libraries.InteractiveObjects.Item(libraries.Items.Scythe()).MakeGeometry(), GridToWorld(cube.Position)));
-            */
-
-            /*
-            var kilnCube = goodGraveCube.NeighborsHor().GetRandom();
-            world.AddInteractiveObject(interactiveObjects.AscensionKiln().MakeGeometry(), GridToWorld(kilnCube.Position));
-            */
-
-
-            World.Created();
         }
 
         private void FixedUpdate()

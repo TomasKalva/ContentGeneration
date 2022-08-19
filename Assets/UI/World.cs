@@ -131,7 +131,7 @@ namespace ContentGeneration.Assets.UI
             }//?.Die();
         }
 
-        public void Created()
+        public void InitializePlayer()
         {
             //Grave = GameObject.FindGameObjectWithTag("DefaultSpawnPoint").GetComponent<InteractiveObject>().State as Grave;
 
