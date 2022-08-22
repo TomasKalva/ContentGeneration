@@ -34,13 +34,13 @@ namespace Assets.ShapeGrammarGenerator
 
         public static  AreaStyle FlatRoof(GridPrimitivesStyle style = null) => new AreaStyle("FlatRoof", GetStyle(style), gpp.FlatRoofStyle);
 
-        public static  AreaStyle GableRoof() => new AreaStyle("GableRoof", gp.TownStyle(), gpp.GableRoofStyle);
+        public static  AreaStyle GableRoof(GridPrimitivesStyle style = null) => new AreaStyle("GableRoof", GetStyle(style), gpp.GableRoofStyle);
 
         public static  AreaStyle PointyRoof(GridPrimitivesStyle style = null) => new AreaStyle("PointyRoof", GetStyle(style), gpp.PointyRoofStyle);
 
-        public static  AreaStyle CrossRoof() => new AreaStyle("CrossRoof", gp.TownStyle(), gpp.CrossRoofStyle);
+        public static  AreaStyle CrossRoof(GridPrimitivesStyle style = null) => new AreaStyle("CrossRoof", GetStyle(style), gpp.CrossRoofStyle);
 
-        public static AreaStyle DirectionalRoof(Vector3Int direction) => new AreaStyle("DirectionalRoof", gp.TownStyle(), (gpStyle, roofArea) => gpp.DirectionalRoofStyle(gpStyle, roofArea, direction));
+        public static AreaStyle DirectionalRoof(Vector3Int direction, GridPrimitivesStyle style = null) => new AreaStyle("DirectionalRoof", GetStyle(style), (gpStyle, roofArea) => gpp.DirectionalRoofStyle(gpStyle, roofArea, direction));
 
         public static  AreaStyle Foundation() => new AreaStyle("Foundation", gp.TownStyle(), gpp.FoundationStyle);
 

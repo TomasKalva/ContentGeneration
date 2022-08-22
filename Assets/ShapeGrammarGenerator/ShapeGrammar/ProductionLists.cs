@@ -189,8 +189,8 @@ namespace ShapeGrammar
             return new ProductionList
             (
                 //pr.ChapelTowerTop(3),
-                pr.Roof(pr.sym.ChapelHall(default), 3, AreaStyles.GableRoof()),
-                pr.Roof(pr.sym.ChapelRoom, 3, AreaStyles.CrossRoof())
+                pr.Roof(pr.sym.ChapelHall(default), 3, AreaStyles.GableRoof(AreaStyles.ChapelStyle)),
+                pr.Roof(pr.sym.ChapelRoom, 3, AreaStyles.CrossRoof(AreaStyles.ChapelStyle))
             );
         }
 

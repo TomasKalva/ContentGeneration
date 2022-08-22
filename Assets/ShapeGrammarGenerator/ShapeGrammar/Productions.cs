@@ -945,7 +945,7 @@ namespace ShapeGrammar
                     sym.ChapelEntrance,
                     () => leF().SetAreaType(AreaStyles.Room(AreaStyles.ChapelStyle)),
                     Empty(),
-                    Roof(AreaStyles.CrossRoof(), roofHeight),
+                    Roof(AreaStyles.CrossRoof(AreaStyles.ChapelStyle), roofHeight),
                     ldk.con.ConnectByStairsOutside,
                     1);
 
