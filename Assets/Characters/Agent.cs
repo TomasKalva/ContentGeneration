@@ -105,7 +105,7 @@ public class Agent : MonoBehaviour
 		var materialIndex = phase == AgentState.PREPARE ? 1 :
 							phase == AgentState.DAMAGE ? 2 :
 							phase == AgentState.RESTORE ? 3 : 0;
-		myRenderer.material = stateMaterials.materials[materialIndex];
+		//myRenderer.material = stateMaterials.materials[materialIndex];
     }
 
 	public void UpdateAgent()

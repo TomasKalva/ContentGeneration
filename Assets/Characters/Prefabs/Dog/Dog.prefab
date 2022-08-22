@@ -805,7 +805,7 @@ MonoBehaviour:
   acting: {fileID: 0}
   animator: {fileID: 0}
   animancerAnimator: {fileID: 0}
-  myRenderer: {fileID: 199270137289387013}
+  myRenderer: {fileID: 6160475001273517957}
   centerOffset: 0
   uiOffset: 1
   stateMaterials: {fileID: 11400000, guid: bb1b489c7574f324bb16c275ce4cc5de, type: 2}
@@ -890,9 +890,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -538439120953531310, guid: 01ca319b4dcfe7548963823e33757d14, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2fa3ee43481a66740a642303f2ac1ee6, type: 2}
+    - target: {fileID: -538439120953531310, guid: 01ca319b4dcfe7548963823e33757d14, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 94889cabaa4eb6f4888e39af43fd2a97, type: 2}
+    - target: {fileID: -538439120953531310, guid: 01ca319b4dcfe7548963823e33757d14, type: 3}
+      propertyPath: m_Materials.Array.data[2]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9d3c91eadbf8182459c84c5d4c8b9fc6, type: 2}
     - target: {fileID: 919132149155446097, guid: 01ca319b4dcfe7548963823e33757d14, type: 3}
       propertyPath: m_Name
       value: Dog
+      objectReference: {fileID: 0}
+    - target: {fileID: 3403173229400625106, guid: 01ca319b4dcfe7548963823e33757d14, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d37768f2ff286b14ba8ea2855d8a22b0, type: 2}
+    - target: {fileID: 3973243620156147162, guid: 01ca319b4dcfe7548963823e33757d14, type: 3}
+      propertyPath: m_Name
+      value: ReducedDog
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 01ca319b4dcfe7548963823e33757d14, type: 3}
@@ -906,9 +926,9 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 01ca319b4dcfe7548963823e33757d14, type: 3}
   m_PrefabInstance: {fileID: 3312805612868412375}
   m_PrefabAsset: {fileID: 0}
---- !u!137 &199270137289387013 stripped
+--- !u!137 &6160475001273517957 stripped
 SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 3403173229400625106, guid: 01ca319b4dcfe7548963823e33757d14, type: 3}
+  m_CorrespondingSourceObject: {fileID: -538439120953531310, guid: 01ca319b4dcfe7548963823e33757d14, type: 3}
   m_PrefabInstance: {fileID: 3312805612868412375}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &487184281772635566 stripped
