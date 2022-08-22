@@ -92,7 +92,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             level_up_area.Get.AddInteractiveObject(
                 Lib.InteractiveObjects.InteractiveObject("Levelling up object", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
                     .SetInteraction(
-                        new InteractionSequence<InteractiveObject>()
+                        ins => ins
                             .Act("Take levelling up items", (ios, player) => statIncreaseItems.ForEach(item => player.AddItem(item))
                             )
                         )
@@ -111,7 +111,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             area.Get.AddInteractiveObject(
                 Lib.InteractiveObjects.InteractiveObject("Spells object", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
                     .SetInteraction(
-                        new InteractionSequence<InteractiveObject>()
+                        ins => ins
                             .Act("Take all spells", (ios, player) => s.ForEach(itemF => player.AddItem(itemF()))
                             )
                         )
@@ -163,5 +163,19 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                        .ForEach(_ => area.AddEnemy(Lib.Enemies.AllAgents().GetRandom()()))
                );*/
         }
+
+        public void NpcLine()
+        {
+            // Npc appears
+
+            // Hello, how are you. I'm the lord of cinder or something. I travel to the desert of language ambiguity.
+
+            // Wow you did something. I didn't think you'd do that. Now take this. I ressume my journey.
+
+            // How could that be. They did the surgery on grape. I'm leaving for blue mountain underneath.
+
+        }
+
+
     }
 }

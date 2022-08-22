@@ -24,7 +24,7 @@ namespace ShapeGrammar
             /*
             State.LC.AddEvent($"Level End", 90, level => L.LevelLanguage.LevelEnd(), true);
             */
-
+            /*
             State.LC.AddEvent( $"Main path", 90, level => L.LevelLanguage.MainPath(level), true);
             
 
@@ -34,7 +34,7 @@ namespace ShapeGrammar
             State.LC.AddEvent($"Add Details", 0, level => L.DetailsLanguage.AddDetails(level), true);
             
             State.LC.AddEvent($"Out of depth encounter", 80, level => L.OutOfDepthEncountersLanguage.DifficultEncounter(level), true);
-            
+            */
             State.LC.AddEvent($"Environment", 0, level => L.EnvironmentLanguage.TestSky(level), true);
             
             /*
@@ -80,7 +80,7 @@ namespace ShapeGrammar
              
 
             
-            //State.LC.AddEvent("Testing Grammars", 90, _ => L.TestingLanguage.GrammarTesting());
+            State.LC.AddEvent("Testing Grammars", 90, _ => L.TestingLanguage.GrammarTesting());
 
         }
     }
@@ -186,38 +186,38 @@ namespace ShapeGrammar
             farmer_area.Get.AddInteractiveObject(
                 Lib.InteractiveObjects.InteractiveObject("Farmer", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
                     .SetInteraction(
-                        new InteractionSequence<InteractiveObject>()
+                        ins => ins
                             .Say("My name is Ted")
                             .Say("I a farmer")
                             .Say("I desire nourishment")
                             .Act("Confirm your understanding", (ios, _) => ios.Interaction.TryMoveNext(ios))
                             .Decision("Would you mind sharing some apples?",
-                            new InteractOption<InteractiveObject>("Give apples",
-                                (farmer, player) =>
-                                {
-                                    if (player.Inventory.HasItems("Earthen apple", 3, out var desiredApples))
+                                new InteractOption<InteractiveObject>("Give apples",
+                                    (farmer, player) =>
                                     {
-                                        player.Inventory.RemoveStacksOfItems(desiredApples, 3);
-                                        Msg.Show("Apples given");
+                                        if (player.Inventory.HasItems("Earthen apple", 3, out var desiredApples))
+                                        {
+                                            player.Inventory.RemoveStacksOfItems(desiredApples, 3);
+                                            Msg.Show("Apples given");
 
-                                        // moves farmer to another state
-                                        farmer.SetInteraction(
-                                            new InteractionSequence<InteractiveObject>()
-                                                .Say("Thanks for the apples, mate")
-                                        );
+                                            // moves farmer to another state
+                                            farmer.SetInteraction(
+                                                ins => ins
+                                                    .Say("Thanks for the apples, mate")
+                                            );
 
-                                        player.Spirit += 10 * (1 + progress);
-                                        //Levels().Next().AddPossibleBranch(FarmerBranch(progress + 1);
+                                            player.Spirit += 10 * (1 + progress);
+                                            //Levels().Next().AddPossibleBranch(FarmerBranch(progress + 1);
+                                        }
+                                        else
+                                        {
+                                            Msg.Show("Not enough apples");
+                                        }
                                     }
-                                    else
-                                    {
-                                        Msg.Show("Not enough apples");
-                                    }
-                                }
-                            , 0)
+                                , 0)
+                            )
                         )
-                    )
-                );
+                    );
 
             Env.ExtendRandomly(Gr.PrL.Garden(), NodesQueries.LastCreated, 5, out var garden);
             var apples = Enumerable.Range(0, 5).Select(_ =>

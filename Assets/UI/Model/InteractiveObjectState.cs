@@ -203,9 +203,9 @@ namespace ContentGeneration.Assets.UI.Model
 #region Api
 
 #if NOESIS
-        public InteractiveObjectState<InteractiveObjectT> SetInteraction(InteractionSequence<InteractiveObjectT> interaction)
+        public InteractiveObjectState<InteractiveObjectT> SetInteraction(Func<InteractionSequence<InteractiveObjectT>, InteractionSequence<InteractiveObjectT>> interactionF)
         {
-            Interaction = interaction;
+            Interaction = interactionF(new InteractionSequence<InteractiveObjectT>());
             return this;
         }
 #endif

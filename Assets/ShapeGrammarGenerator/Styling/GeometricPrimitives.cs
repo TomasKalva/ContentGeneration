@@ -108,6 +108,16 @@ public class GeometricPrimitives : ScriptableObject
     public GeometricPrimitive crossRoof;
     [SerializeField]
     public GeometricPrimitive oneDirectionRoof;
+
+    [SerializeField]
+    public GeometricPrimitive curvedGableRoof;
+    [SerializeField]
+    public GeometricPrimitive curvedPointyRoof;
+    [SerializeField]
+    public GeometricPrimitive curvedCrossRoof;
+    [SerializeField]
+    public GeometricPrimitive curvedOneDirectionRoof;
+
     [SerializeField]
     public GeometricPrimitive bridgeTop;
     [SerializeField]

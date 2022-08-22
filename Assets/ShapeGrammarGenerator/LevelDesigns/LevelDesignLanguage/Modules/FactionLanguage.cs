@@ -107,7 +107,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
         {
             return Lib.InteractiveObjects.InteractiveObject("Progress of Manifestation", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
                     .SetInteraction(
-                        new InteractionSequence<InteractiveObject>()
+                        ins => ins
                             .Decision($"Progress this manifestation ({manifestation.Progress + 1})",
                             new InteractOption<InteractiveObject>("Yes",
                                 (ios, player) =>
@@ -115,7 +115,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                                     manifestation.ContinueManifestation(State.LC, Branches());
                                     Msg.Show("Progress achieved");
                                     ios.SetInteraction(
-                                        new InteractionSequence<InteractiveObject>()
+                                        ins => ins
                                             .Say("Thank you for your attention.")
                                     );
                                 }

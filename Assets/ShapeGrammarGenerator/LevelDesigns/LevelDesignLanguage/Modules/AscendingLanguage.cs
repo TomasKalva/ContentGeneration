@@ -49,7 +49,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             farmer_area.Get.AddInteractiveObject(
                 Lib.InteractiveObjects.InteractiveObject("Farmer", Lib.InteractiveObjects.Geometry<Kiln>(Lib.InteractiveObjects.ascensionKilnPrefab.transform))
                     .SetInteraction(
-                        new InteractionSequence<Kiln>()
+                        ins => ins
                             .Say("Ascension kiln is glad to feel you")
                             .Decision($"What ascension are you longing for? ({ascensionPrice} Spirit)",
                                 statsIncreases.Shuffle().Take(3).Select(si => increaseOption(si)).ToArray())

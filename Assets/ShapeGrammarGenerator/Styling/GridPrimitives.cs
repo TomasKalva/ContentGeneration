@@ -105,7 +105,11 @@ namespace Assets.ShapeGrammarGenerator
         public GridPrimitivesStyle ChapelStyle() => TownStyle()
             .SetFloor(() => Floor(GP.ornamentedFloor, GP.oneSidedCeiling))
             .SetWall(() => Wall(GP.pipedWall, GP.bigBrickWall))
-            .SetCladdedWall(() => CladdedWall(GP.pipedWall, GP.bigBrickWall));
+            .SetCladdedWall(() => CladdedWall(GP.pipedWall, GP.bigBrickWall))
+            .SetPointyRoof(GP.curvedPointyRoof)
+            .SetGableRoof(GP.curvedGableRoof)
+            .SetDirectionalRoof(GP.curvedOneDirectionRoof)
+            .SetCrossRoof(GP.curvedCrossRoof);
 
         public GridPrimitivesStyle GardenStyle() => TownStyle()
             .SetFoundationWall(() => FoundationWall(GP.barkWall))
@@ -161,11 +165,41 @@ namespace Assets.ShapeGrammarGenerator
         public Func<VerFacePrimitive> NoFloor { get; set; }
         public Func<Vector3Int, CubePrimitive> Stairs { get; set; }
         public GeometricPrimitive DirectionalRoof { get; set; }
+        public GridPrimitivesStyle SetDirectionalRoof(GeometricPrimitive roof)
+        {
+            DirectionalRoof = roof;
+            return this;
+        }
         public GeometricPrimitive CrossRoof { get; set; }
+        public GridPrimitivesStyle SetCrossRoof(GeometricPrimitive roof)
+        {
+            CrossRoof = roof;
+            return this;
+        }
         public GeometricPrimitive PointyRoof { get; set; }
+        public GridPrimitivesStyle SetPointyRoof(GeometricPrimitive roof)
+        {
+            PointyRoof = roof;
+            return this;
+        }
         public GeometricPrimitive GableRoof { get; set; }
+        public GridPrimitivesStyle SetGableRoof(GeometricPrimitive roof)
+        {
+            GableRoof = roof;
+            return this;
+        }
         public GeometricPrimitive BridgeTop { get; set; }
+        public GridPrimitivesStyle SetBridgeTop(GeometricPrimitive bridgeTop)
+        {
+            BridgeTop = bridgeTop;
+            return this;
+        }
         public GeometricPrimitive BridgeBottom { get; set; }
+        public GridPrimitivesStyle SetBridgeBottom(GeometricPrimitive bridgeBottom)
+        {
+            BridgeBottom = bridgeBottom;
+            return this;
+        }
     }
 
 

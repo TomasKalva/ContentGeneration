@@ -82,7 +82,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             area.Get.AddInteractiveObject(
                 Lib.InteractiveObjects.InteractiveObject("Sky distributor", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
                     .SetInteraction(
-                        new InteractionSequence<InteractiveObject>()
+                        ins => ins
                             .Act("Take all skies", (ios, player) => skyChangingItems.ForEach(itemF => player.AddItem(itemF()))
                             )
                         )
