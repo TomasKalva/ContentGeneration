@@ -793,6 +793,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8462096005806442370, guid: 7beb9fa765a5ad34ca8650a306ad6d20, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e28dc812e97615847b191184747b1f68, type: 2}
     - target: {fileID: 919132149155446097, guid: 7beb9fa765a5ad34ca8650a306ad6d20, type: 3}
       propertyPath: m_Name
       value: SkinnyWoman
