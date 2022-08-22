@@ -38,9 +38,9 @@ public class Enemies : ScriptableObject
         /*Sculpture,*/
         /*MayanThrower,
         MayanSwordsman,
-        SkinnyWoman,
-        DragonMan,*/
-        Dog,
+        SkinnyWoman,*/
+        DragonMan,
+        /*Dog,*/
     };
 
 
