@@ -264,7 +264,12 @@ namespace ShapeGrammar
         {
             return new ProductionList
             (
-                pr.Roof()
+                //pr.Roof()
+                pr.Roof(pr.sym.ChapelHall(default), 3, AreaStyles.GableRoof(AreaStyles.ChapelStyle)),
+                pr.Roof(pr.sym.ChapelRoom, 3, AreaStyles.CrossRoof(AreaStyles.ChapelStyle)),
+                pr.Roof(pr.sym.TowerTop, 3, AreaStyles.PointyRoof()),
+                pr.Roof(pr.sym.TowerBottom, 3, AreaStyles.PointyRoof()),
+                pr.Roof(pr.sym.Room, 3, AreaStyles.GableRoof())
             );
         }
     }

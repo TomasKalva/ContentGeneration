@@ -137,7 +137,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             */
 
             //Env.Line(Gr.PrL.Town(), NodesQueries.All, 10, out var _);
-            Env.Line(Gr.PrL.Chapels(), NodesQueries.All, 10, out var _);
+            Env.Line(Gr.PrL.Castle(), NodesQueries.All, 10, out var _);
             //Env.Line(Gr.PrL.Castle(), NodesQueries.All, 10, out var _);
             //Env.BranchRandomly(Gr.PrL.Town(), 40, out var _);
 
@@ -147,7 +147,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             Env.Line(Gr.PrL.TestingProductions(), NodesQueries.All, 10, out var _);*/
 
             Env.BranchRandomly(Gr.PrL.ChapelsDetails(), 2, out var _);
-            Env.Execute(new AllGrammar(Gr.PrL.ChapelsPostprocess()));
+            Env.Execute(new AllGrammar(Gr.PrL.Roofs()/*ChapelsPostprocess()*/));
 
             var allAreas = State.TraversableAreas;
             //var objects = Enumerable.Range(0, 100)

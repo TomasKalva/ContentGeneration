@@ -972,7 +972,7 @@ namespace ShapeGrammar
                 },
                 Empty(),
                 (program, chapelSide) => program
-                        .Set(() => chapelSide.LE.CG().ExtrudeVer(Vector3Int.up, 1).LE(AreaStyles.DirectionalRoof(chapelSide.GetSymbol(sym.ChapelSide(default)).Direction)).GN(sym.Roof))
+                        .Set(() => chapelSide.LE.CG().ExtrudeVer(Vector3Int.up, 1).LE(AreaStyles.DirectionalRoof(chapelSide.GetSymbol(sym.ChapelSide(default)).Direction, AreaStyles.ChapelStyle)).GN(sym.Roof))
                         .NotTaken()
                         .PlaceCurrentFrom(chapelSide),
                 ldk.con.ConnectByDoor
