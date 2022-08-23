@@ -55,11 +55,24 @@ public class Agent : MonoBehaviour
 		}
     }
 
+
+
 	[SerializeField]
 	WeaponSlot leftWeaponSlot;
 
 	[SerializeField]
 	WeaponSlot rightWeaponSlot;
+
+	[SerializeField]
+	WeaponSlot leftWristSlot;
+
+	[SerializeField]
+	WeaponSlot rightWristSlot;
+
+	[SerializeField]
+	WeaponSlot headSlot;
+
+
 
 	// Start is called before the first frame update
 	void Awake()
@@ -205,13 +218,13 @@ public class Agent : MonoBehaviour
 		var leftWeaponItem = inventory.LeftWeapon.Item;
 		if(leftWeaponSlot != null)
 		{
-			leftWeaponSlot.Weapon = (leftWeaponItem as WeaponItem)?.Weapon;
+			leftWeaponSlot.Equipment = (leftWeaponItem as WeaponItem)?.Weapon;
 		}
 
 		var rightWeaponItem = inventory.RightWeapon.Item;
 		if(rightWeaponSlot != null)
 		{
-			rightWeaponSlot.Weapon = (rightWeaponItem as WeaponItem)?.Weapon;
+			rightWeaponSlot.Equipment = (rightWeaponItem as WeaponItem)?.Weapon;
 		}
 
 		state.Stats.Update();

@@ -341,7 +341,6 @@ MonoBehaviour:
     m_RotationOrder: 4
   weaponSlots:
   - {fileID: 3700916034506211958}
-  - {fileID: 5151155491971333745}
   damageStartT: 0.22
   damageEndT: 0.35
 --- !u!114 &6408259666256583763
@@ -714,6 +713,9 @@ MonoBehaviour:
   stateMaterials: {fileID: 11400000, guid: bb1b489c7574f324bb16c275ce4cc5de, type: 2}
   leftWeaponSlot: {fileID: 3700916034506211958}
   rightWeaponSlot: {fileID: 5151155491971333745}
+  leftWristSlot: {fileID: 0}
+  rightWristSlot: {fileID: 0}
+  headSlot: {fileID: 0}
 --- !u!114 &104408679878136733
 MonoBehaviour:
   m_ObjectHideFlags: 0

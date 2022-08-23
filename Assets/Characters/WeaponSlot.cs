@@ -4,21 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Movement;
 
-public class WeaponSlot : MonoBehaviour
+public class WeaponSlot : EquipmentSlot<Weapon>
 {
-    [SerializeField]
-    float weaponScale = 1f;
-
-    /// <summary>
-    /// To manage destruction of weapons correctly.
-    /// </summary>
-    public World World { private get; set; }
-
+    /*
     Weapon weapon;
 
-    public Weapon Weapon 
+    public override Transform Equipment 
     {
-        get => weapon;
+        get => equipment;
         set
         {
             RemoveWeapon();
@@ -28,33 +21,27 @@ public class WeaponSlot : MonoBehaviour
 
     void RemoveWeapon()
     {
-        if (weapon == null) return;
+        if (equipment == null) return;
 
-        World.PutToCache(weapon.transform);
-        weapon.gameObject.SetActive(false);
+        World.PutToCache(equipment.transform);
+        equipment.gameObject.SetActive(false);
     }
 
-    void AddWeapon(Weapon newWeapon)
+    void AddWeapon(Transform newEquipment)
     {
-        if (newWeapon == null)
+        if (newEquipment == null)
         {
-            this.weapon = null;
+            this.equipment = null;
             return;
         }
 
-        newWeapon.transform.SetParent(transform);
-        newWeapon.gameObject.SetActive(true);
+        newEquipment.transform.SetParent(transform);
+        newEquipment.gameObject.SetActive(true);
 
-        newWeapon.transform.localPosition = Vector3.zero;
-        newWeapon.transform.localRotation = Quaternion.identity;
-        newWeapon.transform.localScale = weaponScale * Vector3.one;
+        newEquipment.transform.localPosition = Vector3.zero;
+        newEquipment.transform.localRotation = Quaternion.identity;
+        newEquipment.transform.localScale = weaponScale * Vector3.one;
 
-        newWeapon.Show();
-
-        this.weapon = newWeapon;
-    }
-
-    private void Awake()
-    {
-    }
+        this.equipment = newEquipment;
+    }*/
 }

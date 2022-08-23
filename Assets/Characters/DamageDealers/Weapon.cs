@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Weapon : MonoBehaviour
+public class Weapon : Equipment
 {
     public ColliderDetector Detector { get; private set; }
     Renderer Renderer { get; set; }
@@ -40,16 +40,17 @@ public class Weapon : MonoBehaviour
         Renderer = GetComponentInChildren<Renderer>();
     }
 
-    public void DealDamage(Agent owner, float damageDuration)
+    private void Start()
     {
-        WeaponItem.DealDamage(owner.CharacterState, damageDuration);
-    }
-
-    public void Show()
-    {
+        // Renderer needs to be manually activated because collider detector deactivated it
         if (Renderer != null)
         {
             Renderer.enabled = true;
         }
+    }
+
+    public void DealDamage(Agent owner, float damageDuration)
+    {
+        WeaponItem.DealDamage(owner.CharacterState, damageDuration);
     }
 }

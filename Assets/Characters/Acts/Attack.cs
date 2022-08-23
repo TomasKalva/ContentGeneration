@@ -66,15 +66,15 @@ public class Attack : AnimatedAct
     {
         foreach (var weaponSlot in weaponSlots)
         {
-            var weapon = weaponSlot.Weapon;
+            var weapon = weaponSlot.Equipment;
             if (weapon != null)
             {
                 // When the damage starts
-                if (!weaponSlot.Weapon.Active && active)
+                if (!weaponSlot.Equipment.Active && active)
                 {
                     weapon.DealDamage(agent, DamageDuration());
                 }
-                weaponSlot.Weapon.Active = active;
+                weaponSlot.Equipment.Active = active;
             }
         }
     }
