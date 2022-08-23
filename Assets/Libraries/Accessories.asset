@@ -18,3 +18,8 @@ MonoBehaviour:
   handcuff: {fileID: 5769324471535797639, guid: f4b98f8cb262bba4ebf64fb4e63bea98, type: 3}
   nails: {fileID: 3736434357905915021, guid: cf14d0fb509009348a78a53dd0d110ad, type: 3}
   hairRubber: {fileID: 7319370130770978143, guid: 9b54ab07f8b4a3e459bd8b8ff6b9f442, type: 3}
+  circle: {fileID: 9023385172734890608, guid: 89d3ce9490783e045871d45c5be665ec, type: 3}
+  crown: {fileID: 3404897212677644467, guid: 2b363d0996d79b04a81cc188bcb02cae, type: 3}
+  eggs: {fileID: 173444211453681684, guid: 391936a197cfcee47878717e83aa2ef0, type: 3}
+  extraHead: {fileID: 3971389308811447851, guid: f6b70663a00b20541a1bc21161b6ea82, type: 3}
+  towerHorns: {fileID: 1124432356037360990, guid: a480be9421fac4a4eaae472b605107ab, type: 3}

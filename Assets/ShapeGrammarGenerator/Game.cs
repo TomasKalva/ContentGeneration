@@ -63,6 +63,8 @@ namespace ShapeGrammar
             playerState.AddAndEquipItem(libraries.Items.MayanKnife());
             libraries.Items.AllWristItems().ForEach(wi => playerState.AddItem(wi()));
 
+            libraries.Items.AllHeadItems().ForEach(wi => playerState.AddItem(wi()));
+
             GameViewModel.ViewModel.PlayerState = playerState;
         }
 

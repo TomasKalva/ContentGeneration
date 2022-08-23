@@ -110,6 +110,30 @@ public class Items : ScriptableObject
         HairRubber,
     };
 
+    public AccessoryItem Circle() => new AccessoryItem("Circle", "Circle", accessories.Circle)
+        .SetWearable(SlotType.Head) as AccessoryItem;
+
+    public AccessoryItem Crown() => new AccessoryItem("Crown", "Circle", accessories.Crown)
+        .SetWearable(SlotType.Head) as AccessoryItem;
+
+    public AccessoryItem Eggs() => new AccessoryItem("Eggs", "Circle", accessories.Eggs)
+        .SetWearable(SlotType.Head) as AccessoryItem;
+
+    public AccessoryItem ExtraHead() => new AccessoryItem("Extra Head", "Circle", accessories.ExtraHead)
+        .SetWearable(SlotType.Head) as AccessoryItem;
+
+    public AccessoryItem TowerHorns() => new AccessoryItem("Tower Horns", "Circle", accessories.TowerHorns)
+        .SetWearable(SlotType.Head) as AccessoryItem;
+
+    public IEnumerable<Func<AccessoryItem>> AllHeadItems() => new List<Func<AccessoryItem>>()
+    {
+        Circle,
+        Crown,
+        Eggs,
+        ExtraHead,
+        TowerHorns,
+    };
+
     public ItemState NewItem(string name, string description) => 
         new ItemState() 
         { 

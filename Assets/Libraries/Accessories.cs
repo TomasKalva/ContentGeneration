@@ -41,6 +41,22 @@ public class Accessories : ScriptableObject
     [SerializeField]
     Accessory hairRubber;
 
+
+    [SerializeField]
+    Accessory circle;
+
+    [SerializeField]
+    Accessory crown;
+
+    [SerializeField]
+    Accessory eggs;
+
+    [SerializeField]
+    Accessory extraHead;
+
+    [SerializeField]
+    Accessory towerHorns;
+
     Accessory CreateAccessory(Accessory prefab) => Instantiate(prefab);
 
     public Accessory Ring() => CreateAccessory(ring);
@@ -49,4 +65,10 @@ public class Accessories : ScriptableObject
     public Accessory Handcuff() => CreateAccessory(handcuff);
     public Accessory Nails() => CreateAccessory(nails);
     public Accessory HairRubber() => CreateAccessory(hairRubber);
+
+    public Accessory Circle() => CreateAccessory(circle);
+    public Accessory Crown() => CreateAccessory(crown);
+    public Accessory Eggs() => CreateAccessory(eggs);
+    public Accessory ExtraHead() => CreateAccessory(extraHead);
+    public Accessory TowerHorns() => CreateAccessory(towerHorns);
 }

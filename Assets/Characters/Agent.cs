@@ -242,6 +242,12 @@ public class Agent : MonoBehaviour
 			rightWristSlot.Equipment = (rightWristItem as AccessoryItem)?.Accessory;
 		}
 
+		var headItem = inventory.Head.Item;
+		if (headSlot != null)
+		{
+			headSlot.Equipment = (headItem as AccessoryItem)?.Accessory;
+		}
+
 		state.Stats.Update();
 
 		CharacterState.viewCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
