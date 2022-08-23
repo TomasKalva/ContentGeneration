@@ -4,6 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Movement;
 
-public class WeaponSlot : EquipmentSlot<Weapon>
+public class AccessorySlot : EquipmentSlot<Accessory>
 {
 }

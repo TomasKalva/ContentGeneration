@@ -4,15 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Movement;
 
-public class EquipmentSlot<EquipmentT> : MonoBehaviour where EquipmentT : Equipment
+public class EquipmentSlot<EquipmentT> : EquipmentSlot where EquipmentT : Equipment
 {
     [SerializeField]
     float equipmentScale = 1f;
 
-    /// <summary>
-    /// To manage destruction of equipment correctly.
-    /// </summary>
-    public World World { private get; set; }
 
     Transform equipmentTransform;
     EquipmentT equipment;

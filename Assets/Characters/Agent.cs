@@ -64,15 +64,15 @@ public class Agent : MonoBehaviour
 	WeaponSlot rightWeaponSlot;
 
 	[SerializeField]
-	WeaponSlot leftWristSlot;
+	AccessorySlot leftWristSlot;
 
 	[SerializeField]
-	WeaponSlot rightWristSlot;
+	AccessorySlot rightWristSlot;
 
 	[SerializeField]
-	WeaponSlot headSlot;
+	AccessorySlot headSlot;
 
-
+	EquipmentSlot[] slots;
 
 	// Start is called before the first frame update
 	void Awake()
@@ -81,18 +81,20 @@ public class Agent : MonoBehaviour
 		acting = GetComponent<Acting>();
 		animator = GetComponent<Animator>();
 		animancerAnimator = GetComponent<AnimancerComponent>();
+		slots = new EquipmentSlot[]
+		{
+			leftWeaponSlot,
+			rightWeaponSlot,
+			leftWristSlot,
+			rightWristSlot,
+			headSlot,
+		};
 	}
 
     private void Start()
     {
-		if(leftWeaponSlot != null)
-		{
-			leftWeaponSlot.World = CharacterState.World;
-		}
-		if (rightWeaponSlot != null)
-		{
-			rightWeaponSlot.World = CharacterState.World;
-		}
+		slots.SelectNN(slot => slot).ForEach(slot => slot.World = CharacterState.World);
+
 		SynchronizeWithState(CharacterState);
 		acting.UseItem.Inventory = CharacterState.Inventory;
 	}
@@ -226,6 +228,13 @@ public class Agent : MonoBehaviour
 		{
 			rightWeaponSlot.Equipment = (rightWeaponItem as WeaponItem)?.Weapon;
 		}
+
+		/*
+		var leftWristItem = inventory.LeftWrist.Item;
+		if (leftWristSlot != null)
+		{
+			leftWristSlot.Equipment = (leftWristItem as WeaponItem)?.Weapon;
+		}*/
 
 		state.Stats.Update();
 

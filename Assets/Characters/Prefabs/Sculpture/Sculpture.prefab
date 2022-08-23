@@ -1164,6 +1164,9 @@ MonoBehaviour:
   stateMaterials: {fileID: 11400000, guid: bb1b489c7574f324bb16c275ce4cc5de, type: 2}
   leftWeaponSlot: {fileID: 6568517939341452783}
   rightWeaponSlot: {fileID: 1489448645953422288}
+  leftWristSlot: {fileID: 0}
+  rightWristSlot: {fileID: 0}
+  headSlot: {fileID: 0}
 --- !u!1 &2336334424676546886
 GameObject:
   m_ObjectHideFlags: 0
@@ -3115,6 +3118,10 @@ PrefabInstance:
       propertyPath: weaponScale
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 8254846310209840315, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}
+      propertyPath: equipmentScale
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8254846310209840316, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -3202,6 +3209,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8254846310209840315, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}
       propertyPath: weaponScale
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8254846310209840315, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}
+      propertyPath: equipmentScale
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8254846310209840316, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}

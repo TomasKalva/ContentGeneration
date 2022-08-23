@@ -8,42 +8,62 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-[Serializable]
-public class WeaponItem : ItemState
+public class EquipmentItem<EquipmentT> : ItemState where EquipmentT : Equipment
 {
-    GeometryMaker<Weapon> WeaponMaker { get; }
-    Weapon _cachedWeapon { get; set; }
+    protected GeometryMaker<EquipmentT> WeaponMaker { get; }
+    protected EquipmentT _cachedEquipment { get; set; }
+
+    public EquipmentItem(string name, string description, GeometryMaker<EquipmentT> equipmentMaker)
+    {
+        Name = name;
+        Description = description;
+        WeaponMaker = equipmentMaker;
+        //equipmentMaker.WeaponItem = this;
+    }
+}
+
+public class AccessoryItem : EquipmentItem<Accessory>
+{
+    public Accessory Accessory
+    {
+        get
+        {
+            if (_cachedEquipment == null)
+            {
+                _cachedEquipment = WeaponMaker();
+                _cachedEquipment.AccessoryItem = this;
+            }
+            return _cachedEquipment;
+        }
+    }
+
+    public AccessoryItem(string name, string description, GeometryMaker<Accessory> accessoryMaker, IEnumerable<ByUser<Effect>> baseEffects) : base(name, description, accessoryMaker)
+    {
+    }
+}
+
+public class WeaponItem : EquipmentItem<Weapon>
+{
     public Weapon Weapon 
     {
         get
         {
-            if (_cachedWeapon == null)
+            if (_cachedEquipment == null)
             {
-                _cachedWeapon = WeaponMaker();//.CreateGeometry();
-                _cachedWeapon.WeaponItem = this;
+                _cachedEquipment = WeaponMaker();
+                _cachedEquipment.WeaponItem = this;
             }
-            return _cachedWeapon;
+            return _cachedEquipment;
         }
     }
+
     ByUser<Effect>[] BaseEffects { get; set; }
     List<ByUser<Effect>> UpgradeEffects { get; set; }
 
-    public WeaponItem(string name, string description, GeometryMaker<Weapon> weaponMaker, IEnumerable<ByUser<Effect>> baseEffects)
+    public WeaponItem(string name, string description, GeometryMaker<Weapon> weaponMaker, IEnumerable<ByUser<Effect>> baseEffects) : base(name, description, weaponMaker)
     {
-        Name = name;
-        Description = description;
-        WeaponMaker = weaponMaker;
-        //weaponMaker.WeaponItem = this;
-
         BaseEffects = baseEffects.ToArray();
         UpgradeEffects = new List<ByUser<Effect>>();
-
-        OnUseDelegate =
-            character =>
-            {
-                Debug.Log($"{Name} is being used");
-                character.Inventory.RightWeapon.Item = this;
-            };
     }
 
     public WeaponItem AddUpgradeEffect(ByUser<Effect> effect)
