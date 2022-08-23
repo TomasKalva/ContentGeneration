@@ -37,7 +37,7 @@ public class AccessoryItem : EquipmentItem<Accessory>
         }
     }
 
-    public AccessoryItem(string name, string description, GeometryMaker<Accessory> accessoryMaker, IEnumerable<ByUser<Effect>> baseEffects) : base(name, description, accessoryMaker)
+    public AccessoryItem(string name, string description, GeometryMaker<Accessory> accessoryMaker) : base(name, description, accessoryMaker)
     {
     }
 }

@@ -61,6 +61,7 @@ namespace ShapeGrammar
             playerState.Inventory.RightWeapon.Item = libraries.Items.Katana();
             playerState.AddAndEquipItem(libraries.Items.FreeWill());
             playerState.AddAndEquipItem(libraries.Items.MayanKnife());
+            libraries.Items.AllWristItems().ForEach(wi => playerState.AddItem(wi()));
 
             GameViewModel.ViewModel.PlayerState = playerState;
         }

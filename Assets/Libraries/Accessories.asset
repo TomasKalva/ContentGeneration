@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a30e787244b8974496290b868befa07, type: 3}
+  m_Name: Accessories
+  m_EditorClassIdentifier: 
+  ring: {fileID: 749847660005100921, guid: a59cb91fa4b3ce84aabedfb685f496fe, type: 3}
+  twoRings: {fileID: 4779911197141800618, guid: 7a4377cb50ef1704791e1ed1deee05f4, type: 3}
+  watches: {fileID: 3692174359320813760, guid: f0b1963faa9412f489910473185b8cab, type: 3}
+  handcuff: {fileID: 5769324471535797639, guid: f4b98f8cb262bba4ebf64fb4e63bea98, type: 3}
+  nails: {fileID: 3736434357905915021, guid: cf14d0fb509009348a78a53dd0d110ad, type: 3}
+  hairRubber: {fileID: 7319370130770978143, guid: 9b54ab07f8b4a3e459bd8b8ff6b9f442, type: 3}

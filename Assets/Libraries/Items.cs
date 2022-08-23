@@ -27,6 +27,9 @@ public class Items : ScriptableObject
     [SerializeField]
     Weapons weapons;
 
+    [SerializeField]
+    Accessories accessories;
+
     EffectLibrary Effects;
 
     public void SetLibraries(EffectLibrary effects)
@@ -77,6 +80,34 @@ public class Items : ScriptableObject
         Scythe,
         Mace,
         Katana,
+    };
+
+    public AccessoryItem Ring() => new AccessoryItem("Ring", "Circle", accessories.Ring)
+        .SetWearable(SlotType.Wrist) as AccessoryItem;
+
+    public AccessoryItem TwoRings() => new AccessoryItem("Two Ring", "Two is more than one.", accessories.TwoRings)
+        .SetWearable(SlotType.Wrist) as AccessoryItem;
+
+    public AccessoryItem Watches() => new AccessoryItem("Watches", "Circle", accessories.Watches)
+        .SetWearable(SlotType.Wrist) as AccessoryItem;
+
+    public AccessoryItem Handcuff() => new AccessoryItem("Handcuff", "Circle", accessories.Handcuff)
+        .SetWearable(SlotType.Wrist) as AccessoryItem;
+
+    public AccessoryItem Nails() => new AccessoryItem("Nails", "Circle", accessories.Nails)
+        .SetWearable(SlotType.Wrist) as AccessoryItem;
+
+    public AccessoryItem HairRubber() => new AccessoryItem("Hair Rubber", "Circle", accessories.HairRubber)
+        .SetWearable(SlotType.Wrist) as AccessoryItem;
+
+    public IEnumerable<Func<AccessoryItem>> AllWristItems() => new List<Func<AccessoryItem>>()
+    {
+        Ring,
+        TwoRings,
+        Watches,
+        Handcuff,
+        Nails,
+        HairRubber,
     };
 
     public ItemState NewItem(string name, string description) => 

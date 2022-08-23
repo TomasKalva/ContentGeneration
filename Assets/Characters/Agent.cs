@@ -229,12 +229,18 @@ public class Agent : MonoBehaviour
 			rightWeaponSlot.Equipment = (rightWeaponItem as WeaponItem)?.Weapon;
 		}
 
-		/*
+		
 		var leftWristItem = inventory.LeftWrist.Item;
 		if (leftWristSlot != null)
 		{
-			leftWristSlot.Equipment = (leftWristItem as WeaponItem)?.Weapon;
-		}*/
+			leftWristSlot.Equipment = (leftWristItem as AccessoryItem)?.Accessory;
+		}
+
+		var rightWristItem = inventory.RightWrist.Item;
+		if (rightWristSlot != null)
+		{
+			rightWristSlot.Equipment = (rightWristItem as AccessoryItem)?.Accessory;
+		}
 
 		state.Stats.Update();
 

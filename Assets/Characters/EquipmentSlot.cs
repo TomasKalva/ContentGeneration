@@ -7,7 +7,7 @@ using static Movement;
 public class EquipmentSlot<EquipmentT> : EquipmentSlot where EquipmentT : Equipment
 {
     [SerializeField]
-    float equipmentScale = 1f;
+    protected float equipmentScale = 1f;
 
 
     Transform equipmentTransform;
