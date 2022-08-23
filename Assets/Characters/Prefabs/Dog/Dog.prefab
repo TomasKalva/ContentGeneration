@@ -811,9 +811,9 @@ MonoBehaviour:
   stateMaterials: {fileID: 11400000, guid: bb1b489c7574f324bb16c275ce4cc5de, type: 2}
   leftWeaponSlot: {fileID: 2815407099910112329}
   rightWeaponSlot: {fileID: 0}
-  leftWristSlot: {fileID: 0}
-  rightWristSlot: {fileID: 0}
-  headSlot: {fileID: 0}
+  leftWristSlot: {fileID: 4250768998401681479}
+  rightWristSlot: {fileID: 4809434991189345752}
+  headSlot: {fileID: 2649464096876347888}
 --- !u!114 &181610948515338992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -991,9 +991,9 @@ SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: -538439120953531310, guid: 01ca319b4dcfe7548963823e33757d14, type: 3}
   m_PrefabInstance: {fileID: 3312805612868412375}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1754730128509373800 stripped
+--- !u!4 &649654100047960572 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 3865072433241992895, guid: 01ca319b4dcfe7548963823e33757d14, type: 3}
+  m_CorrespondingSourceObject: {fileID: -6557949343179130325, guid: 01ca319b4dcfe7548963823e33757d14, type: 3}
   m_PrefabInstance: {fileID: 3312805612868412375}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &487184281772635566 stripped
@@ -1001,9 +1001,9 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3115260188186580601, guid: 01ca319b4dcfe7548963823e33757d14, type: 3}
   m_PrefabInstance: {fileID: 3312805612868412375}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &649654100047960572 stripped
+--- !u!4 &1754730128509373800 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -6557949343179130325, guid: 01ca319b4dcfe7548963823e33757d14, type: 3}
+  m_CorrespondingSourceObject: {fileID: 3865072433241992895, guid: 01ca319b4dcfe7548963823e33757d14, type: 3}
   m_PrefabInstance: {fileID: 3312805612868412375}
   m_PrefabAsset: {fileID: 0}
 --- !u!95 &5312499011581674837
@@ -1091,7 +1091,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8948146593427722430, guid: 8f66d4d0061c3e347b19dc26c9097a93, type: 3}
       propertyPath: m_Name
-      value: AccessorySlot
+      value: RightAccessorySlot
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f66d4d0061c3e347b19dc26c9097a93, type: 3}
@@ -1100,6 +1100,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4953924722669210793, guid: 8f66d4d0061c3e347b19dc26c9097a93, type: 3}
   m_PrefabInstance: {fileID: 3624484573251371771}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4809434991189345752 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8138648980170262307, guid: 8f66d4d0061c3e347b19dc26c9097a93, type: 3}
+  m_PrefabInstance: {fileID: 3624484573251371771}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba71e472e8bc96943a5302266f3701a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4604281280665852668
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1222,7 +1233,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8948146593427722430, guid: 8f66d4d0061c3e347b19dc26c9097a93, type: 3}
       propertyPath: m_Name
-      value: AccessorySlot
+      value: LeftAccessorySlot
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f66d4d0061c3e347b19dc26c9097a93, type: 3}
@@ -1231,6 +1242,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4953924722669210793, guid: 8f66d4d0061c3e347b19dc26c9097a93, type: 3}
   m_PrefabInstance: {fileID: 5336635547313860452}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4250768998401681479 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8138648980170262307, guid: 8f66d4d0061c3e347b19dc26c9097a93, type: 3}
+  m_PrefabInstance: {fileID: 5336635547313860452}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba71e472e8bc96943a5302266f3701a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6068182337816069843
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1284,10 +1306,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8948146593427722430, guid: 8f66d4d0061c3e347b19dc26c9097a93, type: 3}
       propertyPath: m_Name
-      value: AccessorySlot
+      value: HeadAccessorySlot
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f66d4d0061c3e347b19dc26c9097a93, type: 3}
+--- !u!114 &2649464096876347888 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8138648980170262307, guid: 8f66d4d0061c3e347b19dc26c9097a93, type: 3}
+  m_PrefabInstance: {fileID: 6068182337816069843}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba71e472e8bc96943a5302266f3701a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6169174117443510514
 PrefabInstance:
   m_ObjectHideFlags: 0

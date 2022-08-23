@@ -62,6 +62,7 @@ namespace ShapeGrammar
             playerState.AddAndEquipItem(libraries.Items.FreeWill());
             playerState.AddAndEquipItem(libraries.Items.MayanKnife());
             libraries.Items.AllWristItems().ForEach(wi => playerState.AddItem(wi()));
+            playerState.Inventory.Head.Item = libraries.Items.Eggs();
 
             libraries.Items.AllHeadItems().ForEach(wi => playerState.AddItem(wi()));
 
