@@ -35,10 +35,10 @@ public class Enemies : ScriptableObject
 
     public IEnumerable<Func<CharacterState>> AllAgents () => new List<Func<CharacterState>>()
     {
-        /*Sculpture,
+        //Sculpture,
         MayanThrower,
-        MayanSwordsman,*/
-        SkinnyWoman,
+        //MayanSwordsman,
+        //SkinnyWoman,
         /*DragonMan,
         Dog,*/
     };
