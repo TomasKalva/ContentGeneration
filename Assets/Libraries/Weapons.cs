@@ -36,11 +36,6 @@ public class Weapons : ScriptableObject
     [SerializeField]
     Weapon mayanKnife;
 
-    /*
-    [SerializeField]
-    Weapon fireball;
-    */
-
     [SerializeField]
     Weapon mayanSword;
 
