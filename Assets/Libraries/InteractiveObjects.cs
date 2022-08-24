@@ -23,30 +23,11 @@ public class InteractiveObjects : ScriptableObject
         Selection.activeObject = asset;
     }
 #endif
-    // todo: first return only state of the object, once the world is created, instantiate gameObject from prefab
     [SerializeField]
     InteractiveObject gravePrefab;
 
     [SerializeField]
     public InteractiveObject ascensionKilnPrefab;
-
-    [SerializeField]
-    Transform elevatorPrefab;
-
-    [SerializeField]
-    InteractiveObject leverPrefab;
-
-    [SerializeField]
-    Transform gableRoof;
-
-    [SerializeField]
-    Transform pointyRoof;
-
-    [SerializeField]
-    Transform crossRoof;
-
-    [SerializeField]
-    Transform oneDirectionRoof;
 
     [SerializeField]
     Transform physicalItemPrefab;
@@ -67,79 +48,6 @@ public class InteractiveObjects : ScriptableObject
 
         return state;
     }
-
-    public AscensionKiln AscensionKiln()
-    {
-        var state = new AscensionKiln()
-        {
-            Name = "Ascension Kiln",
-            MessageOnInteract = "Will increased",
-            InteractionDescription = "Increase will",
-            GeometryMaker = Geometry<Kiln>(ascensionKilnPrefab.transform)
-        };
-
-        return state;
-    }
-
-    public ElevatorState Elevator(float height, bool up)
-    {
-        var state = new ElevatorState(height, up);
-        var obj = Instantiate(elevatorPrefab);
-        state.Object = obj;
-
-        var lever = Lever(state.Activate);
-        var leverSlot = obj.FindRecursive("LeverSlot");
-        lever.transform.SetParent(leverSlot, Vector3.zero);
-        return state;
-    }
-
-    public InteractiveObject Lever(Action onPulled)
-    {
-        var state = new Lever(onPulled)
-        {
-            Name = "Lever",
-            MessageOnInteract = "Pulled",
-            InteractionDescription = "Pull lever"
-        };
-        var obj = Instantiate(leverPrefab);
-        obj.State = state;
-
-        return obj;
-    }
-
-    #region Roofs
-    public Transform GableRoof(Vector3 extents)
-    {
-        var obj = Instantiate(gableRoof);
-        obj.transform.localScale = Vector3.Scale(obj.transform.localScale, extents);
-
-        return obj;
-    }
-
-    public Transform PointyRoof(Vector3 extents)
-    {
-        var obj = Instantiate(pointyRoof);
-        obj.transform.localScale = Vector3.Scale(obj.transform.localScale, extents);
-
-        return obj;
-    }
-
-    public Transform CrossRoof(Vector3 extents)
-    {
-        var obj = Instantiate(crossRoof);
-        obj.transform.localScale = Vector3.Scale(obj.transform.localScale, extents);
-
-        return obj;
-    }
-
-    public Transform OneDirectionRoof(Vector3 extents)
-    {
-        var obj = Instantiate(oneDirectionRoof);
-        obj.transform.localScale = Vector3.Scale(obj.transform.localScale, extents);
-
-        return obj;
-    }
-    #endregion
 
     public GeometryMaker<InteractiveObjectT> Geometry<InteractiveObjectT>(Transform prefab) where InteractiveObjectT : InteractiveObject
     {
@@ -190,9 +98,6 @@ public class InteractiveObjects : ScriptableObject
                                 transporter.Interact(
                                     (transporter, pl) => { }
                                     );
-
-                                //var reality = GameObject.Find("Reality").GetComponent<Reality>();
-                                //reality.CreateWorld();
 
                                 var game = GameObject.Find("Game").GetComponent<Game>();
                                 game.GoToNextLevel();

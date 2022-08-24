@@ -43,7 +43,7 @@ namespace ContentGeneration.Assets.UI
 
         public WorldGeometry WorldGeometry { get; }
 
-        public IEnumerable<CharacterState> AliveEnemies => Enemies.Where(ch => ch != null && !ch.Dead);
+        public IEnumerable<CharacterState> AliveEnemies => Enemies;//.Where(ch => ch != null && !ch.Dead);
         public IEnumerable<InteractiveObjectState> InteractiveObjects => interactiveObjects.Where(io => io != null && io.InteractiveObject != null);
 
         // Start is called before the first frame update
