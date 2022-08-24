@@ -21,9 +21,9 @@ namespace ShapeGrammar
         {
             State.LC.AddEvent($"Level Start", 100, level => L.LevelLanguage.LevelStart(), true);
 
-            /*
+            
             State.LC.AddEvent($"Level End", 90, level => L.LevelLanguage.LevelEnd(), true);
-            */
+            
             /*
             State.LC.AddEvent( $"Main path", 90, level => L.LevelLanguage.MainPath(level), true);
             
@@ -35,7 +35,7 @@ namespace ShapeGrammar
             
             State.LC.AddEvent($"Out of depth encounter", 80, level => L.OutOfDepthEncountersLanguage.DifficultEncounter(level), true);
             */
-            State.LC.AddEvent($"Environment", 0, level => L.EnvironmentLanguage.TestSky(level), true);
+            //State.LC.AddEvent($"Environment", 0, level => L.EnvironmentLanguage.TestSky(level), true);
             
             /*
             State.LC.AddEvent("Farmer branch", 5, level => L.FarmersLanguage.FarmerBranch(0));
@@ -76,7 +76,7 @@ namespace ShapeGrammar
             State.LC.AddEvent("Testing enemies", 5, _ => L.TestingLanguage.StatsScalingOfEnemies());
             
             
-            State.LC.AddEvent("Testing spells", 90, _ => L.TestingLanguage.Spells());
+            //State.LC.AddEvent("Testing spells", 90, _ => L.TestingLanguage.Spells());
              
 
             
