@@ -15,6 +15,7 @@ public class DragonManAgent : Agent
     public Act FlapWings()
     {
         var attack = acting.SelectAct("FlapWings") as Shoot;
+        attack.ThrowEffect = Lib.Spells.Cloud(Lib.VFXs.MovingCloud, Color.white, Lib.VFXs.WindTexture, 1.0f, 4f, 700f, new DamageDealt(DamageType.Divine, 2f));
         return attack;
     }
 
