@@ -35,12 +35,12 @@ public class Enemies : ScriptableObject
 
     public IEnumerable<Func<CharacterState>> AllAgents () => new List<Func<CharacterState>>()
     {
-        Sculpture,
+        /*Sculpture,
         MayanThrower,
-        MayanSwordsman,
+        MayanSwordsman,*/
         SkinnyWoman,
-        DragonMan,
-        Dog,
+        /*DragonMan,
+        Dog,*/
     };
 
 
@@ -234,6 +234,7 @@ public class Enemies : ScriptableObject
                 {
                     throw new InvalidOperationException("The object doesn't have Agent component");
                 }
+                comp.Lib = libraries;
                 return comp;
             }
         );

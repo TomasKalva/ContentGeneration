@@ -1,4 +1,5 @@
 ﻿using Animancer;
+using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using ContentGeneration.Assets.UI.Model;
 using ContentGeneration.Assets.UI.Util;
 using System.Collections;
@@ -15,6 +16,8 @@ public class Agent : MonoBehaviour
 	public Animator animator;
 	public AnimancerComponent animancerAnimator;
 	public Renderer myRenderer;
+
+	public Libraries Lib { protected get; set; }
 
 	CharacterState _characterState;
 	public CharacterState CharacterState 
@@ -269,6 +272,11 @@ public class Agent : MonoBehaviour
 	public Vector3 GetRightHandPosition()
 	{
 		return rightWeaponSlot.transform.position;
+	}
+
+	public Vector3 GetLeftHandPosition()
+	{
+		return leftWeaponSlot.transform.position;
 	}
 
 	public void Turn(Vector2 direction)

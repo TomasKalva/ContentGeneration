@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,8 @@ public class Shoot : AnimatedAct
 {
     [SerializeField]
     Projectile projectile;
+
+    public Effect ThrowEffect { set; private get; }
 
     [SerializeField]
     Transform gun;
@@ -59,12 +62,17 @@ public class Shoot : AnimatedAct
 
     void DoShot(Agent agent)
     {
+        if (ThrowEffect != null)
+        {
+            ThrowEffect(agent.CharacterState);
+        }
+        /*
         var direction = directionToTargetF();
         var bullet = Instantiate(projectile);
         bullet.transform.position = gun.position + gun.forward * 0.5f;
         bullet.transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
         bullet.GetComponent<Rigidbody>().velocity = direction * speed;
         bullet.Active = true;
-        bullet.Owner = agent;
+        bullet.Owner = agent;*/
     }
 }

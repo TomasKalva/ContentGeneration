@@ -12,9 +12,6 @@ public enum ActType
 public class Act : MonoBehaviour
 {
     [SerializeField]
-    ColliderDetector detector;
-
-    [SerializeField]
     public string actName;
 
     [SerializeField]

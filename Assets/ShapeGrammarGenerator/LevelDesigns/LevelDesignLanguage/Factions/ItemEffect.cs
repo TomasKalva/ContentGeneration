@@ -173,6 +173,25 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                 return this;
             }
 
+            public SelectorInitializator LeftHandOfCharacter(float frontDist)
+            {
+                initializationOperations.Add((ch, s) => s.transform.position = ch.Agent.GetLeftHandPosition() + ch.Agent.movement.AgentForward * frontDist + 0.2f * Vector3.down);
+                return this;
+            }
+
+            public SelectorInitializator HandOfCharacter(float frontDist, bool right = true)
+            {
+                if (right)
+                {
+                    RightHandOfCharacter(frontDist);
+                }
+                else
+                {
+                    LeftHandOfCharacter(frontDist);
+                }
+                return this;
+            }
+
             public SelectorInitializator SetVelocity(Func<CharacterState, Vector3> directionF, float speed)
             {
                 initializationOperations.Add((ch, s) => s.velocity = speed * directionF(ch));
@@ -365,7 +384,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
     }
 
 
-    class Spells
+    public class Spells
     {
         EffectLibrary eff;
         SelectorLibrary sel;
@@ -439,11 +458,11 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         /// <summary>
         /// Shoots a bolt forward from character's hand. It deals damage upon impact.
         /// </summary>
-        public Effect Bolt(Func<VFX> vfxF, Color color, FlipbookTexture texture, float scale, float speed, DamageDealt damageDealt)
+        public Effect Bolt(Func<VFX> vfxF, Color color, FlipbookTexture texture, float scale, float speed, DamageDealt damageDealt, bool rightHand = true)
         {
             return user => user.World.CreateOccurence(
                 sel.GeometricSelector(vfxF, 4f, sel.Initializator()
-                    .RightHandOfCharacter(0f)
+                    .HandOfCharacter(0f, rightHand)
                     .SetVelocity(user => user.Agent.movement.AgentForward, speed)
                     .RotatePitch(-90f)
                     .Scale(scale)
@@ -570,7 +589,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         }
     }
 
-    class SpellItems
+    public class SpellItems
     {
         Spells spells;
         VFXs vfxs;

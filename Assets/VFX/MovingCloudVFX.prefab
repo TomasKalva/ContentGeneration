@@ -113,7 +113,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   detectionMask:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 5120
   other: {fileID: 0}
 --- !u!1 &6833460153078268311
 GameObject:

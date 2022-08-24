@@ -33,6 +33,8 @@ public class Libraries : ScriptableObject
 
     public EffectLibrary Effects;
     public SelectorLibrary Selectors;
+    public Spells Spells;
+    public SpellItems SpellItems;
 
     public void Initialize()
     {
@@ -40,6 +42,7 @@ public class Libraries : ScriptableObject
         Effects = new EffectLibrary(Selectors);
         Weapons.SetLibraries(Selectors);
         Items.SetLibraries(Effects);
-
+        Spells = new Spells(Effects, Selectors, VFXs);
+        SpellItems = new SpellItems(Spells, VFXs);
     }
 }
