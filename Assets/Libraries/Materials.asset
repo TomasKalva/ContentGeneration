@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f335672caeaccf24e9b7ccc2b6196a44, type: 3}
   m_Name: Materials
   m_EditorClassIdentifier: 
-  stone: {fileID: 0}
-  bricks: {fileID: 0}
-  water: {fileID: 0}
-  tiles: {fileID: 0}
-  wood: {fileID: 0}
+  stone: {fileID: 2100000, guid: 9d3c91eadbf8182459c84c5d4c8b9fc6, type: 2}
+  bricks: {fileID: 2100000, guid: 8443dd43055769044bde8eb38225bfb0, type: 2}
+  water: {fileID: 2100000, guid: dc7e5cd9d06ab234daf6307677ad577e, type: 2}
+  tiles: {fileID: 2100000, guid: e28dc812e97615847b191184747b1f68, type: 2}
+  wood: {fileID: 2100000, guid: 0517d0c8bab888d40adf0b95db6351e1, type: 2}
