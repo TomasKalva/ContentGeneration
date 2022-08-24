@@ -36,12 +36,27 @@ namespace ContentGeneration.Assets.UI.Model
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        CharacterState Owner { get; }
+
         ItemState _item;
         public ItemState Item
         {
             get => _item;
             set
             {
+                if (SlotType != SlotType.Passive)
+                {
+                    if (_item != null)
+                    {
+                        _item.OnUnequipDelegate(Owner);
+                    }
+                    
+                    if (value != null)
+                    {
+                        value.OnEquipDelegate(Owner);
+                    }
+                }
+
                 _item = value;
                 PropertyChanged.OnPropertyChanged(this);
             }
@@ -72,11 +87,12 @@ namespace ContentGeneration.Assets.UI.Model
         public SlotType SlotType { get; }
         public int SlotId { get; }
 
-        public InventorySlot(SlotType slotType, int slotId)
+        public InventorySlot(CharacterState owner, SlotType slotType, int slotId)
         {
             SlotType = slotType;
             SlotId = slotId;
             Selected = false;
+            this.Owner = owner;
         }
     }
 
@@ -170,23 +186,23 @@ namespace ContentGeneration.Assets.UI.Model
             PassiveSlots = new ObservableCollection<InventorySlot>();
             for (int i = 0; i < 15; i++)
             {
-                PassiveSlots.Add(new InventorySlot(SlotType.Passive, i));
+                PassiveSlots.Add(new InventorySlot(character, SlotType.Passive, i));
             }
 
             ActiveSlots = new ObservableCollection<InventorySlot>();
             for (int i = 0; i < 5; i++)
             {
-                ActiveSlots.Add(new InventorySlot(SlotType.Active, i));
+                ActiveSlots.Add(new InventorySlot(character, SlotType.Active, i));
             }
 
             WearableSlots = new ObservableCollection<InventorySlot>() 
             { 
-                new InventorySlot(SlotType.Weapon, 0),
-                new InventorySlot(SlotType.Weapon, 1),
-                new InventorySlot(SlotType.Head, 0),
-                new InventorySlot(SlotType.Wrist, 0),
-                new InventorySlot(SlotType.Wrist, 1),
-                new InventorySlot(SlotType.Heart, 0),
+                new InventorySlot(character, SlotType.Weapon, 0),
+                new InventorySlot(character, SlotType.Weapon, 1),
+                new InventorySlot(character, SlotType.Head, 0),
+                new InventorySlot(character, SlotType.Wrist, 0),
+                new InventorySlot(character, SlotType.Wrist, 1),
+                new InventorySlot(character, SlotType.Heart, 0),
             };
 
             AllSlots = WearableSlots.Concat(ActiveSlots).Concat(PassiveSlots).ToList();

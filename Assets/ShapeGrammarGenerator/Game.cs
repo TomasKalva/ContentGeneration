@@ -64,7 +64,8 @@ namespace ShapeGrammar
             libraries.Items.AllWristItems().ForEach(wi => playerState.AddItem(wi()));
             playerState.Inventory.Head.Item = libraries.Items.Eggs();
 
-            libraries.Items.AllHeadItems().ForEach(wi => playerState.AddItem(wi()));
+            libraries.Items.AllHeartItems().ForEach(hi => playerState.AddItem(hi()));
+            //libraries.Items.AllHeadItems().ForEach(wi => playerState.AddItem(wi()));
 
             GameViewModel.ViewModel.PlayerState = playerState;
         }

@@ -248,6 +248,13 @@ public class Agent : MonoBehaviour
 			headSlot.Equipment = (headItem as AccessoryItem)?.Accessory;
 		}
 
+		var heartItem = inventory.Heart.Item;
+		if(myRenderer != null)
+        {
+			myRenderer.sharedMaterial = (heartItem as MaterialItem)?.Material;
+        }
+
+
 		state.Stats.Update();
 
 		CharacterState.viewCamera = GameObject.Find("Main Camera").GetComponent<Camera>();

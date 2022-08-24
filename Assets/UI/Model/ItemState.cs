@@ -91,6 +91,8 @@ namespace ContentGeneration.Assets.UI.Model
             OnUseDelegate = _ => { };
             OnDropDelegate = _ => { };
             OnUpdateDelegate = _ => { };
+            OnEquipDelegate = _ => { };
+            OnUnequipDelegate = _ => { };
             IsStackable = false;
             Usage = new ItemUsage();
         }
@@ -124,6 +126,22 @@ namespace ContentGeneration.Assets.UI.Model
             OnUpdateDelegate = characterAction;
             return this;
             //Debug.Log($"Updating {Name}");
+        }
+
+        public CharacterAction OnEquipDelegate { get; protected set; }
+        public ItemState OnEquip(CharacterAction characterAction)
+        {
+            OnEquipDelegate = characterAction;
+            return this;
+            //Debug.Log($"Dropping {Name}");
+        }
+
+        public CharacterAction OnUnequipDelegate { get; protected set; }
+        public ItemState OnUnequip(CharacterAction characterAction)
+        {
+            OnUnequipDelegate = characterAction;
+            return this;
+            //Debug.Log($"Dropping {Name}");
         }
 
         public InventorySlot AddToInventory(Inventory inventory)
@@ -351,7 +369,11 @@ namespace ContentGeneration.Assets.UI.Model
 
             public override InventorySlot EquipToPosition(Inventory inventory, InventorySlot currentSlot, int slotId)
             {
-                var newSlot = inventory.WearableSlots.First(slot => slot.SlotType == SlotType && slot.SlotId == slotId);
+                var newSlot = inventory.WearableSlots.FirstOrDefault(slot => slot.SlotType == SlotType && slot.SlotId == slotId);
+                if(newSlot == null)
+                {
+                    return null;
+                }
                 return inventory.ExchangeItems(currentSlot, newSlot);
             }
 

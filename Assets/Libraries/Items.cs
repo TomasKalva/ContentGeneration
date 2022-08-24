@@ -30,6 +30,9 @@ public class Items : ScriptableObject
     [SerializeField]
     Accessories accessories;
 
+    [SerializeField]
+    Materials materials;
+
     EffectLibrary Effects;
 
     public void SetLibraries(EffectLibrary effects)
@@ -132,6 +135,41 @@ public class Items : ScriptableObject
         Eggs,
         ExtraHead,
         TowerHorns,
+    };
+
+
+    public MaterialItem StoneHeart() => new MaterialItem("Stone Heart", "Circle", materials.stone)
+        .OnEquip(ch => ch.Stats.Versatility += 10)
+        .OnUnequip(ch => ch.Stats.Versatility -= 10)
+        .SetWearable(SlotType.Heart) as MaterialItem;
+
+    public MaterialItem BrickHeart() => new MaterialItem("Brick Heart", "Circle", materials.bricks)
+        .OnEquip(ch => ch.Stats.Strength += 10)
+        .OnUnequip(ch => ch.Stats.Strength -= 10)
+        .SetWearable(SlotType.Heart) as MaterialItem;
+
+    public MaterialItem WaterHeart() => new MaterialItem("Water Heart", "Circle", materials.water)
+        .OnEquip(ch => ch.Stats.Will += 10)
+        .OnUnequip(ch => ch.Stats.Will -= 10)
+        .SetWearable(SlotType.Heart) as MaterialItem;
+
+    public MaterialItem TiledHeart() => new MaterialItem("Tiled Heart", "Circle", materials.tiles)
+        .OnEquip(ch => ch.Stats.Resistances += 10)
+        .OnUnequip(ch => ch.Stats.Resistances -= 10)
+        .SetWearable(SlotType.Heart) as MaterialItem;
+
+    public MaterialItem WoodenHeart() => new MaterialItem("Wooden Heart", "Circle", materials.wood)
+        .OnEquip(ch => ch.Stats.Endurance += 10)
+        .OnUnequip(ch => ch.Stats.Endurance -= 10)
+        .SetWearable(SlotType.Heart) as MaterialItem;
+
+    public IEnumerable<Func<MaterialItem>> AllHeartItems() => new List<Func<MaterialItem>>()
+    {
+        StoneHeart,
+        BrickHeart,
+        WaterHeart,
+        TiledHeart,
+        WoodenHeart,
     };
 
     public ItemState NewItem(string name, string description) => 
