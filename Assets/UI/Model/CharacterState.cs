@@ -171,11 +171,9 @@ namespace ContentGeneration.Assets.UI.Model
 
         public virtual void Die()
         {
-            Agent.enabled = false;
+            Agent.Stagger();
             World.RemoveEnemy(this);
             OnDeath();
-            //GameViewModel.ViewModel.Enemies.Remove(CharacterState);
-            //Destroy(gameObject, 1f);
         }
 #endif
 

@@ -9281,9 +9281,7 @@ MonoBehaviour:
     _Speed: 1
     _NormalizedStartTime: 0
   timedActions: []
-  projectile: {fileID: 1623888701323414183, guid: eabd56301874bd7489737f922a8bcb67, type: 3}
-  gun: {fileID: 7775730742045144830}
-  speed: 5
+  spirtStart: {fileID: 7775730742045144830}
   startT: 0.3
   endT: 0.82
   shotsCount: 40
@@ -9627,7 +9625,7 @@ BoxCollider:
   m_GameObject: {fileID: 5392204996638979776}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}

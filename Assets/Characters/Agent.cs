@@ -136,7 +136,6 @@ public class Agent : MonoBehaviour
 				CharacterState.Die();
 				died = true;
 			}
-			return;
         }
 
 		acting.Act();
@@ -286,7 +285,7 @@ public class Agent : MonoBehaviour
 			movement.Turn(direction);
 		}
 	}
-
+	/*
 	public virtual void Die()
 	{
 		acting.ForceIntoAct(acting.Staggered);
@@ -296,7 +295,7 @@ public class Agent : MonoBehaviour
 		//Destroy(gameObject, 1f);
 
 		enabled = false;
-    }
+    }*/
 
 	public virtual void PickUpItem(PhysicalItemState physicalItem)
     {

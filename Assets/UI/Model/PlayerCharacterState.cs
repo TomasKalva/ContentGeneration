@@ -79,8 +79,6 @@ namespace ContentGeneration.Assets.UI.Model
             GameObject.Destroy(Agent.gameObject);
             OnDeath();
             World.OnPlayerDeath();
-            //GameViewModel.ViewModel.Enemies.Remove(CharacterState);
-            //Destroy(gameObject, 1f);
         }
 #endif
 
