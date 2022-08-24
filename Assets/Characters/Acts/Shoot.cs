@@ -5,19 +5,13 @@ using UnityEngine;
 
 public class Shoot : AnimatedAct
 {
-    [SerializeField]
-    Projectile projectile;
-
-    public Effect ThrowEffect { set; private get; }
-
-    [SerializeField]
-    Transform gun;
-
-    [SerializeField]
-    float speed;
+    /// <summary>
+    /// Creates the shot.
+    /// </summary>
+    public Effect ShotEffect { set; private get; }
 
     /// <summary>
-    /// Normalized to [0,1].
+    /// Time when the shot happens. Normalized to [0,1].
     /// </summary>
     [SerializeField]
     float shootT;
@@ -62,17 +56,9 @@ public class Shoot : AnimatedAct
 
     void DoShot(Agent agent)
     {
-        if (ThrowEffect != null)
+        if (ShotEffect != null)
         {
-            ThrowEffect(agent.CharacterState);
+            ShotEffect(agent.CharacterState);
         }
-        /*
-        var direction = directionToTargetF();
-        var bullet = Instantiate(projectile);
-        bullet.transform.position = gun.position + gun.forward * 0.5f;
-        bullet.transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
-        bullet.GetComponent<Rigidbody>().velocity = direction * speed;
-        bullet.Active = true;
-        bullet.Owner = agent;*/
     }
 }

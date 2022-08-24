@@ -36,7 +36,7 @@ public class MayanAgent : Agent
     public Act Throw()
     {
         var thr = acting.SelectAct("Throw") as Shoot;
-        thr.ThrowEffect = Lib.Spells.Bolt(Lib.VFXs.Lightning, Color.yellow, Lib.VFXs.LightningTexture, 1.0f, 10f, new DamageDealt(DamageType.Chaos, 10f));
+        thr.ShotEffect = Lib.Spells.Bolt(Lib.VFXs.Lightning, Color.yellow, Lib.VFXs.LightningTexture, 1.0f, 10f, new DamageDealt(DamageType.Chaos, 10f));
         return thr;
     }
 }

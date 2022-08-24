@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,14 +7,10 @@ using UnityEngine;
 
 public class SpitFire : MultiEventAct
 {
-    [SerializeField]
-    Projectile projectile;
+    public Func<Vector3, Vector3, Effect> SpitFromPositionDirectionEffect { set; private get; }
 
     [SerializeField]
-    Transform gun;
-
-    [SerializeField]
-    float speed;
+    Transform spirtStart;
 
     [SerializeField]
     float startT;
@@ -34,12 +31,9 @@ public class SpitFire : MultiEventAct
 
     void DoShot(Agent agent)
     {
-        var direction = gun.up;
-        var bullet = Instantiate(projectile);
-        bullet.transform.position = gun.position + direction * 0.5f;
-        bullet.transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
-        bullet.GetComponent<Rigidbody>().velocity = direction * speed;
-        bullet.Active = true;
-        bullet.Owner = agent;
+        if (SpitFromPositionDirectionEffect != null)
+        {
+            SpitFromPositionDirectionEffect(spirtStart.position , spirtStart.up)(agent.CharacterState);
+        }
     }
 }

@@ -1,3 +1,4 @@
+using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,13 +16,23 @@ public class DragonManAgent : Agent
     public Act FlapWings()
     {
         var attack = acting.SelectAct("FlapWings") as Shoot;
-        attack.ThrowEffect = Lib.Spells.Cloud(Lib.VFXs.MovingCloud, Color.white, Lib.VFXs.WindTexture, 1.0f, 4f, 700f, new DamageDealt(DamageType.Divine, 2f));
+        attack.ShotEffect = Lib.Spells.Cloud(Lib.VFXs.MovingCloud, Color.white, Lib.VFXs.WindTexture, 1.5f, 7f, 700f, new DamageDealt(DamageType.Divine, 2f));
         return attack;
     }
 
     public Act SpitFire()
     {
         var attack = acting.SelectAct("SpitFire") as SpitFire;
+        attack.SpitFromPositionDirectionEffect = 
+            (position, direction) => user => user.World.CreateOccurence(
+                Lib.Selectors.GeometricSelector(Lib.VFXs.Fireball, 4f, Lib.Selectors.Initializator()
+                    .ConstPosition(position)
+                    .SetVelocity(user => direction, 6f)
+                    .RotatePitch(-90f)
+                    .Scale(1.5f)
+                    )(new SelectorArgs(Color.yellow, Lib.VFXs.FireTexture))(user),
+                Lib.Effects.Damage(new DamageDealt(DamageType.Chaos, 6f))
+            );
         return attack;
     }
 }
