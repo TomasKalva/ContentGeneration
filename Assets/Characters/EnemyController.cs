@@ -9,27 +9,12 @@ public abstract class EnemyController<AgentT> : MonoBehaviour where AgentT : Age
 {
 	protected AgentT agent;
 
-	[SerializeField]
-	public Transform targetEnemy;
-
-	protected Vector3 TargetPoint => targetEnemy ? targetEnemy.position : Vector3.zero;
-
-	[SerializeField]
-	float minDistance;
-
-	bool GoToTarget()
-    {
-		return agent.CanMove && Vector3.Distance(transform.position, TargetPoint) > minDistance;
-    }
-
-	protected float DistanceToTarget => (TargetPoint - agent.transform.position).magnitude;
 
 
 	// Start is called before the first frame update
 	void Awake()
 	{
 		agent = GetComponent<AgentT>();
-		World.OnCreated += OnWorldCreated;
 	}
 
     private void Start()
@@ -42,7 +27,6 @@ public abstract class EnemyController<AgentT> : MonoBehaviour where AgentT : Age
 
 	void OnWorldCreated()
 	{
-		targetEnemy = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     // Update is called once per frame
@@ -68,15 +52,8 @@ public abstract class EnemyController<AgentT> : MonoBehaviour where AgentT : Age
 
 		agent.UpdateAgent();
 	}
-
+	/*
 	protected virtual void UpdateController(Vector2 movementDirection)
 	{
-		/*foreach (var act in agent.acting.Acts)
-		{
-			if (act.CanBeUsed())
-			{
-				agent.acting.SelectAct(act);
-			}
-		}*/
-	}
+	}*/
 }

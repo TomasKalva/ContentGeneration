@@ -15,17 +15,12 @@ public class GoToTargetBehavior : Behavior
     public GoToTargetBehavior(float maxDistance)
     {
         this.maxDistance = maxDistance;
-        World.OnCreated += Initialize;
     }
 
     bool ShouldGoToTarget(Agent agent)
 	{
 		return agent.CanMove && Vector3.Distance(agent.transform.position, TargetPoint) > maxDistance;
 	}
-
-    void Initialize()
-    {
-    }
 
     public override bool CanEnter(Agent agent)
     {

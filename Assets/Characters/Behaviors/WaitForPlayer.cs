@@ -18,7 +18,6 @@ public class WaitForPlayer : Behavior
     {
         this.maxDistance = maxDistance;
         PlayerFound = false;
-        World.OnCreated += Initialize;
     }
 
     bool CloseToTarget(Agent agent)
@@ -31,10 +30,6 @@ public class WaitForPlayer : Behavior
     {
         var agentPos = agent.transform.position;
         return ExtensionMethods.IsPointInDirection(agentPos, agent.movement.AgentForward, TargetPoint);
-    }
-
-    void Initialize()
-    {
     }
 
     public override bool CanEnter(Agent agent)

@@ -18,17 +18,12 @@ public class TurnToTargetBehavior : Behavior
     {
         this.maxAngle = maxAngle;
         cosMaxAngle = Mathf.Cos(maxAngle * Mathf.Deg2Rad);
-        World.OnCreated += Initialize;
     }
 
     bool ShouldTurnToTarget(Agent agent)
 	{
         return Vector2.Dot(agent.movement.direction, (TargetPoint - agent.transform.position).XZ().normalized) < cosMaxAngle;
 	}
-
-    void Initialize()
-    {
-    }
 
     public override bool CanEnter(Agent agent)
     {

@@ -38,8 +38,8 @@ namespace ContentGeneration.Assets.UI
         OccurenceManager Occurences { get; }
         public Grave Grave { get; set; }
 
-        public delegate void WorldCreated();
-        public static event WorldCreated OnCreated;
+        //public delegate void WorldCreated();
+        //public static event WorldCreated OnCreated;
 
         public WorldGeometry WorldGeometry { get; }
 
@@ -170,11 +170,11 @@ namespace ContentGeneration.Assets.UI
             {
                 Debug.LogError("DefaultBonfire wasn't created!");
             }
-
+            /*
             if (OnCreated != null)
             {
                 OnCreated();
-            }
+            }*/
         }
 
         public void CreateOccurence(Selector selector, params Effect[] effects)

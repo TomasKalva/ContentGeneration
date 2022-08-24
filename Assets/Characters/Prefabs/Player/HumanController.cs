@@ -12,7 +12,7 @@ public class HumanController : EnemyController<HumanAgent>
 	{
 		behaviors.AddBehavior(new DetectorBehavior(agent.Attack, attackArea));
 	}
-
+	/*
 	protected override void UpdateController(Vector2 movementDirection)
 	{
 		// check if my attack hits enemy
@@ -21,15 +21,10 @@ public class HumanController : EnemyController<HumanAgent>
 			var hitAgent = attackArea.other.GetComponentInParent<Agent>();
 			if (hitAgent != agent)
 			{
-				/*if (hitAgent.acting.ActiveAct.type == ActType.OFFENSIVE)
-				{
-					agent.Backstep();
-				}
-				else*/
 				{
 					agent.Attack();
 				}
 			}
 		}
-	}
+	}*/
 }
