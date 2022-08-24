@@ -343,8 +343,7 @@ namespace ContentGeneration.Assets.UI.Model
 
             public override bool TryUse(Inventory inventory, ItemState itemState)
             {
-                itemState.StacksCount -= 1;
-                if (itemState.StacksCount < 0)
+                if (itemState.StacksCount-- <= 0)
                 {
                     return false;
                 }

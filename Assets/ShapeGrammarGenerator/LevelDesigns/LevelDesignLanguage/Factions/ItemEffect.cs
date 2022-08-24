@@ -205,6 +205,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 
             public void Initialize(CharacterState caster, Rigidbody selector)
             {
+                caster.World.AddSpecialObject(selector.transform);
                 initializationOperations.ForEach(op => op(caster, selector));
             }
         }
