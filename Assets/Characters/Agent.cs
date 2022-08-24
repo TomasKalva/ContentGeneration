@@ -81,7 +81,8 @@ public class Agent : MonoBehaviour
 		acting = GetComponent<Acting>();
 		animator = GetComponent<Animator>();
 		animancerAnimator = GetComponent<AnimancerComponent>();
-		slots = new EquipmentSlot[]
+		myRenderer = GetComponentInChildren<Renderer>();
+		 slots = new EquipmentSlot[]
 		{
 			leftWeaponSlot,
 			rightWeaponSlot,

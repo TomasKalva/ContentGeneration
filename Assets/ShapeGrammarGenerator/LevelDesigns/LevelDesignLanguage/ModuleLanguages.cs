@@ -22,7 +22,7 @@ namespace ShapeGrammar
             State.LC.AddEvent($"Level Start", 100, level => L.LevelLanguage.LevelStart(), true);
 
             
-            State.LC.AddEvent($"Level End", 90, level => L.LevelLanguage.LevelEnd(), true);
+            //State.LC.AddEvent($"Level End", 90, level => L.LevelLanguage.LevelEnd(), true);
             
             /*
             State.LC.AddEvent( $"Main path", 90, level => L.LevelLanguage.MainPath(level), true);
