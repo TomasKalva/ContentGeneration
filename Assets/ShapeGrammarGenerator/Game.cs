@@ -47,7 +47,7 @@ namespace ShapeGrammar
             playerState.Spirit = 50;
             var stats = new ContentGeneration.Assets.UI.Model.CharacterStats()
             {
-                Will = 5,
+                Will = 0,
                 Strength = 5,
                 Endurance = 5,
                 Agility = 5,
@@ -154,6 +154,16 @@ namespace ShapeGrammar
             var playerState = GameViewModel.ViewModel.PlayerState;
             var levelRoot = grammarState.WorldState.Added;
             PutPlayerToWorld(playerState, levelRoot);
+
+            playerState
+                .ClearOnDeath()
+                .AddOnDeath(() =>
+                {
+                    
+                    GameLanguage.State.World.Reset();
+                    GameLanguage.State.InstantiateAreas();
+                    PutPlayerToWorld(playerState, levelRoot);
+                });
 
         }
 

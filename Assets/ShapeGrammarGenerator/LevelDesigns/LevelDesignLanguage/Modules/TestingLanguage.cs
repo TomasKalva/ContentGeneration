@@ -59,7 +59,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                     var enemy = chF();
                     var stats = new CharacterStats()
                     {
-                        Will = 5,
+                        Will = 0,
                         Strength = 5,
                         Endurance = 5,
                         Agility = 10,

@@ -78,6 +78,7 @@ namespace ShapeGrammar
 
             foreach (var enemy in EnemyStates)
             {
+                enemy.Reset();
                 if (!flooredCubes.Any())
                 {
                     Debug.LogError("Not enough empty cubes");

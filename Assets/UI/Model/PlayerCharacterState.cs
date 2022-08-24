@@ -78,7 +78,7 @@ namespace ContentGeneration.Assets.UI.Model
         {
             GameObject.Destroy(Agent.gameObject);
             OnDeath();
-            World.OnPlayerDeath();
+            //World.OnPlayerDeath();
         }
 #endif
 

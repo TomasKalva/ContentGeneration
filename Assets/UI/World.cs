@@ -31,11 +31,11 @@ namespace ContentGeneration.Assets.UI
         public Transform SpecialObjectsParent { get; }
         public Transform CachedObjectsParent { get; }
 
-        List<InteractiveObjectState> interactiveObjects;
+        List<InteractiveObjectState> interactiveObjects { get; }
         public ObservableCollection<CharacterState> Enemies { get; }
         List<Transform> architectureElements;
         public PlayerCharacterState PlayerState { get; }
-        OccurenceManager Occurences { get; }
+        OccurenceManager Occurences { get; set; }
         public Grave Grave { get; set; }
 
         //public delegate void WorldCreated();
@@ -150,6 +150,7 @@ namespace ContentGeneration.Assets.UI
             GameObject.Destroy(ArchitectureParent.gameObject);
             GameObject.Destroy(EntitiesParent.gameObject);
             GameObject.Destroy(SpecialObjectsParent.gameObject);
+            GameObject.Destroy(CachedObjectsParent.gameObject);
             if (PlayerState.Agent != null)
             {
                 GameObject.Destroy(PlayerState.Agent.gameObject);
@@ -158,23 +159,15 @@ namespace ContentGeneration.Assets.UI
 
         public void InitializePlayer()
         {
-            //Grave = GameObject.FindGameObjectWithTag("DefaultSpawnPoint").GetComponent<InteractiveObject>().State as Grave;
-
             if (Grave != null)
             {
                 var player = Grave.SpawnPlayer();
                 player.World = this;
-                //player.Agent.GetComponent<PlayerController>().World = this;
             }
             else
             {
                 Debug.LogError("DefaultBonfire wasn't created!");
             }
-            /*
-            if (OnCreated != null)
-            {
-                OnCreated();
-            }*/
         }
 
         public void CreateOccurence(Selector selector, params Effect[] effects)
@@ -185,6 +178,32 @@ namespace ContentGeneration.Assets.UI
         public void Update(float deltaT)
         {
             Occurences.Update(deltaT);
+        }
+
+        /// <summary>
+        /// Resets the player and all the enemies inside the world.
+        /// </summary>
+        public void Reset()
+        {
+            // Destroy entities, cached objects and the player
+            foreach(Transform child in EntitiesParent)
+            {
+                GameObject.Destroy(child.gameObject);
+            }
+            foreach (Transform child in CachedObjectsParent)
+            {
+                GameObject.Destroy(child.gameObject);
+            }
+            if (PlayerState.Agent != null)
+            {
+                GameObject.Destroy(PlayerState.Agent.gameObject);
+            }
+
+            // Reset occurences, interactive objects and enemies
+            Occurences = new OccurenceManager();
+            interactiveObjects.Clear();
+            Enemies.Clear();
+
         }
     }
 }
