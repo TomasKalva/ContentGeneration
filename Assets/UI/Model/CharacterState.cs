@@ -189,6 +189,8 @@ namespace ContentGeneration.Assets.UI.Model
         {
             Health += Health.Maximum;
             Stamina += Stamina.Maximum;
+
+            VisibleOnCamera = false;
         }
 
         /// <summary>

@@ -92,8 +92,6 @@ namespace ContentGeneration.Assets.UI
         {
             enemy.World = this;
             enemy.Agent.transform.SetParent(EntitiesParent);
-            //enemy.Health = enemy.Health.Maximum;
-            //enemy.Stamina = enemy.Stamina.Maximum;
             enemy.Reset();
             Enemies.Add(enemy);
         }
