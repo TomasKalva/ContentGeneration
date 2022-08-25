@@ -28,6 +28,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
     public delegate bool FinishedInTime(float deltaT);
     public delegate T ByTime<T>(float time);
     public delegate T ByUser<T>(CharacterState user);
+    public delegate T ByTransform<T>(Vector3 position, Vector3 direction);
 
     public class Selector
     {

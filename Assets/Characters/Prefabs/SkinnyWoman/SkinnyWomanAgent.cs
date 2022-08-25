@@ -1,3 +1,4 @@
+using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,10 +19,10 @@ public class SkinnyWomanAgent : Agent
         return attack;
     }
 
-    public Act CastFireball()
+    public Act CastFireball(Effect castFireball)
     {
         var attack = acting.SelectAct("CastFireball") as Shoot;
-        attack.ShotEffect = Lib.Spells.Bolt(Lib.VFXs.Fireball, Color.yellow, Lib.VFXs.FireTexture, 0.5f, 10f, new DamageDealt(DamageType.Chaos, 10f), false);
+        attack.ShotEffect = castFireball; Lib.Spells.Bolt(Lib.VFXs.Fireball, Color.yellow, Lib.VFXs.FireTexture, 0.5f, 10f, new DamageDealt(DamageType.Chaos, 10f), false);
         return attack;
     }
 

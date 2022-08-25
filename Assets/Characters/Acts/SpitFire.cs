@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class SpitFire : MultiEventAct
 {
-    public Func<Vector3, Vector3, Effect> SpitFromPositionDirectionEffect { set; private get; }
+    public ByTransform<Effect> SpitFromPositionDirectionEffect { set; private get; }
 
     [SerializeField]
     Transform spirtStart;

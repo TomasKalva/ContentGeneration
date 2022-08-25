@@ -175,6 +175,7 @@ namespace ContentGeneration.Assets.UI.Model
 
         public virtual void Die()
         {
+            Debug.Log("Im dyiiiiiiiing");
             Agent.Stagger();
             World.RemoveEnemy(this);
             OnDeath();

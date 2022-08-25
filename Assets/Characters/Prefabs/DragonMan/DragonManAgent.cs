@@ -22,18 +22,18 @@ public class DragonManAgent : Agent
         return attack;
     }
 
-    public Act FlapWings()
+    public Act FlapWings(Effect flapWings)
     {
         var attack = acting.SelectAct("FlapWings") as Shoot;
-        attack.ShotEffect = Lib.Spells.Cloud(Lib.VFXs.MovingCloud, Color.white, Lib.VFXs.WindTexture, 1.5f, 7f, 700f, new DamageDealt(DamageType.Divine, 2f));
+        attack.ShotEffect = flapWings;// Lib.Spells.Cloud(Lib.VFXs.MovingCloud, Color.white, Lib.VFXs.WindTexture, 1.5f, 7f, 700f, new DamageDealt(DamageType.Divine, 2f));
         return attack;
     }
 
-    public Act SpitFire()
+    public Act SpitFire(ByTransform<Effect> spitFire)
     {
         var attack = acting.SelectAct("SpitFire") as SpitFire;
-        attack.SpitFromPositionDirectionEffect = 
-            (position, direction) => user => user.World.CreateOccurence(
+        attack.SpitFromPositionDirectionEffect = spitFire;
+            /*(position, direction) => user => user.World.CreateOccurence(
                 Lib.Selectors.GeometricSelector(Lib.VFXs.Fireball, 4f, Lib.Selectors.Initializator()
                     .ConstPosition(position)
                     .SetVelocity(user => direction, 6f)
@@ -41,7 +41,7 @@ public class DragonManAgent : Agent
                     .Scale(1.5f)
                     )(new SelectorArgs(Color.yellow, Lib.VFXs.FireTexture))(user),
                 Lib.Effects.Damage(new DamageDealt(DamageType.Chaos, 6f))
-            );
+            );*/
         return attack;
     }
 }

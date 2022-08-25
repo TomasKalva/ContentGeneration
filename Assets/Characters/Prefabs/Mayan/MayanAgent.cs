@@ -1,3 +1,4 @@
+using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -42,10 +43,10 @@ public class MayanAgent : Agent
         return attack;
     }
 
-    public Act Throw()
+    public Act Throw(Effect throwEffect)
     {
         var thr = acting.SelectAct("Throw") as Shoot;
-        thr.ShotEffect = Lib.Spells.Bolt(Lib.VFXs.Lightning, Color.yellow, Lib.VFXs.LightningTexture, 1.0f, 10f, new DamageDealt(DamageType.Chaos, 10f));
+        thr.ShotEffect = throwEffect;// Lib.Spells.Bolt(Lib.VFXs.Lightning, Color.yellow, Lib.VFXs.LightningTexture, 1.0f, 10f, new DamageDealt(DamageType.Chaos, 10f));
         return thr;
     }
 }

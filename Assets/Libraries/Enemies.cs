@@ -1,3 +1,4 @@
+using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using ContentGeneration.Assets.UI.Model;
 using ShapeGrammar;
 using System;
@@ -25,7 +26,7 @@ public class Enemies : ScriptableObject
 #endif
 
     [SerializeField]
-    Libraries libraries;
+    Libraries Lib;
 
     public SculptureAgent sculpturePrefab;
     public MayanAgent mayanPrefab;
@@ -99,8 +100,8 @@ public class Enemies : ScriptableObject
 
         // inventory
         sculpture.AddAndEquipItem( new FreeWill());
-        sculpture.Inventory.LeftWeapon.Item = libraries.Items.SculptureClub();
-        sculpture.Inventory.RightWeapon.Item = libraries.Items.SculptureClub();
+        sculpture.Inventory.LeftWeapon.Item = Lib.Items.SculptureClub();
+        sculpture.Inventory.RightWeapon.Item = Lib.Items.SculptureClub();
 
         return sculpture;
     }
@@ -112,7 +113,12 @@ public class Enemies : ScriptableObject
             (agent, behaviors) => 
                 AddDefaultBehaviors(behaviors)
                     .AddBehavior(new DetectorBehavior(agent.LeftSwing, agent.swingDetector))
-                    .AddBehavior(new DetectorBehavior(agent.Throw, agent.throwDetector)));
+
+                    .AddBehavior(new DetectorBehavior(() => 
+                        agent.Throw(Lib.Spells.Bolt(Lib.VFXs.Lightning, Color.yellow, Lib.VFXs.LightningTexture, 1.0f, 10f, new DamageDealt(DamageType.Chaos, 10f))), 
+                        agent.throwDetector)
+                    )
+                );
 
         // properties
         mayan.Health = 40f;
@@ -121,8 +127,8 @@ public class Enemies : ScriptableObject
 
         // inventory
         mayan.AddAndEquipItem(new FreeWill());
-        mayan.Inventory.LeftWeapon.Item = libraries.Items.MayanSword();
-        mayan.Inventory.RightWeapon.Item = libraries.Items.MayanKnife();
+        mayan.Inventory.LeftWeapon.Item = Lib.Items.MayanSword();
+        mayan.Inventory.RightWeapon.Item = Lib.Items.MayanKnife();
 
         return mayan;
     }
@@ -146,8 +152,8 @@ public class Enemies : ScriptableObject
 
         // inventory
         mayan.AddAndEquipItem(new FreeWill());
-        mayan.Inventory.LeftWeapon.Item = libraries.Items.MayanSword();
-        mayan.Inventory.RightWeapon.Item = libraries.Items.MayanKnife();
+        mayan.Inventory.LeftWeapon.Item = Lib.Items.MayanSword();
+        mayan.Inventory.RightWeapon.Item = Lib.Items.MayanKnife();
 
         return mayan;
     }
@@ -159,7 +165,11 @@ public class Enemies : ScriptableObject
             (agent, behaviors) => 
                 AddDefaultBehaviors(behaviors)
                     .AddBehavior(new DetectorBehavior(agent.RushForward, agent.rushForwardDetector))
-                    .AddBehavior(new DetectorBehavior(agent.CastFireball, agent.castDetector)));
+                    .AddBehavior(new DetectorBehavior(() => 
+                        agent.CastFireball(
+                            Lib.Spells.Bolt(Lib.VFXs.Fireball, Color.yellow, Lib.VFXs.FireTexture, 0.5f, 10f, new DamageDealt(DamageType.Chaos, 10f), false)), 
+                        agent.castDetector))
+                );
 
         // properties
         skinnyWoman.Health = 50f;
@@ -168,8 +178,8 @@ public class Enemies : ScriptableObject
 
         // inventory
         skinnyWoman.AddAndEquipItem(new FreeWill());
-        skinnyWoman.Inventory.LeftWeapon.Item = libraries.Items.MayanSword();
-        skinnyWoman.Inventory.RightWeapon.Item = libraries.Items.MayanSword();
+        skinnyWoman.Inventory.LeftWeapon.Item = Lib.Items.MayanSword();
+        skinnyWoman.Inventory.RightWeapon.Item = Lib.Items.MayanSword();
 
         return skinnyWoman;
     }
@@ -181,8 +191,26 @@ public class Enemies : ScriptableObject
             (agent, behaviors) => 
                 AddDefaultBehaviors(behaviors)
                     .AddBehavior(new DetectorBehavior(agent.Slash, agent.slashDetector))
-                    .AddBehavior(new DetectorBehavior(agent.FlapWings, agent.castDetector))
-                    .AddBehavior(new DetectorBehavior(agent.SpitFire, agent.spitFireDetector)));
+
+                    .AddBehavior(new DetectorBehavior(() => 
+                        agent.FlapWings(
+                            Lib.Spells.Cloud(Lib.VFXs.MovingCloud, Color.white, Lib.VFXs.WindTexture, 1.5f, 7f, 700f, new DamageDealt(DamageType.Divine, 2f))), 
+                        agent.castDetector))
+
+                    .AddBehavior(new DetectorBehavior(() =>
+                        agent.SpitFire(
+                            (position, direction) => user => user.World.CreateOccurence(
+                                Lib.Selectors.GeometricSelector(Lib.VFXs.Fireball, 4f, Lib.Selectors.Initializator()
+                                    .ConstPosition(position)
+                                    .SetVelocity(user => direction, 6f)
+                                    .RotatePitch(-90f)
+                                    .Scale(1.5f)
+                                    )(new SelectorArgs(Color.yellow, Lib.VFXs.FireTexture))(user),
+                                Lib.Effects.Damage(new DamageDealt(DamageType.Chaos, 6f))
+                            )
+                        ), 
+                        agent.spitFireDetector))
+                    );
         
         // properties
         dragonMan.Health = 40f;
@@ -191,8 +219,8 @@ public class Enemies : ScriptableObject
 
         // inventory
         dragonMan.AddAndEquipItem(new FreeWill());
-        dragonMan.Inventory.LeftWeapon.Item = libraries.Items.MayanSword();
-        dragonMan.Inventory.RightWeapon.Item = libraries.Items.MayanSword();
+        dragonMan.Inventory.LeftWeapon.Item = Lib.Items.MayanSword();
+        dragonMan.Inventory.RightWeapon.Item = Lib.Items.MayanSword();
 
         return dragonMan;
     }
@@ -214,7 +242,7 @@ public class Enemies : ScriptableObject
 
         // inventory
         dog.AddAndEquipItem(new FreeWill());
-        dog.Inventory.LeftWeapon.Item = libraries.Items.MayanSword();
+        dog.Inventory.LeftWeapon.Item = Lib.Items.MayanSword();
 
         return dog;
     }
@@ -230,7 +258,7 @@ public class Enemies : ScriptableObject
                 {
                     throw new InvalidOperationException("The object doesn't have Agent component");
                 }
-                agent.Lib = libraries;
+                agent.Lib = Lib;
                 var behaviors = agent.Behaviors;
                 initializeBehaviors(agent, behaviors);
                 return agent;
