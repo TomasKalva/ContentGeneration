@@ -32,10 +32,11 @@ public class Wait : Behavior
     public override bool Update(Agent agent)
     {
         var targetPoint = WaitPosition(agent);
-        if((targetPoint - agent.transform.position).magnitude > MinDistance &&
+        var toTarget = targetPoint - agent.transform.position;
+        if (toTarget.magnitude > MinDistance &&
             agent.CanMove)
         {
-            var direction = (targetPoint - agent.transform.position).XZ();
+            var direction = toTarget.XZ();
             agent.Run(direction);
         }
 

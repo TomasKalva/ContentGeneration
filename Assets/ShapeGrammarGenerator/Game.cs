@@ -155,11 +155,11 @@ namespace ShapeGrammar
             var levelRoot = grammarState.WorldState.Added;
             PutPlayerToWorld(playerState, levelRoot);
 
+            // Restart level after player dies
             playerState
                 .ClearOnDeath()
                 .AddOnDeath(() =>
                 {
-                    
                     GameLanguage.State.World.Reset();
                     GameLanguage.State.InstantiateAreas();
                     PutPlayerToWorld(playerState, levelRoot);

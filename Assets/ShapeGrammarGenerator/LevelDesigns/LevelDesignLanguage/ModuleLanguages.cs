@@ -50,17 +50,7 @@ namespace ShapeGrammar
             });
             */
 
-            /*
-
-            State.LC.AddEvent(
-                new LevelConstructionEvent(90,
-                () =>
-                {
-                    L.AscendingLanguage.AscendingBranch(() => 100);
-                    return true;
-                }));
-            */
-
+            //State.LC.AddEvent("Ascending", 90, _ => L.AscendingLanguage.AscendingBranch(() => 100));
             /*
             State.LC.AddEvent(
                 new LevelConstructionEvent(10, () =>
