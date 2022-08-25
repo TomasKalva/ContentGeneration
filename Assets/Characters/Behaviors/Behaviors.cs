@@ -51,4 +51,9 @@ public class Behaviors
             CurrentBehaviour = null;
         }
     }
+
+    public void Reset()
+    {
+        CurrentBehaviour = null;
+    }
 }
