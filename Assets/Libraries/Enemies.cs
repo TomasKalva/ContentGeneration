@@ -258,7 +258,6 @@ public class Enemies : ScriptableObject
                 {
                     throw new InvalidOperationException("The object doesn't have Agent component");
                 }
-                agent.Lib = Lib;
                 var behaviors = agent.Behaviors;
                 initializeBehaviors(agent, behaviors);
                 return agent;

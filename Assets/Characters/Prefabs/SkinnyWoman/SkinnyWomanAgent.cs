@@ -22,7 +22,7 @@ public class SkinnyWomanAgent : Agent
     public Act CastFireball(Effect castFireball)
     {
         var attack = acting.SelectAct("CastFireball") as Shoot;
-        attack.ShotEffect = castFireball; Lib.Spells.Bolt(Lib.VFXs.Fireball, Color.yellow, Lib.VFXs.FireTexture, 0.5f, 10f, new DamageDealt(DamageType.Chaos, 10f), false);
+        attack.ShotEffect = castFireball;
         return attack;
     }
 

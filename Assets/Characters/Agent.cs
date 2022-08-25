@@ -17,8 +17,6 @@ public class Agent : MonoBehaviour
 	public AnimancerComponent animancerAnimator;
 	public Renderer myRenderer;
 
-	public Libraries Lib { protected get; set; }
-
 	CharacterState _characterState;
 	public CharacterState CharacterState 
 	{ 
