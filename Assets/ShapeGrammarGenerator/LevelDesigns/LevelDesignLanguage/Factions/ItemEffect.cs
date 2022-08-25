@@ -378,7 +378,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         /// <summary>
         /// LevelConstructionEvent from function because it can potentialy contain level related state.
         /// </summary>
-        public Effect StartQuestline(LevelConstructor levelConstructor, Func<LevelConstructionEvent> levelConstructionEventF)
+        public Effect StartQuestline(LevelConstructor levelConstructor, Func<SimpleLevelConstructionEvent> levelConstructionEventF)
         {
             return _ => levelConstructor.AddEvent(levelConstructionEventF());
         }
