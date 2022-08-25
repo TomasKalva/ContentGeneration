@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class GoToTargetBehavior : Behavior
 {
@@ -36,6 +37,9 @@ public class GoToTargetBehavior : Behavior
 
     public override bool Update(Agent agent)
     {
+        NavMeshData nmd;
+        NavMeshAgent nma;
+
         Vector3 direction = TargetPoint - agent.movement.transform.position;
         var moveDirection = new Vector2(direction.x, direction.z);
         agent.Run(moveDirection);
