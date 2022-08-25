@@ -37,7 +37,7 @@ namespace ShapeGrammar
 
             State.LC.AddEvent($"Environment", 0, level => L.EnvironmentLanguage.CreateSky(level), true);*/
 
-            //State.LC.AddEvent($"Environment", 0, level => L.EnvironmentLanguage.TestSky(level), true);
+            State.LC.AddEvent($"Environment", 0, level => L.EnvironmentLanguage.TestSky(level), true);
 
             /*
             State.LC.AddEvent("Farmer branch", 5, level => L.FarmersLanguage.FarmerBranch(0));

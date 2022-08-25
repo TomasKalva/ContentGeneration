@@ -126,6 +126,7 @@ MonoBehaviour:
   leftWristSlot: {fileID: 5910950151642680263}
   rightWristSlot: {fileID: 3401030246831684737}
   headSlot: {fileID: 205706000266163400}
+  attackArea: {fileID: 0}
 --- !u!114 &1728200003014362736
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,7 +141,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actContainer: {fileID: 6092720893106556704}
   _activeAct: {fileID: 0}
-  agentBaseActingSpeedMultiplier: 0.8
+  agentBaseActingSpeedMultiplier: 1
 --- !u!114 &1651080212126691465
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -231,7 +232,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   orbitCameraFocusPoint: {fileID: 3016068658843168353}
   playerInputSpace: {fileID: 0}
-  interactionDistance: 2
+  interactionDistance: 0.8
   libraries: {fileID: 11400000, guid: e6d383d7b852e69439d0877d7ed97ca5, type: 2}
 --- !u!114 &8630713964869020744
 MonoBehaviour:

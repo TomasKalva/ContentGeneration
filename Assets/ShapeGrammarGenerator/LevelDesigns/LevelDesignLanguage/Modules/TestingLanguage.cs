@@ -179,7 +179,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
         public void TestLocking()
         {
 
-            L.PatternLanguage.BranchWithKey(NodesQueries.LastCreated, 1, Gr.PrL.Town(), out var lockedArea, out var linearPath);
+            L.PatternLanguage.BranchWithKey(NodesQueries.LastCreated, 1, Gr.PrL.Garden(), out var lockedArea, out var linearPath);
 
         }
 
