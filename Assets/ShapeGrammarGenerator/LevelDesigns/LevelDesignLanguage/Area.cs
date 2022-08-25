@@ -34,7 +34,7 @@ namespace ShapeGrammar
             InteractiveObjectStates.Add(interactiveObject);
         }
 
-        CharacterState AddWaitForPlayerBehavior(World world, CharacterState enemy)
+        void AddWaitForPlayerBehavior(World world, Agent enemy)
         {
             var worldGeometry = world.WorldGeometry;
             var gotoPosition = worldGeometry.GridToWorld(Node.LE.CG().BottomLayer().Cubes.GetRandom().Position);
@@ -50,7 +50,6 @@ namespace ShapeGrammar
                     _ => gotoPosition
                     )
                 );
-            return enemy;
         }
 
         public void AddEnemy(CharacterState enemy)
@@ -84,9 +83,9 @@ namespace ShapeGrammar
                     Debug.LogError("Not enough empty cubes");
                     break;
                 }
-                AddWaitForPlayerBehavior(world, enemy);
                 enemy.MakeGeometry();
                 enemy.Agent.transform.position = worldGeometry.GridToWorld(flooredCubes.Pop().Position);
+                AddWaitForPlayerBehavior(world, enemy.Agent);
 
                 world.AddEnemy(enemy);
             }

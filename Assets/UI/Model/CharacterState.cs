@@ -22,7 +22,6 @@ namespace ContentGeneration.Assets.UI.Model
         public World World { get; set; }
 
 #if NOESIS
-        public Behaviors Behaviors { get; set; }
 
         public GeometryMaker<Agent> GeometryMaker { get; set; }
 
@@ -169,7 +168,7 @@ namespace ContentGeneration.Assets.UI.Model
             FireDefense = FindDefense(DamageType.Chaos);
             DarkDefense = FindDefense(DamageType.Dark);
             DivineDefense = FindDefense(DamageType.Divine);
-            Behaviors = new Behaviors();
+            //Behaviors = new Behaviors();
             Stats = new CharacterStats();
             OnDeath = () => { };
         }
@@ -189,7 +188,7 @@ namespace ContentGeneration.Assets.UI.Model
         {
             Health += Health.Maximum;
             Stamina += Stamina.Maximum;
-            Behaviors.Reset();
+            //Behaviors.Reset();
         }
 
         /// <summary>

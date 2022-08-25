@@ -79,7 +79,13 @@ public class Enemies : ScriptableObject
     public CharacterState Sculpture()
     {
         var sculpture = new CharacterState();
-        sculpture.GeometryMaker = Geometry<Agent>(sculpturePrefab);
+        sculpture.GeometryMaker = AgentGeometry(sculpturePrefab);
+        /*{
+            var agent = AgentGeometry(sculpturePrefab)();
+            var behaviors = agent.Behaviors;
+            AddDefaultBehaviors(behaviors);
+            return agent;
+        };*/
 
         // properties
         sculpture.Health = 40f;
@@ -92,9 +98,9 @@ public class Enemies : ScriptableObject
         sculpture.Inventory.RightWeapon.Item = libraries.Items.SculptureClub();
 
         // behaviors
-        var behaviors = sculpture.Behaviors;
+        //var behaviors = sculpture.Behaviors;
 
-        AddDefaultBehaviors(behaviors);
+        //AddDefaultBehaviors(behaviors);
 
         return sculpture;
     }
@@ -102,7 +108,13 @@ public class Enemies : ScriptableObject
     public CharacterState MayanThrower()
     {
         var mayan = new CharacterState();
-        mayan.GeometryMaker = Geometry<Agent>(mayanPrefab);
+        mayan.GeometryMaker = AgentGeometry<Agent>(mayanPrefab);
+        /*{
+            var agent = AgentGeometry<Agent>(mayanPrefab)();
+            var behaviors = agent.Behaviors;
+            AddDefaultBehaviors(behaviors);
+            return agent;
+        };*/
 
         // properties
         mayan.Health = 40f;
@@ -115,9 +127,10 @@ public class Enemies : ScriptableObject
         mayan.Inventory.RightWeapon.Item = libraries.Items.MayanKnife();
 
         // behaviors
-        var behaviors = mayan.Behaviors;
+        /*var behaviors = mayan.Behaviors;
 
         AddDefaultBehaviors(behaviors);
+        */
 
         return mayan;
     }
@@ -128,7 +141,7 @@ public class Enemies : ScriptableObject
     public CharacterState MayanSwordsman()
     {
         var mayan = new CharacterState();
-        mayan.GeometryMaker = Geometry<Agent>(mayanPrefab);
+        mayan.GeometryMaker = AgentGeometry<Agent>(mayanPrefab);
 
         // properties
         mayan.Health = 50f;
@@ -141,9 +154,9 @@ public class Enemies : ScriptableObject
         mayan.Inventory.RightWeapon.Item = libraries.Items.MayanKnife();
 
         // behaviors
-        var behaviors = mayan.Behaviors;
+        /*var behaviors = mayan.Behaviors;
 
-        AddDefaultBehaviors(behaviors);
+        AddDefaultBehaviors(behaviors);*/
         /*
          * todo: define behavior definition strategy, that will allow creating arbitrary links between controllers and behavior
         behaviors.AddBehavior(new DetectorBehavior(mayan.LongOverheadAttack, controller.overheadDetector));
@@ -157,7 +170,7 @@ public class Enemies : ScriptableObject
     public CharacterState SkinnyWoman()
     {
         var skinnyWoman = new CharacterState();
-        skinnyWoman.GeometryMaker = Geometry<Agent>(skinnyWomanPrefab);
+        skinnyWoman.GeometryMaker = AgentGeometry<Agent>(skinnyWomanPrefab);
 
         // properties
         skinnyWoman.Health = 50f;
@@ -170,9 +183,9 @@ public class Enemies : ScriptableObject
         skinnyWoman.Inventory.RightWeapon.Item = libraries.Items.MayanSword();
 
         // behaviors
-        var behaviors = skinnyWoman.Behaviors;
+        /*var behaviors = skinnyWoman.Behaviors;
 
-        AddDefaultBehaviors(behaviors);
+        AddDefaultBehaviors(behaviors);*/
 
         return skinnyWoman;
     }
@@ -180,7 +193,7 @@ public class Enemies : ScriptableObject
     public CharacterState DragonMan()
     {
         var dragonMan = new CharacterState();
-        dragonMan.GeometryMaker = Geometry<Agent>(dragonManPrefab);
+        dragonMan.GeometryMaker = AgentGeometry<Agent>(dragonManPrefab);
 
         // properties
         dragonMan.Health = 40f;
@@ -193,9 +206,9 @@ public class Enemies : ScriptableObject
         dragonMan.Inventory.RightWeapon.Item = libraries.Items.MayanSword();
 
         // behaviors
-        var behaviors = dragonMan.Behaviors;
+        /*var behaviors = dragonMan.Behaviors;
 
-        AddDefaultBehaviors(behaviors);
+        AddDefaultBehaviors(behaviors);*/
 
         return dragonMan;
     }
@@ -203,7 +216,7 @@ public class Enemies : ScriptableObject
     public CharacterState Dog()
     {
         var dog = new CharacterState();
-        dog.GeometryMaker = Geometry<Agent>(dogPrefab);
+        dog.GeometryMaker = AgentGeometry<Agent>(dogPrefab);
 
         // properties
         dog.Health = 50f;
@@ -216,26 +229,28 @@ public class Enemies : ScriptableObject
         //character.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanSword());
 
         // behaviors
-        var behaviors = dog.Behaviors;
+        /*var behaviors = dog.Behaviors;
 
-        AddDefaultBehaviors(behaviors);
+        AddDefaultBehaviors(behaviors);*/
 
         return dog;
     }
     
-    public GeometryMaker<AgentT> Geometry<AgentT>(AgentT prefab) where AgentT : Agent
+    public GeometryMaker<AgentT> AgentGeometry<AgentT>(AgentT prefab) where AgentT : Agent
     {
         return new GeometryMaker<AgentT>(
             () =>
             {
                 var newObj = Instantiate(prefab);
-                var comp = newObj.GetComponentInChildren<AgentT>();
-                if (comp == null)
+                var agent = newObj.GetComponentInChildren<AgentT>();
+                if (agent == null)
                 {
                     throw new InvalidOperationException("The object doesn't have Agent component");
                 }
-                comp.Lib = libraries;
-                return comp;
+                agent.Lib = libraries;
+                var behaviors = agent.Behaviors;
+                AddDefaultBehaviors(behaviors);
+                return agent;
             }
         );
     }

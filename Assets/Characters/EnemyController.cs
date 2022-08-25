@@ -19,7 +19,7 @@ public abstract class EnemyController<AgentT> : MonoBehaviour where AgentT : Age
 
     private void Start()
     {
-		AddBehaviors(agent.CharacterState.Behaviors);
+		AddBehaviors(agent.Behaviors);
 		agent.acting.MyReset();
 	}
 
@@ -48,7 +48,7 @@ public abstract class EnemyController<AgentT> : MonoBehaviour where AgentT : Age
 
 		UpdateController(movementDirection);
 		*/
-		agent.CharacterState?.Behaviors.UpdateBehavior(agent);
+		agent.Behaviors.UpdateBehavior(agent);
 
 		agent.UpdateAgent();
 	}

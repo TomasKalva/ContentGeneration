@@ -27,8 +27,10 @@ public class Agent : MonoBehaviour
         {
 			_characterState = value;
 			_characterState.Agent = this;
-        } 
+        }
 	}
+
+	public Behaviors Behaviors { get; set; }
 
 	public bool CanMove { get; set; } = true;
 
@@ -85,7 +87,7 @@ public class Agent : MonoBehaviour
 		animator = GetComponent<Animator>();
 		animancerAnimator = GetComponent<AnimancerComponent>();
 		myRenderer = GetComponentInChildren<Renderer>();
-		 slots = new EquipmentSlot[]
+		slots = new EquipmentSlot[]
 		{
 			leftWeaponSlot,
 			rightWeaponSlot,
@@ -93,6 +95,7 @@ public class Agent : MonoBehaviour
 			rightWristSlot,
 			headSlot,
 		};
+		Behaviors = new Behaviors();
 	}
 
     private void Start()

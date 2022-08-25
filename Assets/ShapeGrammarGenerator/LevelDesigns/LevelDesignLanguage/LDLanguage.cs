@@ -224,7 +224,7 @@ namespace ShapeGrammar
 
     }
 
-    public delegate T GeometryMaker<T>() where T : MonoBehaviour;
+    public delegate T GeometryMaker<out T>() where T : MonoBehaviour;
     /*
     public class GeometryMaker<T> where T : MonoBehaviour
     {
