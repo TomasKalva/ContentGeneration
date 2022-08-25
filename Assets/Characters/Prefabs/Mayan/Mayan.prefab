@@ -184,7 +184,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45ddd7c4b1fd1dc4fa81ec2e75a01f95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: Run
   type: 0
   priority: -10
@@ -213,7 +212,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f58e840b1ef77ae418f584a865c153eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: Staggered
   type: 0
   priority: 0
@@ -240,7 +238,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9476961ecce9d0344a5f2c4b666f8492, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: Idle
   type: 0
   priority: -100
@@ -267,7 +264,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 351ea8ce974be344ca968c6609d7764b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: Overhead
   type: 2
   priority: 0
@@ -359,7 +355,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48e0f7dd1a03e43438f4773964e0b979, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: WalkBack
   type: 0
   priority: 0
@@ -388,7 +383,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51e435f1173d00c48b031e42cf4e2807, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: Throw
   type: 2
   priority: 2
@@ -403,9 +397,6 @@ MonoBehaviour:
     _Clip: {fileID: -7872577040935964913, guid: 9f1dedf80f06d0c4bb5b4c68d4840de4, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  projectile: {fileID: 1623888701323414183, guid: bb55490b50c69f94080887c45fc43b99, type: 3}
-  gun: {fileID: 5151155491971333750}
-  speed: 5
   shootT: 0.75
 --- !u!114 &1608244499992161290
 MonoBehaviour:
@@ -419,7 +410,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 351ea8ce974be344ca968c6609d7764b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: LeftSwing
   type: 2
   priority: 0
@@ -501,7 +491,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 351ea8ce974be344ca968c6609d7764b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: RightSwing
   type: 2
   priority: 0
@@ -583,7 +572,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 351ea8ce974be344ca968c6609d7764b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: LongOverhead
   type: 2
   priority: 0
@@ -675,7 +663,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbf4d194e363e0a4fa66ab8076bf6894, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: UseItem
   type: 0
   priority: 0
@@ -977,6 +964,9 @@ MonoBehaviour:
   leftWristSlot: {fileID: 2639001687787554608}
   rightWristSlot: {fileID: 5392304797476323938}
   headSlot: {fileID: 6748387524369471596}
+  overheadDetector: {fileID: 4093943555014982308}
+  throwDetector: {fileID: 6968318311868321479}
+  swingDetector: {fileID: 5919561997481874419}
 --- !u!114 &7465914728098359873
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -989,11 +979,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1652c51156fae54587aa196082bebf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetEnemy: {fileID: 0}
-  minDistance: 5
-  overheadDetector: {fileID: 4093943555014982308}
-  throwDetector: {fileID: 6968318311868321479}
-  swingDetector: {fileID: 5919561997481874419}
 --- !u!1 &8988790298336969575
 GameObject:
   m_ObjectHideFlags: 0
@@ -1418,11 +1403,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}
---- !u!4 &5151155491971333750 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8254846310209840316, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}
-  m_PrefabInstance: {fileID: 3887607426626656970}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5151155491971333745 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8254846310209840315, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}

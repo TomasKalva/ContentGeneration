@@ -5,6 +5,12 @@ using UnityEngine;
 
 public class SkinnyWomanAgent : Agent
 {
+    [SerializeField]
+    public ColliderDetector rushForwardDetector;
+
+    [SerializeField]
+    public ColliderDetector castDetector;
+
     public Act RushForward()
     {
         var attack = acting.SelectAct("RushForward") as Attack;

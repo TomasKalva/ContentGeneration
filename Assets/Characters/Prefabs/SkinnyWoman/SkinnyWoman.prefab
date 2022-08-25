@@ -181,7 +181,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45ddd7c4b1fd1dc4fa81ec2e75a01f95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: Run
   type: 0
   priority: -10
@@ -210,7 +209,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f58e840b1ef77ae418f584a865c153eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: Staggered
   type: 0
   priority: 0
@@ -237,7 +235,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9476961ecce9d0344a5f2c4b666f8492, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: Idle
   type: 0
   priority: -100
@@ -264,7 +261,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 351ea8ce974be344ca968c6609d7764b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: RushForward
   type: 2
   priority: 0
@@ -355,7 +351,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48e0f7dd1a03e43438f4773964e0b979, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: WalkBack
   type: 0
   priority: 0
@@ -384,7 +379,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51e435f1173d00c48b031e42cf4e2807, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: CastFireball
   type: 2
   priority: 1
@@ -399,9 +393,6 @@ MonoBehaviour:
     _Clip: {fileID: 7623476096177806632, guid: 7beb9fa765a5ad34ca8650a306ad6d20, type: 3}
     _Speed: 1
     _NormalizedStartTime: 0
-  projectile: {fileID: 1623888701323414183, guid: eabd56301874bd7489737f922a8bcb67, type: 3}
-  gun: {fileID: 3700916034506211953}
-  speed: 10
   shootT: 0.6
 --- !u!114 &127493566462723005
 MonoBehaviour:
@@ -415,7 +406,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbf4d194e363e0a4fa66ab8076bf6894, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: UseItem
   type: 0
   priority: 0
@@ -716,6 +706,8 @@ MonoBehaviour:
   leftWristSlot: {fileID: 4419921440704673081}
   rightWristSlot: {fileID: 6083470242972684202}
   headSlot: {fileID: 7984250870548638065}
+  rushForwardDetector: {fileID: 4093943555014982308}
+  castDetector: {fileID: 1239587805272705279}
 --- !u!114 &104408679878136733
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -728,10 +720,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2370db8f12307c40805c4c84a64d64c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetEnemy: {fileID: 0}
-  minDistance: 4
-  rushForwardDetector: {fileID: 4093943555014982308}
-  castDetector: {fileID: 1239587805272705279}
 --- !u!1001 &2179614666869927506
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1162,11 +1150,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}
---- !u!4 &3700916034506211953 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8254846310209840316, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}
-  m_PrefabInstance: {fileID: 4743224433215940301}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &3700916034506211958 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8254846310209840315, guid: 7b9786b1d16f3204990dbac1a2023382, type: 3}

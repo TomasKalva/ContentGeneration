@@ -5,6 +5,15 @@ using UnityEngine;
 
 public class MayanAgent : Agent
 {
+    [SerializeField]
+    public ColliderDetector overheadDetector;
+
+    [SerializeField]
+    public ColliderDetector throwDetector;
+
+    [SerializeField]
+    public ColliderDetector swingDetector;
+
     public Act OverheadAttack()
     {
         var attack = acting.SelectAct("Overhead") as Attack;

@@ -13421,6 +13421,9 @@ MonoBehaviour:
   leftWristSlot: {fileID: 6260658651727294597}
   rightWristSlot: {fileID: 3715021718196612782}
   headSlot: {fileID: 2742229138822929548}
+  slashDetector: {fileID: 4093943555014982308}
+  castDetector: {fileID: 1239587805272705279}
+  spitFireDetector: {fileID: 906504424266434486}
 --- !u!114 &4191301710070580148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13433,11 +13436,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 643456b98791673489cb21f0424c7c63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetEnemy: {fileID: 0}
-  minDistance: 0
-  slashDetector: {fileID: 4093943555014982308}
-  castDetector: {fileID: 1239587805272705279}
-  spitFireDetector: {fileID: 906504424266434486}
 --- !u!1 &7507508286386246410
 GameObject:
   m_ObjectHideFlags: 0

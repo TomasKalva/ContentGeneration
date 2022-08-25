@@ -806,6 +806,8 @@ MonoBehaviour:
   leftWristSlot: {fileID: 4250768998401681479}
   rightWristSlot: {fileID: 4809434991189345752}
   headSlot: {fileID: 2649464096876347888}
+  dashForwardDetector: {fileID: 4093943555014982308}
+  slashDetector: {fileID: 1239587805272705279}
 --- !u!114 &181610948515338992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -818,10 +820,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9f6527768c92b04d82bf986058db131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetEnemy: {fileID: 0}
-  minDistance: 0
-  dashForwardDetector: {fileID: 4093943555014982308}
-  slashDetector: {fileID: 1239587805272705279}
 --- !u!1001 &187533897433531038
 PrefabInstance:
   m_ObjectHideFlags: 0

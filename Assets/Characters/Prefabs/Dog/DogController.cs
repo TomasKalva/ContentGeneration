@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(DogAgent))]
 public class DogController : EnemyController<DogAgent>
 {
+    /*
 	[SerializeField]
 	public ColliderDetector dashForwardDetector;
 
@@ -16,5 +17,5 @@ public class DogController : EnemyController<DogAgent>
         behaviors.AddBehavior(new DetectorBehavior(agent.DashForward, dashForwardDetector));
         behaviors.AddBehavior(new DetectorBehavior(agent.LeftSlash, slashDetector));
         behaviors.AddBehavior(new DetectorBehavior(agent.RightSlash, slashDetector));
-    }
+    }*/
 }

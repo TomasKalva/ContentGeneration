@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(DragonManAgent))]
 public class DragonManController : EnemyController<DragonManAgent>
 {
+    /*
 	[SerializeField]
 	public ColliderDetector slashDetector;
 
@@ -19,5 +20,5 @@ public class DragonManController : EnemyController<DragonManAgent>
         behaviors.AddBehavior(new DetectorBehavior(agent.Slash, slashDetector));
         behaviors.AddBehavior(new DetectorBehavior(agent.FlapWings, castDetector));
         behaviors.AddBehavior(new DetectorBehavior(agent.SpitFire, spitFireDetector));
-    }
+    }*/
 }

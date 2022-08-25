@@ -6,6 +6,15 @@ using UnityEngine;
 
 public class DragonManAgent : Agent
 {
+    [SerializeField]
+    public ColliderDetector slashDetector;
+
+    [SerializeField]
+    public ColliderDetector castDetector;
+
+    [SerializeField]
+    public ColliderDetector spitFireDetector;
+
     public Act Slash()
     {
         var attack = acting.SelectAct("Slash") as Attack;

@@ -5,6 +5,12 @@ using UnityEngine;
 
 public class DogAgent : Agent
 {
+    [SerializeField]
+    public ColliderDetector dashForwardDetector;
+
+    [SerializeField]
+    public ColliderDetector slashDetector;
+
     public Act DashForward()
     {
         var attack = acting.SelectAct("DashForward") as Attack;

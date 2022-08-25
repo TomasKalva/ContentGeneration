@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(MayanAgent))]
 public class MayanController : EnemyController<MayanAgent>
 {
+    /*
 	[SerializeField]
 	public ColliderDetector overheadDetector;
 
@@ -19,5 +20,5 @@ public class MayanController : EnemyController<MayanAgent>
         behaviors.AddBehavior(new DetectorBehavior(agent.OverheadAttack, overheadDetector));
         behaviors.AddBehavior(new DetectorBehavior(agent.Throw, throwDetector));
         behaviors.AddBehavior(new DetectorBehavior(agent.LeftSwing, swingDetector));
-    }
+    }*/
 }

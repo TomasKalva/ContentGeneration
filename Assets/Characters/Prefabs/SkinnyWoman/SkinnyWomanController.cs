@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(SkinnyWomanAgent))]
 public class SkinnyWomanController : EnemyController<SkinnyWomanAgent>
 {
+    /*
 	[SerializeField]
 	public ColliderDetector rushForwardDetector;
 
@@ -15,5 +16,5 @@ public class SkinnyWomanController : EnemyController<SkinnyWomanAgent>
     {
         behaviors.AddBehavior(new DetectorBehavior(agent.RushForward, rushForwardDetector));
         behaviors.AddBehavior(new DetectorBehavior(agent.CastFireball, castDetector));
-    }
+    }*/
 }

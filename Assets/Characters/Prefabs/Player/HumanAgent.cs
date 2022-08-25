@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class HumanAgent : Agent
 {
+    [SerializeField]
+    public ColliderDetector attackArea;
 
     public Act Backstep()
     {
