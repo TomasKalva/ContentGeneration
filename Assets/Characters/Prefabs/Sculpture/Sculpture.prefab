@@ -252,7 +252,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45ddd7c4b1fd1dc4fa81ec2e75a01f95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: Run
   type: 0
   priority: -10
@@ -281,7 +280,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f58e840b1ef77ae418f584a865c153eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: Staggered
   type: 0
   priority: 0
@@ -308,7 +306,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9476961ecce9d0344a5f2c4b666f8492, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: Idle
   type: 0
   priority: -100
@@ -335,7 +332,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 351ea8ce974be344ca968c6609d7764b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: Overhead
   type: 2
   priority: 0
@@ -373,7 +369,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 351ea8ce974be344ca968c6609d7764b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: LeftWide
   type: 2
   priority: 0
@@ -410,7 +405,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 351ea8ce974be344ca968c6609d7764b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: RightWideDown
   type: 2
   priority: 0
@@ -447,7 +441,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 351ea8ce974be344ca968c6609d7764b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: DoubleSwipe
   type: 2
   priority: 0
@@ -485,7 +478,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 351ea8ce974be344ca968c6609d7764b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: GroundSlam
   type: 2
   priority: 0
@@ -523,7 +515,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48e0f7dd1a03e43438f4773964e0b979, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: WalkBack
   type: 0
   priority: 0
@@ -552,7 +543,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbf4d194e363e0a4fa66ab8076bf6894, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 0}
   actName: UseItem
   type: 0
   priority: 0
@@ -1002,9 +992,9 @@ GameObject:
   - component: {fileID: 2312574997445221763}
   - component: {fileID: 2312574997445221762}
   - component: {fileID: 2312574997445221765}
-  - component: {fileID: 2312574997445221767}
   - component: {fileID: 2312574997445221774}
   - component: {fileID: 6671359765029590395}
+  - component: {fileID: 3826032702461192234}
   m_Layer: 10
   m_Name: Sculpture
   m_TagString: Untagged
@@ -1109,26 +1099,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Animator: {fileID: 5314448762161765101}
   _ActionOnDisable: 0
---- !u!114 &2312574997445221767
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2312574997445221497}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0515fe2fa12df74498d740d1e43d403, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetEnemy: {fileID: 0}
-  minDistance: 5
-  leftWideDetector: {fileID: 1361164832072617870}
-  rightWideDownDetector: {fileID: 902281851333500135}
-  doubleSwipeLeftDetector: {fileID: 4698324563815994817}
-  doubleSwipeRightDetector: {fileID: 8890925161673452208}
-  overheadDetector: {fileID: 6138063202478992034}
-  groundSlamDetector: {fileID: 6603082743987320390}
 --- !u!136 &2312574997445221774
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1168,6 +1138,30 @@ MonoBehaviour:
   leftWristSlot: {fileID: 823938871253969907}
   rightWristSlot: {fileID: 5926990802248187007}
   headSlot: {fileID: 2023186523860214658}
+  leftWideDetector: {fileID: 1361164832072617870}
+  rightWideDownDetector: {fileID: 902281851333500135}
+  doubleSwipeLeftDetector: {fileID: 4698324563815994817}
+  doubleSwipeRightDetector: {fileID: 8890925161673452208}
+  overheadDetector: {fileID: 6138063202478992034}
+  groundSlamDetector: {fileID: 6603082743987320390}
+--- !u!114 &3826032702461192234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2312574997445221497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0515fe2fa12df74498d740d1e43d403, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftWideDetector: {fileID: 0}
+  rightWideDownDetector: {fileID: 0}
+  doubleSwipeLeftDetector: {fileID: 0}
+  doubleSwipeRightDetector: {fileID: 0}
+  overheadDetector: {fileID: 0}
+  groundSlamDetector: {fileID: 0}
 --- !u!1 &2336334424676546886
 GameObject:
   m_ObjectHideFlags: 0

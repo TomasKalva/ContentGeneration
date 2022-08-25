@@ -19,8 +19,9 @@ public class DetectorBehavior : Behavior
     }
 
     public Transform DetectedTarget()
-    {
-        //return detectors.SelectNN(detector => detector.other).FirstOrDefault()?.transform;
+    { 
+        // Avoids using null coallescing operators on UnityEngine.Object:
+        // https://forum.unity.com/threads/simple-question-about-null-conditional-operator.734864/
         var maybeOther = detectors.Select(detector =>
         {
             if (detector != null)

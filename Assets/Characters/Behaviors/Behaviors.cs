@@ -14,9 +14,10 @@ public class Behaviors
         behaviors = new List<Behavior>();
     }
 
-    public void AddBehavior(Behavior behavior)
+    public Behaviors AddBehavior(Behavior behavior)
     {
         behaviors.Add(behavior);
+        return this;
     }
 
     public bool BehaviorPossible(Agent agent, int minPriority)

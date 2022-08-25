@@ -228,20 +228,6 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
 	{
-		// Death and respawning
-        //if (myAgent.CharacterState.Dead && !respawned)
-		//{
-			//PlayerCharacterState.World.OnPlayerDeath();
-			//respawned = true;
-			/*if (PlayerCharacterState.SpawnPoint && !respawned)
-			{
-				PlayerCharacterState.SpawnPoint.SpawnPlayer();
-				respawned = true;
-			}*/
-		//}
-
-		//UpdateCurrentModule();
-
 		myAgent.StartReceivingControls();
 
 		Vector2 playerInput;

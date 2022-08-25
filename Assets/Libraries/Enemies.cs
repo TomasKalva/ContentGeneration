@@ -45,12 +45,17 @@ public class Enemies : ScriptableObject
 
 
 
-    void AddDefaultBehaviors(Behaviors behaviors)
+    Behaviors AddDefaultBehaviors(Behaviors behaviors)
     {
-        behaviors.AddBehavior(new TurnToTargetBehavior(10));
-        behaviors.AddBehavior(new GoToTargetBehavior(10));
+        /*
+        behaviors;
+        behaviors;
         //behaviors.AddBehavior(new WaitForPlayer(10));
-        behaviors.AddBehavior(new Awareness(10, new Vector2(3.0f, 5.0f), 5f, 10f));
+        behaviors.AddBehavior(new Awareness(10, new Vector2(3.0f, 5.0f), 5f, 10f));*/
+        return behaviors
+            .AddBehavior(new TurnToTargetBehavior(10))
+            .AddBehavior(new GoToTargetBehavior(10))
+            .AddBehavior(new Awareness(10, new Vector2(3.0f, 5.0f), 5f, 10f));
     }
 
     /*
@@ -79,13 +84,17 @@ public class Enemies : ScriptableObject
     public CharacterState Sculpture()
     {
         var sculpture = new CharacterState();
-        sculpture.GeometryMaker = AgentGeometry(sculpturePrefab);
-        /*{
+        sculpture.GeometryMaker = () => // AgentGeometry(sculpturePrefab);
+        {
             var agent = AgentGeometry(sculpturePrefab)();
             var behaviors = agent.Behaviors;
-            AddDefaultBehaviors(behaviors);
+            AddDefaultBehaviors(behaviors)
+                .AddBehavior(new DetectorBehavior(agent.WideAttack, agent.leftWideDetector, agent.rightWideDownDetector))
+                .AddBehavior(new DetectorBehavior(agent.OverheadAttack, agent.overheadDetector))
+                .AddBehavior(new DetectorBehavior(agent.DoubleSwipe, agent.doubleSwipeLeftDetector, agent.doubleSwipeRightDetector))
+                .AddBehavior(new DetectorBehavior(agent.GroundSlam, agent.groundSlamDetector));
             return agent;
-        };*/
+        };
 
         // properties
         sculpture.Health = 40f;

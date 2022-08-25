@@ -5,6 +5,24 @@ using UnityEngine;
 
 public class SculptureAgent : Agent
 {
+    [SerializeField]
+    public ColliderDetector leftWideDetector;
+
+    [SerializeField]
+    public ColliderDetector rightWideDownDetector;
+
+    [SerializeField]
+    public ColliderDetector doubleSwipeLeftDetector;
+
+    [SerializeField]
+    public ColliderDetector doubleSwipeRightDetector;
+
+    [SerializeField]
+    public ColliderDetector overheadDetector;
+
+    [SerializeField]
+    public ColliderDetector groundSlamDetector;
+
     public Act OverheadAttack()
     {
         var attack = acting.SelectAct("Overhead") as Attack;
