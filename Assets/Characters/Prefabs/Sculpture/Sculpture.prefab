@@ -994,7 +994,7 @@ GameObject:
   - component: {fileID: 2312574997445221765}
   - component: {fileID: 2312574997445221774}
   - component: {fileID: 6671359765029590395}
-  - component: {fileID: 3826032702461192234}
+  - component: {fileID: 4992422414179292125}
   m_Layer: 10
   m_Name: Sculpture
   m_TagString: Untagged
@@ -1144,7 +1144,7 @@ MonoBehaviour:
   doubleSwipeRightDetector: {fileID: 8890925161673452208}
   overheadDetector: {fileID: 6138063202478992034}
   groundSlamDetector: {fileID: 6603082743987320390}
---- !u!114 &3826032702461192234
+--- !u!114 &4992422414179292125
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1153,15 +1153,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2312574997445221497}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0515fe2fa12df74498d740d1e43d403, type: 3}
+  m_Script: {fileID: 11500000, guid: f30feaafda3bb4042ae3667b458e7a05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftWideDetector: {fileID: 0}
-  rightWideDownDetector: {fileID: 0}
-  doubleSwipeLeftDetector: {fileID: 0}
-  doubleSwipeRightDetector: {fileID: 0}
-  overheadDetector: {fileID: 0}
-  groundSlamDetector: {fileID: 0}
 --- !u!1 &2336334424676546886
 GameObject:
   m_ObjectHideFlags: 0

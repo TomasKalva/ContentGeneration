@@ -823,7 +823,7 @@ GameObject:
   - component: {fileID: 7465914728098360252}
   - component: {fileID: 7465914728098360247}
   - component: {fileID: 7465914728098359874}
-  - component: {fileID: 7465914728098359873}
+  - component: {fileID: 7963197687352713670}
   m_Layer: 10
   m_Name: Mayan
   m_TagString: Untagged
@@ -967,7 +967,7 @@ MonoBehaviour:
   overheadDetector: {fileID: 4093943555014982308}
   throwDetector: {fileID: 6968318311868321479}
   swingDetector: {fileID: 5919561997481874419}
---- !u!114 &7465914728098359873
+--- !u!114 &7963197687352713670
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -976,7 +976,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7465914728098359872}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1652c51156fae54587aa196082bebf0, type: 3}
+  m_Script: {fileID: 11500000, guid: f30feaafda3bb4042ae3667b458e7a05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &8988790298336969575

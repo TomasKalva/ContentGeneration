@@ -566,7 +566,7 @@ GameObject:
   - component: {fileID: 7465914728098360252}
   - component: {fileID: 7465914728098360247}
   - component: {fileID: 3008176056970571526}
-  - component: {fileID: 104408679878136733}
+  - component: {fileID: 1711432608150315126}
   m_Layer: 10
   m_Name: SkinnyWoman
   m_TagString: Untagged
@@ -708,7 +708,7 @@ MonoBehaviour:
   headSlot: {fileID: 7984250870548638065}
   rushForwardDetector: {fileID: 4093943555014982308}
   castDetector: {fileID: 1239587805272705279}
---- !u!114 &104408679878136733
+--- !u!114 &1711432608150315126
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -717,7 +717,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7465914728098359872}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2370db8f12307c40805c4c84a64d64c, type: 3}
+  m_Script: {fileID: 11500000, guid: f30feaafda3bb4042ae3667b458e7a05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &2179614666869927506

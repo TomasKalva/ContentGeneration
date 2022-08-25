@@ -13279,7 +13279,7 @@ GameObject:
   - component: {fileID: 7465914728098360252}
   - component: {fileID: 7465914728098360247}
   - component: {fileID: 958852462359189586}
-  - component: {fileID: 4191301710070580148}
+  - component: {fileID: 7879916979872257021}
   m_Layer: 10
   m_Name: DragonMan
   m_TagString: Untagged
@@ -13424,7 +13424,7 @@ MonoBehaviour:
   slashDetector: {fileID: 4093943555014982308}
   castDetector: {fileID: 1239587805272705279}
   spitFireDetector: {fileID: 906504424266434486}
---- !u!114 &4191301710070580148
+--- !u!114 &7879916979872257021
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -13433,7 +13433,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7465914728098359872}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 643456b98791673489cb21f0424c7c63, type: 3}
+  m_Script: {fileID: 11500000, guid: f30feaafda3bb4042ae3667b458e7a05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &7507508286386246410
