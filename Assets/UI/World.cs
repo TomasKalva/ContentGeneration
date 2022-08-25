@@ -32,6 +32,7 @@ namespace ContentGeneration.Assets.UI
         public Transform CachedObjectsParent { get; }
 
         List<InteractiveObjectState> interactiveObjects { get; }
+        List<InteractiveObjectState> interactivePersistentObjects { get; }
         public ObservableCollection<CharacterState> Enemies { get; }
         List<Transform> architectureElements;
         public PlayerCharacterState PlayerState { get; }
@@ -44,7 +45,7 @@ namespace ContentGeneration.Assets.UI
         public WorldGeometry WorldGeometry { get; }
 
         public IEnumerable<CharacterState> AliveEnemies => Enemies;//.Where(ch => ch != null && !ch.Dead);
-        public IEnumerable<InteractiveObjectState> InteractiveObjects => interactiveObjects.Where(io => io != null && io.InteractiveObject != null);
+        public IEnumerable<InteractiveObjectState> InteractiveObjects => interactiveObjects.Concat(interactivePersistentObjects).Where(io => io != null && io.InteractiveObject != null);
 
         // Start is called before the first frame update
         public World(WorldGeometry worldGeometry, PlayerCharacterState playerState)
@@ -69,6 +70,7 @@ namespace ContentGeneration.Assets.UI
             PlayerState.World = this;
 
             interactiveObjects = new List<InteractiveObjectState>();
+            interactivePersistentObjects = new List<InteractiveObjectState>();
             Enemies = new ObservableCollection<CharacterState>();
             architectureElements = new List<Transform>();
         }
@@ -123,6 +125,16 @@ namespace ContentGeneration.Assets.UI
                 interactiveObject.InteractiveObject.transform.SetParent(EntitiesParent);
             }
             interactiveObjects.Add(interactiveObject);
+        }
+
+        public void AddInteractivePersistentObject(InteractiveObjectState interactivePersistentObject)
+        {
+            interactivePersistentObject.World = this;
+            if (interactivePersistentObject.InteractiveObject.transform.parent == null) // Don't reparent door
+            {
+                interactivePersistentObject.InteractiveObject.transform.SetParent(EntitiesParent);
+            }
+            interactivePersistentObjects.Add(interactivePersistentObject);
         }
 
         public void AddArchitectureElement(Transform el)

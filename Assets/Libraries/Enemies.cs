@@ -228,11 +228,6 @@ public class Enemies : ScriptableObject
         dog.Inventory.LeftWeapon.Item = libraries.Items.MayanSword();
         //character.SetItemToSlot(SlotType.RightWeapon, libraries.Items.MayanSword());
 
-        // behaviors
-        /*var behaviors = dog.Behaviors;
-
-        AddDefaultBehaviors(behaviors);*/
-
         return dog;
     }
     

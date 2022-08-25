@@ -124,7 +124,7 @@ namespace ShapeGrammar
             var cubeSide = world.WorldGeometry.WorldScale;
             ((IEnumerable<Cube>)this).ForEach(i => i.CreateGeometry(cubeSide, world));
             var interactiveArchitecture = world.ArchitectureParent.GetComponentsInChildren<InteractiveObject>().Select(io => io.State);
-            interactiveArchitecture.ForEach(el => world.AddInteractiveObject(el));
+            interactiveArchitecture.ForEach(el => world.AddInteractivePersistentObject(el));
         }
     }
 

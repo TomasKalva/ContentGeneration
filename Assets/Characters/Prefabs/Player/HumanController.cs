@@ -12,19 +12,4 @@ public class HumanController : EnemyController<HumanAgent>
 	{
 		behaviors.AddBehavior(new DetectorBehavior(agent.Attack, attackArea));
 	}
-	/*
-	protected override void UpdateController(Vector2 movementDirection)
-	{
-		// check if my attack hits enemy
-		if (attackArea.Triggered)
-		{
-			var hitAgent = attackArea.other.GetComponentInParent<Agent>();
-			if (hitAgent != agent)
-			{
-				{
-					agent.Attack();
-				}
-			}
-		}
-	}*/
 }
