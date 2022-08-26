@@ -69,7 +69,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         public void ContinueManifestation(LevelConstructor levelConstructor, IEnumerable<FactionEnvironmentConstructor> branches)
         {
             Progress++;
-            levelConstructor.AddEvent($"{nameof(ContinueManifestation)} {Progress}", 10 + Progress, _ => branches.GetRandom()(GetFactionEnvironment(), Progress));
+            levelConstructor.AddNecessaryEvent($"{nameof(ContinueManifestation)} {Progress}", 10 + Progress, _ => branches.GetRandom()(GetFactionEnvironment(), Progress));
         }
     }
 

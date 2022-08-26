@@ -88,7 +88,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                 var factionConcepts = concepts.TakeSubset(3, 4);
                 var faction = new Faction(concepts);
 
-                State.LC.AddEvent($"Start Manifestation", 5, level =>
+                State.LC.AddNecessaryEvent($"Start Manifestation", 5, level =>
                     {
                         var factionManifestation = faction.GetFactionManifestation();
                         var factionEnvironment = factionManifestation.GetFactionEnvironment();

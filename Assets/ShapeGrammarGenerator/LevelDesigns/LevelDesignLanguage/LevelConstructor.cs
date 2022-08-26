@@ -12,31 +12,35 @@ namespace ShapeGrammar
         /// <summary>
         /// Events that are used to construct the current level.
         /// </summary>
-        List<SimpleLevelConstructionEvent> LevelConstructionEvents { get; set; }
+        /*
+        List<LevelConstructionEvent> LevelConstructionEvents { get; set; }
         /// <summary>
         /// Events that are set during the construction by modules.
         /// </summary>
-        List<SimpleLevelConstructionEvent> NewEvents { get; set; }
+        List<LevelConstructionEvent> NewEvents { get; set; }*/
         /// <summary>
         /// Index of successfull LevelConstructor iteration. Indexed from 0.
         /// </summary>
         int Level { get; set; }
 
+        public PriorityPoolLevelConstructionEvent NecessaryEvents { get; set; }
+
         public LevelConstructor()
         {
-            LevelConstructionEvents = new List<SimpleLevelConstructionEvent>();
-            NewEvents = new List<SimpleLevelConstructionEvent>();
+            NecessaryEvents = new PriorityPoolLevelConstructionEvent();
+            /*LevelConstructionEvents = new List<LevelConstructionEvent>();
+            NewEvents = new List<LevelConstructionEvent>();*/
             Level = 0;
         }
 
-        public void AddEvent(SimpleLevelConstructionEvent levelConstructionEvent)
+        public void AddNecessaryEvent(LevelConstructionEvent levelConstructionEvent)
         {
-            NewEvents.Add(levelConstructionEvent);
+            NecessaryEvents.AddEvent(levelConstructionEvent);
         }
 
-        public void AddEvent(string name, int priority, LevelConstruction construction, bool persistent = false)
+        public void AddNecessaryEvent(string name, int priority, LevelConstruction construction, bool persistent = false)
         {
-            NewEvents.Add(new SimpleLevelConstructionEvent(name, priority, construction, persistent));
+            NecessaryEvents.AddEvent(new LevelConstructionEvent(name, priority, construction, persistent));
         }
 
         /// <summary>
@@ -44,7 +48,19 @@ namespace ShapeGrammar
         /// </summary>
         public bool TryConstruct()
         {
-            LevelConstructionEvents.Clear();
+            var oldNecessaryPool = NecessaryEvents;
+            NecessaryEvents = new PriorityPoolLevelConstructionEvent();
+            bool necessaryOk = oldNecessaryPool.TryConstruct(ev => AddNecessaryEvent(ev), Level);
+            if (necessaryOk)
+            {
+                Level++;
+            }
+            else
+            {
+                NecessaryEvents = oldNecessaryPool;
+            }
+            return necessaryOk;
+            /*LevelConstructionEvents.Clear();
             LevelConstructionEvents.AddRange(NewEvents);
             NewEvents.Clear();
             try
@@ -69,7 +85,7 @@ namespace ShapeGrammar
                 NewEvents.AddRange(LevelConstructionEvents);
                 Debug.Log(ex.Message);
                 return false;
-            }
+            }*/
         }
     }
 
@@ -77,54 +93,83 @@ namespace ShapeGrammar
     /// Returns true if construction is finished.
     /// </summary>
     public delegate void LevelConstruction(int level);
-    public abstract class LevelConstructionEvent
+    public class LevelConstructionEvent
     {
         public string Name { get; }
         public int Priority { get; }
         public bool Persistent { get; }
+        LevelConstruction Construction { get; }
 
-        public LevelConstructionEvent(string name, int priority, bool persistent = false)
+        public LevelConstructionEvent(string name, int priority, LevelConstruction construction, bool persistent = false)
         {
             Name = name;
             Priority = priority;
+            Construction = construction;
             Persistent = persistent;
         }
 
-        public abstract void Handle(int level);
-    }
-    
-    public class SimpleLevelConstructionEvent : LevelConstructionEvent
-    {
-        LevelConstruction Construction { get; }
-
-        public SimpleLevelConstructionEvent(string name, int priority, LevelConstruction construction, bool persistent = false) : base(name, priority, persistent)
-        {
-            Construction = construction;
-        }
-
-
-        public override void Handle(int level)
+        public void Handle(int level)
         {
             Construction(level);
         }
     }
-
-    public class PoolLevelConstructionEvent : LevelConstructionEvent
+    
+    public abstract class LevelConstructionEventPool
     {
-        List<LevelConstructionEvent> ConstructionsPool { get; set; }
-        int MaxNumberOfEvents { get; }
+        public abstract bool TryConstruct(Action<LevelConstructionEvent> reAddPersistent, int level);
+    }
 
-        public PoolLevelConstructionEvent(string name, int priority, LevelConstruction construction, bool persistent = false) : base(name, priority, persistent)
+    public class PriorityPoolLevelConstructionEvent : LevelConstructionEventPool
+    {
+        /// <summary>
+        /// Events that are used to construct the current level.
+        /// </summary>
+        List<LevelConstructionEvent> LevelConstructionEvents { get; }
+        /// <summary>
+        /// Events that are set during the construction by modules.
+        /// </summary>
+        //List<LevelConstructionEvent> NewEvents { get; }
+
+        public PriorityPoolLevelConstructionEvent()
         {
-            ConstructionsPool = new List<LevelConstructionEvent>();
+            LevelConstructionEvents = new List<LevelConstructionEvent>();
+            //NewEvents = new List<LevelConstructionEvent>();
         }
 
-        public override void Handle(int level)
+        public void AddEvent(LevelConstructionEvent levelConstructionEvent)
         {
-            ConstructionsPool
-                .OrderBy(ev => ev.Priority)
-                .Take(MaxNumberOfEvents)
-                .ForEach(ev => ev.Handle(level));
+            LevelConstructionEvents.Add(levelConstructionEvent);
+        }
+
+        public override bool TryConstruct(Action<LevelConstructionEvent> reAddPersistent, int level)
+        {
+            /*LevelConstructionEvents.Clear();
+            LevelConstructionEvents.AddRange(NewEvents);
+            NewEvents.Clear();*/
+            try
+            {
+                LevelConstructionEvents.OrderBy(ev => -ev.Priority).ForEach(ev =>
+                {
+                    Debug.Log($"Starting: {ev.Name}");
+                    ev.Handle(level);
+                    if (ev.Persistent)
+                    {
+                        reAddPersistent(ev);
+                        
+                    }
+                    Debug.Log($"Finished: {ev.Name}");
+                });
+                level++;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Keep the old events
+                //NewEvents.Clear();
+                //NewEvents.AddRange(LevelConstructionEvents);
+                Debug.Log(ex.Message);
+                return false;
+            }
         }
     }
 }

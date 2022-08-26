@@ -57,7 +57,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                 );
 
             // Add the same branch to the next level
-            State.LC.AddEvent($"Ascending branch", 90, _ => L.AscendingLanguage.AscendingBranch(() => ascensionPrice));
+            State.LC.AddNecessaryEvent($"Ascending branch", 90, _ => L.AscendingLanguage.AscendingBranch(() => ascensionPrice));
         }
     }
 }
