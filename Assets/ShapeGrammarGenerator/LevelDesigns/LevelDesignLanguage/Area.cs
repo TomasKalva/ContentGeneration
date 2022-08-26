@@ -64,6 +64,9 @@ namespace ShapeGrammar
 
             foreach (var ios in InteractiveObjectStates)
             {
+                if (!ios.CanBeCreated())
+                    continue;
+
                 if (!flooredCubes.Any())
                 {
                     Debug.LogError("Not enough empty cubes");
@@ -77,6 +80,9 @@ namespace ShapeGrammar
 
             foreach (var enemy in EnemyStates)
             {
+                if (!enemy.CanBeCreated())
+                    continue;
+
                 if (!flooredCubes.Any())
                 {
                     Debug.LogError("Not enough empty cubes");

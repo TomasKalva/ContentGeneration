@@ -39,6 +39,9 @@ namespace ContentGeneration.Assets.UI.Model
         }
 #endif
 
+        protected ICreatingStrategy CreatingStrategy { get; set; }
+        public bool CanBeCreated() => CreatingStrategy.TryCreate();
+
 #if NOESIS
         [SerializeField]
 #endif
@@ -87,9 +90,8 @@ namespace ContentGeneration.Assets.UI.Model
         {
             Name = "Name";
             InteractionDescription = "";
+            CreatingStrategy = new CreateAlways();
         }
-
-
     }
 
     public delegate void InteractionDelegate<InteractiveObjectT>(InteractiveObjectState<InteractiveObjectT> interactiveObject, PlayerCharacterState playerCharacter)
@@ -118,6 +120,12 @@ namespace ContentGeneration.Assets.UI.Model
                 InteractiveObject = value;
 #endif
             }
+        }
+
+        public InteractiveObjectState<InteractiveObjectT> SetCreatingStrategy(ICreatingStrategy creatingStrategy)
+        {
+            CreatingStrategy = creatingStrategy;
+            return this;
         }
 
         protected InteractionDelegate<InteractiveObjectT> ActionOnInteract { get; set; }

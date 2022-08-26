@@ -13,6 +13,7 @@ public class PhysicalItemState : InteractiveObjectState<InteractiveObject>
         var added = agent.CharacterState.AddItem(Item);
         if (added)
         {
+            Item = null;
             World.RemoveItem(this);
         }
     }

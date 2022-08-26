@@ -112,7 +112,7 @@ public class InteractiveObjects : ScriptableObject
                         beingPickedUp = true;
                     }
                 })
-            );
+            ).SetCreatingStrategy(new CreateIfCondition(() => physicalItemState.Item != null));
         return physicalItemState;
     }
 

@@ -53,7 +53,8 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                 .SetStats(GetStats(level))
                 .SetLeftWeapon(weaponF())
                 .SetRightWeapon(weaponF())
-                .AddOnDeath(() => GameViewModel.ViewModel.PlayerState.Spirit += 3 * enemy.Health.Maximum);
+                .AddOnDeath(() => GameViewModel.ViewModel.PlayerState.Spirit += 3 * enemy.Health.Maximum)
+                .SetCreatingStrategy(new CreateIfCondition(() => enemy.DeathCount == 0));
         }
 
         public IEnumerable<Func<ItemState>> UpgradeRewards(int _)
@@ -92,7 +93,6 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                     Lib.Enemies.Sculpture()
                 ),
                 () => new Encounter(
-                    Lib.Enemies.Dog(),
                     Lib.Enemies.SkinnyWoman()
                 ),
             };

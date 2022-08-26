@@ -12,6 +12,68 @@ using System.Linq;
 
 namespace ContentGeneration.Assets.UI.Model
 {
+    /// <summary>
+    /// Strategy for creating objects multiple times.
+    /// </summary>
+    public interface ICreatingStrategy
+    {
+        /// <summary>
+        /// Returns true if object should be created.
+        /// </summary>
+        bool TryCreate();
+    }
+
+    /// <summary>
+    /// Allows creating the object any amount of times.
+    /// </summary>
+    class CreateAlways : ICreatingStrategy
+    {
+        public bool TryCreate() => true;
+    }
+
+    /// <summary>
+    /// Allows creating the object if condition holds.
+    /// </summary>
+    class CreateIfCondition : ICreatingStrategy
+    {
+        Func<bool> Condition { get; }
+
+        public CreateIfCondition(Func<bool> condition)
+        {
+            Condition = condition;
+        }
+
+        public bool TryCreate() => Condition();
+    }
+
+    /// <summary>
+    /// The object can be created at most maxCreatedCount times.
+    /// </summary>
+    class CreateNTimes : ICreatingStrategy
+    {
+        int AlreadyCreatedCount { get; set; }
+        int MaxCreatedCount { get; }
+
+        public CreateNTimes(int maxCreatedCount)
+        {
+            MaxCreatedCount = maxCreatedCount;
+            AlreadyCreatedCount = 0;
+        }
+
+        public bool TryCreate()
+        {
+            if (AlreadyCreatedCount < MaxCreatedCount)
+            {
+                AlreadyCreatedCount++;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+
 #if NOESIS
     [Serializable]
 #endif
@@ -24,6 +86,8 @@ namespace ContentGeneration.Assets.UI.Model
 #if NOESIS
 
         public GeometryMaker<Agent> GeometryMaker { get; set; }
+
+        public int DeathCount { get; private set; }
 
         public Action OnDeath { get; private set; }
         public CharacterState AddOnDeath(Action onDeath)
@@ -57,6 +121,14 @@ namespace ContentGeneration.Assets.UI.Model
             return agent;
         }
 #endif
+
+        ICreatingStrategy CreatingStrategy { get; set; }
+        public CharacterState SetCreatingStrategy(ICreatingStrategy creatingStrategy) 
+        {
+            CreatingStrategy = creatingStrategy;
+            return this;
+        }
+        public bool CanBeCreated() => CreatingStrategy.TryCreate();
 
 #if NOESIS
         [SerializeField]
@@ -110,15 +182,15 @@ namespace ContentGeneration.Assets.UI.Model
         public CharacterStats Stats
         {
             get { return _stats; }
-            set 
+            set
             {
-                _stats = value; 
-                if(_stats.Character != this)
+                _stats = value;
+                if (_stats.Character != this)
                 {
                     _stats.Character = this;
                 }
 
-                OnPropertyChanged(this); 
+                OnPropertyChanged(this);
             }
         }
 
@@ -170,14 +242,16 @@ namespace ContentGeneration.Assets.UI.Model
             DivineDefense = FindDefense(DamageType.Divine);
             //Behaviors = new Behaviors();
             Stats = new CharacterStats();
+            DeathCount = 0;
             OnDeath = () => { };
+            CreatingStrategy = new CreateAlways();
         }
 
         public virtual void Die()
         {
-            Debug.Log("Im dyiiiiiiiing");
             Agent.Stagger();
             World.RemoveEnemy(this);
+            DeathCount++;
             OnDeath();
         }
 #endif
