@@ -23,21 +23,12 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
         {
             var branches = Branches();
 
-            var selectorLibrary = Lib.Selectors;
-            var effectsLibrary = Lib.Effects;
-
-
-            var spells = new Spells(Lib.Effects, Lib.Selectors, Lib.VFXs);
-            var spellItems = new SpellItems(spells, Lib.VFXs);
-            Func<ItemState>[] s = spellItems.AllSpellItems()
-                .Select<Func<ItemState>, Func<ItemState>>(itemF => () => itemF().SetReplenishable(1)).ToArray();
-
             var concepts = new FactionConcepts(
                     new List<Func<PathGuide, ProductionList>>()
                     {
-                            pathGuide => Gr.PrL.Town(pathGuide),
-                            pathGuide => Gr.PrL.Castle(pathGuide),
-                            pathGuide => Gr.PrL.Chapels(pathGuide),
+                        pathGuide => Gr.PrL.Town(pathGuide),
+                        pathGuide => Gr.PrL.Castle(pathGuide),
+                        pathGuide => Gr.PrL.Chapels(pathGuide),
                     },
                     new List<Func<CharacterState>>()
                     {
@@ -48,39 +39,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                     }
                     .Shuffle().ToList(),
                     Lib.Items.AllWeapons().ToList(),
-                    new List<List<Func<ItemState>>>()
-                    {
-                        new List<Func<ItemState>>()
-                        {
-                            spellItems.FireBolt,
-                            spellItems.Replenishment,
-                        },
-                        new List<Func<ItemState>>()
-                        {
-                            spellItems.FlameBolt,
-                            spellItems.Fireball,
-                            spellItems.Cloud,
-                            spellItems.PillarsOfHeaven,
-                            spellItems.ConsecratedGround,
-                            spellItems.Refreshment,
-                        },
-                        new List<Func<ItemState>>()
-                        {
-                            spellItems.ChaosBolt,
-                            spellItems.Firefall,
-                            spellItems.SquareOfChaos,
-                            spellItems.FlameOfHeaven,
-                            spellItems.HeavenlyFlameCloud,
-                            spellItems.Triangle,
-                        },
-                        new List<Func<ItemState>>()
-                        {
-                            spellItems.CircleOfChaos,
-                            spellItems.FlamesOfHeaven,
-                            spellItems.Inferno,
-                            spellItems.WaveOfChaos,
-                        },
-                    }
+                    Lib.SpellItems.AllSpellsByPower()
                 );
 
             Enumerable.Range(0, factionsCount).ForEach(_ =>

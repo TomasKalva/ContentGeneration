@@ -103,10 +103,8 @@ namespace ContentGeneration.Assets.UI.Model
             Usage = new ItemUsage();
         }
 
-        public delegate void CharacterAction(CharacterState state);
-
-        public CharacterAction OnUseDelegate { get; protected set; }
-        public virtual ItemState OnUse(CharacterAction characterAction)
+        public Effect OnUseDelegate { get; protected set; }
+        public virtual ItemState OnUse(Effect characterAction)
         {
             OnUseDelegate += character =>
             {
@@ -118,32 +116,32 @@ namespace ContentGeneration.Assets.UI.Model
             return this;
         }
 
-        public CharacterAction OnDropDelegate { get; protected set; }
-        public ItemState OnDrop(CharacterAction characterAction)
+        public Effect OnDropDelegate { get; protected set; }
+        public ItemState OnDrop(Effect characterAction)
         {
             OnDropDelegate = characterAction;
             return this;
             //Debug.Log($"Dropping {Name}");
         }
 
-        public CharacterAction OnUpdateDelegate { get; protected set; }
-        public ItemState OnUpdate(CharacterAction characterAction)
+        public Effect OnUpdateDelegate { get; protected set; }
+        public ItemState OnUpdate(Effect characterAction)
         {
             OnUpdateDelegate = characterAction;
             return this;
             //Debug.Log($"Updating {Name}");
         }
 
-        public CharacterAction OnEquipDelegate { get; protected set; }
-        public ItemState OnEquip(CharacterAction characterAction)
+        public Effect OnEquipDelegate { get; protected set; }
+        public ItemState OnEquip(Effect characterAction)
         {
             OnEquipDelegate = characterAction;
             return this;
             //Debug.Log($"Dropping {Name}");
         }
 
-        public CharacterAction OnUnequipDelegate { get; protected set; }
-        public ItemState OnUnequip(CharacterAction characterAction)
+        public Effect OnUnequipDelegate { get; protected set; }
+        public ItemState OnUnequip(Effect characterAction)
         {
             OnUnequipDelegate = characterAction;
             return this;

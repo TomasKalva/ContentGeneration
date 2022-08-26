@@ -23,7 +23,7 @@ namespace ShapeGrammar
             
 
             State.LC.AddNecessaryEvent($"Level End", 99, level => L.LevelLanguage.LevelEnd(), true);
-            /*
+            
             
             State.LC.AddNecessaryEvent( $"Main path", 90, level => L.LevelLanguage.MainPath(level), true);
             
@@ -32,10 +32,12 @@ namespace ShapeGrammar
             L.FactionsLanguage.InitializeFactions(2);
             
             State.LC.AddNecessaryEvent($"Add Details", 0, level => L.DetailsLanguage.AddDetails(level), true);
-            */
+            
+            
             State.LC.AddNecessaryEvent($"Out of depth encounter", 80, level => L.OutOfDepthEncountersLanguage.DifficultEncounter(level), true);
-            /*
-            State.LC.AddNecessaryEvent($"Environment", 0, level => L.EnvironmentLanguage.CreateSky(level), true);*/
+
+            
+            State.LC.AddNecessaryEvent($"Environment", 0, level => L.EnvironmentLanguage.CreateSky(level), true);
 
             //State.LC.AddEvent($"Environment", 0, level => L.EnvironmentLanguage.TestSky(level), true);
 
@@ -123,7 +125,9 @@ namespace ShapeGrammar
                     Lib.Enemies.MayanSwordsman,
                     Lib.Enemies.MayanThrower,
                     Lib.Enemies.SkinnyWoman,
-                }
+                },
+                Lib.Items.MiscellaneousItems()
+                    .Select<Func<ItemState>, Func<InteractiveObjectState>>(item => () => Lib.InteractiveObjects.Item(item())).ToList()
             );
         }
 
@@ -238,12 +242,14 @@ namespace ShapeGrammar
         public Func<int, CharacterStats> CharacterStats { get; }
         public IEnumerable<Func<WeaponItem>> Weapons { get; }
         public IEnumerable<Func<CharacterState>> Enemies { get; }
+        public IEnumerable<Func<InteractiveObjectState>> Rewards { get; }
 
-        public EnemyMaker(Func<int, CharacterStats> characterStats, IEnumerable<Func<WeaponItem>> weapons, IEnumerable<Func<CharacterState>> enemies)
+        public EnemyMaker(Func<int, CharacterStats> characterStats, IEnumerable<Func<WeaponItem>> weapons, IEnumerable<Func<CharacterState>> enemies, IEnumerable<Func<InteractiveObjectState>> rewards)
         {
             CharacterStats = characterStats;
             Weapons = weapons;
             Enemies = enemies;
+            Rewards = rewards;
         }
 
         public Func<CharacterState> GetRandomEnemy(int level)
@@ -257,7 +263,11 @@ namespace ShapeGrammar
                     .SetStats(CharacterStats(level))
                     .SetLeftWeapon(weaponF())
                     .SetRightWeapon(weaponF())
-                    .AddOnDeath(() => GameViewModel.ViewModel.PlayerState.Spirit += enemy.Health.Maximum);
+                    .AddOnDeath(() =>
+                    {
+                        GameViewModel.ViewModel.PlayerState.Spirit += enemy.Health.Maximum;
+                    })
+                    .DropItem(Rewards.GetRandom());
             };
         }
     }

@@ -113,7 +113,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 
             // Give enemy key to the area
             var mainEnemy = enemies.First();
-            mainEnemy.DropItem(Lib.InteractiveObjects.Item(key));
+            mainEnemy.DropItem(() => Lib.InteractiveObjects.Item(key));
 
             // Place rewards
             var rewards = UpgradeRewards(level).ToList();

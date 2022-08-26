@@ -103,10 +103,11 @@ namespace ContentGeneration.Assets.UI.Model
         /// <summary>
         /// Character will drop the item upon death.
         /// </summary>
-        public CharacterState DropItem(InteractiveObjectState item)
+        public CharacterState DropItem(Func<InteractiveObjectState> itemF)
         {
             OnDeath += () =>
             {
+                var item = itemF();
                 item.MakeGeometry().transform.position = Agent.transform.position;
 
                 World.AddInteractiveObject(item);

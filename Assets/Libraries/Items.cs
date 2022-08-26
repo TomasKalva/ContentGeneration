@@ -172,6 +172,20 @@ public class Items : ScriptableObject
         WoodenHeart,
     };
 
+    public ItemState Dew() => NewItem("Dew", "Dew is dew.")
+        .SetStackable(1)
+        .OnUse(Effects.RegenerateHealth(2f,  4f));
+
+    public ItemState HoneyBall() => NewItem("Honey Ball", "Bees don't stagnate.")
+        .SetStackable(1)
+        .OnUse(Effects.Heal(5f));
+
+    public IEnumerable<Func<ItemState>> MiscellaneousItems() => new List<Func<ItemState>>()
+    {
+        Dew,
+        HoneyBall
+    };
+
     public ItemState NewItem(string name, string description) => 
         new ItemState() 
         { 

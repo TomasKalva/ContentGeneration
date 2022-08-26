@@ -69,16 +69,16 @@ public class WeaponItem : EquipmentItem<Weapon>
         }
     }
 
-    ByUser<Effect>[] BaseEffects { get; set; }
-    List<ByUser<Effect>> UpgradeEffects { get; set; }
+    ByUser<Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions.Effect>[] BaseEffects { get; set; }
+    List<ByUser<Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions.Effect>> UpgradeEffects { get; set; }
 
-    public WeaponItem(string name, string description, GeometryMaker<Weapon> weaponMaker, IEnumerable<ByUser<Effect>> baseEffects) : base(name, description, weaponMaker)
+    public WeaponItem(string name, string description, GeometryMaker<Weapon> weaponMaker, IEnumerable<ByUser<Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions.Effect>> baseEffects) : base(name, description, weaponMaker)
     {
         BaseEffects = baseEffects.ToArray();
-        UpgradeEffects = new List<ByUser<Effect>>();
+        UpgradeEffects = new List<ByUser<Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions.Effect>>();
     }
 
-    public WeaponItem AddUpgradeEffect(ByUser<Effect> effect)
+    public WeaponItem AddUpgradeEffect(ByUser<Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions.Effect> effect)
     {
         UpgradeEffects.Add(effect);
         return this;

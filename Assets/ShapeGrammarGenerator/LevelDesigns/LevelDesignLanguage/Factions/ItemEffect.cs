@@ -624,6 +624,41 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
                     Replenishment,
             };
 
+        public List<List<Func<ItemState>>> AllSpellsByPower() => 
+            new List<List<Func<ItemState>>>()
+                {
+                    new List<Func<ItemState>>()
+                    {
+                        FireBolt,
+                        Replenishment,
+                    },
+                    new List<Func<ItemState>>()
+                    {
+                        FlameBolt,
+                        Fireball,
+                        Cloud,
+                        PillarsOfHeaven,
+                        ConsecratedGround,
+                        Refreshment,
+                    },
+                    new List<Func<ItemState>>()
+                    {
+                        ChaosBolt,
+                        Firefall,
+                        SquareOfChaos,
+                        FlameOfHeaven,
+                        HeavenlyFlameCloud,
+                        Triangle,
+                    },
+                    new List<Func<ItemState>>()
+                    {
+                        CircleOfChaos,
+                        FlamesOfHeaven,
+                        Inferno,
+                        WaveOfChaos,
+                    },
+                };
+
         public ItemState FireBolt()
             => new ItemState()
             {
