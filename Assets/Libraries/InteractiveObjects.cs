@@ -32,6 +32,9 @@ public class InteractiveObjects : ScriptableObject
     [SerializeField]
     Transform physicalItemPrefab;
 
+    [SerializeField]
+    Transform farmer;
+
     public Grave Grave()
     {
         var state = new Grave()
@@ -47,6 +50,16 @@ public class InteractiveObjects : ScriptableObject
         };
 
         return state;
+    }
+
+    public InteractiveObjectState<InteractiveObject> Farmer(string name = "Farmer")
+    {
+        return InteractiveObject(name, Geometry<InteractiveObject>(farmer.transform));
+    }
+
+    public InteractiveObjectState<Kiln> Kiln(string name = "Kiln")
+    {
+        return InteractiveObject(name, Geometry<Kiln>(ascensionKilnPrefab.transform));
     }
 
     public GeometryMaker<InteractiveObjectT> Geometry<InteractiveObjectT>(Transform prefab) where InteractiveObjectT : InteractiveObject

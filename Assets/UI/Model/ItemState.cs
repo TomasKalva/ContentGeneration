@@ -33,6 +33,12 @@ namespace ContentGeneration.Assets.UI.Model
             set { _name = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
+        public ItemState SetName(string name)
+        {
+            Name = name;
+            return this;
+        }
+
 #if NOESIS
         [SerializeField]
 #endif

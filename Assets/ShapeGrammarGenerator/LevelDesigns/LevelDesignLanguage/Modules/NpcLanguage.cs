@@ -18,60 +18,116 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
     class NpcLanguage : LDLanguage
     {
         public NpcLanguage(LanguageParams tools) : base(tools) { }
-
-        public void StartNonPersistentNpcLines()
+        
+        
+        public void PutNpcToNewArea(InteractiveObjectState npc)
         {
-            Enumerable.Range(0, 6).ForEach(i => 
-                State.LC.AddPossibleEvent($"Npc {i}", 0, 
-                    _ =>
-                    {
-                        Env.One(Gr.PrL.Garden(), NodesQueries.All, out var area);
-                        area.AreasList[0].AddInteractiveObject(
-                            Lib.InteractiveObjects.InteractiveObject<Kiln>($"Npc {i}", Lib.InteractiveObjects.Geometry<Kiln>(Lib.InteractiveObjects.ascensionKilnPrefab.transform))
-                                .SetInteraction(
-                                    ins => ins
-                                        .Say($"I'm npc {i}")
+            Env.One(Gr.PrL.Garden(), NodesQueries.All, out var area);
+            area.AreasList[0].AddInteractiveObject(npc);
+        }
+        
+        public void ContinueNpc<InteractiveObjectT>(
+            InteractiveObjectState<InteractiveObjectT> npc, 
+            Action<InteractiveObjectState<InteractiveObjectT>> initialize,
+            Func<bool> condition) 
+            where InteractiveObjectT : InteractiveObject
+        {
+            State.LC.AddPossibleEvent($"{npc.Name}", 0, _ =>
+            {
+                Env.One(Gr.PrL.Garden(), NodesQueries.All, out var area);
+                area.AreasList[0].AddInteractiveObject(npc);
+                initialize(npc);
+            }, 
+            false,
+            condition);
+        }
+
+        public void SpecifictNpcStart()
+        {
+            var npc = Lib.InteractiveObjects.Kiln();
+            ContinueNpc(
+                npc, 
+                npc => npc.SetInteraction(
+                        ins => ins
+                            .Say($"I'm an npc.")
+                            .Decision("Could you go and collect dew for me?",
+                                new InteractOption<Kiln>("Yes",
+                                    (thisNpc, player) =>
+                                    {
+                                        thisNpc.SetInteraction(
+                                            ins => ins.Say("Very well then.")
+                                            );
+
+                                        ContinueNpc(
+                                            thisNpc,
+                                            SpecificNpcContinue,
+                                            () => true //player.Inventory.HasItems("Dew", 3, out var _)
+                                        );
+                                    }
                                 )
-                            );
-                        }
+                    )
+                ),
+                () => true
+            );
+        }
+
+        public void SpecificNpcContinue<InteractiveObjectT>(InteractiveObjectState<InteractiveObjectT> npc) where InteractiveObjectT : InteractiveObject
+        {
+            npc.SetInteraction(
+                ins => ins
+                    .Say("You found the dew")
+                    .Say("It is wet. Maybe too much.")
+                    .Decision("Would you mind sharing some?",
+                        new InteractOption<InteractiveObjectT>("Give one dew",
+                            (thisNpc, player) =>
+                            {
+                                if (!player.Inventory.TryPay("Dew", 1, () => Msg.Show("Dew given"), () => Msg.Show("Not enough Dew")))
+                                    return;
+
+                                thisNpc.SetInteraction(
+                                    ins => ins
+                                        .Say("Good dew is a good dew")
+                                );
+                                player.Inventory.AddItem(
+                                    Lib.SpellItems.Refreshment()
+                                        .SetName("Dew refreshment")
+                                        .SetReplenishable(2)
+                                    );
+                            }
+                        ),
+                        new InteractOption<InteractiveObjectT>("Give two dews",
+                            (thisNpc, player) =>
+                            {
+                                if (!player.Inventory.TryPay("Dew", 2, () => Msg.Show("Dew given"), () => Msg.Show("Not enough Dew")))
+                                    return;
+
+                                thisNpc.SetInteraction(
+                                    ins => ins
+                                        .Say("A wonderful dew.")
+                                        .Say("Much appreciated.")
+                                );
+                                player.Inventory.AddItem(
+                                    Lib.SpellItems.Replenishment()
+                                        .SetName("Dew replenishment")
+                                        .SetReplenishable(2)
+                                    );
+                            }
+                        )
                     )
                 );
         }
 
-        public void StartPersistentNpcLines()
+        public void InitializeNpcs()
         {
-            // Npc appears
+            SpecifictNpcStart();
 
-            Enumerable.Range(0, 6).ForEach(i =>
-                State.LC.AddPossibleEvent($"Npc {i}", 0,
-                    _ =>
-                    {
-                        Env.One(Gr.PrL.Garden(), NodesQueries.All, out var area);
-                        area.AreasList[0].AddInteractiveObject(
-                            Lib.InteractiveObjects.InteractiveObject<Kiln>($"Npc {i}", Lib.InteractiveObjects.Geometry<Kiln>(Lib.InteractiveObjects.ascensionKilnPrefab.transform))
-                                .SetInteraction(
-                                    ins => ins
-                                        .Say($"I'm npc {i}")
-                                )
-                            );
-                    }, 
-                    true)
-                );
+            // Npc appears
 
             // Hello, how are you. I'm the lord of cinder or something. I travel to the desert of language ambiguity.
 
             // Wow you did something. I didn't think you'd do that. Now take this. I ressume my journey.
 
             // How could that be. They did the surgery on grape. I'm leaving for blue mountain underneath.
-
         }
-
-        public void TestLocking()
-        {
-
-            L.PatternLanguage.BranchWithKey(NodesQueries.LastCreated, 1, Gr.PrL.Garden(), out var lockedArea, out var linearPath);
-
-        }
-
     }
 }

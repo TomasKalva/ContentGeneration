@@ -80,7 +80,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                      .OnUse(user => skyParams.Set(env))).ToArray();
 
             area.Get.AddInteractiveObject(
-                Lib.InteractiveObjects.InteractiveObject("Sky distributor", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
+                Lib.InteractiveObjects.Farmer("Sky distributor")
                     .SetInteraction(
                         ins => ins
                             .Act("Take all skies", (ios, player) => skyChangingItems.ForEach(itemF => player.AddItem(itemF()))

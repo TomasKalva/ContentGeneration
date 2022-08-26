@@ -74,7 +74,7 @@ namespace ShapeGrammar
 
             //State.LC.AddEvent("Testing Grammars", 90, _ => L.TestingLanguage.GrammarTesting());
             //State.LC.AddEvent("Testing Locking", 90, _ => L.TestingLanguage.TestLocking());
-            L.TestingLanguage.StartPersistentNpcLines();
+            L.NpcLanguage.InitializeNpcs();
             //State.LC.AddEvent("Testing Locking", 90, _ => L.TestingLanguage.NpcLine());
 
         }
@@ -179,7 +179,7 @@ namespace ShapeGrammar
 
             Env.One(Gr.PrL.Garden(), NodesQueries.LastCreated, out var farmer_area);
             farmer_area.Get.AddInteractiveObject(
-                Lib.InteractiveObjects.InteractiveObject("Farmer", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
+                Lib.InteractiveObjects.Farmer()
                     .SetInteraction(
                         ins => ins
                             .Say("My name is Ted")

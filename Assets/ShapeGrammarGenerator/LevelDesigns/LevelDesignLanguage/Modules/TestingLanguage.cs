@@ -90,7 +90,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             ).ToArray();
 
             level_up_area.Get.AddInteractiveObject(
-                Lib.InteractiveObjects.InteractiveObject("Levelling up object", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
+                Lib.InteractiveObjects.Farmer("Levelling up object")
                     .SetInteraction(
                         ins => ins
                             .Act("Take levelling up items", (ios, player) => statIncreaseItems.ForEach(item => player.AddItem(item))
@@ -109,7 +109,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                 .Select<Func<ItemState>, Func<ItemState>>(itemF => () => itemF().SetReplenishable(1)).ToArray();
 
             area.Get.AddInteractiveObject(
-                Lib.InteractiveObjects.InteractiveObject("Spells object", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
+                Lib.InteractiveObjects.Farmer("Spell objects")
                     .SetInteraction(
                         ins => ins
                             .Act("Take all spells", (ios, player) => s.ForEach(itemF => player.AddItem(itemF()))

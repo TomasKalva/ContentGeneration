@@ -22,7 +22,6 @@ public class Objects : ScriptableObject
 #endif
 
     //public Transform spawnPoint;
-    public Transform farmer;
 
     [SerializeField]
     Environment environment;

@@ -244,6 +244,26 @@ namespace ContentGeneration.Assets.UI.Model
         {
             items.RemoveFromInventory(this, stacksToRemove);
         }
+
+        public bool TryPay(string itemName, int amount, Action success = null, Action fail = null)
+        {
+
+            if (!HasItems(itemName, amount, out var dew))
+            {
+                if(fail != null)
+                {
+                    fail();
+                }
+                return false;
+            }
+            
+            RemoveStacksOfItems(dew, amount);
+            if (success != null)
+            {
+                success();
+            }
+            return true;
+        }
 #endif
 
         public void RemoveItem(ItemState item)

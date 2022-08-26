@@ -105,7 +105,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
         /// </summary>
         InteractiveObjectState ProgressOfManifestation(FactionManifestation manifestation)
         {
-            return Lib.InteractiveObjects.InteractiveObject("Progress of Manifestation", Lib.InteractiveObjects.Geometry<InteractiveObject>(Lib.Objects.farmer))
+            return Lib.InteractiveObjects.Farmer("Progress of Manifestation")
                     .SetInteraction(
                         ins => ins
                             .Decision($"Progress this manifestation ({manifestation.Progress + 1})",
