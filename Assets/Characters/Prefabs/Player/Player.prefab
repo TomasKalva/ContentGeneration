@@ -232,7 +232,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   orbitCameraFocusPoint: {fileID: 3016068658843168353}
   playerInputSpace: {fileID: 0}
-  interactionDistance: 0.8
+  interactionDistance: 1
   libraries: {fileID: 11400000, guid: e6d383d7b852e69439d0877d7ed97ca5, type: 2}
 --- !u!114 &8630713964869020744
 MonoBehaviour:

@@ -24,10 +24,12 @@ namespace ShapeGrammar
         int Level { get; set; }
 
         public PriorityPoolLevelConstructionEvent NecessaryEvents { get; set; }
+        public RoundRobinPoolLevelConstructionEvent PossibleEvents { get; set; }
 
         public LevelConstructor()
         {
             NecessaryEvents = new PriorityPoolLevelConstructionEvent();
+            PossibleEvents = new RoundRobinPoolLevelConstructionEvent(3);
             /*LevelConstructionEvents = new List<LevelConstructionEvent>();
             NewEvents = new List<LevelConstructionEvent>();*/
             Level = 0;
@@ -38,9 +40,18 @@ namespace ShapeGrammar
             NecessaryEvents.AddEvent(levelConstructionEvent);
         }
 
-        public void AddNecessaryEvent(string name, int priority, LevelConstruction construction, bool persistent = false)
+        public void AddNecessaryEvent(string name, int priority, LevelConstruction construction, bool persistent = false, Func<bool> condition = null)
         {
-            NecessaryEvents.AddEvent(new LevelConstructionEvent(name, priority, construction, persistent));
+            AddNecessaryEvent(new LevelConstructionEvent(name, priority, construction, persistent, condition));
+        }
+
+        public void AddPossibleEvent(LevelConstructionEvent levelConstructionEvent)
+        {
+            PossibleEvents.AddEvent(levelConstructionEvent);
+        }
+        public void AddPossibleEvent(string name, int priority, LevelConstruction construction, bool persistent = false, Func<bool> condition = null)
+        {
+            AddPossibleEvent(new LevelConstructionEvent(name, priority, construction, persistent, condition));
         }
 
         /// <summary>
@@ -49,43 +60,21 @@ namespace ShapeGrammar
         public bool TryConstruct()
         {
             var oldNecessaryPool = NecessaryEvents;
+            var oldPossiblePool = PossibleEvents;
             NecessaryEvents = new PriorityPoolLevelConstructionEvent();
+            PossibleEvents = new RoundRobinPoolLevelConstructionEvent(3);
             bool necessaryOk = oldNecessaryPool.TryConstruct(ev => AddNecessaryEvent(ev), Level);
-            if (necessaryOk)
+            bool possibleOk = oldPossiblePool.TryConstruct(ev => AddPossibleEvent(ev), Level);
+            if (necessaryOk && possibleOk)
             {
                 Level++;
             }
             else
             {
                 NecessaryEvents = oldNecessaryPool;
+                PossibleEvents = oldPossiblePool;
             }
             return necessaryOk;
-            /*LevelConstructionEvents.Clear();
-            LevelConstructionEvents.AddRange(NewEvents);
-            NewEvents.Clear();
-            try
-            {
-                LevelConstructionEvents.OrderBy(ev => -ev.Priority).ForEach(ev =>
-                {
-                    Debug.Log($"Starting: {ev.Name}");
-                    ev.Handle(Level);
-                    if (ev.Persistent)
-                    {
-                        NewEvents.Add(ev);
-                    }
-                    Debug.Log($"Finished: {ev.Name}");
-                });
-                Level++;
-                return true;
-            }
-            catch(Exception ex)
-            {
-                // Keep the old events
-                NewEvents.Clear();
-                NewEvents.AddRange(LevelConstructionEvents);
-                Debug.Log(ex.Message);
-                return false;
-            }*/
         }
     }
 
@@ -98,14 +87,16 @@ namespace ShapeGrammar
         public string Name { get; }
         public int Priority { get; }
         public bool Persistent { get; }
+        public Func<bool> Condition { get; }
         LevelConstruction Construction { get; }
 
-        public LevelConstructionEvent(string name, int priority, LevelConstruction construction, bool persistent = false)
+        public LevelConstructionEvent(string name, int priority, LevelConstruction construction, bool persistent = false, Func<bool> condition = null)
         {
             Name = name;
             Priority = priority;
             Construction = construction;
             Persistent = persistent;
+            Condition = condition != null ? condition : () => true;
         }
 
         public void Handle(int level)
@@ -125,15 +116,10 @@ namespace ShapeGrammar
         /// Events that are used to construct the current level.
         /// </summary>
         List<LevelConstructionEvent> LevelConstructionEvents { get; }
-        /// <summary>
-        /// Events that are set during the construction by modules.
-        /// </summary>
-        //List<LevelConstructionEvent> NewEvents { get; }
 
         public PriorityPoolLevelConstructionEvent()
         {
             LevelConstructionEvents = new List<LevelConstructionEvent>();
-            //NewEvents = new List<LevelConstructionEvent>();
         }
 
         public void AddEvent(LevelConstructionEvent levelConstructionEvent)
@@ -143,9 +129,6 @@ namespace ShapeGrammar
 
         public override bool TryConstruct(Action<LevelConstructionEvent> reAddPersistent, int level)
         {
-            /*LevelConstructionEvents.Clear();
-            LevelConstructionEvents.AddRange(NewEvents);
-            NewEvents.Clear();*/
             try
             {
                 LevelConstructionEvents.OrderBy(ev => -ev.Priority).ForEach(ev =>
@@ -159,14 +142,62 @@ namespace ShapeGrammar
                     }
                     Debug.Log($"Finished: {ev.Name}");
                 });
-                level++;
                 return true;
             }
             catch (Exception ex)
             {
-                // Keep the old events
-                //NewEvents.Clear();
-                //NewEvents.AddRange(LevelConstructionEvents);
+                Debug.Log(ex.Message);
+                return false;
+            }
+        }
+    }
+
+    public class RoundRobinPoolLevelConstructionEvent : LevelConstructionEventPool
+    {
+        /// <summary>
+        /// Events that are used to construct the current level.
+        /// </summary>
+        List<LevelConstructionEvent> LevelConstructionEvents { get; }
+        /// <summary>
+        /// Maximum number of events that can be executed during one TryConstruct.
+        /// </summary>
+        int MaxEvents { get; }
+
+        public RoundRobinPoolLevelConstructionEvent(int maxEvents)
+        {
+            LevelConstructionEvents = new List<LevelConstructionEvent>();
+            MaxEvents = maxEvents;
+        }
+
+        public void AddEvent(LevelConstructionEvent levelConstructionEvent)
+        {
+            LevelConstructionEvents.Add(levelConstructionEvent);
+        }
+
+        public override bool TryConstruct(Action<LevelConstructionEvent> reAddPersistent, int level)
+        {
+            try
+            {
+                var toExecute = LevelConstructionEvents.Where(ev => ev.Condition()).Take(MaxEvents);
+                var toKeep = LevelConstructionEvents.Except(toExecute);
+
+                toKeep.ForEach(ev => reAddPersistent(ev));
+
+                toExecute.ForEach(ev =>
+                {
+                    Debug.Log($"Starting: {ev.Name}");
+                    ev.Handle(level);
+                    if (ev.Persistent)
+                    {
+                        reAddPersistent(ev);
+
+                    }
+                    Debug.Log($"Finished: {ev.Name}");
+                });
+                return true;
+            }
+            catch (Exception ex)
+            {
                 Debug.Log(ex.Message);
                 return false;
             }

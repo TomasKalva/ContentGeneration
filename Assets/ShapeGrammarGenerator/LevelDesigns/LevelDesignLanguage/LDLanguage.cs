@@ -267,8 +267,8 @@ namespace ShapeGrammar
         public OutOfDepthEncountersLanguage OutOfDepthEncountersLanguage { get; private set; }
         public DetailsLanguage DetailsLanguage { get; private set; }
         public EnvironmentLanguage EnvironmentLanguage { get; private set; }
+        public NpcLanguage NpcLanguage { get; private set; }
         
-
 
         Languages()
         {
@@ -288,6 +288,7 @@ namespace ShapeGrammar
             OutOfDepthEncountersLanguage = new OutOfDepthEncountersLanguage(tools);
             DetailsLanguage = new DetailsLanguage(tools);
             EnvironmentLanguage = new EnvironmentLanguage(tools);
+            NpcLanguage = new NpcLanguage(tools);
         }
     }
 

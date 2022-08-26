@@ -164,9 +164,44 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                );*/
         }
 
-        public void NpcLine()
+        public void StartNonPersistentNpcLines()
+        {
+            Enumerable.Range(0, 6).ForEach(i => 
+                State.LC.AddPossibleEvent($"Npc {i}", 0, 
+                    _ =>
+                    {
+                        Env.One(Gr.PrL.Garden(), NodesQueries.All, out var area);
+                        area.AreasList[0].AddInteractiveObject(
+                            Lib.InteractiveObjects.InteractiveObject<Kiln>($"Npc {i}", Lib.InteractiveObjects.Geometry<Kiln>(Lib.InteractiveObjects.ascensionKilnPrefab.transform))
+                                .SetInteraction(
+                                    ins => ins
+                                        .Say($"I'm npc {i}")
+                                )
+                            );
+                        }
+                    )
+                );
+        }
+
+        public void StartPersistentNpcLines()
         {
             // Npc appears
+
+            Enumerable.Range(0, 6).ForEach(i =>
+                State.LC.AddPossibleEvent($"Npc {i}", 0,
+                    _ =>
+                    {
+                        Env.One(Gr.PrL.Garden(), NodesQueries.All, out var area);
+                        area.AreasList[0].AddInteractiveObject(
+                            Lib.InteractiveObjects.InteractiveObject<Kiln>($"Npc {i}", Lib.InteractiveObjects.Geometry<Kiln>(Lib.InteractiveObjects.ascensionKilnPrefab.transform))
+                                .SetInteraction(
+                                    ins => ins
+                                        .Say($"I'm npc {i}")
+                                )
+                            );
+                    }, 
+                    true)
+                );
 
             // Hello, how are you. I'm the lord of cinder or something. I travel to the desert of language ambiguity.
 
