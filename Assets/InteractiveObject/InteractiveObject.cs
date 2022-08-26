@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class InteractiveObject : MonoBehaviour
 {
+    
     public InteractiveObjectState _state;
     public InteractiveObjectState State
     {
@@ -18,17 +19,5 @@ public class InteractiveObject : MonoBehaviour
                 _state.InteractiveObject = this;
             }
         }
-    }
-
-    public void Interact(Agent agent)
-    {
-        //GameViewModel.ViewModel.Message = State.MessageOnInteract;
-        
-        State.Interact(agent);
-    }
-
-    public void OptionalInteract(Agent agent, int optionIndex)
-    {
-        State.OptionalInteract(agent, optionIndex);
     }
 }

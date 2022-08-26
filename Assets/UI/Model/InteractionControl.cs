@@ -7,10 +7,24 @@ using System.Threading.Tasks;
 namespace ContentGeneration.Assets.UI.Model
 {
     /// <summary>
-    /// Expression that defines how InteractiveObjects act
+    /// Expression that defines how InteractiveObject acts
     /// </summary>
     public abstract class Interaction<InteractiveObjectT> where InteractiveObjectT : InteractiveObject
     {
+        public struct InteractionArguments
+        {
+            public InteractOptions<InteractiveObjectT> InteractOptions { get; }
+            public string InteractionDescription { get; }
+            public InteractionDelegate<InteractiveObjectT> ActionOnInteract { get; }
+
+            public InteractionArguments(InteractOptions<InteractiveObjectT> interactOptions, string interactionDescription, InteractionDelegate<InteractiveObjectT> actionOnInteract)
+            {
+                InteractOptions = interactOptions;
+                InteractionDescription = interactionDescription;
+                ActionOnInteract = actionOnInteract;
+            }
+        }
+
         public abstract void Enter(InteractiveObjectState<InteractiveObjectT> ios);
     }
 
@@ -30,8 +44,17 @@ namespace ContentGeneration.Assets.UI.Model
 
         public override void Enter(InteractiveObjectState<InteractiveObjectT> ios)
         {
+            ios.Configure(
+                new InteractionArguments(
+                        InteractOptions,
+                        Message,
+                        (_1, _2) => { }
+                    )
+                );
+            /*
             ios.InteractOptions = InteractOptions;
             ios.InteractionDescription = Message;
+            */
         }
     }
 
@@ -51,9 +74,16 @@ namespace ContentGeneration.Assets.UI.Model
 
         public override void Enter(InteractiveObjectState<InteractiveObjectT> ios)
         {
-            ios.InteractOptions = null;
+            ios.Configure(
+                new InteractionArguments(
+                        null,
+                        InteractionDescription,
+                        ActionOnInteract
+                    )
+                );
+            /*ios.InteractOptions = null;
             ios.InteractionDescription = InteractionDescription;
-            ios.ActionOnInteract = ActionOnInteract;
+            ios.ActionOnInteract = ActionOnInteract;*/
         }
     }
 

@@ -12,25 +12,7 @@ using System.Collections.Generic;
 
 namespace ContentGeneration.Assets.UI.Model
 {
-    public class ObjectState
-    {
-#if NOESIS
-        Transform _object;
-        public Transform Object 
-        { 
-            get => _object;
-            set
-            {
-                _object = value;
-                AfterObjectSet();
-            }
-        }
-#endif
-
-        protected virtual void AfterObjectSet() { }
-    }
-
-    public class InteractiveObjectState : INotifyPropertyChanged
+    public abstract class InteractiveObjectState : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -67,7 +49,6 @@ namespace ContentGeneration.Assets.UI.Model
             set { _name = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
-
 #if NOESIS
         [SerializeField]
 #endif
@@ -76,9 +57,8 @@ namespace ContentGeneration.Assets.UI.Model
         public string InteractionDescription
         {
             get { return _interactionDescription; }
-            set { _interactionDescription = value; PropertyChanged.OnPropertyChanged(this); }
+            protected set { _interactionDescription = value; PropertyChanged.OnPropertyChanged(this); }
         }
-
 
 #if NOESIS
         public virtual void Interact(Agent agent)
@@ -88,7 +68,7 @@ namespace ContentGeneration.Assets.UI.Model
 
         public virtual void OptionalInteract(Agent agent, int optionIndex)
         {
-            //InteractOptions.DoOption(agent, this, optionIndex);
+
         }
 
         public virtual void PlayerLeft()
@@ -108,6 +88,8 @@ namespace ContentGeneration.Assets.UI.Model
             Name = "Name";
             InteractionDescription = "";
         }
+
+
     }
 
     public delegate void InteractionDelegate<InteractiveObjectT>(InteractiveObjectState<InteractiveObjectT> interactiveObject, PlayerCharacterState playerCharacter)
@@ -138,13 +120,13 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
-        public InteractionDelegate<InteractiveObjectT> ActionOnInteract { get; set; }
+        protected InteractionDelegate<InteractiveObjectT> ActionOnInteract { get; set; }
 
         private InteractOptions<InteractiveObjectT> _interactOptions;
         public InteractOptions<InteractiveObjectT> InteractOptions
         {
             get { return _interactOptions; }
-            set { _interactOptions = value; OnPropertyChanged(this); }
+            protected set { _interactOptions = value; OnPropertyChanged(this); }
         }
 
 #if NOESIS
@@ -160,6 +142,13 @@ namespace ContentGeneration.Assets.UI.Model
         }
 
         public GeometryMaker<InteractiveObjectT> GeometryMaker { get; set; }
+
+        public void Configure(Interaction<InteractiveObjectT>.InteractionArguments arguments)
+        {
+            InteractOptions = arguments.InteractOptions;
+            InteractionDescription = arguments.InteractionDescription;
+            ActionOnInteract = arguments.ActionOnInteract;
+        }
 
         public override InteractiveObject MakeGeometry()
         {
@@ -209,7 +198,7 @@ namespace ContentGeneration.Assets.UI.Model
             return this;
         }
 
-#endregion
+        #endregion
 
 
     }
@@ -257,7 +246,7 @@ namespace ContentGeneration.Assets.UI.Model
             Options.Add(new InteractOption<InteractiveObjectT>(description, action, index));
             return this;
         }
-}
+    }
 
     public class InteractOption<InteractiveObjectT>
 #if NOESIS

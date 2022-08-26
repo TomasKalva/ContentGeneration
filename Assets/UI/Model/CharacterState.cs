@@ -322,6 +322,7 @@ namespace ContentGeneration.Assets.UI.Model
 #if NOESIS
             Inventory.AllSlots.ForEach(slot => slot.Item?.OnRest());
 #endif
+            Reset();
         }
 
         /// <summary>

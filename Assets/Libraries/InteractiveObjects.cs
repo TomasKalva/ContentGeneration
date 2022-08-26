@@ -37,20 +37,22 @@ public class InteractiveObjects : ScriptableObject
 
     public Grave Grave()
     {
-        var state = new Grave()
+        var grave = new Grave()
         {
             Name = "Grave",
             GeometryMaker = Geometry<InteractiveObject>(gravePrefab.transform)
-        }.SetInteraction(
+        };
+        grave.SetInteraction(
             ins => ins
-                .Decision("The Grave",
-                    new InteractOption<InteractiveObject>("Take candle", (grave, player) => Debug.Log("Taking candle")),
-                    new InteractOption<InteractiveObject>("Put candle", (grave, player) => Debug.Log("Putting candle")),
-                    new InteractOption<InteractiveObject>("Rest", (grave, player) => player.Rest())
-                )
+                .Act("Rest",
+                    (_, player) =>
+                    {
+                        player.World.Grave = grave;
+                        player.Rest();
+                    })
             );
 
-        return (Grave)state;
+        return grave;
     }
 
     public InteractiveObjectState<InteractiveObject> Farmer(string name = "Farmer")

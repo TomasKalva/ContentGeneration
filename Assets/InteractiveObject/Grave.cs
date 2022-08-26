@@ -8,13 +8,8 @@ using System.Threading.Tasks;
 
 public class Grave : InteractiveObjectState<InteractiveObject>
 {
-    AgentSpawner PlayerSpawner => InteractiveObject.GetComponentInChildren<AgentSpawner>();
-
-    public override void Interact(global::Agent agent)
-    {
-        World.Grave = this;
-    }
-
+    AgentSpawner PlayerSpawner => IntObj.GetComponentInChildren<AgentSpawner>();
+    
     public PlayerCharacterState SpawnPlayer()
     {
         var playerAgent = PlayerSpawner.Spawn();

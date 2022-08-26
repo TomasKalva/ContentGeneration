@@ -36,27 +36,30 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
                 var doorState = (DoorState)door.State;
 
                 bool unlocked = false;
-                doorState.ActionOnInteract = (ios, player) =>
-                {
-                    if (unlocked)
-                    {
-                        ios.IntObj.SwitchPosition();
-                    }
-                    else
-                    {
-                        unlocked = unlock(player);
+                doorState.SetInteraction(
+                    ins => ins.Act("Open/Close", 
+                        (ios, player) =>
+                        {
+                            if (unlocked)
+                            {
+                                ios.IntObj.SwitchPosition();
+                            }
+                            else
+                            {
+                                unlocked = unlock(player);
 
-                        if (unlocked)
-                        {
-                            Msg.Show("Door unlocked");
-                            ios.IntObj.SwitchPosition();
-                        }
-                        else
-                        {
-                            Msg.Show("Door is locked");
-                        }
-                    }
-                };
+                                if (unlocked)
+                                {
+                                    Msg.Show("Door unlocked");
+                                    ios.IntObj.SwitchPosition();
+                                }
+                                else
+                                {
+                                    Msg.Show("Door is locked");
+                                }
+                            }
+                        })
+                    );
             };
         }
 
