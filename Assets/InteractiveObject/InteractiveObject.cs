@@ -22,7 +22,7 @@ public class InteractiveObject : MonoBehaviour
 
     public void Interact(Agent agent)
     {
-        GameViewModel.ViewModel.Message = State.MessageOnInteract;
+        //GameViewModel.ViewModel.Message = State.MessageOnInteract;
         
         State.Interact(agent);
     }

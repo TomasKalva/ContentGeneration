@@ -61,7 +61,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                                         ContinueNpc(
                                             thisNpc,
                                             SpecificNpcContinue,
-                                            () => true //player.Inventory.HasItems("Dew", 3, out var _)
+                                            () => player.Inventory.HasItems("Dew", 3, out var _)
                                         );
                                     }
                                 )

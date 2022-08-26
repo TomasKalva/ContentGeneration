@@ -118,6 +118,14 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                     );
         }
 
+        public void ItemsTesting()
+        {
+            Env.One(Gr.PrL.Garden(), NodesQueries.All, out var area);
+
+            var itemPlacer = PlO.RandomAreaPlacer(new ConstDistrInt(3), () => Lib.InteractiveObjects.Item(Lib.Items.NewItem("Item", "Description")));
+            itemPlacer.Place(area);
+        }
+
         public void GrammarTesting()
         {
             var grammarState = State.GrammarState;

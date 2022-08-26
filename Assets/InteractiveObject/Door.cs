@@ -19,10 +19,7 @@ public class Door : InteractiveObject
 
     private void Awake()
     {
-        State = new DoorState(this) 
-        { 
-            InteractionDescription = "Open/Close" 
-        };
+        State = new DoorState(this);
     }
 
     public void SwitchPosition()
@@ -41,10 +38,7 @@ public class DoorState : InteractiveObjectState<Door>
     public DoorState(Door door)
     {
         IntObj = door;
-        ActionOnInteract = (ios, player) =>
-        {
-            ios.IntObj.SwitchPosition();
-        };
+        SetInteraction(ins => ins.Act("Open/Close", (door, _) => door.IntObj.SwitchPosition()));
     }
 }
 

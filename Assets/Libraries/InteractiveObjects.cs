@@ -40,16 +40,17 @@ public class InteractiveObjects : ScriptableObject
         var state = new Grave()
         {
             Name = "Grave",
-            MessageOnInteract = "Grave chosen",
-            InteractionDescription = "Choose Grave",
-            InteractOptions = new InteractOptions<InteractiveObject>()
-                .AddOption("Take candle", (grave, player) => Debug.Log("Taking candle"))
-                .AddOption("Put candle", (grave, player) => Debug.Log("Putting candle"))
-                .AddOption("Rest", (grave, player) => player.Rest()),
             GeometryMaker = Geometry<InteractiveObject>(gravePrefab.transform)
-        };
+        }.SetInteraction(
+            ins => ins
+                .Decision("The Grave",
+                    new InteractOption<InteractiveObject>("Take candle", (grave, player) => Debug.Log("Taking candle")),
+                    new InteractOption<InteractiveObject>("Put candle", (grave, player) => Debug.Log("Putting candle")),
+                    new InteractOption<InteractiveObject>("Rest", (grave, player) => player.Rest())
+                )
+            );
 
-        return state;
+        return (Grave)state;
     }
 
     public InteractiveObjectState<InteractiveObject> Farmer(string name = "Farmer")
@@ -91,14 +92,25 @@ public class InteractiveObjects : ScriptableObject
 
     public InteractiveObjectState<InteractiveObject> Item(ItemState itemState)
     {
+        bool beingPickedUp = false;
+
         var physicalItemState = new PhysicalItemState()
         {
             Name = itemState.Name,
-            MessageOnInteract = $"Picked up {itemState.Name}",
-            InteractionDescription = "Pick up item",
             Item = itemState,
             GeometryMaker = Geometry<InteractiveObject>(physicalItemPrefab)
         };
+        physicalItemState.SetInteraction(
+            ins => ins.Act("Pick up item", 
+                (io, pl) => 
+                {
+                    if (!beingPickedUp)
+                    {
+                        pl.Agent.PickUpItem(physicalItemState);
+                        beingPickedUp = true;
+                    }
+                })
+            );
         return physicalItemState;
     }
 

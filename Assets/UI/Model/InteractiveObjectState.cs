@@ -67,18 +67,6 @@ namespace ContentGeneration.Assets.UI.Model
             set { _name = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
-#if NOESIS
-        [SerializeField]
-#endif
-        private string _messageOnInteract;
-        /// <summary>
-        /// D E P R E C A T E D, handle messaging manually
-        /// </summary>
-        public string MessageOnInteract
-        {
-            get { return _messageOnInteract; }
-            set { _messageOnInteract = value; PropertyChanged.OnPropertyChanged(this); }
-        }
 
 #if NOESIS
         [SerializeField]
@@ -118,7 +106,6 @@ namespace ContentGeneration.Assets.UI.Model
         public InteractiveObjectState()
         {
             Name = "Name";
-            MessageOnInteract = "";
             InteractionDescription = "";
         }
     }
@@ -212,7 +199,6 @@ namespace ContentGeneration.Assets.UI.Model
 
         public InteractiveObjectState<InteractiveObjectT> Interact(InteractionDelegate<InteractiveObjectT> onInteract)
         {
-            MessageOnInteract = "";
             ActionOnInteract = onInteract;
             return this;
         }

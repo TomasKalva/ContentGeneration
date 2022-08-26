@@ -21,8 +21,5 @@ public class Grave : InteractiveObjectState<InteractiveObject>
         var playerState = GameViewModel.ViewModel.PlayerState;
         playerAgent.CharacterState = playerState;
         return playerState;
-
-        /*playerAgent.CharacterState = InteractiveObject.Reality.PlayerState;
-        return InteractiveObject.Reality.PlayerState;*/
     }
 }

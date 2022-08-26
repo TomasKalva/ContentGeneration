@@ -40,11 +40,11 @@ namespace ShapeGrammar
             //State.LC.AddEvent($"Environment", 0, level => L.EnvironmentLanguage.TestSky(level), true);
 
             /*
-            State.LC.AddEvent("Farmer branch", 5, level => L.FarmersLanguage.FarmerBranch(0));
+            State.LC.AddNecessaryEvent("Farmer branch", 5, level => L.FarmersLanguage.FarmerBranch(0));
             */
 
             /*
-            State.LC.AddEvent(5, () =>
+            State.LC.AddNecessaryEvent(5, () =>
             {
                 //L.PatternLanguage.BranchWithKey(NodesQueries.LastCreated, 4, Gr.PrL.TestingProductions());
                 L.PatternLanguage.RandomBranchingWithKeys(6, Gr.PrL.TestingProductions(), out var locked, out var branches);
@@ -52,9 +52,9 @@ namespace ShapeGrammar
             });
             */
 
-            //State.LC.AddEvent("Ascending", 90, _ => L.AscendingLanguage.AscendingBranch(() => 100));
+            //State.LC.AddNecessaryEvent("Ascending", 90, _ => L.AscendingLanguage.AscendingBranch(() => 100));
             /*
-            State.LC.AddEvent(
+            State.LC.AddNecessaryEvent(
                 new LevelConstructionEvent(10, () =>
                 {
                     L.TestingLanguage.LevellingUpItems();
@@ -65,17 +65,18 @@ namespace ShapeGrammar
 
 
 
-            //State.LC.AddEvent("Testing enemies", 5, _ => L.TestingLanguage.StatsScalingOfEnemies());
+            //State.LC.AddNecessaryEvent("Testing enemies", 5, _ => L.TestingLanguage.StatsScalingOfEnemies());
 
 
-            //State.LC.AddEvent("Testing spells", 90, _ => L.TestingLanguage.Spells());
+            //State.LC.AddNecessaryEvent("Testing spells", 90, _ => L.TestingLanguage.Spells());
+
+            State.LC.AddNecessaryEvent("Testing spells", 90, _ => L.TestingLanguage.ItemsTesting());
 
 
-
-            //State.LC.AddEvent("Testing Grammars", 90, _ => L.TestingLanguage.GrammarTesting());
-            //State.LC.AddEvent("Testing Locking", 90, _ => L.TestingLanguage.TestLocking());
+            //State.LC.AddNecessaryEvent("Testing Grammars", 90, _ => L.TestingLanguage.GrammarTesting());
+            //State.LC.AddNecessaryEvent("Testing Locking", 90, _ => L.TestingLanguage.TestLocking());
             L.NpcLanguage.InitializeNpcs();
-            //State.LC.AddEvent("Testing Locking", 90, _ => L.TestingLanguage.NpcLine());
+            //State.LC.AddNecessaryEvent("Testing Locking", 90, _ => L.TestingLanguage.NpcLine());
 
         }
     }

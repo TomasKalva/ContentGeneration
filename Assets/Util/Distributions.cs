@@ -156,4 +156,19 @@ namespace ShapeGrammar
             return val;
         }
     }
+
+    public class ConstDistrInt : IDistribution<int>
+    {
+        int val;
+
+        public ConstDistrInt(int val)
+        {
+            this.val = val;
+        }
+
+        public int Sample()
+        {
+            return val;
+        }
+    }
 }
