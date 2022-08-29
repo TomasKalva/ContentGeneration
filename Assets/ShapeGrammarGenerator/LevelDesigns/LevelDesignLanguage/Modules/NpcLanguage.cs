@@ -42,7 +42,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             condition);
         }
 
-        public void SpecifictNpcStart()
+        public void DewStart()
         {
             var npc = Lib.InteractiveObjects.Kiln();
             ContinueNpc(
@@ -55,12 +55,12 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                                     (thisNpc, player) =>
                                     {
                                         thisNpc.SetInteraction(
-                                            ins => ins.Say("Very well then.")
+                                            ins => ins.Say("Very well then. I'll see you later.")
                                             );
 
                                         ContinueNpc(
                                             thisNpc,
-                                            SpecificNpcContinue,
+                                            DewEnd,
                                             () => player.Inventory.HasItems("Dew", 3, out var _)
                                         );
                                     }
@@ -71,7 +71,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             );
         }
 
-        public void SpecificNpcContinue<InteractiveObjectT>(InteractiveObjectState<InteractiveObjectT> npc) where InteractiveObjectT : InteractiveObject
+        public void DewEnd<InteractiveObjectT>(InteractiveObjectState<InteractiveObjectT> npc) where InteractiveObjectT : InteractiveObject
         {
             npc.SetInteraction(
                 ins => ins
@@ -119,7 +119,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 
         public void InitializeNpcs()
         {
-            SpecifictNpcStart();
+            DewStart();
 
             // Npc appears
 

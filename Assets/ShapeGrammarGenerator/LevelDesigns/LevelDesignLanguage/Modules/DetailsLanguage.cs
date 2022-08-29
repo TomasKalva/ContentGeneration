@@ -18,14 +18,15 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
     {
         public DetailsLanguage(LanguageParams tools) : base(tools) 
         {
+            string itemTooltip = "May her volatile presence lift us up.";
             Items = new List<Func<ItemState>>()
             {
-                () => Lib.Items.NewItem("Will of a small Dog 1", "Why dog?").OnUse(user => user.Spirit += 100),
-                () => Lib.Items.NewItem("Will of a small Dog 2", "Why dog?").OnUse(user => user.Spirit += 200),
-                () => Lib.Items.NewItem("Will of a small Dog 3", "Why dog?").OnUse(user => user.Spirit += 500),
-                () => Lib.Items.NewItem("Will of a small Dog 4", "Why dog?").OnUse(user => user.Spirit += 1000),
-                () => Lib.Items.NewItem("Will of a small Dog 5", "Why dog?").OnUse(user => user.Spirit += 2000),
-                () => Lib.Items.NewItem("Will of a small Dog 6", "Why dog?").OnUse(user => user.Spirit += 3000),
+                () => Lib.Items.NewItem("Presence of small Dog", $"Dog, o'Dog, why are you so small? Your little presence is the most welcome one. {itemTooltip}").OnUse(user => user.Spirit += 100),
+                () => Lib.Items.NewItem("Presence of lovely Dog", $"The heartwarming doggie, rests in its nest. Her loveliness shall not go unnoticed. {itemTooltip}").OnUse(user => user.Spirit += 200),
+                () => Lib.Items.NewItem("Presence of angry Dog", $"A heap of barks is turning into a mountain. Will your barking know any limits? {itemTooltip}").OnUse(user => user.Spirit += 500),
+                () => Lib.Items.NewItem("Presence of impatient Dog", $"Dog knows where. Dog knows how. Dog, however lacks the time. {itemTooltip}").OnUse(user => user.Spirit += 1000),
+                () => Lib.Items.NewItem("Presence of pure Dog", $"Are you even real? A dog so clean, a dog so proud. If only petting was allowed. {itemTooltip}").OnUse(user => user.Spirit += 2000),
+                () => Lib.Items.NewItem("Absence of Dog", $"The dog is gone? How could it. Will it return? No one knows. Let us rejoice in her past presence for a few last times.").OnUse(user => user.Spirit += 3000),
             };
         }
 
