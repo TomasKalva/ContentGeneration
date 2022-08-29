@@ -34,8 +34,8 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 
         int ItemLevel(int level)
         {
-            var desiredLevel = new UniformDistr(level, level + 2).Sample();
-            return Math.Min(Items.Count - 1, desiredLevel);
+            var desiredLevel = new UniformDistr(level - 1, level + 1).Sample();
+            return Math.Clamp(desiredLevel, 0, Items.Count - 1);
         }
 
         public void AddDetails(int level)

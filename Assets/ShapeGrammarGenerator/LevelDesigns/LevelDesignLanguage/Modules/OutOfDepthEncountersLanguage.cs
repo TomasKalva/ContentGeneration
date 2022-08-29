@@ -67,7 +67,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                     Stat.Endurance 
                 }
                     .Select<Stat, Func<ItemState>>(stat => 
-                        () => Lib.Items.NewItem($"Glory: {stat.ToString()}", $"Greatly increases {stat}")
+                        () => Lib.Items.NewItem($"Experience: {stat.ToString()}", $"There are no secrets behind the power of the Ancients. Once finally put to rest after millenia of slow decomposition, their experience might serve as a gentel warnings to those who take over.")
                             .OnUse(ch => CharacterStats.StatChanges[stat].Manipulate(ch.Stats, 3))
                             .SetConsumable()
                     );
@@ -88,13 +88,46 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             {
                 () => new Encounter(
                     Lib.Enemies.DragonMan()
+                        .DropItem(
+                            () =>
+                                Lib.InteractiveObjects.Item(
+                                    Lib.Items.NewItem(
+                                        "Stubbornness of Half Dragon",
+                                        "Once a noble man with no ambitions other than turning himself into a cold blooded beast. Upon fracturing last semblances of Common Sense his wish was finally granted."
+                                    )
+                                    .SetStackable(1)
+                                    .OnUse(Lib.Effects.Heal(1000))
+                            )
+                        )
                 ),
                 () => new Encounter(
                     Lib.Enemies.Sculpture()
+                        .DropItem(
+                            () =>
+                                Lib.InteractiveObjects.Item(
+                                    Lib.Items.NewItem(
+                                        "Serenity of Sculpture",
+                                        "Sculptures belong to the few entities originating to this place. They ranked among the few supporters of Ariamel and his Master Plans, before his unfortunate descent into insanity."
+                                    )
+                                    .SetStackable(1)
+                                    .OnUse(Lib.Effects.GiveSpirit(1000))
+                            )
+                        )
                 ),
                 () => new Encounter(
                     Lib.Enemies.SkinnyWoman()
-                ),
+                        .DropItem(
+                            () => 
+                                Lib.InteractiveObjects.Item(
+                                    Lib.Items.NewItem(
+                                        "Complacency of Headless Lady",
+                                        "Although a rare phoenomenon in the Lands of Abundance, Headless Ladies are a natural speciment in these parts. Their rejection from Source due to their high affiliation with witchcraft is a likely reason for their migration."
+                                    )
+                                    .SetStackable(1)
+                                    .OnUse(Lib.Effects.RegenerateHealth(2, 60))
+                            )
+                        )
+                    ),
             };
 
         public void DifficultEncounter(int level)
@@ -108,12 +141,14 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             enemies.Select(enemy => EnhanceEnemy(enemy, level)).ForEach(enemy => arena.AddEnemy(enemy));
 
             // Create a locked area after the encounter
-            var key = L.PatternLanguage.CreateLockItems(State.UniqueNameGenerator.UniqueName("Soulbound Key"), 1, "Unlocks a door", out var unlock).First();
+            var key = L.PatternLanguage.CreateLockItems(State.UniqueNameGenerator.UniqueName("Integral part"), 1, "The pathway rarely opens without the detachment of Integrand from its Integree being achieved.", out var unlock).First();
             L.PatternLanguage.LockedArea(_ => path.LastArea().Node.ToEnumerable(), unlock, out var locked);
 
             // Give enemy key to the area
             var mainEnemy = enemies.First();
-            mainEnemy.DropItem(() => Lib.InteractiveObjects.Item(key));
+            mainEnemy
+                .AddOnDeath(() => Msg.Show("Ancient disintegrated"))
+                .DropItem(() => Lib.InteractiveObjects.Item(key));
 
             // Place rewards
             var rewards = UpgradeRewards(level).ToList();
