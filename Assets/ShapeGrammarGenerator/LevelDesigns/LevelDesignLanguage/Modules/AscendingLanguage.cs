@@ -23,10 +23,10 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
         {
             Env.One(Gr.PrL.Garden(), NodesQueries.All, out var ascending_area);
 
-            var statsIncreases = CharacterStats.StatIncreases;
-
             int ascensionPrice = startingAscensionPrice();
+            int ascensionPriceIncrease = 50;
 
+            var statsIncreases = CharacterStats.StatIncreases;
             Func<StatManipulation<Action<CharacterStats>>, InteractOption<Kiln>> increaseOption = null; // Declare function before calling it recursively
             increaseOption =
                 statIncrease => new InteractOption<Kiln>($"{statIncrease.Stat}",
@@ -35,7 +35,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                         if (player.Pay(ascensionPrice))
                         {
                             statIncrease.Manipulate(player.Stats);
-                            ascensionPrice += 50;
+                            ascensionPrice += ascensionPriceIncrease;
                             kiln.IntObj.BurstFire();
                             kiln.Interaction =
                                 new InteractionSequence<Kiln>()
@@ -50,7 +50,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                 Lib.InteractiveObjects.InteractiveObject("Farmer", Lib.InteractiveObjects.Geometry<Kiln>(Lib.InteractiveObjects.ascensionKilnPrefab.transform))
                     .SetInteraction(
                         ins => ins
-                            .Say("Ascension kiln is glad to feel you")
+                            .Say("Ascension kiln is delighted to feel your presence.")
                             .Decision($"What ascension are you longing for? ({ascensionPrice} Spirit)",
                                 statsIncreases.Shuffle().Take(3).Select(si => increaseOption(si)).ToArray())
                     )

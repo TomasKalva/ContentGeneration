@@ -64,18 +64,34 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
         /// </summary>
         InteractiveObjectState ProgressOfManifestation(FactionManifestation manifestation)
         {
+            Func<string>[] toSay = new Func<string>[3]
+            {
+                () => "Death comes sparsly and every chance to rest is greatly appreciated.",
+                () => "Our members are tired. Most of us don't get many chances to die regularly anymore...",
+                () => "Living in death. What was the last time we could? Bringing rest to our bodies feels... refreshing.",
+            };
+            int progressPrice = 500 * (1 + manifestation.Progress);
             return Lib.InteractiveObjects.Farmer("Progress of Manifestation")
                     .SetInteraction(
                         ins => ins
-                            .Decision($"Progress this manifestation ({manifestation.Progress + 1})",
-                            new InteractOption<InteractiveObject>("Yes",
+                            .Say("Our faction is the most pleased with your service.")
+                            .Say(toSay.GetRandom()())
+                            .Say("Finding a skilled executioner is a long time run.")
+                            .Decision($"Are your services still available? (Proceed to progress {manifestation.Progress + 1})",
+                            new InteractOption<InteractiveObject>($"Yes ({progressPrice} Spirit)",
                                 (ios, player) =>
                                 {
+                                    if (!player.Pay(progressPrice))
+                                    {
+                                        Msg.Show("Not enough spirit.");
+                                        return;
+                                    }
+
                                     manifestation.ContinueManifestation(State.LC, Branches());
                                     Msg.Show("Progress achieved");
                                     ios.SetInteraction(
                                         ins => ins
-                                            .Say("Thank you for your attention.")
+                                            .Say("We are in your debt.")
                                     );
                                 }
                             , 0)
