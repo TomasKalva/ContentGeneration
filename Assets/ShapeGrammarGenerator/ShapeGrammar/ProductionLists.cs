@@ -29,7 +29,7 @@ namespace ShapeGrammar
             return new ProductionList
             (
                 // Connection from other grammars
-                pr.ExtendBridgeToRoom(pr.sym.FullFloorMarker, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide),
+                pr.ExtendBridgeToRoom(pr.sym.FullFloorMarker, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 4, 3, 4)), pathGuide),
 
                 pr.CourtyardFromRoom(pathGuide),
                 pr.CourtyardFromCourtyardCorner(),
@@ -128,13 +128,13 @@ namespace ShapeGrammar
                     pr.sym.FullFloorMarker,
                     pr.sym.ChapelRoom,
                     4,
-                    () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)).SetAreaType(AreaStyles.Room(AreaStyles.ChapelStyle)),
+                    () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 5, 3, 3)).SetAreaType(AreaStyles.Room(AreaStyles.ChapelStyle)),
                     pathGuide,
                     pr.Reserve(2, pr.sym.UpwardReservation)),
                 //.ExtendBridgeToRoom(pr.sym.FullFloorMarker, pr.sym.ChapelRoom, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)).SetAreaType(AreaStyles.Room(AreaStyles.ChapelStyle)), pathGuide),
 
-                pr.ChapelEntranceNextTo(pr.sym.Room, 3, () => ldk.qc.GetFlatBox(3, 3, 2)),
-                pr.ChapelEntranceNextTo(pr.sym.Park, 3, () => ldk.qc.GetFlatBox(3, 3, 2)),
+                pr.ChapelEntranceNextTo(pr.sym.Room, 3, () => ldk.qc.GetFlatBox(4, 4, 2)),
+                pr.ChapelEntranceNextTo(pr.sym.Park, 3, () => ldk.qc.GetFlatBox(4, 4, 2)),
 
                 pr.ChapelHall(pr.sym.ChapelEntrance, 4, pathGuide),
 
@@ -200,7 +200,7 @@ namespace ShapeGrammar
             return new ProductionList
             (
                 // Connection from other grammars
-                pr.ExtendBridgeToGarden(pr.sym.FullFloorMarker, pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide),
+                pr.ExtendBridgeToGarden(pr.sym.FullFloorMarker, pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 4, 3, 3)), pathGuide),
 
                 pr.TowerBottomNear(pr.sym.Room, () => ldk.qc.GetFlatBox(3, 3, 4)),
                 pr.TowerBottomNear(pr.sym.Garden, () => ldk.qc.GetFlatBox(3, 3, 4)),
