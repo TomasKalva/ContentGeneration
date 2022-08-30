@@ -27,6 +27,7 @@ namespace ShapeGrammar
             
             State.LC.AddNecessaryEvent( $"Main path", 90, level => L.LevelLanguage.MainPath(level), true);
             
+            L.FactionsLanguage.InitializeFactions(2);
 
             
             
@@ -37,7 +38,6 @@ namespace ShapeGrammar
             State.LC.AddNecessaryEvent($"Environment", 0, level => L.EnvironmentLanguage.CreateSky(level), true);
             */
 
-            L.FactionsLanguage.InitializeFactions(2);
 
             //State.LC.AddEvent($"Environment", 0, level => L.EnvironmentLanguage.TestSky(level), true);
 

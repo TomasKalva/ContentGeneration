@@ -131,7 +131,8 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                 // Manifestation is over => get reward
                 endArea.AddInteractiveObject(
                     Lib.InteractiveObjects.Item(
-                        Lib.Items.NewItem($"Spirit of Lord", "This spirit belonged to some lord.")
+                        Lib.Items.NewItem($"Humanity", "Although the art of dying is forbidden in the majority of natural settlments, some recognized its true benefits. In the world of    there is no greater glory than life in death.")
+                            .SetStackable(1)
                             .OnUse(user => user.Spirit += 5000)));
             }
         }

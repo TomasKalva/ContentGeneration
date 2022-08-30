@@ -28,9 +28,9 @@ public class Movement : MonoBehaviour {
 
 	public Vector2 direction, desiredDirection;
 
-	Vector3 contactNormal, steepNormal;
+	Vector3 contactNormal;
 
-	int groundContactCount, steepContactCount;
+	int groundContactCount;
 
 	bool OnGround => groundContactCount > 0;
 
@@ -183,27 +183,12 @@ public class Movement : MonoBehaviour {
     }
 
 	void ClearState () {
-		groundContactCount = steepContactCount = 0;
-		contactNormal = steepNormal = Vector3.zero;
+		groundContactCount = 0;
+		contactNormal = Vector3.zero;
 	}
 
 	void UpdateState () {
 		stepsSinceLastGrounded += 1;
-		CheckSteepContacts();
-	}
-
-	bool CheckSteepContacts () {
-		if (steepContactCount > 1) {
-			steepNormal.Normalize();
-			float upDot = Vector3.Dot(upAxis, steepNormal);
-			if (upDot >= minGroundDotProduct) {
-				steepContactCount = 0;
-				groundContactCount = 1;
-				contactNormal = steepNormal;
-				return true;
-			}
-		}
-		return false;
 	}
 
 	void AdjustDirection()
@@ -265,10 +250,6 @@ public class Movement : MonoBehaviour {
 			if (upDot >= minDot) {
 				groundContactCount += 1;
 				contactNormal += normal;
-			}
-			else if (upDot > -0.01f) {
-				steepContactCount += 1;
-				steepNormal += normal;
 			}
 		}
 	}
