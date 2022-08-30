@@ -18,7 +18,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
     {
         public DetailsLanguage(LanguageParams tools) : base(tools) 
         {
-            string itemTooltip = "May her volatile presence lift us up.";
+            string itemTooltip = "The volatile presence guides.";
             Items = new List<Func<ItemState>>()
             {
                 () => Lib.Items.NewItem("Presence of small Dog", $"Dog, o'Dog, why are you so small? Your little presence is the most welcome one. {itemTooltip}").OnUse(user => user.Spirit += 100),
