@@ -10,17 +10,8 @@ public class Movement : MonoBehaviour {
 	[SerializeField, Range(0f, 720f)]
 	float rotationSpeed = 90f;
 
-	[SerializeField, Range(0, 90)]
-	float maxGroundAngle = 25f, maxStairsAngle = 50f;
-
-	[SerializeField, Min(0f)]
-	float probeDistance = 1f;
-
 	[SerializeField]
-	LayerMask probeMask = -1, stairsMask = -1;
-
-	[SerializeField]
-	LayerMask movingPlatformMask;
+	LayerMask stairsMask = -1;
 
 	public Rigidbody body;
 
@@ -35,9 +26,7 @@ public class Movement : MonoBehaviour {
 	bool OnGround => groundContactCount > 0;
 
 
-	float minGroundDotProduct, minStairsDotProduct;
-
-	int stepsSinceLastGrounded;
+	float minGroundDotProduct;
 
 	bool applyFriction;
 
@@ -56,14 +45,11 @@ public class Movement : MonoBehaviour {
 		}
     }
 
-	#region API
+	#region Utils
 
-	public void Impulse(Vector3 force)
-	{
-		var projectedForce = ExtensionMethods.ProjectDirectionOnPlane(force.normalized, groundNormal.normalized) * force.magnitude;
-		body.AddForce(projectedForce);
-	}
-
+	/// <summary>
+	/// The agent moves in moveDirection projected to ground given by groundNormal.
+	/// </summary>
 	Vector3 MoveOnGroundDirection(Vector2 moveDirection, Vector3 groundNormal)
 	{
 		var movePlaneN = new Vector3(moveDirection.y, 0f, -moveDirection.x);
@@ -73,6 +59,24 @@ public class Movement : MonoBehaviour {
 		return projectedDir;
 	}
 
+	#endregion
+
+
+	#region API
+
+	/// <summary>
+	/// Pushes the agent by force.
+	/// </summary>
+	public void Impulse(Vector3 force)
+	{
+		var projectedForce = ExtensionMethods.ProjectDirectionOnPlane(force.normalized, groundNormal.normalized) * force.magnitude;
+		body.AddForce(projectedForce);
+	}
+
+	/// <summary>
+	/// Move on ground in direction with speed.
+	/// </summary>
+	/// <param name="setDirection">If true, agent will turn to the direction.</param>
 	public void Move(Vector2 direction, float speed, bool setDirection = true)
 	{
         if (!OnGround)
@@ -90,16 +94,9 @@ public class Movement : MonoBehaviour {
 		}
 	}
 
-	public void Accelerate(Vector2 dV, float speed)
-	{
-		// todo: change it to MoveGroundDirection, but there is problem when touching object and trying to accelerate
-		var projectedDir = ExtensionMethods.ProjectDirectionOnPlane(dV.X0Z(), groundNormal.normalized);
-		//var projectedDir = MoveGroundDirection(direction, contactNormal);
-
-		velocity += speed * projectedDir;
-		applyFriction = false;
-	}
-
+	/// <summary>
+	/// Agent turns to direction.
+	/// </summary>
 	public void Turn(Vector2 direction)
 	{
 		desiredDirection = direction;
@@ -107,33 +104,37 @@ public class Movement : MonoBehaviour {
 
     #endregion
 
-	void OnValidate () {
-		minGroundDotProduct = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad);
-		minStairsDotProduct = Mathf.Cos(maxStairsAngle * Mathf.Deg2Rad);
-	}
-
 	void Awake () {
 		body = GetComponent<Rigidbody>();
 		upAxis = Vector3.up;
-		OnValidate();
 		direction = Vector2.up;
 		Constraints = new List<MovementConstraint>();
 	}
 
+	/// <summary>
+	/// Removes the velocity component that goes inside of a wall.
+	/// </summary>
 	void PreventWallCollision()
     {
+		// total distance traveled by the testing ray
 		float totalTraveled = velocity.magnitude * Time.fixedDeltaTime;
 		if (body.SweepTest(velocity.normalized, out var wallCollision, totalTraveled, QueryTriggerInteraction.Ignore))
 		{
+			// distance traveled by the ray once reaching the wall
 			float traveledInWall = totalTraveled - wallCollision.distance;
-			velocity += -Vector3.Dot(wallCollision.normal, velocity.normalized * (traveledInWall / Time.fixedDeltaTime)) * wallCollision.normal;
+			// amount of velocity inside of the wall
+			float velocityInWall = traveledInWall / Time.fixedDeltaTime;
+			// subtract velocity in the wall from velocity
+			velocity += -Vector3.Dot(wallCollision.normal, velocity.normalized * velocityInWall) * wallCollision.normal;
 		}
 	}
 
+	/// <summary>
+	/// Main update method.
+	/// </summary>
 	public void MovementUpdate ()
 	{
-		UpdateState();
-
+		// Update velocity using the current strategy
 		if (VelocityUpdater != null)
 		{
 			if (VelocityUpdater.UpdateVelocity(this, Time.fixedDeltaTime))
@@ -142,14 +143,16 @@ public class Movement : MonoBehaviour {
 			}
 		}
 
+		//
 		PreventWallCollision();
 		SnapToGround();
 
-		foreach(var constraint in Constraints)
+		foreach (var constraint in Constraints)
         {
 			constraint.Apply(this);
         }
 		Constraints.RemoveAll(constr => constr.Finished);
+
 
 		AdjustDirection();
 		body.velocity = velocity;
@@ -176,9 +179,6 @@ public class Movement : MonoBehaviour {
 		if(Physics.Raycast(transform.position, -upAxis, out var hit, 1.2f, stairsMask, QueryTriggerInteraction.Ignore) &&
 			hit.distance > 0.5f)
         {
-			//Debug.Log($"Snapping distance: {hit.distance}");
-			//transform.position = hit.point;
-			//Debug.Log("Snapping to ground");
 			velocity += -10f * upAxis;
         }
     }
@@ -186,10 +186,6 @@ public class Movement : MonoBehaviour {
 	void ClearState () {
 		groundContactCount = 0;
 		groundNormal = Vector3.zero;
-	}
-
-	void UpdateState () {
-		stepsSinceLastGrounded += 1;
 	}
 
 	void AdjustDirection()
@@ -204,26 +200,14 @@ public class Movement : MonoBehaviour {
 			direction = new Vector2(Mathf.Cos(newAngle), Mathf.Sin(newAngle));
 
 			// update body rotation
-			body.rotation = Quaternion.LookRotation(AgentForward, Vector3.up);//.FromToRotation(Vector3.forward, AgentForward);
+			body.rotation = Quaternion.LookRotation(AgentForward, Vector3.up);
 		}
 	}
-
-	public void MoveTowards(Vector3 velocity)
-    {
-        if (!OnGround)
-        {
-			return;
-        }
-
-		this.velocity = velocity;
-    }
 
 	public void ResetDesiredValues()
     {
 		desiredDirection = Vector2.zero;
-
 		velocity = body.velocity;
-
 		applyFriction = true;
 	}
 
@@ -247,13 +231,10 @@ public class Movement : MonoBehaviour {
 			}
 		}
 		groundNormal = groundNormal.normalized;
-		//Debug.Log($"Evaluating collisions: collisions: {groundContactCount}");
 	}
 
 	float GetMinDot (int layer) {
-		return minStairsDotProduct;
-	/*return (stairsMask & (1 << layer)) == 0 ?
-		minGroundDotProduct : minStairsDotProduct;*/
+		return minGroundDotProduct;
 	}
 }
 
