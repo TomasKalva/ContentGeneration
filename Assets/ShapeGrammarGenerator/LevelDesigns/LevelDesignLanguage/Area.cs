@@ -68,6 +68,18 @@ namespace ShapeGrammar
             world.AddInteractiveObject(ios);
         }
 
+        void CreateEnemy(World world, CharacterState enemy, Vector3Int position)
+        {
+            if (!enemy.CanBeCreated())
+                return;
+
+            enemy.MakeGeometry();
+            enemy.Agent.transform.position = world.WorldGeometry.GridToWorld(position);
+            AddWaitForPlayerBehavior(world, enemy.Agent);
+
+            world.AddEnemy(enemy);
+        }
+
         public virtual void InstantiateAll(World world)
         {
             //var flooredCubes = new Stack<Cube>(Node.LE.CG().WithFloor().Cubes.Shuffle());
@@ -86,7 +98,7 @@ namespace ShapeGrammar
             var blockingIos = InteractiveObjectStates.Where(ios => ios.IsBlocking);
             var notBlockingIos = InteractiveObjectStates.Except(blockingIos);
 
-
+            // Place blocking objects
             blockingIos.ForEach(ios =>
             {
                 var validCube = flooredCubes.TakeRandom(
@@ -97,12 +109,9 @@ namespace ShapeGrammar
                 CreateInteractiveObject(world, ios, validCube.Position);
             });
 
+            // Place not blocking objects
             notBlockingIos.ForEach(ios =>
             {
-                /*
-                if (!ios.CanBeCreated())
-                    continue;
-                */
                 if (!flooredCubes.Any())
                 {
                     Debug.LogError("Not enough empty cubes");
@@ -110,28 +119,17 @@ namespace ShapeGrammar
                 }
 
                 CreateInteractiveObject(world, ios, flooredCubes.TakeRandom().Position);
-                /*
-                ios.MakeGeometry();
-                ios.InteractiveObject.transform.position = worldGeometry.GridToWorld(flooredCubes.TakeRandom().Position);
-
-                world.AddInteractiveObject(ios);*/
             });
 
             foreach (var enemy in EnemyStates)
             {
-                if (!enemy.CanBeCreated())
-                    continue;
-
                 if (!flooredCubes.Any())
                 {
                     Debug.LogError("Not enough empty cubes");
                     break;
                 }
-                enemy.MakeGeometry();
-                enemy.Agent.transform.position = worldGeometry.GridToWorld(flooredCubes.TakeRandom().Position);
-                AddWaitForPlayerBehavior(world, enemy.Agent);
 
-                world.AddEnemy(enemy);
+                CreateEnemy(world, enemy, flooredCubes.TakeRandom().Position);
             }
         }
 
@@ -158,6 +156,9 @@ namespace ShapeGrammar
         }
     }
 
+    /// <summary>
+    /// Represents collection from which itmes satisfying some condition can be gradually removed at random.
+    /// </summary>
     class Holder<T>
     {
         List<T> _heldObjects;
@@ -169,6 +170,9 @@ namespace ShapeGrammar
             _heldObjects = heldObjects.ToList();
         }
 
+        /// <summary>
+        /// Returns random item statisfying the predicate and removes it.
+        /// </summary>
         public T TakeRandom(Func<T, bool> predicate = null)
         {
             predicate ??= _ => true;
@@ -177,6 +181,10 @@ namespace ShapeGrammar
             return randT;
         }
 
+        /// <summary>
+        /// Returns items that remain.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<T> Rest() => _heldObjects;
     }
 
