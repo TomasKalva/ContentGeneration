@@ -28,7 +28,7 @@ public class Movement : MonoBehaviour {
 
 	public Vector2 direction, desiredDirection;
 
-	Vector3 contactNormal;
+	public Vector3 groundNormal;
 
 	int groundContactCount;
 
@@ -60,11 +60,11 @@ public class Movement : MonoBehaviour {
 
 	public void Impulse(Vector3 force)
 	{
-		var projectedForce = ExtensionMethods.ProjectDirectionOnPlane(force.normalized, contactNormal.normalized) * force.magnitude;
+		var projectedForce = ExtensionMethods.ProjectDirectionOnPlane(force.normalized, groundNormal.normalized) * force.magnitude;
 		body.AddForce(projectedForce);
 	}
 
-	Vector3 MoveGroundDirection(Vector2 moveDirection, Vector3 groundNormal)
+	Vector3 MoveOnGroundDirection(Vector2 moveDirection, Vector3 groundNormal)
 	{
 		var movePlaneN = new Vector3(moveDirection.y, 0f, -moveDirection.x);
 		var groundPlaneN = groundNormal.normalized;
@@ -80,7 +80,7 @@ public class Movement : MonoBehaviour {
 			return;
         }
 
-		var projectedDir = MoveGroundDirection(direction, contactNormal);
+		var projectedDir = MoveOnGroundDirection(direction, groundNormal);
 
 		velocity = speed * projectedDir;
 		applyFriction = false;
@@ -93,7 +93,7 @@ public class Movement : MonoBehaviour {
 	public void Accelerate(Vector2 dV, float speed)
 	{
 		// todo: change it to MoveGroundDirection, but there is problem when touching object and trying to accelerate
-		var projectedDir = ExtensionMethods.ProjectDirectionOnPlane(dV.X0Z(), contactNormal.normalized);
+		var projectedDir = ExtensionMethods.ProjectDirectionOnPlane(dV.X0Z(), groundNormal.normalized);
 		//var projectedDir = MoveGroundDirection(direction, contactNormal);
 
 		velocity += speed * projectedDir;
@@ -122,8 +122,11 @@ public class Movement : MonoBehaviour {
 
 	void PreventWallCollision()
     {
-		if(body.SweepTest(velocity.normalized, out var info, velocity.magnitude * Time.fixedDeltaTime, QueryTriggerInteraction.Ignore)){
-			velocity -= Vector3.Dot(info.normal, velocity) * info.normal;
+		float totalTraveled = velocity.magnitude * Time.fixedDeltaTime;
+		if (body.SweepTest(velocity.normalized, out var wallCollision, totalTraveled, QueryTriggerInteraction.Ignore))
+		{
+			float traveledInWall = totalTraveled - wallCollision.distance;
+			//velocity += -Vector3.Dot(wallCollision.normal, velocity.normalized * (traveledInWall / Time.fixedDeltaTime)) * wallCollision.normal;
 		}
 	}
 
@@ -184,7 +187,7 @@ public class Movement : MonoBehaviour {
 
 	void ClearState () {
 		groundContactCount = 0;
-		contactNormal = Vector3.zero;
+		groundNormal = Vector3.zero;
 	}
 
 	void UpdateState () {
@@ -243,15 +246,18 @@ public class Movement : MonoBehaviour {
 	}
 
 	void EvaluateCollision (Collision collision) {
+
 		float minDot = GetMinDot(collision.gameObject.layer);
 		for (int i = 0; i < collision.contactCount; i++) {
 			Vector3 normal = collision.GetContact(i).normal;
 			float upDot = Vector3.Dot(normal, upAxis);
 			if (upDot >= minDot) {
 				groundContactCount += 1;
-				contactNormal += normal;
+				groundNormal += normal;
 			}
 		}
+		groundNormal = groundNormal.normalized;
+		//Debug.Log($"Evaluating collisions: collisions: {groundContactCount}");
 	}
 
 	float GetMinDot (int layer) {
@@ -379,7 +385,9 @@ public class CurveVelocityUpdater : VelocityUpdater
 		var speed0 = speedF.Evaluate((t - dt) / duration);
 		var speed1 = speedF.Evaluate(t / duration);
 		var dS = (speed1 - speed0) / duration; // dividing by duration makes traveled distance independent of duration
-		movement.Accelerate(directionF().XZ().normalized, dS);
+		//movement.Accelerate(directionF().XZ().normalized, dS);
+
+		movement.Move(directionF().XZ().normalized, speed1 / duration);
 		//movement.velocity += dS * direction;
 
 		return t >= duration;
