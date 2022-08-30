@@ -21,23 +21,10 @@ public class Roll : AnimatedAct
 
         agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, () => Direction.X0Z());
 
-        /*
-        movementContraints = new List<MovementConstraint>()
-        {
-            new VelocityInDirection(() => Direction.X0Z()),
-            new TurnToDirection(() => Direction),
-        };*/
-
         SetupMovementConstraints(agent,
             new VelocityInDirection(() => Direction.X0Z()),
             new TurnToDirection(() => Direction)
             );
-        /*agent.movement.AddMovementConstraints(new MovementConstraint[]
-        {
-            new VelocityInDirection(() => Direction.X0Z()),
-            new TurnToDirection(() => Direction),
-        });*/
-        //movementContraints.ForEach(con => agent.movement.Constraints.Add(con));
     }
 
     public override void EndAct(Agent agent)

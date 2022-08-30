@@ -49,16 +49,10 @@ public class Attack : AnimatedAct
         agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, directionF);
 
         lockOnTarget = new TurnToDirection(() => directionF().XZ().normalized);
-        /*movementContraints = new List<MovementConstraint>()
-        {
-            new VelocityInDirection(directionF),
-            lockOnTarget,
-        };*/
+
         SetupMovementConstraints(agent,
             new VelocityInDirection(directionF),
             lockOnTarget);
-
-        //movementContraints.ForEach(con => agent.movement.Constraints.Add(con));
 
         agent.State = AgentState.PREPARE;
     }

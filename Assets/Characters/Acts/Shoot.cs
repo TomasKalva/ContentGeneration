@@ -27,17 +27,8 @@ public class Shoot : AnimatedAct
         directionToTargetF = () => TargetPosition.DirectionTo(agent.transform.position).XZ().X0Z().normalized;
 
         lockOnTarget = new TurnToDirection(() => directionToTargetF().XZ().normalized);
-        /*movementContraints = new List<MovementConstraint>()
-        {
-            lockOnTarget,
-        };*/
 
         SetupMovementConstraints(agent, lockOnTarget);
-        /*agent.movement.AddMovementConstraints(new MovementConstraint[]
-        {
-            lockOnTarget
-        });*/
-        //movementContraints.ForEach(con => agent.movement.Constraints.Add(con));
 
         agent.State = AgentState.PREPARE;
     }

@@ -7,28 +7,60 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Movement : MonoBehaviour {
 
+	/// <summary>
+	/// Speed with whitch the agent rotates.
+	/// </summary>
 	[SerializeField, Range(0f, 720f)]
 	float rotationSpeed = 90f;
 
+	/// <summary>
+	/// Mask of objects that can be walked on.
+	/// </summary>
 	[SerializeField]
 	LayerMask groundMask = -1;
 
+	/// <summary>
+	/// Agent's body.
+	/// </summary>
 	public Rigidbody body;
 
+	/// <summary>
+	/// Current direction of the agent.
+	/// </summary>
 	public Vector2 direction;
 
+	/// <summary>
+	/// Normal vector of ground that is being currently touched.
+	/// </summary>
 	public Vector3 groundNormal;
 
+	/// <summary>
+	/// Number of ground polygons touched.
+	/// </summary>
 	int groundContactCount;
 
+	/// <summary>
+	/// True iff agent is standing on the ground.
+	/// </summary>
 	bool OnGround => groundContactCount > 0;
 
+	/// <summary>
+	/// Maximum angle (from horizontal position) for which ground is still considered walkable.
+	/// </summary>
 	float maxGroundAngle = 60f;
+	/// <summary>
+	/// Precomputed value from maxGroundAngle.
+	/// </summary>
 	float minGroundDotProduct;
 
+	/// <summary>
+	/// Which way is up.
+	/// </summary>
 	Vector3 upAxis;
 
-
+	/// <summary>
+	/// Horizontal forward direction of the agent.
+	/// </summary>
 	public Vector3 AgentForward
     {
         get
@@ -171,21 +203,22 @@ public class Movement : MonoBehaviour {
 			}
 		}
 
-		//
+		// Handle interaction with walls and stairs edges
 		PreventWallCollision();
 		SnapToGround();
 
+		// Obey client defined constraints
 		foreach (var constraint in Constraints)
         {
 			constraint.Apply(this);
         }
 		Constraints.RemoveAll(constr => constr.Finished);
 
-
+		// Set values of desired direction and velocity
 		AdjustDirection();
 		body.velocity = Velocity;
 
-		// gravity
+		// Apply friction
         if (OnGround)
         {
 			body.useGravity = false;
@@ -199,6 +232,7 @@ public class Movement : MonoBehaviour {
 			body.useGravity = true;
         }
 
+		// Clear collision based variables
 		ClearState();
 	}
 	
@@ -242,7 +276,7 @@ public class Movement : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// 
+	/// Resets values of api variables.
 	/// </summary>
 	public void ResetDesiredValues()
     {
@@ -251,17 +285,22 @@ public class Movement : MonoBehaviour {
 		ApplyFriction = true;
 	}
 
-	void OnCollisionEnter (Collision collision) {
-		EvaluateCollision(collision);
+    #region Collisions
+
+    void OnCollisionEnter (Collision collision) {
+		SetGround(collision);
 	}
 
 	void OnCollisionStay (Collision collision) {
-		EvaluateCollision(collision);
+		SetGround(collision);
 	}
 
-	void EvaluateCollision (Collision collision) {
+	/// <summary>
+	/// Sets values related to ground.
+	/// </summary>
+	void SetGround (Collision collision) {
 
-		float minDot = GetMinDot(collision.gameObject.layer);
+		float minDot = GetGroundMinDot();
 		for (int i = 0; i < collision.contactCount; i++) {
 			Vector3 normal = collision.GetContact(i).normal;
 			float upDot = Vector3.Dot(normal, upAxis);
@@ -273,9 +312,14 @@ public class Movement : MonoBehaviour {
 		groundNormal = groundNormal.normalized;
 	}
 
-	float GetMinDot (int layer) {
+	/// <summary>
+	/// Returns minimal dot product between up vector and ground.
+	/// </summary>
+	float GetGroundMinDot () {
 		return minGroundDotProduct;
 	}
+
+	#endregion
 }
 
 public abstract class MovementConstraint

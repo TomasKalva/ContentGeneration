@@ -14,15 +14,7 @@ public class Backstep : AnimatedAct
         Direction3F direction = () => -agent.movement.AgentForward;
         agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, direction);
 
-        /*
-        movementContraints = new List<MovementConstraint>()
-        {
-            new VelocityInDirection(direction),
-        };*/
-
         SetupMovementConstraints(agent, new VelocityInDirection(direction));
-        //agent.movement.AddMovementConstraint(new VelocityInDirection(direction));
-        //movementContraints.ForEach(con => agent.movement.Constraints.Add(con));
     }
 
     public override void EndAct(Agent agent)
