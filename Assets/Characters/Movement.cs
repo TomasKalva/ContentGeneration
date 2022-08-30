@@ -11,7 +11,7 @@ public class Movement : MonoBehaviour {
 	float rotationSpeed = 90f;
 
 	[SerializeField]
-	LayerMask stairsMask = -1;
+	LayerMask groundMask = -1;
 
 	public Rigidbody body;
 
@@ -28,9 +28,6 @@ public class Movement : MonoBehaviour {
 
 	Vector3 upAxis;
 
-	public VelocityUpdater VelocityUpdater { get; set; }
-
-	public List<MovementConstraint> Constraints { get; private set; }
 
 	public Vector3 AgentForward
     {
@@ -65,6 +62,34 @@ public class Movement : MonoBehaviour {
 	public Vector2 DesiredDirection { get; set; }
 
 	public bool ApplyFriction { get; set; }
+
+	public VelocityUpdater VelocityUpdater { get; set; }
+
+	List<MovementConstraint> Constraints { get; set; }
+
+	/// <summary>
+	/// Adds the movement constraints.
+	/// </summary>
+	public void AddMovementConstraints(params MovementConstraint[] constraints)
+    {
+		Constraints.AddRange(constraints);
+	}
+
+	/// <summary>
+	/// Adds the movement constraint.
+	/// </summary>
+	public void AddMovementConstraint(MovementConstraint constraint)
+	{
+		Constraints.Add(constraint);
+	}
+
+	/// <summary>
+	/// Removes the movement constraint.
+	/// </summary>
+	public void RemoveMovementConstraint(MovementConstraint constraint)
+	{
+		Constraints.Remove(constraint);
+	}
 
 	/// <summary>
 	/// Pushes the agent by force.
@@ -182,7 +207,7 @@ public class Movement : MonoBehaviour {
 	/// </summary>
 	void SnapToGround()
     {
-		if(Physics.Raycast(transform.position, -upAxis, out var hit, 1.2f, stairsMask, QueryTriggerInteraction.Ignore) &&
+		if(Physics.Raycast(transform.position, -upAxis, out var hit, 1.2f, groundMask, QueryTriggerInteraction.Ignore) &&
 			hit.distance > 0.5f)
         {
 			Velocity += -10f * upAxis;

@@ -49,13 +49,16 @@ public class Attack : AnimatedAct
         agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, directionF);
 
         lockOnTarget = new TurnToDirection(() => directionF().XZ().normalized);
-        movementContraints = new List<MovementConstraint>()
+        /*movementContraints = new List<MovementConstraint>()
         {
             new VelocityInDirection(directionF),
             lockOnTarget,
-        };
+        };*/
+        SetupMovementConstraints(agent,
+            new VelocityInDirection(directionF),
+            lockOnTarget);
 
-        movementContraints.ForEach(con => agent.movement.Constraints.Add(con));
+        //movementContraints.ForEach(con => agent.movement.Constraints.Add(con));
 
         agent.State = AgentState.PREPARE;
     }
@@ -100,7 +103,7 @@ public class Attack : AnimatedAct
     {
         SetSlotsActive(false, agent);
         agent.State = AgentState.NORMAL;
-        movementContraints.ForEach(con => con.Finished = true);
+        MovementContraints.ForEach(con => con.Finished = true);
     }
 }
 

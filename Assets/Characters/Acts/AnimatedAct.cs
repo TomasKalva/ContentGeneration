@@ -10,13 +10,14 @@ public class AnimatedAct : Act
 
     protected float timeElapsed;
 
-    protected List<MovementConstraint> movementContraints;
+    protected List<MovementConstraint> MovementContraints { get; private set; }
 
     public void Initialize(Agent agent)
     {
         // Set speed so that the animation takes duration seconds
         var speed = anim.Clip.length / Duration;
         anim.Speed = speed;
+        MovementContraints = new List<MovementConstraint>();
     }
 
     public sealed override void StartAct(Agent agent)
@@ -56,5 +57,12 @@ public class AnimatedAct : Act
             return agent.animancerAnimator.Play(anim, transitionTime);
         }
         return agent.animancerAnimator.States.Current;
+    }
+
+    protected void SetupMovementConstraints(Agent agent, params MovementConstraint[] movementConstraints)
+    {
+        MovementContraints.Clear();
+        MovementContraints.AddRange(movementConstraints);
+        agent.movement.AddMovementConstraints(movementConstraints);
     }
 }

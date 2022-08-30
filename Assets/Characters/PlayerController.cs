@@ -173,10 +173,10 @@ public class PlayerController : MonoBehaviour
 			PlayerCharacterState.TargetedEnemy = lockOnTarget != null ? lockOnTarget.CharacterState : null;
 			
 			// Remove the constraint in case it wasn't removed properly with unlock
-			myAgent.movement.Constraints.Remove(turnToTarget);
+			myAgent.movement.RemoveMovementConstraint(turnToTarget);
 
 			turnToTarget = new TurnToTransform(lockOnTarget.transform);
-			myAgent.movement.Constraints.Add(turnToTarget);
+			myAgent.movement.AddMovementConstraint(turnToTarget);
 		}
 		else
 		{
@@ -184,7 +184,7 @@ public class PlayerController : MonoBehaviour
 			orbitCamera.CamUpdater = orbitCamera.FocusPlayer(myAgent.transform);
 			lockOnTarget = null;
 			PlayerCharacterState.TargetedEnemy = null;
-			myAgent.movement.Constraints.Remove(turnToTarget);
+			myAgent.movement.RemoveMovementConstraint(turnToTarget);
 		}
 	}
 
