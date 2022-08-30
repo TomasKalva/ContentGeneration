@@ -50,19 +50,19 @@ public class InteractiveObjects : ScriptableObject
                         player.World.Grave = grave;
                         player.Rest();
                     })
-            );
+            ).SetBlocking(true);
 
         return grave;
     }
 
     public InteractiveObjectState<InteractiveObject> Farmer(string name = "Farmer")
     {
-        return InteractiveObject(name, Geometry<InteractiveObject>(farmer.transform));
+        return InteractiveObject(name, Geometry<InteractiveObject>(farmer.transform)).SetBlocking(true);
     }
 
     public InteractiveObjectState<Kiln> Kiln(string name = "Kiln")
     {
-        return InteractiveObject(name, Geometry<Kiln>(ascensionKilnPrefab.transform));
+        return InteractiveObject(name, Geometry<Kiln>(ascensionKilnPrefab.transform)).SetBlocking(true);
     }
 
     public GeometryMaker<InteractiveObjectT> Geometry<InteractiveObjectT>(Transform prefab) where InteractiveObjectT : InteractiveObject
@@ -129,6 +129,7 @@ public class InteractiveObjects : ScriptableObject
                                 var game = GameObject.Find("Game").GetComponent<Game>();
                                 game.GoToNextLevel();
                             }
-                        );
+                        )
+                    .SetBlocking(true);
     }
 }

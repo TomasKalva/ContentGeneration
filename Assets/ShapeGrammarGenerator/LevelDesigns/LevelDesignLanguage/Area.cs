@@ -57,26 +57,65 @@ namespace ShapeGrammar
             EnemyStates.Add(enemy);
         }
 
+        void CreateInteractiveObject(World world, InteractiveObjectState ios, Vector3Int position)
+        {
+            if (!ios.CanBeCreated())
+                return;
+
+            ios.MakeGeometry();
+            ios.InteractiveObject.transform.position = world.WorldGeometry.GridToWorld(position);
+
+            world.AddInteractiveObject(ios);
+        }
+
         public virtual void InstantiateAll(World world)
         {
-            var flooredCubes = new Stack<Cube>(Node.LE.CG().BottomLayer().Cubes.Shuffle());
+            //var flooredCubes = new Stack<Cube>(Node.LE.CG().WithFloor().Cubes.Shuffle());
+
+            var grid = L.State.Ldk.grid;
+
+            var paths = L.State.TraversabilityGraph.Connections.Select(areasConnection => areasConnection.Path.LE.CG());
+            var pathEnds = paths.SelectMany(path => PathNode.FindPathEndsInFloor(Node.LE.CG().WithFloor(), paths));
+
+            var unoccupiedFloor = Node.LE.CG().WithFloor().Cubes.Except(pathEnds);
+            var flooredCubes = new Holder<Cube>(unoccupiedFloor);
+
             var worldGeometry = world.WorldGeometry;
 
-            foreach (var ios in InteractiveObjectStates)
+
+            var blockingIos = InteractiveObjectStates.Where(ios => ios.IsBlocking);
+            var notBlockingIos = InteractiveObjectStates.Except(blockingIos);
+
+
+            blockingIos.ForEach(ios =>
             {
+                var validCube = flooredCubes.TakeRandom(
+                    cube => PathNode.IsConnected(
+                        flooredCubes.Rest().Except(cube.ToEnumerable()).ToCubeGroup(grid),
+                        pathEnds));
+
+                CreateInteractiveObject(world, ios, validCube.Position);
+            });
+
+            notBlockingIos.ForEach(ios =>
+            {
+                /*
                 if (!ios.CanBeCreated())
                     continue;
-
+                */
                 if (!flooredCubes.Any())
                 {
                     Debug.LogError("Not enough empty cubes");
-                    break;
+                    return;
                 }
-                ios.MakeGeometry();
-                ios.InteractiveObject.transform.position = worldGeometry.GridToWorld(flooredCubes.Pop().Position);
 
-                world.AddInteractiveObject(ios);
-            }
+                CreateInteractiveObject(world, ios, flooredCubes.TakeRandom().Position);
+                /*
+                ios.MakeGeometry();
+                ios.InteractiveObject.transform.position = worldGeometry.GridToWorld(flooredCubes.TakeRandom().Position);
+
+                world.AddInteractiveObject(ios);*/
+            });
 
             foreach (var enemy in EnemyStates)
             {
@@ -89,7 +128,7 @@ namespace ShapeGrammar
                     break;
                 }
                 enemy.MakeGeometry();
-                enemy.Agent.transform.position = worldGeometry.GridToWorld(flooredCubes.Pop().Position);
+                enemy.Agent.transform.position = worldGeometry.GridToWorld(flooredCubes.TakeRandom().Position);
                 AddWaitForPlayerBehavior(world, enemy.Agent);
 
                 world.AddEnemy(enemy);
@@ -117,6 +156,28 @@ namespace ShapeGrammar
                 }
             });
         }
+    }
+
+    class Holder<T>
+    {
+        List<T> _heldObjects;
+
+        public bool Any() => _heldObjects.Any();
+
+        public Holder(IEnumerable<T> heldObjects)
+        {
+            _heldObjects = heldObjects.ToList();
+        }
+
+        public T TakeRandom(Func<T, bool> predicate = null)
+        {
+            predicate ??= _ => true;
+            var randT = _heldObjects.Where(predicate).ToList().GetRandom();
+            _heldObjects.Remove(randT);
+            return randT;
+        }
+
+        public IEnumerable<T> Rest() => _heldObjects;
     }
 
     class AreasConnection : IEdge<Area>

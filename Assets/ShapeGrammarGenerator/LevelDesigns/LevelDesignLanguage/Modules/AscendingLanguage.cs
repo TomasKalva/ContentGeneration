@@ -45,16 +45,17 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                         }
                     });
 
-            Env.One(Gr.PrL.Garden(), NodesQueries.LastCreated, out var farmer_area);
-            farmer_area.Get.AddInteractiveObject(
-                Lib.InteractiveObjects.InteractiveObject("Farmer", Lib.InteractiveObjects.Geometry<Kiln>(Lib.InteractiveObjects.ascensionKilnPrefab.transform))
+            //Env.One(Gr.PrL.Garden(), NodesQueries.LastCreated, out var farmer_area);
+            Enumerable.Range(0, 1).ForEach(_ => ascending_area.Get.AddInteractiveObject(
+                Lib.InteractiveObjects.Kiln()
                     .SetInteraction(
                         ins => ins
                             .Say("Ascension kiln is delighted to feel your presence.")
                             .Decision($"What ascension are you longing for? ({ascensionPrice} Spirit)",
                                 statsIncreases.Shuffle().Take(3).Select(si => increaseOption(si)).ToArray())
                     )
-                );
+                )
+            );
 
             // Add the same branch to the next level
             State.LC.AddNecessaryEvent($"Ascending branch", 90, _ => L.AscendingLanguage.AscendingBranch(() => ascensionPrice));

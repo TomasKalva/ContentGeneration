@@ -115,6 +115,18 @@ namespace ContentGeneration.Assets.UI.Model
             return this;
         }
 
+        public Action OnRest { get; private set; }
+        public CharacterState AddOnRest(Action onRest)
+        {
+            OnRest += onRest;
+            return this;
+        }
+        public CharacterState ClearOnRest()
+        {
+            OnRest = () => { };
+            return this;
+        }
+
         public Agent MakeGeometry()
         {
             var agent = GeometryMaker();
@@ -264,6 +276,7 @@ namespace ContentGeneration.Assets.UI.Model
         {
             Health += Health.Maximum;
             Stamina += Stamina.Maximum;
+            Poise += Poise.Maximum;
 
             VisibleOnCamera = false;
         }
@@ -398,6 +411,8 @@ namespace ContentGeneration.Assets.UI.Model
             Inventory.AllSlots.ForEach(slot => slot.Item?.OnRest());
 #endif
             Reset();
+
+            OnRest();
         }
 
         /// <summary>

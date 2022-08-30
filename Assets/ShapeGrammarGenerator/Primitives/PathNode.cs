@@ -88,7 +88,7 @@ namespace ShapeGrammar
         ///     - each path has ordered cubes from start to end
         ///     - each path has at least 2 cubes
         /// </summary>
-        static IEnumerable<Cube> FindPathEndsInFloor(CubeGroup floor, IEnumerable<CubeGroup> paths) 
+        public static IEnumerable<Cube> FindPathEndsInFloor(CubeGroup floor, IEnumerable<CubeGroup> paths) 
         {
             var pathEnds =
                 paths.Select(path => path.Cubes.First()).Concat(
@@ -101,16 +101,28 @@ namespace ShapeGrammar
         /// <summary>
         /// All path ends must belong to the floor group.
         /// </summary>
-        static bool StaysConnected(CubeGroup floor, IEnumerable<Cube> pathEnds, PathNode newNode)
+        public static bool IsConnected(CubeGroup unoccupiedFloor, IEnumerable<Cube> pathEnds)
         {
-            var newFloor = floor.Cubes.Except(newNode.ReversePath()).ToCubeGroup(floor.Grid);
-            var endOfNewPath = newNode.ReversePath().Last();
-            var newPathEnds = floor.Cubes.Contains(endOfNewPath) ? pathEnds.Append(endOfNewPath) : pathEnds;
-            return 
+            return
                 // floor doesn't get disconnected
-                newFloor.SplitToConnected().Count() <= 1 &&
+                unoccupiedFloor.SplitToConnected().Count() <= 1 &&
                 // all path ends in the floor are still connected to the new floor
-                newPathEnds.All(pathEnd => pathEnd.NeighborsHor().SetIntersect(newFloor.Cubes).Any());
+                pathEnds.All(pathEnd => pathEnd.NeighborsHor().SetIntersect(unoccupiedFloor.Cubes).Any());
+        }
+
+        /// <summary>
+        /// All path ends must belong to the floor group.
+        /// </summary>
+        public static bool StaysConnected(CubeGroup unoccupiedFloor, IEnumerable<Cube> pathEnds, PathNode newNode)
+        {
+            var newFloor = unoccupiedFloor.Cubes.Except(newNode.ReversePath()).ToCubeGroup(unoccupiedFloor.Grid);
+            var endOfNewPath = newNode.ReversePath().Last();
+            var newPathEnds = unoccupiedFloor.Cubes.Contains(endOfNewPath) ? pathEnds.Append(endOfNewPath) : pathEnds;
+            return IsConnected(newFloor, newPathEnds);
+                // floor doesn't get disconnected
+                /*newFloor.SplitToConnected().Count() <= 1 &&
+                // all path ends in the floor are still connected to the new floor
+                newPathEnds.All(pathEnd => pathEnd.NeighborsHor().SetIntersect(newFloor.Cubes).Any());*/
         }
 
         public static Neighbors<PathNode> PreserveConnectivity(Neighbors<PathNode> neighbors, CubeGroup cg1, CubeGroup cg2, IEnumerable<CubeGroup> otherPaths)

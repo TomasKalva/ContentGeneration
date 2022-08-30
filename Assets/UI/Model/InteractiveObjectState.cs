@@ -23,6 +23,8 @@ namespace ContentGeneration.Assets.UI.Model
 
         public World World { get; set; }
 
+        public bool IsBlocking { get; set; }
+
 #if NOESIS
         InteractiveObject _interactiveObject;
         public InteractiveObject InteractiveObject 
@@ -91,6 +93,7 @@ namespace ContentGeneration.Assets.UI.Model
             Name = "Name";
             InteractionDescription = "";
             CreatingStrategy = new CreateAlways();
+            IsBlocking = false;
         }
     }
 
@@ -125,6 +128,12 @@ namespace ContentGeneration.Assets.UI.Model
         public InteractiveObjectState<InteractiveObjectT> SetCreatingStrategy(ICreatingStrategy creatingStrategy)
         {
             CreatingStrategy = creatingStrategy;
+            return this;
+        }
+
+        public InteractiveObjectState<InteractiveObjectT> SetBlocking(bool isBlocking)
+        {
+            IsBlocking = isBlocking;
             return this;
         }
 

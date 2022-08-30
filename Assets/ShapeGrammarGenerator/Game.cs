@@ -140,6 +140,8 @@ namespace ShapeGrammar
         {
             // Generating the world
 
+            // show transition animation
+
             GameLanguage.GenerateWorld();
 
             GameViewModel.ViewModel.World = GameLanguage.State.World;
@@ -163,8 +165,16 @@ namespace ShapeGrammar
                     GameLanguage.State.World.Reset();
                     GameLanguage.State.InstantiateAreas();
                     PutPlayerToWorld(playerState, levelRoot);
+                })
+                .ClearOnRest()
+                .AddOnRest(() =>
+                {
+                    GameLanguage.State.World.Reset();
+                    GameLanguage.State.InstantiateAreas();
+                    PutPlayerToWorld(playerState, levelRoot);
                 });
 
+            // hide transition animation
         }
 
         private void FixedUpdate()
