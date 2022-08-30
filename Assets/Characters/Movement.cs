@@ -126,7 +126,7 @@ public class Movement : MonoBehaviour {
 		if (body.SweepTest(velocity.normalized, out var wallCollision, totalTraveled, QueryTriggerInteraction.Ignore))
 		{
 			float traveledInWall = totalTraveled - wallCollision.distance;
-			//velocity += -Vector3.Dot(wallCollision.normal, velocity.normalized * (traveledInWall / Time.fixedDeltaTime)) * wallCollision.normal;
+			velocity += -Vector3.Dot(wallCollision.normal, velocity.normalized * (traveledInWall / Time.fixedDeltaTime)) * wallCollision.normal;
 		}
 	}
 
@@ -140,11 +140,6 @@ public class Movement : MonoBehaviour {
 			{
 				VelocityUpdater = null;
 			}
-		}
-
-		if (VelocityUpdater == null)
-		{
-			AdjustVelocity();
 		}
 
 		PreventWallCollision();
@@ -178,10 +173,13 @@ public class Movement : MonoBehaviour {
 	
 	void SnapToGround()
     {
-		if(Physics.Raycast(transform.position, -upAxis, out var hit, 1.2f, movingPlatformMask, QueryTriggerInteraction.Ignore))
+		if(Physics.Raycast(transform.position, -upAxis, out var hit, 1.2f, stairsMask, QueryTriggerInteraction.Ignore) &&
+			hit.distance > 0.5f)
         {
+			//Debug.Log($"Snapping distance: {hit.distance}");
+			//transform.position = hit.point;
 			//Debug.Log("Snapping to ground");
-			velocity += -1f * upAxis;
+			velocity += -10f * upAxis;
         }
     }
 
@@ -208,14 +206,6 @@ public class Movement : MonoBehaviour {
 			// update body rotation
 			body.rotation = Quaternion.LookRotation(AgentForward, Vector3.up);//.FromToRotation(Vector3.forward, AgentForward);
 		}
-	}
-
-	void AdjustVelocity ()
-	{
-		/*float acceleration = OnGround ? maxAcceleration : maxAirAcceleration;
-		float maxSpeedChange = acceleration * Time.fixedDeltaTime;
-
-		velocity = Vector3.MoveTowards(velocity, desiredVelocity, maxSpeedChange);*/
 	}
 
 	public void MoveTowards(Vector3 velocity)

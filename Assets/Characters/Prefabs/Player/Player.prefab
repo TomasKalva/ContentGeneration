@@ -71,6 +71,7 @@ MonoBehaviour:
   velocity: {x: 0, y: 0, z: 0}
   direction: {x: 0, y: 0}
   desiredDirection: {x: 0, y: 0}
+  groundNormal: {x: 0, y: 0, z: 0}
 --- !u!54 &1728200003014362748
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -94,7 +95,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: -2529390294451437032}
-  m_Material: {fileID: 13400000, guid: 4680b2a3052bf0b47969638ae89ab1ae, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.3052082
