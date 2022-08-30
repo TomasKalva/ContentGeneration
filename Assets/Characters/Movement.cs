@@ -15,9 +15,7 @@ public class Movement : MonoBehaviour {
 
 	public Rigidbody body;
 
-	public Vector3 velocity;
-
-	public Vector2 direction, desiredDirection;
+	public Vector2 direction;
 
 	public Vector3 groundNormal;
 
@@ -25,10 +23,8 @@ public class Movement : MonoBehaviour {
 
 	bool OnGround => groundContactCount > 0;
 
-
+	float maxGroundAngle = 60f;
 	float minGroundDotProduct;
-
-	bool applyFriction;
 
 	Vector3 upAxis;
 
@@ -64,6 +60,12 @@ public class Movement : MonoBehaviour {
 
 	#region API
 
+	public Vector3 Velocity { get; set; }
+
+	public Vector2 DesiredDirection { get; set; }
+
+	public bool ApplyFriction { get; set; }
+
 	/// <summary>
 	/// Pushes the agent by force.
 	/// </summary>
@@ -86,11 +88,11 @@ public class Movement : MonoBehaviour {
 
 		var projectedDir = MoveOnGroundDirection(direction, groundNormal);
 
-		velocity = speed * projectedDir;
-		applyFriction = false;
-		if (setDirection && velocity.sqrMagnitude > 0.1f)
+		Velocity = speed * projectedDir;
+		ApplyFriction = false;
+		if (setDirection && Velocity.sqrMagnitude > 0.1f)
 		{
-			desiredDirection = direction;
+			DesiredDirection = direction;
 		}
 	}
 
@@ -99,7 +101,7 @@ public class Movement : MonoBehaviour {
 	/// </summary>
 	public void Turn(Vector2 direction)
 	{
-		desiredDirection = direction;
+		DesiredDirection = direction;
 	}
 
     #endregion
@@ -109,6 +111,7 @@ public class Movement : MonoBehaviour {
 		upAxis = Vector3.up;
 		direction = Vector2.up;
 		Constraints = new List<MovementConstraint>();
+		minGroundDotProduct = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad);
 	}
 
 	/// <summary>
@@ -117,15 +120,15 @@ public class Movement : MonoBehaviour {
 	void PreventWallCollision()
     {
 		// total distance traveled by the testing ray
-		float totalTraveled = velocity.magnitude * Time.fixedDeltaTime;
-		if (body.SweepTest(velocity.normalized, out var wallCollision, totalTraveled, QueryTriggerInteraction.Ignore))
+		float totalTraveled = Velocity.magnitude * Time.fixedDeltaTime;
+		if (body.SweepTest(Velocity.normalized, out var wallCollision, totalTraveled, QueryTriggerInteraction.Ignore))
 		{
 			// distance traveled by the ray once reaching the wall
 			float traveledInWall = totalTraveled - wallCollision.distance;
 			// amount of velocity inside of the wall
 			float velocityInWall = traveledInWall / Time.fixedDeltaTime;
 			// subtract velocity in the wall from velocity
-			velocity += -Vector3.Dot(wallCollision.normal, velocity.normalized * velocityInWall) * wallCollision.normal;
+			Velocity += -Vector3.Dot(wallCollision.normal, Velocity.normalized * velocityInWall) * wallCollision.normal;
 		}
 	}
 
@@ -155,13 +158,13 @@ public class Movement : MonoBehaviour {
 
 
 		AdjustDirection();
-		body.velocity = velocity;
+		body.velocity = Velocity;
 
 		// gravity
         if (OnGround)
         {
 			body.useGravity = false;
-			if (applyFriction)
+			if (ApplyFriction)
 			{
 				body.velocity *= 0.7f;
 			}
@@ -174,26 +177,35 @@ public class Movement : MonoBehaviour {
 		ClearState();
 	}
 	
+	/// <summary>
+	/// Put agent back to ground. Used mainly for not jumping when walking downstairs from straight platform.
+	/// </summary>
 	void SnapToGround()
     {
 		if(Physics.Raycast(transform.position, -upAxis, out var hit, 1.2f, stairsMask, QueryTriggerInteraction.Ignore) &&
 			hit.distance > 0.5f)
         {
-			velocity += -10f * upAxis;
+			Velocity += -10f * upAxis;
         }
     }
 
+	/// <summary>
+	/// Resets variables used during collision checking.
+	/// </summary>
 	void ClearState () {
 		groundContactCount = 0;
 		groundNormal = Vector3.zero;
 	}
 
+	/// <summary>
+	/// Rotate towards desired direction.
+	/// </summary>
 	void AdjustDirection()
 	{
-		if (desiredDirection.sqrMagnitude > 0.01f)
+		if (DesiredDirection.sqrMagnitude > 0.01f)
 		{
 			var currentAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-			var desiredAngle = Mathf.Atan2(desiredDirection.y, desiredDirection.x) * Mathf.Rad2Deg;
+			var desiredAngle = Mathf.Atan2(DesiredDirection.y, DesiredDirection.x) * Mathf.Rad2Deg;
 
 			var newAngle = Mathf.MoveTowardsAngle(currentAngle, desiredAngle, rotationSpeed * Time.fixedDeltaTime) * Mathf.Deg2Rad;
 
@@ -204,11 +216,14 @@ public class Movement : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public void ResetDesiredValues()
     {
-		desiredDirection = Vector2.zero;
-		velocity = body.velocity;
-		applyFriction = true;
+		DesiredDirection = Vector2.zero;
+		Velocity = body.velocity;
+		ApplyFriction = true;
 	}
 
 	void OnCollisionEnter (Collision collision) {
@@ -255,9 +270,9 @@ public class VelocityInDirection : MovementConstraint
 
 	public override void Apply(Movement movement)
 	{
-		if (Vector3.Dot(movement.velocity, directionF()) <= 0)
+		if (Vector3.Dot(movement.Velocity, directionF()) <= 0)
 		{
-			movement.velocity = Vector3.zero;
+			movement.Velocity = Vector3.zero;
 		}
 	}
 }
@@ -273,7 +288,7 @@ public class TurnToDirection : MovementConstraint
 
 	public override void Apply(Movement movement)
 	{
-		movement.desiredDirection = directionF();
+		movement.DesiredDirection = directionF();
 	}
 }
 
@@ -290,7 +305,7 @@ public class TurnToTransform : MovementConstraint
 
 	public override void Apply(Movement movement)
 	{
-		movement.desiredDirection = (TargetPosition - movement.transform.position).XZ().normalized;
+		movement.DesiredDirection = (TargetPosition - movement.transform.position).XZ().normalized;
 	}
 }
 
@@ -346,8 +361,8 @@ public class CurveVelocityUpdater : VelocityUpdater
 	{
 		if (firstIteration)
 		{
-			var currSpeed = movement.velocity.magnitude;
-			movement.velocity = Vector3.zero;
+			var currSpeed = movement.Velocity.magnitude;
+			movement.Velocity = Vector3.zero;
 			firstIteration = false;
 		}
 
