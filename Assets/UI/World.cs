@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-
+using System;
 
 namespace ContentGeneration.Assets.UI
 {
@@ -46,6 +46,8 @@ namespace ContentGeneration.Assets.UI
 
         public IEnumerable<CharacterState> AliveEnemies => Enemies;//.Where(ch => ch != null && !ch.Dead);
         public IEnumerable<InteractiveObjectState> InteractiveObjects => interactiveObjects.Concat(interactivePersistentObjects).Where(io => io != null && io.InteractiveObject != null);
+
+        public Action OnGameStart { get; set; }
 
         // Start is called before the first frame update
         public World(WorldGeometry worldGeometry, PlayerCharacterState playerState)
@@ -149,11 +151,6 @@ namespace ContentGeneration.Assets.UI
         public void PutToCache(Transform specialObject)
         {
             specialObject.SetParent(CachedObjectsParent);
-        }
-
-        public void OnPlayerDeath()
-        {
-            Grave.SpawnPlayer();
         }
 
         public void Destroy()

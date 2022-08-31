@@ -9,7 +9,7 @@ public class Objects : ScriptableObject
     [MenuItem("Assets/Create/Objects")]
     public static void CreateMyAsset()
     {
-        Objects asset = ScriptableObject.CreateInstance<Objects>();
+        Objects asset = CreateInstance<Objects>();
 
         string name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath("Assets/Objects.asset");
         AssetDatabase.CreateAsset(asset, name);

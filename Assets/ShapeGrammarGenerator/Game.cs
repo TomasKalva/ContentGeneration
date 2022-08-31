@@ -204,6 +204,10 @@ namespace ShapeGrammar
 
             yield return TaskSteps.One();
 
+            GameLanguage.State.World.OnGameStart();
+
+            yield return TaskSteps.One();
+
             // Restart level after player dies
             playerState
                 .ClearOnDeath()

@@ -1,5 +1,6 @@
 ﻿using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using Assets.Util;
+using ContentGeneration.Assets.UI;
 using ContentGeneration.Assets.UI.Model;
 using ContentGeneration.Assets.UI.Util;
 using ShapeGrammar;
@@ -17,7 +18,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 
     class EnvironmentLanguage : LDLanguage
     {
-        struct SkyParameters
+        public struct SkyParameters
         {
             float SkyVariability { get; }
             float SkyBrightness { get; }
@@ -51,33 +52,73 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             };
         }
 
+        public class EnvironmentState
+        {
+            GeometryMaker<Environment> GeometryMaker { get; }
+            Environment Environment { get; set; }
+
+            public EnvironmentState(GeometryMaker<Environment> makeGeometry)
+            {
+                GeometryMaker = makeGeometry;
+            }
+
+            public void MakeGeometry()
+            {
+                Environment = GeometryMaker();
+            }
+
+            public void SetParameters(SkyParameters skyParameters)
+            {
+                if(Environment != null)
+                {
+                    skyParameters.Set(Environment);
+                }
+            }
+        }
+
         SkyParameters GetSkyParameter(int level)
             => SkyParams[Mathf.Clamp(level, 0, SkyParams.Length - 1)];
 
 
         public void CreateSky(int level)
         {
-            var env = Lib.Objects.Environment();
-            State.World.AddSpecialObject(env.transform);
+            var envState = new EnvironmentState(
+                () =>
+                {
+                    var env = Lib.Objects.Environment();
+                    State.World.AddSpecialObject(env.transform);
+                    RenderSettings.sun = env.Sun;
+                    return env;
+                });
+            State.World.OnGameStart += envState.MakeGeometry;
 
             var parameters = GetSkyParameter(level);
-            parameters.Set(env);
-            RenderSettings.sun = env.Sun;
-
+            envState.SetParameters(parameters);
+            //parameters.Set(env);
         }
 
         public void TestSky(int level)
         {
+            var envState = new EnvironmentState(
+                () =>
+                {
+                    var env = Lib.Objects.Environment();
+                    State.World.AddSpecialObject(env.transform);
+                    RenderSettings.sun = env.Sun;
+                    return env;
+                });
+            State.World.OnGameStart += envState.MakeGeometry;
+            /*
             var env = Lib.Objects.Environment();
-            State.World.AddSpecialObject(env.transform);
+            State.World.AddSpecialObject(env.transform);*/
             Env.One(Gr.PrL.Town(), NodesQueries.All, out var area);
 
-            GetSkyParameter(level).Set(env);
+            envState.SetParameters(GetSkyParameter(level));
             
             Func<ItemState>[] skyChangingItems = SkyParams
                 .Select<SkyParameters, Func<ItemState>>((skyParams, i) => () => Lib.Items
                  .NewItem($"Set sky {i}", $"Summon sky of {i}-th level")
-                     .OnUse(user => skyParams.Set(env))).ToArray();
+                     .OnUse(user => envState.SetParameters(skyParams))).ToArray();
 
             area.Get.AddInteractiveObject(
                 Lib.InteractiveObjects.Farmer("Sky distributor")

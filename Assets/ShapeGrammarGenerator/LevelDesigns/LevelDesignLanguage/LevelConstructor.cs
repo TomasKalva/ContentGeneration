@@ -129,7 +129,6 @@ namespace ShapeGrammar
                     if (ev.Persistent)
                     {
                         reAddPersistent(ev);
-                        
                     }
                     Debug.Log($"Finished: {ev.Name}");
                 });
