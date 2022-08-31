@@ -197,7 +197,7 @@ namespace ShapeGrammar
             {
                 var dir = lengthX < lengthZ ?
                     Vector3Int.forward : Vector3Int.right;
-                var relDist = UnityEngine.Random.Range(0.3f, 0.7f);
+                var relDist = MyRandom1.Range(0.3f, 0.7f);
                 var splitGroup = levelElement.SplitRel(dir, levelElement.AreaStyle, relDist);
                 return splitGroup.Select(lg => RecursivelySplitXZImpl((LevelGeometryElement)lg, maxSide));
             }
@@ -219,7 +219,7 @@ namespace ShapeGrammar
             }
             else
             {
-                var relDist = UnityEngine.Random.Range(0.3f, 0.7f);
+                var relDist = MyRandom1.Range(0.3f, 0.7f);
                 var splitGroup = levelElement.SplitRel(maxLengthDir, levelElement.AreaStyle, relDist);
                 return splitGroup.Select(lg => RecursivelySplitImpl((LevelGeometryElement)lg, maxSide));
             }

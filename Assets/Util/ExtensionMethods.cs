@@ -8,6 +8,37 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
+/// <summary>
+/// My random is thread safe, unlike the one from Unity.
+/// </summary>
+static class MyRandom1
+{
+    static readonly System.Random GlobalRandom = new System.Random();
+
+    [ThreadStatic] static System.Random _threadSafeRandom;
+
+    static System.Random ThreadSafeRandom 
+    { 
+        get
+        {
+            if(_threadSafeRandom == null)
+            {
+                int seed;
+                lock (GlobalRandom)
+                {
+                    seed = GlobalRandom.Next();
+                }
+                _threadSafeRandom = new System.Random(seed);
+            }
+            return _threadSafeRandom;
+        } 
+    }
+
+    public static int Range(int min, int max) => ThreadSafeRandom.Next(min, max);
+    public static float Range(float min, float max) => Value * (max - min) + min;
+    public static float Value => (float)ThreadSafeRandom.NextDouble();
+}
+
 static class ExtensionMethods
 {
     // from https://ericlippert.com/2010/06/28/computing-a-cartesian-product-with-linq/
@@ -43,7 +74,7 @@ static class ExtensionMethods
     {
         var count = list.Count;
         if (count == 0) return default;
-        var i = UnityEngine.Random.Range(0, list.Count);
+        var i = MyRandom1.Range(0, list.Count);
         return list[i];
     }
 
@@ -51,7 +82,7 @@ static class ExtensionMethods
     {
         var count = enumerable.Count();
         if (count == 0) return default;
-        var i = UnityEngine.Random.Range(0, count);
+        var i = MyRandom1.Range(0, count);
         return enumerable.ElementAt(i);
     }
 
@@ -102,16 +133,16 @@ static class ExtensionMethods
 
     public static Vector2Int RandomVector2Int(Vector2Int leftBottom, Vector2Int rightTop)
     {
-        var x = UnityEngine.Random.Range(leftBottom.x, rightTop.x);
-        var y = UnityEngine.Random.Range(leftBottom.y, rightTop.y);
+        var x = MyRandom1.Range(leftBottom.x, rightTop.x);
+        var y = MyRandom1.Range(leftBottom.y, rightTop.y);
         return new Vector2Int(x, y);
     }
 
     public static Vector3Int RandomVector3Int(Vector3Int leftBottomBack, Vector3Int rightTopFront)
     {
-        var x = UnityEngine.Random.Range(leftBottomBack.x, rightTopFront.x);
-        var y = UnityEngine.Random.Range(leftBottomBack.y, rightTopFront.y);
-        var z = UnityEngine.Random.Range(leftBottomBack.z, rightTopFront.z);
+        var x = MyRandom1.Range(leftBottomBack.x, rightTopFront.x);
+        var y = MyRandom1.Range(leftBottomBack.y, rightTopFront.y);
+        var z = MyRandom1.Range(leftBottomBack.z, rightTopFront.z);
         return new Vector3Int(x, y, z);
     }
 
@@ -132,8 +163,8 @@ static class ExtensionMethods
 
     public static void GetRandomExtents(int M, int m, out int a, out int b)
     {
-        int size = UnityEngine.Random.Range(1, m + 1);
-        a = UnityEngine.Random.Range(0, M - m);
+        int size = MyRandom1.Range(1, m + 1);
+        a = MyRandom1.Range(0, M - m);
         b = a + size;
     }
 
@@ -160,7 +191,7 @@ static class ExtensionMethods
 
     public static Box2Int RandomBox(Vector2Int minExt, Vector2Int maxExt)
     {
-        var ext = minExt.ComponentWise(maxExt, (min, max) => UnityEngine.Random.Range(min, max));
+        var ext = minExt.ComponentWise(maxExt, (min, max) => MyRandom1.Range(min, max));
         return new Box2Int(Vector2Int.zero, ext);
     }
 
@@ -315,7 +346,7 @@ static class ExtensionMethods
     public static T GetRandom<T>(this IEnumerable<T> enumerable, Func<T, float> weightF)
     {
         float total = enumerable.Sum(weightF);
-        float r = UnityEngine.Random.value * total;
+        float r = MyRandom1.Value * total;
 
         int i = 0;
         float x = 0f;
@@ -536,7 +567,7 @@ static class ExtensionMethods
         var buffer = enumerable.ToList();
         for (int i = 0; i < buffer.Count; i++)
         {
-            int j = UnityEngine.Random.Range(i, buffer.Count);
+            int j = MyRandom1.Range(i, buffer.Count);
             yield return buffer[j];
 
             buffer[j] = buffer[i];
@@ -741,7 +772,7 @@ static class ExtensionMethods
 
     public static int PlusMinusOne()
     {
-        return UnityEngine.Random.Range(0, 2) == 0 ? 1 : -1;
+        return MyRandom1.Range(0, 2) == 0 ? 1 : -1;
     }
 
     public static Vector3 ProjectDirectionOnPlane(Vector3 direction, Vector3 normal)

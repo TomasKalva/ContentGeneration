@@ -444,7 +444,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         IEnumerable<Vector3> EvenlySampleCircleArea(Vector3 center, float radius, int samplesCount)
         {
             return Enumerable.Range(0, samplesCount)
-                .Select(_ => new Vector2(radius * Mathf.Sqrt(UnityEngine.Random.Range(0f, 1f)), 2 * Mathf.PI * UnityEngine.Random.Range(0f, 1f)))
+                .Select(_ => new Vector2(radius * Mathf.Sqrt(MyRandom1.Range(0f, 1f)), 2 * Mathf.PI * MyRandom1.Range(0f, 1f)))
                 .Select(rTheta =>
                 {
                     float r = rTheta.x;

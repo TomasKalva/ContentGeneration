@@ -51,7 +51,7 @@ namespace ShapeGrammar
             var flatBoxes = qc.FlatBoxes(2, 5, 4);
             var layout = qc.RemoveOverlap(pl.MoveToIntersectAll(flatBoxes));
 
-            var boxes =  qc.RaiseRandomly(layout, () => UnityEngine.Random.Range(height / 2, height))
+            var boxes =  qc.RaiseRandomly(layout, () => MyRandom1.Range(height / 2, height))
                     .Select(part => TurnIntoHouse(part.CG()))
                     .SetChildrenAreaType(AreaStyles.Room());
             var symBoxes = boxes.SymmetrizeGrp(boxes.CG().CubeGroupMaxLayer(Vector3Int.left).Cubes.GetRandom().FacesHor(Vector3Int.left));

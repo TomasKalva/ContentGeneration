@@ -24,7 +24,7 @@ namespace ShapeGrammar
 
         public int Sample()
         {
-            return UnityEngine.Random.Range(min, max);
+            return MyRandom1.Range(min, max);
         }
     }
 
@@ -90,7 +90,7 @@ namespace ShapeGrammar
             var successes = 0;
             for (int i = 0; i < size; i++)
             {
-                if (UnityEngine.Random.Range(0f, 1f) < p)
+                if (MyRandom1.Range(0f, 1f) < p)
                 {
                     successes++;
                 }
@@ -110,7 +110,7 @@ namespace ShapeGrammar
 
         public int Sample()
         {
-            return UnityEngine.Random.Range(min, max);
+            return MyRandom1.Range(min, max);
         }
     }
 
