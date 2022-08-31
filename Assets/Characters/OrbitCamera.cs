@@ -150,7 +150,10 @@ public class OrbitCamera : MonoBehaviour
 
 		public override void PreUpdate(OrbitCamera cam)
 		{
-			cam.desiredFocusPoint = point.transform.position;
+			if (!point)
+				return;
+
+			cam.desiredFocusPoint = point.position;
 
 			//orbitAngles = cam.transform.rotation.eulerAngles;
 

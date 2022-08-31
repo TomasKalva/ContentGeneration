@@ -108,22 +108,19 @@ namespace ShapeGrammar
         /// <summary>
         /// Returns true iff constructing was success.
         /// </summary>
-        bool TryConstruct()
+        /*bool TryConstruct()
         {
+            result = false;
             State.Restart();
-            return State.LC.TryConstruct();
-            /*try
+            yield return TaskSteps.One();
+
+            var task = Task<bool>.Factory.StartNew(() => State.LC.TryConstruct());
+            while (!task.IsCompleted)
             {
-                State.Restart();
-                State.LC.TryConstruct();
-                return true;
+                yield return TaskSteps.One();
             }
-            catch (Exception ex)
-            {
-                Debug.Log(ex.Message);
-                return false;
-            }*/
-        }
+            result = task.Result;
+        }*/
 
         public IEnumerable<TaskSteps> GenerateWorld()
         {
@@ -131,8 +128,23 @@ namespace ShapeGrammar
             stopwatch.Start();
 
             int constructionTries = 1;
-            while (!TryConstruct())
+
+
+            while (true)
             {
+                State.Restart();
+                yield return TaskSteps.One();
+
+                var constructingTask = Task<bool>.Factory.StartNew(() => State.LC.TryConstruct());
+                while (!constructingTask.IsCompleted)
+                {
+                    yield return TaskSteps.One();
+                }
+                if (constructingTask.Result)
+                {
+                    break;
+                }
+
                 yield return TaskSteps.One();
                 if(constructionTries++ >= 5)
                 {

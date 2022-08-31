@@ -20,7 +20,7 @@ namespace ShapeGrammar
         public void MyWorldStart()
         {
             State.LC.AddNecessaryEvent($"Level Start", 100, level => L.LevelLanguage.LevelStart(), true);
-
+            /*
             
             State.LC.AddNecessaryEvent($"Level End", 99, level => L.LevelLanguage.LevelEnd(), true);
             
@@ -39,6 +39,8 @@ namespace ShapeGrammar
 
 
             State.LC.AddNecessaryEvent($"Roofs", -1, level => L.LevelLanguage.Roofs(), true);
+            */
+
 
             //State.LC.AddEvent($"Environment", 0, level => L.EnvironmentLanguage.TestSky(level), true);
 
