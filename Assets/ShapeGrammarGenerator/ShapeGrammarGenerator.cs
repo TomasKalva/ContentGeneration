@@ -9,6 +9,9 @@ using ContentGeneration.Assets.UI;
 
 namespace ShapeGrammar
 {
+    /// <summary>
+    /// No longer works.
+    /// </summary>
     public class ShapeGrammarGenerator : MonoBehaviour
     {
         [SerializeField]

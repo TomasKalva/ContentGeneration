@@ -39,7 +39,7 @@ namespace ShapeGrammar
         public Picker PickWithChance(float pickProb)
         {
             return lge =>
-                lge.LevelElements.Select(le => MyRandom1.Range(0f, 1f) < pickProb ? le : le.SetAreaType(AreaStyles.Empty())).ToLevelGroupElement(lge.Grid);
+                lge.LevelElements.Select(le => MyRandom.Range(0f, 1f) < pickProb ? le : le.SetAreaType(AreaStyles.Empty())).ToLevelGroupElement(lge.Grid);
         }
 
         public Picker Dropper(int dropCount)

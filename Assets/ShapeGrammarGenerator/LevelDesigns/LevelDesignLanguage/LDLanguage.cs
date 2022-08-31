@@ -154,8 +154,11 @@ namespace ShapeGrammar
             Debug.Log($"Number of construction tries: {constructionTries}");
 
             yield return TaskSteps.One();
+
             State.GrammarState.WorldState.Added.CreateGeometry(State.World);
-            State.Ldk.grid.CreateGeometry(State.World);
+            yield return TaskSteps.One();
+
+            yield return TaskSteps.Multiple(State.Ldk.grid.CreateGeometry(State.World));
 
             yield return TaskSteps.One();
 

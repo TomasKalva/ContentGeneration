@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 222c5448fd11ea84bbfe0c388c3fdbc7, type: 3}
   m_Name: InteractiveObjects
   m_EditorClassIdentifier: 
-  gravePrefab: {fileID: 8498464949297270748, guid: 7df4f3c3374e1784c8b3db1c2527d70b, type: 3}
-  ascensionKilnPrefab: {fileID: 4703221732589058432, guid: ca3cbaa14f69d5e438f2eb8efdaf8d01, type: 3}
+  gravePrefab: {fileID: 8348426894195509797, guid: 7df4f3c3374e1784c8b3db1c2527d70b, type: 3}
+  ascensionKilnPrefab: {fileID: 7615131291433926843, guid: ca3cbaa14f69d5e438f2eb8efdaf8d01, type: 3}
   physicalItemPrefab: {fileID: 5493687118069396730, guid: 11441b73fa9c64b41b699592cf5aaf4e, type: 3}
   farmer: {fileID: 3307065043585355908, guid: 6a49633222cd2af468ba1be834475af5, type: 3}

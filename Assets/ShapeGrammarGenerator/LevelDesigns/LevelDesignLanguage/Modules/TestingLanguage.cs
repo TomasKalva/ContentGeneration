@@ -180,7 +180,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                     {
                         Env.One(Gr.PrL.Garden(), NodesQueries.All, out var area);
                         area.AreasList[0].AddInteractiveObject(
-                            Lib.InteractiveObjects.InteractiveObject<Kiln>($"Npc {i}", Lib.InteractiveObjects.Geometry<Kiln>(Lib.InteractiveObjects.ascensionKilnPrefab.transform))
+                            Lib.InteractiveObjects.Kiln()
                                 .SetInteraction(
                                     ins => ins
                                         .Say($"I'm npc {i}")
@@ -201,7 +201,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                     {
                         Env.One(Gr.PrL.Garden(), NodesQueries.All, out var area);
                         area.AreasList[0].AddInteractiveObject(
-                            Lib.InteractiveObjects.InteractiveObject<Kiln>($"Npc {i}", Lib.InteractiveObjects.Geometry<Kiln>(Lib.InteractiveObjects.ascensionKilnPrefab.transform))
+                            Lib.InteractiveObjects.Kiln()
                                 .SetInteraction(
                                     ins => ins
                                         .Say($"I'm npc {i}")

@@ -91,7 +91,7 @@ namespace ShapeGrammar
             var flatBoxes = qc.FlatBoxes(3, 7, 5);
             var bounds = qc.GetFlatBox(new Box2Int(new Vector2Int(0, 0), new Vector2Int(15, 15)));
             var town = qc.RemoveOverlap(pl.PlaceInside(bounds, flatBoxes));
-            town = qc.LiftRandomly(town, () => 2 + MyRandom1.Range(1, 4));
+            town = qc.LiftRandomly(town, () => 2 + MyRandom.Range(1, 4));
             town = town.Select(g => sgShapes.SimpleHouseWithFoundation(g.CG(), 5).ApplyGrammarStyles());
 
             // house roofs
@@ -103,7 +103,7 @@ namespace ShapeGrammar
                     3)
                 );
             housesRoofs = housesRoofs.Select(houseRoof =>
-                    qc.RaiseRandomly(houseRoof as LevelGroupElement, () => MyRandom1.Range(1, 4))
+                    qc.RaiseRandomly(houseRoof as LevelGroupElement, () => MyRandom.Range(1, 4))
                     .Select(part => sgShapes.TurnIntoHouse(part.CG()))
                     .SetChildrenAreaType(AreaStyles.Room()));
             

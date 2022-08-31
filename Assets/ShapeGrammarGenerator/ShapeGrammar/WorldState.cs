@@ -53,7 +53,7 @@ namespace ShapeGrammar
 
             var newLe = AfterPushed(le);
 
-            Debug.Log(newLe.Print(0));
+            //Debug.Log(newLe.Print(0));
             return new WorldState(Added.Merge(newLe), newLe, Grid, AfterPushed);
         }
     }

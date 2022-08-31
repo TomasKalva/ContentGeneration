@@ -24,10 +24,10 @@ public class InteractiveObjects : ScriptableObject
     }
 #endif
     [SerializeField]
-    InteractiveObject gravePrefab;
+    Transform gravePrefab;
 
     [SerializeField]
-    public InteractiveObject ascensionKilnPrefab;
+    Transform ascensionKilnPrefab;
 
     [SerializeField]
     Transform physicalItemPrefab;
@@ -40,7 +40,7 @@ public class InteractiveObjects : ScriptableObject
         var grave = new Grave()
         {
             Name = "Grave",
-            GeometryMaker = Geometry<InteractiveObject>(gravePrefab.transform)
+            GeometryMaker = Geometry<InteractiveObject>(gravePrefab)
         };
         grave.SetInteraction(
             ins => ins
@@ -57,12 +57,12 @@ public class InteractiveObjects : ScriptableObject
 
     public InteractiveObjectState<InteractiveObject> Farmer(string name = "Farmer")
     {
-        return InteractiveObject(name, Geometry<InteractiveObject>(farmer.transform)).SetBlocking(true);
+        return InteractiveObject(name, Geometry<InteractiveObject>(farmer)).SetBlocking(true);
     }
 
     public InteractiveObjectState<Kiln> Kiln(string name = "Kiln")
     {
-        return InteractiveObject(name, Geometry<Kiln>(ascensionKilnPrefab.transform)).SetBlocking(true);
+        return InteractiveObject(name, Geometry<Kiln>(ascensionKilnPrefab)).SetBlocking(true);
     }
 
     public GeometryMaker<InteractiveObjectT> Geometry<InteractiveObjectT>(Transform prefab) where InteractiveObjectT : InteractiveObject

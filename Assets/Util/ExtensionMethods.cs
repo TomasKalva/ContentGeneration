@@ -11,7 +11,7 @@ using UnityEngine;
 /// <summary>
 /// My random is thread safe, unlike the one from Unity.
 /// </summary>
-static class MyRandom1
+static class MyRandom
 {
     static readonly System.Random GlobalRandom = new System.Random();
 
@@ -74,7 +74,7 @@ static class ExtensionMethods
     {
         var count = list.Count;
         if (count == 0) return default;
-        var i = MyRandom1.Range(0, list.Count);
+        var i = MyRandom.Range(0, list.Count);
         return list[i];
     }
 
@@ -82,7 +82,7 @@ static class ExtensionMethods
     {
         var count = enumerable.Count();
         if (count == 0) return default;
-        var i = MyRandom1.Range(0, count);
+        var i = MyRandom.Range(0, count);
         return enumerable.ElementAt(i);
     }
 
@@ -133,16 +133,16 @@ static class ExtensionMethods
 
     public static Vector2Int RandomVector2Int(Vector2Int leftBottom, Vector2Int rightTop)
     {
-        var x = MyRandom1.Range(leftBottom.x, rightTop.x);
-        var y = MyRandom1.Range(leftBottom.y, rightTop.y);
+        var x = MyRandom.Range(leftBottom.x, rightTop.x);
+        var y = MyRandom.Range(leftBottom.y, rightTop.y);
         return new Vector2Int(x, y);
     }
 
     public static Vector3Int RandomVector3Int(Vector3Int leftBottomBack, Vector3Int rightTopFront)
     {
-        var x = MyRandom1.Range(leftBottomBack.x, rightTopFront.x);
-        var y = MyRandom1.Range(leftBottomBack.y, rightTopFront.y);
-        var z = MyRandom1.Range(leftBottomBack.z, rightTopFront.z);
+        var x = MyRandom.Range(leftBottomBack.x, rightTopFront.x);
+        var y = MyRandom.Range(leftBottomBack.y, rightTopFront.y);
+        var z = MyRandom.Range(leftBottomBack.z, rightTopFront.z);
         return new Vector3Int(x, y, z);
     }
 
@@ -163,8 +163,8 @@ static class ExtensionMethods
 
     public static void GetRandomExtents(int M, int m, out int a, out int b)
     {
-        int size = MyRandom1.Range(1, m + 1);
-        a = MyRandom1.Range(0, M - m);
+        int size = MyRandom.Range(1, m + 1);
+        a = MyRandom.Range(0, M - m);
         b = a + size;
     }
 
@@ -191,7 +191,7 @@ static class ExtensionMethods
 
     public static Box2Int RandomBox(Vector2Int minExt, Vector2Int maxExt)
     {
-        var ext = minExt.ComponentWise(maxExt, (min, max) => MyRandom1.Range(min, max));
+        var ext = minExt.ComponentWise(maxExt, (min, max) => MyRandom.Range(min, max));
         return new Box2Int(Vector2Int.zero, ext);
     }
 
@@ -346,7 +346,7 @@ static class ExtensionMethods
     public static T GetRandom<T>(this IEnumerable<T> enumerable, Func<T, float> weightF)
     {
         float total = enumerable.Sum(weightF);
-        float r = MyRandom1.Value * total;
+        float r = MyRandom.Value * total;
 
         int i = 0;
         float x = 0f;
@@ -567,7 +567,7 @@ static class ExtensionMethods
         var buffer = enumerable.ToList();
         for (int i = 0; i < buffer.Count; i++)
         {
-            int j = MyRandom1.Range(i, buffer.Count);
+            int j = MyRandom.Range(i, buffer.Count);
             yield return buffer[j];
 
             buffer[j] = buffer[i];
@@ -772,7 +772,7 @@ static class ExtensionMethods
 
     public static int PlusMinusOne()
     {
-        return MyRandom1.Range(0, 2) == 0 ? 1 : -1;
+        return MyRandom.Range(0, 2) == 0 ? 1 : -1;
     }
 
     public static Vector3 ProjectDirectionOnPlane(Vector3 direction, Vector3 normal)

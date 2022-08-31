@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Profiling;
+using static ShapeGrammar.AsynchronousEvaluator;
 
 namespace ShapeGrammar
 {
@@ -119,10 +120,19 @@ namespace ShapeGrammar
             }
         }
 
-        public void CreateGeometry(World world)
+        public IEnumerable<TaskSteps> CreateGeometry(World world)
         {
             var cubeSide = world.WorldGeometry.WorldScale;
-            ((IEnumerable<Cube>)this).ForEach(i => i.CreateGeometry(cubeSide, world));
+            int iteration = 0;
+            foreach(var cube in ((IEnumerable<Cube>)this))
+            {
+                if(iteration++ % 10 == 0)
+                {
+                    yield return TaskSteps.One();
+                }
+                cube.CreateGeometry(cubeSide, world);
+            }
+            //((IEnumerable<Cube>)this).ForEach(i => i.CreateGeometry(cubeSide, world));
             var interactiveArchitecture = world.ArchitectureParent.GetComponentsInChildren<InteractiveObject>().Select(io => io.State);
             interactiveArchitecture.ForEach(el => world.AddInteractivePersistentObject(el));
         }
@@ -197,7 +207,7 @@ namespace ShapeGrammar
             {
                 var dir = lengthX < lengthZ ?
                     Vector3Int.forward : Vector3Int.right;
-                var relDist = MyRandom1.Range(0.3f, 0.7f);
+                var relDist = MyRandom.Range(0.3f, 0.7f);
                 var splitGroup = levelElement.SplitRel(dir, levelElement.AreaStyle, relDist);
                 return splitGroup.Select(lg => RecursivelySplitXZImpl((LevelGeometryElement)lg, maxSide));
             }
@@ -219,7 +229,7 @@ namespace ShapeGrammar
             }
             else
             {
-                var relDist = MyRandom1.Range(0.3f, 0.7f);
+                var relDist = MyRandom.Range(0.3f, 0.7f);
                 var splitGroup = levelElement.SplitRel(maxLengthDir, levelElement.AreaStyle, relDist);
                 return splitGroup.Select(lg => RecursivelySplitImpl((LevelGeometryElement)lg, maxSide));
             }
