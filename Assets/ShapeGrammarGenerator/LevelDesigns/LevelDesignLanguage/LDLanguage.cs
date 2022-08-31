@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using static ShapeGrammar.AsynchronousEvaluator;
 
 namespace ShapeGrammar
 {
@@ -46,9 +47,13 @@ namespace ShapeGrammar
             World = CreateWorld();
         }
 
-        public void InstantiateAreas()
+        public IEnumerable<TaskSteps> InstantiateAreas()
         {
-            TraversableAreas.ForEach(area => area.InstantiateAll(World));
+            foreach(var area in TraversableAreas)
+            {
+                yield return TaskSteps.Multiple(area.InstantiateAll(World));
+            }
+            //TraversableAreas.ForEach(area => area.InstantiateAll(World));
         }
 
         public void AddAreas(List<Area> areas)
@@ -120,7 +125,7 @@ namespace ShapeGrammar
             }*/
         }
 
-        public void GenerateWorld()
+        public IEnumerable<TaskSteps> GenerateWorld()
         {
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
@@ -128,6 +133,7 @@ namespace ShapeGrammar
             int constructionTries = 1;
             while (!TryConstruct())
             {
+                yield return TaskSteps.One();
                 if(constructionTries++ >= 5)
                 {
                     break;
@@ -135,10 +141,14 @@ namespace ShapeGrammar
             }
             Debug.Log($"Number of construction tries: {constructionTries}");
 
+            yield return TaskSteps.One();
             State.GrammarState.WorldState.Added.CreateGeometry(State.World);
             State.Ldk.grid.CreateGeometry(State.World);
 
-            State.InstantiateAreas();
+            yield return TaskSteps.One();
+
+
+            yield return TaskSteps.Multiple(State.InstantiateAreas());
 
 
             stopwatch.Stop();

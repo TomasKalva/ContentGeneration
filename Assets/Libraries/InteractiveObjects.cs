@@ -127,7 +127,7 @@ public class InteractiveObjects : ScriptableObject
                                     );
 
                                 var game = GameObject.Find("Game").GetComponent<Game>();
-                                game.GoToNextLevel();
+                                game.AsyncEvaluator.SetTasks(game.GoToNextLevel());
                             }
                         )
                     .SetBlocking(true);

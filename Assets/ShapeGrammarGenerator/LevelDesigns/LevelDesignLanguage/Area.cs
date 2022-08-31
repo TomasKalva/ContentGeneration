@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using static ShapeGrammar.AsynchronousEvaluator;
 
 namespace ShapeGrammar
 {
@@ -44,6 +45,10 @@ namespace ShapeGrammar
                 new Wait(
                     _ =>
                     {
+                        // Wait until the player spawns
+                        if (GameViewModel.ViewModel.PlayerState.Agent == null)
+                            return true;
+
                         var playerGridPosition = Vector3Int.RoundToInt(worldGeometry.WorldToGrid(GameViewModel.ViewModel.PlayerState.Agent.transform.position));
                         return !thisAreaPositions.Contains(playerGridPosition);
                     },
@@ -80,7 +85,7 @@ namespace ShapeGrammar
             world.AddEnemy(enemy);
         }
 
-        public virtual void InstantiateAll(World world)
+        public IEnumerable<TaskSteps> InstantiateAll(World world)
         {
             //var flooredCubes = new Stack<Cube>(Node.LE.CG().WithFloor().Cubes.Shuffle());
 
@@ -89,17 +94,22 @@ namespace ShapeGrammar
             var paths = L.State.TraversabilityGraph.Connections.Select(areasConnection => areasConnection.Path.LE.CG());
             var pathEnds = paths.SelectMany(path => PathNode.FindPathEndsInFloor(Node.LE.CG().WithFloor(), paths));
 
+            yield return TaskSteps.One();
+
             var unoccupiedFloor = Node.LE.CG().WithFloor().Cubes.Except(pathEnds);
             var flooredCubes = new Holder<Cube>(unoccupiedFloor);
 
             var worldGeometry = world.WorldGeometry;
 
+            yield return TaskSteps.One();
 
             var blockingIos = InteractiveObjectStates.Where(ios => ios.IsBlocking);
             var notBlockingIos = InteractiveObjectStates.Except(blockingIos);
 
+            yield return TaskSteps.One();
+
             // Place blocking objects
-            blockingIos.ForEach(ios =>
+            foreach(var ios in blockingIos)
             {
                 var validCube = flooredCubes.TakeRandom(
                     cube => PathNode.IsConnected(
@@ -107,19 +117,21 @@ namespace ShapeGrammar
                         pathEnds));
 
                 CreateInteractiveObject(world, ios, validCube.Position);
-            });
+                yield return TaskSteps.One();
+            }
 
             // Place not blocking objects
-            notBlockingIos.ForEach(ios =>
+            foreach(var ios in notBlockingIos)
             {
                 if (!flooredCubes.Any())
                 {
                     Debug.LogError("Not enough empty cubes");
-                    return;
+                    break;
                 }
 
                 CreateInteractiveObject(world, ios, flooredCubes.TakeRandom().Position);
-            });
+                yield return TaskSteps.One();
+            }
 
             foreach (var enemy in EnemyStates)
             {
@@ -130,6 +142,7 @@ namespace ShapeGrammar
                 }
 
                 CreateEnemy(world, enemy, flooredCubes.TakeRandom().Position);
+                yield return TaskSteps.One();
             }
         }
 

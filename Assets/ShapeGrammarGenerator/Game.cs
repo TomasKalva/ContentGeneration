@@ -28,16 +28,30 @@ namespace ShapeGrammar
 
         MyLanguage GameLanguage;
 
-        AsynchronousEvaluator AsyncEvaluator;
+        public AsynchronousEvaluator AsyncEvaluator { get; private set; }
 
         private void Awake()
         {
+            AsyncEvaluator = new AsynchronousEvaluator(10);
+            /*
             libraries.Initialize();
             InitializePlayer();
-            InitializeLevelConstructor();
-            GoToNextLevel();
+            InitializeLevelConstructor();*/
+            AsyncEvaluator.SetTasks(StartGame());
 
-            AsyncEvaluator = new AsynchronousEvaluator(TaskSteps.Multiple(AsynchronousEvaluator.TestMethod()), 2);
+            //AsyncEvaluator.SetTasks(TaskSteps.Multiple(AsynchronousEvaluator.TestMethod()));
+        }
+
+        private IEnumerable<TaskSteps> StartGame()
+        {
+            libraries.Initialize();
+            yield return TaskSteps.One();
+
+            InitializePlayer();
+            yield return TaskSteps.One();
+
+            yield return TaskSteps.Multiple(InitializeLevelConstructor());
+            yield return TaskSteps.Multiple(GoToNextLevel());
         }
 
         public void InitializePlayer()
@@ -88,9 +102,11 @@ namespace ShapeGrammar
                 );
         }
 
-        public void InitializeLevelConstructor()
+        public IEnumerable<TaskSteps> InitializeLevelConstructor()
         {
             var ldk = new LevelDevelopmentKit(GeometricPrimitives, worldParent, libraries);
+
+            yield return TaskSteps.One();
 
             // Declaration
             {
@@ -99,21 +115,28 @@ namespace ShapeGrammar
                     var levelConstructor = new LevelConstructor();
                     var languageState = new LanguageState(levelConstructor, ldk, CreateWorld);
                     languageState.Restart();
+
+                    yield return TaskSteps.One();
+
                     var gr = new Grammars(ldk);
                     var sym = new Symbols();
                     ProductionProgram.pr = new Productions(ldk, sym);
                     ProductionProgram.ldk = ldk;
 
+                    yield return TaskSteps.One();
+
                     GameLanguage = new MyLanguage(new LanguageParams(libraries, gr, languageState));
 
 
                     GameLanguage.MyWorldStart();
+
+                    yield return TaskSteps.One();
                 }
 
             }
         }
 
-        void PutPlayerToWorld(PlayerCharacterState playerState, LevelElement entireLevel)
+        IEnumerable<TaskSteps> PutPlayerToWorld(PlayerCharacterState playerState, LevelElement entireLevel)
         {
             // Stuff related to player initialization
             {
@@ -127,7 +150,7 @@ namespace ShapeGrammar
                     spacePartitioning.Update(playerNode);
                 };
 
-
+                yield return TaskSteps.One();
 
                 Debug.Log(entireLevel.Print(0));
 
@@ -140,17 +163,29 @@ namespace ShapeGrammar
                 world.AddInteractiveObject(graveState);
                 world.Grave = graveState;
 
+                //yield return TaskSteps.One();
+
                 world.InitializePlayer();
+
+                yield return TaskSteps.One();
             }
         }
 
-        public void GoToNextLevel()
+        IEnumerable<TaskSteps> ResetLevel(PlayerCharacterState playerState, LevelGroupElement levelRoot)
+        {
+            GameLanguage.State.World.Reset();
+            yield return TaskSteps.One();
+            yield return TaskSteps.Multiple(GameLanguage.State.InstantiateAreas());
+            yield return TaskSteps.Multiple(PutPlayerToWorld(playerState, levelRoot));
+        }
+
+        public IEnumerable<TaskSteps> GoToNextLevel()
         {
             // Generating the world
 
             // show transition animation
 
-            GameLanguage.GenerateWorld();
+            yield return TaskSteps.Multiple(GameLanguage.GenerateWorld());
 
             GameViewModel.ViewModel.World = GameLanguage.State.World;
 
@@ -159,27 +194,33 @@ namespace ShapeGrammar
             grammarState.Print(new PrintingState()).Show();
             grammarState.Stats.Print();
 
+            yield return TaskSteps.One();
+
             // Put player to the world
 
             var playerState = GameViewModel.ViewModel.PlayerState;
             var levelRoot = grammarState.WorldState.Added;
-            PutPlayerToWorld(playerState, levelRoot);
+            yield return TaskSteps.Multiple(PutPlayerToWorld(playerState, levelRoot));
+
+            yield return TaskSteps.One();
 
             // Restart level after player dies
             playerState
                 .ClearOnDeath()
                 .AddOnDeath(() =>
                 {
-                    GameLanguage.State.World.Reset();
+                    AsyncEvaluator.SetTasks(ResetLevel(playerState, levelRoot));
+                    /*GameLanguage.State.World.Reset();
                     GameLanguage.State.InstantiateAreas();
-                    PutPlayerToWorld(playerState, levelRoot);
+                    PutPlayerToWorld(playerState, levelRoot);*/
                 })
                 .ClearOnRest()
                 .AddOnRest(() =>
                 {
-                    GameLanguage.State.World.Reset();
+                    AsyncEvaluator.SetTasks(ResetLevel(playerState, levelRoot));
+                    /*GameLanguage.State.World.Reset();
                     GameLanguage.State.InstantiateAreas();
-                    PutPlayerToWorld(playerState, levelRoot);
+                    PutPlayerToWorld(playerState, levelRoot);*/
                 });
 
             // hide transition animation
@@ -187,9 +228,11 @@ namespace ShapeGrammar
 
         private void FixedUpdate()
         {
-            var World = GameLanguage.State.World;
-            World.Update(Time.fixedDeltaTime);
-            AsyncEvaluator.Evaluate();
+            if (AsyncEvaluator.Evaluate())
+            {
+                var World = GameLanguage.State.World;
+                World.Update(Time.fixedDeltaTime);
+            }
         }
     }
 
@@ -265,11 +308,20 @@ namespace ShapeGrammar
         Stopwatch _stopwatch;
         int _msPerFrame;
 
-        public AsynchronousEvaluator(TaskSteps taskSteps, int msPerFrame)
+        public AsynchronousEvaluator(int msPerFrame)
         {
-            _taskQueue = taskSteps.GetTasks().GetEnumerator();
             _stopwatch = new Stopwatch();
             _msPerFrame = msPerFrame;
+        }
+
+        public void SetTasks(TaskSteps taskSteps)
+        {
+            _taskQueue = taskSteps.GetTasks().GetEnumerator();
+        }
+
+        public void SetTasks(IEnumerable<TaskSteps> taskSteps)
+        {
+            _taskQueue = TaskSteps.Multiple(taskSteps).GetTasks().GetEnumerator();
         }
 
         /// <summary>
@@ -277,6 +329,9 @@ namespace ShapeGrammar
         /// </summary>
         public bool Evaluate()
         {
+            if (_taskQueue == null)
+                return true;
+
             _stopwatch.Restart();
             while(_stopwatch.ElapsedMilliseconds < _msPerFrame)
             {

@@ -319,7 +319,8 @@ public class OrbitCamera : MonoBehaviour
 
     void LateUpdate()
 	{
-        if (CamUpdater.Finished())
+        if (CamUpdater != null &&
+			CamUpdater.Finished())
         {
 			CamUpdater = null;
         }
