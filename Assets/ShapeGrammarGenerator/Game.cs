@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,6 +8,9 @@ using Assets.Util;
 using ContentGeneration.Assets.UI.Util;
 using ContentGeneration.Assets.UI.Model;
 using ContentGeneration.Assets.UI;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
+using static ShapeGrammar.AsynchronousEvaluator;
 
 namespace ShapeGrammar
 {
@@ -24,12 +28,16 @@ namespace ShapeGrammar
 
         MyLanguage GameLanguage;
 
+        AsynchronousEvaluator AsyncEvaluator;
+
         private void Awake()
         {
             libraries.Initialize();
             InitializePlayer();
             InitializeLevelConstructor();
             GoToNextLevel();
+
+            AsyncEvaluator = new AsynchronousEvaluator(TaskSteps.Multiple(AsynchronousEvaluator.TestMethod()), 2);
         }
 
         public void InitializePlayer()
@@ -181,6 +189,103 @@ namespace ShapeGrammar
         {
             var World = GameLanguage.State.World;
             World.Update(Time.fixedDeltaTime);
+            AsyncEvaluator.Evaluate();
+        }
+    }
+
+    /// <summary>
+    /// Takes function and evaluates it for fixed amount of time per each frame.
+    /// The function has to return IEnumerable<TaskStep> which marks pause points in the algorithm.
+    /// </summary>
+    public class AsynchronousEvaluator
+    {
+        public static IEnumerable<TaskSteps> TestMethod()
+        {
+            Debug.Log("Starting TestMethod");
+            yield return TaskSteps.One();
+            Debug.Log("Done first step");
+            yield return TaskSteps.One();
+            yield return TaskSteps.Multiple(TestMethod2());
+            Debug.Log("Finished");
+            yield return TaskSteps.One();
+            Debug.Log("Is this written?");
+        }
+
+        public static IEnumerable<TaskSteps> TestMethod2()
+        {
+            Debug.Log("Starting TestMethod2");
+            yield return TaskSteps.One();
+            for (int i = 0; i < 10_000; i++)
+            {
+                int x = 0;
+                for(int j = 0; j < 1000; j++)
+                {
+                    x = 2 * x + 3;
+                }
+                Debug.Log($"Iteration {i}, x is {x}");
+                yield return TaskSteps.One();
+            }
+            yield return TaskSteps.Multiple(TestMethod3());
+        }
+
+        public static IEnumerable<TaskSteps> TestMethod3()
+        {
+            Debug.Log("Starting TestMethod3");
+            yield return TaskSteps.One();
+            Debug.Log("Done first step");
+            yield return TaskSteps.One();
+        }
+
+        /// <summary>
+        /// Yield returned by the evaluating function.
+        /// </summary>
+        public class TaskSteps 
+        {
+            public static TaskSteps One() => new TaskSteps(Enumerable.Empty<TaskSteps>());
+            public static TaskSteps Multiple(IEnumerable<TaskSteps> subtasks) => new TaskSteps(subtasks);
+
+            IEnumerable<TaskSteps> Subtasks { get; }
+
+            TaskSteps(IEnumerable<TaskSteps> subtasks)
+            {
+                Subtasks = subtasks;
+            }
+
+            public IEnumerable<TaskSteps> GetTasks()
+            {
+                yield return this;
+                foreach(var subtask in Subtasks.SelectMany(st => st.GetTasks()))
+                {
+                    yield return subtask;
+                }
+            }
+        }
+
+        IEnumerator<TaskSteps> _taskQueue;
+        Stopwatch _stopwatch;
+        int _msPerFrame;
+
+        public AsynchronousEvaluator(TaskSteps taskSteps, int msPerFrame)
+        {
+            _taskQueue = taskSteps.GetTasks().GetEnumerator();
+            _stopwatch = new Stopwatch();
+            _msPerFrame = msPerFrame;
+        }
+
+        /// <summary>
+        /// Returns true if finished.
+        /// </summary>
+        public bool Evaluate()
+        {
+            _stopwatch.Restart();
+            while(_stopwatch.ElapsedMilliseconds < _msPerFrame)
+            {
+                if (!_taskQueue.MoveNext())
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

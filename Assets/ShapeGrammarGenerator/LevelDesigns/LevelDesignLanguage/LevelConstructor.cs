@@ -10,15 +10,6 @@ namespace ShapeGrammar
     public class LevelConstructor
     {
         /// <summary>
-        /// Events that are used to construct the current level.
-        /// </summary>
-        /*
-        List<LevelConstructionEvent> LevelConstructionEvents { get; set; }
-        /// <summary>
-        /// Events that are set during the construction by modules.
-        /// </summary>
-        List<LevelConstructionEvent> NewEvents { get; set; }*/
-        /// <summary>
         /// Index of successfull LevelConstructor iteration. Indexed from 0.
         /// </summary>
         int Level { get; set; }
