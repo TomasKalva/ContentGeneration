@@ -21,9 +21,9 @@ namespace ShapeGrammar
         {
             State.LC.AddNecessaryEvent($"Level Start", 100, level => L.LevelLanguage.LevelStart(), true);
             
-            /*
-            State.LC.AddNecessaryEvent($"Level End", 99, level => L.LevelLanguage.LevelEnd(), true);
             
+            State.LC.AddNecessaryEvent($"Level End", 99, level => L.LevelLanguage.LevelEnd(), true);
+            /*
             
             State.LC.AddNecessaryEvent( $"Main path", 90, level => L.LevelLanguage.MainPath(level), true);
             

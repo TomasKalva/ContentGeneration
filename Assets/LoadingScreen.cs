@@ -5,13 +5,7 @@ using UnityEngine;
 public class LoadingScreen : MonoBehaviour
 {
     [SerializeField]
-    Camera cam;
-
-    [SerializeField]
-    LayerMask Everything;
-
-    [SerializeField]
-    LayerMask LoadingLayer;
+    Camera LoadingScreenCamera;
 
     [SerializeField]
     Renderer LoadingScreenRenderer;
@@ -23,11 +17,11 @@ public class LoadingScreen : MonoBehaviour
 
     public void StartLoading()
     {
-        //cam.cullingMask = LoadingLayer;
+        LoadingScreenCamera.gameObject.SetActive(true);
     }
 
     public void EndLoading()
     {
-        //cam.cullingMask = Everything & ~LoadingLayer;
+        LoadingScreenCamera.gameObject.SetActive(false);
     }
 }

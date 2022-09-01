@@ -16,9 +16,9 @@
     </UserControl.Resources>
     <Grid  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" RenderTransformOrigin="0, 0.5">
         <!-- The UI gets flipped vertically when it's not the last overlay element of camera... -->
-        <Grid.RenderTransform>
+        <!--<Grid.RenderTransform>
             <ScaleTransform ScaleY="-1"/>
-        </Grid.RenderTransform>
+        </Grid.RenderTransform>-->
         <Grid.Style>
             <Style TargetType="Grid">
                 <Style.Triggers>

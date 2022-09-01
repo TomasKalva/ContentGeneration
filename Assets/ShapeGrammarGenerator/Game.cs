@@ -63,13 +63,12 @@ namespace ShapeGrammar
 
         public void InitializePlayer()
         {
+            /*
             if (Application.isEditor)
             {
                 UnityEditor.SceneView.FocusWindowIfItsOpen(typeof(UnityEditor.SceneView));
-            }
-            //world.AddEnemy(libraries.Enemies.MayanSwordsman(), new Vector3(0, 1, 0));
-            //world.AddEnemy(libraries.Enemies.DragonMan(), new Vector3(0, 1, 0));
-            //UnityEngine.Random.InitState(42);
+            }*/
+
 
             // todo: make this initialization less annoying
             var playerState = new ContentGeneration.Assets.UI.Model.PlayerCharacterState();
@@ -255,7 +254,7 @@ namespace ShapeGrammar
             GameViewModel.ViewModel.Visible = false;
             LoadingScreen.StartLoading();
 
-            float transitionTime = 0.2f;
+            float transitionTime = 0.3f;
             var sw = new Stopwatch();
             sw.Start();
             while(sw.ElapsedMilliseconds < transitionTime * 1000)
@@ -268,7 +267,7 @@ namespace ShapeGrammar
 
         public IEnumerable<TaskSteps> EndScreenTransition()
         {
-            float transitionTime = 0.2f;
+            float transitionTime = 1.0f;
             var sw = new Stopwatch();
             sw.Start();
             while (sw.ElapsedMilliseconds < transitionTime * 1000)
