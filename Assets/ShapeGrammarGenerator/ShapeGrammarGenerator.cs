@@ -32,10 +32,11 @@ namespace ShapeGrammar
 
         public void Generate()
         {
+            /*
             if (Application.isEditor)
             {
                 UnityEditor.SceneView.FocusWindowIfItsOpen(typeof(UnityEditor.SceneView));
-            }
+            }*/
             //world.AddEnemy(libraries.Enemies.MayanSwordsman(), new Vector3(0, 1, 0));
             //world.AddEnemy(libraries.Enemies.DragonMan(), new Vector3(0, 1, 0));
             //UnityEngine.Random.InitState(42);

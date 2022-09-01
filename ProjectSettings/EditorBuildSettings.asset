@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/StartScene.unity
+    guid: 092660bcba16e3c469187fddbe07ff6c
+  - enabled: 1
     path: Assets/ShapeGrammarGenerator/ShapeGrammar.unity
     guid: 6a62ef664df6d0340ad142ce5cfd1c47
   m_configObjects: {}
