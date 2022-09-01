@@ -56,6 +56,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
         {
             GeometryMaker<Environment> GeometryMaker { get; }
             Environment Environment { get; set; }
+            SkyParameters CurrentParameters { get; set; }
 
             public EnvironmentState(GeometryMaker<Environment> makeGeometry)
             {
@@ -65,11 +66,13 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             public void MakeGeometry()
             {
                 Environment = GeometryMaker();
+                CurrentParameters.Set(Environment);
             }
 
             public void SetParameters(SkyParameters skyParameters)
             {
-                if(Environment != null)
+                CurrentParameters = skyParameters;
+                if (Environment != null)
                 {
                     skyParameters.Set(Environment);
                 }

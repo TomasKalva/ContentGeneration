@@ -160,9 +160,11 @@ namespace ShapeGrammar
 
                 Debug.Log(entireLevel.Print(0));
 
-                var goodCubes = entireLevel.CG().WithFloor().Cubes
-                    .Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor));
-                var goodGraveCube = goodCubes.ElementAt(0);
+                var startArea = GameLanguage.State.TraversableAreas.Where(area => area.Node.HasSymbols(GameLanguage.Gr.Sym.LevelStartMarker)).First();
+
+                var goodCubes = startArea.Node.LE.CG().WithFloor().OpSub().ExtrudeHor(false).OpNew().Cubes;
+                //.Cubes.Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor));
+                var goodGraveCube = goodCubes.GetRandom();
                 var graveState = libraries.InteractiveObjects.Grave();
                 var grave = graveState.MakeGeometry();
                 grave.transform.position = world.WorldGeometry.GridToWorld(goodGraveCube.Position);
@@ -224,17 +226,11 @@ namespace ShapeGrammar
                 .AddOnDeath(() =>
                 {
                     AsyncEvaluator.SetTasks(ResetLevel(playerState, levelRoot));
-                    /*GameLanguage.State.World.Reset();
-                    GameLanguage.State.InstantiateAreas();
-                    PutPlayerToWorld(playerState, levelRoot);*/
                 })
                 .ClearOnRest()
                 .AddOnRest(() =>
                 {
                     AsyncEvaluator.SetTasks(ResetLevel(playerState, levelRoot));
-                    /*GameLanguage.State.World.Reset();
-                    GameLanguage.State.InstantiateAreas();
-                    PutPlayerToWorld(playerState, levelRoot);*/
                 });
 
             // hide transition animation
