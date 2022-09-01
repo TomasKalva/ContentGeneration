@@ -14,7 +14,11 @@
     <UserControl.Resources>
         <comp:BarLengthConverter x:Key="BarLengthConverter" />
     </UserControl.Resources>
-    <Grid  VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+    <Grid  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" RenderTransformOrigin="0, 0.5">
+        <!-- The UI gets flipped vertically when it's not the last overlay element of camera... -->
+        <Grid.RenderTransform>
+            <ScaleTransform ScaleY="-1"/>
+        </Grid.RenderTransform>
         <Grid.Style>
             <Style TargetType="Grid">
                 <Style.Triggers>

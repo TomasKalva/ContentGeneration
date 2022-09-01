@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour
 		orbitCamera.DefaultCamUpdater = orbitCamera.FocusPlayer(orbitCameraFocusPoint);
 		lockOnTarget = null;
 
-		var viewModel = camera.GetComponent<ViewModel>();
+		var viewModel = GameViewModel.ViewModel;// camera.GetComponent<ViewModel>();
 		myAgent.CharacterState = viewModel.PlayerState;
 		viewModel.PlayerState.Reset();
 

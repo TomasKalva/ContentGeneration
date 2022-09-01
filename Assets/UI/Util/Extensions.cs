@@ -24,7 +24,7 @@ namespace ContentGeneration.Assets.UI.Util
 #if NOESIS
     public static class GameViewModel
     {
-        public static ViewModel ViewModel;
+        public static ViewModel ViewModel { get; }
 
         static GameViewModel(){
             var camera = GameObject.Find("Main Camera");

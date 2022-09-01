@@ -263,7 +263,7 @@ namespace ShapeGrammar
                 LoadingScreen.SetOpacity(sw.ElapsedMilliseconds * 0.001f / transitionTime);
                 yield return TaskSteps.One();
             }
-
+            LoadingScreen.SetOpacity(1f);
         }
 
         public IEnumerable<TaskSteps> EndScreenTransition()
@@ -276,6 +276,7 @@ namespace ShapeGrammar
                 LoadingScreen.SetOpacity(1f - sw.ElapsedMilliseconds * 0.001f / transitionTime);
                 yield return TaskSteps.One();
             }
+            LoadingScreen.SetOpacity(0f);
 
             GameViewModel.ViewModel.Visible = true;
             LoadingScreen.EndLoading();

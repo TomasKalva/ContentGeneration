@@ -23,11 +23,11 @@ public class LoadingScreen : MonoBehaviour
 
     public void StartLoading()
     {
-        cam.cullingMask = LoadingLayer;
+        //cam.cullingMask = LoadingLayer;
     }
 
     public void EndLoading()
     {
-        cam.cullingMask = Everything & ~LoadingLayer;
+        //cam.cullingMask = Everything & ~LoadingLayer;
     }
 }
