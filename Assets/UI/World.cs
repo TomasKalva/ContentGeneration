@@ -75,6 +75,8 @@ namespace ContentGeneration.Assets.UI
             interactivePersistentObjects = new List<InteractiveObjectState>();
             Enemies = new ObservableCollection<CharacterState>();
             architectureElements = new List<Transform>();
+
+            OnGameStart = () => { };
         }
 
         /*

@@ -15,7 +15,7 @@ using static ShapeGrammar.AsynchronousEvaluator;
 namespace ShapeGrammar
 {
 
-    public class Game : MonoBehaviour
+    public sealed class Game : MonoBehaviour
     {
         [SerializeField]
         Transform worldParent;
@@ -24,7 +24,10 @@ namespace ShapeGrammar
         GeometricPrimitives GeometricPrimitives;
 
         [SerializeField]
-        protected Libraries libraries;
+        LoadingScreen LoadingScreen;
+
+        [SerializeField]
+        Libraries libraries;
 
         MyLanguage GameLanguage;
 
@@ -44,6 +47,8 @@ namespace ShapeGrammar
 
         private IEnumerable<TaskSteps> StartGame()
         {
+            yield return TaskSteps.Multiple(StartScreenTransition());
+
             libraries.Initialize();
             yield return TaskSteps.One();
 
@@ -52,6 +57,8 @@ namespace ShapeGrammar
 
             yield return TaskSteps.Multiple(InitializeLevelConstructor());
             yield return TaskSteps.Multiple(GoToNextLevel());
+
+            yield return TaskSteps.Multiple(EndScreenTransition());
         }
 
         public void InitializePlayer()
@@ -173,10 +180,14 @@ namespace ShapeGrammar
 
         IEnumerable<TaskSteps> ResetLevel(PlayerCharacterState playerState, LevelGroupElement levelRoot)
         {
+            yield return TaskSteps.Multiple(StartScreenTransition());
+
             GameLanguage.State.World.Reset();
             yield return TaskSteps.One();
             yield return TaskSteps.Multiple(GameLanguage.State.InstantiateAreas());
             yield return TaskSteps.Multiple(PutPlayerToWorld(playerState, levelRoot));
+
+            yield return TaskSteps.Multiple(EndScreenTransition());
         }
 
         public IEnumerable<TaskSteps> GoToNextLevel()
@@ -237,6 +248,38 @@ namespace ShapeGrammar
                 var World = GameLanguage.State.World;
                 World.Update(Time.fixedDeltaTime);
             }
+        }
+
+        public IEnumerable<TaskSteps> StartScreenTransition()
+        {
+            GameViewModel.ViewModel.Visible = false;
+            LoadingScreen.StartLoading();
+
+            float transitionTime = 0.2f;
+            var sw = new Stopwatch();
+            sw.Start();
+            while(sw.ElapsedMilliseconds < transitionTime * 1000)
+            {
+                LoadingScreen.SetOpacity(sw.ElapsedMilliseconds * 0.001f / transitionTime);
+                yield return TaskSteps.One();
+            }
+
+        }
+
+        public IEnumerable<TaskSteps> EndScreenTransition()
+        {
+            float transitionTime = 0.2f;
+            var sw = new Stopwatch();
+            sw.Start();
+            while (sw.ElapsedMilliseconds < transitionTime * 1000)
+            {
+                LoadingScreen.SetOpacity(1f - sw.ElapsedMilliseconds * 0.001f / transitionTime);
+                yield return TaskSteps.One();
+            }
+
+            GameViewModel.ViewModel.Visible = true;
+            LoadingScreen.EndLoading();
+            yield return TaskSteps.One();
         }
     }
 

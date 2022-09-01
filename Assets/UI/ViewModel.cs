@@ -74,6 +74,17 @@ namespace ContentGeneration.Assets.UI
             }
         }
 
+        bool _visible;
+        public bool Visible
+        {
+            get => _visible;
+            set
+            {
+                _visible = value;
+                PropertyChanged.OnPropertyChanged(this);
+            }
+        }
+
 
         World _world;
 

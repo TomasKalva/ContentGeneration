@@ -146,6 +146,7 @@ public class NoesisUnity
                 case LogLevel.Error:
                 {
                     Debug.LogError("[noesis] " + message);
+
                     break;
                 }
                 default: break;

@@ -614,6 +614,16 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2819975557250606188, guid: e5dff2d4b0ce2c64ca95915491235bda, type: 3}
   m_PrefabInstance: {fileID: 1704686075}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &728031118 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 349668046623684405, guid: e5dff2d4b0ce2c64ca95915491235bda, type: 3}
+  m_PrefabInstance: {fileID: 1704686075}
+  m_PrefabAsset: {fileID: 0}
+--- !u!20 &728031124 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 3469223549816914217, guid: e5dff2d4b0ce2c64ca95915491235bda, type: 3}
+  m_PrefabInstance: {fileID: 1704686075}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &854039760
 GameObject:
   m_ObjectHideFlags: 0
@@ -705,6 +715,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   worldParent: {fileID: 1347385784}
   GeometricPrimitives: {fileID: 11400000, guid: 38fd6d0eaaa3939478ca6d9a042d9881, type: 2}
+  LoadingScreen: {fileID: 1487830899}
   libraries: {fileID: 11400000, guid: e6d383d7b852e69439d0877d7ed97ca5, type: 2}
 --- !u!1 &1041288316 stripped
 GameObject:
@@ -1126,6 +1137,110 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1487830894
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1487830895}
+  - component: {fileID: 1487830898}
+  - component: {fileID: 1487830897}
+  - component: {fileID: 1487830899}
+  m_Layer: 15
+  m_Name: LoadingScreen
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1487830895
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1487830894}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1.36}
+  m_LocalScale: {x: 5.16865, y: 5.16865, z: 5.16865}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 728031118}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &1487830897
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1487830894}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: bb0ae5d43313ac944b91028f9fb990aa, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1487830898
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1487830894}
+  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1487830899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1487830894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9f211fa61d4ad3458a6f726274665c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cam: {fileID: 728031124}
+  Everything:
+    serializedVersion: 2
+    m_Bits: 2147483647
+  LoadingLayer:
+    serializedVersion: 2
+    m_Bits: 32768
+  LoadingScreenRenderer: {fileID: 0}
 --- !u!1 &1565847614
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,6 +3,7 @@ using ShapeGrammar;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -127,7 +128,12 @@ public class InteractiveObjects : ScriptableObject
                                     );
 
                                 var game = GameObject.Find("Game").GetComponent<Game>();
-                                game.AsyncEvaluator.SetTasks(game.GoToNextLevel());
+                                game.AsyncEvaluator.SetTasks(
+                                    game.StartScreenTransition().Concat(
+                                    game.GoToNextLevel()).Concat(
+                                    game.EndScreenTransition()    
+                                    )
+                                );
                             }
                         )
                     .SetBlocking(true);

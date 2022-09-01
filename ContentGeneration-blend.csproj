@@ -40,8 +40,11 @@
       <HintPath>$(SolutionDir)packages\Expression.Blend.Sdk.WPF.1.0.1\lib\net45\Microsoft.Expression.Interactions.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Noesis.GUI.Extensions, Version=3.0.5.10009, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>$(SolutionDir)packages\Noesis.GUI.Extensions.3.0.5\lib\net45\Noesis.GUI.Extensions.dll</HintPath>
+    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Xaml.Behaviors.Wpf.1.1.37\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
+    </Reference>
+    <Reference Include="Noesis.GUI.Extensions, Version=3.0.12.11285, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Noesis.GUI.Extensions.3.0.12\lib\net45\Noesis.GUI.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>$(SolutionDir)packages\Expression.Blend.Sdk.WPF.1.0.1\lib\net45\System.Windows.Interactivity.dll</HintPath>

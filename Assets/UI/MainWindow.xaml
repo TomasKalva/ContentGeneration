@@ -7,6 +7,7 @@
   xmlns:comp="clr-namespace:ContentGeneration.Assets.UI.Components"
   xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
   xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+  xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
   mc:Ignorable="d"
   d:DesignWidth="767.667" d:DesignHeight="416"
   d:DataContext="{d:DesignInstance {x:Type local:ViewModel}, IsDesignTimeCreatable=True}">
@@ -14,6 +15,15 @@
         <comp:BarLengthConverter x:Key="BarLengthConverter" />
     </UserControl.Resources>
     <Grid  VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <Grid.Style>
+            <Style TargetType="Grid">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Visible}" Value="False">
+                        <Setter Property="Visibility" Value="Hidden"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Style>
         <Canvas>
             <!-- Enemy health bars -->
             <ItemsControl ItemsSource="{Binding World.Enemies}">
@@ -178,6 +188,7 @@
             
             <!-- Player's inventory -->
             <comp:InventoryView DataContext="{Binding World.PlayerState}"/>
+
         </Grid>
     </Grid>
 </UserControl>
