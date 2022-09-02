@@ -99,16 +99,11 @@ namespace ContentGeneration.Assets.UI
         }
 #if NOESIS
 
-        void Start()
-        {
-            Enemies = new ObservableCollection<CharacterState>(Object.FindObjectsOfType<Agent>().Select(a => a.CharacterState));
-        }
-
-        float inputDelay;
+        float delayBetweenInputs;
 
         bool CanTakeInput()
         {
-            return inputDelay <= 0f;
+            return delayBetweenInputs <= 0f;
         }
 
         void Update()
@@ -116,7 +111,7 @@ namespace ContentGeneration.Assets.UI
             MessageOpacity *= 0.99f;
 
             // Let's handle input in update for now...
-            inputDelay -= Time.deltaTime;
+            delayBetweenInputs -= Time.deltaTime;
             var input = new Vector2(
                 Input.GetAxis("Noesis_Horizontal"),
                 Input.GetAxis("Noesis_Vertical")
@@ -126,12 +121,12 @@ namespace ContentGeneration.Assets.UI
                 if (PlayerState.PlayerInventory.Active)
                 {
                     PlayerState.PlayerInventory.MoveCursor(GetInputDirection(input.x), GetInputDirection(-input.y));
-                    inputDelay = 0.15f;
+                    delayBetweenInputs = 0.15f;
                 }
                 else
                 {
                     PlayerState.PlayerInventory.ChangeSelected(input.x > 0f);
-                    inputDelay = 0.3f;
+                    delayBetweenInputs = 0.3f;
                 }
             }
 

@@ -82,6 +82,14 @@ public class VFX : MonoBehaviour, IDestroyable
     }
 }
 
+public interface IDestroyable
+{
+    /// <summary>
+    /// The object will be destroyed in timeS seconds.
+    /// </summary>
+    void Destroy(float timeS);
+}
+
 /// <summary>
 /// Describes texture made of multiple smaller textures in grid.
 /// </summary>

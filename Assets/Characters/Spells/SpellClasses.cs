@@ -1,4 +1,5 @@
-﻿using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
+﻿using Assets.Characters.SpellClasses;
+using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using ContentGeneration.Assets.UI.Model;
 using ShapeGrammar;
 using System;
@@ -141,4 +142,35 @@ namespace Assets.Characters.SpellClasses
                 incomingDamage;
         }
     }
+
+    /// <summary>
+    /// Handles collisions detection, duration and destruction of objects the selector is composed of.
+    /// </summary>
+    public class GeometricTargetSelector
+    {
+        ColliderDetector colliderDetector;
+        IDestroyable destroyable;
+        FinishedInTime finishedInTime;
+
+        public SelectTargets SelectTargets { get; }
+
+        public GeometricTargetSelector(IDestroyable destroyable, ColliderDetector colliderDetector, FinishedInTime finishedInTime)
+        {
+            this.destroyable = destroyable;
+            this.colliderDetector = colliderDetector;
+            this.finishedInTime = finishedInTime;
+            SelectTargets = () => colliderDetector.Hits.SelectNN(c => c.GetComponentInParent<Agent>()?.CharacterState);
+        }
+
+        public bool Update(float deltaT)
+        {
+            bool finished = finishedInTime(deltaT);
+            if (finished)
+            {
+                destroyable.Destroy(1f);
+            }
+            return finished;
+        }
+    }
 }
+

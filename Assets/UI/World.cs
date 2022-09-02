@@ -37,7 +37,7 @@ namespace ContentGeneration.Assets.UI
         public ObservableCollection<CharacterState> Enemies { get; }
         List<Transform> architectureElements;
         public PlayerCharacterState PlayerState { get; }
-        OccurenceManager Occurences { get; set; }
+        OccurrenceManager Occurences { get; set; }
         public GraveState Grave { get; set; }
 
         //public delegate void WorldCreated();
@@ -68,7 +68,7 @@ namespace ContentGeneration.Assets.UI
             CachedObjectsParent = new GameObject("CachedObjects").transform;
             CachedObjectsParent.SetParent(worldParent);
 
-            Occurences = new OccurenceManager();
+            Occurences = new OccurrenceManager();
             PlayerState = playerState;
             PlayerState.World = this;
 
@@ -183,7 +183,7 @@ namespace ContentGeneration.Assets.UI
 
         public void CreateOccurence(Selector selector, params Effect[] effects)
         {
-            Occurences.CreateOccurence(selector, effects);
+            Occurences.CreateOccurrence(selector, effects);
         }
 
         public void Update(float deltaT)
@@ -211,7 +211,7 @@ namespace ContentGeneration.Assets.UI
             }
 
             // Reset occurences, interactive objects and enemies
-            Occurences = new OccurenceManager();
+            Occurences = new OccurrenceManager();
             interactiveObjects.Clear();
             Enemies.Clear();
 
@@ -239,26 +239,26 @@ namespace ContentGeneration.Assets.UI
         }
     }
 
-    class OccurenceManager
+    class OccurrenceManager
     {
-        List<Occurence> CurrentOccurences { get; set; }
+        List<Occurrence> CurrentOccurrences { get; set; }
         //HashSet<Occurence> FinishedOccurences { get; }
 
-        public OccurenceManager()
+        public OccurrenceManager()
         {
-            CurrentOccurences = new List<Occurence>();
+            CurrentOccurrences = new List<Occurrence>();
             //FinishedOccurences = new HashSet<Occurence>();
         }
 
         /// <summary>
         /// Something that happens inside of the world.
         /// </summary>
-        class Occurence
+        class Occurrence
         {
             Selector selector;
             Effect[] effects;
 
-            public Occurence(Selector selector, params Effect[] effects)
+            public Occurrence(Selector selector, params Effect[] effects)
             {
                 this.selector = selector;
                 this.effects = effects;
@@ -277,15 +277,15 @@ namespace ContentGeneration.Assets.UI
             }
         }
 
-        public void CreateOccurence(Selector selector, params Effect[] effects)
+        public void CreateOccurrence(Selector selector, params Effect[] effects)
         {
-            CurrentOccurences.Add(new Occurence(selector, effects));
+            CurrentOccurrences.Add(new Occurrence(selector, effects));
         }
 
         public void Update(float deltaT)
         {
             // todo: somehow optimize this to avoid allocations each update
-            CurrentOccurences = CurrentOccurences.Where(occurence => !occurence.Update(deltaT)).ToList();
+            CurrentOccurrences = CurrentOccurrences.Where(occurence => !occurence.Update(deltaT)).ToList();
             /*CurrentOccurences.ForEach(occurence =>
             {
                 if (occurence.Update(deltaT))
