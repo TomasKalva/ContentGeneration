@@ -330,7 +330,7 @@ namespace ShapeGrammar
                     .DontIntersect(State.VerticallyTaken);
 
                 return validMoves
-                    .TryMove()?.GN();
+                    .TryMove().GN();
             })
             // Move node to level of target node
             .Change(validNewRoom => {

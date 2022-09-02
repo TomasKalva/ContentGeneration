@@ -99,7 +99,7 @@ namespace ShapeGrammar
         }
 
         /// <summary>
-        /// All path ends must belong to the floor group.
+        /// All path ends must belong to the area of floor group.
         /// </summary>
         public static bool IsConnected(CubeGroup unoccupiedFloor, IEnumerable<Cube> pathEnds)
         {
@@ -111,7 +111,7 @@ namespace ShapeGrammar
         }
 
         /// <summary>
-        /// All path ends must belong to the floor group.
+        /// All path ends must belong to the area of floor group.
         /// </summary>
         public static bool StaysConnected(CubeGroup unoccupiedFloor, IEnumerable<Cube> pathEnds, PathNode newNode)
         {
@@ -119,10 +119,6 @@ namespace ShapeGrammar
             var endOfNewPath = newNode.ReversePath().Last();
             var newPathEnds = unoccupiedFloor.Cubes.Contains(endOfNewPath) ? pathEnds.Append(endOfNewPath) : pathEnds;
             return IsConnected(newFloor, newPathEnds);
-                // floor doesn't get disconnected
-                /*newFloor.SplitToConnected().Count() <= 1 &&
-                // all path ends in the floor are still connected to the new floor
-                newPathEnds.All(pathEnd => pathEnd.NeighborsHor().SetIntersect(newFloor.Cubes).Any());*/
         }
 
         public static Neighbors<PathNode> PreserveConnectivity(Neighbors<PathNode> neighbors, CubeGroup cg1, CubeGroup cg2, IEnumerable<CubeGroup> otherPaths)
@@ -186,27 +182,6 @@ namespace ShapeGrammar
             };
             return NotRepeatingCubes(repeatingCubesNeighbors);
         }
-
-        public static Neighbors<PathNode> BalconyStairsBalconyNeighbors(CubeGroup start, CubeGroup end, CubeGroup balcony1, CubeGroup balcony2)
-        {
-            //todo: make sure that the path is always valid - problems with returning to the balcony space
-            var horizontal = HorizontalNeighbors();
-            var vertical = VerticalNeighbors();
-            var balconySet1 = new HashSet<Cube>(balcony1.Cubes);
-            var balconySet2 = new HashSet<Cube>(balcony2.Cubes);
-            var stairsNeighbors = StairsNeighbors();
-            Neighbors<PathNode> repeatingCubesNeighbors = pathNode =>
-            {
-                // return only horizontal directions for 1st node
-                return pathNode.prev == null || balconySet2.Contains(pathNode.cube) ?
-                            horizontal(pathNode) :
-                            balconySet1.Contains(pathNode.cube) ?
-                                horizontal(pathNode).Concat(stairsNeighbors(pathNode)) :
-                                stairsNeighbors(pathNode)
-                                    .Where(nextNode => !balconySet2.Contains(nextNode.cube) || nextNode.prevVerMove == 0);// move to the second balcony horizontaly
-            };
-            return NotRepeatingCubes(repeatingCubesNeighbors);
-        }
         #endregion
 
         // Helper variable
@@ -261,10 +236,13 @@ namespace ShapeGrammar
             return x.cube == y.cube && x.lastHorMove == y.lastHorMove && x.prevVerMove == y.prevVerMove;
         }
 
+        /// <summary>
+        /// Adapted from:
+        /// https://stackoverflow.com/questions/263400/what-is-the-best-algorithm-for-overriding-gethashcode
+        /// </summary>
         public int GetHashCode(PathNode obj)
         {
             int hash = 17;
-            // Suitable nullity checks etc, of course :)
 
             hash = hash * 23 + (cube == null ? 0 : cube.GetHashCode());
             hash = hash * 23 + lastHorMove.GetHashCode();

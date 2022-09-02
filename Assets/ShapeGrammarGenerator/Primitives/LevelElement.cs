@@ -1,4 +1,5 @@
 ﻿using Assets.ShapeGrammarGenerator;
+using Assets.ShapeGrammarGenerator.Primitives;
 using ContentGeneration.Assets.UI;
 using System;
 using System.Collections.Generic;
@@ -34,8 +35,6 @@ namespace ShapeGrammar
         public LevelGeometryElement MapGeom(Func<CubeGroup, CubeGroup> f) => new LevelGeometryElement(Grid, AreaStyle, f(CG()));
 
         #endregion
-
-        public IEnumerable<LevelGeometryElement> Nonterminals(AreaStyle areaType) => Leafs().Where(g => g.AreaStyle == areaType);
 
         protected abstract LevelElement MoveByImpl(Vector3Int offset);
 
@@ -167,7 +166,7 @@ namespace ShapeGrammar
             public LevelElement TryMove(int randomFromFirstCount = 10_000)
             {
                 if (!Ms.Any())
-                    return null;
+                    throw new NoValidMovesException();
 
                 var move = Ms.Take(randomFromFirstCount).GetRandom();
                 return LE.MoveBy(move);
@@ -354,7 +353,7 @@ namespace ShapeGrammar
 
         public override LevelElement Symmetrize(FaceHor faceHor)
         {
-            return new LevelGroupElement(Grid, AreaStyle, LevelElements.Select(le => le.Symmetrize(faceHor)).ToList<LevelElement>());
+            return new LevelGroupElement(Grid, AreaStyle, LevelElements.Select(le => le.Symmetrize(faceHor)).ToList());
         }
 
         public LevelGroupElement SymmetrizeGrp(FaceHor faceHor) => (LevelGroupElement)Symmetrize(faceHor);

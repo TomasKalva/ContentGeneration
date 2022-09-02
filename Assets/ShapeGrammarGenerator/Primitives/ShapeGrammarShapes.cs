@@ -127,8 +127,6 @@ namespace ShapeGrammar
             }
         }
 
-        public LevelElement CliffFoundation(LevelElement toBeFounded) => Foundation(toBeFounded).SetAreaType(AreaStyles.CliffFoundation());
-
         public CubeGroup Platform(Box2Int areaXZ, int posY) => qc.GetPlatform(areaXZ, posY);
 
         public CubeGroup BalconyOne(CubeGroup house)

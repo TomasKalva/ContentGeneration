@@ -793,7 +793,7 @@ namespace ShapeGrammar
                                     var validMoves = createdRoom.MoveBottomTo(0)
                                         .MovesToIntersect(boundingBox.LE).XZ()
                                         .DontIntersect(state.VerticallyTaken);
-                                    return pathGuide.SelectMove(validMoves).TryMove()?.GN();
+                                    return pathGuide.SelectMove(validMoves).TryMove().GN();
                                 })
                                 .Change(
                                     newRoomDown => newRoomDown.LE.MoveBottomTo(whatCG.LeftBottomBack().y).GN(to, sym.FullFloorMarker)

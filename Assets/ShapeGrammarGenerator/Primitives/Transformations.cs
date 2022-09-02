@@ -8,6 +8,9 @@ using UnityEngine;
 
 namespace ShapeGrammar
 {
+    /// <summary>
+    /// Doesn't throw correct exceptions.
+    /// </summary>
     public class Transformations
     {
         LevelDevelopmentKit ldk { get; }

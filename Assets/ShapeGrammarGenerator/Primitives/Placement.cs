@@ -10,6 +10,7 @@ namespace ShapeGrammar
 {
     /// <summary>
     /// D E P R E C A T E D
+    /// and doesnt throw correct exceptions
     /// </summary>
     public class Placement
     {

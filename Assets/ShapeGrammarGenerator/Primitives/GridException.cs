@@ -14,4 +14,9 @@ namespace Assets.ShapeGrammarGenerator.Primitives
     {
 
     }
+
+    class NoValidMovesException : GridException
+    {
+
+    }
 }

@@ -487,23 +487,6 @@ namespace ShapeGrammar
         public FaceHorGroup Minus(FaceHorGroup faceHorGroup) => new FaceHorGroup(Grid, Facets.Except(faceHorGroup.Facets).ToList());
     }
 
-    class Countdown
-    {
-        public int Elapsed { get; private set; }
-        public Countdown(int elapsed)
-        {
-            Elapsed = elapsed;
-        }
-        /// <summary>
-        /// Returns true after finished.
-        /// </summary>
-        public bool Tick()
-        {
-            Elapsed--;
-            return Elapsed < 0;
-        }
-    }
-
     public class FaceVerGroup : FacetGroup<FaceVer>
     {
         public FaceVerGroup(Grid<Cube> grid, List<FaceVer> faces) : base(grid, faces)
