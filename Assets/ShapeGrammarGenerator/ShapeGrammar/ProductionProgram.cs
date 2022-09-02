@@ -1,4 +1,5 @@
 ﻿using Assets.ShapeGrammarGenerator;
+using Assets.ShapeGrammarGenerator.Primitives;
 using Assets.ShapeGrammarGenerator.ShapeGrammar;
 using System;
 using System.Collections.Generic;
@@ -12,8 +13,8 @@ namespace ShapeGrammar
 {
     public class ProductionProgram
     {
-        public static LevelDevelopmentKit ldk { get; set; }
-        public static Productions pr { get; set; }
+        public static LevelDevelopmentKit Ldk { get; set; }
+        public static Productions Pr { get; set; }
 
 
         public ShapeGrammarState State { get; }
@@ -137,8 +138,8 @@ namespace ShapeGrammar
             if (Failed)
                 return this;
 
-            CurrentNodes = CurrentNodes.Select(node => ldk.sgShapes.Foundation(node.LE).GN(pr.sym.Foundation)).ToList();
-            foundation = CurrentNodes.Select(node => node.LE).ToLevelGroupElement(ldk.grid).GN();
+            CurrentNodes = CurrentNodes.Select(node => Ldk.sgShapes.Foundation(node.LE).GN(Pr.sym.Foundation)).ToList();
+            foundation = CurrentNodes.Select(node => node.LE).ToLevelGroupElement(Ldk.grid).GN();
             return this;
         }
 
@@ -167,7 +168,7 @@ namespace ShapeGrammar
                 .Where(prog => !prog.Failed)
                 .SelectMany(prog => prog.CurrentNodes).ToList();
 
-            reservation = CurrentNodes.Select(node => node.LE).ToLevelGroupElement(ldk.grid).GN();
+            reservation = CurrentNodes.Select(node => node.LE).ToLevelGroupElement(Ldk.grid).GN();
             return this;
             
         }
@@ -274,11 +275,6 @@ namespace ShapeGrammar
             return this;
         }
 
-        public ProductionProgram EmptyPath()
-        {
-            return Set(() => new CubeGroup(ldk.grid, new List<Cube>()).LE().GN(pr.sym.ConnectionMarker));
-        }
-
         public ProductionProgram Set(Func<Node> nodesF, out Node result)
         {
             result = null;
@@ -313,7 +309,10 @@ namespace ShapeGrammar
         /// </summary>
         public ProductionProgram MoveNearTo(Node targetNode, int dist)
         {
-            if(CurrentNodes.Count() != 1)
+            if (Failed)
+                return this;
+
+            if (CurrentNodes.Count() != 1)
             {
                 throw new InvalidOperationException($"{nameof(MoveNearTo)} only works for 1 node.");
             }
@@ -330,7 +329,17 @@ namespace ShapeGrammar
                     .DontIntersect(State.VerticallyTaken);
 
                 return validMoves
-                    .TryMove().GN();
+                    .TryMove()?.GN();
+                /*try
+                {
+                    return validMoves
+                        .TryMove().GN();
+                }
+                catch(NoValidMovesException ex)
+                {
+                    SetFailed(true, $"{nameof(MoveNearTo)}: {ex.Message}");
+                    return null;
+                }*/
             })
             // Move node to level of target node
             .Change(validNewRoom => {

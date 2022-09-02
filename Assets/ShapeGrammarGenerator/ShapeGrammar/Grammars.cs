@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Assets.ShapeGrammarGenerator.Primitives;
+using Assets.ShapeGrammarGenerator.ShapeGrammar;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,13 +37,12 @@ namespace ShapeGrammar
         /// </summary>
         public abstract IEnumerable<Node> Evaluate(ShapeGrammarState shapeGrammarState);
 
-        protected IEnumerable<Node> Produce(ShapeGrammarState state, IEnumerable<Production> applicableProductions, string failedMsg = null)
+        protected IEnumerable<Node> Produce(ShapeGrammarState state, IEnumerable<Production> applicableProductions)
         {
             var newNodes = applicableProductions.DoUntilSuccess(prod => state.ApplyProduction(prod), x => x != null);
             if (newNodes == null)
             {
-                UnityEngine.Debug.Log(failedMsg ?? $"Can't apply any productions");
-                return null;
+                throw new NoApplicableProductionException("Can't apply any productions");
             }
             CreatedNodes.AddRange(newNodes);
             return newNodes;
@@ -88,9 +89,17 @@ namespace ShapeGrammar
             {
                 shapeGrammarState.ActiveNodes = shapeGrammarState.Root.AllDerived();
                 var applicable = Productions.Get.Shuffle();
-                newNodes = Produce(shapeGrammarState, applicable, "All grammar finished");
+                // Grammar evaluates until no production can be applied
+                try
+                {
+                    newNodes = Produce(shapeGrammarState, applicable);
+                }catch(NoApplicableProductionException ex) 
+                {
+                    Debug.Log("All grammar finished.");
+                    break;
+                }
             }
-            while (newNodes != null);
+            while (true);
             return CreatedNodes;
         }
     }

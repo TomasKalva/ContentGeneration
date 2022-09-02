@@ -128,8 +128,8 @@ namespace ShapeGrammar
 
                     var gr = new Grammars(ldk);
                     var sym = new Symbols();
-                    ProductionProgram.pr = new Productions(ldk, sym);
-                    ProductionProgram.ldk = ldk;
+                    ProductionProgram.Pr = new Productions(ldk, sym);
+                    ProductionProgram.Ldk = ldk;
 
                     yield return TaskSteps.One();
 

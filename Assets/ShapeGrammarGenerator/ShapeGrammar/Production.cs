@@ -94,6 +94,9 @@ namespace ShapeGrammar
             ExpandNewNodes = effect;
         }
 
+        /// <summary>
+        /// Tries to apply this production and returns nodes it creates. If can't be applied, returns null instead.
+        /// </summary>
         public IEnumerable<Operation> TryApply(ShapeGrammarState shapeGrammarState, out int triedParameters)
         {
             var parameters = ProdParamsManager.GetParams(shapeGrammarState).Shuffle();

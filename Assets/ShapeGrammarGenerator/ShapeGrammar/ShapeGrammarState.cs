@@ -313,11 +313,13 @@ namespace ShapeGrammar
 
             if (operations == null)
             {
+                // Production application failed
                 Stats.AddFailed(production.Name, elapsedMs, triedParameters);
                 return null;
             }
             else
             {
+                // Production application succeeded
                 var dagBeforeCount = Root.AllDerived().Count();
                 var newNodes = operations.SelectMany(operation => operation.ChangeState(this)).Evaluate();
                 var dagAfterCount = Root.AllDerived().Count();

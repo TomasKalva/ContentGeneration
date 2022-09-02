@@ -160,13 +160,13 @@ namespace ShapeGrammar
 
             /// <summary>
             /// Moves the level element by a random move and returns it.
-            /// If no move exists, returns null.
+            /// Returns null if no moves exist.
             /// </summary>
             /// <param name="randomFromFirstCount">Cap the maximum number of moves for selection.</param>
             public LevelElement TryMove(int randomFromFirstCount = 10_000)
             {
                 if (!Ms.Any())
-                    throw new NoValidMovesException();
+                    return null;
 
                 var move = Ms.Take(randomFromFirstCount).GetRandom();
                 return LE.MoveBy(move);

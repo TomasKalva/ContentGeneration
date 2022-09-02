@@ -91,7 +91,7 @@ namespace ShapeGrammar
         {
             if (!Cubes.Any())
             {
-                throw new GroupEmptyException();
+                throw new GroupEmptyException("Failed group not empty assertion.");
             }
             return this;
         }
