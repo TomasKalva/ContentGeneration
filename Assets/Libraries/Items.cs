@@ -1,5 +1,7 @@
 using Assets.Characters.Items;
 using Assets.Characters.Items.ItemClasses;
+using Assets.Characters.SpellClasses;
+using Assets.Libraries;
 using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using ContentGeneration.Assets.UI.Model;
 using System;

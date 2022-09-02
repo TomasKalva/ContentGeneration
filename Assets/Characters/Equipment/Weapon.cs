@@ -1,4 +1,5 @@
 using Assets.Characters.Items.ItemClasses;
+using Assets.Characters.SpellClasses;
 using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using System;
 using System.Collections;

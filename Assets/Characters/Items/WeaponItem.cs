@@ -1,4 +1,5 @@
 using Assets.Characters.Items.ItemClasses;
+using Assets.Characters.SpellClasses;
 using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using ContentGeneration.Assets.UI.Model;
 using ShapeGrammar;
@@ -27,16 +28,16 @@ namespace Assets.Characters.Items.ItemClasses
             }
         }
 
-        ByUser<Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions.Effect>[] BaseEffects { get; set; }
-        List<ByUser<Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions.Effect>> UpgradeEffects { get; set; }
+        ByUser<Effect>[] BaseEffects { get; set; }
+        List<ByUser<Effect>> UpgradeEffects { get; set; }
 
-        public WeaponItem(string name, string description, GeometryMaker<Weapon> weaponMaker, IEnumerable<ByUser<Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions.Effect>> baseEffects) : base(name, description, weaponMaker)
+        public WeaponItem(string name, string description, GeometryMaker<Weapon> weaponMaker, IEnumerable<ByUser<Effect>> baseEffects) : base(name, description, weaponMaker)
         {
             BaseEffects = baseEffects.ToArray();
-            UpgradeEffects = new List<ByUser<Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions.Effect>>();
+            UpgradeEffects = new List<ByUser<Effect>>();
         }
 
-        public WeaponItem AddUpgradeEffect(ByUser<Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions.Effect> effect)
+        public WeaponItem AddUpgradeEffect(ByUser<Effect> effect)
         {
             UpgradeEffects.Add(effect);
             return this;

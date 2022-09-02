@@ -11,6 +11,7 @@ using System.ComponentModel;
 using ContentGeneration.Assets.UI.Util;
 #if NOESIS
 using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
+using Assets.Characters.SpellClasses;
 #endif
 
 namespace ContentGeneration.Assets.UI.Model

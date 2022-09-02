@@ -9,7 +9,6 @@ public class EnemyController : MonoBehaviour
 {
 	Agent agent;
 
-	// Start is called before the first frame update
 	void Awake()
 	{
 		agent = GetComponent<Agent>();
@@ -20,7 +19,6 @@ public class EnemyController : MonoBehaviour
 		agent.acting.MyReset();
 	}
 
-    // Update is called once per frame
     void FixedUpdate()
 	{
 		agent.StartReceivingControls();

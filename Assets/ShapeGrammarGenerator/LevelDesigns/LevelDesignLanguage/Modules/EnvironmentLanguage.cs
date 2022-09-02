@@ -10,7 +10,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using static Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions.SelectorLibrary;
 using static InteractiveObject;
 
 namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage

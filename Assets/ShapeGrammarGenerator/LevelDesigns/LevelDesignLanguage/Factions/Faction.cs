@@ -1,4 +1,5 @@
 ﻿using Assets.Characters.Items.ItemClasses;
+using Assets.Characters.SpellClasses;
 using Assets.Util;
 using ContentGeneration.Assets.UI.Model;
 using ContentGeneration.Assets.UI.Util;

@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System;
+using Assets.Characters.SpellClasses;
 
 namespace ContentGeneration.Assets.UI
 {
@@ -236,5 +237,66 @@ namespace ContentGeneration.Assets.UI
         {
             return (worldPos - WorldParent.position) / WorldScale;
         }
+    }
+
+    class OccurenceManager
+    {
+        List<Occurence> CurrentOccurences { get; set; }
+        //HashSet<Occurence> FinishedOccurences { get; }
+
+        public OccurenceManager()
+        {
+            CurrentOccurences = new List<Occurence>();
+            //FinishedOccurences = new HashSet<Occurence>();
+        }
+
+        /// <summary>
+        /// Something that happens inside of the world.
+        /// </summary>
+        class Occurence
+        {
+            Selector selector;
+            Effect[] effects;
+
+            public Occurence(Selector selector, params Effect[] effects)
+            {
+                this.selector = selector;
+                this.effects = effects;
+            }
+
+            /// <summary>
+            /// Returns true iff the occurence has finished.
+            /// </summary>
+            public bool Update(float deltaT)
+            {
+                var affectedCharacters = selector.Select(deltaT).ToList();
+                affectedCharacters.ForEach(character =>
+                    effects.ForEach(effect => effect(character)));
+
+                return selector.Finished(deltaT);
+            }
+        }
+
+        public void CreateOccurence(Selector selector, params Effect[] effects)
+        {
+            CurrentOccurences.Add(new Occurence(selector, effects));
+        }
+
+        public void Update(float deltaT)
+        {
+            // todo: somehow optimize this to avoid allocations each update
+            CurrentOccurences = CurrentOccurences.Where(occurence => !occurence.Update(deltaT)).ToList();
+            /*CurrentOccurences.ForEach(occurence =>
+            {
+                if (occurence.Update(deltaT))
+                {
+                    //FinishedOccurences.Add(occurence);
+                }
+            });*/
+            //CurrentOccurences.RemoveAll(occurence => FinishedOccurences.Contains(occurence));
+            //FinishedOccurences.Clear();
+        }
+
+
     }
 }

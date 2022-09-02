@@ -1,3 +1,4 @@
+using Assets.Characters.SpellClasses;
 using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using ContentGeneration.Assets.UI.Model;
 using ShapeGrammar;
