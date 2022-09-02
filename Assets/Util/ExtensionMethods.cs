@@ -417,6 +417,9 @@ static class ExtensionMethods
         }
     }
 
+    /// <summary>
+    /// For each consecutive triple (l, t, r) returns t if the triple satisfies the condition.
+    /// </summary>
     public static List<T> Where3<T>(this List<T> list, Func<T, T, T, bool> cond)
     {
         var selected = new List<T>();

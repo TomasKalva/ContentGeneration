@@ -1,4 +1,6 @@
 ﻿using Assets.ShapeGrammarGenerator;
+using Assets.ShapeGrammarGenerator.Primitives;
+using Assets.Util;
 using ContentGeneration.Assets.UI;
 using ShapeGrammar;
 using System;
@@ -27,17 +29,26 @@ namespace ShapeGrammar
 
         public virtual List<Cube> Cubes { get; }
 
-        public Vector3Int LeftBottomBack() => new Vector3Int(
+        public Vector3Int LeftBottomBack()
+        {
+            AssertNonEmpty();
+            return new Vector3Int(
                 Cubes.Min(c => c.Position.x),
                 Cubes.Min(c => c.Position.y),
                 Cubes.Min(c => c.Position.z)
             );
+        }
 
-        public Vector3Int RightTopFront() => new Vector3Int(
+        public Vector3Int RightTopFront()
+        {
+            AssertNonEmpty();
+            return new Vector3Int(
                 Cubes.Max(c => c.Position.x),
                 Cubes.Max(c => c.Position.y),
                 Cubes.Max(c => c.Position.z)
             );
+        }
+
         public Vector3Int Extents() => RightTopFront() - LeftBottomBack() + Vector3Int.one;
         public int ExtentsDir(Vector3Int dir) => dir.Dot(CubesMaxLayer(dir).FirstOrDefault().Position - CubesMaxLayer(-dir).FirstOrDefault().Position) + 1;
 
@@ -47,6 +58,7 @@ namespace ShapeGrammar
 
         public Vector3 Center()
         {
+            AssertNonEmpty();
             var sum = Cubes.Aggregate(Vector3Int.zero, (total, c) => total + c.Position);
             var count = Cubes.Count;
             return sum / count;
@@ -73,6 +85,15 @@ namespace ShapeGrammar
         CubeGroup(Grid<Cube> grid, List<Cube> cubes, Constructor constr) : this(grid, cubes)
         {
             Constr = constr;
+        }
+
+        public CubeGroup AssertNonEmpty()
+        {
+            if (!Cubes.Any())
+            {
+                throw new GroupEmptyException();
+            }
+            return this;
         }
 
         public CubeGroup OpAdd()
@@ -108,6 +129,9 @@ namespace ShapeGrammar
         public bool AllAreNotTaken() => Cubes.All(cube => !cube.Changed);
         public CubeGroup NotTaken() => Cubes.Where(cube => !cube.Changed).ToCubeGroup(Grid);
 
+        /// <summary>
+        /// Returns all cubes that don't have neighbor in given direction in this group.
+        /// </summary>
         public CubeGroup CubeGroupLayer(Vector3Int dir)
         {
             return new CubeGroup(Grid, Cubes.Where(cube => !Cubes.Contains(Grid[cube.Position + dir])).ToList());
@@ -120,6 +144,7 @@ namespace ShapeGrammar
 
         IEnumerable<Cube> CubesMaxLayer(Vector3Int dir)
         {
+            AssertNonEmpty();
             var max = Cubes.Max(cube => Vector3.Dot(cube.Position, dir));
             return Cubes.Where(cube => Vector3.Dot(cube.Position, dir) == max);
         }
@@ -132,7 +157,7 @@ namespace ShapeGrammar
 
         public CubeGroup MoveInDirUntil(Vector3Int dir, Func<Cube, bool> stopPred)
         {
-            var validCubes = Cubes.SelectMany(corner => corner.MoveInDirUntil(dir, stopPred));
+            var validCubes = Cubes.SelectMany(cube => cube.MoveInDirUntil(dir, stopPred));
             return new CubeGroup(Grid, validCubes.ToList());
         }
 
@@ -147,11 +172,11 @@ namespace ShapeGrammar
         }
 
         public CubeGroup Where(Func<Cube, bool> pred) => new CubeGroup(Grid, Cubes.Where(pred).ToList());
-        public CubeGroup Select3(Func<Cube, Cube, Cube, bool> pred) => new CubeGroup(Grid, Cubes.Where3(pred).ToList());
+        public CubeGroup Where3(Func<Cube, Cube, Cube, bool> pred) => new CubeGroup(Grid, Cubes.Where3(pred).ToList());
         /// <summary>
         /// Includes first and last element.
         /// </summary>
-        public CubeGroup Where3Cycle(Func<Cube, Cube, Cube, bool> pred) => new CubeGroup(Grid, Cubes.Where3(pred).Prepend(Cubes.FirstOrDefault()).Append(Cubes.LastOrDefault()).ToList());
+        public CubeGroup Where3All(Func<Cube, Cube, Cube, bool> pred) => new CubeGroup(Grid, Cubes.Where3(pred).Prepend(Cubes.FirstOrDefault()).Append(Cubes.LastOrDefault()).ToList());
         public CubeGroup Minus(CubeGroup group) => new CubeGroup(Grid, Cubes.Except(group.Cubes).ToList(), Constr);
 
         public IEnumerable<Vector3Int> MinkowskiMinus(CubeGroup grp) => 
@@ -246,6 +271,7 @@ namespace ShapeGrammar
         /// </summary>
         public IEnumerable<CubeGroup> Split(Vector3Int dir, params int[] dists)
         {
+            AssertNonEmpty();
             var min = Cubes.Min(cube => cube.Position.Dot(dir));
             var split = from cube in Cubes
                    group cube by dists.IndexOfInterval((cube.Position.Dot(dir) - min)) into splitGroup
@@ -398,12 +424,12 @@ namespace ShapeGrammar
         }
 
         /// <summary>
-        /// Finishes after time invocations.
+        /// Finishes after time + 1 invocations.
         /// </summary>
         Func<Cube, bool> CountdownMaker(int time)
         {
-            var countdown = new Countdown(time);
-            return cube => countdown.Tick();
+            var countdown = new EventsCountdown(time + 1);
+            return cube => countdown.Finished(true);
         }
 
         public CubeGroup Extrude(int dist, bool takeChanged = true)

@@ -12,8 +12,4 @@ namespace Assets.ShapeGrammarGenerator.ShapeGrammar
         {
         }
     }
-
-    class SearchFailedException : Exception
-    {
-    }
 }

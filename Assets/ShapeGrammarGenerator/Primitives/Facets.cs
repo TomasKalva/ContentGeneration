@@ -37,7 +37,7 @@ namespace ShapeGrammar
         public FacetT MoveBy<FacetT>(Vector3Int offset) where FacetT : Facet
         {
             var offsetCube = MyCube.MoveBy(offset);
-            return (FacetT)offsetCube?.Facets[Direction];
+            return (FacetT)offsetCube.Facets[Direction];
         }
 
         public IEnumerable<FacetT> MoveInDirUntil<FacetT>(Grid<Cube> gridView, Vector3Int dir, Func<FacetT, bool> stopPred) where FacetT : Facet

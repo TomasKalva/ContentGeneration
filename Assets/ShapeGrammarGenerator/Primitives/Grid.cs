@@ -132,7 +132,7 @@ namespace ShapeGrammar
                 }
                 cube.CreateGeometry(cubeSide, world);
             }
-            //((IEnumerable<Cube>)this).ForEach(i => i.CreateGeometry(cubeSide, world));
+            
             var interactiveArchitecture = world.ArchitectureParent.GetComponentsInChildren<InteractiveObject>().Select(io => io.State);
             interactiveArchitecture.ForEach(el => world.AddInteractivePersistentObject(el));
         }
@@ -288,7 +288,7 @@ namespace ShapeGrammar
         public CubeGroup GetRandomHorConnected1(CubeGroup start, CubeGroup boundingGroup)
         {
             var possibleCubes = start.AllBoundaryFacesH().Extrude(1).Cubes.Intersect(boundingGroup.Cubes);
-            if (possibleCubes.Count() == 0)
+            if (!possibleCubes.Any())
                 return start;
             var newCube = possibleCubes.GetRandom();
             return new CubeGroup(QueriedGrid, start.Cubes.Append(newCube).ToList());
@@ -297,7 +297,7 @@ namespace ShapeGrammar
         public CubeGroup ExtrudeRandomly(CubeGroup start, float keptRatio)
         {
             var possibleCubes = start.AllBoundaryFacesH().Extrude(1).Cubes;
-            if (possibleCubes.Count() == 0)
+            if (!possibleCubes.Any())
                 return start;
             var newCubes = possibleCubes.Shuffle().Take((int)(keptRatio * possibleCubes.Count()));
             return new CubeGroup(QueriedGrid, start.Cubes.Concat(newCubes).ToList());

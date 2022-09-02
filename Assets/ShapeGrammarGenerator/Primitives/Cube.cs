@@ -101,7 +101,7 @@ namespace ShapeGrammar
         public IEnumerable<Cube> MoveInDirUntil(Vector3Int dir, Func<Cube, bool> stopPred)
         {
             var ray = new Ray3Int(Position, dir);
-            var validCubes = ray.TakeWhile(v => Grid[v] != null && !stopPred(Grid[v])).Select(v => Grid[v]);
+            var validCubes = ray.TakeWhile(v => !stopPred(Grid[v])).Select(v => Grid[v]);
             return validCubes;
         }
 

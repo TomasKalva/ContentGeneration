@@ -105,8 +105,8 @@ namespace ShapeGrammar
 
         public CubeGroup ConnectByPath(CubeGroup startGroup, CubeGroup endGroup, Neighbors<PathNode> neighbors)
         {
-            Debug.Assert(startGroup.Cubes.Count > 0);
-            Debug.Assert(endGroup.Cubes.Count > 0);
+            startGroup.AssertNonEmpty();
+            endGroup.AssertNonEmpty();
 
             // create graph for searching for the path
             var graph = new ImplicitGraph<PathNode>(neighbors);

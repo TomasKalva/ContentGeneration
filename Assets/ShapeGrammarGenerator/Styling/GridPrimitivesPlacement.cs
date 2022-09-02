@@ -174,7 +174,7 @@ namespace ShapeGrammar
         public CubeGroup StairsPathStyle(GridPrimitivesStyle gpStyle, CubeGroup path)
         {
             // find cubes with floor
-            var floorCubes = path.Where3Cycle(
+            var floorCubes = path.Where3All(
                 (prev, cube, next) => 
                 {
                     var verDirTo = cube.Position.y - prev.Position.y;
