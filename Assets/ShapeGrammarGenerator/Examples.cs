@@ -260,11 +260,6 @@ namespace ShapeGrammar
             return CurveDesign.CreateLevel();
         }
         */
-        public LevelElement ShapeGrammarDesign()
-        {
-            var ShapeGrammarLevelDesign = new ShapeGrammarLevelDesign(this);
-            return ShapeGrammarLevelDesign.CreateLevel();
-        }
 
         /*
         public LevelElement LanguageDesign(Libraries lib, World world)
