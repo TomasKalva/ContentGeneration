@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System;
 using System.Linq;
+using Assets.Characters.Items.ItemClasses;
 
 namespace ContentGeneration.Assets.UI.Model
 {

@@ -99,7 +99,7 @@ public class Enemies : ScriptableObject
         sculpture.Poise = 10f;
 
         // inventory
-        sculpture.AddAndEquipItem( new FreeWill());
+        sculpture.AddAndEquipItem(Lib.Items.FreeWill());
         sculpture.Inventory.LeftWeapon.Item = Lib.Items.SculptureClub();
         sculpture.Inventory.RightWeapon.Item = Lib.Items.SculptureClub();
 
@@ -126,7 +126,7 @@ public class Enemies : ScriptableObject
         mayan.Poise = 10f;
 
         // inventory
-        mayan.AddAndEquipItem(new FreeWill());
+        mayan.AddAndEquipItem(Lib.Items.FreeWill());
         mayan.Inventory.LeftWeapon.Item = Lib.Items.MayanSword();
         mayan.Inventory.RightWeapon.Item = Lib.Items.MayanKnife();
 
@@ -151,7 +151,7 @@ public class Enemies : ScriptableObject
         mayan.Poise = 10f;
 
         // inventory
-        mayan.AddAndEquipItem(new FreeWill());
+        mayan.AddAndEquipItem(Lib.Items.FreeWill());
         mayan.Inventory.LeftWeapon.Item = Lib.Items.MayanSword();
         mayan.Inventory.RightWeapon.Item = Lib.Items.MayanKnife();
 
@@ -177,7 +177,7 @@ public class Enemies : ScriptableObject
         skinnyWoman.Poise = 10f;
 
         // inventory
-        skinnyWoman.AddAndEquipItem(new FreeWill());
+        skinnyWoman.AddAndEquipItem(Lib.Items.FreeWill());
         skinnyWoman.Inventory.LeftWeapon.Item = Lib.Items.MayanSword();
         skinnyWoman.Inventory.RightWeapon.Item = Lib.Items.MayanSword();
 
@@ -218,7 +218,7 @@ public class Enemies : ScriptableObject
         dragonMan.Poise = 10f;
 
         // inventory
-        dragonMan.AddAndEquipItem(new FreeWill());
+        dragonMan.AddAndEquipItem(Lib.Items.FreeWill());
         dragonMan.Inventory.LeftWeapon.Item = Lib.Items.MayanSword();
         dragonMan.Inventory.RightWeapon.Item = Lib.Items.MayanSword();
 
@@ -241,7 +241,7 @@ public class Enemies : ScriptableObject
         dog.Poise = 10f;
 
         // inventory
-        dog.AddAndEquipItem(new FreeWill());
+        dog.AddAndEquipItem(Lib.Items.FreeWill());
         dog.Inventory.LeftWeapon.Item = Lib.Items.MayanSword();
 
         return dog;

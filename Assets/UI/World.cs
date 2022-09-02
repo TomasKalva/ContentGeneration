@@ -216,4 +216,25 @@ namespace ContentGeneration.Assets.UI
 
         }
     }
+    public class WorldGeometry
+    {
+        public Transform WorldParent { get; }
+        public float WorldScale { get; }
+
+        public WorldGeometry(Transform worldParent, float worldScale)
+        {
+            this.WorldParent = worldParent;
+            this.WorldScale = worldScale;
+        }
+
+        public Vector3 GridToWorld(Vector3 gridPos)
+        {
+            return WorldParent.position + WorldScale * gridPos;
+        }
+
+        public Vector3 WorldToGrid(Vector3 worldPos)
+        {
+            return (worldPos - WorldParent.position) / WorldScale;
+        }
+    }
 }

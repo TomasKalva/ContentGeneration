@@ -1,3 +1,5 @@
+using Assets.Characters.Items;
+using Assets.Characters.Items.ItemClasses;
 using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using ContentGeneration.Assets.UI.Model;
 using System;
@@ -39,8 +41,6 @@ public class Items : ScriptableObject
     {
         Effects = effects;
     }
-
-    public ItemState FreeWill() => new FreeWill();
 
     /// <summary>
     /// Good push force values between 1 and 10.
@@ -185,6 +185,20 @@ public class Items : ScriptableObject
         Dew,
         HoneyBall
     };
+
+
+    public AccessoryItem FreeWill() => new AccessoryItem("Free Will", "Costs nothing", accessories.Circle)
+        .OnUpdate(
+        character =>
+            {
+                if (character.Agent != null &&
+                    !character.Agent.acting.Busy)
+                {
+                    character.Stamina += ExtensionMethods.PerFixedSecond(2f);
+                }
+            }
+        )
+        .SetWearable(SlotType.Head) as AccessoryItem;
 
     public ItemState NewItem(string name, string description) => 
         new ItemState() 

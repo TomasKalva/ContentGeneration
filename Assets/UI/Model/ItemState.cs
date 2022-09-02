@@ -367,12 +367,12 @@ namespace ContentGeneration.Assets.UI.Model
 
             public override InventorySlot EquipToFree(Inventory inventory, InventorySlot currentSlot)
             {
-                return inventory.MoveFromSlotToSlots(currentSlot, inventory.WearableSlots.Where(slot => slot.SlotType == SlotType));
+                return inventory.MoveFromSlotToSlots(currentSlot, inventory.EquipmentSlots.Where(slot => slot.SlotType == SlotType));
             }
 
             public override InventorySlot EquipToPosition(Inventory inventory, InventorySlot currentSlot, int slotId)
             {
-                var newSlot = inventory.WearableSlots.FirstOrDefault(slot => slot.SlotType == SlotType && slot.SlotId == slotId);
+                var newSlot = inventory.EquipmentSlots.FirstOrDefault(slot => slot.SlotType == SlotType && slot.SlotId == slotId);
                 if(newSlot == null)
                 {
                     return null;

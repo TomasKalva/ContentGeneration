@@ -138,13 +138,13 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
-        ObservableCollection<InventorySlot> _equipedSlots;
-        public ObservableCollection<InventorySlot> WearableSlots
+        ObservableCollection<InventorySlot> _equipmentSlots;
+        public ObservableCollection<InventorySlot> EquipmentSlots
         {
-            get => _equipedSlots;
+            get => _equipmentSlots;
             private set
             {
-                _equipedSlots = value;
+                _equipmentSlots = value;
                 PropertyChanged.OnPropertyChanged(this);
             }
         }
@@ -195,7 +195,7 @@ namespace ContentGeneration.Assets.UI.Model
                 ActiveSlots.Add(new InventorySlot(character, SlotType.Active, i));
             }
 
-            WearableSlots = new ObservableCollection<InventorySlot>() 
+            EquipmentSlots = new ObservableCollection<InventorySlot>() 
             { 
                 new InventorySlot(character, SlotType.Weapon, 0),
                 new InventorySlot(character, SlotType.Weapon, 1),
@@ -205,7 +205,7 @@ namespace ContentGeneration.Assets.UI.Model
                 new InventorySlot(character, SlotType.Heart, 0),
             };
 
-            AllSlots = WearableSlots.Concat(ActiveSlots).Concat(PassiveSlots).ToList();
+            AllSlots = EquipmentSlots.Concat(ActiveSlots).Concat(PassiveSlots).ToList();
         }
 
         public InventorySlot AvailableSlot(IEnumerable<InventorySlot> slots)
@@ -300,7 +300,7 @@ namespace ContentGeneration.Assets.UI.Model
 
         public void Update()
         {
-            var activeItems = from slot in ActiveSlots where slot.Item != null select slot.Item;
+            var activeItems = from slot in ActiveSlots.Concat(EquipmentSlots) where slot.Item != null select slot.Item;
             foreach (var item in activeItems)
             {
                 item.OnUpdateDelegate(character);

@@ -1,4 +1,5 @@
-﻿using Assets.Util;
+﻿using Assets.Characters.Items.ItemClasses;
+using Assets.Util;
 using ContentGeneration.Assets.UI.Model;
 using ContentGeneration.Assets.UI.Util;
 using ShapeGrammar;
