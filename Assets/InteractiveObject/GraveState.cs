@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public class Grave : InteractiveObjectState<InteractiveObject>
+public class GraveState : InteractiveObjectState<InteractiveObject>
 {
     AgentSpawner PlayerSpawner => IntObj.GetComponentInChildren<AgentSpawner>();
     

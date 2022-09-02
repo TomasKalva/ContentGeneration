@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using System;
 using System.Linq;
 using Assets.Characters.Items.ItemClasses;
+using Assets.Characters.SpellClasses;
 
 namespace ContentGeneration.Assets.UI.Model
 {

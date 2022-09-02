@@ -101,4 +101,44 @@ namespace Assets.Characters.SpellClasses
 
     public delegate SelectorByUser SelectorByArgsByUser(SelectorArgs args);
 
+    public enum DamageType
+    {
+        Physical,
+        Chaos,
+        Dark,
+        Divine
+    }
+
+    public struct DamageDealt
+    {
+        public DamageType Type;
+        public float Amount;
+
+        public DamageDealt(DamageType type, float amount)
+        {
+            Type = type;
+            Amount = amount;
+        }
+    }
+
+    public class Defense
+    {
+        public DamageType Type;
+        public float ReductionPercentage;
+
+        public Defense(DamageType type, float reductionPercentage)
+        {
+            Type = type;
+            ReductionPercentage = reductionPercentage;
+        }
+
+        public DamageDealt DamageAfterDefense(DamageDealt incomingDamage)
+        {
+            return incomingDamage.Type == Type ?
+                // Reduce damage if it has the same type
+                new DamageDealt(incomingDamage.Type, incomingDamage.Amount * (1f - 0.01f * ReductionPercentage)) :
+                // Return the same damage otherwise
+                incomingDamage;
+        }
+    }
 }

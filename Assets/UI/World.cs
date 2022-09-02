@@ -38,7 +38,7 @@ namespace ContentGeneration.Assets.UI
         List<Transform> architectureElements;
         public PlayerCharacterState PlayerState { get; }
         OccurenceManager Occurences { get; set; }
-        public Grave Grave { get; set; }
+        public GraveState Grave { get; set; }
 
         //public delegate void WorldCreated();
         //public static event WorldCreated OnCreated;

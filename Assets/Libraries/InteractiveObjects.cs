@@ -36,9 +36,9 @@ public class InteractiveObjects : ScriptableObject
     [SerializeField]
     Transform farmer;
 
-    public Grave Grave()
+    public GraveState Grave()
     {
-        var grave = new Grave()
+        var grave = new GraveState()
         {
             Name = "Grave",
             GeometryMaker = Geometry<InteractiveObject>(gravePrefab)

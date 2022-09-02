@@ -24,14 +24,6 @@ namespace ContentGeneration.Assets.UI.Model
         Heart
     }
     
-    static class SlotTypeExtensions
-    {
-        public static bool IsWeapon(this SlotType slotType)
-        {
-            return slotType == SlotType.Weapon;
-        }
-    }
-
     public class InventorySlot : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -375,7 +367,7 @@ namespace ContentGeneration.Assets.UI.Model
         /// </summary>
         public void MoveCursor(int x, int _)
         {
-            // todo: remove the y argument
+            // todo: remove the _ argument
             if(!Active)
                 return;
 
@@ -428,8 +420,6 @@ namespace ContentGeneration.Assets.UI.Model
 
     public class EnemyInventory : Inventory
     {
-        InventorySlot EmptySlot => ActiveSlots.Where(slot => slot.Item == null).FirstOrDefault();
-
         public EnemyInventory(CharacterState character) : base(character)
         {
         }
