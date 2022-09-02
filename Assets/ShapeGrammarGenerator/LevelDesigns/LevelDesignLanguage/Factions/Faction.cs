@@ -187,87 +187,8 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         }
     }
 
-    class UniqueNameGenerator
-    {
-        Dictionary<string, int> AlreadyGenerated { get; }
-
-        public UniqueNameGenerator()
-        {
-            AlreadyGenerated = new Dictionary<string, int>();
-        }
-
-        public string GenerateUniqueName(List<string> adjectives, List<string> nouns)
-        {
-            int c = 100;
-            string generated = "";
-            while (c-- >= 0)
-            {
-                generated = $"{adjectives.GetRandom()} {nouns.GetRandom()}";
-                if (!AlreadyGenerated.ContainsKey(generated))
-                {
-                    AlreadyGenerated.Add(generated, 0);
-                    return generated;
-                }
-            }
-            var n = ++AlreadyGenerated[generated];
-            return $"{generated} {n}";
-        }
-
-        public string UniqueName(string str)
-        {
-            if (AlreadyGenerated.TryGetValue(str, out var value))
-            {
-                AlreadyGenerated[str]++;
-                return $"{str} {value}";
-            }
-            else
-            {
-                AlreadyGenerated.Add(str, 1);
-                return str;
-            }
-        }
-    }
 
     delegate ByUser<Effect> EffectByFactionEnvironmentByUser(FactionEnvironment factionEnv);
-
-    /*
-    class FactionScalingEffectLibrary
-    {
-        public List<Annotated<EffectByFactionEnvironmentByUser>> EffectsByUser { get; }
-
-        float EffectPower(FactionEnvironment factionEnv, CharacterState user)
-        {
-            var affinity = factionEnv.FactionManifestation.Faction.Affinity;
-            var manifProgress = factionEnv.FactionManifestation.Progress;
-            var vers = user.Stats.Versatility;
-            return affinity + 7 * manifProgress + vers;
-        }
-
-        Annotated<EffectByFactionEnvironmentByUser> FromPower(string name, string description, Func<float, Effect> powerToEffect)
-        {
-
-            return new Annotated<EffectByFactionEnvironmentByUser>(name, description, faction => user =>
-            {
-                var power = EffectPower(faction, user);
-                return powerToEffect(power);
-            });
-        }
-
-        public FactionScalingEffectLibrary(EffectLibrary eff)
-        {
-            EffectsByUser = new List<Annotated<EffectByFactionEnvironmentByUser>>()
-            {
-                FromPower("Heal", "heals", p => eff.Heal(5f + 5f * p)),
-                FromPower("Chaos", "gives chaos damage", p => eff.Damage(new DamageDealt(DamageType.Chaos, 10f + 5f * p))),
-                FromPower("Dark", "gives dark damage", p => eff.Damage(new DamageDealt(DamageType.Dark, 10f + 5f * p))),
-                FromPower("Divine", "gives divine damage", p => eff.Damage(new DamageDealt(DamageType.Divine, 10f + 5f * p))),
-                FromPower("Give spirit", "gives spirit to", p => eff.GiveSpirit(10f + 2f * p)),
-                FromPower("Bleed", "applies bleeding to", p => eff.Bleed(5f + 2f * p, 2f)),
-                FromPower("Boost stamina regeneration", "boosts stamina regeneration to", p => eff.BoostStaminaRegen(5f + 2f * p, 2f)),
-                FromPower("Regenerate health", "regenerates health to", p => eff.RegenerateHealth(5f + 2f * p, 2f)),
-            };
-        }
-    }*/
 
     class ScalingCharacterStats
     {

@@ -11,6 +11,8 @@ using ContentGeneration.Assets.UI;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 using static ShapeGrammar.AsynchronousEvaluator;
+using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules;
+using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage;
 
 namespace ShapeGrammar
 {
