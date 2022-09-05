@@ -474,7 +474,7 @@ namespace ShapeGrammar
                             .Set(() => leF()
                                 .MoveBottomTo(bottomHeight)
                                 .MovesToNotIntersectXZ(state.WorldState.Added.LevelElements)
-                                .TryMove(1)
+                                .TryMove(1)?
                                 .GN(newSymbol, sym.FullFloorMarker))
                             .CurrentFirst(out var first)
                             .PlaceCurrentFrom(state.Root)
@@ -720,7 +720,7 @@ namespace ShapeGrammar
                                     var validMoves = createdRoom.MoveBottomTo(0)
                                         .MovesToIntersect(boundingBox.LE).XZ()
                                         .DontIntersect(state.VerticallyTaken);
-                                    return pathGuide.SelectMove(validMoves).TryMove().GN();
+                                    return pathGuide.SelectMove(validMoves).TryMove()?.GN();
                                 })
                                 .Change(
                                     newRoomDown => newRoomDown.LE.MoveBottomTo(whatCG.LeftBottomBack().y).GN(to, sym.FullFloorMarker)
