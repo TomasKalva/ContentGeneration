@@ -21,8 +21,6 @@ namespace ShapeGrammar
         {
             NecessaryEvents = new PriorityPoolLevelConstructionEvent();
             PossibleEvents = new RoundRobinPoolLevelConstructionEvent(3);
-            /*LevelConstructionEvents = new List<LevelConstructionEvent>();
-            NewEvents = new List<LevelConstructionEvent>();*/
             Level = 0;
         }
 
@@ -48,24 +46,24 @@ namespace ShapeGrammar
         /// <summary>
         /// Returns true iff construction was success.
         /// </summary>
-        public bool TryConstruct()
+        public void Construct()
         {
             var oldNecessaryPool = NecessaryEvents;
             var oldPossiblePool = PossibleEvents;
             NecessaryEvents = new PriorityPoolLevelConstructionEvent();
             PossibleEvents = new RoundRobinPoolLevelConstructionEvent(3);
-            bool necessaryOk = oldNecessaryPool.TryConstruct(ev => AddNecessaryEvent(ev), Level);
-            bool possibleOk = oldPossiblePool.TryConstruct(ev => AddPossibleEvent(ev), Level);
-            if (necessaryOk && possibleOk)
+            try
             {
+                oldNecessaryPool.Construct(ev => AddNecessaryEvent(ev), Level);
+                oldPossiblePool.Construct(ev => AddPossibleEvent(ev), Level);
                 Level++;
             }
-            else
+            catch(Exception ex)
             {
                 NecessaryEvents = oldNecessaryPool;
                 PossibleEvents = oldPossiblePool;
+                throw ex;
             }
-            return necessaryOk;
         }
     }
 
@@ -98,7 +96,7 @@ namespace ShapeGrammar
     
     public abstract class LevelConstructionEventPool
     {
-        public abstract bool TryConstruct(Action<LevelConstructionEvent> reAddPersistent, int level);
+        public abstract void Construct(Action<LevelConstructionEvent> reAddPersistent, int level);
     }
 
     public class PriorityPoolLevelConstructionEvent : LevelConstructionEventPool
@@ -118,27 +116,18 @@ namespace ShapeGrammar
             LevelConstructionEvents.Add(levelConstructionEvent);
         }
 
-        public override bool TryConstruct(Action<LevelConstructionEvent> reAddPersistent, int level)
+        public override void Construct(Action<LevelConstructionEvent> reAddPersistent, int level)
         {
-            try
+            LevelConstructionEvents.OrderBy(ev => -ev.Priority).ForEach(ev =>
             {
-                LevelConstructionEvents.OrderBy(ev => -ev.Priority).ForEach(ev =>
+                Debug.Log($"Starting: {ev.Name}");
+                ev.Handle(level);
+                if (ev.Persistent)
                 {
-                    Debug.Log($"Starting: {ev.Name}");
-                    ev.Handle(level);
-                    if (ev.Persistent)
-                    {
-                        reAddPersistent(ev);
-                    }
-                    Debug.Log($"Finished: {ev.Name}");
-                });
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Debug.Log(ex.Message);
-                return false;
-            }
+                    reAddPersistent(ev);
+                }
+                Debug.Log($"Finished: {ev.Name}");
+            });
         }
     }
 
@@ -164,33 +153,24 @@ namespace ShapeGrammar
             LevelConstructionEvents.Add(levelConstructionEvent);
         }
 
-        public override bool TryConstruct(Action<LevelConstructionEvent> reAddPersistent, int level)
+        public override void Construct(Action<LevelConstructionEvent> reAddPersistent, int level)
         {
-            try
+            var toExecute = LevelConstructionEvents.Where(ev => ev.Condition()).Take(MaxEvents);
+            var toKeep = LevelConstructionEvents.Except(toExecute);
+
+            toKeep.ForEach(ev => reAddPersistent(ev));
+
+            toExecute.ForEach(ev =>
             {
-                var toExecute = LevelConstructionEvents.Where(ev => ev.Condition()).Take(MaxEvents);
-                var toKeep = LevelConstructionEvents.Except(toExecute);
-
-                toKeep.ForEach(ev => reAddPersistent(ev));
-
-                toExecute.ForEach(ev =>
+                Debug.Log($"Starting: {ev.Name}");
+                ev.Handle(level);
+                if (ev.Persistent)
                 {
-                    Debug.Log($"Starting: {ev.Name}");
-                    ev.Handle(level);
-                    if (ev.Persistent)
-                    {
-                        reAddPersistent(ev);
+                    reAddPersistent(ev);
 
-                    }
-                    Debug.Log($"Finished: {ev.Name}");
-                });
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Debug.Log(ex.Message);
-                return false;
-            }
+                }
+                Debug.Log($"Finished: {ev.Name}");
+            });
         }
     }
 }

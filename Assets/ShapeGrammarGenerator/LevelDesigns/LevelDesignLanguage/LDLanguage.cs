@@ -73,7 +73,19 @@ namespace ShapeGrammar
                 State.Restart();
                 yield return TaskSteps.One();
 
-                var constructingTask = Task<bool>.Factory.StartNew(() => State.LC.TryConstruct());
+                var constructingTask = Task<bool>.Factory.StartNew(() =>
+                {
+                    try
+                    {
+                        State.LC.Construct();
+                        State.CalculateObjectsPositions();
+                        return true;
+                    }
+                    catch(Exception ex)
+                    {
+                        return false;
+                    }
+                });
                 while (!constructingTask.IsCompleted)
                 {
                     yield return TaskSteps.One();

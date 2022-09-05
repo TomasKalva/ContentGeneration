@@ -42,13 +42,20 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             World = CreateWorld();
         }
 
+        public void CalculateObjectsPositions()
+        {
+            foreach (var area in TraversableAreas)
+            {
+                area.CalculatePositions(World);
+            }
+        }
+
         public IEnumerable<TaskSteps> InstantiateAreas()
         {
             foreach (var area in TraversableAreas)
             {
                 yield return TaskSteps.Multiple(area.InstantiateAll(World));
             }
-            //TraversableAreas.ForEach(area => area.InstantiateAll(World));
         }
 
         public void AddAreas(List<Area> areas)

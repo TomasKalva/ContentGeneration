@@ -1,4 +1,5 @@
-﻿using ContentGeneration.Assets.UI;
+﻿using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage;
+using ContentGeneration.Assets.UI;
 using ContentGeneration.Assets.UI.Model;
 using ContentGeneration.Assets.UI.Util;
 using System;
@@ -62,24 +63,83 @@ namespace ShapeGrammar
             EnemyStates.Add(enemy);
         }
 
-        void CreateInteractiveObject(World world, InteractiveObjectState ios, Vector3Int position)
+        void ThrowPlacementException(string objectName)
+        {
+            throw new PlacementException($"{objectName} can't be placed to {Node.Print(new PrintingState()).ToString()}");
+        }
+
+        public void CalculatePositions(World world)
+        {
+            var grid = L.State.Ldk.grid;
+
+            var paths = L.State.TraversabilityGraph.Connections.Select(areasConnection => areasConnection.Path.LE.CG());
+            var pathEnds = paths.SelectMany(path => PathNode.FindPathEndsInFloor(Node.LE.CG().WithFloor(), paths));
+
+            var unoccupiedFloor = Node.LE.CG().WithFloor().Cubes.Except(pathEnds);
+            var flooredCubes = new Holder<Cube>(unoccupiedFloor);
+
+            var worldGeometry = world.WorldGeometry;
+
+            var blockingIos = InteractiveObjectStates.Where(ios => ios.IsBlocking);
+            var notBlockingIos = InteractiveObjectStates.Except(blockingIos);
+
+            // Place blocking objects
+            foreach (var ios in blockingIos)
+            {
+                var validCube = flooredCubes.TryTakeRandom(
+                    cube => PathNode.IsConnected(
+                        flooredCubes.Rest().Except(cube.ToEnumerable()).ToCubeGroup(grid),
+                        pathEnds));
+
+                if(validCube == null)
+                {
+                    ThrowPlacementException($"Blocking interactive object {ios.Name}");
+                }
+
+                ios.Position = world.WorldGeometry.GridToWorld(validCube.Position);
+            }
+
+            // Place not blocking objects
+            foreach (var ios in notBlockingIos)
+            {
+                if (!flooredCubes.Any())
+                {
+                    ThrowPlacementException($"Interactive object {ios.Name}");
+                }
+
+                var position = flooredCubes.TryTakeRandom().Position;
+                ios.Position = world.WorldGeometry.GridToWorld(position);
+            }
+
+            foreach (var enemy in EnemyStates)
+            {
+                if (!flooredCubes.Any())
+                {
+                    ThrowPlacementException($"Enemy");
+                }
+                var position = flooredCubes.TryTakeRandom().Position;
+                enemy.Position = world.WorldGeometry.GridToWorld(position);
+            }
+        }
+
+        void CreateInteractiveObject(World world, InteractiveObjectState ios)
         {
             if (!ios.CanBeCreated())
                 return;
 
             ios.MakeGeometry();
-            ios.InteractiveObject.transform.position = world.WorldGeometry.GridToWorld(position);
+            ios.InteractiveObject.transform.position = ios.Position;
 
             world.AddInteractiveObject(ios);
         }
 
-        void CreateEnemy(World world, CharacterState enemy, Vector3Int position)
+        void CreateEnemy(World world, CharacterState enemy)
         {
             if (!enemy.CanBeCreated())
                 return;
 
             enemy.MakeGeometry();
-            enemy.Agent.transform.position = world.WorldGeometry.GridToWorld(position);
+            enemy.Agent.transform.position = enemy.Position;
             AddWaitForPlayerBehavior(world, enemy.Agent);
 
             world.AddEnemy(enemy);
@@ -87,61 +147,17 @@ namespace ShapeGrammar
 
         public IEnumerable<TaskSteps> InstantiateAll(World world)
         {
-            //var flooredCubes = new Stack<Cube>(Node.LE.CG().WithFloor().Cubes.Shuffle());
-
-            var grid = L.State.Ldk.grid;
-
-            var paths = L.State.TraversabilityGraph.Connections.Select(areasConnection => areasConnection.Path.LE.CG());
-            var pathEnds = paths.SelectMany(path => PathNode.FindPathEndsInFloor(Node.LE.CG().WithFloor(), paths));
-
-            yield return TaskSteps.One();
-
-            var unoccupiedFloor = Node.LE.CG().WithFloor().Cubes.Except(pathEnds);
-            var flooredCubes = new Holder<Cube>(unoccupiedFloor);
-
-            var worldGeometry = world.WorldGeometry;
-
-            yield return TaskSteps.One();
-
-            var blockingIos = InteractiveObjectStates.Where(ios => ios.IsBlocking);
-            var notBlockingIos = InteractiveObjectStates.Except(blockingIos);
-
-            yield return TaskSteps.One();
-
-            // Place blocking objects
-            foreach(var ios in blockingIos)
+            // Instantiate interactive objects
+            foreach(var ios in InteractiveObjectStates)
             {
-                var validCube = flooredCubes.TakeRandom(
-                    cube => PathNode.IsConnected(
-                        flooredCubes.Rest().Except(cube.ToEnumerable()).ToCubeGroup(grid),
-                        pathEnds));
-
-                CreateInteractiveObject(world, ios, validCube.Position);
+                CreateInteractiveObject(world, ios);
                 yield return TaskSteps.One();
             }
 
-            // Place not blocking objects
-            foreach(var ios in notBlockingIos)
-            {
-                if (!flooredCubes.Any())
-                {
-                    Debug.LogError("Not enough empty cubes");
-                    break;
-                }
-
-                CreateInteractiveObject(world, ios, flooredCubes.TakeRandom().Position);
-                yield return TaskSteps.One();
-            }
-
+            // Instantiate enemies
             foreach (var enemy in EnemyStates)
             {
-                if (!flooredCubes.Any())
-                {
-                    Debug.LogError("Not enough empty cubes");
-                    break;
-                }
-
-                CreateEnemy(world, enemy, flooredCubes.TakeRandom().Position);
+                CreateEnemy(world, enemy);
                 yield return TaskSteps.One();
             }
         }
@@ -186,10 +202,16 @@ namespace ShapeGrammar
         /// <summary>
         /// Returns random item statisfying the predicate and removes it.
         /// </summary>
-        public T TakeRandom(Func<T, bool> predicate = null)
+        public T TryTakeRandom(Func<T, bool> predicate = null)
         {
             predicate ??= _ => true;
-            var randT = _heldObjects.Where(predicate).ToList().GetRandom();
+            var satisfying = _heldObjects.Where(predicate).ToList();
+            if (!satisfying.Any())
+            {
+                return default;
+            }
+
+            var randT = satisfying.GetRandom();
             _heldObjects.Remove(randT);
             return randT;
         }
