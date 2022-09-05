@@ -1,10 +1,12 @@
 ﻿using Assets.ShapeGrammarGenerator;
+using ContentGeneration.Assets.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using static ShapeGrammar.AsynchronousEvaluator;
 
 namespace ShapeGrammar
 {
@@ -42,6 +44,27 @@ namespace ShapeGrammar
 
             var newLe = AfterPushed(le);
             Added = Added.Merge(newLe);
+        }
+
+        public IEnumerable<TaskSteps> CreateGeometry(World world)
+        {
+            var cubeSide = world.WorldGeometry.WorldScale;
+            int iteration = 0;
+            //var iterChunks = Grid.chunks.Values.ToList();
+            foreach (var chunk in Grid.Chunks().ToList())
+            {
+                foreach (var cube in chunk)
+                {
+                    if (iteration++ % 10 == 0)
+                    {
+                        yield return TaskSteps.One();
+                    }
+                    cube.CreateGeometry(cubeSide, world);
+                }
+            }
+
+            var interactiveArchitecture = world.ArchitectureParent.GetComponentsInChildren<InteractiveObject>().Select(io => io.State);
+            interactiveArchitecture.ForEach(el => world.AddInteractivePersistentObject(el));
         }
     }
 }

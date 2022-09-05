@@ -19,6 +19,8 @@ namespace ShapeGrammar
 
         Dictionary<Vector3Int, T[,,]> chunks;
 
+        public IEnumerable<T[,,]> Chunks() => chunks.Values;
+
         public int Width => sizes.x;
         public int Height => sizes.y;
         public int Depth => sizes.z;
@@ -118,23 +120,6 @@ namespace ShapeGrammar
                     chunk[c.x, c.y, c.z] = Constr(this, lbb + c);
                 }
             }
-        }
-
-        public IEnumerable<TaskSteps> CreateGeometry(World world)
-        {
-            var cubeSide = world.WorldGeometry.WorldScale;
-            int iteration = 0;
-            foreach(var cube in ((IEnumerable<Cube>)this))
-            {
-                if(iteration++ % 10 == 0)
-                {
-                    yield return TaskSteps.One();
-                }
-                cube.CreateGeometry(cubeSide, world);
-            }
-            
-            var interactiveArchitecture = world.ArchitectureParent.GetComponentsInChildren<InteractiveObject>().Select(io => io.State);
-            interactiveArchitecture.ForEach(el => world.AddInteractivePersistentObject(el));
         }
     }
 

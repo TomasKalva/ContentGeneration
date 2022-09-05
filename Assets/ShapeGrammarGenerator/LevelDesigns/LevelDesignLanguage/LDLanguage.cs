@@ -96,7 +96,7 @@ namespace ShapeGrammar
             State.GrammarState.WorldState.Added.CreateGeometry(State.World);
             yield return TaskSteps.One();
 
-            yield return TaskSteps.Multiple(State.Ldk.grid.CreateGeometry(State.World));
+            yield return TaskSteps.Multiple(State.GrammarState.WorldState.CreateGeometry(State.World));
 
             yield return TaskSteps.One();
 
