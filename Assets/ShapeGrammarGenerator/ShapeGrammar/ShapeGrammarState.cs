@@ -126,7 +126,7 @@ namespace ShapeGrammar
                 le.CG().Cubes.ForEach(cube => cube.Changed = true);
                 return le.ApplyGrammarStyles();
             });
-            WorldState.TryPush(empty);
+            WorldState.Add(empty);
             OffersFoundation = new Grid<bool>(new Vector3Int(10, 1, 10), (_1, _2) => true);
             CubeToNode = new Grid<Node>(new Vector3Int(10, 10, 10), (_1, _2) => null);
             VerticallyTaken = LevelElement.Empty(grid);

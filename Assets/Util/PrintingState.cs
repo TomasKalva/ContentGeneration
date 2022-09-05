@@ -41,6 +41,11 @@ public class PrintingState
         return this;
     }
 
+    public override string ToString()
+    {
+        return sb.ToString();
+    }
+
     public void Show()
     {
         Debug.Log(sb.ToString());

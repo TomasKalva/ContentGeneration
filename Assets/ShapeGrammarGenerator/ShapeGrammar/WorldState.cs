@@ -33,20 +33,15 @@ namespace ShapeGrammar
             AfterPushed = afterPushed;
         }
 
-        public WorldState(LevelGroupElement added, LevelElement last, Grid<Cube> grid, Func<LevelElement, LevelElement> afterPushed)
-        {
-            Grid = grid;
-            Added = added;
-            AfterPushed = afterPushed;
-        }
-
-        public void TryPush(LevelElement le)
+        /// <summary>
+        /// Adds le to the world.
+        /// </summary>
+        public void Add(LevelElement le)
         {
             Debug.Assert(le != null, "Trying to add null level element to WorldState");
 
             var newLe = AfterPushed(le);
             Added = Added.Merge(newLe);
-            //return new WorldState(Added.Merge(newLe), newLe, Grid, AfterPushed);
         }
     }
 }
