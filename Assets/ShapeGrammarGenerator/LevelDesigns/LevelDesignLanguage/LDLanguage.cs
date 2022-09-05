@@ -2,6 +2,8 @@
 using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage;
 using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules;
+using Assets.ShapeGrammarGenerator.Primitives;
+using Assets.ShapeGrammarGenerator.ShapeGrammar;
 using ContentGeneration.Assets.UI;
 using ContentGeneration.Assets.UI.Model;
 using ContentGeneration.Assets.UI.Util;
@@ -81,8 +83,12 @@ namespace ShapeGrammar
                         State.CalculateObjectsPositions();
                         return true;
                     }
-                    catch(Exception ex)
+                    catch(Exception ex) when (
+                        ex is GridException ||
+                        ex is ShapeGrammarException ||
+                        ex is LevelDesignException)
                     {
+                        Debug.Log($"Construction failed: {ex.Message}");
                         return false;
                     }
                 });

@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage;
+using Assets.ShapeGrammarGenerator.Primitives;
+using Assets.ShapeGrammarGenerator.ShapeGrammar;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -58,7 +61,10 @@ namespace ShapeGrammar
                 oldPossiblePool.Construct(ev => AddPossibleEvent(ev), Level);
                 Level++;
             }
-            catch(Exception ex)
+            catch(Exception ex) when (
+                ex is GridException || 
+                ex is ShapeGrammarException || 
+                ex is LevelDesignException)
             {
                 NecessaryEvents = oldNecessaryPool;
                 PossibleEvents = oldPossiblePool;
