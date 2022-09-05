@@ -25,6 +25,8 @@ namespace ContentGeneration.Assets.UI.Model
 
         public bool IsBlocking { get; set; }
 
+        public Vector3 Position { get; set; }
+
 #if NOESIS
         InteractiveObject _interactiveObject;
         public InteractiveObject InteractiveObject 

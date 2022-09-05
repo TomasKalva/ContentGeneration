@@ -86,6 +86,7 @@ namespace ContentGeneration.Assets.UI.Model
         public World World { get; set; }
 
 #if NOESIS
+        public Vector3 Position { get; set; }
 
         public GeometryMaker<Agent> GeometryMaker { get; set; }
 

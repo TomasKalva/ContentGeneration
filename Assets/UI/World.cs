@@ -220,22 +220,24 @@ namespace ContentGeneration.Assets.UI
     public class WorldGeometry
     {
         public Transform WorldParent { get; }
+        public Vector3 ParentPosition { get; }
         public float WorldScale { get; }
 
         public WorldGeometry(Transform worldParent, float worldScale)
         {
             this.WorldParent = worldParent;
             this.WorldScale = worldScale;
+            ParentPosition = worldParent.position;
         }
 
         public Vector3 GridToWorld(Vector3 gridPos)
         {
-            return WorldParent.position + WorldScale * gridPos;
+            return ParentPosition + WorldScale * gridPos;
         }
 
         public Vector3 WorldToGrid(Vector3 worldPos)
         {
-            return (worldPos - WorldParent.position) / WorldScale;
+            return (worldPos - ParentPosition) / WorldScale;
         }
     }
 
