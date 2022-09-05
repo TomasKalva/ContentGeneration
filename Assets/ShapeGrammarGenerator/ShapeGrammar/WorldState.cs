@@ -8,53 +8,45 @@ using UnityEngine;
 
 namespace ShapeGrammar
 {
+    /// <summary>
+    /// Represents the nodes in the world.
+    /// </summary>
     public class WorldState
     {
-        public delegate WorldState ChangeWorld(WorldState state);
-
-        public LevelGroupElement Added { get; }
-        public LevelElement Last { get; }
+        /// <summary>
+        /// Contains all level elements created.
+        /// </summary>
+        public LevelGroupElement Added { get; private set; }
+        /// <summary>
+        /// Grid to which level elements are put.
+        /// </summary>
         public Grid<Cube> Grid { get; }
-        public delegate LevelElement TransformPushed(LevelElement levelElement);
-        public TransformPushed AfterPushed { get; }
+        /// <summary>
+        /// Transforms the level element before its added.
+        /// </summary>
+        public Func<LevelElement, LevelElement> AfterPushed { get; }
 
-        public WorldState(LevelElement last, Grid<Cube> grid, TransformPushed afterPushed)
+        public WorldState(LevelElement last, Grid<Cube> grid, Func<LevelElement, LevelElement> afterPushed)
         {
             Grid = grid;
             Added = new LevelGroupElement(grid, AreaStyles.None());
-            Last = last;
             AfterPushed = afterPushed;
         }
 
-        public WorldState(LevelGroupElement added, LevelElement last, Grid<Cube> grid, TransformPushed afterPushed)
+        public WorldState(LevelGroupElement added, LevelElement last, Grid<Cube> grid, Func<LevelElement, LevelElement> afterPushed)
         {
             Grid = grid;
             Added = added;
-            Last = last;
             AfterPushed = afterPushed;
         }
 
-        /*
-        public WorldState ChangeAll(IEnumerable<ChangeWorld> adders)
+        public void TryPush(LevelElement le)
         {
-            return adders.Aggregate(this,
-            (addingState, adder) =>
-            {
-                var newState = adder(addingState);
-
-                return newState.Last == null ? addingState : newState;
-            });
-        }*/
-
-        public WorldState TryPush(LevelElement le)
-        {
-            if (le == null)
-                return this;
+            Debug.Assert(le != null, "Trying to add null level element to WorldState");
 
             var newLe = AfterPushed(le);
-
-            //Debug.Log(newLe.Print(0));
-            return new WorldState(Added.Merge(newLe), newLe, Grid, AfterPushed);
+            Added = Added.Merge(newLe);
+            //return new WorldState(Added.Merge(newLe), newLe, Grid, AfterPushed);
         }
     }
 }

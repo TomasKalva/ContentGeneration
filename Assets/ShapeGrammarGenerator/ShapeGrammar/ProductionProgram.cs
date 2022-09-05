@@ -46,7 +46,7 @@ namespace ShapeGrammar
             return this;
         }
 
-        private ProductionProgram Bind<OutT>(Func<OutT> programChange, out OutT t)
+        private ProductionProgram Bind<OutT>(out OutT t, Func<OutT> programChange)
         {
             t = default;
             if (!Failed)
@@ -73,125 +73,82 @@ namespace ShapeGrammar
         /// <summary>
         /// Keeps only one of the current nodes. Fails if no current nodes exist.
         /// </summary>
-        public ProductionProgram SelectRandomOne(ProductionProgram program, out Node result)
+        public ProductionProgram SelectRandomOne(ProductionProgram program, out Node result) => Bind(out result, () =>
         {
-            /*result = null;
-            if (Failed)
-                return this;
-            */
-            return Bind(() =>
-                {
-                    if (!program.CurrentNodes.Any())
-                        return SetFailedReturn<Node>(true, $"{nameof(SelectRandomOne)}: no current nodes exist");
+            if (!program.CurrentNodes.Any())
+                return SetFailedReturn<Node>(true, $"{nameof(SelectRandomOne)}: no current nodes exist");
 
-                    var node = program.CurrentNodes.GetRandom();
-                    CurrentNodes = node.ToEnumerable().ToList();
-                    return node;
-                },
-                out result
-            );
-            //return this;
-        }
+            var node = program.CurrentNodes.GetRandom();
+            CurrentNodes = node.ToEnumerable().ToList();
+            return node;
+        });
 
         /// <summary>
         /// Keeps only one of the current nodes. Fails if no current nodes exist.
         /// </summary>
-        public ProductionProgram SelectFirstOne(ProductionProgram program, out Node result)
+        public ProductionProgram SelectFirstOne(ProductionProgram program, out Node result) => Bind(out result, () =>
         {
-            /*
-            result = null;
-            if (Failed)
-                return this;*/
-            return Bind(() =>
-            {
-                if (!program.CurrentNodes.Any())
-                    return SetFailedReturn<Node>(true, $"{nameof(SelectFirstOne)}: no current nodes exist");
+            if (!program.CurrentNodes.Any())
+                return SetFailedReturn<Node>(true, $"{nameof(SelectFirstOne)}: no current nodes exist");
 
-                var node = program.CurrentNodes.First();
-                CurrentNodes = node.ToEnumerable().ToList();
-                return node;
-            },
-            out result);
-            //return this;
-        }
+            var node = program.CurrentNodes.First();
+            CurrentNodes = node.ToEnumerable().ToList();
+            return node;
+        });
         
-        public ProductionProgram FindPath(Func<Node> pathFinder, out Node path)
+        
+        public ProductionProgram FindPath(Func<Node> pathFinder, out Node path) => Bind(out path, () =>
         {
-            /*
-            path = null;
-            if (Failed) 
-                return this;*/
-            return Bind(() =>
-                {
-                    Node foundPath;
-                    try
-                    {
-                        foundPath = pathFinder();
-                    }
-                    catch (PathNotFoundException ex)
-                    {
-                        return SetFailedReturn<Node>(true, $"Can't find path: {ex.Message}");
-                    }
-                    CurrentNodes = foundPath.ToEnumerable().ToList();
-                    return foundPath;
-                },
-                out path
-            );
-            //return this;
-        }
+            Node foundPath;
+            try
+            {
+                foundPath = pathFinder();
+            }
+            catch (PathNotFoundException ex)
+            {
+                return SetFailedReturn<Node>(true, $"Can't find path: {ex.Message}");
+            }
+            CurrentNodes = foundPath.ToEnumerable().ToList();
+            return foundPath;
+        });
 
         /// <summary>
         /// Places the current nodes to the level. Each will be child of all nodes contained in from. 
         /// </summary>
-        public ProductionProgram PlaceCurrentFrom(params Node[] from)
+        public ProductionProgram PlaceCurrentFrom(params Node[] from) => Bind(() =>
         {
-            /*
-            if (Failed)
-                return this;*/
-            return Bind(() =>
+            if (!CurrentNodes.Any())
             {
-                if (!CurrentNodes.Any())
-                {
-                    SetFailed(true, $"{nameof(PlaceCurrentFrom)}: no current nodes exist");
-                    return;
-                }
+                SetFailed(true, $"{nameof(PlaceCurrentFrom)}: no current nodes exist");
+                return;
+            }
 
-                var op = State.Add(from).SetTo(CurrentNodes.ToArray());
-                AppliedOperations.Add(op);
-            });
-            //return this;
-        }
+            var op = State.Add(from).SetTo(CurrentNodes.ToArray());
+            AppliedOperations.Add(op);
+        });
 
-        public ProductionProgram ReplaceNodes(params Node[] from)
+        public ProductionProgram ReplaceNodes(params Node[] from) => Bind(() =>
         {
-            return Bind(() =>
+            if (!CurrentNodes.Any())
             {
-                if (!CurrentNodes.Any())
-                {
-                    SetFailed(true, $"{nameof(ReplaceNodes)}: no current nodes exist");
-                    return;
-                }
+                SetFailed(true, $"{nameof(ReplaceNodes)}: no current nodes exist");
+                return;
+            }
 
-                var op = State.Replace(from).SetTo(CurrentNodes.ToArray());
-                AppliedOperations.Add(op);
-            });
-        }
+            var op = State.Replace(from).SetTo(CurrentNodes.ToArray());
+            AppliedOperations.Add(op);
+        });
 
         public ProductionProgram Found() => Found(out var _);
 
         /// <summary>
         /// Returned node is not in derivation. It is just a container of newly created level elements.
         /// </summary>
-        public ProductionProgram Found(out Node foundation)
+        public ProductionProgram Found(out Node foundation) =>  Bind(out foundation, () =>
         {
-            return Bind(() =>
-                {
-                    CurrentNodes = CurrentNodes.Select(node => Ldk.sgShapes.Foundation(node.LE).GN(Pr.sym.Foundation)).ToList();
-                    return CurrentNodes.Select(node => node.LE).ToLevelGroupElement(Ldk.grid).GN();
-                },
-                out foundation
-            );
-        }
+            CurrentNodes = CurrentNodes.Select(node => Ldk.sgShapes.Foundation(node.LE).GN(Pr.sym.Foundation)).ToList();
+            return CurrentNodes.Select(node => node.LE).ToLevelGroupElement(Ldk.grid).GN();
+        });
 
         public ProductionProgram ReserveUpward(int height, Func<Node, Symbol> reservationSymbolF) => ReserveUpward(height, reservationSymbolF, out var _);
 
@@ -199,65 +156,38 @@ namespace ShapeGrammar
         /// Returned node is not in derivation. It is just a container of newly created level elements.
         /// </summary>
         public ProductionProgram ReserveUpward(int height, Func<Node, Symbol> reservationSymbolF, out Node reservation)
+            => Bind(out reservation, () =>
         {
-            return Bind(() =>
-                {
-                    var reservations = CurrentNodes
-                        .Select(node =>
-                            State.NewProgram(prog => prog
-                                .Set(() => node.LE.CG().ExtrudeVer(Vector3Int.up, height).LE(AreaStyles.Reservation()).GN(reservationSymbolF(node)))
-                                .NotTaken()
-                            )
-                        );
-                    if (reservations.Any(prog => prog.Failed))
-                    {
-                        return SetFailedReturn<Node>(true, $"{nameof(ReserveUpward)}: subprogram failed");
-                    }
+            var reservations = CurrentNodes
+                .Select(node =>
+                    State.NewProgram(prog => prog
+                        .Set(() => node.LE.CG().ExtrudeVer(Vector3Int.up, height).LE(AreaStyles.Reservation()).GN(reservationSymbolF(node)))
+                        .KeepNotTaken()
+                    )
+                );
+            if (reservations.Any(prog => prog.Failed))
+            {
+                return SetFailedReturn<Node>(true, $"{nameof(ReserveUpward)}: subprogram failed");
+            }
 
-                    CurrentNodes = reservations
-                        .Where(prog => !prog.Failed)
-                        .SelectMany(prog => prog.CurrentNodes).ToList();
+            CurrentNodes = reservations
+                .Where(prog => !prog.Failed)
+                .SelectMany(prog => prog.CurrentNodes).ToList();
 
-                    return CurrentNodes.Select(node => node.LE).ToLevelGroupElement(Ldk.grid).GN();
-                },
-                out reservation
-            );
-            //return this;
-            
-        }
+            return CurrentNodes.Select(node => node.LE).ToLevelGroupElement(Ldk.grid).GN();
+        });
 
         public ProductionProgram Directional(IEnumerable<Vector3Int> directions, Func<Vector3Int, Node> nodeCreator)
-        {
-            return Bind(() => CurrentNodes = directions.Select(dir => nodeCreator(dir)).ToList());
-            /*if (Failed)
-                return this;
-
-            CurrentNodes = directions.Select(dir => nodeCreator(dir)).ToList();
-            return this;*/
-        }
+            => Bind(() => CurrentNodes = directions.Select(dir => nodeCreator(dir)).ToList());
 
         /// <summary>
         /// Remove the current nodes which are overlapping already added nodes.
         /// </summary>
-        public ProductionProgram NotTaken()
-        {
-            return Bind(() => CurrentNodes = CurrentNodes.Where(node => node.LE.CG().AllAreNotTaken()).ToList());
-            /*if (Failed)
-                return this;
-
-            CurrentNodes = CurrentNodes.Where(node => node.LE.CG().AllAreNotTaken()).ToList();
-            return this;*/
-        }
+        public ProductionProgram KeepNotTaken()
+            => Bind(() => CurrentNodes = CurrentNodes.Where(node => node.LE.CG().AllAreNotTaken()).ToList());
 
         public ProductionProgram Keep(Func<Node, bool> condition)
-        {
-            return Bind(() => CurrentNodes = CurrentNodes.Where(condition).ToList());
-            /*if (Failed)
-                return this;
-
-            CurrentNodes = CurrentNodes.Where(condition).ToList();
-            return this;*/
-        }
+            => Bind(() => CurrentNodes = CurrentNodes.Where(condition).ToList());
 
         /// <summary>
         /// Remove the current nodes for which foundation can't be created.
@@ -275,146 +205,82 @@ namespace ShapeGrammar
         public ProductionProgram DontIntersectAdded() => Keep(node => !node.LE.CG().Intersects(State.WorldState.Added.CG()));
 
         public ProductionProgram Change(Func<Node, Node> changer)
+            => Bind(() => CurrentNodes = CurrentNodes.SelectNN(changer).ToList());
+
+        public ProductionProgram CurrentFirst(out Node first) => Bind(out first, () =>
         {
-            return Bind(() => CurrentNodes = CurrentNodes.SelectNN(changer).ToList());
-            /*if (Failed)
-                return this;
+            var first = CurrentNodes.FirstOrDefault();
+            return first ?? SetFailedReturn<Node>(true, $"{nameof(CurrentFirst)}: no current nodes exist");
+        });
 
-            CurrentNodes = CurrentNodes.SelectNN(changer).ToList();
-            return this;*/
-        }
-
-        public ProductionProgram CurrentFirst(out Node first)
+        public ProductionProgram Condition(Func<bool> condF) => Bind(() =>
         {
-            return Bind(() =>
-                {
-                    var first = CurrentNodes.FirstOrDefault();
-                    return first ?? SetFailedReturn<Node>(true, $"{nameof(CurrentFirst)}: no current nodes exist");
-                },
-                out first
-            );
-        }
-
-        public ProductionProgram Condition(Func<bool> condF)
-        {
-            /*
-            if (Failed)
-                return this;*/
-            return Bind(() =>
-                {
-                    if(!condF())
-                        SetFailed(true, "Condition failed");
-                });
-            /*if (!condF())
-                return SetFailedNormal(true, "Condition failed");
-
-            return this;*/
-        }
+            if(!condF())
+                SetFailed(true, "Condition failed");
+        });
 
         /// <summary>
         /// Runs the program with the current State and CurrentNodes and its state after being run is applied to this.
         /// programF takes new program with the same state as argument.
         /// </summary>
-        public ProductionProgram RunIf(bool condition, Func<ProductionProgram, ProductionProgram> programF)
+        public ProductionProgram RunIf(bool condition, Func<ProductionProgram, ProductionProgram> programF) => Bind(() =>
         {
-            /*
-            if (Failed)
-                return this;*/
-            return Bind(() =>
-                {
-                    if (condition)
-                    {
-                        var startingProgram = State.NewProgram(prog => prog);
-                        startingProgram.CurrentNodes = CurrentNodes;
-                        startingProgram.Failed = Failed;
+            if (condition)
+            {
+                var startingProgram = State.NewProgram(prog => prog);
+                startingProgram.CurrentNodes = CurrentNodes;
+                startingProgram.Failed = Failed;
 
-                        var program = programF(startingProgram);
-                        AppliedOperations.AddRange(program.AppliedOperations);
+                var program = programF(startingProgram);
+                AppliedOperations.AddRange(program.AppliedOperations);
 
-                        CurrentNodes = program.CurrentNodes;
-                        Failed = program.Failed;
-                    }
-                }
-            );
-            //return this;
-        }
+                CurrentNodes = program.CurrentNodes;
+                Failed = program.Failed;
+            }
+        });
 
-        public ProductionProgram Set(Func<Node> nodesF, out Node result)
+        public ProductionProgram Set(Func<Node> nodesF, out Node result) => Bind(out result, () =>
         {
-            /*
-            result = null;
-            if (Failed)
-                return this;*/
-            return Bind(() =>
-                {
-                    Set(() => nodesF().ToEnumerable());
-                    return CurrentNodes.First();
-                },
-                out result
-            );
-            //return this;
-        }
+            Set(() => nodesF().ToEnumerable());
+            return CurrentNodes.First();
+        });
 
         public ProductionProgram Set(Func<Node> nodesF)
-        {
-            /*
-            if (Failed)
-                return this;
-            */
-            return Bind(() => Set(() => nodesF().ToEnumerable()));
-        }
+            => Bind(() => Set(() => nodesF().ToEnumerable()));
 
         public ProductionProgram Set(Func<IEnumerable<Node>> nodesF)
-        {            return Bind(() => CurrentNodes = nodesF().ToList());        }
+            => Bind(() => CurrentNodes = nodesF().ToList());
 
         /// <summary>
         /// Moves current node near to targetNode. None of the cubes of the moved node is vertically taken yet.
         /// Doesn't work correctly for multiple current nodes.
         /// </summary>
-        public ProductionProgram MoveNearTo(Node targetNode, int dist)
+        public ProductionProgram MoveNearTo(Node targetNode, int dist) => Bind(() =>
         {
-            /*
-            if (Failed)
-                return this;
-            */
-            return Bind(() =>
+            if (CurrentNodes.Count() != 1)
             {
-                if (CurrentNodes.Count() != 1)
-                {
-                    throw new InvalidOperationException($"{nameof(MoveNearTo)} only works for 1 node.");
-                }
+                throw new InvalidOperationException($"{nameof(MoveNearTo)} only works for 1 node.");
+            }
 
-                Change(node =>
-                {
-                    var nodeOnGround = node.LE.MoveBottomTo(0);
-                    var targeOnGround = targetNode.LE.MoveBottomTo(0);
+            Change(node =>
+            {
+                var nodeOnGround = node.LE.MoveBottomTo(0);
+                var targeOnGround = targetNode.LE.MoveBottomTo(0);
 
-                    var movesInDistance = nodeOnGround
-                        .MovesInDistanceXZ(targeOnGround, dist);
+                var movesInDistance = nodeOnGround
+                    .MovesInDistanceXZ(targeOnGround, dist);
 
-                    var validMoves = movesInDistance
-                        .DontIntersect(State.VerticallyTaken);
+                var validMoves = movesInDistance
+                    .DontIntersect(State.VerticallyTaken);
 
-                    return validMoves
-                        .TryMove()?.GN();
-                    /*try
-                    {
-                        return validMoves
-                            .TryMove().GN();
-                    }
-                    catch(NoValidMovesException ex)
-                    {
-                        SetFailed(true, $"{nameof(MoveNearTo)}: {ex.Message}");
-                        return null;
-                    }*/
-                })
-                // Move node to level of target node
-                .Change(validNewRoom =>
-                {
-                    return validNewRoom.LE.MoveBottomTo(targetNode.LE.CG().LeftBottomBack().y).GN();
-                });
+                return validMoves
+                    .TryMove()?.GN();
+            })
+            // Move node to level of target node
+            .Change(validNewRoom =>
+            {
+                return validNewRoom.LE.MoveBottomTo(targetNode.LE.CG().LeftBottomBack().y).GN();
             });
-            //return this;
-        }
+        });
     }
 }

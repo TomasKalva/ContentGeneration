@@ -47,7 +47,7 @@ public class PrintingState
     }
 }
 
-interface Printable
+interface IPrintable
 {
     PrintingState Print(PrintingState state);
 }

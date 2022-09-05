@@ -9,32 +9,26 @@ namespace ShapeGrammar
 {
     public class Symbols
     {
-        //public Symbol BrokenFloor { get; } = new Symbol("BrokenFloor");
-        //public Symbol ConnectTo(Node to) => new ConnectTo("ConnectTo", to);
-        //public Symbol ExtrudeUp { get; } = new Symbol("ExtrudeUp");
-        //public Symbol CreateFrom(params Node[] from) => new CreateFrom("CreateFrom", from.ToList());
-        //public Symbol FloorGiver(Node giveTo) => new FloorGiver("FloorGiver", giveTo);
-
         #region Common symbols
         public Symbol Foundation { get; } = new Symbol("Foundation");
-        #endregion
-
-
-
-
-        public Symbol Room { get; } = new Symbol("Room");
-        public Symbol BrokenFloorRoom { get; } = new Symbol("BrokenFloorRoom");
-        //public Symbol DirectedRoom(Vector3Int direction, int floor = 0) => new DirectedRoom("DirectedRoom", false, floor, direction);
         /// <summary>
         /// Serves as a space that can be turned into another part of a building or in a roof.
         /// </summary>
-        public UpwardReservation UpwardReservation(Node roomBelow) => new UpwardReservation("RoomReservation", roomBelow);
+        public ReferenceSymbol UpwardReservation(Node roomBelow) => new ReferenceSymbol("RoomReservation", roomBelow);
+        #endregion
+
+        public Symbol BrokenFloorRoom { get; } = new Symbol("BrokenFloorRoom");
+
+
+        #region Town
+        public Symbol Room { get; } = new Symbol("Room");
         public DirectionalSymbol Terrace(Vector3Int direction) => new DirectionalSymbol("Terrace", direction);
         public Symbol Roof { get; } = new Symbol("Roof");
         public Symbol Courtyard { get; } = new Symbol("Courtyard");
         public DirectionalSymbol Bridge(Vector3Int direction = default) => new DirectionalSymbol("Bridge", direction);
         public Symbol Garden { get; } = new Symbol("Garden");
         public DirectionalSymbol Balcony(Vector3Int direction) => new DirectionalSymbol("Balcony", direction);
+        #endregion
 
         #region Graveyard
         public Symbol Park { get; } = new Symbol("Park");
@@ -54,15 +48,20 @@ namespace ShapeGrammar
         public Symbol WatchPost { get; } = new Symbol("WatchPost");
         #endregion
 
+        #region Utility symbols
         public Symbol StartMarker { get; } = new Marker("Start");
         public Symbol EndMarker { get; } = new Marker("End");
         public Symbol ReturnToMarker { get; } = new Marker("ReturnTo");
         public Symbol FullFloorMarker { get; } = new Marker("FullFloor");
         public Symbol ConnectionMarker { get; } = new Marker("Connection");
         public Symbol LevelStartMarker { get; } = new Marker("LevelStart");
+        #endregion
     }
 
-    public class Symbol : Printable
+    /// <summary>
+    /// Used by production rules to decide to which nodes to apply.
+    /// </summary>
+    public class Symbol : IPrintable
     {
         public string Name { get; }
 
@@ -77,8 +76,9 @@ namespace ShapeGrammar
         }
     }
 
-
-
+    /// <summary>
+    /// Holds a direction.
+    /// </summary>
     public class DirectionalSymbol : Symbol
     {
         public Vector3Int Direction { get; }
@@ -89,14 +89,6 @@ namespace ShapeGrammar
         }
     }
 
-    /*
-    public class ChapelRoom : Symbol
-    {
-        public ChapelRoom(string name) : base(name)
-        {
-        }
-    }*/
-
     public class Marker : Symbol
     {
         public Marker(string name) : base(name)
@@ -104,33 +96,16 @@ namespace ShapeGrammar
         }
     }
 
-    public class ConnectTo : Symbol
+    /// <summary>
+    /// Holds a reference to a node.
+    /// </summary>
+    public class ReferenceSymbol : Symbol
     {
-        public Node To { get; }
+        public Node NodeReference { get; }
 
-        public ConnectTo(string name, Node to) : base(name)
+        public ReferenceSymbol(string name, Node roomBelow) : base(name)
         {
-            To = to;
-        }
-    }
-
-    public class CreateFrom : Symbol
-    {
-        public List<Node> From { get; }
-
-        public CreateFrom(string name, List<Node> from) : base(name)
-        {
-            From = from;
-        }
-    }
-
-    public class UpwardReservation : Symbol
-    {
-        public Node SomethingBelow { get; }
-
-        public UpwardReservation(string name, Node roomBelow) : base(name)
-        {
-            SomethingBelow = roomBelow;
+            NodeReference = roomBelow;
         }
     }
 }

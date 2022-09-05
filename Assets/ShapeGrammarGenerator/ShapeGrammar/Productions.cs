@@ -53,7 +53,7 @@ namespace ShapeGrammar
                                         .LE(AreaStyles.Yard(AreaStyles.YardStyle))
                                         .GN(sym.Courtyard, sym.FullFloorMarker)
                                 )
-                                .NotTaken()
+                                .KeepNotTaken()
                                 .CanBeFounded()
                                 ),
                             out var courtyard
@@ -101,7 +101,7 @@ namespace ShapeGrammar
                                         .MoveBy(2 * Vector3Int.down)
                                     .LE(AreaStyles.Yard(AreaStyles.YardStyle)).GN(sym.Courtyard, sym.FullFloorMarker)
                                 )
-                                .NotTaken()
+                                .KeepNotTaken()
                                 .CanBeFounded()
                                 ),
                             out var newCourtyard
@@ -230,7 +230,7 @@ namespace ShapeGrammar
                 Empty(),
                 (program, terrace) => program
                         .Set(() => terrace.LE.CG().ExtrudeVer(Vector3Int.up, 1).LE(AreaStyles.DirectionalRoof(terrace.GetSymbol(sym.Terrace(default)).Direction)).GN(sym.Roof))
-                        .NotTaken()
+                        .KeepNotTaken()
                         .PlaceCurrentFrom(terrace),
                 ldk.con.ConnectByDoor
                 );
@@ -252,7 +252,7 @@ namespace ShapeGrammar
                             state.NewProgram(subProg => subProg
                                 .Set(() => roomFromToF().GN())
                                 .MoveNearTo(what, 1)
-                                .Change(node => node.LE.GN(sym.BrokenFloorRoom, sym.FullFloorMarker))
+                                .Change(node => node.LE.GN(sym.BrokenFloorRoom))
                                 ),
                             out var newRoom
                         )
@@ -346,25 +346,6 @@ namespace ShapeGrammar
                 });
         }
 
-        public Production Roof()
-        {
-            return new Production(
-                "AddRoof",
-                new ProdParamsManager()
-                    .AddNodeSymbols(sym.UpwardReservation(null)),
-                (state, pp) =>
-                {
-                    var roomReservation = pp.Param;
-                    var roof = roomReservation.LE.SetAreaType(AreaStyles.GableRoof()).GN(sym.Roof);
-
-                    // and modify the dag
-                    return state.NewProgramBadMethodDestroyItASAP(new[]
-                    {
-                        state.Replace(roomReservation).SetTo(roof),
-                    });
-                });
-        }
-
         public Production Roof(Symbol reservationSymbol, int roofHeight, AreaStyle roofAreaStyle)
         {
             return TakeUpwardReservation(
@@ -410,7 +391,7 @@ namespace ShapeGrammar
             return (program, roof) => program
                         .Set(() => roof)
                         .Change(towerTop => towerTop.LE.CG().ExtrudeVer(Vector3Int.up, roofHeight).LE(roofType).GN(sym.Roof))
-                        .NotTaken()
+                        .KeepNotTaken()
                         .PlaceCurrentFrom(roof);
         }
 
@@ -418,7 +399,7 @@ namespace ShapeGrammar
         {
             return (program, bridgeTop) => program
                         .Set(() => ldk.sgShapes.BridgeFoundation(bridgeTop.LE, bridgeDirection).GN(sym.Foundation))
-                        .NotTaken()
+                        .KeepNotTaken()
                         .PlaceCurrentFrom(bridgeTop);
         }
 
@@ -561,7 +542,7 @@ namespace ShapeGrammar
                                     dir =>
                                         extrudeNodeFromDirection(from.LE.CG(), dir)
                                 )
-                                .NotTaken()
+                                .KeepNotTaken()
                                 .CurrentFirst(out var created)
 
                                 .RunIf(true, p => afterNodeCreated(p, created))
@@ -603,7 +584,7 @@ namespace ShapeGrammar
                     {
                         bool correctBelowSymbol =
                             pp.Param.GetSymbol(sym.UpwardReservation(null))
-                            .SomethingBelow.GetSymbol(reservationSymbol) != null;
+                            .NodeReference.GetSymbol(reservationSymbol) != null;
                         return correctBelowSymbol && pp.Param.LE.CG().RightTopFront().y + 1 <= maxBottomHeight;
                     }),
                 (state, pp) =>
@@ -611,7 +592,7 @@ namespace ShapeGrammar
                     var reservation = pp.Param;
                     var reservationCG = reservation.LE.CG();
                     var toExtrude = nextFloorHeight - 1;
-                    var roomBelow = pp.Param.GetSymbol<UpwardReservation>(sym.UpwardReservation(null)).SomethingBelow;
+                    var roomBelow = pp.Param.GetSymbol<ReferenceSymbol>(sym.UpwardReservation(null)).NodeReference;
 
                     return state.NewProgram(prog => prog
                         .Condition(() => toExtrude >= 0)
@@ -622,7 +603,7 @@ namespace ShapeGrammar
 
                         // Only check if the part outside of the reservation was not taken yet
                         .Set(() => extendedReservation.LE.Minus(reservation.LE).GN())
-                        .NotTaken()
+                        .KeepNotTaken()
                         .Set(() => extendedReservation)
 
                         .Change(extr => nodeFromExtrudedUp(extr.LE.CG()))
@@ -670,7 +651,7 @@ namespace ShapeGrammar
 
                         // Only check if the part outside of the reservation was not taken yet
                         .Set(() => extendedDown.LE.Minus(foundationBelow.LE).GN())
-                        .NotTaken()
+                        .KeepNotTaken()
                         .Set(() => extendedDown)
 
                         .Change(extr => nodeFromExtrudedDown(extr.LE.CG()))
@@ -745,53 +726,6 @@ namespace ShapeGrammar
 
                 });
         }
-        /*
-        public Production LayerAroundFrom(
-            Symbol from,
-            Symbol to,
-            int layerSize,
-            Func<Node, LevelElement> layerToTo,
-            Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPlaced,
-            ConnectionNotIntersecting connection
-            )
-        {
-            return new Production(
-                $"ExtendBridgeFromTo_{from.Name}_{to.Name}",
-                new ProdParamsManager().AddNodeSymbols(from),
-                (state, pp) =>
-                {
-                    var what = pp.Param;
-                    var whatCG = what.LE.CG();
-
-                    // reduced from 1450 to 1050 characters, from 80 lines to 34 lines
-                    return state.NewProgram(prog => prog
-                        .SelectOne(
-                            
-                            state.NewProgram(subProg => subProg
-                                .Directional(ExtensionMethods.HorizontalDirections(),
-                                    dir => what.LE.CG().BottomLayer().ExtrudeDir(dir, layerSize).LE().GN()
-                                )
-                                .DontIntersectAdded()
-                                .Change(node => layerToTo(node).Minus(state.WorldState.Added).GN(to))
-                                ),
-                                out var newNode
-                        )
-                        .PlaceCurrentFrom(what)
-
-                        .Found()
-                        .PlaceCurrentFrom(newNode)
-
-                        .RunIf(true,
-                            thisProg => fromFloorNodeAfterPlaced(thisProg, newNode)
-                        )
-
-                        .FindPath(() => connection(AllBlocking(state, prog, what.LE.Grid))
-                            (what.LE, newNode.LE).GN(sym.ConnectionMarker), out var stairs)
-                        .PlaceCurrentFrom(what, newNode)
-                        );
-
-                });
-        }*/
 
         #endregion
 
@@ -900,7 +834,7 @@ namespace ShapeGrammar
                 Empty(),
                 (program, chapelSide) => program
                         .Set(() => chapelSide.LE.CG().ExtrudeVer(Vector3Int.up, 1).LE(AreaStyles.DirectionalRoof(chapelSide.GetSymbol(sym.ChapelSide(default)).Direction, AreaStyles.ChapelStyle)).GN(sym.Roof))
-                        .NotTaken()
+                        .KeepNotTaken()
                         .PlaceCurrentFrom(chapelSide),
                 ldk.con.ConnectByDoor
                 );
@@ -978,7 +912,7 @@ namespace ShapeGrammar
                             )
                             .GN(sym.Garden, sym.FullFloorMarker)
                         )
-                        .NotTaken()
+                        .KeepNotTaken()
                         .CanBeFounded(),
                     Empty(),
                     ldk.con.ConnectByDoor
