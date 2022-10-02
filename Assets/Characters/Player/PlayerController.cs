@@ -21,10 +21,6 @@ public class PlayerController : MonoBehaviour
 
 	OrbitCamera orbitCamera;
 
-	//public World World { get; set; }
-
-	//Reality reality;
-
 	Agent lockOnTarget;
 
 	SpacePartitioning spacePartitioning;
@@ -32,6 +28,9 @@ public class PlayerController : MonoBehaviour
 	[SerializeField]
 	Transform playerInputSpace;
 
+	/// <summary>
+	/// The input buttons which are used.
+	/// </summary>
 	Dictionary<string, bool> buttonDown;
 
 	bool respawned;

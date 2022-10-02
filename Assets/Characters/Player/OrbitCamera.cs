@@ -57,7 +57,7 @@ public class OrbitCamera : MonoBehaviour
 
 	Vector3 focusPoint, previousFocusPoint;
 
-	Vector3 CameraHalfExtends
+	Vector3 CameraHalfExtents
 	{
 		get
 		{
@@ -359,7 +359,7 @@ public class OrbitCamera : MonoBehaviour
 		Vector3 castDirection = castLine / castDistance;
 
 		if (Physics.BoxCast(
-			castFrom, CameraHalfExtends, castDirection, out RaycastHit hit,
+			castFrom, CameraHalfExtents, castDirection, out RaycastHit hit,
 			lookRotation, castDistance, obstructionMask
 		))
 		{

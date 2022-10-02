@@ -166,6 +166,7 @@ GameObject:
   - component: {fileID: 3418460660708015382}
   - component: {fileID: 3172359642046584015}
   - component: {fileID: 5631563924380078937}
+  - component: {fileID: 6401959119458965534}
   m_Layer: 12
   m_Name: WallStone.001
   m_TagString: Untagged
@@ -238,6 +239,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &6401959119458965534
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4312322144896961075}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4017646212506745490, guid: 2eded77bfa55735449fa157f0658b04a, type: 3}
 --- !u!1 &4653143009766046905
 GameObject:
   m_ObjectHideFlags: 0
@@ -466,6 +481,7 @@ GameObject:
   - component: {fileID: 4532157715380736120}
   - component: {fileID: 6916684035694736199}
   - component: {fileID: 7536911355336887676}
+  - component: {fileID: 5922076002454353938}
   m_Layer: 12
   m_Name: WallStone
   m_TagString: Untagged
@@ -538,3 +554,17 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &5922076002454353938
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7368427825265922325}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -5567913062341607129, guid: 2eded77bfa55735449fa157f0658b04a, type: 3}
