@@ -152,7 +152,7 @@ namespace ShapeGrammar
         /// Returns horizontal connection between two neighboring cubes. The connection will fit well into the context
         /// given by the face.
         /// </summary>
-        HorFacePrimitive GetFittingConnection(GridPrimitivesStyle gpStyle, FaceHor faceH)
+        HorFacePrimitive GetFittingDoorOrEmpty(GridPrimitivesStyle gpStyle, FaceHor faceH)
         {
             var otherFace = faceH.OtherFacet();
 
@@ -167,6 +167,29 @@ namespace ShapeGrammar
             if (faceH.FaceType == FACE_HOR.Railing || otherFace.FaceType == FACE_HOR.Railing)
             {
                 return gpStyle.RailingDoor();
+            }
+            return gpStyle.NoWall();
+        }
+
+        /// <summary>
+        /// Returns horizontal connection between two neighboring cubes. The connection will fit well into the context
+        /// given by the face.
+        /// </summary>
+        HorFacePrimitive GetFittingHoleOrEmpty(GridPrimitivesStyle gpStyle, FaceHor faceH)
+        {
+            var otherFace = faceH.OtherFacet();
+
+            if (faceH.FaceType == FACE_HOR.Door || otherFace.FaceType == FACE_HOR.Door)
+            {
+                return faceH.FacePrimitive;
+            }
+            if (faceH.FaceType == FACE_HOR.Wall || otherFace.FaceType == FACE_HOR.Wall)
+            {
+                return gpStyle.WallHole();
+            }
+            if (faceH.FaceType == FACE_HOR.Railing || otherFace.FaceType == FACE_HOR.Railing)
+            {
+                return gpStyle.WallHole();
             }
             return gpStyle.NoWall();
         }
@@ -214,10 +237,7 @@ namespace ShapeGrammar
             //var horFacesInside = path.InsideFacesH().Facets;
             horFacesInside.Facets.ForEach(faceH =>
             {
-                //faceH.FaceType = FACE_HOR.Door;
-                //return;
-
-                faceH.FacePrimitive = GetFittingConnection(gpStyle, faceH);
+                faceH.FacePrimitive = GetFittingDoorOrEmpty(gpStyle, faceH);
             });
 
             //hor.Intersect(path.AllBoundaryFacesH()).SetStyle(ObjectStyle).Fill(FACE_HOR.Railing);
@@ -253,7 +273,11 @@ namespace ShapeGrammar
             shaftFloors.Fill(gpStyle.NoFloor);
 
             // no walls between horizontal
-            var horFacesInside = fallArea.ConsecutiveInsideFacesH().Fill(gpStyle.NoWall);
+            var horFacesInside = fallArea.ConsecutiveInsideFacesH();//.Fill(gpStyle.NoWall);
+            horFacesInside.Facets.ForEach(faceH =>
+            {
+                faceH.FacePrimitive = GetFittingHoleOrEmpty(gpStyle, faceH);
+            });
 
             return fallArea;
         }
@@ -264,7 +288,7 @@ namespace ShapeGrammar
 
             twoNeighbors.Cubes.First().Group().NeighborsInGroupH(twoNeighbors).Facets
                 .ForEach(faceH => 
-                    faceH.FacePrimitive = GetFittingConnection(gpStyle, faceH)
+                    faceH.FacePrimitive = GetFittingDoorOrEmpty(gpStyle, faceH)
                 );
 
             return twoNeighbors;

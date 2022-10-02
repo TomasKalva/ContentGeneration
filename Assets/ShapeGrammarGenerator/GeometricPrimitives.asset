@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   empty: {fileID: 5652275661959312811, guid: df0bba3dd5c09784683447305975721f, type: 3}
   wallDoor: {fileID: -8342775008284480774, guid: 627bbb96138ecd444a6a157749e64090, type: 3}
+  wallHole: {fileID: -8342775008284480774, guid: 43db1ee3b3734f246a586844092af74f, type: 3}
   railingDoor: {fileID: -8342775008284480774, guid: bac84fd7825d2984cb1c962a4c878eed, type: 3}
   brickWall: {fileID: 3764113671630828798, guid: ec05327582746e64fb6bf6fc1fab9864, type: 3}
   woodenWall: {fileID: 3764113671630828798, guid: 61b3322b68d1a3146baefbf1251f40dd, type: 3}
@@ -39,6 +40,7 @@ MonoBehaviour:
   beamBottom: {fileID: -3025781043452578236, guid: 49a59bcfd8177f34a9fb97d1238f0577, type: 3}
   beamMiddle: {fileID: -3025781043452578236, guid: 3b551a368e8ee2344b940d6619d435ce, type: 3}
   beamTop: {fileID: -3025781043452578236, guid: f2135e95214912d42a78c28b67987492, type: 3}
+  beamBottomTop: {fileID: -3025781043452578236, guid: 1bf940884f7715a44b57ac3773cb7e3c, type: 3}
   stairs: {fileID: 2509556157168084794, guid: 8478bb57d13fda64286b87706a03ec10, type: 3}
   gableRoof: {fileID: 8798057177368778506, guid: de186beae02a2da48acf935e96f699b8, type: 3}
   pointyRoof: {fileID: -606982149753653071, guid: f3aab967e0176cd4d9fff34e02c4dd0b, type: 3}

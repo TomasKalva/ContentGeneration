@@ -29,7 +29,7 @@ namespace Assets.ShapeGrammarGenerator
             => new CladdedWallPrimitive(GP.tiledWall, GP.brickWall, GP.cladding);
 
         public HorFaceExclusivePrimitive Door()
-            => new HorFaceExclusivePrimitive(GP.wallDoor, FACE_HOR.Door, 3);//todo: replace with actual door primitive
+            => new HorFaceExclusivePrimitive(GP.wallDoor, FACE_HOR.Door, 3);
         public HorFaceExclusivePrimitive RailingDoor()
             => new HorFaceExclusivePrimitive(GP.railingDoor, FACE_HOR.Door, 3);
 
@@ -37,6 +37,9 @@ namespace Assets.ShapeGrammarGenerator
             => new HorFaceExclusivePrimitive(GP.railing, FACE_HOR.Railing, 1);
         public HorFaceExclusivePrimitive Cladding()
             => new HorFaceExclusivePrimitive(GP.cladding, FACE_HOR.Railing, 0.5f);
+
+        public HorFaceExclusivePrimitive WallHole()
+            => new HorFaceExclusivePrimitive(GP.wallHole, FACE_HOR.Door, 3);
 
         public NoWallPrimitive NoWall()
             => new NoWallPrimitive();
@@ -75,6 +78,7 @@ namespace Assets.ShapeGrammarGenerator
             Wall = HouseWall,
             FoundationWall = () => FoundationWall(GP.stoneWall),
             CladdedWall = CladdedWall,
+            WallHole = WallHole,
             NoWall = NoWall,
 
             Railing = Railing,
@@ -150,6 +154,7 @@ namespace Assets.ShapeGrammarGenerator
         }
         public Func<HorFacePrimitive> Railing { get; set; }
         public Func<HorFacePrimitive> Cladding { get; set; }
+        public Func<HorFaceExclusivePrimitive> WallHole { get; set; }
         public Func<HorFacePrimitive> NoWall { get; set; }
         public Func<CornerFacetPrimitive> RailingPillar { get; set; }
         public Func<CornerFacetPrimitive> Beam { get; set; }

@@ -106,10 +106,10 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 
         public IEnumerable<FactionEnvironmentConstructor> Branches()
         {
-            yield return LinearWithKey;
+            /*yield return LinearWithKey;
             yield return BranchesWithKey;
             yield return RandomBranches;
-            yield return LinearBranch;
+            */yield return LinearBranch;
         }
 
         IDistribution<int> EnemiesInAreaCount(int progress)
