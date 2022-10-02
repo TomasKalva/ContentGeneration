@@ -91,10 +91,10 @@ namespace ShapeGrammar
             playerState.Inventory.RightWeapon.Item = libraries.Items.Katana();
             playerState.AddAndEquipItem(libraries.Items.FreeWill());
             playerState.AddAndEquipItem(libraries.Items.MayanKnife());
-            libraries.Items.AllWristItems().ForEach(wi => playerState.AddItem(wi()));
+            //libraries.Items.AllWristItems().ForEach(wi => playerState.AddItem(wi()));
             //playerState.Inventory.Head.Item = libraries.Items.Eggs();
 
-            //libraries.Items.AllHeartItems().ForEach(hi => playerState.AddItem(hi()));
+            libraries.Items.AllSkinItems().ForEach(hi => playerState.AddItem(hi()));
             libraries.Items.AllHeadItems().ForEach(wi => playerState.AddItem(wi()));
 
             GameViewModel.ViewModel.PlayerState = playerState;

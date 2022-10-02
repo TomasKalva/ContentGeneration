@@ -254,10 +254,10 @@ public class Agent : MonoBehaviour
 			headSlot.Equipment = (headItem as AccessoryItem)?.Accessory;
 		}
 
-		var heartItem = inventory.Heart.Item;
+		var skinItem = inventory.Skin.Item;
 		if(myRenderer != null)
         {
-			myRenderer.sharedMaterial = (heartItem as MaterialItem)?.Material;
+			myRenderer.sharedMaterial = (skinItem as MaterialItem)?.Material;
         }
 
 

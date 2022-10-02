@@ -68,37 +68,6 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
             Env.One(Gr.PrL.BlockedByDoor(), startNodes, out lockedArea);
             // the locked area has to be connected to some previous area
             LockArea(lockedArea.Get, unlock);
-            /*var connection = State.TraversabilityGraph.EdgesTo(lockedArea.Get).First();
-            // the door face exists because of the chosen grammar
-            var doorFace = connection.Path.LE.CG().ConsecutiveInsideFacesH().Where(faceH => faceH.FaceType == FACE_HOR.Door).Facets.First();
-            doorFace.OnObjectCreated += tr =>
-            {
-                var door = tr.GetComponentInChildren<Door>();
-                var doorState = (DoorState)door.State;
-
-                bool unlocked = false;
-                doorState.ActionOnInteract = (ios, player) =>
-                {
-                    if (unlocked)
-                    {
-                        ios.IntObj.SwitchPosition();
-                    }
-                    else
-                    {
-                        unlocked = unlock(player);
-
-                        if (unlocked)
-                        {
-                            Msg.Show("Door unlocked");
-                            ios.IntObj.SwitchPosition();
-                        }
-                        else
-                        {
-                            Msg.Show("Door is locked");
-                        }
-                    }
-                };
-            };*/
         }
 
         public IEnumerable<ItemState> CreateLockItems(string name, int count, string description, out UnlockAction unlockAction)

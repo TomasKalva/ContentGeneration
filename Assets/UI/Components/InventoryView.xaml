@@ -93,7 +93,7 @@
                                 <comp:ItemSlotView DataContext="{Binding Inventory.Head}" Width="50" Height="50" Style="{StaticResource EquipmentSlotMargin}"></comp:ItemSlotView>
                                 <comp:ItemSlotView DataContext="{Binding Inventory.LeftWrist}" Width="50" Height="50" Style="{StaticResource EquipmentSlotMargin}"></comp:ItemSlotView>
                                 <comp:ItemSlotView DataContext="{Binding Inventory.RightWrist}" Width="50" Height="50" Style="{StaticResource EquipmentSlotMargin}"></comp:ItemSlotView>
-                                <comp:ItemSlotView DataContext="{Binding Inventory.Heart}" Width="50" Height="50" Style="{StaticResource EquipmentSlotMargin}"></comp:ItemSlotView>
+                                <comp:ItemSlotView DataContext="{Binding Inventory.Skin}" Width="50" Height="50" Style="{StaticResource EquipmentSlotMargin}"></comp:ItemSlotView>
                             </StackPanel>
                         </StackPanel>
                         <comp:Items DataContext="{Binding Inventory.ActiveSlots}" Columns="5" Rows="1" Style="{StaticResource Margined}"></comp:Items>

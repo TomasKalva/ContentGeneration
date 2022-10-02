@@ -21,7 +21,7 @@ namespace ContentGeneration.Assets.UI.Model
         Weapon,
         Head,
         Wrist,
-        Heart
+        Skin
     }
     
     public class InventorySlot : INotifyPropertyChanged
@@ -147,7 +147,7 @@ namespace ContentGeneration.Assets.UI.Model
         public InventorySlot Head => GetSlots(SlotType.Head).First();
         public InventorySlot LeftWrist => GetSlots(SlotType.Wrist).First(slot => slot.SlotId == 0);
         public InventorySlot RightWrist => GetSlots(SlotType.Wrist).First(slot => slot.SlotId == 1);
-        public InventorySlot Heart => GetSlots(SlotType.Heart).First();
+        public InventorySlot Skin => GetSlots(SlotType.Skin).First();
 
         InventorySlot _selectedSlot;
         public InventorySlot SelectedSlot
@@ -194,7 +194,7 @@ namespace ContentGeneration.Assets.UI.Model
                 new InventorySlot(character, SlotType.Head, 0),
                 new InventorySlot(character, SlotType.Wrist, 0),
                 new InventorySlot(character, SlotType.Wrist, 1),
-                new InventorySlot(character, SlotType.Heart, 0),
+                new InventorySlot(character, SlotType.Skin, 0),
             };
 
             AllSlots = EquipmentSlots.Concat(ActiveSlots).Concat(PassiveSlots).ToList();

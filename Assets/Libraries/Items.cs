@@ -140,38 +140,38 @@ public class Items : ScriptableObject
     };
 
 
-    public MaterialItem StoneHeart() => new MaterialItem("Stone Heart", "Circle", materials.stone)
+    public MaterialItem StoneSkin() => new MaterialItem("Stone Skin", "Circle", materials.stone)
         .OnEquip(ch => ch.Stats.Versatility += 10)
         .OnUnequip(ch => ch.Stats.Versatility -= 10)
-        .SetWearable(SlotType.Heart) as MaterialItem;
+        .SetWearable(SlotType.Skin) as MaterialItem;
 
-    public MaterialItem BrickHeart() => new MaterialItem("Brick Heart", "Circle", materials.bricks)
+    public MaterialItem BrickSkin() => new MaterialItem("Brick Skin", "Circle", materials.bricks)
         .OnEquip(ch => ch.Stats.Strength += 10)
         .OnUnequip(ch => ch.Stats.Strength -= 10)
-        .SetWearable(SlotType.Heart) as MaterialItem;
+        .SetWearable(SlotType.Skin) as MaterialItem;
 
-    public MaterialItem WaterHeart() => new MaterialItem("Water Heart", "Circle", materials.water)
+    public MaterialItem WaterSkin() => new MaterialItem("Water Skin", "Circle", materials.water)
         .OnEquip(ch => ch.Stats.Will += 10)
         .OnUnequip(ch => ch.Stats.Will -= 10)
-        .SetWearable(SlotType.Heart) as MaterialItem;
+        .SetWearable(SlotType.Skin) as MaterialItem;
 
-    public MaterialItem TiledHeart() => new MaterialItem("Tiled Heart", "Circle", materials.tiles)
+    public MaterialItem TiledSkin() => new MaterialItem("Tiled Skin", "Circle", materials.tiles)
         .OnEquip(ch => ch.Stats.Resistances += 10)
         .OnUnequip(ch => ch.Stats.Resistances -= 10)
-        .SetWearable(SlotType.Heart) as MaterialItem;
+        .SetWearable(SlotType.Skin) as MaterialItem;
 
-    public MaterialItem WoodenHeart() => new MaterialItem("Wooden Heart", "Circle", materials.wood)
+    public MaterialItem WoodenSkin() => new MaterialItem("Wooden Skin", "Circle", materials.wood)
         .OnEquip(ch => ch.Stats.Endurance += 10)
         .OnUnequip(ch => ch.Stats.Endurance -= 10)
-        .SetWearable(SlotType.Heart) as MaterialItem;
+        .SetWearable(SlotType.Skin) as MaterialItem;
 
-    public IEnumerable<Func<MaterialItem>> AllHeartItems() => new List<Func<MaterialItem>>()
+    public IEnumerable<Func<MaterialItem>> AllSkinItems() => new List<Func<MaterialItem>>()
     {
-        StoneHeart,
-        BrickHeart,
-        WaterHeart,
-        TiledHeart,
-        WoodenHeart,
+        StoneSkin,
+        BrickSkin,
+        WaterSkin,
+        TiledSkin,
+        WoodenSkin,
     };
 
     public ItemState Dew() => NewItem("Dew", "Dew is dew.")

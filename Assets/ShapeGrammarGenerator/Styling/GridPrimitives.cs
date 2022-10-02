@@ -18,7 +18,7 @@ namespace Assets.ShapeGrammarGenerator
         }
 
         public WallPrimitive HouseWall()
-            => new WallPrimitive(GP.woodenWall, GP.brickWall);
+            => new WallPrimitive(GP.tiledWall, GP.brickWall);
         public WallPrimitive Wall(GeometricPrimitive insideWall, GeometricPrimitive outsideWall)
             => new WallPrimitive(insideWall, outsideWall);
         public WallPrimitive FoundationWall(GeometricPrimitive wall)
@@ -26,7 +26,7 @@ namespace Assets.ShapeGrammarGenerator
         public CladdedWallPrimitive CladdedWall(GeometricPrimitive insideWall, GeometricPrimitive outsideWall)
             => new CladdedWallPrimitive(insideWall, outsideWall, GP.cladding);
         public CladdedWallPrimitive CladdedWall()
-            => new CladdedWallPrimitive(GP.woodenWall, GP.brickWall, GP.cladding);
+            => new CladdedWallPrimitive(GP.tiledWall, GP.brickWall, GP.cladding);
 
         public HorFaceExclusivePrimitive Door()
             => new HorFaceExclusivePrimitive(GP.wallDoor, FACE_HOR.Door, 3);//todo: replace with actual door primitive
