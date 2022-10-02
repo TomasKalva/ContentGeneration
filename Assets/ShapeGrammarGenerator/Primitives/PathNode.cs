@@ -91,7 +91,7 @@ namespace ShapeGrammar
         public static IEnumerable<Cube> FindPathEndsInFloor(CubeGroup floor, IEnumerable<CubeGroup> paths) 
         {
             var pathEnds =
-                paths.Select(path => path.Cubes.First()).Concat(
+                paths.Select(path => path.Cubes.First()).Concat( // todo: sequence contains no elements error happens in here
                 paths.Select(path => path.Cubes.Last())
                 );
             //return pathEnds;

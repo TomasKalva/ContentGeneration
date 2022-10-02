@@ -124,7 +124,7 @@ namespace ShapeGrammar
 
         public override void Construct(Action<LevelConstructionEvent> reAddPersistent, int level)
         {
-            LevelConstructionEvents.OrderBy(ev => -ev.Priority).ForEach(ev =>
+            LevelConstructionEvents.Where(ev => ev.Condition()).OrderBy(ev => -ev.Priority).ForEach(ev =>
             {
                 Debug.Log($"Starting: {ev.Name}");
                 ev.Handle(level);

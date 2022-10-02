@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
 {
@@ -88,6 +89,21 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
                 );
         }
 
+        /// <summary>
+        /// Adds possible event that can end level right at the begining. Can be used at most once.
+        /// </summary>
+        public void AddOptionalEnd()
+        {
+            bool usedOptionalEnd = false;
+            State.LC.AddNecessaryEvent($"Optional end", 99, level => // turning this to possible event causes PathNode error
+            {
+                Env.One(Gr.PrL.LevelEnd(), NodesQueries.All, out var area);
+                area.Get.AddInteractiveObject(
+                    Lib.InteractiveObjects.Transporter(() => usedOptionalEnd = true)
+                    );
+            }, true, () => !usedOptionalEnd);
+
+        }
 
         public void LevelEnd()
         {

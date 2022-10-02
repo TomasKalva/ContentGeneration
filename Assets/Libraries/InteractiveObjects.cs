@@ -117,7 +117,7 @@ public class InteractiveObjects : ScriptableObject
         return physicalItemState;
     }
 
-    public InteractiveObjectState<InteractiveObject> Transporter()
+    public InteractiveObjectState<InteractiveObject> Transporter(Action onUse = null)
     {
         return InteractiveObject("Transporter", Geometry<InteractiveObject>(physicalItemPrefab))
                     .Interact(
@@ -126,6 +126,8 @@ public class InteractiveObjects : ScriptableObject
                                 transporter.Interact(
                                     (transporter, pl) => { }
                                     );
+
+                                if (onUse != null) onUse();
 
                                 var game = GameObject.Find("Game").GetComponent<Game>();
                                 game.AsyncEvaluator.SetTasks(
