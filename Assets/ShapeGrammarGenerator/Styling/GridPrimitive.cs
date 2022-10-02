@@ -242,12 +242,14 @@ namespace Assets.ShapeGrammarGenerator
         GeometricPrimitive Bottom { get; }
         GeometricPrimitive Middle { get; }
         GeometricPrimitive Top { get; }
+        GeometricPrimitive BottomTop { get; }
 
-        public BeamPrimitive(GeometricPrimitive bottom, GeometricPrimitive middle, GeometricPrimitive top)
+        public BeamPrimitive(GeometricPrimitive bottom, GeometricPrimitive middle, GeometricPrimitive top, GeometricPrimitive bottomTop)
         {
             Priority = 2;
             Bottom = bottom;
             Middle = middle;
+            BottomTop = bottomTop;
             Top = top;
             CornerType = CORNER.Beam;
         }
@@ -277,7 +279,7 @@ namespace Assets.ShapeGrammarGenerator
                 }
                 else
                 {
-                    PlaceCorner(worldGeometry, facet, Middle);
+                    PlaceCorner(worldGeometry, facet, BottomTop);
                 }
             }
         }

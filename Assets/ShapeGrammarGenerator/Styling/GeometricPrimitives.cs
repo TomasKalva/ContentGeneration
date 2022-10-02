@@ -91,6 +91,8 @@ public class GeometricPrimitives : ScriptableObject
     public GeometricPrimitive beamMiddle;
     [SerializeField]
     public GeometricPrimitive beamTop;
+    [SerializeField]
+    public GeometricPrimitive beamBottomTop;
     #endregion
 
 

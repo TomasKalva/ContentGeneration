@@ -19,7 +19,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
             State.LC.AddNecessaryEvent($"Level End", 99, level => L.LevelLanguage.LevelEnd(), true);
 
 
-            State.LC.AddNecessaryEvent($"Main path", 90, level => L.LevelLanguage.MainPath(level), true);
+            State.LC.AddNecessaryEvent($"Main path", 98, level => L.LevelLanguage.MainPath(level), true);
 
             L.FactionsLanguage.InitializeFactions(2);
 

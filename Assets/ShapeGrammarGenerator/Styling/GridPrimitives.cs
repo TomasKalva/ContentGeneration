@@ -46,7 +46,7 @@ namespace Assets.ShapeGrammarGenerator
             => new CornerFaceExclusivePrimitive(GP.railingPillar, CORNER.RailingPillar, 1f);
 
         public BeamPrimitive Beam()
-            => new BeamPrimitive(GP.beamBottom, GP.beamMiddle, GP.beamTop);
+            => new BeamPrimitive(GP.beamBottom, GP.beamMiddle, GP.beamTop, GP.beamBottomTop);
 
         public CornerFaceExclusivePrimitive NoPillar()
             => new CornerFaceExclusivePrimitive(GP.empty, CORNER.Nothing, 3f);

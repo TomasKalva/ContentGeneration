@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: AgentStateMaterial
   m_EditorClassIdentifier: 
   materials:
-  - {fileID: 2100000, guid: 8443dd43055769044bde8eb38225bfb0, type: 2}
+  - {fileID: 2100000, guid: 3abae7189de3a6f4997074bde69d7a26, type: 2}
   - {fileID: 2100000, guid: dfd0babb39f73384086f6bb1b4fcbe5f, type: 2}
   - {fileID: 2100000, guid: 423c95723a1afbb4093b1462e9dbbfd8, type: 2}
-  - {fileID: 2100000, guid: 48242178b6f30be4c8621d0a7707049d, type: 2}
+  - {fileID: 2100000, guid: 3abae7189de3a6f4997074bde69d7a26, type: 2}
