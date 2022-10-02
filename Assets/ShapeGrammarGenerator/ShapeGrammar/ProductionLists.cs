@@ -45,10 +45,6 @@ namespace ShapeGrammar
                 pr.GardenFrom(pr.sym.Courtyard, boxFs.GetRandom()),
                 pr.RoomNextTo(pr.sym.Courtyard, boxFs.GetRandom()),
 
-                // these productions make the world untraversable
-                //pr.RoomFallDown(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-                //pr.TowerFallDown(pr.sym.Room, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-
                 pr.ExtendBridgeToRoom(pr.sym.Room, pr.sym.Room, boxFs.GetRandom(), pathGuide),
                 pr.ExtendBridgeToGarden(pr.sym.Room, pr.sym.Garden, boxFs.GetRandom(), pathGuide),
                 pr.RoomNextTo(pr.sym.Garden, boxFs.GetRandom())
@@ -91,8 +87,8 @@ namespace ShapeGrammar
             var pathGuide = new RandomPathGuide();
             return new ProductionList
             (
-                pr.ExtendBridgeToRoom(pr.sym.FullFloorMarker, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide),
-                pr.ExtendBridgeToRoom(pr.sym.FullFloorMarker, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide)
+                pr.ExtendBridgeToRoom(pr.sym.FullFloorMarker, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 4, 3, 4)), pathGuide),
+                pr.ExtendBridgeToRoom(pr.sym.FullFloorMarker, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 4, 3, 4)), pathGuide)
             );
         }
 
@@ -112,7 +108,7 @@ namespace ShapeGrammar
         {
             return new ProductionList
             (
-                pr.ExtendBridgeToRoom(pr.sym.FullFloorMarker, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide),
+                pr.ExtendBridgeToRoom(pr.sym.FullFloorMarker, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 4, 3, 4)), pathGuide),
                 pr.ExtendBridgeToGarden(pr.sym.FullFloorMarker, pr.sym.Garden, () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaStyles.Garden()), pathGuide)
             );
         }
@@ -136,7 +132,7 @@ namespace ShapeGrammar
                 pr.ChapelEntranceNextTo(pr.sym.Room, 3, () => ldk.qc.GetFlatBox(4, 4, 2)),
                 pr.ChapelEntranceNextTo(pr.sym.Park, 3, () => ldk.qc.GetFlatBox(4, 4, 2)),
 
-                pr.ChapelHall(pr.sym.ChapelEntrance, 4, pathGuide),
+                pr.ChapelHall(pr.sym.ChapelEntrance, 5, pathGuide),
 
                 pr.ChapelHall(pr.sym.ChapelRoom, 7, pathGuide),
                 pr.ChapelHall(pr.sym.ChapelRoom, 5, pathGuide),
@@ -202,8 +198,8 @@ namespace ShapeGrammar
                 // Connection from other grammars
                 pr.ExtendBridgeToGarden(pr.sym.FullFloorMarker, pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 4, 3, 3)), pathGuide),
 
-                pr.TowerBottomNear(pr.sym.Room, () => ldk.qc.GetFlatBox(3, 3, 4)),
-                pr.TowerBottomNear(pr.sym.Garden, () => ldk.qc.GetFlatBox(3, 3, 4)),
+                pr.TowerBottomNear(pr.sym.Room, () => ldk.qc.GetFlatBox(4, 4, 4)),
+                pr.TowerBottomNear(pr.sym.Garden, () => ldk.qc.GetFlatBox(4, 4, 4)),
 
                 pr.UpwardTowerTop(2),
                 pr.WallTop(pr.sym.TowerTop, 5, 2, pathGuide),
@@ -212,7 +208,7 @@ namespace ShapeGrammar
                 pr.RoomDown(pr.sym.TowerTop, pr.sym.TowerBottom, AreaStyles.Room(AreaStyles.CastleStyle), 5, 3),
 
                 //pr.GardenFrom(pr.sym.TowerBottom, () => ldk.qc.GetFlatBox(4, 4, 1)),
-                pr.TowerTopNear(pr.sym.TowerTop, 4, 0, 3, () => ldk.qc.GetFlatBox(3, 3, 2)),
+                pr.TowerTopNear(pr.sym.TowerTop, 4, 0, 3, () => ldk.qc.GetFlatBox(4, 4, 2)),
                 pr.GardenFrom(pr.sym.TowerBottom)
             );
         }
@@ -235,7 +231,7 @@ namespace ShapeGrammar
                 pr.ConnectByRoom(
                     pr.sym.StartMarker, 
                     pr.sym.EndMarker, 
-                    () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)),
+                    () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 4, 3, 4)),
                     pr.Empty(),
                     ldk.con.ConnectByStairsOutside,
                     ldk.con.ConnectByStairsOutside,
@@ -251,7 +247,7 @@ namespace ShapeGrammar
                 pr.ConnectByRoom(
                     pr.sym.StartMarker,
                     pr.sym.EndMarker,
-                    () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)),
+                    () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 4, 3, 4)),
                     pr.MoveVertically(1, 2),
                     ldk.con.ConnectByStairsOutside,
                     ldk.con.ConnectByFall,

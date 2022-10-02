@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -37,6 +38,7 @@ public class Attack : AnimatedAct
     [SerializeField]
     float damageEndT;
 
+    Action StopLockOn { get; set; }
     MovementConstraint lockOnTarget;
 
     public override void OnStart(Agent agent)
@@ -44,11 +46,27 @@ public class Attack : AnimatedAct
 
         PlayAnimation(agent);
 
-        Direction3F directionF = () => TargetPosition == null ? Direction : TargetPosition.DirectionTo(agent.transform.position);
+        bool shouldLockOn = true;
+        Vector3 lastDirection = agent.movement.AgentForward;
+        Direction3F directionF = () =>
+        {
+            if (shouldLockOn)
+            {
+                lastDirection = TargetPosition == null ? Direction : TargetPosition.DirectionFrom(agent.transform.position);
+            }
+            return lastDirection;
+            //return TargetPosition == null ? Direction : TargetPosition.DirectionFrom(agent.transform.position);
+        };
 
         agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, directionF);
 
         lockOnTarget = new TurnToDirection(() => directionF().XZ().normalized);
+
+        StopLockOn = () =>
+        {
+            shouldLockOn = false;
+            lockOnTarget.Finished = true;
+        };
 
         SetupMovementConstraints(agent,
             new VelocityInDirection(directionF),
@@ -81,7 +99,7 @@ public class Attack : AnimatedAct
         var normalizedElapsed = timeElapsed / duration;
         if(agent.State == AgentState.PREPARE && normalizedElapsed >= damageStartT)
         {
-            lockOnTarget.Finished = true;
+            StopLockOn();
             agent.State = AgentState.DAMAGE;
             SetSlotsActive(true, agent);
         }
@@ -108,7 +126,7 @@ public class TargetPosition
     Vector3 defaultPosition;
 
     public Vector3 Position => target != null ? target.position : defaultPosition;
-    public Vector3 DirectionTo(Vector3 from) => (Position - from).normalized;
+    public Vector3 DirectionFrom(Vector3 from) => (Position - from).normalized;
 
     public TargetPosition(Transform target, Vector3 defaultPosition)
     {

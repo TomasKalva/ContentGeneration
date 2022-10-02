@@ -25,7 +25,7 @@ public class Shoot : AnimatedAct
     {
         PlayAnimation(agent);
 
-        directionToTargetF = () => TargetPosition.DirectionTo(agent.transform.position).XZ().X0Z().normalized;
+        directionToTargetF = () => TargetPosition.DirectionFrom(agent.transform.position).XZ().X0Z().normalized;
 
         lockOnTarget = new TurnToDirection(() => directionToTargetF().XZ().normalized);
 
