@@ -7,7 +7,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static Movement;
 
 [RequireComponent(typeof(HumanAgent))]
 public class PlayerController : MonoBehaviour
@@ -21,11 +20,8 @@ public class PlayerController : MonoBehaviour
 
 	OrbitCamera orbitCamera;
 
-	Agent lockOnTarget;
-
 	SpacePartitioning spacePartitioning;
 
-	[SerializeField]
 	Transform playerInputSpace;
 
 	/// <summary>
@@ -33,20 +29,13 @@ public class PlayerController : MonoBehaviour
 	/// </summary>
 	Dictionary<string, bool> buttonDown;
 
-	bool respawned;
-
 	[SerializeField]
 	float interactionDistance = 1f;
-
-	[SerializeField]
-	Libraries libraries;
 
 	// Start is called before the first frame update
 	void Awake()
 	{
 		myAgent = GetComponent<HumanAgent>();
-		//world = GameObject.Find("World").GetComponent<World>();
-		//reality = GameObject.Find("Reality").GetComponent<Reality>();
 
 		Application.targetFrameRate = 80;
 
@@ -70,17 +59,12 @@ public class PlayerController : MonoBehaviour
 
 		var camera = GameObject.Find("Main Camera");
 		playerInputSpace = camera.transform;
-		//myAgent.movement.playerInputSpace = playerInputSpace;
 		orbitCamera = camera.GetComponent<OrbitCamera>();
 		orbitCamera.DefaultCamUpdater = orbitCamera.FocusPlayer(orbitCameraFocusPoint);
-		lockOnTarget = null;
 
-		var viewModel = GameViewModel.ViewModel;// camera.GetComponent<ViewModel>();
+		var viewModel = GameViewModel.ViewModel;
 		myAgent.CharacterState = viewModel.PlayerState;
 		viewModel.PlayerState.Reset();
-
-		cameraInputs = new Queue<Vector2>();
-
 	}
 
     void Update()
@@ -92,121 +76,7 @@ public class PlayerController : MonoBehaviour
 
 		PlayerCharacterState.CurrentInteractiveObjectState = PlayerCharacterState.World.ObjectsCloseTo(transform.position, interactionDistance).FirstOrDefault();
 
-		UpdateLockOn();
-
 	}
-
-	#region Lock on
-
-	float switchTargetTimer;
-
-	Queue<Vector2> cameraInputs;
-
-	MovementConstraint turnToTarget;
-
-	float maxDistance = 15f;
-
-	bool CanSwitchTarget()
-    {
-		return switchTargetTimer <= 0f;
-    }
-
-	void UpdateLockOn()
-    {
-		// Switch between free and locked camera
-		if (Input.GetButtonDown("LockOn"))
-		{
-			if (lockOnTarget)
-			{
-				LockOn(null);
-			}
-			else
-			{
-				LockOn(LockOnTarget(myAgent, orbitCamera.transform));
-			}
-		}
-
-		// Switch targets
-		switchTargetTimer -= Time.deltaTime;
-		if (lockOnTarget && CanSwitchTarget())
-		{
-			Vector2 cameraInput = new Vector2(
-					Input.GetAxis("Horizontal Camera"),
-					-Input.GetAxis("Vertical Camera")
-				);
-			cameraInputs.Enqueue(cameraInput);
-			if(cameraInputs.Count >= 30)
-            {
-				cameraInputs.Dequeue();
-			}
-
-			if (cameraInputs.Average(x => x.magnitude) > 35.0f)
-			{
-				cameraInputs.Clear();
-				var newLockOnTarget = SwitchLockOnTarget(myAgent, lockOnTarget, cameraInput);
-				if (newLockOnTarget != null)
-				{
-					LockOn(newLockOnTarget);
-					switchTargetTimer = 0.5f;
-				}
-			}
-		}
-
-		// Remove dead target from ui
-		if (PlayerCharacterState.TargetedEnemy != null && (PlayerCharacterState.TargetedEnemy.Agent == null || !(orbitCamera.CamUpdater is OrbitCamera.LockOn)))
-		{
-			LockOn(null);
-		}
-	}
-
-    /// <summary>
-    /// Lock on is removed if agent is null.
-    /// </summary>
-    void LockOn(Agent selectedAgent)
-	{
-		if (selectedAgent != null)
-		{
-			// Lock
-			lockOnTarget = selectedAgent;
-			orbitCamera.CamUpdater = orbitCamera.FocusOnEnemy(myAgent.transform, lockOnTarget, maxDistance);
-			PlayerCharacterState.TargetedEnemy = lockOnTarget != null ? lockOnTarget.CharacterState : null;
-			
-			// Remove the constraint in case it wasn't removed properly with unlock
-			myAgent.movement.RemoveMovementConstraint(turnToTarget);
-
-			turnToTarget = new TurnToTransform(lockOnTarget.transform);
-			myAgent.movement.AddMovementConstraint(turnToTarget);
-		}
-		else
-		{
-			// Unlock
-			orbitCamera.CamUpdater = orbitCamera.FocusPlayer(myAgent.transform);
-			lockOnTarget = null;
-			PlayerCharacterState.TargetedEnemy = null;
-			myAgent.movement.RemoveMovementConstraint(turnToTarget);
-		}
-	}
-
-	IEnumerable<Agent> LockableTargets(Agent player)
-    {
-		return PlayerCharacterState.World.AliveEnemies.SelectNN(e => e.Agent).Where(agent => agent != player && (agent.transform.position - player.transform.position).sqrMagnitude < maxDistance * maxDistance);
-
-	}
-
-	Agent LockOnTarget(Agent player, Transform cam)
-	{
-		return LockableTargets(player)
-							.ArgMax(agent => Vector3.Dot((agent.transform.position - cam.position).normalized, cam.forward));
-	}
-
-	Agent SwitchLockOnTarget(Agent player, Agent selected, Vector2 screenDirection)
-	{
-		return LockableTargets(player).Where(agent => 
-									Vector2.Dot(screenDirection, agent.CharacterState.ScreenPos - selected.CharacterState.ScreenPos) > 0f &&
-									ExtensionMethods.IsPointInDirection(orbitCamera.transform.position, orbitCamera.transform.forward, agent.transform.position))
-					.ArgMin(agent => (selected.CharacterState.ScreenPos - agent.CharacterState.ScreenPos).sqrMagnitude);
-	}
-#endregion
 
 	void AddButtonsDown()
     {
@@ -238,14 +108,7 @@ public class PlayerController : MonoBehaviour
 		var worldInputDirection = InputToWorld(playerInput).XZ().normalized;
 		if (playerInputSpace != null)
 		{
-			if (lockOnTarget == null)
-			{
-				myAgent.Run(worldInputDirection);
-			}
-            else
-			{
-				myAgent.RunLockedOn(worldInputDirection);
-			}
+			myAgent.Run(worldInputDirection);
 		}
 		else
 		{

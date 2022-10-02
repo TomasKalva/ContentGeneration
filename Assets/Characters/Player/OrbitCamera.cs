@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Why not use cinemachine?
+/// </summary>
 [RequireComponent(typeof(Camera))]
 public class OrbitCamera : MonoBehaviour
 {
 
 	public delegate Vector3 CameraFocus();
-
-	//public CameraFocus Focus;
 
 	public CameraUpdater DefaultCamUpdater { get; set; }
 
@@ -29,7 +30,6 @@ public class OrbitCamera : MonoBehaviour
             }
         }
     }
-
 	[SerializeField, Min(0f)]
 	float focusRadius = 5f;
 
@@ -39,35 +39,26 @@ public class OrbitCamera : MonoBehaviour
 	[SerializeField, Range(-89f, 89f)]
 	float minVerticalAngle = -45f, maxVerticalAngle = 45f;
 
-	[SerializeField, Min(0f)]
-	float alignDelay = 5f;
-
-	[SerializeField, Range(0f, 90f)]
-	float alignSmoothRange = 45f;
-
-	[SerializeField, Min(0f)]
-	float upAlignmentSpeed = 360f;
-
 	[SerializeField]
 	LayerMask obstructionMask = -1;
-
-	Camera regularCamera;
 
 	Vector3 cameraPosition, previousCameraPosition;
 
 	Vector3 focusPoint, previousFocusPoint;
 
+	Camera regularCamera;
+
 	Vector3 CameraHalfExtents
 	{
 		get
 		{
-			Vector3 halfExtends;
-			halfExtends.y =
+			Vector3 halfExtents;
+			halfExtents.y =
 				regularCamera.nearClipPlane *
 				Mathf.Tan(0.5f * Mathf.Deg2Rad * regularCamera.fieldOfView);
-			halfExtends.x = halfExtends.y * regularCamera.aspect;
-			halfExtends.z = 0f;
-			return halfExtends;
+			halfExtents.x = halfExtents.y * regularCamera.aspect;
+			halfExtents.z = 0f;
+			return halfExtents;
 		}
 	}
 
@@ -80,65 +71,43 @@ public class OrbitCamera : MonoBehaviour
 		return new FocusPoint(player);
 	}
 
-	public CameraUpdater FocusOnEnemy(Transform player, Agent enemy, float maxDistance)
+	public abstract class CameraUpdater
 	{
-		return new LockOn(player, enemy, maxDistance);
-	}
+		public abstract void PreUpdate(OrbitCamera cam);
 
-
-
-	public class CameraUpdater
-	{
-		public virtual void PreUpdate(OrbitCamera cam)
-        {
-			cam.desiredCameraPosition = Vector3.one;
-			cam.desiredFocusPoint = Vector3.zero;
-		}
-
-		public virtual void PostUpdate(OrbitCamera cam)
-		{
-			//cam.desiredCameraPosition = Vector3.one;
-			//cam.desiredFocusPoint = Vector3.zero;
-		}
+		public abstract void PostUpdate(OrbitCamera cam);
 
 		/// <summary>
 		/// Returns false after these parameters can no longer be used.
 		/// </summary>
-		public virtual bool Finished() => false;
+		public abstract bool Finished();
 
-		public virtual void Start(OrbitCamera cam)
-		{
+		public abstract void Start(OrbitCamera cam);
 
-		}
-
-		public virtual void UpdateCameraPosition(OrbitCamera cam) { }
+		public abstract void UpdateCameraPosition(OrbitCamera cam);
 	}
 
 	public class FocusPoint : CameraUpdater
 	{
-		Transform point;
+		Transform focusPoint;
 
 		Vector2 orbitAngles = new Vector2(45f, 0f);
 
 		Quaternion orbitRotation;
 
-		[SerializeField, Min(0f)]
 		float alignDelay = 5f;
 
-		//[SerializeField, Range(1f, 360f)]
 		float rotationSpeed = 270f;
 
-		[SerializeField, Range(0f, 90f)]
 		float alignSmoothRange = 45f;
 
-		[SerializeField, Range(1f, 10f)]
 		float distance = 3f;
 
 		float lastManualRotationTime;
 
 		public FocusPoint(Transform point)
 		{
-			this.point = point;
+			this.focusPoint = point;
 		}
 
 		public override void Start(OrbitCamera cam)
@@ -146,16 +115,14 @@ public class OrbitCamera : MonoBehaviour
 			orbitAngles = cam.transform.eulerAngles;
 		}
 
-		public override bool Finished() => !point;
+		public override bool Finished() => !focusPoint;
 
 		public override void PreUpdate(OrbitCamera cam)
 		{
-			if (!point)
+			if (!this.focusPoint)
 				return;
 
-			cam.desiredFocusPoint = point.position;
-
-			//orbitAngles = cam.transform.rotation.eulerAngles;
+			cam.desiredFocusPoint = this.focusPoint.position;
 
 			ManualRotation(cam);
 			AutomaticRotation(cam);
@@ -165,7 +132,7 @@ public class OrbitCamera : MonoBehaviour
 
 			orbitRotation = Quaternion.Euler(orbitAngles);
 
-			var focusPoint = point != null ? point.position : Vector3.zero;
+			var focusPoint = this.focusPoint != null ? this.focusPoint.position : Vector3.zero;
 			cam.desiredFocusPoint = focusPoint;
 		}
 
@@ -178,7 +145,6 @@ public class OrbitCamera : MonoBehaviour
 
 		bool ManualRotation(OrbitCamera cam)
 		{
-
 			Vector2 input = 0.05f * new Vector2(
 				Input.GetAxis("Vertical Camera"),
 				Input.GetAxis("Horizontal Camera")
@@ -209,7 +175,7 @@ public class OrbitCamera : MonoBehaviour
 				return false;
 			}
 
-			float headingAngle = OrbitCamera.GetAngle(movement / Mathf.Sqrt(movementDeltaSqr));
+			float headingAngle = GetAngle(movement / Mathf.Sqrt(movementDeltaSqr));
 			float deltaAbs = Mathf.Abs(Mathf.DeltaAngle(orbitAngles.y, headingAngle));
 			float rotationChange =
 				rotationSpeed * Mathf.Min(Time.unscaledDeltaTime, movementDeltaSqr);
@@ -228,86 +194,6 @@ public class OrbitCamera : MonoBehaviour
 
 		public override void UpdateCameraPosition(OrbitCamera cam)
 		{
-			//var targetPoint = cam.desiredCameraPosition;
-			//float t = 1f;// Mathf.Pow(1f - 0.99999f, Time.unscaledDeltaTime);
-			//cam.cameraPosition = Vector3.Lerp(targetPoint, cam.cameraPosition, t);
-		}
-	}
-
-	public class LockOn : CameraUpdater
-	{
-		Transform from;
-
-		Agent to;
-
-		[SerializeField, Min(0f)]
-		float alignDelay = 5f;
-
-		float maxDistance;
-
-		public LockOn(Transform from, Agent to, float maxDistance)
-		{
-			this.from = from;
-			this.to = to;
-			this.maxDistance = maxDistance;
-		}
-
-		public override void Start(OrbitCamera cam)
-        {
-
-        }
-
-		public override bool Finished() => !from || !to || (from.position - to.transform.position).sqrMagnitude > maxDistance * maxDistance /*|| !FromToVisible()*/;
-		
-		bool FromToVisible()
-        {
-			if(Physics.Raycast(from.position, to.transform.position, out RaycastHit hitInfo))
-            {
-				if(!hitInfo.transform.IsChildOf(to.transform) && hitInfo.distance < maxDistance)
-                {
-					return false;
-                }
-            }
-			return true;
-        }
-
-		public override void PreUpdate(OrbitCamera cam)
-		{
-			//
-			//  c         
-			//   \       f
-			//    \   /
-			//     a
-			var focusPoint = Vector3.Lerp(from.transform.position, to.transform.position + to.CenterOffset * Vector3.up, 0.3f);
-			cam.desiredFocusPoint = focusPoint;
-
-			var directionFromTo = ExtensionMethods.ProjectDirectionOnPlane(to.transform.position - from.position, Vector3.up);
-			float yaw = GetAngle(new Vector2(directionFromTo.x, directionFromTo.z));
-			var cameraPosition = from.position - 3f * (Quaternion.Euler(new Vector3(20f, yaw)) * Vector3.forward);
-			cam.desiredCameraPosition = cameraPosition;
-		}
-
-		/// <summary>
-		/// Pitch in [-90, 90]. Yaw in [-180, 180].
-		/// </summary>
-		Vector2 MoveTowardsPitchYaw(Vector2 from, Vector2 to, float speed)
-        {
-			return new Vector2(Mathf.MoveTowardsAngle(from.x, to.x, speed), Mathf.MoveTowardsAngle(from.y, to.y, speed));
-		}
-
-		public override void UpdateCameraPosition(OrbitCamera cam)
-		{
-			var targetPoint = cam.desiredCameraPosition;
-			float t = 0.3f;// Mathf.Pow(1f - 0.99999f, Time.unscaledDeltaTime);
-			cam.cameraPosition = Vector3.Lerp(targetPoint, cam.cameraPosition, t);
-		}
-	}
-
-	void OnValidate()
-	{
-		if (maxVerticalAngle < minVerticalAngle)
-		{
-			maxVerticalAngle = minVerticalAngle;
 		}
 	}
 
@@ -371,8 +257,6 @@ public class OrbitCamera : MonoBehaviour
 
 		var constrainedOrbitAngles = ConstrainAngles(transform.rotation.eulerAngles);
 		transform.rotation = Quaternion.Euler(constrainedOrbitAngles);
-
-
 	}
 
 	void UpdateFocusPoint()
@@ -397,13 +281,6 @@ public class OrbitCamera : MonoBehaviour
 		{
 			focusPoint = targetPoint;
 		}
-	}
-
-	void UpdateCameraPosition()
-    {
-		var targetPoint = desiredCameraPosition;
-		float t = 1f;// Mathf.Pow(1f - 0.99999f, Time.unscaledDeltaTime);
-		cameraPosition = Vector3.Lerp(targetPoint, cameraPosition, t);
 	}
 
 	Vector2 ConstrainAngles(Vector2 orbitAngles)
