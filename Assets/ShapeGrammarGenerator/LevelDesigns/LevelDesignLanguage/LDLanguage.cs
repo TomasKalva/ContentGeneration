@@ -42,7 +42,7 @@ namespace ShapeGrammar
             PlO = new ObjectPlacement<InteractiveObjectState>((area, io) => area.AddInteractiveObject(io));
             Msg = new MsgPrinter();
 
-            L = Languages.Get(languageParams);
+            L = languageParams.Languages;// Languages.Get(languageParams);
         }
 
         /// <summary>
@@ -133,12 +133,14 @@ namespace ShapeGrammar
 
         public Libraries Lib { get; }
         public Grammars Gr { get; }
+        public Languages Languages { get; }
 
-        public LanguageParams(Libraries lib, Grammars gr, LanguageState languageState)
+        public LanguageParams(Libraries lib, Grammars gr, LanguageState languageState, Languages languages)
         {
             Lib = lib;
             Gr = gr;
             LanguageState = languageState;
+            Languages = languages;
         }
     }
 
@@ -228,16 +230,16 @@ namespace ShapeGrammar
         /// <summary>
         /// Singleton to prevent cycles when creating languages.
         /// </summary>
-        static Languages _get;
-        public static Languages Get(LanguageParams tools)
+        /*static Languages _get;
+        public static Languages Get(LanguageParams languageParams)
         {
             if (_get == null)
             {
                 _get = new Languages();
-                _get.Init(tools);
+                _get.Initialize(languageParams);
             }
             return _get;
-        }
+        }*/
 
         public LevelLanguage LevelLanguage { get; private set; }
         public PatternLanguage PatternLanguage { get; private set; }
@@ -250,24 +252,24 @@ namespace ShapeGrammar
         public NpcLanguage NpcLanguage { get; private set; }
         
 
-        Languages()
+        public Languages()
         {
         }
 
         /// <summary>
         /// Can't be in constructor to avoid infinite recursion.
         /// </summary>
-        void Init(LanguageParams tools)
+        public void Initialize(LanguageParams languageParams)
         {
-            LevelLanguage = new LevelLanguage(tools);
-            PatternLanguage = new PatternLanguage(tools);
-            TestingLanguage = new TestingLanguage(tools);
-            FactionsLanguage = new FactionsLanguage(tools);
-            AscendingLanguage = new AscendingLanguage(tools);
-            OutOfDepthEncountersLanguage = new OutOfDepthEncountersLanguage(tools);
-            DetailsLanguage = new DetailsLanguage(tools);
-            EnvironmentLanguage = new EnvironmentLanguage(tools);
-            NpcLanguage = new NpcLanguage(tools);
+            LevelLanguage = new LevelLanguage(languageParams);
+            PatternLanguage = new PatternLanguage(languageParams);
+            TestingLanguage = new TestingLanguage(languageParams);
+            FactionsLanguage = new FactionsLanguage(languageParams);
+            AscendingLanguage = new AscendingLanguage(languageParams);
+            OutOfDepthEncountersLanguage = new OutOfDepthEncountersLanguage(languageParams);
+            DetailsLanguage = new DetailsLanguage(languageParams);
+            EnvironmentLanguage = new EnvironmentLanguage(languageParams);
+            NpcLanguage = new NpcLanguage(languageParams);
         }
     }
 

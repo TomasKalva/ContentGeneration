@@ -59,14 +59,6 @@ namespace ShapeGrammar
 
         public void InitializePlayer()
         {
-            /*
-            if (Application.isEditor)
-            {
-                UnityEditor.SceneView.FocusWindowIfItsOpen(typeof(UnityEditor.SceneView));
-            }*/
-
-
-            // todo: make this initialization less annoying
             var playerState = new ContentGeneration.Assets.UI.Model.PlayerCharacterState();
             playerState.Spirit = 50;
             var stats = new ContentGeneration.Assets.UI.Model.CharacterStats()
@@ -127,7 +119,13 @@ namespace ShapeGrammar
 
                     yield return TaskSteps.One();
 
-                    GameLanguage = new MyLanguage(new LanguageParams(libraries, gr, languageState));
+                    // Initialize module languages
+                    var languages = new Languages();
+                    var languageParams = new LanguageParams(libraries, gr, languageState, languages);
+                    languages.Initialize(languageParams);
+
+                    // Initialize main language
+                    GameLanguage = new MyLanguage(languageParams);
 
 
                     GameLanguage.MyWorldStart();
