@@ -80,8 +80,8 @@ namespace ShapeGrammar
             //libraries.Items.AllWristItems().ForEach(wi => playerState.AddItem(wi()));
             //playerState.Inventory.Head.Item = libraries.Items.Eggs();
 
-            libraries.Items.AllSkinItems().ForEach(hi => playerState.AddItem(hi()));
-            libraries.Items.AllHeadItems().ForEach(wi => playerState.AddItem(wi()));
+            //libraries.Items.AllSkinItems().ForEach(hi => playerState.AddItem(hi()));
+            //libraries.Items.AllHeadItems().ForEach(wi => playerState.AddItem(wi()));
 
             GameViewModel.ViewModel.PlayerState = playerState;
         }

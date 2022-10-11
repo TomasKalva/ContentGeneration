@@ -15,15 +15,13 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
         {
             State.LC.AddNecessaryEvent($"Level Start", 100, level => L.LevelLanguage.LevelStart(), true);
 
-            State.LC.AddNecessaryEvent($"Level End", 99, level => L.LevelLanguage.LevelEnd(), true);
+            //State.LC.AddNecessaryEvent($"Level End", 99, level => L.LevelLanguage.LevelEnd(), true);
 
-            
+            //L.LevelLanguage.AddOptionalEnd();
 
-            L.FactionsLanguage.InitializeFactions(1);
 
-            /*
-            
-            L.LevelLanguage.AddOptionalEnd();
+            L.FactionsLanguage.InitializeFactions(2);
+
             
             State.LC.AddNecessaryEvent($"Main path", 98, level => L.LevelLanguage.MainPath(level), true);
 
@@ -34,8 +32,9 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
             State.LC.AddNecessaryEvent($"Environment", 0, level => L.EnvironmentLanguage.CreateSky(level), true);
 
 
-            State.LC.AddNecessaryEvent($"Roofs", -1, level => L.LevelLanguage.Roofs(), true);*/
+            State.LC.AddNecessaryEvent($"Roofs", -1, level => L.LevelLanguage.Roofs(), true);
 
+            State.LC.AddNecessaryEvent("Ascending", 80, _ => L.AscendingLanguage.AscendingBranch(() => 100));
 
 
             //State.LC.AddNecessaryEvent("Testing enemies", 5, _ => L.TestingLanguage.StatsScalingOfEnemies());
@@ -47,7 +46,6 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
             State.LC.AddNecessaryEvent("Farmer branch", 5, level => L.FarmersLanguage.FarmerBranch(0));
             */
 
-            //State.LC.AddNecessaryEvent("Ascending", 90, _ => L.AscendingLanguage.AscendingBranch(() => 100));
 
             /*
             State.LC.AddNecessaryEvent(5, () =>
