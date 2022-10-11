@@ -22,13 +22,29 @@ namespace ContentGeneration.Assets.UI.Util
         }
     }
 #if NOESIS
+    /// <summary>
+    /// Has reference to the view model. Should be reset manually when view model changes.
+    /// </summary>
     public static class GameViewModel
     {
-        public static ViewModel ViewModel { get; }
+        static ViewModel _viewModel;
 
-        static GameViewModel(){
-            var camera = GameObject.Find("Main Camera");
-            ViewModel = camera.GetComponent<ViewModel>();
+        public static ViewModel ViewModel 
+        {
+            get
+            {
+                if(_viewModel == null)
+                {
+                    var camera = GameObject.Find("Main Camera");
+                    _viewModel = camera.GetComponent<ViewModel>();
+                }
+                return _viewModel;
+            } 
+        }
+
+        public static void Reset()
+        {
+            _viewModel = null;
         }
     }
 #endif

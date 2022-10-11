@@ -239,6 +239,13 @@ namespace ShapeGrammar
             }
         }
 
+
+        private void OnDestroy()
+        {
+            // Reset reference to view model when scene ends
+            GameViewModel.Reset();
+        }
+
         public IEnumerable<TaskSteps> StartScreenTransition()
         {
             GameViewModel.ViewModel.Visible = false;
