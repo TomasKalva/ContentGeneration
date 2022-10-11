@@ -115,7 +115,7 @@
                     <TextBlock>2: Equip right weapon</TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="5" HorizontalAlignment="Center">
-                    <TextBlock>Q: Drop item irreversibly</TextBlock>
+                    <TextBlock>Q: Drop item for good</TextBlock>
                     <TextBlock>Z: Move left</TextBlock>
                     <TextBlock>X: Move right</TextBlock>
                 </StackPanel>

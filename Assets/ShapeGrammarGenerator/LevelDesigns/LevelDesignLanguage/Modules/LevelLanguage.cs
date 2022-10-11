@@ -21,7 +21,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
         }
 
         public List<Func<ProductionList>> MainPathProductionLists() =>
-            new List<Func<ProductionList>>()
+            new()
                     {
                             () => Gr.PrL.Town(),
                             () => Gr.PrL.Castle(),

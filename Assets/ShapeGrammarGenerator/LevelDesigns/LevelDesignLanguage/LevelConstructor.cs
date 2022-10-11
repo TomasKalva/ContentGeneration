@@ -91,7 +91,7 @@ namespace ShapeGrammar
             Priority = priority;
             Construction = construction;
             Persistent = persistent;
-            Condition = condition != null ? condition : () => true;
+            Condition = condition ?? (() => true);
         }
 
         public void Handle(int level)

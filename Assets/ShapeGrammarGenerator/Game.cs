@@ -38,13 +38,7 @@ namespace ShapeGrammar
         private void Awake()
         {
             AsyncEvaluator = new AsynchronousEvaluator(10);
-            /*
-            libraries.Initialize();
-            InitializePlayer();
-            InitializeLevelConstructor();*/
             AsyncEvaluator.SetTasks(StartGame());
-
-            //AsyncEvaluator.SetTasks(TaskSteps.Multiple(AsynchronousEvaluator.TestMethod()));
         }
 
         private IEnumerable<TaskSteps> StartGame()
@@ -329,8 +323,8 @@ namespace ShapeGrammar
         /// </summary>
         public class TaskSteps 
         {
-            public static TaskSteps One() => new TaskSteps(Enumerable.Empty<TaskSteps>());
-            public static TaskSteps Multiple(IEnumerable<TaskSteps> subtasks) => new TaskSteps(subtasks);
+            public static TaskSteps One() => new(Enumerable.Empty<TaskSteps>());
+            public static TaskSteps Multiple(IEnumerable<TaskSteps> subtasks) => new(subtasks);
 
             IEnumerable<TaskSteps> Subtasks { get; }
 

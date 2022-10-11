@@ -35,7 +35,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
 
             State.LC.AddNecessaryEvent($"Roofs", -1, level => L.LevelLanguage.Roofs(), true);
 
-            State.LC.AddNecessaryEvent("Testing enemies", 5, _ => L.TestingLanguage.StatsScalingOfEnemies());
+            //State.LC.AddNecessaryEvent("Testing enemies", 5, _ => L.TestingLanguage.StatsScalingOfEnemies());
 
 
             //State.LC.AddNecessaryEvent($"Environment", 0, level => L.EnvironmentLanguage.TestSky(level), true);
