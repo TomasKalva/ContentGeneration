@@ -97,6 +97,9 @@ namespace ContentGeneration.Assets.UI
                 PropertyChanged.OnPropertyChanged(this);
             }
         }
+
+        public Menu Menu { get; } = new Menu();
+
 #if NOESIS
 
         float delayBetweenInputs;
@@ -154,6 +157,8 @@ namespace ContentGeneration.Assets.UI
             {
                 PlayerState.PlayerInventory.DropItem();
             }
+
+            Menu.Update();
         }
 
         int GetInputDirection(float i)
@@ -169,7 +174,7 @@ namespace ContentGeneration.Assets.UI
         public ViewModel()
         {
             PlayerState = new PlayerCharacterState();
-            PlayerState.Prop.Spirit = 42;
+            PlayerState.Spirit = 42;
             Enemies = new ObservableCollection<CharacterState>();
 
             Message = "Sample text";

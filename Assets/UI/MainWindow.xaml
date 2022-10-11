@@ -193,6 +193,7 @@
             <!-- Player's inventory -->
             <comp:InventoryView DataContext="{Binding World.PlayerState}"/>
 
+            <comp:Menu DataContext="{Binding Menu}"></comp:Menu>
         </Grid>
     </Grid>
 </UserControl>

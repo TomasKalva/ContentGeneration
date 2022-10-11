@@ -16,6 +16,7 @@ public class MainMenu : MonoBehaviour
     void Start()
     {
         cam = GameObject.Find("Main Camera").GetComponent<Camera>();
+        Cursor.lockState = CursorLockMode.None;
         StartButton.OnClick = PlayGame;
         QuitButton.OnClick = Quit;
     }

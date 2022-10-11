@@ -88,3 +88,4 @@ C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\Asset
 C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\ContentGeneration-blend.csproj.AssemblyReference.cache
 C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\Assets\UI\Components\FloatingHealthBar.g.cs
 C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\Assets\UI\Components\FloatingHealthBar.baml
+C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\Assets\UI\Components\Menu.g.cs

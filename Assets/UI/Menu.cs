@@ -1,0 +1,58 @@
+﻿#if UNITY_5_3_OR_NEWER
+#define NOESIS
+#endif
+using System.ComponentModel;
+using ContentGeneration.Assets.UI.Util;
+#if NOESIS
+using UnityEngine;
+using UnityEngine.SceneManagement;
+#endif
+
+namespace ContentGeneration.Assets.UI
+{
+    public class Menu : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        bool _visible;
+        public bool Visible
+        {
+            get => _visible;
+            set
+            {
+                _visible = value;
+                PropertyChanged.OnPropertyChanged(this);
+            }
+        }
+
+        public Menu()
+        {
+            Visible = false;
+        }
+
+#if NOESIS
+        public void Update()
+        {
+            if (Visible)
+            {
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    Visible = false;
+                }
+                else if (Input.GetKeyDown(KeyCode.Return))
+                {
+                    string sceneName = "StartScene";
+                    SceneManager.LoadScene(sceneName);
+                }
+            }
+            else
+            {
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    Visible = true;
+                }
+            }
+        }
+#endif
+    }
+}

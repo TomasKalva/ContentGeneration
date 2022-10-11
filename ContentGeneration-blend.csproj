@@ -76,6 +76,9 @@
     <Compile Include="Assets\UI\Components\ItemDescriptionView.xaml.cs">
       <DependentUpon>ItemDescriptionView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Assets\UI\Components\Menu.xaml.cs">
+      <DependentUpon>Menu.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Assets\UI\Components\ItemSlotView.xaml.cs">
       <DependentUpon>ItemSlotView.xaml</DependentUpon>
     </Compile>
@@ -96,6 +99,7 @@
     <Compile Include="Assets\UI\Model\PlayerCharacterState.cs" />
     <Compile Include="Assets\UI\Util\Extensions.cs" />
     <Compile Include="Assets\UI\Util\FloatRange.cs" />
+    <Compile Include="Assets\UI\Menu.cs" />
     <Compile Include="Assets\UI\World.cs" />
     <Compile Include="Blend\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -106,6 +110,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Assets\UI\Components\ItemDescriptionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Assets\UI\Components\Menu.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
