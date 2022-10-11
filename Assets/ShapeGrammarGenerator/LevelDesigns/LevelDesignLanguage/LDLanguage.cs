@@ -227,20 +227,6 @@ namespace ShapeGrammar
 
     class Languages
     {
-        /// <summary>
-        /// Singleton to prevent cycles when creating languages.
-        /// </summary>
-        /*static Languages _get;
-        public static Languages Get(LanguageParams languageParams)
-        {
-            if (_get == null)
-            {
-                _get = new Languages();
-                _get.Initialize(languageParams);
-            }
-            return _get;
-        }*/
-
         public LevelLanguage LevelLanguage { get; private set; }
         public PatternLanguage PatternLanguage { get; private set; }
         public TestingLanguage TestingLanguage { get; private set; }
@@ -257,7 +243,8 @@ namespace ShapeGrammar
         }
 
         /// <summary>
-        /// Can't be in constructor to avoid infinite recursion.
+        /// This class is referenced by LanguageParams and also requires them for initialization so
+        /// languages can't be initialized in constructor.
         /// </summary>
         public void Initialize(LanguageParams languageParams)
         {

@@ -28,7 +28,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
         public void ContinueNpc<InteractiveObjectT>(
             InteractiveObjectState<InteractiveObjectT> npc, 
             Action<InteractiveObjectState<InteractiveObjectT>> initialize,
-            Func<bool> condition) 
+            LevelConstructionCondition condition) 
             where InteractiveObjectT : InteractiveObject
         {
             State.LC.AddPossibleEvent($"{npc.Name}", 0, _ =>
@@ -60,13 +60,13 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                                         ContinueNpc(
                                             thisNpc,
                                             DewEnd,
-                                            () => player.Inventory.HasItems("Dew", 3, out var _)
+                                            _ => player.Inventory.HasItems("Dew", 3, out var _)
                                         );
                                     }
                                 )
                     )
                 ),
-                () => true
+                _ => true
             );
         }
 

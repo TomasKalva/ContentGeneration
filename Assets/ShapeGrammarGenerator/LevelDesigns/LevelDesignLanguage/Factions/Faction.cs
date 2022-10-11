@@ -20,7 +20,10 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
     {
         public FactionConcepts Concepts { get; }
 
-        public UniqueNameGenerator UniqueNameGenerator { get; }
+        /// <summary>
+        /// Maximal level to which progressed environment event was added.
+        /// </summary>
+        public int ProgressedEnvironmentInMaxLevel { get; set; }
 
         /// <summary>
         /// Affinity of player with the faction.
@@ -36,6 +39,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
             Concepts = concepts;
             Affinity = 0;
             MaxProgress = 3;
+            ProgressedEnvironmentInMaxLevel = -1;
         }
 
         public FactionManifestation GetFactionManifestation()
@@ -71,7 +75,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
         public void ContinueManifestation(LevelConstructor levelConstructor, IEnumerable<FactionEnvironmentConstructor> branches)
         {
             Progress++;
-            levelConstructor.AddNecessaryEvent($"{nameof(ContinueManifestation)} {Progress}", 10 + Progress, _ => branches.GetRandom()(GetFactionEnvironment(), Progress));
+            levelConstructor.AddNecessaryEvent($"{nameof(ContinueManifestation)} {Progress}", 10 + Progress, level => branches.GetRandom()(GetFactionEnvironment(), Progress, level));
         }
     }
 

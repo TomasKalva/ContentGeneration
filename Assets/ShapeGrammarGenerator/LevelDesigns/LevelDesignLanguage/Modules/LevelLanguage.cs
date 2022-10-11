@@ -95,13 +95,13 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
         public void AddOptionalEnd()
         {
             bool usedOptionalEnd = false;
-            State.LC.AddNecessaryEvent($"Optional end", 99, level => // turning this to possible event causes PathNode error
+            State.LC.AddPossibleEvent($"Optional end", 99, level =>
             {
                 Env.One(Gr.PrL.LevelEnd(), NodesQueries.All, out var area);
                 area.Get.AddInteractiveObject(
                     Lib.InteractiveObjects.Transporter(() => usedOptionalEnd = true)
                     );
-            }, true, () => !usedOptionalEnd);
+            }, true, _ => !usedOptionalEnd);
 
         }
 

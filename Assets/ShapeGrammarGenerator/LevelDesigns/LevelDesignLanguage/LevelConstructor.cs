@@ -32,7 +32,7 @@ namespace ShapeGrammar
             NecessaryEvents.AddEvent(levelConstructionEvent);
         }
 
-        public void AddNecessaryEvent(string name, int priority, LevelConstruction construction, bool persistent = false, Func<bool> condition = null)
+        public void AddNecessaryEvent(string name, int priority, LevelConstruction construction, bool persistent = false, LevelConstructionCondition condition = null)
         {
             AddNecessaryEvent(new LevelConstructionEvent(name, priority, construction, persistent, condition));
         }
@@ -41,7 +41,7 @@ namespace ShapeGrammar
         {
             PossibleEvents.AddEvent(levelConstructionEvent);
         }
-        public void AddPossibleEvent(string name, int priority, LevelConstruction construction, bool persistent = false, Func<bool> condition = null)
+        public void AddPossibleEvent(string name, int priority, LevelConstruction construction, bool persistent = false, LevelConstructionCondition condition = null)
         {
             AddPossibleEvent(new LevelConstructionEvent(name, priority, construction, persistent, condition));
         }
@@ -74,24 +74,28 @@ namespace ShapeGrammar
     }
 
     /// <summary>
-    /// Returns true if construction is finished.
+    /// Constructs part of a level.
     /// </summary>
     public delegate void LevelConstruction(int level);
+    /// <summary>
+    /// Returns true if construction can be done.
+    /// </summary>
+    public delegate bool LevelConstructionCondition(int level);
     public class LevelConstructionEvent
     {
         public string Name { get; }
         public int Priority { get; }
         public bool Persistent { get; }
-        public Func<bool> Condition { get; }
+        public LevelConstructionCondition Condition { get; }
         LevelConstruction Construction { get; }
 
-        public LevelConstructionEvent(string name, int priority, LevelConstruction construction, bool persistent = false, Func<bool> condition = null)
+        public LevelConstructionEvent(string name, int priority, LevelConstruction construction, bool persistent = false, LevelConstructionCondition condition = null)
         {
             Name = name;
             Priority = priority;
             Construction = construction;
             Persistent = persistent;
-            Condition = condition ?? (() => true);
+            Condition = condition ?? (_ => true);
         }
 
         public void Handle(int level)
@@ -124,7 +128,7 @@ namespace ShapeGrammar
 
         public override void Construct(Action<LevelConstructionEvent> reAddPersistent, int level)
         {
-            LevelConstructionEvents.Where(ev => ev.Condition()).OrderBy(ev => -ev.Priority).ForEach(ev =>
+            LevelConstructionEvents.Where(ev => ev.Condition(level)).OrderBy(ev => -ev.Priority).ForEach(ev =>
             {
                 Debug.Log($"Starting: {ev.Name}");
                 ev.Handle(level);
@@ -161,7 +165,7 @@ namespace ShapeGrammar
 
         public override void Construct(Action<LevelConstructionEvent> reAddPersistent, int level)
         {
-            var toExecute = LevelConstructionEvents.Where(ev => ev.Condition()).Take(MaxEvents);
+            var toExecute = LevelConstructionEvents.Where(ev => ev.Condition(level)).Take(MaxEvents);
             var toKeep = LevelConstructionEvents.Except(toExecute);
 
             toKeep.ForEach(ev => reAddPersistent(ev));

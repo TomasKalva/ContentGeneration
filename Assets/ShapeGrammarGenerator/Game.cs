@@ -60,7 +60,7 @@ namespace ShapeGrammar
         public void InitializePlayer()
         {
             var playerState = new ContentGeneration.Assets.UI.Model.PlayerCharacterState();
-            playerState.Spirit = 50;
+            playerState.Spirit = 5000;
             var stats = new ContentGeneration.Assets.UI.Model.CharacterStats()
             {
                 Will = 0,
