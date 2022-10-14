@@ -193,6 +193,14 @@ public class Items : ScriptableObject
             ch.AddItem(VibrantMemory());
         });
 
+    public ItemState Smile() => NewItem("Smile", "Smiling is one of the fundamental practices of Eternal Life movement. Has strong beneficial effects, but should be used with caution.")
+        .SetStackable(1)
+        .OnUse(ch =>
+        {
+            Effects.Heal(1000f)(ch);
+            Effects.RegenerateHealth(5f, 60f);
+        });
+
     public IEnumerable<Func<ItemState>> MiscellaneousItems() => new List<Func<ItemState>>()
     {
         Dew,

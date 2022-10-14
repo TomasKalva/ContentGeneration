@@ -21,7 +21,8 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
                 L.DeathLanguage.DieIfNotProtected();
                 //L.DeathLanguage.EndRunAfterDeaths(2);
                 //L.DeathLanguage.DropSpiritBloodstainOnDeath();
-                L.DeathLanguage.DropRunEndingBloodstainOnDeath();
+                //L.DeathLanguage.DropRunEndingBloodstainOnDeath();
+                L.DeathLanguage.EndRunIfOutOfSmile();
             }, true);
 
             State.LC.AddNecessaryEvent($"Level End", 99, level => L.LevelLanguage.LevelEnd(), true);

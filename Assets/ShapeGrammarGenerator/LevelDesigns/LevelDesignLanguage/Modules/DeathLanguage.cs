@@ -93,6 +93,9 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
             playerState.AddOnDeath(bloodstainRemoval);
         }
 
+        /// <summary>
+        /// Player drops spirit into bloodstain after death.
+        /// </summary>
         public void DropSpiritBloodstainOnDeath()
         {
             var playerState = State.World.PlayerState;
@@ -108,6 +111,9 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
             });
         }
 
+        /// <summary>
+        /// The game ends if player doesn't retrieve bloodstain before end of the level.
+        /// </summary>
         public void DropRunEndingBloodstainOnDeath()
         {
             var playerState = State.World.PlayerState;
@@ -130,6 +136,22 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
                     {
                         State.GC.EndRun();
                     }
+                });
+        }
+
+        public void EndRunIfOutOfSmile()
+        {
+            var playerState = State.World.PlayerState;
+            playerState
+                .AddOnDeath(() =>
+                {
+                    playerState.Inventory.TryPay(
+                        "Smile", 1,
+                        () => { },
+                        () =>
+                        {
+                            State.GC.EndRun();
+                        });
                 });
         }
     }
