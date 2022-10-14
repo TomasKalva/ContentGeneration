@@ -77,6 +77,7 @@ namespace ContentGeneration.Assets.UI.Model
         public override void Die()
         {
             //GameObject.Destroy(Agent.gameObject);
+            DeathCount++;
             OnDeath();
             //World.OnPlayerDeath();
         }

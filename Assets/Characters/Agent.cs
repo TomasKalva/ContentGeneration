@@ -296,17 +296,6 @@ public class Agent : MonoBehaviour
 			movement.Turn(direction);
 		}
 	}
-	/*
-	public virtual void Die()
-	{
-		acting.ForceIntoAct(acting.Staggered);
-		CharacterState.World.RemoveEnemy(CharacterState);
-		CharacterState.OnDeath();
-		//GameViewModel.ViewModel.Enemies.Remove(CharacterState);
-		//Destroy(gameObject, 1f);
-
-		enabled = false;
-    }*/
 
 	public virtual void PickUpItem(PhysicalItemState physicalItem)
     {

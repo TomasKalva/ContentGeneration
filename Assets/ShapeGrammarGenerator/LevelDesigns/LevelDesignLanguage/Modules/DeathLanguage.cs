@@ -55,8 +55,10 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
         /// <summary>
         /// Bloodstain will get created after level reset. The bloodstain will stop spawning after player dies.
         /// </summary>
-        void DropBloodstain(Action onRetrieval)
+        void DropBloodstain(Action onRetrieval, Action onNonRetrieval = null)
         {
+            onNonRetrieval = onNonRetrieval ?? (() => { });
+
             var playerState = State.World.PlayerState;
             var deathPosition = playerState.Agent.transform.position;
 
@@ -84,6 +86,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
             // Remove old bloodstain after death
             bloodstainRemoval = () =>
             {
+                onNonRetrieval();
                 State.World.OnLevelRestart -= spawnBloodstain;
                 playerState.OnDeath -= bloodstainRemoval;
             };
@@ -97,11 +100,22 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
             {
                 var lostSpirit = playerState.Spirit;
                 playerState.Spirit = 0;
-                DropBloodstain(() => playerState.Spirit += lostSpirit);
+                DropBloodstain(() =>
+                {
+                    playerState.Spirit += lostSpirit;
+                    Msg.Show("Spirit retrieved");
+                });
             });
         }
 
-        int TotalPlayersDeaths { get; set; } = 0;
+        public void DropRunEndingBloodstainOnDeath()
+        {
+            var playerState = State.World.PlayerState;
+            playerState.AddOnDeath(() =>
+            {
+                DropBloodstain(() => { Msg.Show("Ending alleviated"); }, State.GC.EndRun);
+            });
+        }
 
         /// <summary>
         /// The run will end after max(1, deathCount) player's deaths.
@@ -112,7 +126,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
             playerState
                 .AddOnDeath(() =>
                 {
-                    if(++TotalPlayersDeaths == deathCount)
+                    if(playerState.DeathCount == deathCount)
                     {
                         State.GC.EndRun();
                     }

@@ -90,7 +90,7 @@ namespace ContentGeneration.Assets.UI.Model
 
         public GeometryMaker<Agent> GeometryMaker { get; set; }
 
-        public int DeathCount { get; private set; }
+        public int DeathCount { get; protected set; }
 
         public Action OnDeath { get; set; }
         public CharacterState AddOnDeath(Action onDeath)

@@ -36,6 +36,9 @@ public class InteractiveObjects : ScriptableObject
     Transform physicalItemPrefab;
 
     [SerializeField]
+    Transform bloodstainPrefab;
+
+    [SerializeField]
     Transform farmer;
 
     public GraveState Grave(GameControl gameControl)
@@ -126,7 +129,7 @@ public class InteractiveObjects : ScriptableObject
         var bloodstain = new InteractiveObjectState<InteractiveObject>()
         {
             Name = "Bloodstain",
-            GeometryMaker = Geometry<InteractiveObject>(physicalItemPrefab)
+            GeometryMaker = Geometry<InteractiveObject>(bloodstainPrefab)
         };
         bloodstain.SetInteraction(
             ins => ins.Act("Retrieve",
