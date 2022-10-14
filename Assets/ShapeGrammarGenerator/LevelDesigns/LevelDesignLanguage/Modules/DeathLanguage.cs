@@ -1,4 +1,5 @@
 ﻿using ContentGeneration.Assets.UI;
+using ContentGeneration.Assets.UI.Model;
 using ShapeGrammar;
 using System;
 using System.Collections.Generic;
@@ -51,49 +52,53 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
                 });
         }
 
-        public void DropBloodstain()
+        /// <summary>
+        /// Bloodstain will get created after level reset. The bloodstain will stop spawning after player dies.
+        /// </summary>
+        void DropBloodstain(Action onRetrieval)
+        {
+            var playerState = State.World.PlayerState;
+            var deathPosition = playerState.Agent.transform.position;
+
+            Action spawnBloodstain = null;
+            Action bloodstainRemoval = null;
+
+            // Create bloodstain
+            var bloodstain = Lib.InteractiveObjects.Bloodstain(
+                () =>
+                {
+                    onRetrieval();
+                    State.World.OnLevelRestart -= spawnBloodstain;
+                    playerState.OnDeath -= bloodstainRemoval;
+                });
+
+            // Spawn bloodstain
+            spawnBloodstain = () =>
+            {
+                var bloodstainBody = bloodstain.MakeGeometry();
+                bloodstainBody.transform.position = deathPosition;
+                State.World.AddInteractiveObject(bloodstain);
+            };
+            State.World.OnLevelRestart += spawnBloodstain;
+
+            // Remove old bloodstain after death
+            bloodstainRemoval = () =>
+            {
+                State.World.OnLevelRestart -= spawnBloodstain;
+                playerState.OnDeath -= bloodstainRemoval;
+            };
+            playerState.AddOnDeath(bloodstainRemoval);
+        }
+
+        public void DropSpiritBloodstainOnDeath()
         {
             var playerState = State.World.PlayerState;
             playerState.AddOnDeath(() =>
             {
-                    // Lose spirit at the position
-                    var deathPosition = playerState.Agent.transform.position;
-                    var lostSpirit = playerState.Spirit;
-                    playerState.Spirit = 0;
-
-                    Action spawnBloodstain = null;
-                    Action bloodstainRemoval = null;
-
-                    // Create bloodstain
-                    var bloodstain = Lib.InteractiveObjects.Bloodstain(
-                        () =>
-                        {
-                            playerState.Spirit += lostSpirit;
-                            State.World.OnLevelRestart -= spawnBloodstain;
-                            playerState.OnDeath -= bloodstainRemoval;
-                        });
-
-                    // Spawn bloodstain
-                    spawnBloodstain = () =>
-                    {
-                        var bloodstainBody = bloodstain.MakeGeometry();
-                        bloodstainBody.transform.position = deathPosition;
-                        State.World.AddInteractiveObject(bloodstain);
-                    };
-                    State.World.OnLevelRestart += spawnBloodstain;
-
-                    // Remove old bloodstain after death
-                    bloodstainRemoval = () =>
-                    {
-                        State.World.OnLevelRestart -= spawnBloodstain;
-                        playerState.OnDeath -= bloodstainRemoval;
-                    };
-                    playerState.AddOnDeath(bloodstainRemoval);
-
-                    //
-                    
-                }
-            );
+                var lostSpirit = playerState.Spirit;
+                playerState.Spirit = 0;
+                DropBloodstain(() => playerState.Spirit += lostSpirit);
+            });
         }
 
         int TotalPlayersDeaths { get; set; } = 0;
