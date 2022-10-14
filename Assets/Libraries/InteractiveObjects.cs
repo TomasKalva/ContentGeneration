@@ -112,6 +112,7 @@ public class InteractiveObjects : ScriptableObject
                     if (!beingPickedUp)
                     {
                         pl.Agent.PickUpItem(physicalItemState);
+                        Msg.Show($"{itemState.Name} picked up");
                         beingPickedUp = true;
                     }
                 })

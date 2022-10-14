@@ -28,7 +28,7 @@ namespace ShapeGrammar
         public Environments Env { get; }
         public ObjectPlacement<CharacterState> PlC { get; }
         public ObjectPlacement<InteractiveObjectState> PlO { get; }
-        public MsgPrinter Msg { get; }
+        //public MsgPrinter Msg { get; }
 
         public LDLanguage(LanguageParams languageParams)
         {
@@ -40,7 +40,7 @@ namespace ShapeGrammar
             Env = new Environments(this);
             PlC = new ObjectPlacement<CharacterState>((area, enemy) => area.AddEnemy(enemy));
             PlO = new ObjectPlacement<InteractiveObjectState>((area, io) => area.AddInteractiveObject(io));
-            Msg = new MsgPrinter();
+            //Msg = new MsgPrinter();
 
             L = languageParams.Languages;// Languages.Get(languageParams);
         }
@@ -366,9 +366,9 @@ namespace ShapeGrammar
         }
     }
 
-    class MsgPrinter
+    public static class Msg
     {
-        public void Show(string message)
+        public static void Show(string message)
         {
             GameViewModel.ViewModel.Message = message;
         }
