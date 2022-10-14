@@ -19,7 +19,6 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
     {
         public NpcLanguage(LanguageParams tools) : base(tools) { }
         
-        
         public void PutNpcToNewArea(InteractiveObjectState npc)
         {
             Env.One(Gr.PrL.Garden(), NodesQueries.All, out var area);
@@ -116,6 +115,12 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                     )
                 );
         }
+        /*
+        public void PutNpcToNewArea(InteractiveObjectState npc)
+        {
+            Env.One(Gr.PrL.Garden(), NodesQueries.All, out var area);
+            area.AreasList[0].AddInteractiveObject(npc);
+        }*/
 
         public void InitializeNpcs()
         {

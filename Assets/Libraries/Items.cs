@@ -7,6 +7,7 @@ using ContentGeneration.Assets.UI.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -174,16 +175,17 @@ public class Items : ScriptableObject
         WoodenSkin,
     };
 
-    public ItemState Dew() => NewItem("Dew", "Dew is dew.")
+    public ItemState Dew() => NewItem("Dew", "Originating from the morning garden, Dew keeps its position of a great refereshment.")
         .SetStackable(1)
         .OnUse(Effects.RegenerateHealth(2f,  4f));
 
-    public ItemState HoneyBall() => NewItem("Honey Ball", "Bees don't stagnate.")
+    public ItemState HoneyBall() => NewItem("Honey Ball", "Sweet honey can heal wounds.")
         .SetStackable(1)
         .OnUse(Effects.Heal(5f));
 
-    public ItemState VibrantMemory() => NewItem("Vibrant Memory", "A memory blurring the borders between life and death. Can be relived.")
-        .SetStackable(1, false);
+    public ItemState VibrantMemory() => NewItem("Vibrant Memory", "A memory blurring the border between life and death. Can be relived.")
+        .SetStackable(1)
+        .OnUse(ch => ch.AddItem(AllWeapons().GetRandom()()));
 
     public ItemState FadingMemory() => NewItem("Fading Memory", "A short lived memory that does not indicate anything worthwile. Recalling hurts.")
         .SetStackable(1)
@@ -201,12 +203,27 @@ public class Items : ScriptableObject
             Effects.RegenerateHealth(5f, 60f);
         });
 
+    public ItemState Coconut() => NewItem("Coconut", "What hides inside is not just a tasty snack.")
+        .SetStackable(1)
+        .OnUse(ch =>
+        {
+            ch.AddItem(AllWristItems().Concat(AllHeadItems()).GetRandom()());
+            Effects.BoostStaminaRegen(2f, 20f)(ch);
+        });
+
     public IEnumerable<Func<ItemState>> MiscellaneousItems() => new List<Func<ItemState>>()
     {
         Dew,
-        HoneyBall
+        HoneyBall,
     };
 
+
+    public IEnumerable<Func<ItemState>> RareItems() => new List<Func<ItemState>>()
+    {
+        Smile,
+        FadingMemory,
+        Coconut,
+    };
 
     public AccessoryItem FreeWill() => new AccessoryItem("Free Will", "Costs nothing", accessories.Circle)
         .OnUpdate(

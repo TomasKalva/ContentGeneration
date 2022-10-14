@@ -139,6 +139,9 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
                 });
         }
 
+        /// <summary>
+        /// Ends run when no smile remains in the inventory.
+        /// </summary>
         public void EndRunIfOutOfSmile()
         {
             var playerState = State.World.PlayerState;

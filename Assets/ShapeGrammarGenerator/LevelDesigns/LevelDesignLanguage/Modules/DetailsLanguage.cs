@@ -47,11 +47,18 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 
             Env.BranchRandomly(allDetails, 6, out var disconnectedDetails);
 
-            var itemPlacer = PlO.EvenPlacer(
-                Enumerable.Range(0, disconnectedDetails.AreasList.Count)
+            int areasCount = disconnectedDetails.AreasList.Count;
+            var dogItemPlacer = PlO.EvenPlacer(
+                Enumerable.Range(0, areasCount)
                 .Select(_ => Items[ItemLevel(level)]().SetStackable(1))
                 .Select(itemState => Lib.InteractiveObjects.Item(itemState)));
-            itemPlacer.Place(disconnectedDetails);
+            dogItemPlacer.Place(disconnectedDetails);
+
+            var rareItemPlacer = PlO.EvenPlacer(
+                Enumerable.Range(0, areasCount)
+                .Select(_ => Lib.Items.RareItems().GetRandom()())
+                .Select(itemState => Lib.InteractiveObjects.Item(itemState)));
+            rareItemPlacer.Place(disconnectedDetails);
         }
     }
 }
