@@ -219,7 +219,7 @@ namespace ShapeGrammar
 
             yield return TaskSteps.One();
 
-            GameLanguage.State.World.OnGameStart();
+            GameLanguage.State.World.OnLevelStart();
 
             yield return TaskSteps.One();
 

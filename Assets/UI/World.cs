@@ -48,7 +48,8 @@ namespace ContentGeneration.Assets.UI
         public IEnumerable<CharacterState> AliveEnemies => Enemies;//.Where(ch => ch != null && !ch.Dead);
         public IEnumerable<InteractiveObjectState> InteractiveObjects => interactiveObjects.Concat(interactivePersistentObjects).Where(io => io != null && io.InteractiveObject != null);
 
-        public Action OnGameStart { get; set; }
+        public Action OnLevelStart { get; set; }
+        public Action OnLevelRestart { get; set; }
 
         // Start is called before the first frame update
         public World(WorldGeometry worldGeometry, PlayerCharacterState playerState)
@@ -77,7 +78,8 @@ namespace ContentGeneration.Assets.UI
             Enemies = new ObservableCollection<CharacterState>();
             architectureElements = new List<Transform>();
 
-            OnGameStart = () => { };
+            OnLevelStart = () => { };
+            OnLevelRestart = () => { };
         }
 
         /*
@@ -215,6 +217,7 @@ namespace ContentGeneration.Assets.UI
             interactiveObjects.Clear();
             Enemies.Clear();
 
+            OnLevelRestart();
         }
     }
     public class WorldGeometry

@@ -16,7 +16,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
         {
         }
 
-        public void EnableClassicalDeath()
+        public void DieClasically()
         {
             var playerState = State.World.PlayerState;
             playerState
@@ -27,6 +27,9 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
                 });
         }
 
+        /// <summary>
+        /// Pay item to stay alive. The item is payed automatically on death.
+        /// </summary>
         public void DieIfNotProtected()
         {
             var playerState = State.World.PlayerState;
@@ -46,6 +49,34 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
                             State.GC.ResetLevel(5.0f);
                         });
                 });
+        }
+
+        public void DropBloodstain()
+        {
+            var playerState = State.World.PlayerState;
+            playerState.AddOnDeath(() =>
+                {
+                    // Spawn bloodstain at death position at restart of level
+                    var deathPosition = playerState.Agent.transform.position;
+                    var bloodstain = Lib.InteractiveObjects.Item(Lib.Items.NewItem("Retrieval", "Retrieved"));
+                    Action spawnBloodstain = () =>
+                    {
+                        var bloodstainBody = bloodstain.MakeGeometry();
+                        bloodstainBody.transform.position = deathPosition;
+                        State.World.AddInteractiveObject(bloodstain);
+                    };
+                    State.World.OnLevelRestart += spawnBloodstain;
+
+                    // Remove old bloodstain after death
+                    Action bloodstainRemoval = null;
+                    bloodstainRemoval = () =>
+                    {
+                        State.World.OnLevelRestart -= spawnBloodstain;
+                        playerState.OnDeath -= bloodstainRemoval;
+                    };
+                    playerState.AddOnDeath(bloodstainRemoval);
+                }
+            );
         }
 
         int TotalPlayersDeaths { get; set; } = 0;

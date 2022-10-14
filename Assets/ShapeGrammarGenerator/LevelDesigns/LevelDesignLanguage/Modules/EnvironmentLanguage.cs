@@ -92,7 +92,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                     RenderSettings.sun = env.Sun;
                     return env;
                 });
-            State.World.OnGameStart += envState.MakeGeometry;
+            State.World.OnLevelStart += envState.MakeGeometry;
 
             var parameters = GetSkyParameter(level);
             envState.SetParameters(parameters);
@@ -109,7 +109,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                     RenderSettings.sun = env.Sun;
                     return env;
                 });
-            State.World.OnGameStart += envState.MakeGeometry;
+            State.World.OnLevelStart += envState.MakeGeometry;
             /*
             var env = Lib.Objects.Environment();
             State.World.AddSpecialObject(env.transform);*/

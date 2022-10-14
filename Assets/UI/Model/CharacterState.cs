@@ -92,7 +92,7 @@ namespace ContentGeneration.Assets.UI.Model
 
         public int DeathCount { get; private set; }
 
-        public Action OnDeath { get; private set; }
+        public Action OnDeath { get; set; }
         public CharacterState AddOnDeath(Action onDeath)
         {
             OnDeath += onDeath;
