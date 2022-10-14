@@ -50,7 +50,7 @@ public class InteractiveObjects : ScriptableObject
                     (_, player) =>
                     {
                         player.World.Grave = grave;
-                        gameControl.ResetLevel();
+                        gameControl.ResetLevel(0.3f);
                         player.Rest();
                     })
             ).SetBlocking(true);

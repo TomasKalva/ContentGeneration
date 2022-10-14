@@ -184,14 +184,10 @@ namespace ShapeGrammar
 
         IEnumerable<TaskSteps> ResetLevel(PlayerCharacterState playerState, LevelGroupElement levelRoot)
         {
-            yield return TaskSteps.Multiple(StartScreenTransition());
-
             GameLanguage.State.World.Reset();
             yield return TaskSteps.One();
             yield return TaskSteps.Multiple(GameLanguage.State.InstantiateAreas());
             yield return TaskSteps.Multiple(PutPlayerToWorld(playerState, levelRoot));
-
-            yield return TaskSteps.Multiple(EndScreenTransition());
         }
 
         IEnumerable<TaskSteps> GoToNextLevel()
@@ -242,32 +238,35 @@ namespace ShapeGrammar
             GameViewModel.Reset();
         }
 
-        public IEnumerable<TaskSteps> StartScreenTransition()
-        {
-            GameViewModel.ViewModel.Visible = false;
-            LoadingScreen.StartLoading();
+        /// <summary>
+        /// Elapsed is normalized between 0f and 1f.
+        /// </summary>
+        delegate void DoEachStep(float elapsedNormalized);
 
-            float transitionTime = 0.3f;
-            var sw = new Stopwatch();
-            sw.Start();
-            while(sw.ElapsedMilliseconds < transitionTime * 1000)
-            {
-                LoadingScreen.SetOpacity(sw.ElapsedMilliseconds * 0.001f / transitionTime);
-                yield return TaskSteps.One();
-            }
-            LoadingScreen.SetOpacity(1f);
-        }
-
-        public IEnumerable<TaskSteps> EndScreenTransition()
+        IEnumerable<TaskSteps> Wait(float transitionTime, DoEachStep doEachStep = null)
         {
-            float transitionTime = 1.0f;
+            doEachStep = doEachStep ?? (_ => { });
             var sw = new Stopwatch();
             sw.Start();
             while (sw.ElapsedMilliseconds < transitionTime * 1000)
             {
-                LoadingScreen.SetOpacity(1f - sw.ElapsedMilliseconds * 0.001f / transitionTime);
+                doEachStep(sw.ElapsedMilliseconds * 0.001f / transitionTime);
                 yield return TaskSteps.One();
             }
+        }
+
+        IEnumerable<TaskSteps> StartScreenTransition(float duration = 0.3f)
+        {
+            GameViewModel.ViewModel.Visible = false;
+            LoadingScreen.StartLoading();
+
+            yield return TaskSteps.Multiple(Wait(duration, secondsElapsed => LoadingScreen.SetOpacity(secondsElapsed)));
+            LoadingScreen.SetOpacity(1f);
+        }
+
+        IEnumerable<TaskSteps> EndScreenTransition(float duration = 1.0f)
+        {
+            yield return TaskSteps.Multiple(Wait(duration, secondsElapsed => LoadingScreen.SetOpacity(1f - secondsElapsed)));
             LoadingScreen.SetOpacity(0f);
 
             GameViewModel.ViewModel.Visible = true;
@@ -297,11 +296,14 @@ namespace ShapeGrammar
                     Game.EndScreenTransition()));
             }
 
-            public void ResetLevel()
+            public void ResetLevel(float startDuration)
             {
                 var levelRoot = Game.GameLanguage.State.GrammarState.WorldState.Added;
                 var playerState = Game.GameLanguage.State.World.PlayerState;
-                AsyncEvaluator.SetTasks(Game.ResetLevel(playerState, levelRoot));
+                AsyncEvaluator.SetTasks(
+                    Game.StartScreenTransition(startDuration).Concat(
+                    Game.ResetLevel(playerState, levelRoot)).Concat(
+                    Game.EndScreenTransition()));
             }
         }
     }

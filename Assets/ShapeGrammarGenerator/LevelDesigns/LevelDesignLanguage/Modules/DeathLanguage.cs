@@ -21,8 +21,10 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
                 .AddOnDeath(() =>
                 {
                     GameObject.Destroy(playerState.Agent.gameObject);
-                    State.GC.ResetLevel();
+                    State.GC.ResetLevel(5.0f);
                 });
         }
+
+
     }
 }
