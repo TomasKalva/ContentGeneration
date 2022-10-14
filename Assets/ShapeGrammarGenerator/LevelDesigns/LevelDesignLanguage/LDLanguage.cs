@@ -236,7 +236,8 @@ namespace ShapeGrammar
         public DetailsLanguage DetailsLanguage { get; private set; }
         public EnvironmentLanguage EnvironmentLanguage { get; private set; }
         public NpcLanguage NpcLanguage { get; private set; }
-        
+        public DeathLanguage DeathLanguage { get; private set; }
+
 
         public Languages()
         {
@@ -257,6 +258,7 @@ namespace ShapeGrammar
             DetailsLanguage = new DetailsLanguage(languageParams);
             EnvironmentLanguage = new EnvironmentLanguage(languageParams);
             NpcLanguage = new NpcLanguage(languageParams);
+            DeathLanguage = new DeathLanguage(languageParams);
         }
     }
 

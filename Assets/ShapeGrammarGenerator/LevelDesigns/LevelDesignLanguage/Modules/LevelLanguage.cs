@@ -85,7 +85,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
             // Place transporter to the next level
             var end = pathToEnd.LastArea();
             end.AddInteractiveObject(
-                Lib.InteractiveObjects.Transporter()
+                Lib.InteractiveObjects.Transporter(State.GC)
                 );
         }
 
@@ -99,7 +99,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
             {
                 Env.One(Gr.PrL.LevelEnd(), NodesQueries.All, out var area);
                 area.Get.AddInteractiveObject(
-                    Lib.InteractiveObjects.Transporter(() => usedOptionalEnd = true)
+                    Lib.InteractiveObjects.Transporter(State.GC, () => usedOptionalEnd = true)
                     );
             }, true, _ => !usedOptionalEnd);
 
@@ -109,8 +109,9 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
         {
             Env.One(Gr.PrL.LevelEnd(), NodesQueries.All, out var area);
             area.Get.AddInteractiveObject(
-                Lib.InteractiveObjects.Transporter()
+                Lib.InteractiveObjects.Transporter(State.GC)
                 );
+
         }
 
         public void Roofs()

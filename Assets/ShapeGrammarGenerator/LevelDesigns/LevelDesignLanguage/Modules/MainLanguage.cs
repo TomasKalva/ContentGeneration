@@ -7,22 +7,23 @@ using System.Threading.Tasks;
 
 namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
 {
-    class MyLanguage : LDLanguage
+    class MainLanguage : LDLanguage
     {
-        public MyLanguage(LanguageParams tools) : base(tools) { }
+        public MainLanguage(LanguageParams tools) : base(tools) { }
 
-        public void MyWorldStart()
+        public void StartWorld()
         {
             State.LC.AddNecessaryEvent($"Level Start", 100, level => L.LevelLanguage.LevelStart(), true);
 
-            //State.LC.AddNecessaryEvent($"Level End", 99, level => L.LevelLanguage.LevelEnd(), true);
+            State.LC.AddNecessaryEvent($"Classical death", 99, _ => L.DeathLanguage.EnableClassicalDeath(), true);
+
+            State.LC.AddNecessaryEvent($"Level End", 99, level => L.LevelLanguage.LevelEnd(), true);
 
             //L.LevelLanguage.AddOptionalEnd();
-
-
+            /*
             L.FactionsLanguage.InitializeFactions(2);
-
             
+
             State.LC.AddNecessaryEvent($"Main path", 98, level => L.LevelLanguage.MainPath(level), true);
 
             State.LC.AddNecessaryEvent($"Add Details", 0, level => L.DetailsLanguage.AddDetails(level), true);
@@ -35,7 +36,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
             State.LC.AddNecessaryEvent($"Roofs", -1, level => L.LevelLanguage.Roofs(), true);
 
             State.LC.AddNecessaryEvent("Ascending", 80, _ => L.AscendingLanguage.AscendingBranch(() => 100));
-
+            */
 
             //State.LC.AddNecessaryEvent("Testing enemies", 5, _ => L.TestingLanguage.StatsScalingOfEnemies());
 

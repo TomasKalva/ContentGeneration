@@ -7,12 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static ShapeGrammar.AsynchronousEvaluator;
+using static ShapeGrammar.Game;
 
 namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 {
     class LanguageState
     {
         public LevelConstructor LC { get; }
+        public GameControl GC { get; }
 
         public ShapeGrammarState GrammarState { get; set; }
         public IEnumerable<Area> TraversableAreas => TraversabilityGraph.Areas;
@@ -23,10 +25,11 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 
         Func<World> CreateWorld { get; }
 
-        public LanguageState(LevelConstructor levelConstructor, LevelDevelopmentKit ldk, Func<World> createWorld)
+        public LanguageState(LevelConstructor levelConstructor, LevelDevelopmentKit ldk, GameControl gameControl, Func<World> createWorld)
         {
             TraversabilityGraph = new TraversabilityGraph();
             LC = levelConstructor;
+            GC = gameControl;
             Ldk = ldk;
             UniqueNameGenerator = new UniqueNameGenerator();
             CreateWorld = createWorld;

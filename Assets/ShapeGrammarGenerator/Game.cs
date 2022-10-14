@@ -31,13 +31,16 @@ namespace ShapeGrammar
         [SerializeField]
         Libraries libraries;
 
-        MyLanguage GameLanguage;
+        GameControl GC;
+
+        MainLanguage GameLanguage;
 
         public AsynchronousEvaluator AsyncEvaluator { get; private set; }
 
         private void Awake()
         {
             AsyncEvaluator = new AsynchronousEvaluator(10);
+            GC = new GameControl(this, AsyncEvaluator);
             AsyncEvaluator.SetTasks(StartGame());
         }
 
@@ -57,7 +60,7 @@ namespace ShapeGrammar
             yield return TaskSteps.Multiple(EndScreenTransition());
         }
 
-        public void InitializePlayer()
+        void InitializePlayer()
         {
             var playerState = new ContentGeneration.Assets.UI.Model.PlayerCharacterState();
             playerState.Spirit = 5000;
@@ -86,17 +89,23 @@ namespace ShapeGrammar
             GameViewModel.ViewModel.PlayerState = playerState;
         }
 
-        public World CreateWorld()
+        World CreateNewWorld()
         {
             var playerState = GameViewModel.ViewModel.PlayerState;
+
+            // Reset player's callbacks before executing languages 
+            playerState
+                .ClearOnDeath()
+                .ClearOnRest();
 
             return new World(
                 new WorldGeometry(worldParent, 2.8f),
                 playerState
                 );
+
         }
 
-        public IEnumerable<TaskSteps> InitializeLevelConstructor()
+        IEnumerable<TaskSteps> InitializeLevelConstructor()
         {
             var ldk = new LevelDevelopmentKit(GeometricPrimitives, worldParent, libraries);
 
@@ -107,7 +116,7 @@ namespace ShapeGrammar
                 //ShapeGrammarState grammarState = new ShapeGrammarState(ldk);
                 {
                     var levelConstructor = new LevelConstructor();
-                    var languageState = new LanguageState(levelConstructor, ldk, CreateWorld);
+                    var languageState = new LanguageState(levelConstructor, ldk, GC, CreateNewWorld);
                     languageState.Restart();
 
                     yield return TaskSteps.One();
@@ -125,10 +134,10 @@ namespace ShapeGrammar
                     languages.Initialize(languageParams);
 
                     // Initialize main language
-                    GameLanguage = new MyLanguage(languageParams);
+                    GameLanguage = new MainLanguage(languageParams);
 
 
-                    GameLanguage.MyWorldStart();
+                    GameLanguage.StartWorld();
 
                     yield return TaskSteps.One();
                 }
@@ -159,7 +168,7 @@ namespace ShapeGrammar
                 var goodCubes = startArea.Node.LE.CG().WithFloor().OpSub().ExtrudeHor(false).OpNew().Cubes;
                 //.Cubes.Where(cube => cube.NeighborsHor().All(neighbor => neighbor.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor));
                 var goodGraveCube = goodCubes.GetRandom();
-                var graveState = libraries.InteractiveObjects.Grave();
+                var graveState = libraries.InteractiveObjects.Grave(GC);
                 var grave = graveState.MakeGeometry();
                 grave.transform.position = world.WorldGeometry.GridToWorld(goodGraveCube.Position);
                 world.AddInteractiveObject(graveState);
@@ -185,8 +194,9 @@ namespace ShapeGrammar
             yield return TaskSteps.Multiple(EndScreenTransition());
         }
 
-        public IEnumerable<TaskSteps> GoToNextLevel()
+        IEnumerable<TaskSteps> GoToNextLevel()
         {
+
             // Generating the world
 
             // show transition animation
@@ -203,8 +213,7 @@ namespace ShapeGrammar
             yield return TaskSteps.One();
 
             // Put player to the world
-
-            var playerState = GameViewModel.ViewModel.PlayerState;
+            var playerState = GameLanguage.State.World.PlayerState;
             var levelRoot = grammarState.WorldState.Added;
             yield return TaskSteps.Multiple(PutPlayerToWorld(playerState, levelRoot));
 
@@ -213,19 +222,6 @@ namespace ShapeGrammar
             GameLanguage.State.World.OnGameStart();
 
             yield return TaskSteps.One();
-
-            // Restart level after player dies
-            playerState
-                .ClearOnDeath()
-                .AddOnDeath(() =>
-                {
-                    AsyncEvaluator.SetTasks(ResetLevel(playerState, levelRoot));
-                })
-                .ClearOnRest()
-                .AddOnRest(() =>
-                {
-                    AsyncEvaluator.SetTasks(ResetLevel(playerState, levelRoot));
-                });
 
             // hide transition animation
         }
@@ -277,6 +273,36 @@ namespace ShapeGrammar
             GameViewModel.ViewModel.Visible = true;
             LoadingScreen.EndLoading();
             yield return TaskSteps.One();
+        }
+
+        /// <summary>
+        /// Public api for Game.
+        /// </summary>
+        public class GameControl
+        {
+            Game Game { get; }
+            AsynchronousEvaluator AsyncEvaluator { get; }
+
+            public GameControl(Game game, AsynchronousEvaluator asyncEvaluator)
+            {
+                Game = game;
+                AsyncEvaluator = asyncEvaluator;
+            }
+
+            public void GoToNextLevel()
+            {
+                AsyncEvaluator.SetTasks(
+                    Game.StartScreenTransition().Concat(
+                    Game.GoToNextLevel()).Concat(
+                    Game.EndScreenTransition()));
+            }
+
+            public void ResetLevel()
+            {
+                var levelRoot = Game.GameLanguage.State.GrammarState.WorldState.Added;
+                var playerState = Game.GameLanguage.State.World.PlayerState;
+                AsyncEvaluator.SetTasks(Game.ResetLevel(playerState, levelRoot));
+            }
         }
     }
 

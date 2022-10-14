@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using static ShapeGrammar.Game;
 
 public class InteractiveObjects : ScriptableObject
 {
@@ -36,7 +37,7 @@ public class InteractiveObjects : ScriptableObject
     [SerializeField]
     Transform farmer;
 
-    public GraveState Grave()
+    public GraveState Grave(GameControl gameControl)
     {
         var grave = new GraveState()
         {
@@ -49,6 +50,7 @@ public class InteractiveObjects : ScriptableObject
                     (_, player) =>
                     {
                         player.World.Grave = grave;
+                        gameControl.ResetLevel();
                         player.Rest();
                     })
             ).SetBlocking(true);
@@ -117,7 +119,7 @@ public class InteractiveObjects : ScriptableObject
         return physicalItemState;
     }
 
-    public InteractiveObjectState<InteractiveObject> Transporter(Action onUse = null)
+    public InteractiveObjectState<InteractiveObject> Transporter(GameControl gameControl, Action onUse = null)
     {
         return InteractiveObject("Transporter", Geometry<InteractiveObject>(physicalItemPrefab))
                     .Interact(
@@ -129,13 +131,14 @@ public class InteractiveObjects : ScriptableObject
 
                                 if (onUse != null) onUse();
 
-                                var game = GameObject.Find("Game").GetComponent<Game>();
+                                gameControl.GoToNextLevel();
+                                /*var game = GameObject.Find("Game").GetComponent<Game>();
                                 game.AsyncEvaluator.SetTasks(
                                     game.StartScreenTransition().Concat(
                                     game.GoToNextLevel()).Concat(
                                     game.EndScreenTransition()    
                                     )
-                                );
+                                );*/
                             }
                         )
                     .SetBlocking(true);

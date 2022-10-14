@@ -76,7 +76,7 @@ namespace ContentGeneration.Assets.UI.Model
 #if NOESIS
         public override void Die()
         {
-            GameObject.Destroy(Agent.gameObject);
+            //GameObject.Destroy(Agent.gameObject);
             OnDeath();
             //World.OnPlayerDeath();
         }
