@@ -1,4 +1,5 @@
-﻿using ShapeGrammar;
+﻿using ContentGeneration.Assets.UI;
+using ShapeGrammar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,27 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
                 {
                     GameObject.Destroy(playerState.Agent.gameObject);
                     State.GC.ResetLevel(5.0f);
+                });
+        }
+
+        public void DieIfNotProtected()
+        {
+            var playerState = State.World.PlayerState;
+            playerState
+                .AddOnDeath(() =>
+                {
+                    playerState.Inventory.TryPay(
+                        "Vibrant Memory", 1,
+                        () => 
+                        {
+                            playerState.Reset();
+                            Msg.Show("Life endures");
+                        },
+                        () => 
+                        {
+                            GameObject.Destroy(playerState.Agent.gameObject);
+                            State.GC.ResetLevel(5.0f);
+                        });
                 });
         }
 

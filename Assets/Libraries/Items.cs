@@ -182,6 +182,17 @@ public class Items : ScriptableObject
         .SetStackable(1)
         .OnUse(Effects.Heal(5f));
 
+    public ItemState VibrantMemory() => NewItem("Vibrant Memory", "A memory blurring the borders between life and death. Can be relived.")
+        .SetStackable(1, false);
+
+    public ItemState FadingMemory() => NewItem("Fading Memory", "A short lived memory that does not indicate anything worthwile. Recalling hurts.")
+        .SetStackable(1)
+        .OnUse(ch =>
+        {
+            Effects.Damage(new DamageDealt(DamageType.Dark, 15f))(ch);
+            ch.AddItem(VibrantMemory());
+        });
+
     public IEnumerable<Func<ItemState>> MiscellaneousItems() => new List<Func<ItemState>>()
     {
         Dew,

@@ -81,6 +81,8 @@ namespace ShapeGrammar
             playerState.Inventory.RightWeapon.Item = libraries.Items.Katana();
             playerState.AddAndEquipItem(libraries.Items.FreeWill());
             playerState.AddAndEquipItem(libraries.Items.MayanKnife());
+
+            playerState.AddItem(libraries.Items.FadingMemory());//.NewItem("Vibrant Memory", "A memory stronger than life itself. Can be relived.").SetStackable(1, false));
             //libraries.Items.AllWristItems().ForEach(wi => playerState.AddItem(wi()));
             //playerState.Inventory.Head.Item = libraries.Items.Eggs();
 
