@@ -55,11 +55,26 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
         {
             var playerState = State.World.PlayerState;
             playerState.AddOnDeath(() =>
-                {
-                    // Spawn bloodstain at death position at restart of level
+            {
+                    // Lose spirit at the position
                     var deathPosition = playerState.Agent.transform.position;
-                    var bloodstain = Lib.InteractiveObjects.Item(Lib.Items.NewItem("Retrieval", "Retrieved"));
-                    Action spawnBloodstain = () =>
+                    var lostSpirit = playerState.Spirit;
+                    playerState.Spirit = 0;
+
+                    Action spawnBloodstain = null;
+                    Action bloodstainRemoval = null;
+
+                    // Create bloodstain
+                    var bloodstain = Lib.InteractiveObjects.Bloodstain(
+                        () =>
+                        {
+                            playerState.Spirit += lostSpirit;
+                            State.World.OnLevelRestart -= spawnBloodstain;
+                            playerState.OnDeath -= bloodstainRemoval;
+                        });
+
+                    // Spawn bloodstain
+                    spawnBloodstain = () =>
                     {
                         var bloodstainBody = bloodstain.MakeGeometry();
                         bloodstainBody.transform.position = deathPosition;
@@ -68,13 +83,15 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
                     State.World.OnLevelRestart += spawnBloodstain;
 
                     // Remove old bloodstain after death
-                    Action bloodstainRemoval = null;
                     bloodstainRemoval = () =>
                     {
                         State.World.OnLevelRestart -= spawnBloodstain;
                         playerState.OnDeath -= bloodstainRemoval;
                     };
                     playerState.AddOnDeath(bloodstainRemoval);
+
+                    //
+                    
                 }
             );
         }

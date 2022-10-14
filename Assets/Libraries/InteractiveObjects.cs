@@ -121,6 +121,24 @@ public class InteractiveObjects : ScriptableObject
         return physicalItemState;
     }
 
+    public InteractiveObjectState<InteractiveObject> Bloodstain(Action onUse)
+    {
+        var bloodstain = new InteractiveObjectState<InteractiveObject>()
+        {
+            Name = "Bloodstain",
+            GeometryMaker = Geometry<InteractiveObject>(physicalItemPrefab)
+        };
+        bloodstain.SetInteraction(
+            ins => ins.Act("Retrieve",
+                (io, pl) =>
+                {
+                    onUse();
+                    pl.World.RemoveItem(bloodstain);
+                })
+            );
+        return bloodstain;
+    }
+
     public InteractiveObjectState<InteractiveObject> Transporter(GameControl gameControl, Action onUse = null)
     {
         return InteractiveObject("Transporter", Geometry<InteractiveObject>(physicalItemPrefab))
@@ -134,13 +152,6 @@ public class InteractiveObjects : ScriptableObject
                                 if (onUse != null) onUse();
 
                                 gameControl.GoToNextLevel();
-                                /*var game = GameObject.Find("Game").GetComponent<Game>();
-                                game.AsyncEvaluator.SetTasks(
-                                    game.StartScreenTransition().Concat(
-                                    game.GoToNextLevel()).Concat(
-                                    game.EndScreenTransition()    
-                                    )
-                                );*/
                             }
                         )
                     .SetBlocking(true);
