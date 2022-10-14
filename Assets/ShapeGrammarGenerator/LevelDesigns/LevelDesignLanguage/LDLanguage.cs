@@ -366,14 +366,6 @@ namespace ShapeGrammar
         }
     }
 
-    public static class Msg
-    {
-        public static void Show(string message)
-        {
-            GameViewModel.ViewModel.Message = message;
-        }
-    }
-
     class Grammars
     {
         public ProductionLists PrL { get; }

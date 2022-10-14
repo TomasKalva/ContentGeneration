@@ -1,4 +1,5 @@
-﻿using ContentGeneration.Assets.UI.Model;
+﻿using ContentGeneration.Assets.UI;
+using ContentGeneration.Assets.UI.Model;
 using ShapeGrammar;
 using System;
 using System.Collections.Generic;

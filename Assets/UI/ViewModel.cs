@@ -14,6 +14,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using ContentGeneration.Assets.UI.Util;
 using System.Linq;
+using static ShapeGrammar.Game;
 
 namespace ContentGeneration.Assets.UI
 {
@@ -98,6 +99,8 @@ namespace ContentGeneration.Assets.UI
             }
         }
 
+        public GameControl GameControl { get; set; }
+
         public Menu Menu { get; } = new Menu();
 
 #if NOESIS
@@ -158,7 +161,7 @@ namespace ContentGeneration.Assets.UI
                 PlayerState.PlayerInventory.DropItem();
             }
 
-            Menu.Update();
+            Menu.Update(GameControl);
         }
 
         int GetInputDirection(float i)
@@ -181,5 +184,13 @@ namespace ContentGeneration.Assets.UI
             MessageOpacity = 0.5f;
         }
 #endif
+    }
+
+    public static class Msg
+    {
+        public static void Show(string message)
+        {
+            GameViewModel.ViewModel.Message = message;
+        }
     }
 }

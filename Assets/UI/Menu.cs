@@ -6,6 +6,7 @@ using ContentGeneration.Assets.UI.Util;
 #if NOESIS
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static ShapeGrammar.Game;
 #endif
 
 namespace ContentGeneration.Assets.UI
@@ -31,7 +32,7 @@ namespace ContentGeneration.Assets.UI
         }
 
 #if NOESIS
-        public void Update()
+        public void Update(GameControl gameControl)
         {
             if (Visible)
             {
@@ -41,8 +42,7 @@ namespace ContentGeneration.Assets.UI
                 }
                 else if (Input.GetKeyDown(KeyCode.Return))
                 {
-                    string sceneName = "StartScene";
-                    SceneManager.LoadScene(sceneName);
+                    gameControl.EndRun();
                 }
             }
             else

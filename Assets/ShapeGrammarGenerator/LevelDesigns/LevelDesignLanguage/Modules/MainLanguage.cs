@@ -15,7 +15,11 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
         {
             State.LC.AddNecessaryEvent($"Level Start", 100, level => L.LevelLanguage.LevelStart(), true);
 
-            State.LC.AddNecessaryEvent($"Classical death", 99, _ => L.DeathLanguage.EnableClassicalDeath(), true);
+            State.LC.AddNecessaryEvent($"Death", 99, _ =>
+            {
+                L.DeathLanguage.EnableClassicalDeath();
+                L.DeathLanguage.EndRunAfterDeaths(1);
+            }, true);
 
             State.LC.AddNecessaryEvent($"Level End", 99, level => L.LevelLanguage.LevelEnd(), true);
 

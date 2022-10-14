@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
 {
@@ -25,6 +26,22 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
                 });
         }
 
+        int TotalPlayersDeaths { get; set; } = 0;
 
+        /// <summary>
+        /// The run will end after max(1, deathCount) player's deaths.
+        /// </summary>
+        public void EndRunAfterDeaths(int deathCount)
+        {
+            var playerState = State.World.PlayerState;
+            playerState
+                .AddOnDeath(() =>
+                {
+                    if(++TotalPlayersDeaths == deathCount)
+                    {
+                        State.GC.EndRun();
+                    }
+                });
+        }
     }
 }

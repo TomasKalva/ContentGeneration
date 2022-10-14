@@ -1,5 +1,6 @@
 ﻿using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using Assets.Util;
+using ContentGeneration.Assets.UI;
 using ContentGeneration.Assets.UI.Model;
 using ContentGeneration.Assets.UI.Util;
 using ShapeGrammar;

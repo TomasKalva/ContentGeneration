@@ -13,6 +13,7 @@ using Debug = UnityEngine.Debug;
 using static ShapeGrammar.AsynchronousEvaluator;
 using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules;
 using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage;
+using UnityEngine.SceneManagement;
 
 namespace ShapeGrammar
 {
@@ -200,6 +201,7 @@ namespace ShapeGrammar
             yield return TaskSteps.Multiple(GameLanguage.GenerateWorld());
 
             GameViewModel.ViewModel.World = GameLanguage.State.World;
+            GameViewModel.ViewModel.GameControl = GC;
 
             var grammarState = GameLanguage.State.GrammarState;
 
@@ -274,6 +276,12 @@ namespace ShapeGrammar
             yield return TaskSteps.One();
         }
 
+        IEnumerable<TaskSteps> EndRun()
+        {
+            SceneManager.LoadScene("StartScene");
+            yield return TaskSteps.One();
+        }
+
         /// <summary>
         /// Public api for Game.
         /// </summary>
@@ -304,6 +312,13 @@ namespace ShapeGrammar
                     Game.StartScreenTransition(startDuration).Concat(
                     Game.ResetLevel(playerState, levelRoot)).Concat(
                     Game.EndScreenTransition()));
+            }
+
+            public void EndRun()
+            {
+                AsyncEvaluator.SetTasks(
+                    Game.StartScreenTransition(0.5f).Concat(
+                    Game.EndRun()));
             }
         }
     }
