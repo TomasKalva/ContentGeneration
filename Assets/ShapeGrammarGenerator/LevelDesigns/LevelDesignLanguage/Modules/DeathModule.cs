@@ -11,9 +11,9 @@ using UnityEngine.SceneManagement;
 
 namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
 {
-    class DeathLanguage : LDLanguage
+    class DeathModule : LDLanguage
     {
-        public DeathLanguage(LanguageParams tools) : base(tools)
+        public DeathModule(LanguageParams parameters) : base(parameters)
         {
         }
 

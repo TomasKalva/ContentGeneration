@@ -13,9 +13,9 @@ using static InteractiveObject;
 
 namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 {
-    class AscendingLanguage : LDLanguage
+    class AscendingModule : LDLanguage
     {
-        public AscendingLanguage(LanguageParams tools) : base(tools) { }
+        public AscendingModule(LanguageParams parameters) : base(parameters) { }
 
 
         public void AscendingBranch(Func<int> startingAscensionPrice)
@@ -57,7 +57,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             );
 
             // Add the same branch to the next level
-            State.LC.AddNecessaryEvent($"Ascending branch", 90, _ => L.AscendingLanguage.AscendingBranch(() => ascensionPrice));
+            State.LC.AddNecessaryEvent($"Ascending branch", 90, _ => M.AscendingModule.AscendingBranch(() => ascensionPrice));
         }
     }
 }

@@ -15,9 +15,9 @@ using static InteractiveObject;
 namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 {
 
-    class TestingLanguage : LDLanguage
+    class TestingModule : LDLanguage
     {
-        public TestingLanguage(LanguageParams tools) : base(tools) { }
+        public TestingModule(LanguageParams parameters) : base(parameters) { }
 
         public void LargeLevel()
         {
@@ -222,7 +222,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
         public void TestLocking()
         {
 
-            L.PatternLanguage.BranchWithKey(NodesQueries.LastCreated, 1, Gr.PrL.Garden(), out var lockedArea, out var linearPath);
+            M.PatternModule.BranchWithKey(NodesQueries.LastCreated, 1, Gr.PrL.Garden(), out var lockedArea, out var linearPath);
 
         }
 

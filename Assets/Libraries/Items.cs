@@ -88,6 +88,14 @@ public class Items : ScriptableObject
         Katana,
     };
 
+    public IEnumerable<Func<WeaponItem>> GoodWeaponsForEnemies() => new List<Func<WeaponItem>>()
+    {
+        SculptureClub,
+        MayanSword,
+        Mace,
+        Katana,
+    };
+
     public AccessoryItem Ring() => new AccessoryItem("Ring", "Circle", accessories.Ring)
         .SetWearable(SlotType.Wrist) as AccessoryItem;
 

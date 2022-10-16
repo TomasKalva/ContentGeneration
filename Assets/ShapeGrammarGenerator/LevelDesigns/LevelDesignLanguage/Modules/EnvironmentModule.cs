@@ -15,7 +15,7 @@ using static InteractiveObject;
 namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 {
 
-    class EnvironmentLanguage : LDLanguage
+    class EnvironmentModule : LDLanguage
     {
         public struct SkyParameters
         {
@@ -36,7 +36,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
         }
 
         SkyParameters[] SkyParams { get; }
-        public EnvironmentLanguage(LanguageParams tools) : base(tools) 
+        public EnvironmentModule(LanguageParams parameters) : base(parameters) 
         {
             SkyParams = new SkyParameters[8]
             {

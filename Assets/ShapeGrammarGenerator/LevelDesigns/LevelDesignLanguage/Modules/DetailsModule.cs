@@ -13,9 +13,9 @@ using static InteractiveObject;
 
 namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 {
-    class DetailsLanguage : LDLanguage
+    class DetailsModule : LDLanguage
     {
-        public DetailsLanguage(LanguageParams tools) : base(tools) 
+        public DetailsModule(LanguageParams parameters) : base(parameters) 
         {
             string itemTooltip = "The volatile presence guides.";
             Items = new List<Func<ItemState>>()

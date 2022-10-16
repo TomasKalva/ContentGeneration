@@ -34,7 +34,7 @@ namespace ShapeGrammar
 
         GameControl GC;
 
-        MainLanguage GameLanguage;
+        MainModule GameLanguage;
 
         public AsynchronousEvaluator AsyncEvaluator { get; private set; }
 
@@ -132,12 +132,12 @@ namespace ShapeGrammar
                     yield return TaskSteps.One();
 
                     // Initialize module languages
-                    var languages = new Languages();
+                    var languages = new Modules();
                     var languageParams = new LanguageParams(libraries, gr, languageState, languages);
                     languages.Initialize(languageParams);
 
                     // Initialize main language
-                    GameLanguage = new MainLanguage(languageParams);
+                    GameLanguage = new MainModule(languageParams);
 
 
                     GameLanguage.StartWorld();

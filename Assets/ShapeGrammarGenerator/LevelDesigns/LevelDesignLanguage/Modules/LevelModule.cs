@@ -10,9 +10,9 @@ using UnityEngine;
 
 namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
 {
-    class LevelLanguage : LDLanguage
+    class LevelModule : LDLanguage
     {
-        public LevelLanguage(LanguageParams tools) : base(tools) { }
+        public LevelModule(LanguageParams parameters) : base(parameters) { }
 
         public void LevelStart()
         {
@@ -73,9 +73,9 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
             Env.MoveFromTo(pathGuide => Gr.PrL.GuidedGarden(pathGuide), Gr.PrL.ConnectBack(), 2, shortcutArea.Node.ToEnumerable(), first.Node.ToEnumerable(), out var shortcut);
 
             // Lock the shortcut
-            var shortcutKey = L.PatternLanguage.CreateLockItems(State.UniqueNameGenerator.UniqueName("Shortcut key"), 1, "Unlocks a shortcut", out var unlock).First();
+            var shortcutKey = M.PatternModule.CreateLockItems(State.UniqueNameGenerator.UniqueName("Shortcut key"), 1, "Unlocks a shortcut", out var unlock).First();
             shortcut.AreasList[0].AddInteractiveObject(Lib.InteractiveObjects.Item(shortcutKey));
-            L.PatternLanguage.LockArea(shortcut.AreasList[1], unlock);
+            M.PatternModule.LockArea(shortcut.AreasList[1], unlock);
 
             // Create second part of the main path
             Env.Line(Gr.PrL.Town(), _ => shortcutArea.Node.ToEnumerable(), 5, out var pathToEnd);

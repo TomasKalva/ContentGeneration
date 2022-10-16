@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
 {
-    class PatternLanguage : LDLanguage
+    class PatternModule : LDLanguage
     {
-        public PatternLanguage(LanguageParams tools) : base(tools) { }
+        public PatternModule(LanguageParams parameters) : base(parameters) { }
 
         /// <summary>
         /// Returns true if unlocking was successful.

@@ -16,9 +16,9 @@ using static InteractiveObject;
 namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 {
 
-    class OutOfDepthEncountersLanguage : LDLanguage
+    class OutOfDepthEncountersModule : LDLanguage
     {
-        public OutOfDepthEncountersLanguage(LanguageParams tools) : base(tools) { }
+        public OutOfDepthEncountersModule(LanguageParams parameters) : base(parameters) { }
 
         public CharacterStats GetStats(int level)
         {
@@ -43,7 +43,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                 () => Lib.Items.Katana().AddUpgradeEffect(user => target => Lib.Effects.Bleed(3 + 2 * level, 6)),
                 () => Lib.Items.Mace().AddUpgradeEffect(user => target => Lib.Effects.DamagePosture(5 + 10 * level)),
                 () => Lib.Items.SculptureClub().AddUpgradeEffect(user => target => Lib.Effects.PushFrom(50f + 50f * level)(user)),
-                () => Lib.Items.MayanKnife().AddUpgradeEffect(user => target => Lib.Effects.Heal(3 + 3 * level)(user)),
+                //() => Lib.Items.MayanKnife().AddUpgradeEffect(user => target => Lib.Effects.Heal(3 + 3 * level)(user)),
             };
         }
 
@@ -108,7 +108,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
                                 Lib.InteractiveObjects.Item(
                                     Lib.Items.NewItem(
                                         "Serenity of Sculpture",
-                                        "Sculptures belong to the few entities originating to this place. They ranked among the few supporters of Ariamel and his Master Plans, before his unfortunate descent into insanity."
+                                        "Sculptures belong to the few entities originating to the World. They ranked among the few supporters of Ariamel and his Master Plans, before his unfortunate descent into insanity."
                                     )
                                     .SetStackable(1)
                                     .OnUse(Lib.Effects.GiveSpirit(1000))
@@ -142,8 +142,8 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             enemies.Select(enemy => EnhanceEnemy(enemy, level)).ForEach(enemy => arena.AddEnemy(enemy));
 
             // Create a locked area after the encounter
-            var key = L.PatternLanguage.CreateLockItems(State.UniqueNameGenerator.UniqueName("Integral part"), 1, "The pathway rarely opens without the detachment of Integrand from its Integree being achieved.", out var unlock).First();
-            L.PatternLanguage.LockedArea(_ => path.LastArea().Node.ToEnumerable(), unlock, out var locked);
+            var key = M.PatternModule.CreateLockItems(State.UniqueNameGenerator.UniqueName("Integral part"), 1, "The pathway rarely opens without the detachment of Integrand from its Integree being achieved.", out var unlock).First();
+            M.PatternModule.LockedArea(_ => path.LastArea().Node.ToEnumerable(), unlock, out var locked);
 
             // Give enemy key to the area
             var mainEnemy = enemies.First();

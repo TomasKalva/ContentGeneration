@@ -15,9 +15,9 @@ using static InteractiveObject;
 namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 {
 
-    class NpcLanguage : LDLanguage
+    class NpcModule : LDLanguage
     {
-        public NpcLanguage(LanguageParams tools) : base(tools) { }
+        public NpcModule(LanguageParams parameters) : base(parameters) { }
         
         public void PutNpcToNewArea(InteractiveObjectState npc)
         {

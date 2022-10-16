@@ -7,7 +7,7 @@ using ShapeGrammar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.FactionsLanguage;
+using static Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.FactionsModule;
 
 namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions
 {

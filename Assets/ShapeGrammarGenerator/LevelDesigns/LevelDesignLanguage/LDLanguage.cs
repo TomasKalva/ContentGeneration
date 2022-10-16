@@ -24,7 +24,7 @@ namespace ShapeGrammar
 
         public Libraries Lib { get; }
         public Grammars Gr { get; }
-        public Languages L { get; }
+        public Modules M { get; }
         public Environments Env { get; }
         public ObjectPlacement<CharacterState> PlC { get; }
         public ObjectPlacement<InteractiveObjectState> PlO { get; }
@@ -42,7 +42,7 @@ namespace ShapeGrammar
             PlO = new ObjectPlacement<InteractiveObjectState>((area, io) => area.AddInteractiveObject(io));
             //Msg = new MsgPrinter();
 
-            L = languageParams.Languages;// Languages.Get(languageParams);
+            M = languageParams.Modules;// Languages.Get(languageParams);
         }
 
         /// <summary>
@@ -133,14 +133,14 @@ namespace ShapeGrammar
 
         public Libraries Lib { get; }
         public Grammars Gr { get; }
-        public Languages Languages { get; }
+        public Modules Modules { get; }
 
-        public LanguageParams(Libraries lib, Grammars gr, LanguageState languageState, Languages languages)
+        public LanguageParams(Libraries lib, Grammars gr, LanguageState languageState, Modules modules)
         {
             Lib = lib;
             Gr = gr;
             LanguageState = languageState;
-            Languages = languages;
+            Modules = modules;
         }
     }
 
@@ -225,21 +225,22 @@ namespace ShapeGrammar
 
     #endregion
 
-    class Languages
+    class Modules
     {
-        public LevelLanguage LevelLanguage { get; private set; }
-        public PatternLanguage PatternLanguage { get; private set; }
-        public TestingLanguage TestingLanguage { get; private set; }
-        public FactionsLanguage FactionsLanguage { get; private set; }
-        public AscendingLanguage AscendingLanguage { get; private set; }
-        public OutOfDepthEncountersLanguage OutOfDepthEncountersLanguage { get; private set; }
-        public DetailsLanguage DetailsLanguage { get; private set; }
-        public EnvironmentLanguage EnvironmentLanguage { get; private set; }
-        public NpcLanguage NpcLanguage { get; private set; }
-        public DeathLanguage DeathLanguage { get; private set; }
+        public LevelModule LevelModule { get; private set; }
+        public PatternModule PatternModule { get; private set; }
+        public TestingModule TestingModule { get; private set; }
+        public FactionsModule FactionsModule { get; private set; }
+        public AscendingModule AscendingModule { get; private set; }
+        public OutOfDepthEncountersModule OutOfDepthEncountersModule { get; private set; }
+        public DetailsModule DetailsModule { get; private set; }
+        public EnvironmentModule EnvironmentModule { get; private set; }
+        public NpcModule NpcModule { get; private set; }
+        public DeathModule DeathModule { get; private set; }
+        public TutorialGameModule TutorialModule { get; private set; }
 
 
-        public Languages()
+        public Modules()
         {
         }
 
@@ -249,16 +250,17 @@ namespace ShapeGrammar
         /// </summary>
         public void Initialize(LanguageParams languageParams)
         {
-            LevelLanguage = new LevelLanguage(languageParams);
-            PatternLanguage = new PatternLanguage(languageParams);
-            TestingLanguage = new TestingLanguage(languageParams);
-            FactionsLanguage = new FactionsLanguage(languageParams);
-            AscendingLanguage = new AscendingLanguage(languageParams);
-            OutOfDepthEncountersLanguage = new OutOfDepthEncountersLanguage(languageParams);
-            DetailsLanguage = new DetailsLanguage(languageParams);
-            EnvironmentLanguage = new EnvironmentLanguage(languageParams);
-            NpcLanguage = new NpcLanguage(languageParams);
-            DeathLanguage = new DeathLanguage(languageParams);
+            LevelModule = new LevelModule(languageParams);
+            PatternModule = new PatternModule(languageParams);
+            TestingModule = new TestingModule(languageParams);
+            FactionsModule = new FactionsModule(languageParams);
+            AscendingModule = new AscendingModule(languageParams);
+            OutOfDepthEncountersModule = new OutOfDepthEncountersModule(languageParams);
+            DetailsModule = new DetailsModule(languageParams);
+            EnvironmentModule = new EnvironmentModule(languageParams);
+            NpcModule = new NpcModule(languageParams);
+            DeathModule = new DeathModule(languageParams);
+            TutorialModule = new TutorialGameModule(languageParams);
         }
     }
 

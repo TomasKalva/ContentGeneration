@@ -7,43 +7,44 @@ using System.Threading.Tasks;
 
 namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
 {
-    class MainLanguage : LDLanguage
+    class MainModule : LDLanguage
     {
-        public MainLanguage(LanguageParams tools) : base(tools) { }
+        public MainModule(LanguageParams parameters) : base(parameters) { }
 
         public void StartWorld()
         {
-            State.LC.AddNecessaryEvent($"Level Start", 100, level => L.LevelLanguage.LevelStart(), true);
+
+            State.LC.AddNecessaryEvent($"Level Start", 100, level => M.LevelModule.LevelStart(), true);
 
             State.LC.AddNecessaryEvent($"Death", 99, _ =>
             {
                 //L.DeathLanguage.EnableClassicalDeath();
-                L.DeathLanguage.DieIfNotProtected();
+                M.DeathModule.DieIfNotProtected();
                 //L.DeathLanguage.EndRunAfterDeaths(2);
                 //L.DeathLanguage.DropSpiritBloodstainOnDeath();
                 //L.DeathLanguage.DropRunEndingBloodstainOnDeath();
-                L.DeathLanguage.EndRunIfOutOfSmile();
+                M.DeathModule.EndRunIfOutOfSmile();
             }, true);
 
-            State.LC.AddNecessaryEvent($"Level End", 99, level => L.LevelLanguage.LevelEnd(), true);
+            State.LC.AddNecessaryEvent($"Level End", 99, level => M.LevelModule.LevelEnd(), true);
 
             //L.LevelLanguage.AddOptionalEnd();
             
-            L.FactionsLanguage.InitializeFactions(2);
+            M.FactionsModule.InitializeFactions(2);
             
 
-            State.LC.AddNecessaryEvent($"Main path", 98, level => L.LevelLanguage.MainPath(level), true);
+            State.LC.AddNecessaryEvent($"Main path", 98, level => M.LevelModule.MainPath(level), true);
 
-            State.LC.AddNecessaryEvent($"Add Details", 0, level => L.DetailsLanguage.AddDetails(level), true);
+            State.LC.AddNecessaryEvent($"Add Details", 0, level => M.DetailsModule.AddDetails(level), true);
 
-            State.LC.AddNecessaryEvent($"Out of depth encounter", 80, level => L.OutOfDepthEncountersLanguage.DifficultEncounter(level), true);
+            State.LC.AddNecessaryEvent($"Out of depth encounter", 80, level => M.OutOfDepthEncountersModule.DifficultEncounter(level), true);
 
-            State.LC.AddNecessaryEvent($"Environment", 0, level => L.EnvironmentLanguage.CreateSky(level), true);
+            State.LC.AddNecessaryEvent($"Environment", 0, level => M.EnvironmentModule.CreateSky(level), true);
 
 
-            State.LC.AddNecessaryEvent($"Roofs", -1, level => L.LevelLanguage.Roofs(), true);
+            State.LC.AddNecessaryEvent($"Roofs", -1, level => M.LevelModule.Roofs(), true);
 
-            State.LC.AddNecessaryEvent("Ascending", 80, _ => L.AscendingLanguage.AscendingBranch(() => 100));
+            State.LC.AddNecessaryEvent("Ascending", 80, _ => M.AscendingModule.AscendingBranch(() => 100));
             
 
             //State.LC.AddNecessaryEvent("Testing enemies", 5, _ => L.TestingLanguage.StatsScalingOfEnemies());
