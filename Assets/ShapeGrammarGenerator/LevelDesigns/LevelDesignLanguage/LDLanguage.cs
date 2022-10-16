@@ -228,7 +228,7 @@ namespace ShapeGrammar
     class Modules
     {
         public LevelModule LevelModule { get; private set; }
-        public PatternModule PatternModule { get; private set; }
+        public LockingModule LockingModule { get; private set; }
         public TestingModule TestingModule { get; private set; }
         public FactionsModule FactionsModule { get; private set; }
         public AscendingModule AscendingModule { get; private set; }
@@ -251,7 +251,7 @@ namespace ShapeGrammar
         public void Initialize(LanguageParams languageParams)
         {
             LevelModule = new LevelModule(languageParams);
-            PatternModule = new PatternModule(languageParams);
+            LockingModule = new LockingModule(languageParams);
             TestingModule = new TestingModule(languageParams);
             FactionsModule = new FactionsModule(languageParams);
             AscendingModule = new AscendingModule(languageParams);

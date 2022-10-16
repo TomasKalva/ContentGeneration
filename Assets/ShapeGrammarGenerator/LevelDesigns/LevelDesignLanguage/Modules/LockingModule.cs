@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
 {
-    class PatternModule : LDLanguage
+    class LockingModule : LDLanguage
     {
-        public PatternModule(LanguageParams parameters) : base(parameters) { }
+        public LockingModule(LanguageParams parameters) : base(parameters) { }
 
         /// <summary>
         /// Returns true if unlocking was successful.
@@ -91,13 +91,13 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
             return items;
         }
 
-        public void BranchWithKey(NodesQuery startNodesQuery, int keyBranchLength, ProductionList keyBranchPr, out SingleArea locked, out LinearPath keyBranch)
+        public void LineWithKey(NodesQuery startNodesQuery, int keyLineLength, ProductionList keyLinePr, out SingleArea locked, out LinearPath keyLine)
         {
             var branchNodes = startNodesQuery(State.GrammarState);
-            Env.Line(keyBranchPr, startNodesQuery, keyBranchLength, out keyBranch);
+            Env.Line(keyLinePr, startNodesQuery, keyLineLength, out keyLine);
 
             var keys = CreateLockItems(State.UniqueNameGenerator.UniqueName("Key"), 1, "Used to unlock door", out var unlock);
-            keyBranch.LastArea().AddInteractiveObject(Lib.InteractiveObjects.Item(keys.First()));
+            keyLine.LastArea().AddInteractiveObject(Lib.InteractiveObjects.Item(keys.First()));
 
             LockedArea(_ => branchNodes, unlock, out locked);
             locked.Get.AddInteractiveObject(Lib.InteractiveObjects.Item(Lib.Items.NewItem("Unlocked", "The door are unlocked now")));

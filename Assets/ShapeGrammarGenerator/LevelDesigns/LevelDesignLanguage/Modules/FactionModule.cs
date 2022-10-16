@@ -142,7 +142,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 
         public void LinearWithKey(FactionEnvironment fe, int progress, int level)
         {
-            M.PatternModule.BranchWithKey(NodesQueries.LastCreated, 4, fe.GetProductionList(), out var lockedArea, out var linearPath);
+            M.LockingModule.LineWithKey(NodesQueries.LastCreated, 4, fe.GetProductionList(), out var lockedArea, out var linearPath);
 
             var itemPlacer = PlO.RandomAreasPlacer(new UniformDistr(3, 4), ItemsToPlace(fe, 3));
             itemPlacer.Place(linearPath);
@@ -154,7 +154,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 
         public void BranchesWithKey(FactionEnvironment fe, int progress, int level)
         {
-            M.PatternModule.RandomBranchingWithKeys(4, fe.GetProductionList(), out var lockedArea, out var branches);
+            M.LockingModule.RandomBranchingWithKeys(4, fe.GetProductionList(), out var lockedArea, out var branches);
 
             var itemPlacer = PlO.RandomAreasPlacer(new UniformDistr(3, 4), ItemsToPlace(fe, 3));
             itemPlacer.Place(branches);

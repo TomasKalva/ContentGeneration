@@ -96,7 +96,6 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
 
             var parameters = GetSkyParameter(level);
             envState.SetParameters(parameters);
-            //parameters.Set(env);
         }
 
         public void TestSky(int level)

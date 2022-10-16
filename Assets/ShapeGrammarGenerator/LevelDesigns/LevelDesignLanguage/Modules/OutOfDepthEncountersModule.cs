@@ -142,8 +142,8 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
             enemies.Select(enemy => EnhanceEnemy(enemy, level)).ForEach(enemy => arena.AddEnemy(enemy));
 
             // Create a locked area after the encounter
-            var key = M.PatternModule.CreateLockItems(State.UniqueNameGenerator.UniqueName("Integral part"), 1, "The pathway rarely opens without the detachment of Integrand from its Integree being achieved.", out var unlock).First();
-            M.PatternModule.LockedArea(_ => path.LastArea().Node.ToEnumerable(), unlock, out var locked);
+            var key = M.LockingModule.CreateLockItems(State.UniqueNameGenerator.UniqueName("Integral part"), 1, "The pathway rarely opens without the detachment of Integrand from its Integree being achieved.", out var unlock).First();
+            M.LockingModule.LockedArea(_ => path.LastArea().Node.ToEnumerable(), unlock, out var locked);
 
             // Give enemy key to the area
             var mainEnemy = enemies.First();
