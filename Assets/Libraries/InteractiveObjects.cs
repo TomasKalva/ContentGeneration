@@ -1,10 +1,10 @@
+using Assets.LevelDesignLanguage;
 using ContentGeneration.Assets.UI;
 using ContentGeneration.Assets.UI.Model;
-using ShapeGrammar;
 using System;
 using UnityEditor;
 using UnityEngine;
-using static ShapeGrammar.Game;
+using static Assets.LevelDesignLanguage.Game;
 
 public class InteractiveObjects : ScriptableObject
 {

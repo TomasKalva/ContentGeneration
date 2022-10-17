@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using UnityEngine;
 
-namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
+namespace Assets.LevelDesignLanguage.CustomModules
 {
 
     class EnvironmentModule : LDLanguage

@@ -11,7 +11,6 @@ using ContentGeneration.Assets.UI.Model;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using ContentGeneration.Assets.UI.Util;
-using static ShapeGrammar.Game;
 
 namespace ContentGeneration.Assets.UI
 {

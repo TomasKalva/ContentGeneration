@@ -6,12 +6,12 @@ using ContentGeneration.Assets.UI.Model;
 using ContentGeneration.Assets.UI;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
-using static ShapeGrammar.AsynchronousEvaluator;
-using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules;
-using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage;
 using UnityEngine.SceneManagement;
+using static Assets.LevelDesignLanguage.AsynchronousEvaluator;
+using ShapeGrammar;
+using Assets.LevelDesignLanguage.CustomModules;
 
-namespace ShapeGrammar
+namespace Assets.LevelDesignLanguage
 {
 
     public sealed class Game : MonoBehaviour

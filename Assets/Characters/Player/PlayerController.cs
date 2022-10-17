@@ -1,6 +1,5 @@
 ﻿using ContentGeneration.Assets.UI.Model;
 using ContentGeneration.Assets.UI.Util;
-using ShapeGrammar;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;

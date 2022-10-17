@@ -1,5 +1,5 @@
 ﻿using Assets.Characters.Items.ItemClasses;
-using ShapeGrammar;
+using Assets.LevelDesignLanguage;
 
 namespace Assets.Characters.Items
 {

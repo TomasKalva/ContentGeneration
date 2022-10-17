@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
+namespace Assets.LevelDesignLanguage
 {
     class UniqueNameGenerator
     {

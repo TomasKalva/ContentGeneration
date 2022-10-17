@@ -3,7 +3,7 @@ using ContentGeneration.Assets.UI.Model;
 using ShapeGrammar;
 using System;
 
-namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
+namespace Assets.LevelDesignLanguage.CustomModules
 {
 
     class NpcModule : LDLanguage

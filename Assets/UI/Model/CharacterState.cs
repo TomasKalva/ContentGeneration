@@ -1,7 +1,6 @@
 ﻿#if UNITY_5_3_OR_NEWER
 #define NOESIS
 using UnityEngine;
-using ShapeGrammar;
 #endif
 using ContentGeneration.Assets.UI.Util;
 using System.ComponentModel;

@@ -1,12 +1,11 @@
-﻿using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage;
-using Assets.ShapeGrammarGenerator.Primitives;
+﻿using Assets.ShapeGrammarGenerator.Primitives;
 using Assets.ShapeGrammarGenerator.ShapeGrammar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace ShapeGrammar
+namespace Assets.LevelDesignLanguage
 {
     public class LevelConstructor
     {

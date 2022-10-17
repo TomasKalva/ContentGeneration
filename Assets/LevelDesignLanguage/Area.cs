@@ -1,14 +1,14 @@
-﻿using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage;
-using ContentGeneration.Assets.UI;
+﻿using ContentGeneration.Assets.UI;
 using ContentGeneration.Assets.UI.Model;
 using ContentGeneration.Assets.UI.Util;
+using ShapeGrammar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static ShapeGrammar.AsynchronousEvaluator;
+using static Assets.LevelDesignLanguage.AsynchronousEvaluator;
 
-namespace ShapeGrammar
+namespace Assets.LevelDesignLanguage
 {
     class Area
     {

@@ -1,8 +1,7 @@
-﻿using ShapeGrammar;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
+namespace Assets.LevelDesignLanguage
 {
 
     class Areas

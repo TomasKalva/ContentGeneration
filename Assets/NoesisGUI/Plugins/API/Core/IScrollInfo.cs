@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Noesis
+﻿namespace Noesis
 {
     /// <summary>
     /// An IScrollInfo serves as the main scrolling region inside a ScrollViewer or derived class.

@@ -1,9 +1,8 @@
 ﻿using ContentGeneration.Assets.UI;
-using ShapeGrammar;
 using System;
 using UnityEngine;
 
-namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
+namespace Assets.LevelDesignLanguage.CustomModules
 {
     class DeathModule : LDLanguage
     {

@@ -1,16 +1,16 @@
-﻿using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage;
-using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules;
-using Assets.ShapeGrammarGenerator.Primitives;
+﻿using Assets.ShapeGrammarGenerator.Primitives;
 using Assets.ShapeGrammarGenerator.ShapeGrammar;
 using ContentGeneration.Assets.UI.Model;
+using ShapeGrammar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
-using static ShapeGrammar.AsynchronousEvaluator;
+using static Assets.LevelDesignLanguage.AsynchronousEvaluator;
+using Assets.LevelDesignLanguage.CustomModules;
 
-namespace ShapeGrammar
+namespace Assets.LevelDesignLanguage
 {
 
     abstract class LDLanguage

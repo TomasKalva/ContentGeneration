@@ -1,10 +1,10 @@
-﻿using Assets.Libraries;
-using ContentGeneration.Assets.UI.Model;
+﻿using ContentGeneration.Assets.UI.Model;
 using ShapeGrammar;
 using System;
 using System.Linq;
+using Util;
 
-namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
+namespace Assets.LevelDesignLanguage.CustomModules
 {
 
     class TestingModule : LDLanguage

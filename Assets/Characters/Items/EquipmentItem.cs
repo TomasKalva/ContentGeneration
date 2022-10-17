@@ -1,5 +1,5 @@
-﻿using ContentGeneration.Assets.UI.Model;
-using ShapeGrammar;
+﻿using Assets.LevelDesignLanguage;
+using ContentGeneration.Assets.UI.Model;
 
 namespace Assets.Characters.Items.ItemClasses
 {

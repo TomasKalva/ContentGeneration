@@ -1,13 +1,11 @@
 ﻿using Assets.Characters.SpellClasses;
-using ShapeGrammar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Util;
 
-namespace Assets.Libraries
-{
-    public class Spells
+public class Spells
     {
         EffectLibrary eff;
         SelectorLibrary sel;
@@ -211,4 +209,3 @@ namespace Assets.Libraries
             return user => eff.Heal(healing)(user);
         }
     }
-}

@@ -4,11 +4,15 @@ OurFramework is a framework for fast prototyping of 3D roguelite action RPG game
 
 Creation of 3D action RPGs is a complex and time consuming process. OurFramework helps the designer to focus on the important tasks while minimizing the need to focus on repetitive actions and to write boilerplate code. OurFramework also provides user with existing assets such as models for environment and enemies and visual effects. 
 
-This tutorial covers all the steps needed to create a game using OurFramework.  The reader should be familiar with programming in C#. To see how the framework is implemented internally, please refer to the [documentation][documentation].
+This tutorial covers all the steps needed to create a game using OurFramework.  The reader should be familiar with programming in C#. Most of the C# concepts needed to understand this tutorial can be found [here](https://learnxinyminutes.com/docs/csharp/).
+
+To see how the framework is implemented internally, please refer to the [documentation][documentation].
 
 [documentation]: ???
 
 We are in Visual Studio 2022.
+Navigating to declaration of a symbol in visual studio can be done using `Ctrl` + `Left mouse button` click on the symbol.
+Moving to previous position of cursor using 
 
 ## Installing framework
 
@@ -18,33 +22,43 @@ We are in Visual Studio 2022.
 
 >Install the package to be created
 
+>Our framework uses Noesis so we need a trial license
+
 ## A simple level
 
 In this part of the tutorial we will create a simple game with a few buildings, enemies and items.
 
 ### Creating a new game
 
+As you probably noticed, the framework contains a lot of scripts and directories. Don't worry about it, for now we will only focus on the core of the framework that is necessary to create a simple game and later on gradually explore more options how to extend the game using more advanced features.
 
+The most important part of th
+
+>Create new module
+
+>Put the module to languages
+
+>Call the module from main
 
 ```
-class TutorialGameLanguage : LDLanguage
+class TutorialGameModule : LDLanguage
 {
-    public TutorialGameLanguage(LanguageParams parameters) : base(parameters) { }
+    public TutorialGameModule(LanguageParams parameters) : base(parameters) { }
     
     public void Main()
     {
+        LevelStart();
+    }
 
+    public void LevelStart()
+    {
+        Env.One(Gr.PrL.CreateNewHouse(), NodesQueries.All, out var area);
+        area.Get.Node.AddSymbol(Gr.Sym.LevelStartMarker);
     }
 }
 ```
 
-```
-public void LevelStart()
-{
-    Env.One(Gr.PrL.CreateNewHouse(), NodesQueries.All, out var area);
-    area.Get.Node.AddSymbol(Gr.Sym.LevelStartMarker);
-}
-```
+>Look at what level start method does
 
 Let's not focus on the parameters, just run the game.
 

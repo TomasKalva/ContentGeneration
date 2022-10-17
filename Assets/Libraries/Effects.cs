@@ -1,11 +1,10 @@
 ﻿using Assets.Characters.SpellClasses;
-using ShapeGrammar;
+using Assets.LevelDesignLanguage;
 using System;
 using UnityEngine;
+using Util;
 
-namespace Assets.Libraries
-{
-    public class EffectLibrary
+public class EffectLibrary
     {
         SelectorLibrary sel;
 
@@ -95,4 +94,3 @@ namespace Assets.Libraries
             return _ => levelConstructor.AddNecessaryEvent(levelConstructionEventF());
         }
     }
-}

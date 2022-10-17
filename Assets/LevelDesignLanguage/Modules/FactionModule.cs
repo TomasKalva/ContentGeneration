@@ -7,9 +7,9 @@ using ShapeGrammar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules.FactionsModule;
+using Util;
 
-namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
+namespace Assets.LevelDesignLanguage.CustomModules
 {
 
     class FactionsModule : LDLanguage
@@ -241,7 +241,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
             return new FactionEnvironment(Concepts.TakeSubset(2, 1 + Progress), this);
         }
 
-        public void ContinueManifestation(LevelConstructor levelConstructor, IEnumerable<FactionEnvironmentConstructor> branches)
+        public void ContinueManifestation(LevelConstructor levelConstructor, IEnumerable<FactionsModule.FactionEnvironmentConstructor> branches)
         {
             Progress++;
             levelConstructor.AddNecessaryEvent($"{nameof(ContinueManifestation)} {Progress}", 10 + Progress, level => branches.GetRandom()(GetFactionEnvironment(), Progress, level));

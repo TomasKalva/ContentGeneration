@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Libraries
-{
     public class SpellItems
     {
         Spells spells;
@@ -298,4 +296,3 @@ namespace Assets.Libraries
             }
             .OnUse(ch => spells.Replenishment(5f + 1.5f * ch.Stats.Versatility)(ch));
     }
-}

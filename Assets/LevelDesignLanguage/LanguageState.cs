@@ -3,10 +3,10 @@ using ShapeGrammar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static ShapeGrammar.AsynchronousEvaluator;
-using static ShapeGrammar.Game;
+using static Assets.LevelDesignLanguage.AsynchronousEvaluator;
+using static Assets.LevelDesignLanguage.Game;
 
-namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
+namespace Assets.LevelDesignLanguage
 {
     class LanguageState
     {

@@ -1,8 +1,8 @@
 ﻿using ContentGeneration.Assets.UI.Model;
-using ShapeGrammar;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Util;
 
 namespace Assets.Characters.SpellClasses
 {

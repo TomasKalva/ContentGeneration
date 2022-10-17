@@ -50,7 +50,7 @@ public class Weapons : ScriptableObject
         return weapon.SetHitSelector(Selectors.WeaponSelector(weapon.Detector));
         /*
         owner.World.AddOccurence(
-            new Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions.Occurence(
+            new Assets.ShapeGrammarGenerator.LevelDesignLanguage.Factions.Occurence(
                 Weapon.GetSelector(),
                 ))*/
     }

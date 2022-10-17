@@ -1,6 +1,4 @@
-﻿using ShapeGrammar;
-
-namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
+﻿namespace Assets.LevelDesignLanguage.CustomModules
 {
     class MainModule : LDLanguage
     {
@@ -8,7 +6,11 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
 
         public void StartWorld()
         {
+            StartDebugWorld();
+        }
 
+        void StartDebugWorld()
+        {
             State.LC.AddNecessaryEvent($"Level Start", 100, level => M.LevelModule.LevelStart(), true);
 
             State.LC.AddNecessaryEvent($"Death", 99, _ =>
@@ -24,9 +26,9 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
             State.LC.AddNecessaryEvent($"Level End", 99, level => M.LevelModule.LevelEnd(), true);
 
             //L.LevelLanguage.AddOptionalEnd();
-            
+
             M.FactionsModule.InitializeFactions(2);
-            
+
 
             State.LC.AddNecessaryEvent($"Main path", 98, level => M.LevelModule.MainPath(level), true);
 
@@ -40,7 +42,7 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
             State.LC.AddNecessaryEvent($"Roofs", -1, level => M.LevelModule.Roofs(), true);
 
             State.LC.AddNecessaryEvent("Ascending", 80, _ => M.AscendingModule.AscendingBranch(() => 100));
-            
+
 
             //State.LC.AddNecessaryEvent("Testing enemies", 5, _ => L.TestingLanguage.StatsScalingOfEnemies());
 
@@ -85,7 +87,6 @@ namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
             //State.LC.AddNecessaryEvent("Testing Locking", 90, _ => L.TestingLanguage.TestLocking());
             //L.NpcLanguage.InitializeNpcs();
             //State.LC.AddNecessaryEvent("Testing Locking", 90, _ => L.TestingLanguage.NpcLine());
-
         }
     }
 }

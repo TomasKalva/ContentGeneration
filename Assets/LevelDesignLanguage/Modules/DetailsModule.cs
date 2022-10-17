@@ -3,8 +3,9 @@ using ShapeGrammar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Util;
 
-namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
+namespace Assets.LevelDesignLanguage.CustomModules
 {
     class DetailsModule : LDLanguage
     {

@@ -1,9 +1,9 @@
-﻿using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Util;
 
-namespace ShapeGrammar
+namespace Assets.LevelDesignLanguage
 {
     class ObjectPlacement<T>
     {

@@ -4,7 +4,7 @@ using ShapeGrammar;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
+namespace Assets.LevelDesignLanguage.CustomModules
 {
     class LockingModule : LDLanguage
     {

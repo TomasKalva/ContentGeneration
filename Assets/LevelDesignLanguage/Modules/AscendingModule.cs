@@ -3,7 +3,7 @@ using ShapeGrammar;
 using System;
 using System.Linq;
 
-namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
+namespace Assets.LevelDesignLanguage.Modules
 {
     class AscendingModule : LDLanguage
     {

@@ -1,7 +1,6 @@
 using Assets.Characters.Items;
 using Assets.Characters.Items.ItemClasses;
 using Assets.Characters.SpellClasses;
-using Assets.Libraries;
 using ContentGeneration.Assets.UI.Model;
 using System;
 using System.Collections.Generic;

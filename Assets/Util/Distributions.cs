@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using UnityEngine;
 
-namespace ShapeGrammar
+namespace Util
 {
     public interface IDistribution<T>
     {

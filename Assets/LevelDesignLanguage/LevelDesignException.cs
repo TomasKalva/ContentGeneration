@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage
+namespace Assets.LevelDesignLanguage
 {
     class LevelDesignException : Exception
     {

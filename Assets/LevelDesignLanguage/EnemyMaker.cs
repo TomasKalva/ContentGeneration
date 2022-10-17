@@ -4,7 +4,7 @@ using ContentGeneration.Assets.UI.Util;
 using System;
 using System.Collections.Generic;
 
-namespace ShapeGrammar
+namespace Assets.LevelDesignLanguage
 {
     class EnemyMaker
     {
