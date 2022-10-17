@@ -1,8 +1,4 @@
 using ContentGeneration.Assets.UI.Model;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Events;
 
 public class PhysicalItemState : InteractiveObjectState<InteractiveObject>
 {

@@ -2,8 +2,6 @@
 #define NOESIS
 using UnityEngine;
 #endif
-using ContentGeneration.Assets.UI.Util;
-using System.ComponentModel;
 using System;
 
 namespace ContentGeneration.Assets.UI.Model

@@ -1,10 +1,6 @@
-
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using Assets.Util;
 using ContentGeneration.Assets.UI.Util;
 using ContentGeneration.Assets.UI.Model;
 using ContentGeneration.Assets.UI;

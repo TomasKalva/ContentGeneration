@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NoesisGUIExtensions
+﻿namespace NoesisGUIExtensions
 {
     /// <summary>
     /// An action that will select all the text on the text control.

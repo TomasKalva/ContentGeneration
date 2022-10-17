@@ -1,8 +1,6 @@
 ﻿#if UNITY_5_3_OR_NEWER
 #define NOESIS
-using Noesis;
 using UnityEngine;
-using Color = Noesis.Color;
 #else
 using System;
 using System.Windows.Input;
@@ -13,7 +11,6 @@ using ContentGeneration.Assets.UI.Model;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using ContentGeneration.Assets.UI.Util;
-using System.Linq;
 using static ShapeGrammar.Game;
 
 namespace ContentGeneration.Assets.UI

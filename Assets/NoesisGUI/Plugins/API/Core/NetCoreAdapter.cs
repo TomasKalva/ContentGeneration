@@ -91,7 +91,7 @@ namespace System
     }
 
     // Unity already defines this in WinRTLegacy assembly
-    #if !UNITY_WSA_10_0 && !UNITY_WSA_8_1
+#if !UNITY_WSA_10_0 && !UNITY_WSA_8_1
     // SWIG uses System.ApplicationException and there is no such class in .NETCore
     public class ApplicationException : Exception
     {
@@ -99,7 +99,7 @@ namespace System
         public ApplicationException(string message) : base(message) { }
         public ApplicationException(string message, Exception innerException) : base(message, innerException) { }
     }
-    #endif
+#endif
 }
 
 namespace Noesis
@@ -202,8 +202,6 @@ namespace Noesis
 {
     using System;
     using System.Reflection;
-    using System.Runtime;
-    using System.Collections.Generic;
 
     public static class ExtensionMethods
     {

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
 
 public class Graph<VertexT> : GraphAlgorithms<VertexT, Edge<VertexT>, Graph<VertexT>>, IGraph<VertexT, Edge<VertexT>> where VertexT : class
 {

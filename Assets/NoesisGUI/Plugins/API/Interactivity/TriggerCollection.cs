@@ -1,9 +1,4 @@
-﻿using Noesis;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-
-namespace NoesisApp
+﻿namespace NoesisApp
 {
     /// <summary>
     /// Represents a collection of triggers with a shared AssociatedObject and provides change

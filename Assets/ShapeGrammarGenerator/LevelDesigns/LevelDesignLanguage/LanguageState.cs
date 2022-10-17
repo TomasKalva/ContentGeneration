@@ -1,11 +1,8 @@
-﻿using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
-using ContentGeneration.Assets.UI;
+﻿using ContentGeneration.Assets.UI;
 using ShapeGrammar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static ShapeGrammar.AsynchronousEvaluator;
 using static ShapeGrammar.Game;
 

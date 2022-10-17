@@ -1,10 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
-using System.Reflection;
-using System.Globalization;
-using System.Linq;
 
 namespace Noesis
 {

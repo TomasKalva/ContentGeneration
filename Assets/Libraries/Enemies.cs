@@ -1,9 +1,7 @@
 using Assets.Characters.SpellClasses;
-using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using ContentGeneration.Assets.UI.Model;
 using ShapeGrammar;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;

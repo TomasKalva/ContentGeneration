@@ -2,13 +2,21 @@
 
 OurFramework is a framework for fast prototyping of 3D roguelite action RPG games. The gameplay can be created by using C# scripts which make use of already existing libraries for creation of bulidings, enemies, items and much more. 
 
-Creation of 3D action RPGs is a complex and time consuming process. OurFramework helps the designer to focus on the important tasks while minimizing the need to write a boilerplate code. OurFramework also provides user with existing assets such as models for environment and enemies and visual effects. 
+Creation of 3D action RPGs is a complex and time consuming process. OurFramework helps the designer to focus on the important tasks while minimizing the need to focus on repetitive actions and to write boilerplate code. OurFramework also provides user with existing assets such as models for environment and enemies and visual effects. 
 
 This tutorial covers all the steps needed to create a game using OurFramework.  The reader should be familiar with programming in C#. To see how the framework is implemented internally, please refer to the [documentation][documentation].
 
 [documentation]: ???
 
 We are in Visual Studio 2022.
+
+## Installing framework
+
+>Install Unity
+
+>Install Visual Studio 2022
+
+>Install the package to be created
 
 ## A simple level
 
@@ -27,6 +35,14 @@ class TutorialGameLanguage : LDLanguage
     {
 
     }
+}
+```
+
+```
+public void LevelStart()
+{
+    Env.One(Gr.PrL.CreateNewHouse(), NodesQueries.All, out var area);
+    area.Get.Node.AddSymbol(Gr.Sym.LevelStartMarker);
 }
 ```
 

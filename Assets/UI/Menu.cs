@@ -5,7 +5,6 @@ using System.ComponentModel;
 using ContentGeneration.Assets.UI.Util;
 #if NOESIS
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using static ShapeGrammar.Game;
 #endif
 

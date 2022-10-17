@@ -1,8 +1,5 @@
-using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
-using ShapeGrammar;
 using UnityEngine;
 using ContentGeneration.Assets.UI.Model;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;

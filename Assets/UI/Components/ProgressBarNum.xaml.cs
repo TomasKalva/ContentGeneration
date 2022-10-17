@@ -2,7 +2,6 @@
 #define NOESIS
 using Noesis;
 using System;
-using System.Globalization;
 #else
 using System;
 using System.Windows;

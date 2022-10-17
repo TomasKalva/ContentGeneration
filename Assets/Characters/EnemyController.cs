@@ -1,8 +1,4 @@
-﻿using ContentGeneration.Assets.UI;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using static Movement;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Agent))]
 public class EnemyController : MonoBehaviour

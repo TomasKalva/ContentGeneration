@@ -1,13 +1,7 @@
 ﻿using ContentGeneration.Assets.UI;
-using ContentGeneration.Assets.UI.Model;
 using ShapeGrammar;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules
 {

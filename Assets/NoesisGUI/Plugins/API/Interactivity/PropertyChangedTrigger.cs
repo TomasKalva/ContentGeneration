@@ -1,6 +1,4 @@
 ﻿using Noesis;
-using System;
-using System.Reflection;
 
 namespace NoesisApp
 {

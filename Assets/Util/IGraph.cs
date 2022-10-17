@@ -1,12 +1,8 @@
 ﻿using Assets.ShapeGrammarGenerator.ShapeGrammar;
 using PommaLabs.Hippie;
-using SD.Tools.Algorithmia.PriorityQueues;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
 
 public delegate bool StopCondition(int iterationsCount);
 

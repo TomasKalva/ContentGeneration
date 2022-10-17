@@ -1,12 +1,7 @@
-﻿using Assets.Characters.SpellClasses;
-using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
-using ContentGeneration.Assets.UI.Model;
+﻿using ContentGeneration.Assets.UI.Model;
 using ShapeGrammar;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Assets.Characters.SpellClasses

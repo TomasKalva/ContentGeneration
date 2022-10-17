@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NoesisGUIExtensions
+﻿namespace NoesisGUIExtensions
 {
     /// <summary>
     /// An action that will try to focus the associated element.

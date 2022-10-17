@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Specialized;
-using System.ComponentModel;
-
-namespace NoesisGUIExtensions
+﻿namespace NoesisGUIExtensions
 {
     /// <summary>
     /// Compares the text representation of two items for sorting.

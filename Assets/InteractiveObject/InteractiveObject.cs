@@ -1,7 +1,4 @@
 using ContentGeneration.Assets.UI.Model;
-using ContentGeneration.Assets.UI.Util;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class InteractiveObject : MonoBehaviour

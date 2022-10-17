@@ -1,9 +1,6 @@
-﻿using Assets;
-using ContentGeneration.Assets.UI;
-using ContentGeneration.Assets.UI.Model;
+﻿using ContentGeneration.Assets.UI.Model;
 using ContentGeneration.Assets.UI.Util;
 using ShapeGrammar;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;

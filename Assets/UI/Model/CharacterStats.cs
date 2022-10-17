@@ -1,11 +1,9 @@
 ﻿#if UNITY_5_3_OR_NEWER
 #define NOESIS
-using UnityEngine;
 using UnityEditor;
 #endif
 using ContentGeneration.Assets.UI.Util;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;

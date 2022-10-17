@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NoesisGUIExtensions
+﻿namespace NoesisGUIExtensions
 {
     /// <summary>
     /// An action that wiil set Selector.IsSelected property to true on the asssociated object.

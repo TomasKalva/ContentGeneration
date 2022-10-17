@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Noesis
+﻿namespace Noesis
 {
     /// <summary>
     ///     Interface through which a layout element (such as a panel) marked

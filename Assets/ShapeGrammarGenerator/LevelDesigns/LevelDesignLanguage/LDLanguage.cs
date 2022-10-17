@@ -1,16 +1,11 @@
-﻿using Assets.ShapeGrammarGenerator;
-using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage;
-using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
+﻿using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage;
 using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Modules;
 using Assets.ShapeGrammarGenerator.Primitives;
 using Assets.ShapeGrammarGenerator.ShapeGrammar;
-using ContentGeneration.Assets.UI;
 using ContentGeneration.Assets.UI.Model;
-using ContentGeneration.Assets.UI.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using static ShapeGrammar.AsynchronousEvaluator;

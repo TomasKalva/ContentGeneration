@@ -3,14 +3,10 @@
 using UnityEngine;
 #endif
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel;
 using ContentGeneration.Assets.UI.Util;
 #if NOESIS
-using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
 using Assets.Characters.SpellClasses;
 #endif
 

@@ -1,10 +1,5 @@
 ﻿using Assets.Characters.Items.ItemClasses;
 using ShapeGrammar;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assets.Characters.Items
 {

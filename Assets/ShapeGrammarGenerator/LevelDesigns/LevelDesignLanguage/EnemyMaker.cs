@@ -1,15 +1,8 @@
 using Assets.Characters.Items.ItemClasses;
-using Assets.ShapeGrammarGenerator;
-using Assets.ShapeGrammarGenerator.LevelDesigns.LevelDesignLanguage.Factions;
-using Assets.Util;
 using ContentGeneration.Assets.UI.Model;
 using ContentGeneration.Assets.UI.Util;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
 
 namespace ShapeGrammar
 {

@@ -1,7 +1,4 @@
-﻿using Noesis;
-using System;
-
-namespace NoesisApp
+﻿namespace NoesisApp
 {
     /// <summary>
     /// Interface implemented by objects set in ConditionBehavior.Condition property.
