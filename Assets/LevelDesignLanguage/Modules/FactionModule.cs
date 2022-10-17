@@ -1,15 +1,15 @@
-﻿using Assets.Characters.Items.ItemClasses;
-using Assets.Characters.SpellClasses;
+﻿using OurFramework.Characters.Items.ItemClasses;
+using OurFramework.Characters.SpellClasses;
 using ContentGeneration.Assets.UI;
 using ContentGeneration.Assets.UI.Model;
 using ContentGeneration.Assets.UI.Util;
-using ShapeGrammar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Util;
+using OurFramework.Environment.ShapeGrammar;
 
-namespace Assets.LevelDesignLanguage.CustomModules
+namespace OurFramework.LevelDesignLanguage.CustomModules
 {
 
     class FactionsModule : LDLanguage

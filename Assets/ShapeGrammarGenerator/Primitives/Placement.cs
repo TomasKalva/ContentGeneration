@@ -1,9 +1,10 @@
-﻿using Assets.ShapeGrammarGenerator;
+﻿using OurFramework.Environment.GridMembers;
+using OurFramework.Environment.StylingAreas;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace ShapeGrammar
+namespace OurFramework.Environment.ShapeCreation
 {
     /// <summary>
     /// D E P R E C A T E D

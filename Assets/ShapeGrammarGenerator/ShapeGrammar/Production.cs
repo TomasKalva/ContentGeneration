@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ShapeGrammar
+namespace OurFramework.Environment.ShapeGrammar
 {
     public class ProdParamsManager
     {

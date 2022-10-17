@@ -1,10 +1,10 @@
 ﻿using ContentGeneration.Assets.UI.Model;
-using ShapeGrammar;
+using OurFramework.Environment.ShapeGrammar;
 using System;
 using System.Linq;
 using UnityEngine;
 
-namespace Assets.LevelDesignLanguage.CustomModules
+namespace OurFramework.LevelDesignLanguage.CustomModules
 {
 
     class EnvironmentModule : LDLanguage
@@ -20,7 +20,7 @@ namespace Assets.LevelDesignLanguage.CustomModules
                 SkyBrightness = skyBrightness;
             }
 
-            public void Set(Environment environment)
+            public void Set(EnvironmentMap environment)
             {
                 environment.SetSkyVariability(SkyVariability);
                 environment.SetSkyBrightness(SkyBrightness);
@@ -45,11 +45,11 @@ namespace Assets.LevelDesignLanguage.CustomModules
 
         public class EnvironmentState
         {
-            GeometryMaker<Environment> GeometryMaker { get; }
-            Environment Environment { get; set; }
+            GeometryMaker<EnvironmentMap> GeometryMaker { get; }
+            EnvironmentMap Environment { get; set; }
             SkyParameters CurrentParameters { get; set; }
 
-            public EnvironmentState(GeometryMaker<Environment> makeGeometry)
+            public EnvironmentState(GeometryMaker<EnvironmentMap> makeGeometry)
             {
                 GeometryMaker = makeGeometry;
             }
@@ -79,7 +79,7 @@ namespace Assets.LevelDesignLanguage.CustomModules
             var envState = new EnvironmentState(
                 () =>
                 {
-                    var env = Lib.Objects.Environment();
+                    var env = Lib.Objects.EnvironmentMap();
                     State.World.AddSpecialObject(env.transform);
                     RenderSettings.sun = env.Sun;
                     return env;
@@ -95,7 +95,7 @@ namespace Assets.LevelDesignLanguage.CustomModules
             var envState = new EnvironmentState(
                 () =>
                 {
-                    var env = Lib.Objects.Environment();
+                    var env = Lib.Objects.EnvironmentMap();
                     State.World.AddSpecialObject(env.transform);
                     RenderSettings.sun = env.Sun;
                     return env;

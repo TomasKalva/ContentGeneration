@@ -1,12 +1,13 @@
 ﻿using ContentGeneration.Assets.UI;
-using ShapeGrammar;
+using OurFramework.Environment.ShapeCreation;
+using OurFramework.Environment.ShapeGrammar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static Assets.LevelDesignLanguage.AsynchronousEvaluator;
-using static Assets.LevelDesignLanguage.Game;
+using static OurFramework.LevelDesignLanguage.AsynchronousEvaluator;
+using static OurFramework.LevelDesignLanguage.Game;
 
-namespace Assets.LevelDesignLanguage
+namespace OurFramework.LevelDesignLanguage
 {
     class LanguageState
     {

@@ -1,6 +1,6 @@
-﻿using ShapeGrammar;
+﻿using OurFramework.Environment.ShapeGrammar;
 
-namespace Assets.LevelDesignLanguage.CustomModules
+namespace OurFramework.LevelDesignLanguage.CustomModules
 {
 
     class TutorialGameModule : LDLanguage

@@ -1,4 +1,4 @@
-﻿using Assets.ShapeGrammarGenerator;
+﻿using OurFramework.Environment.StylingAreas;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-namespace ShapeGrammar
+namespace OurFramework.Environment.GridMembers
 {
 
     public class Grid<T> : IEnumerable<T>

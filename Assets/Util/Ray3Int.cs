@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Util
+namespace OurFramework.Util
 {
     public struct Ray3Int : IEnumerable<Vector3Int>
     {

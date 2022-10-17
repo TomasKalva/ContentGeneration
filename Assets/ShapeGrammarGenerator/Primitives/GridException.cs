@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Assets.ShapeGrammarGenerator.Primitives
+namespace OurFramework.Environment.GridMembers
 {
     class GridException : Exception
     {

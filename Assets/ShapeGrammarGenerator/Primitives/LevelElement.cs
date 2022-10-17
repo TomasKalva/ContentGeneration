@@ -1,12 +1,13 @@
-﻿using Assets.ShapeGrammarGenerator;
-using ContentGeneration.Assets.UI;
+﻿using ContentGeneration.Assets.UI;
+using OurFramework.Environment.StylingAreas;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using Util;
 
-namespace ShapeGrammar
+namespace OurFramework.Environment.GridMembers
 {
     public abstract class LevelElement
     {

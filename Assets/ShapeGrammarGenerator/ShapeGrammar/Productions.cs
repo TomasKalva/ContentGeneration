@@ -1,11 +1,14 @@
-﻿using Assets.ShapeGrammarGenerator;
+﻿using OurFramework.Environment.GridMembers;
+using OurFramework.Environment.ShapeCreation;
+using OurFramework.Environment.ShapeGrammar;
+using OurFramework.Environment.StylingAreas;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static ShapeGrammar.Connections;
+using static OurFramework.Environment.ShapeCreation.Connections;
 
-namespace ShapeGrammar
+namespace OurFramework.Environment.ShapeGrammar
 {
     public class Productions
     {

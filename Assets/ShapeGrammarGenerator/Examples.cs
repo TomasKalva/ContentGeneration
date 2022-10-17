@@ -1,9 +1,11 @@
-﻿using Assets.ShapeGrammarGenerator;
+﻿using OurFramework.Environment.GridMembers;
+using OurFramework.Environment.StylingAreas;
 using System;
 using System.Linq;
 using UnityEngine;
+using Util;
 
-namespace ShapeGrammar
+namespace OurFramework.Environment.ShapeCreation
 {
     public class LevelDevelopmentKit
     {

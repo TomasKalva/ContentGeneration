@@ -1,12 +1,13 @@
-﻿using Assets.ShapeGrammarGenerator;
-using ContentGeneration.Assets.UI;
+﻿using ContentGeneration.Assets.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static Assets.LevelDesignLanguage.AsynchronousEvaluator;
+using static OurFramework.LevelDesignLanguage.AsynchronousEvaluator;
+using OurFramework.Environment.GridMembers;
+using OurFramework.Environment.StylingAreas;
 
-namespace ShapeGrammar
+namespace OurFramework.Environment.ShapeGrammar
 {
     /// <summary>
     /// Represents the nodes in the world.

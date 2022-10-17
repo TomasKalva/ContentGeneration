@@ -1,11 +1,11 @@
 ﻿using ContentGeneration.Assets.UI.Model;
-using ShapeGrammar;
+using OurFramework.Environment.ShapeGrammar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Util;
 
-namespace Assets.LevelDesignLanguage.CustomModules
+namespace OurFramework.LevelDesignLanguage.CustomModules
 {
     class DetailsModule : LDLanguage
     {

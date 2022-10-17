@@ -1,7 +1,7 @@
-﻿using Assets.LevelDesignLanguage;
+﻿using OurFramework.LevelDesignLanguage;
 using ContentGeneration.Assets.UI.Model;
 
-namespace Assets.Characters.Items.ItemClasses
+namespace OurFramework.Characters.Items.ItemClasses
 {
     public class EquipmentItem<EquipmentT> : ItemState where EquipmentT : Equipment
     {

@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using OurFramework.Environment.GridMembers;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace ShapeGrammar
+namespace OurFramework.Environment.ShapeGrammar
 {
     /// <summary>
     /// Declares a relationship between derived symbols.

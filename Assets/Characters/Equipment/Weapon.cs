@@ -1,5 +1,5 @@
-using Assets.Characters.Items.ItemClasses;
-using Assets.Characters.SpellClasses;
+using OurFramework.Characters.Items.ItemClasses;
+using OurFramework.Characters.SpellClasses;
 using UnityEngine;
 
 public class Weapon : Equipment

@@ -1,12 +1,11 @@
-﻿using Assets.ShapeGrammarGenerator;
-using Assets.Util;
+﻿using OurFramework.Util;
 using ContentGeneration.Assets.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace ShapeGrammar
+namespace OurFramework.Environment.GridMembers
 {
     public class Cube : IFacet
     {

@@ -1,9 +1,10 @@
-﻿using Assets.ShapeGrammarGenerator;
+﻿using OurFramework.Environment.GridMembers;
+using OurFramework.Environment.StylingAreas;
 using System;
 using System.Linq;
 using UnityEngine;
 
-namespace ShapeGrammar
+namespace OurFramework.Environment.ShapeCreation
 {
     /// <summary>
     /// Doesn't throw correct exceptions.

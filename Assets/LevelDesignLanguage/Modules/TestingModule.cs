@@ -1,10 +1,10 @@
 ﻿using ContentGeneration.Assets.UI.Model;
-using ShapeGrammar;
+using OurFramework.Environment.ShapeGrammar;
 using System;
 using System.Linq;
 using Util;
 
-namespace Assets.LevelDesignLanguage.CustomModules
+namespace OurFramework.LevelDesignLanguage.CustomModules
 {
 
     class TestingModule : LDLanguage

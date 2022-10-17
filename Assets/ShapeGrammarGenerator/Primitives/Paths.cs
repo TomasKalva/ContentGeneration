@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using OurFramework.Environment.GridMembers;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 
-namespace ShapeGrammar
+namespace OurFramework.Environment.ShapeCreation
 {
     public class Paths
     {

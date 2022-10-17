@@ -7,7 +7,7 @@ using System.Linq;
 using System.ComponentModel;
 using ContentGeneration.Assets.UI.Util;
 #if NOESIS
-using Assets.Characters.SpellClasses;
+using OurFramework.Characters.SpellClasses;
 #endif
 
 namespace ContentGeneration.Assets.UI.Model

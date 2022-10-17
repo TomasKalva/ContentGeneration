@@ -1,7 +1,7 @@
-﻿using Assets.Characters.Items.ItemClasses;
-using Assets.LevelDesignLanguage;
+﻿using OurFramework.Characters.Items.ItemClasses;
+using OurFramework.LevelDesignLanguage;
 
-namespace Assets.Characters.Items
+namespace OurFramework.Characters.Items
 {
     public class AccessoryItem : EquipmentItem<Accessory>
     {

@@ -1,12 +1,11 @@
-﻿using Assets.ShapeGrammarGenerator;
-using Assets.ShapeGrammarGenerator.Primitives;
-using Assets.Util;
+﻿using OurFramework.Environment.StylingAreas;
+using OurFramework.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace ShapeGrammar
+namespace OurFramework.Environment.GridMembers
 {
 
     public class Group

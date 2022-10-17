@@ -1,10 +1,10 @@
-﻿using Assets.ShapeGrammarGenerator;
+﻿using OurFramework.Environment.GridMembers;
+using OurFramework.Environment.StylingAreas;
 using System.Linq;
 using UnityEngine;
 
-namespace ShapeGrammar
+namespace OurFramework.Environment.ShapeCreation
 {
-
     public class ShapeGrammarShapes
     {
         Grid<Cube> Grid { get; }

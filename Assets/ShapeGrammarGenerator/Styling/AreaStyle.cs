@@ -1,6 +1,6 @@
-﻿using ShapeGrammar;
+﻿using OurFramework.Environment.GridMembers;
 
-namespace Assets.ShapeGrammarGenerator
+namespace OurFramework.Environment.StylingAreas
 {
     public delegate CubeGroup PlacePrimitives(GridPrimitivesStyle gridPrimitivesStyle, CubeGroup target);
 

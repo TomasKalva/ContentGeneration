@@ -1,5 +1,5 @@
-﻿using Assets.Characters.SpellClasses;
-using Assets.LevelDesignLanguage;
+﻿using OurFramework.Characters.SpellClasses;
+using OurFramework.LevelDesignLanguage;
 using System;
 using UnityEngine;
 using Util;

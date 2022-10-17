@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace ShapeGrammar
+namespace OurFramework.Environment.ShapeGrammar
 {
     public class Symbols
     {

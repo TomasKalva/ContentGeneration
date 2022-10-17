@@ -1,11 +1,11 @@
-﻿using Assets.ShapeGrammarGenerator.ShapeGrammar;
+﻿using OurFramework.Environment.GridMembers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static ShapeGrammar.LevelElement;
+using static OurFramework.Environment.GridMembers.LevelElement;
 
-namespace ShapeGrammar
+namespace OurFramework.Environment.ShapeGrammar
 {
     public class ProductionList
     {

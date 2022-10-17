@@ -7,11 +7,14 @@ using ContentGeneration.Assets.UI;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 using UnityEngine.SceneManagement;
-using static Assets.LevelDesignLanguage.AsynchronousEvaluator;
-using ShapeGrammar;
-using Assets.LevelDesignLanguage.CustomModules;
+using static OurFramework.LevelDesignLanguage.AsynchronousEvaluator;
+using OurFramework.LevelDesignLanguage.CustomModules;
+using OurFramework.Environment.ShapeGrammar;
+using OurFramework.Environment.StylingAreas;
+using OurFramework.Environment.GridMembers;
+using OurFramework.Environment.ShapeCreation;
 
-namespace Assets.LevelDesignLanguage
+namespace OurFramework.LevelDesignLanguage
 {
 
     public sealed class Game : MonoBehaviour

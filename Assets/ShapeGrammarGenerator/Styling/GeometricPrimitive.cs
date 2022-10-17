@@ -1,10 +1,13 @@
 using UnityEngine;
 
-public class GeometricPrimitive : MonoBehaviour
+namespace OurFramework.Environment.StylingAreas
 {
-    /// <summary>
-    /// Returns a copy of this object.
-    /// </summary>
-    public GeometricPrimitive New() => Instantiate(this);
+    public class GeometricPrimitive : MonoBehaviour
+    {
+        /// <summary>
+        /// Returns a copy of this object.
+        /// </summary>
+        public GeometricPrimitive New() => Instantiate(this);
 
+    }
 }

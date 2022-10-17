@@ -22,9 +22,9 @@ public class Objects : ScriptableObject
     //public Transform spawnPoint;
 
     [SerializeField]
-    Environment environment;
+    EnvironmentMap environment;
 
-    public Environment Environment()
+    public EnvironmentMap EnvironmentMap()
     {
         return Instantiate(environment);
     }

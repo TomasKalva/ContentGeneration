@@ -1,4 +1,4 @@
-using Assets.Characters.SpellClasses;
+using OurFramework.Characters.SpellClasses;
 using UnityEngine;
 
 

@@ -1,10 +1,10 @@
 ﻿using ContentGeneration.Assets.UI;
-using ShapeGrammar;
+using OurFramework.Environment.StylingAreas;
 using System;
 using System.Linq;
 using UnityEngine;
 
-namespace Assets.ShapeGrammarGenerator
+namespace OurFramework.Environment.GridMembers
 {
     public abstract class GridPrimitive
     {

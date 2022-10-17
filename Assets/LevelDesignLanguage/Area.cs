@@ -1,14 +1,16 @@
 ﻿using ContentGeneration.Assets.UI;
 using ContentGeneration.Assets.UI.Model;
 using ContentGeneration.Assets.UI.Util;
-using ShapeGrammar;
+using OurFramework.Environment.GridMembers;
+using OurFramework.Environment.ShapeCreation;
+using OurFramework.Environment.ShapeGrammar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static Assets.LevelDesignLanguage.AsynchronousEvaluator;
+using static OurFramework.LevelDesignLanguage.AsynchronousEvaluator;
 
-namespace Assets.LevelDesignLanguage
+namespace OurFramework.LevelDesignLanguage
 {
     class Area
     {
@@ -184,7 +186,7 @@ namespace Assets.LevelDesignLanguage
     }
 
     /// <summary>
-    /// Represents collection from which itmes satisfying some condition can be gradually removed at random.
+    /// Represents collection from which items satisfying some condition can be gradually removed at random.
     /// </summary>
     class Holder<T>
     {

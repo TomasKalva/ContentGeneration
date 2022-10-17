@@ -1,9 +1,10 @@
-﻿using Assets.ShapeGrammarGenerator;
-using ShapeGrammar;
+﻿using OurFramework.Environment.GridMembers;
+using OurFramework.Environment.StylingAreas;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Util;
 
 /// <summary>
 /// My random is thread safe, unlike the one from Unity.
@@ -93,12 +94,12 @@ static class ExtensionMethods
         return enumerable.Reverse().Skip(skipCount).Reverse();
     }
 
-    public static CubeGroup ToCubeGroup(this IEnumerable<Cube> enumerable, ShapeGrammar.Grid<Cube> grid)
+    public static CubeGroup ToCubeGroup(this IEnumerable<Cube> enumerable, Grid<Cube> grid)
     {
         return enumerable.ToList().ToCubeGroup(grid);
     }
 
-    public static CubeGroup ToCubeGroup(this List<Cube> list, ShapeGrammar.Grid<Cube> grid)
+    public static CubeGroup ToCubeGroup(this List<Cube> list, Grid<Cube> grid)
     {
         return new CubeGroup(grid, list);
     }
@@ -108,17 +109,17 @@ static class ExtensionMethods
         return new CubeGroup(enumerable.FirstOrDefault().Grid, enumerable.SelectMany(cg => cg.Cubes).ToList());
     }
 
-    public static LevelGroupElement ToLevelGroupElement(this IEnumerable<CubeGroup> enumerable, ShapeGrammar.Grid<Cube> grid)
+    public static LevelGroupElement ToLevelGroupElement(this IEnumerable<CubeGroup> enumerable, Grid<Cube> grid)
     {
         return enumerable.Select(g => new LevelGeometryElement(g.Grid, AreaStyles.None(), g)).ToLevelGroupElement(grid);
     }
 
-    public static LevelGroupElement ToLevelGroupElement(this IEnumerable<LevelElement> enumerable, ShapeGrammar.Grid<Cube> grid)
+    public static LevelGroupElement ToLevelGroupElement(this IEnumerable<LevelElement> enumerable, Grid<Cube> grid)
     {
         return enumerable.ToList().ToLevelGroupElement(grid);
     }
 
-    public static LevelGroupElement ToLevelGroupElement(this List<LevelElement> list, ShapeGrammar.Grid<Cube> grid)
+    public static LevelGroupElement ToLevelGroupElement(this List<LevelElement> list, Grid<Cube> grid)
     {
         return new LevelGroupElement(grid, AreaStyles.None(), list);
     }

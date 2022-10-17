@@ -5,6 +5,7 @@ using System.ComponentModel;
 using ContentGeneration.Assets.UI.Util;
 #if NOESIS
 using UnityEngine;
+using static OurFramework.LevelDesignLanguage.Game;
 #endif
 
 namespace ContentGeneration.Assets.UI

@@ -1,11 +1,11 @@
-using Assets.Characters.SpellClasses;
-using Assets.LevelDesignLanguage;
+using OurFramework.Characters.SpellClasses;
+using OurFramework.LevelDesignLanguage;
 using ContentGeneration.Assets.UI.Model;
 using System.Collections.Generic;
 using System.Linq;
 
 
-namespace Assets.Characters.Items.ItemClasses
+namespace OurFramework.Characters.Items.ItemClasses
 {
     public class WeaponItem : EquipmentItem<Weapon>
     {

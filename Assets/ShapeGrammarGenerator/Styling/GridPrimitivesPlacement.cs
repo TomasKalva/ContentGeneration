@@ -1,9 +1,9 @@
-﻿using Assets.ShapeGrammarGenerator;
+﻿using OurFramework.Environment.StylingAreas;
 using System;
 using System.Linq;
 using UnityEngine;
 
-namespace ShapeGrammar
+namespace OurFramework.Environment.GridMembers
 {
     public class GridPrimitivesPlacement
     {

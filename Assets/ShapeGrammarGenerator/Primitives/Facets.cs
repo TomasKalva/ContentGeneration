@@ -1,11 +1,10 @@
-﻿using Assets.ShapeGrammarGenerator;
-using ContentGeneration.Assets.UI;
+﻿using ContentGeneration.Assets.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace ShapeGrammar
+namespace OurFramework.Environment.GridMembers
 {
 
     public interface IFacet

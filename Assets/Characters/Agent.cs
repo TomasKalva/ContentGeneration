@@ -1,6 +1,6 @@
 ﻿using Animancer;
-using Assets.Characters.Items;
-using Assets.Characters.Items.ItemClasses;
+using OurFramework.Characters.Items;
+using OurFramework.Characters.Items.ItemClasses;
 using ContentGeneration.Assets.UI.Model;
 using UnityEngine;
 

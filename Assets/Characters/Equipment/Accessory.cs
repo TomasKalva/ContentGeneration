@@ -1,4 +1,4 @@
-using Assets.Characters.Items;
+using OurFramework.Characters.Items;
 
 public class Accessory : Equipment
 {

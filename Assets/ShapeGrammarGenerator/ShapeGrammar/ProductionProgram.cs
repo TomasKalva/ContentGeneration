@@ -1,11 +1,11 @@
-﻿using Assets.ShapeGrammarGenerator;
-using Assets.ShapeGrammarGenerator.ShapeGrammar;
+﻿using OurFramework.Environment.ShapeCreation;
+using OurFramework.Environment.StylingAreas;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace ShapeGrammar
+namespace OurFramework.Environment.ShapeGrammar
 {
     public class ProductionProgram
     {

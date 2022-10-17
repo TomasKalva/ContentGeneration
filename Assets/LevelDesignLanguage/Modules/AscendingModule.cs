@@ -1,9 +1,9 @@
 ﻿using ContentGeneration.Assets.UI.Model;
-using ShapeGrammar;
+using OurFramework.Environment.ShapeGrammar;
 using System;
 using System.Linq;
 
-namespace Assets.LevelDesignLanguage.Modules
+namespace OurFramework.LevelDesignLanguage.CustomModules
 {
     class AscendingModule : LDLanguage
     {

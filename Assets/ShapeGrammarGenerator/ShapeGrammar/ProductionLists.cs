@@ -1,7 +1,9 @@
-﻿using Assets.ShapeGrammarGenerator;
+﻿using OurFramework.Environment.GridMembers;
+using OurFramework.Environment.ShapeCreation;
+using OurFramework.Environment.StylingAreas;
 using System;
 
-namespace ShapeGrammar
+namespace OurFramework.Environment.ShapeGrammar
 {
     public class ProductionLists
     {

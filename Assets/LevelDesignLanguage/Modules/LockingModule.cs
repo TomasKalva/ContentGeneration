@@ -1,10 +1,11 @@
 ﻿using ContentGeneration.Assets.UI;
 using ContentGeneration.Assets.UI.Model;
-using ShapeGrammar;
+using OurFramework.Environment.GridMembers;
+using OurFramework.Environment.ShapeGrammar;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Assets.LevelDesignLanguage.CustomModules
+namespace OurFramework.LevelDesignLanguage.CustomModules
 {
     class LockingModule : LDLanguage
     {

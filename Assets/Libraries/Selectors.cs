@@ -1,5 +1,5 @@
-﻿using Assets.Characters.SpellClasses;
-using Assets.Util;
+﻿using OurFramework.Characters.SpellClasses;
+using OurFramework.Util;
 using ContentGeneration.Assets.UI.Model;
 using System;
 using System.Collections.Generic;

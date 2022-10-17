@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using OurFramework.Environment.GridMembers;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace ShapeGrammar
+namespace OurFramework.Environment.ShapeGrammar
 {
     /// <summary>
     /// Element of shape grammar created by and used as a target for production rules.

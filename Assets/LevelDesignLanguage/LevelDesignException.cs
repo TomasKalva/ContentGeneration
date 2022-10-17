@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Assets.LevelDesignLanguage
+namespace OurFramework.LevelDesignLanguage
 {
     class LevelDesignException : Exception
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Environment : MonoBehaviour
+public class EnvironmentMap : MonoBehaviour
 {
     [SerializeField]
     Transform skyParent;

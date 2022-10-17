@@ -1,7 +1,8 @@
-﻿using Assets.ShapeGrammarGenerator;
+﻿using OurFramework.Environment.GridMembers;
+using OurFramework.Environment.StylingAreas;
 using System.Collections.Generic;
 
-namespace ShapeGrammar
+namespace OurFramework.Environment.ShapeCreation
 {
     public class Connections
     {

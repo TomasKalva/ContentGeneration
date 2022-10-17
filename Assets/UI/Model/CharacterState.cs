@@ -7,8 +7,9 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System;
 using System.Linq;
-using Assets.Characters.Items.ItemClasses;
-using Assets.Characters.SpellClasses;
+using OurFramework.Characters.Items.ItemClasses;
+using OurFramework.Characters.SpellClasses;
+using OurFramework.LevelDesignLanguage;
 
 namespace ContentGeneration.Assets.UI.Model
 {

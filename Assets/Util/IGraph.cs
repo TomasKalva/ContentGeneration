@@ -1,4 +1,4 @@
-﻿using Assets.ShapeGrammarGenerator.ShapeGrammar;
+﻿using OurFramework.Environment.ShapeGrammar;
 using PommaLabs.Hippie;
 using System;
 using System.Collections.Generic;

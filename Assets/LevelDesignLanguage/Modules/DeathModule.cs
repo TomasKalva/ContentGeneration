@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-namespace Assets.LevelDesignLanguage.CustomModules
+namespace OurFramework.LevelDesignLanguage.CustomModules
 {
     class DeathModule : LDLanguage
     {

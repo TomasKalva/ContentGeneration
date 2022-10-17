@@ -1,10 +1,10 @@
-using Assets.Characters.Items.ItemClasses;
+using OurFramework.Characters.Items.ItemClasses;
 using ContentGeneration.Assets.UI.Model;
 using ContentGeneration.Assets.UI.Util;
 using System;
 using System.Collections.Generic;
 
-namespace Assets.LevelDesignLanguage
+namespace OurFramework.LevelDesignLanguage
 {
     class EnemyMaker
     {

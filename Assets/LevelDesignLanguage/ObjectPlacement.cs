@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Util;
 
-namespace Assets.LevelDesignLanguage
+namespace OurFramework.LevelDesignLanguage
 {
     class ObjectPlacement<T>
     {

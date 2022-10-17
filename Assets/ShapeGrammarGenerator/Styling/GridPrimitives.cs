@@ -1,8 +1,8 @@
-﻿using ShapeGrammar;
+﻿using OurFramework.Environment.StylingAreas;
 using System;
 using UnityEngine;
 
-namespace Assets.ShapeGrammarGenerator
+namespace OurFramework.Environment.GridMembers
 {
     public class GridPrimitives
     {

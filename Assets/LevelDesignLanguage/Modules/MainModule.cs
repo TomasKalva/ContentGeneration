@@ -1,4 +1,4 @@
-﻿namespace Assets.LevelDesignLanguage.CustomModules
+﻿namespace OurFramework.LevelDesignLanguage.CustomModules
 {
     class MainModule : LDLanguage
     {

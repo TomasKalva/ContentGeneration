@@ -1,9 +1,9 @@
 ﻿using ContentGeneration.Assets.UI;
 using ContentGeneration.Assets.UI.Model;
-using ShapeGrammar;
+using OurFramework.Environment.ShapeGrammar;
 using System;
 
-namespace Assets.LevelDesignLanguage.CustomModules
+namespace OurFramework.LevelDesignLanguage.CustomModules
 {
 
     class NpcModule : LDLanguage

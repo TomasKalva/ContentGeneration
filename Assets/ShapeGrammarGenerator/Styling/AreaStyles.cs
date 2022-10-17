@@ -1,7 +1,7 @@
-﻿using ShapeGrammar;
+﻿using OurFramework.Environment.GridMembers;
 using UnityEngine;
 
-namespace Assets.ShapeGrammarGenerator
+namespace OurFramework.Environment.StylingAreas
 {
     public static class AreaStyles
     {

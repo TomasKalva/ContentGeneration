@@ -1,4 +1,4 @@
-﻿namespace Assets.Util
+﻿namespace OurFramework.Util
 {
     public class Annotated<T>
     {

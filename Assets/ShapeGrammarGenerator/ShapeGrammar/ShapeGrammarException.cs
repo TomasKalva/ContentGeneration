@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Assets.ShapeGrammarGenerator.ShapeGrammar
+namespace OurFramework.Environment.ShapeGrammar
 {
     class ShapeGrammarException : Exception
     {
