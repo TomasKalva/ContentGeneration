@@ -121,7 +121,6 @@ namespace OurFramework.LevelDesignLanguage
             Debug.Log(stopwatch.ElapsedMilliseconds);
         }
     }
-
     class LanguageParams
     {
         public LanguageState LanguageState { get; }
@@ -220,44 +219,6 @@ namespace OurFramework.LevelDesignLanguage
 
     #endregion
 
-    class Modules
-    {
-        public LevelModule LevelModule { get; private set; }
-        public LockingModule LockingModule { get; private set; }
-        public TestingModule TestingModule { get; private set; }
-        public FactionsModule FactionsModule { get; private set; }
-        public AscendingModule AscendingModule { get; private set; }
-        public OutOfDepthEncountersModule OutOfDepthEncountersModule { get; private set; }
-        public DetailsModule DetailsModule { get; private set; }
-        public EnvironmentModule EnvironmentModule { get; private set; }
-        public NpcModule NpcModule { get; private set; }
-        public DeathModule DeathModule { get; private set; }
-        public TutorialGameModule TutorialModule { get; private set; }
-
-
-        public Modules()
-        {
-        }
-
-        /// <summary>
-        /// This class is referenced by LanguageParams and also requires them for initialization so
-        /// languages can't be initialized in constructor.
-        /// </summary>
-        public void Initialize(LanguageParams languageParams)
-        {
-            LevelModule = new LevelModule(languageParams);
-            LockingModule = new LockingModule(languageParams);
-            TestingModule = new TestingModule(languageParams);
-            FactionsModule = new FactionsModule(languageParams);
-            AscendingModule = new AscendingModule(languageParams);
-            OutOfDepthEncountersModule = new OutOfDepthEncountersModule(languageParams);
-            DetailsModule = new DetailsModule(languageParams);
-            EnvironmentModule = new EnvironmentModule(languageParams);
-            NpcModule = new NpcModule(languageParams);
-            DeathModule = new DeathModule(languageParams);
-            TutorialModule = new TutorialGameModule(languageParams);
-        }
-    }
 
     #region Language tools
 

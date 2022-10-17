@@ -139,7 +139,7 @@ namespace OurFramework.LevelDesignLanguage
                     GameLanguage = new MainModule(languageParams);
 
 
-                    GameLanguage.StartWorld();
+                    GameLanguage.DeclareGame();
 
                     yield return TaskSteps.One();
                 }

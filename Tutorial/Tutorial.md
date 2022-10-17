@@ -13,6 +13,7 @@ To see how the framework is implemented internally, please refer to the [documen
 We are in Visual Studio 2022.
 Navigating to declaration of a symbol in visual studio can be done using `Ctrl` + `Left mouse button` click on the symbol.
 Moving to previous position of cursor using 
+We are in main scene in Unity.
 
 ## Installing framework
 
@@ -32,31 +33,76 @@ In this part of the tutorial we will create a simple game with a few buildings, 
 
 As you probably noticed, the framework contains a lot of scripts and directories. Don't worry about it, for now we will only focus on the core of the framework that is necessary to create a simple game and later on gradually explore more options how to extend the game using more advanced features.
 
-The most important part of th
+The philosophy of OurFramework is to define most of the game logic using C# scripts. Because the logic can get complicated quite quickly, the scripts are split into modules each of which focuses on a smaller task. The modules are then used to declare what the game should contain.
 
->Create new module
+Let's create a simple module to see how modules work in practice. The module will allow us to start a game with a single building. 
 
->Put the module to languages
-
->Call the module from main
+First let's navigate to the folder `AssetsFolderName/LevelDesignLanguage/Modules`. You should see multiple already created modules each put into its own `.cs` file. We will put our new module into a new file too so let's create a new class file called `TutorialModule.cs`. Copy and paste the following code to the file:
 
 ```
-class TutorialGameModule : LDLanguage
-{
-    public TutorialGameModule(LanguageParams parameters) : base(parameters) { }
-    
-    public void Main()
-    {
-        LevelStart();
-    }
+using OurFramework.Environment.ShapeGrammar;
 
-    public void LevelStart()
+namespace OurFramework.LevelDesignLanguage.CustomModules
+{
+    class TutorialModule : LDLanguage
     {
-        Env.One(Gr.PrL.CreateNewHouse(), NodesQueries.All, out var area);
-        area.Get.Node.AddSymbol(Gr.Sym.LevelStartMarker);
+        public TutorialModule(LanguageParams parameters) : base(parameters) { }
+        
+        public void Main()
+        {
+            LevelStart();
+        }
+
+        void LevelStart()
+        {
+            Env.One(Gr.PrL.CreateNewHouse(), NodesQueries.All, out var area);
+            area.Get.Node.AddSymbol(Gr.Sym.LevelStartMarker);
+        }
     }
 }
 ```
+
+
+>Create new module
+
+>Put the module to modules
+ 
+Before the game is started the method `DeclareGame` of the module `MainModule` is called. The method contains declaration of events that will get called once the game starts. The method currently contains call to `StartDebugGame` which starts a new game using the already existing modules. We will create the entire game from scratch so to comment out the line with `StartDebugGame();` and add declaration of event from our module the following way:
+
+```
+...
+public void DeclareGame()
+{
+    //StartDebugGame();
+    State.LC.AddNecessaryEvent($"Tutorial module", 100, level => M.TutorialModule.Main());
+}
+...
+```
+
+At this point the compiler should complain about `TutorialModule`. `M` is an object that should contain references to all existing modules. We need to add our module to it as a property called `TutorialModule`. Navigate to the C# file `AssetsFolderName/LevelDesignLanguage/Modules.cs` and add the following property to the class `Modules`:
+
+```
+...
+public TutorialModule TutorialModule { get; private set; }
+...
+```
+
+We need have to initialize it before being able to use it so add call constructor of `TutorialModule` in the method `Initialize`:
+
+```
+public void Initialize(LanguageParams languageParams)
+{
+    ...
+    TutorialModule = new TutorialModule(languageParams);
+}
+```
+
+Now we can go back to Unity and press play. If you've done everything correctly, you should see the following result:
+
+
+
+>Call the module from main
+
 
 >Look at what level start method does
 

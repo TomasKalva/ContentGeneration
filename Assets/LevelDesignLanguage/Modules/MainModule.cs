@@ -4,12 +4,13 @@
     {
         public MainModule(LanguageParams parameters) : base(parameters) { }
 
-        public void StartWorld()
+        public void DeclareGame()
         {
-            StartDebugWorld();
+            //StartDebugGame();
+            State.LC.AddNecessaryEvent($"Tutorial module", 100, level => M.TutorialModule.Main());
         }
 
-        void StartDebugWorld()
+        void StartDebugGame()
         {
             State.LC.AddNecessaryEvent($"Level Start", 100, level => M.LevelModule.LevelStart(), true);
 

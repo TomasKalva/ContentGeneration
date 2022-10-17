@@ -2,17 +2,16 @@
 
 namespace OurFramework.LevelDesignLanguage.CustomModules
 {
-
-    class TutorialGameModule : LDLanguage
+    class TutorialModule : LDLanguage
     {
-        public TutorialGameModule(LanguageParams parameters) : base(parameters) { }
+        public TutorialModule(LanguageParams parameters) : base(parameters) { }
         
         public void Main()
         {
-
+            LevelStart();
         }
 
-        public void LevelStart()
+        void LevelStart()
         {
             Env.One(Gr.PrL.CreateNewHouse(), NodesQueries.All, out var area);
             area.Get.Node.AddSymbol(Gr.Sym.LevelStartMarker);
