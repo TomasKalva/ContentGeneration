@@ -112,7 +112,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
 
         }
 
-        public void Roofs()
+        public void AddRoofs()
         {
             Env.Execute(new AllGrammar(Gr.PrL.Roofs()));
         }

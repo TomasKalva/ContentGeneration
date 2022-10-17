@@ -40,7 +40,7 @@
             State.LC.AddNecessaryEvent($"Environment", 0, level => M.EnvironmentModule.CreateSky(level), true);
 
 
-            State.LC.AddNecessaryEvent($"Roofs", -1, level => M.LevelModule.Roofs(), true);
+            State.LC.AddNecessaryEvent($"Roofs", -1, level => M.LevelModule.AddRoofs(), true);
 
             State.LC.AddNecessaryEvent("Ascending", 80, _ => M.AscendingModule.AscendingBranch(() => 100));
 
