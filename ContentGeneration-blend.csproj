@@ -145,9 +145,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Assets\UI\DelegateCommand.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Assets\UI\ViewModel.cs">
       <SubType>Code</SubType>
     </Compile>
