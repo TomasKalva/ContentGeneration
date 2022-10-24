@@ -14,6 +14,9 @@ namespace ContentGeneration.Assets.UI.Model
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        const int MAX_STAT_VALUE = 99;
+        int ValidStatValue(int val) => Math.Max(0, Math.Min(MAX_STAT_VALUE, val));
+
         private CharacterState _character;
         public CharacterState Character
         {
@@ -40,7 +43,7 @@ namespace ContentGeneration.Assets.UI.Model
             get { return _will; }
             set 
             { 
-                _will = value;
+                _will = ValidStatValue(value);
                 if(Character != null)
                 {
                     Character.Health.Maximum = 40 + 10 * _will;
@@ -55,7 +58,7 @@ namespace ContentGeneration.Assets.UI.Model
             get { return _strength; }
             set
             {
-                _strength = value;
+                _strength = ValidStatValue(value);
                 if (Character != null)
                 {
                 }
@@ -69,7 +72,7 @@ namespace ContentGeneration.Assets.UI.Model
             get { return _endurance; }
             set
             {
-                _endurance = value;
+                _endurance = ValidStatValue(value);
                 if (Character != null)
                 {
                     Character.Stamina.Maximum = 10 + _endurance;
@@ -84,15 +87,13 @@ namespace ContentGeneration.Assets.UI.Model
             get { return _agility; }
             set
             {
-                _agility = value;
+                _agility = ValidStatValue(value);
                 if (Character != null)
                 {
                     var agent = Character.Agent;
                     if(agent != null)
                     {
                         agent.acting.SetActingSpeedMultiplier(1f + 0.0025f * _agility);
-                        //var walk = agent.acting.GetAct("Walk") as Move;
-                        //walk.SetSpeedMultiplier(1f + 0.01f * _agility);
                         var run = agent.acting.GetAct("Run") as Move;
                         run.SetSpeedMultiplier(1f + 0.01f * _agility);
                     }
@@ -107,7 +108,7 @@ namespace ContentGeneration.Assets.UI.Model
             get { return _posture; }
             set 
             { 
-                _posture = value;
+                _posture = ValidStatValue(value);
                 if (Character != null)
                 {
                     Character.Poise.Maximum = 20f + 6f * _posture;
@@ -123,7 +124,7 @@ namespace ContentGeneration.Assets.UI.Model
             get { return _resistances; }
             set
             {
-                _resistances = value;
+                _resistances = ValidStatValue(value);
                 if (Character != null)
                 {
                     Character.FireDefense.ReductionPercentage = 0.5f * _resistances;
@@ -140,13 +141,20 @@ namespace ContentGeneration.Assets.UI.Model
             get { return _versatility; }
             set
             {
-                _versatility = value;
+                _versatility = ValidStatValue(value);
                 PropertyChanged.OnPropertyChanged(this);
             }
         }
 
         public CharacterStats()
         {
+            Will = 0;
+            Strength = 0;
+            Endurance = 0;
+            Agility = 0;
+            Posture = 0;
+            Resistances = 0;
+            Versatility = 0;
         }
 
         public void Update()
@@ -162,16 +170,6 @@ namespace ContentGeneration.Assets.UI.Model
 
         static CharacterStats()
         {
-            /*
-            StatIncreases = new[] {
-                new StatManipulation<Action<CharacterStats>>(Stat.Will, ch => ch.Will++),
-                new StatManipulation<Action<CharacterStats>>(Stat.Strength, ch => ch.Strength++),
-                new StatManipulation<Action<CharacterStats>>(Stat.Endurance, ch => ch.Endurance++),
-                new StatManipulation<Action<CharacterStats>>(Stat.Agility, ch => ch.Agility++),
-                new StatManipulation<Action<CharacterStats>>(Stat.Posture, ch => ch.Posture++),
-                new StatManipulation<Action<CharacterStats>>(Stat.Resistances, ch => ch.Resistances++),
-                new StatManipulation<Action<CharacterStats>>(Stat.Versatility, ch => ch.Versatility++),
-            };*/
             StatChanges = new Dictionary<Stat, StatManipulation<Action<CharacterStats, int>>>() {
                 {Stat.Will, new StatManipulation<Action<CharacterStats, int>>(Stat.Will, (ch, val) => ch.Will += val) },
                 {Stat.Strength, new StatManipulation<Action<CharacterStats, int>>(Stat.Strength, (ch, val) => ch.Strength += val) },

@@ -377,13 +377,14 @@ namespace ContentGeneration.Assets.UI.Model
             }
         }
 
-        public InventorySlot AddAndEquipItem(ItemState item)
+        public CharacterState AddAndEquipItem(ItemState item)
         {
             var firstSlot = item.AddToInventory(Inventory);
             if (firstSlot == null)
                 return null;
 
-            return item.EquipToFree(Inventory, firstSlot);
+            item.EquipToFree(Inventory, firstSlot);
+            return this;
         }
 
         public CharacterState SetLeftWeapon(WeaponItem weapon)

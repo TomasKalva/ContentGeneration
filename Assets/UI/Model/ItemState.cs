@@ -69,7 +69,7 @@ namespace ContentGeneration.Assets.UI.Model
             return this;
         }
 
-        public ItemState SetStackable(int stacksCount, bool canBeUsed = true)
+        public ItemState SetStackable(int stacksCount = 1, bool canBeUsed = true)
         {
             Usage = new StackableItemUsage(this, stacksCount, canBeUsed);
             return this;

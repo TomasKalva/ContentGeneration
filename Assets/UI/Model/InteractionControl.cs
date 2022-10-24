@@ -119,7 +119,7 @@ namespace ContentGeneration.Assets.UI.Model
                 new InteractionWithOptions<InteractiveObjectT>(
                     message,
                     new InteractOptions<InteractiveObjectT>()
-                        .AddOption("<nod>", (ios, _1) =>
+                        .AddOption("ok", (ios, _1) =>
                         {
                             TryMoveNext(ios);
                         }))
