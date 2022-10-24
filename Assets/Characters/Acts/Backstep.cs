@@ -9,10 +9,14 @@ public class Backstep : AnimatedAct
     {
         PlayAnimation(agent);
 
-        Direction3F direction = () => -agent.movement.AgentForward;
-        agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, direction);
+        var backDirection = -agent.movement.AgentForward;
+        Direction3F directionF = () => backDirection;
+        agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, directionF);
 
-        SetupMovementConstraints(agent, new VelocityInDirection(direction));
+        SetupMovementConstraints(agent, 
+            new VelocityInDirection(directionF),
+            new TurnToDirection(() => -backDirection.XZ())
+            );
     }
 
     public override void EndAct(Agent agent)
