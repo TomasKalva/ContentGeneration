@@ -9,8 +9,8 @@
              mc:Ignorable="d"
              x:Name="parent"
              d:DataContext="{d:DesignInstance model:ItemState}">
-    <StackPanel>
-        <TextBlock Text="{Binding Name}" Background="Beige" FontSize="22" TextAlignment="Center" Margin="0,0,0,3"></TextBlock>
-        <TextBlock Text="{Binding Description}" Background="Beige" Height="100"  TextAlignment="Center" TextWrapping="WrapWithOverflow"></TextBlock>
-    </StackPanel>
+    <DockPanel Background="Black" VerticalAlignment="Stretch">
+        <TextBlock Text="{Binding Name}" DockPanel.Dock="Top" Background="Beige" FontSize="22" TextAlignment="Center" Margin="0,0,0,3"></TextBlock>
+        <TextBlock Text="{Binding Description}" DockPanel.Dock="Bottom" Background="Beige" TextAlignment="Center" TextWrapping="WrapWithOverflow"></TextBlock>
+    </DockPanel>
 </UserControl>

@@ -28,7 +28,7 @@
         <StackPanel>
             <StackPanel Orientation="Horizontal">
                 <DockPanel Width="300" Background="Blue" Margin="10">
-                    <StackPanel DockPanel.Dock="Top" Margin="5" Orientation="Horizontal">
+                    <StackPanel Margin="5" DockPanel.Dock="Top" Orientation="Horizontal">
                         <Border Width="110" Background="Beige" BorderBrush="Black" BorderThickness="3" Padding="3,3,7,3">
                             <Grid>
                                 <Grid.Resources>
@@ -74,7 +74,7 @@
                             </Grid>
                         </Border>
                     </StackPanel>
-                    <comp:ItemDescriptionView DataContext="{Binding Inventory.CursorSlot.Item}" DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Width="270" Margin="5"></comp:ItemDescriptionView>
+                    <comp:ItemDescriptionView DataContext="{Binding Inventory.CursorSlot.Item}" Margin="5"></comp:ItemDescriptionView>
                 </DockPanel>
                 <Border>
                     <StackPanel Background="Blue" Margin="10" VerticalAlignment="Bottom">
