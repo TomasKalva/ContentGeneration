@@ -160,7 +160,7 @@ namespace OurFramework.LevelDesignLanguage
 
         public override void Place(AreasT areas)
         {
-            Prioritizer(areas)
+            Prioritizer(areas).RepeatInfinitely()
                 .Zip(ToPlace, (area, toPlace) => new { area, toPlace})
                 .ForEach(x => PlacementOp(x.area, x.toPlace));
         }

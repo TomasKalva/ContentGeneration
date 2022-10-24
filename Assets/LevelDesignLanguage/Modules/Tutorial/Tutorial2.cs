@@ -1,15 +1,15 @@
 ﻿using OurFramework.Environment.ShapeGrammar;
 using System.Linq;
-using ContentGeneration.Assets.UI.Model;
-using UnityEngine;
 using Util;
+using ContentGeneration.Assets.UI.Model;
+using System;
 
 namespace OurFramework.LevelDesignLanguage.CustomModules
 {
-    class TutorialModule : LDLanguage
+    class TutorialModule2 : LDLanguage
     {
-        public TutorialModule(LanguageParams parameters) : base(parameters) { }
-        
+        public TutorialModule2(LanguageParams parameters) : base(parameters) { }
+
         public void Main()
         {
             LevelStart();
@@ -29,77 +29,41 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
         void LevelContinue()
         {
             Env.Line(Gr.PrL.Town(), NodesQueries.All, 5, out var line);
+
             /*
             var firstArea = line.AreasList.First();
             firstArea.AddEnemy(Lib.Enemies.MayanSwordsman());
 
-            
             line.AreasList.ForEach(area =>
             {
                 area.AddEnemy(Lib.Enemies.MayanSwordsman());
             });
-
-            line.AreasList.ForEach(area =>
-            {
-                Enumerable.Range(0, new UniformDistr(1, 4).Sample()).ForEach(
-                    _ => area.AddEnemy(Lib.Enemies.MayanSwordsman()));
-            });
-
             var placer = PlC.RandomAreaPlacer(new UniformDistr(1, 2), Lib.Enemies.MayanSwordsman);
             placer.Place(line);
             */
-            
-            
             var placer = PlC.RandomAreaPlacer(
-                new UniformDistr(1, 4), 
+                new UniformDistr(1, 4),
                 () => Lib.Enemies.MayanSwordsman()
-                    .SetLeftWeapon(Lib.Items.Katana())
+                    .SetLeftWeapon(Lib.Items.SculptureClub())
                     .AddAndEquipItem(Lib.Items.Nails())
                     .AddAndEquipItem(Lib.Items.Nails())
                     .SetStats(
-                     new CharacterStats() 
-                     { 
-                         Will = 10,
-                         Endurance = 10,
-                         Agility = 25
+                     new CharacterStats()
+                     {
+                         Will = 20
                      })
                     );
-            
+
             placer.Place(line);
 
-            /*
-            Func<ItemState> chocolateBarF = () => Lib.Items.NewItem("Health potion", "Heals over time.")
-                .SetStackable()
-                .OnUse(Lib.Effects.RegenerateHealth(2f, 5f));
-            State.World.PlayerState.AddItem(chocolateBarF());
-            var itemPlacer = PlO.RandomAreasPlacer(new UniformDistr(3, 6), () => Lib.InteractiveObjects.Item(chocolateBarF()));
-            itemPlacer.Place(line);
-            */
-        }
-
-        void AddRoofs()
-        {
-            Env.Execute(new AllGrammar(Gr.PrL.Roofs()));
-        }
-
-        void CustomizePlayer()
-        {
-            var playerState = State.World.PlayerState;
-            playerState
-                .AddOnDeath(() =>
-                {
-                    GameObject.Destroy(playerState.Agent.gameObject);
-                    State.GC.ResetLevel(5.0f);
-                });
-
-            playerState
+            State.World.PlayerState
                 .SetStats(new CharacterStats()
                 {
                     Agility = 10,
                     Strength = 10,
                 })
                 .SetRightWeapon(
-                    Lib.Items.SculptureClub()
+                    Lib.Items.Scythe()
                         .AddUpgradeEffect(
                         user => enemy =>
                         {
@@ -112,6 +76,23 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
 
             // ok for debugging but can be added multiple times
             State.World.PlayerState.AddItem(chocolateBar);
+
+            Func<ItemState> chocolateBarF = () => Lib.Items.NewItem("Health potion", "Heals over time.")
+                .SetStackable()
+                .OnUse(Lib.Effects.RegenerateHealth(2f, 5f));
+            State.World.PlayerState.AddItem(chocolateBarF());
+            var itemPlacer = PlO.RandomAreasPlacer(new UniformDistr(3, 6), () => Lib.InteractiveObjects.Item(chocolateBarF()));
+            itemPlacer.Place(line);
+        }
+
+        void AddRoofs()
+        {
+            Env.Execute(new AllGrammar(Gr.PrL.Roofs()));
+        }
+
+        void CustomizePlayer()
+        {
+            M.DeathModule.DieClasically();
         }
 
         void LevelUpArea()

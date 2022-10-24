@@ -64,6 +64,11 @@ static class ExtensionMethods
         return enumerable.Reverse().Skip(skipCount).Reverse();
     }
 
+    public static IEnumerable<T> RepeatInfinitely<T>(this IEnumerable<T> enumerable)
+    {
+        return Naturals().SelectMany(_ => enumerable);
+    }
+
     public static CubeGroup ToCubeGroup(this IEnumerable<Cube> enumerable, Grid<Cube> grid)
     {
         return enumerable.ToList().ToCubeGroup(grid);
