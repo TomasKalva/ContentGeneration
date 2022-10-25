@@ -36,7 +36,7 @@ public class DoorState : InteractiveObjectState<Door>
     public DoorState(Door door)
     {
         IntObj = door;
-        SetInteraction(ins => ins.Act("Open/Close", (door, _) => door.IntObj.SwitchPosition()));
+        SetInteraction(ins => ins.Interact("Open/Close", (door, _) => door.IntObj.SwitchPosition()));
     }
 }
 

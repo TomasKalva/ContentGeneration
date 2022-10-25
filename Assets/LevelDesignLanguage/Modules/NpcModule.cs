@@ -40,7 +40,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                 npc => npc.SetInteraction(
                         ins => ins
                             .Say($"I'm an npc.")
-                            .Decision("Could you go and collect dew for me?",
+                            .Decide("Could you go and collect dew for me?",
                                 new InteractOption<Kiln>("Yes",
                                     (thisNpc, player) =>
                                     {
@@ -67,7 +67,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                 ins => ins
                     .Say("You found the dew")
                     .Say("It is wet. Maybe too much.")
-                    .Decision("Would you mind sharing some?",
+                    .Decide("Would you mind sharing some?",
                         new InteractOption<InteractiveObjectT>("Give one dew",
                             (thisNpc, player) =>
                             {

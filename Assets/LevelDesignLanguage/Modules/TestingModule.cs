@@ -85,7 +85,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                 Lib.InteractiveObjects.Farmer("Levelling up object")
                     .SetInteraction(
                         ins => ins
-                            .Act("Take levelling up items", (ios, player) => statIncreaseItems.ForEach(item => player.AddItem(item))
+                            .Interact("Take levelling up items", (ios, player) => statIncreaseItems.ForEach(item => player.AddItem(item))
                             )
                         )
                     );
@@ -104,7 +104,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                 Lib.InteractiveObjects.Farmer("Spell objects")
                     .SetInteraction(
                         ins => ins
-                            .Act("Take all spells", (ios, player) => s.ForEach(itemF => player.AddItem(itemF()))
+                            .Interact("Take all spells", (ios, player) => s.ForEach(itemF => player.AddItem(itemF()))
                             )
                         )
                     );

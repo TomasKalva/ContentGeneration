@@ -3,6 +3,7 @@ using System.Linq;
 using ContentGeneration.Assets.UI.Model;
 using UnityEngine;
 using Util;
+using System;
 
 namespace OurFramework.LevelDesignLanguage.CustomModules
 {
@@ -67,14 +68,9 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             
             placer.Place(line);
 
-            /*
-            Func<ItemState> chocolateBarF = () => Lib.Items.NewItem("Health potion", "Heals over time.")
-                .SetStackable()
-                .OnUse(Lib.Effects.RegenerateHealth(2f, 5f));
-            State.World.PlayerState.AddItem(chocolateBarF());
-            var itemPlacer = PlO.RandomAreasPlacer(new UniformDistr(3, 6), () => Lib.InteractiveObjects.Item(chocolateBarF()));
+            var itemPlacer = PlO.RandomAreasPlacer(new UniformDistr(3, 6), () => Lib.InteractiveObjects.Item(HealthPotion()));
             itemPlacer.Place(line);
-            */
+            
         }
 
         void AddRoofs()
@@ -106,12 +102,14 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                             Lib.Effects.Heal(10)(user);
                         }));
 
-            var chocolateBar = Lib.Items.NewItem("Health potion", "Heals over time.")
-                .SetStackable()
-                .OnUse(Lib.Effects.RegenerateHealth(2f, 5f));
+            State.World.PlayerState.AddItem(HealthPotion());
+        }
 
-            // ok for debugging but can be added multiple times
-            State.World.PlayerState.AddItem(chocolateBar);
+        public ItemState HealthPotion()
+        {
+            return Lib.Items.NewItem("Health potion", "Heals over time.")
+                .OnUse(Lib.Effects.RegenerateHealth(2f, 5f))
+                .SetStackable();
         }
 
         void LevelUpArea()
@@ -120,18 +118,14 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
 
             var kiln = Lib.InteractiveObjects.Kiln()
                     .SetInteraction(ins => ins
-                        .Say("I am a talking kiln")
-                        .Act("Do you understand?", (kiln, player) => kiln.Interaction.TryMoveNext(kiln))
-                        .Decision("Would you like to increase stats?",
-                            new InteractOption<Kiln>("Yes", (kiln, player) =>
+                        .Say("I am a levelling up kiln.")
+                        .Interact("Do you want to level up?", 
+                            (kiln, player) =>
                             {
                                 CharacterStats.StatIncreases.ForEach(statIncrease => statIncrease.Manipulate(player.Stats));
-                                kiln.SetInteraction(ins => ins.Say("Stats increased."));
+                                kiln.SetInteraction(ins => ins.Say("Levelled up."));
                                 kiln.IntObj.BurstFire();
-                            }),
-                            new InteractOption<Kiln>("No", (kiln, _) => kiln.Interaction.TryMoveNext(kiln))
-                        )
-                        .Say("Ok, maybe next time")
+                            })
                     );
             kilnArea.AreasList.First().AddInteractiveObject(kiln);
         }

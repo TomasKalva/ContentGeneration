@@ -36,7 +36,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
 
                 bool unlocked = false;
                 doorState.SetInteraction(
-                    ins => ins.Act("Open/Close", 
+                    ins => ins.Interact("Open/Close", 
                         (ios, player) =>
                         {
                             if (unlocked)

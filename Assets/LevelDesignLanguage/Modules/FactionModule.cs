@@ -76,7 +76,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                             .Say("Our faction is the most pleased with your service.")
                             .Say(toSay.GetRandom()())
                             .Say("Finding a skilled executioner is a long time run.")
-                            .Decision($"Are your services still available? (Proceed to progress {manifestation.Progress + 1})",
+                            .Decide($"Are your services still available? (Proceed to progress {manifestation.Progress + 1})",
                             new InteractOption<InteractiveObject>($"Yes ({progressPrice} Spirit)",
                                 (ios, player) =>
                                 {

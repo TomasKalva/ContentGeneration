@@ -47,7 +47,7 @@ public class InteractiveObjects : ScriptableObject
         };
         grave.SetInteraction(
             ins => ins
-                .Act("Rest",
+                .Interact("Rest",
                     (_, player) =>
                     {
                         player.World.Grave = grave;
@@ -107,7 +107,7 @@ public class InteractiveObjects : ScriptableObject
             GeometryMaker = Geometry<InteractiveObject>(physicalItemPrefab)
         };
         physicalItemState.SetInteraction(
-            ins => ins.Act("Pick up item", 
+            ins => ins.Interact("Pick up item", 
                 (io, pl) => 
                 {
                     if (!beingPickedUp)
@@ -129,7 +129,7 @@ public class InteractiveObjects : ScriptableObject
             GeometryMaker = Geometry<InteractiveObject>(bloodstainPrefab)
         };
         bloodstain.SetInteraction(
-            ins => ins.Act("Retrieve",
+            ins => ins.Interact("Retrieve",
                 (io, pl) =>
                 {
                     onUse();

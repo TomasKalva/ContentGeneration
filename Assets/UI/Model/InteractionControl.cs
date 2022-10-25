@@ -127,7 +127,7 @@ namespace ContentGeneration.Assets.UI.Model
             return this;
         }
 
-        public InteractionSequence<InteractiveObjectT> Decision(string message, params InteractOption<InteractiveObjectT>[] options)
+        public InteractionSequence<InteractiveObjectT> Decide(string message, params InteractOption<InteractiveObjectT>[] options)
         {
             States.Add(
                 new InteractionWithOptions<InteractiveObjectT>(
@@ -137,7 +137,7 @@ namespace ContentGeneration.Assets.UI.Model
             return this;
         }
 
-        public InteractionSequence<InteractiveObjectT> Act(string interactionDescription, InteractionDelegate<InteractiveObjectT> actionOnInteract)
+        public InteractionSequence<InteractiveObjectT> Interact(string interactionDescription, InteractionDelegate<InteractiveObjectT> actionOnInteract)
         {
             States.Add(
                 new FastInteraction<InteractiveObjectT>(

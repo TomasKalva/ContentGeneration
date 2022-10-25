@@ -31,7 +31,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                             kiln.Interaction =
                                 new InteractionSequence<Kiln>()
                                 .Say("Do you desire further ascending?")
-                                .Decision($"What ascension are you longing for? ({ascensionPrice} Spirit)",
+                                .Decide($"What ascension are you longing for? ({ascensionPrice} Spirit)",
                                     statsIncreases.Shuffle().Take(3).Select(si => increaseOption(si)).ToArray());
                         }
                     });
@@ -42,7 +42,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                     .SetInteraction(
                         ins => ins
                             .Say("Ascension kiln is delighted to feel your presence.")
-                            .Decision($"What ascension are you longing for? ({ascensionPrice} Spirit)",
+                            .Decide($"What ascension are you longing for? ({ascensionPrice} Spirit)",
                                 statsIncreases.Shuffle().Take(3).Select(si => increaseOption(si)).ToArray())
                     )
                 )

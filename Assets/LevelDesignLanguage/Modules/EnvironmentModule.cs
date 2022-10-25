@@ -117,7 +117,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                 Lib.InteractiveObjects.Farmer("Sky distributor")
                     .SetInteraction(
                         ins => ins
-                            .Act("Take all skies", (ios, player) => skyChangingItems.ForEach(itemF => player.AddItem(itemF()))
+                            .Interact("Take all skies", (ios, player) => skyChangingItems.ForEach(itemF => player.AddItem(itemF()))
                             )
                         )
                     );
