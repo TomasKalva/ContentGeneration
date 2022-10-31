@@ -273,15 +273,27 @@ namespace ContentGeneration.Assets.UI.Model
     where InteractiveObjectT : class
 #endif
     {
-        public string Description { get; }
-        public InteractionDelegate<InteractiveObjectT> Action { get; }
+        public string Description { get; private set; }
+        public InteractionDelegate<InteractiveObjectT> Action { get; private set; }
         public int Index { get; set; }
 
-        public InteractOption(string description, InteractionDelegate<InteractiveObjectT> action, int index = 0)
+        public InteractOption(string description = "", InteractionDelegate<InteractiveObjectT> action = null, int index = 0)
         {
             Description = description;
-            Action = action;
+            Action = action ?? ((_1, _2) => { });
             Index = index;
+        }
+
+        public InteractOption<InteractiveObjectT> SetDescription(string description) 
+        {
+            Description = description;
+            return this;
+        }
+
+        public InteractOption<InteractiveObjectT> SetAction(InteractionDelegate<InteractiveObjectT> action)
+        {
+            Action = action;
+            return this;
         }
     }
 }

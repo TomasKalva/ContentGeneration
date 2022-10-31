@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ContentGeneration.Assets.UI.Model
 {
@@ -124,6 +125,12 @@ namespace ContentGeneration.Assets.UI.Model
                             TryMoveNext(ios);
                         }))
                 );
+            return this;
+        }
+
+        public InteractionSequence<InteractiveObjectT> Decide(string message, params Func<InteractOption<InteractiveObjectT>, InteractOption<InteractiveObjectT>>[] optionCreators)
+        {
+            Decide(message, optionCreators.Select(oc => oc(new InteractOption<InteractiveObjectT>())).ToArray());
             return this;
         }
 
