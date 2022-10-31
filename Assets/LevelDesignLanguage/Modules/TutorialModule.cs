@@ -166,15 +166,6 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                 })));
         }
 
-        Func<CharacterState>[] Enemies()
-        {
-            return new Func<CharacterState>[]
-               {
-                Lib.Enemies.MayanSwordsman,
-                Lib.Enemies.MayanThrower,
-                Lib.Enemies.SkinnyWoman,
-               };
-        }
 
         void StartQuest()
         {
@@ -184,16 +175,13 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                 .SetConsumable()
                 .OnUse(ch => {
                     Msg.Show("A dragon has been unleashed.");
-                    Lib.Effects.StartQuestline(State.LC, new LevelConstructionEvent("Dragon quest", 50,
-                        level =>
-                        {
-                            LockedAreaWithSpells();
-                        }))(ch);
+                    State.LC.AddPossibleEvent("Dragon quest", 50,
+                        level =>ContinueQuest());
                 });
             area.Get.AddInteractiveObject(Lib.InteractiveObjects.Item(questStarter));
         }
 
-        void LockedAreaWithSpells()
+        void ContinueQuest()
         {
             // Create a locked room and a path to its key
             M.LockingModule.LineWithKey(NodesQueries.All, 4, Gr.PrL.Garden(), out var locked, out var keyLine);
@@ -202,6 +190,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             var enemyPlacer = PlC.RandomAreaPlacer(new UniformDistr(1, 3), Enemies());
             enemyPlacer.Place(keyLine);
 
+            
             // Place spell items
             var spellPlacer = PlO.RandomAreasPlacer(new UniformDistr(4, 6), 
                 () => Lib.InteractiveObjects.Item(
@@ -210,6 +199,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
 
             // Create dragon state so that we can use it when defining sword that defeats it
             var dragon = Lib.Enemies.DragonMan();
+            
 
             // Deal large damage to dragon using a strong sword
             // The dragon whose reference we use doesn't exist physically in this level yet
@@ -226,6 +216,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                 .SetName("Dragon Slayer")
                 .SetDescription("A powerful weapon whose mission is to slay its chosen dragon. Only those who posses enough Will are fit to carry it and even then it takes its toll.");
             locked.Get.AddInteractiveObject(Lib.InteractiveObjects.Item(powerSword));
+            
 
             // Continue the quest
             var questContinuer = Lib.Items.NewItem("Dragon Scale", "Caressing dragon scales brings luck.")
@@ -233,19 +224,24 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                  .OnUse(ch =>
                  {
                      Msg.Show("The dragon grows.");
-
-                     Lib.Effects.StartQuestline(State.LC, new LevelConstructionEvent("Dragon quest 2", 50,
-                        level =>
-                        {
-                            // Pass the dragon to the next level
-                            PowerfulEnemy(dragon);
-                        }))(ch);
+                     State.LC.AddPossibleEvent("Dragon quest 2", 50,
+                        level => EndQuest(dragon));// Pass the dragon to the next level
                  });
             locked.Get.AddInteractiveObject(Lib.InteractiveObjects.Item(questContinuer));
 
         }
 
-        void PowerfulEnemy(CharacterState dragon)
+        Func<CharacterState>[] Enemies()
+        {
+            return new Func<CharacterState>[]
+               {
+                Lib.Enemies.MayanSwordsman,
+                Lib.Enemies.MayanThrower,
+                Lib.Enemies.SkinnyWoman,
+               };
+        }
+
+        void EndQuest(CharacterState dragon)
         {
             // Place the powerful dragon to the level
             Env.One(Gr.PrL.Town(), NodesQueries.All, out var area);
@@ -258,24 +254,23 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             dragon.Stats.Will = 40;
             area.Get.AddEnemy(dragon);
 
-
             // Weaken the dragon using an interactive object
             Env.Line(Gr.PrL.Castle(), NodesQueries.All, 4, out var pathToGoblet);
             var goblet = Lib.InteractiveObjects.SpikyGoblet()
                 .SetInteraction(ins => ins
                     .Interact("Touch", (goblet, player) =>
                     {
-                        dragon.Stats.Will = 5;
+                        dragon.Stats.Will = 10;
                         Msg.Show("Dragon weakened");
                         goblet.SetInteraction(ins => ins.Say("Dragon weakened"));
                     })
                 );
             pathToGoblet.LastArea().AddInteractiveObject(goblet);
-
+            
             // Place enemies
             var enemyPlacer = PlC.RandomAreaPlacer(new UniformDistr(1, 3), Enemies());
             enemyPlacer.Place(pathToGoblet);
-
+            
             // Place stronger spell items
             var spellPlacer = PlO.RandomAreasPlacer(new UniformDistr(2, 4),
                 () => Lib.InteractiveObjects.Item(
