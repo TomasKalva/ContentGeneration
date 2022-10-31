@@ -11,6 +11,13 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
     {
         public TutorialModule(LanguageParams parameters) : base(parameters) { }
         
+        public void DeclareGame()
+        {
+            State.LC.AddNecessaryEvent("Start", 100, _ => Main());
+            //State.LC.AddNecessaryEvent("Player initialization", 90, _ => InitializePlayer());
+            State.LC.AddNecessaryEvent("End", 99, _ => M.LevelModule.LevelEnd());// throws sequence contains no elements
+        }
+
         public void Main()
         {
             LevelStart();
@@ -78,16 +85,9 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             Env.Execute(new AllGrammar(Gr.PrL.Roofs()));
         }
 
-        void CustomizePlayer()
+        void InitializePlayer()
         {
             var playerState = State.World.PlayerState;
-            playerState
-                .AddOnDeath(() =>
-                {
-                    GameObject.Destroy(playerState.Agent.gameObject);
-                    State.GC.ResetLevel(5.0f);
-                });
-
             playerState
                 .SetStats(new CharacterStats()
                 {
@@ -101,8 +101,31 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                         {
                             Lib.Effects.Heal(10)(user);
                         }));
+        }
 
-            State.World.PlayerState.AddItem(HealthPotion());
+        void CustomizePlayer()
+        {
+            var playerState = State.World.PlayerState;
+            playerState
+                .AddOnDeath(() =>
+                {
+                    GameObject.Destroy(playerState.Agent.gameObject);
+                    State.GC.ResetLevel(5.0f);
+                });
+
+            /*playerState
+                .SetStats(new CharacterStats()
+                {
+                    Agility = 10,
+                    Strength = 10,
+                })
+                .SetRightWeapon(
+                    Lib.Items.SculptureClub()
+                        .AddUpgradeEffect(
+                        user => enemy =>
+                        {
+                            Lib.Effects.Heal(10)(user);
+                        }));*/
         }
 
         public ItemState HealthPotion()

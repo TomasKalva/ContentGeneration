@@ -1,4 +1,6 @@
-﻿namespace OurFramework.LevelDesignLanguage.CustomModules
+﻿using OurFramework.Environment.ShapeGrammar;
+
+namespace OurFramework.LevelDesignLanguage.CustomModules
 {
     class MainModule : LDLanguage
     {
@@ -6,11 +8,13 @@
 
         public void DeclareGame()
         {
-            //StartDebugGame();
-            State.LC.AddNecessaryEvent($"Tutorial module", 100, level => M.TutorialModule.Main());
+            //DeclareDebugGame();
+            //State.LC.AddNecessaryEvent($"Tutorial module", 100, level => M.TutorialModule.Main());
+            M.TutorialModule.DeclareGame();
+            //DeclareEnvironmentForPrettyPictures();
         }
 
-        void StartDebugGame()
+        void DeclareDebugGame()
         {
             State.LC.AddNecessaryEvent($"Level Start", 100, level => M.LevelModule.LevelStart(), true);
 
@@ -18,13 +22,13 @@
             {
                 //L.DeathLanguage.EnableClassicalDeath();
                 M.DeathModule.DieIfNotProtected();
-                //L.DeathLanguage.EndRunAfterDeaths(2);
-                //L.DeathLanguage.DropSpiritBloodstainOnDeath();
-                //L.DeathLanguage.DropRunEndingBloodstainOnDeath();
-                M.DeathModule.EndRunIfOutOfSmile();
+                //M.DeathModule.EndRunAfterDeaths(2);
+                //M.DeathModule.DropSpiritBloodstainOnDeath();
+                M.DeathModule.DropRunEndingBloodstainOnDeath();
+                //M.DeathModule.EndRunIfOutOfSmile();
             }, true);
 
-            State.LC.AddNecessaryEvent($"Level End", 99, level => M.LevelModule.LevelEnd(), true);
+            //State.LC.AddNecessaryEvent($"Level End", 99, level => M.LevelModule.LevelEnd(), true);
 
             //L.LevelLanguage.AddOptionalEnd();
 
@@ -37,7 +41,7 @@
 
             State.LC.AddNecessaryEvent($"Out of depth encounter", 80, level => M.OutOfDepthEncountersModule.DifficultEncounter(level), true);
 
-            State.LC.AddNecessaryEvent($"Environment", 0, level => M.EnvironmentModule.CreateSky(level), true);
+            State.LC.AddNecessaryEvent($"Sky", 0, level => M.EnvironmentModule.CreateSky(level), true);
 
 
             State.LC.AddNecessaryEvent($"Roofs", -1, level => M.LevelModule.AddRoofs(), true);
@@ -88,6 +92,22 @@
             //State.LC.AddNecessaryEvent("Testing Locking", 90, _ => L.TestingLanguage.TestLocking());
             //L.NpcLanguage.InitializeNpcs();
             //State.LC.AddNecessaryEvent("Testing Locking", 90, _ => L.TestingLanguage.NpcLine());
+        }
+
+        void DeclareEnvironmentForPrettyPictures()
+        {
+            State.LC.AddNecessaryEvent($"Level Start", 100, level => M.LevelModule.LevelStart(), true);
+            State.LC.AddNecessaryEvent("Testing enemies", 5, _ => 
+            {
+                Env.Line(Gr.PrL.Town(), NodesQueries.All, 20, out var _);
+                Env.Line(Gr.PrL.Castle(), NodesQueries.All, 20, out var _);
+                Env.Line(Gr.PrL.Chapels(), NodesQueries.All, 20, out var _);
+            });
+
+            State.LC.AddNecessaryEvent($"Environment", 90, level => M.EnvironmentModule.TestSky(level), true);
+
+
+            State.LC.AddNecessaryEvent($"Roofs", -1, level => M.LevelModule.AddRoofs(), true);
         }
     }
 }
