@@ -88,9 +88,10 @@ namespace OurFramework.Environment.ShapeCreation
         /// </summary>
         public static IEnumerable<Cube> FindPathEndsInFloor(CubeGroup floor, IEnumerable<CubeGroup> paths) 
         {
+            var nonEmptyPaths = paths.Where(path => path.LE().Cubes().Any()); // filter our NoConnection paths
             var pathEnds =
-                paths.Select(path => path.Cubes.First()).Concat( // todo: sequence contains no elements error happens in here
-                paths.Select(path => path.Cubes.Last())
+                nonEmptyPaths.Select(path => path.Cubes.First()).Concat( // todo: sequence contains no elements error happens in here
+                nonEmptyPaths.Select(path => path.Cubes.Last())
                 );
             //return pathEnds;
             return pathEnds.SetIntersect(floor.Cubes).ToArray();

@@ -8,9 +8,9 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
 
         public void DeclareGame()
         {
-            //DeclareDebugGame();
+            DeclareDebugGame();
             //State.LC.AddNecessaryEvent($"Tutorial module", 100, level => M.TutorialModule.Main());
-            M.TutorialModule.DeclareGame();
+            //M.TutorialModule.DeclareGame();
             //DeclareEnvironmentForPrettyPictures();
         }
 
@@ -30,7 +30,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
 
             //State.LC.AddNecessaryEvent($"Level End", 99, level => M.LevelModule.LevelEnd(), true);
 
-            //L.LevelLanguage.AddOptionalEnd();
+            M.LevelModule.AddOptionalEnd();
 
             M.FactionsModule.InitializeFactions(2);
 
