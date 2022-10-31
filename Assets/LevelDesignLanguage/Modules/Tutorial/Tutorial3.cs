@@ -9,10 +9,10 @@ using ContentGeneration.Assets.UI;
 
 namespace OurFramework.LevelDesignLanguage.CustomModules
 {
-    class TutorialModule : LDLanguage
+    class TutorialModule3 : LDLanguage
     {
-        public TutorialModule(LanguageParams parameters) : base(parameters) { }
-        
+        public TutorialModule3(LanguageParams parameters) : base(parameters) { }
+
         public void DeclareGame()
         {
             State.LC.AddNecessaryEvent($"Level Start", 100, level => M.LevelModule.LevelStart(), true);
@@ -33,22 +33,22 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
         void LevelContinue()
         {
             Env.Line(Gr.PrL.Town(), NodesQueries.All, 5, out var line);
-            
+
             var placer = PlC.RandomAreaPlacer(
-                new UniformDistr(1, 4), 
+                new UniformDistr(1, 4),
                 () => Lib.Enemies.MayanSwordsman()
                     .SetLeftWeapon(Lib.Items.Katana())
                     .AddAndEquipItem(Lib.Items.Nails())
                     .AddAndEquipItem(Lib.Items.Nails())
                     .SetStats(
-                     new CharacterStats() 
-                     { 
+                     new CharacterStats()
+                     {
                          Will = 10,
                          Endurance = 10,
                          Agility = 25
                      })
                     );
-            
+
             placer.Place(line);
 
             var itemPlacer = PlO.RandomAreasPlacer(new UniformDistr(3, 6), () => Lib.InteractiveObjects.Item(HealthPotion()));
@@ -93,7 +93,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             var kiln = Lib.InteractiveObjects.Kiln()
                     .SetInteraction(ins => ins
                         .Say("I am a levelling up kiln.")
-                        .Interact("Do you want to level up?", 
+                        .Interact("Do you want to level up?",
                             (kiln, player) =>
                             {
                                 CharacterStats.StatIncreases.ForEach(statIncrease => statIncrease.Manipulate(player.Stats));
@@ -122,7 +122,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             var places = new[] { "America", "Azeroth", "Moon" };
             var itemFs = Lib.Items.AllHeadItems();
 
-            return 
+            return
                 names.SelectMany(name =>
                 places.SelectMany(place =>
                 itemFs.Select(itemF =>
