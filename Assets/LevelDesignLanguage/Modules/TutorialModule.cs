@@ -13,50 +13,23 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
         
         public void DeclareGame()
         {
-            State.LC.AddNecessaryEvent("Start", 100, _ => Main());
-            //State.LC.AddNecessaryEvent("Player initialization", 90, _ => InitializePlayer());
-            State.LC.AddNecessaryEvent("End", 99, _ => M.LevelModule.LevelEnd());// throws sequence contains no elements
+            State.LC.AddNecessaryEvent($"Level Start", 100, level => M.LevelModule.LevelStart(), true);
+            State.LC.AddNecessaryEvent("Main", 95, _ => Main(), true);
+            State.LC.AddNecessaryEvent("Player initialization", 90, _ => InitializePlayer());
+            State.LC.AddNecessaryEvent("Enable death", 90, _ => M.DeathModule.DieClasically(), true);
+            State.LC.AddNecessaryEvent("Roofs", -1, _ => M.LevelModule.AddRoofs(), true);
+            //State.LC.AddNecessaryEvent("End", 99, _ => M.LevelModule.LevelEnd(), true);
         }
 
         public void Main()
         {
-            LevelStart();
             LevelUpArea();
             LevelContinue();
-            AddRoofs();
-
-            CustomizePlayer();
-        }
-
-        void LevelStart()
-        {
-            Env.One(Gr.PrL.CreateNewHouse(), NodesQueries.All, out var area);
-            area.Get.Node.AddSymbol(Gr.Sym.LevelStartMarker);
         }
 
         void LevelContinue()
         {
             Env.Line(Gr.PrL.Town(), NodesQueries.All, 5, out var line);
-            /*
-            var firstArea = line.AreasList.First();
-            firstArea.AddEnemy(Lib.Enemies.MayanSwordsman());
-
-            
-            line.AreasList.ForEach(area =>
-            {
-                area.AddEnemy(Lib.Enemies.MayanSwordsman());
-            });
-
-            line.AreasList.ForEach(area =>
-            {
-                Enumerable.Range(0, new UniformDistr(1, 4).Sample()).ForEach(
-                    _ => area.AddEnemy(Lib.Enemies.MayanSwordsman()));
-            });
-
-            var placer = PlC.RandomAreaPlacer(new UniformDistr(1, 2), Lib.Enemies.MayanSwordsman);
-            placer.Place(line);
-            */
-            
             
             var placer = PlC.RandomAreaPlacer(
                 new UniformDistr(1, 4), 
@@ -77,12 +50,12 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
 
             var itemPlacer = PlO.RandomAreasPlacer(new UniformDistr(3, 6), () => Lib.InteractiveObjects.Item(HealthPotion()));
             itemPlacer.Place(line);
-            
-        }
 
-        void AddRoofs()
-        {
-            Env.Execute(new AllGrammar(Gr.PrL.Roofs()));
+
+            var end = line.LastArea();
+            end.AddInteractiveObject(
+                Lib.InteractiveObjects.Transporter(State.GC)
+                );
         }
 
         void InitializePlayer()
@@ -101,31 +74,6 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                         {
                             Lib.Effects.Heal(10)(user);
                         }));
-        }
-
-        void CustomizePlayer()
-        {
-            var playerState = State.World.PlayerState;
-            playerState
-                .AddOnDeath(() =>
-                {
-                    GameObject.Destroy(playerState.Agent.gameObject);
-                    State.GC.ResetLevel(5.0f);
-                });
-
-            /*playerState
-                .SetStats(new CharacterStats()
-                {
-                    Agility = 10,
-                    Strength = 10,
-                })
-                .SetRightWeapon(
-                    Lib.Items.SculptureClub()
-                        .AddUpgradeEffect(
-                        user => enemy =>
-                        {
-                            Lib.Effects.Heal(10)(user);
-                        }));*/
         }
 
         public ItemState HealthPotion()

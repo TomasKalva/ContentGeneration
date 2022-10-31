@@ -17,3 +17,4 @@ MonoBehaviour:
   physicalItemPrefab: {fileID: 5493687118069396730, guid: 11441b73fa9c64b41b699592cf5aaf4e, type: 3}
   bloodstainPrefab: {fileID: 5493687118069396730, guid: d22727100585a4c49b9d39802729d9be, type: 3}
   farmer: {fileID: 3307065043585355908, guid: 6a49633222cd2af468ba1be834475af5, type: 3}
+  endEye: {fileID: 166632313805238084, guid: eb8042023d303594fb92c0bc8e7824ee, type: 3}

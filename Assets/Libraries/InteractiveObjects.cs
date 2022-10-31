@@ -38,6 +38,9 @@ public class InteractiveObjects : ScriptableObject
     [SerializeField]
     Transform farmer;
 
+    [SerializeField]
+    Transform endEye;
+
     public GraveState Grave(GameControl gameControl)
     {
         var grave = new GraveState()
@@ -141,19 +144,21 @@ public class InteractiveObjects : ScriptableObject
 
     public InteractiveObjectState<InteractiveObject> Transporter(GameControl gameControl, Action onUse = null)
     {
-        return InteractiveObject("Transporter", Geometry<InteractiveObject>(physicalItemPrefab))
-                    .Interact(
-                            (transporter, pl) =>
-                            {
-                                transporter.Interact(
-                                    (transporter, pl) => { }
-                                    );
+        return InteractiveObject("Transporter", Geometry<InteractiveObject>(endEye))
+            .SetInteraction(
+                ins => ins.Interact("Proceed to the next level",
+                    (transporter, pl) =>
+                    {
+                        transporter.Interact(
+                            (transporter, pl) => { }
+                            );
 
-                                if (onUse != null) onUse();
+                        if (onUse != null) onUse();
 
-                                gameControl.GoToNextLevel();
-                            }
-                        )
-                    .SetBlocking(true);
+                        gameControl.GoToNextLevel();
+                    }
+                )
+            )
+            .SetBlocking(true);
     }
 }
