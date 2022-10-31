@@ -89,8 +89,8 @@ public class EffectLibrary
         /// <summary>
         /// LevelConstructionEvent from function because it can potentialy contain level related state.
         /// </summary>
-        public Effect StartQuestline(LevelConstructor levelConstructor, Func<LevelConstructionEvent> levelConstructionEventF)
+        public Effect StartQuestline(LevelConstructor levelConstructor, LevelConstructionEvent levelConstructionEvent)
         {
-            return _ => levelConstructor.AddNecessaryEvent(levelConstructionEventF());
+            return _ => levelConstructor.AddPossibleEvent(levelConstructionEvent);
         }
     }

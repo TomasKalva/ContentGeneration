@@ -6,6 +6,7 @@ using Util;
 using System;
 using System.Collections.Generic;
 using ContentGeneration.Assets.UI;
+using OurFramework.Characters.SpellClasses;
 
 namespace OurFramework.LevelDesignLanguage.CustomModules
 {
@@ -16,12 +17,16 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
         public void DeclareGame()
         {
             State.LC.AddNecessaryEvent($"Level Start", 100, level => M.LevelModule.LevelStart(), true);
-            State.LC.AddNecessaryEvent("Main", 95, _ => Main(), true);
+            State.LC.AddNecessaryEvent($"Level Start", 99, level => M.LevelModule.LevelEnd(), true);
+            /*State.LC.AddNecessaryEvent("Main", 95, _ => Main(), true);
             State.LC.AddNecessaryEvent("Player initialization", 90, _ => InitializePlayer());
             State.LC.AddNecessaryEvent("Enable death", 90, _ => M.DeathModule.DieClasically(), true);
-            State.LC.AddNecessaryEvent("Roofs", -1, _ => M.LevelModule.AddRoofs(), true);
+            State.LC.AddNecessaryEvent("Roofs", -1, _ => M.LevelModule.AddRoofs(), true);*/
+            State.LC.AddNecessaryEvent($"Sky", 0, level => M.EnvironmentModule.CreateSky(level), true);
 
-            AddNpcEvents();
+            State.LC.AddPossibleEvent("Quest", 50, _ => StartQuest());
+            
+            //AddNpcEvents();
         }
 
         public void Main()
@@ -159,6 +164,123 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                                 .Say("Ok, fine, bye.")
                             );
                 })));
+        }
+
+        Func<CharacterState>[] Enemies()
+        {
+            return new Func<CharacterState>[]
+               {
+                Lib.Enemies.MayanSwordsman,
+                Lib.Enemies.MayanThrower,
+                Lib.Enemies.SkinnyWoman,
+               };
+        }
+
+        void StartQuest()
+        {
+            // Create an environment with an item that starts the quest
+            Env.One(Gr.PrL.Town(), NodesQueries.All, out var area);
+            var questStarter = Lib.Items.NewItem("Dragon Egg", "Crack to unleash a dragon.")
+                .SetConsumable()
+                .OnUse(ch => {
+                    Msg.Show("A dragon has been unleashed.");
+                    Lib.Effects.StartQuestline(State.LC, new LevelConstructionEvent("Dragon quest", 50,
+                        level =>
+                        {
+                            LockedAreaWithSpells();
+                        }))(ch);
+                });
+            area.Get.AddInteractiveObject(Lib.InteractiveObjects.Item(questStarter));
+        }
+
+        void LockedAreaWithSpells()
+        {
+            // Create a locked room and a path to its key
+            M.LockingModule.LineWithKey(NodesQueries.All, 4, Gr.PrL.Garden(), out var locked, out var keyLine);
+
+            // Place enemies
+            var enemyPlacer = PlC.RandomAreaPlacer(new UniformDistr(1, 3), Enemies());
+            enemyPlacer.Place(keyLine);
+
+            // Place spell items
+            var spellPlacer = PlO.RandomAreasPlacer(new UniformDistr(4, 6), 
+                () => Lib.InteractiveObjects.Item(
+                    Lib.SpellItems.AllSpellsByPower()[1].GetRandom()().SetStackable()));
+            spellPlacer.Place(keyLine);
+
+            // Create dragon state so that we can use it when defining sword that defeats it
+            var dragon = Lib.Enemies.DragonMan();
+
+            // Deal large damage to dragon using a strong sword
+            // The dragon whose reference we use doesn't exist physically in this level yet
+            var powerSword = Lib.Items.MayanSword()
+                .AddUpgradeEffect(
+                user => enemy =>
+                {
+                    if (enemy == dragon && user.Stats.Will > 0)
+                    {
+                        Lib.Effects.Damage(new DamageDealt(DamageType.Chaos, 100))(enemy);
+                        user.Stats.Will--;
+                    }
+                })
+                .SetName("Dragon Slayer")
+                .SetDescription("A powerful weapon whose mission is to slay its chosen dragon. Only those who posses enough Will are fit to carry it and even then it takes its toll.");
+            locked.Get.AddInteractiveObject(Lib.InteractiveObjects.Item(powerSword));
+
+            // Continue the quest
+            var questContinuer = Lib.Items.NewItem("Dragon Scale", "Caressing dragon scales brings luck.")
+                 .SetConsumable()
+                 .OnUse(ch =>
+                 {
+                     Msg.Show("The dragon grows.");
+
+                     Lib.Effects.StartQuestline(State.LC, new LevelConstructionEvent("Dragon quest 2", 50,
+                        level =>
+                        {
+                            // Pass the dragon to the next level
+                            PowerfulEnemy(dragon);
+                        }))(ch);
+                 });
+            locked.Get.AddInteractiveObject(Lib.InteractiveObjects.Item(questContinuer));
+
+        }
+
+        void PowerfulEnemy(CharacterState dragon)
+        {
+            // Place the powerful dragon to the level
+            Env.One(Gr.PrL.Town(), NodesQueries.All, out var area);
+            dragon
+                .DropItem(
+                    () => Lib.InteractiveObjects.Item(
+                        Lib.Items.NewItem("Dragons Demise", "The dragon fades, but its Will lives on.")
+                            .OnUse(ch => ch.Stats.Will += 5))
+                );
+            dragon.Stats.Will = 40;
+            area.Get.AddEnemy(dragon);
+
+
+            // Weaken the dragon using an interactive object
+            Env.Line(Gr.PrL.Castle(), NodesQueries.All, 4, out var pathToGoblet);
+            var goblet = Lib.InteractiveObjects.SpikyGoblet()
+                .SetInteraction(ins => ins
+                    .Interact("Touch", (goblet, player) =>
+                    {
+                        dragon.Stats.Will = 5;
+                        Msg.Show("Dragon weakened");
+                        goblet.SetInteraction(ins => ins.Say("Dragon weakened"));
+                    })
+                );
+            pathToGoblet.LastArea().AddInteractiveObject(goblet);
+
+            // Place enemies
+            var enemyPlacer = PlC.RandomAreaPlacer(new UniformDistr(1, 3), Enemies());
+            enemyPlacer.Place(pathToGoblet);
+
+            // Place stronger spell items
+            var spellPlacer = PlO.RandomAreasPlacer(new UniformDistr(2, 4),
+                () => Lib.InteractiveObjects.Item(
+                    Lib.SpellItems.AllSpellsByPower()[2].GetRandom()().SetStackable()));
+            spellPlacer.Place(pathToGoblet);
         }
     }
 }

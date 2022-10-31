@@ -47,6 +47,12 @@ namespace ContentGeneration.Assets.UI.Model
             set { _description = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
+        public ItemState SetDescription(string description)
+        {
+            Description = description;
+            return this;
+        }
+
         int _stacksCount;
         public int StacksCount
         {

@@ -41,6 +41,9 @@ public class InteractiveObjects : ScriptableObject
     [SerializeField]
     Transform endEye;
 
+    [SerializeField]
+    Transform spikyGoblet;
+
     public GraveState Grave(GameControl gameControl)
     {
         var grave = new GraveState()
@@ -70,6 +73,11 @@ public class InteractiveObjects : ScriptableObject
     public InteractiveObjectState<Kiln> Kiln(string name = "Kiln")
     {
         return InteractiveObject(name, Geometry<Kiln>(ascensionKilnPrefab)).SetBlocking(true);
+    }
+
+    public InteractiveObjectState<InteractiveObject> SpikyGoblet(string name = "Spiky Gobblet")
+    {
+        return InteractiveObject(name, Geometry<InteractiveObject>(spikyGoblet)).SetBlocking(true);
     }
 
     public GeometryMaker<InteractiveObjectT> Geometry<InteractiveObjectT>(Transform prefab) where InteractiveObjectT : InteractiveObject

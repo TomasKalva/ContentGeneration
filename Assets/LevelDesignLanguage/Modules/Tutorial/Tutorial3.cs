@@ -20,6 +20,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             State.LC.AddNecessaryEvent("Player initialization", 90, _ => InitializePlayer());
             State.LC.AddNecessaryEvent("Enable death", 90, _ => M.DeathModule.DieClasically(), true);
             State.LC.AddNecessaryEvent("Roofs", -1, _ => M.LevelModule.AddRoofs(), true);
+            State.LC.AddNecessaryEvent($"Sky", 0, level => M.EnvironmentModule.CreateSky(level), true);
 
             AddNpcEvents();
         }

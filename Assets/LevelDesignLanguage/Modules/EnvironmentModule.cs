@@ -101,9 +101,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                     return env;
                 });
             State.World.OnLevelStart += envState.MakeGeometry;
-            /*
-            var env = Lib.Objects.Environment();
-            State.World.AddSpecialObject(env.transform);*/
+
             Env.One(Gr.PrL.Town(), NodesQueries.All, out var area);
 
             envState.SetParameters(GetSkyParameter(level));
