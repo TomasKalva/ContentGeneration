@@ -99,7 +99,6 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                     );
         }
 
-
         public Func<InteractiveObjectState>[] ItemsToPlace(FactionEnvironment fe, int count)
         {
             return Enumerable.Range(0, 3).Select<int, Func<InteractiveObjectState>>(_ => () => Lib.InteractiveObjects.Item(fe.CreateItemFactory()(_))).ToArray();
@@ -282,7 +281,31 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             };
         }
 
+        public CharacterStats GetStats(int manifestationProgress)
+        {
+            var stats = new CharacterStats()
+            {
+                Will = 4 * manifestationProgress,
+                Strength = 5 + 5 * manifestationProgress,
+                Versatility = 5 * manifestationProgress
+            };
 
+            var statChanges = CharacterStats.StatChanges;
+            var randomisedStats = new Stat[]
+            {
+                Stat.Endurance,
+                Stat.Agility,
+                Stat.Posture,
+                Stat.Resistances,
+            };
+            var increasedStats = randomisedStats.Take(manifestationProgress).ToHashSet();
+
+            randomisedStats.Select(stat => statChanges[stat])
+                .ForEach(sc => sc.Manipulate(stats, 4 + 4 * manifestationProgress));
+
+            return stats;
+
+        }
 
         /// <summary>
         /// Returns a factory that returns similar enemies.
@@ -292,16 +315,13 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             var affinity = FactionManifestation.Faction.Affinity;
             var manifestationProgress = FactionManifestation.Progress;
 
-            // Create stats of the enemy
-            var scalingStats = new ScalingCharacterStats();
-
             // Create items for the enemy
 
             return progress =>
             {
                 var character = Concepts.CharacterStates.GetRandom()();
 
-                character.Stats = scalingStats.GetStats(manifestationProgress);
+                character.Stats = GetStats(manifestationProgress);
                 character.AddOnDeath(() => GameViewModel.ViewModel.PlayerState.Spirit += character.Health.Maximum);
 
                 // Create weapon for the enemy
@@ -362,33 +382,4 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
 
 
     delegate ByUser<Effect> EffectByFactionEnvironmentByUser(FactionEnvironment factionEnv);
-
-    class ScalingCharacterStats
-    {
-        public CharacterStats GetStats(int manifestationProgress)
-        {
-            var stats = new CharacterStats()
-            {
-                Will = 4 * manifestationProgress,
-                Strength = 5 + 5 * manifestationProgress,
-                Versatility = 5 * manifestationProgress
-            };
-
-            var statChanges = CharacterStats.StatChanges;
-            var randomisedStats = new Stat[]
-            {
-                Stat.Endurance,
-                Stat.Agility,
-                Stat.Posture,
-                Stat.Resistances,
-            };
-            var increasedStats = randomisedStats.Take(manifestationProgress).ToHashSet();
-
-            randomisedStats.Select(stat => statChanges[stat])//statChanges.Where(sc => increasedStats.Contains(sc.Stat))
-                .ForEach(sc => sc.Manipulate(stats, 4 + 4 * manifestationProgress));
-
-            return stats;
-
-        }
-    }
 }

@@ -2,7 +2,9 @@
 using OurFramework.Environment.ShapeGrammar;
 using System;
 using System.Linq;
+using UnityEngine;
 using Util;
+using static OurFramework.LevelDesignLanguage.CustomModules.EnvironmentModule;
 
 namespace OurFramework.LevelDesignLanguage.CustomModules
 {
@@ -11,6 +13,9 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
     {
         public TestingModule(LanguageParams parameters) : base(parameters) { }
 
+        /// <summary>
+        /// Test creating a large environmnet.
+        /// </summary>
         public void LargeLevel()
         {
             var grammarState = State.GrammarState;
@@ -41,6 +46,9 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                );
         }
 
+        /// <summary>
+        /// Places each existing enemy type into one area and gives it the declared stats.
+        /// </summary>
         public void StatsScalingOfEnemies()
         {
             Env.Line(Gr.PrL.Garden(), NodesQueries.All, Lib.Enemies.AllAgents().Count(), out var areas);
@@ -68,6 +76,9 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             allEnemiesPlacer.Place(areas);
         }
 
+        /// <summary>
+        /// Places an area with an npc that gives stat increasing items.
+        /// </summary>
         public void LevellingUpItems()
         {
             Env.One(Gr.PrL.Garden(), NodesQueries.LastCreated, out var level_up_area);
@@ -91,6 +102,9 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                     );
         }
 
+        /// <summary>
+        /// Places an area with an npc that gives all spells.
+        /// </summary>
         public void Spells()
         {
             Env.One(Gr.PrL.Garden(), NodesQueries.All, out var area);
@@ -110,6 +124,9 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                     );
         }
 
+        /// <summary>
+        /// Places an area with multiple items lying on the ground.
+        /// </summary>
         public void ItemsTesting()
         {
             Env.One(Gr.PrL.Garden(), NodesQueries.All, out var area);
@@ -118,6 +135,9 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             itemPlacer.Place(area);
         }
 
+        /// <summary>
+        /// Test grammars.
+        /// </summary>
         public void GrammarTesting()
         {
             var grammarState = State.GrammarState;
@@ -164,6 +184,9 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                );*/
         }
 
+        /// <summary>
+        /// Test npcs using possible events.
+        /// </summary>
         public void StartNonPersistentNpcLines()
         {
             Enumerable.Range(0, 6).ForEach(i => 
@@ -183,10 +206,11 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                 );
         }
 
+        /// <summary>
+        /// Test npcs using possible events that persist after being used.
+        /// </summary>
         public void StartPersistentNpcLines()
         {
-            // Npc appears
-
             Enumerable.Range(0, 6).ForEach(i =>
                 State.LC.AddPossibleEvent($"Npc {i}", 0,
                     _ =>
@@ -202,21 +226,48 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                     }, 
                     true)
                 );
-
-            // Hello, how are you. I'm the lord of cinder or something. I travel to the desert of language ambiguity.
-
-            // Wow you did something. I didn't think you'd do that. Now take this. I ressume my journey.
-
-            // How could that be. They did the surgery on grape. I'm leaving for blue mountain underneath.
-
         }
 
+        /// <summary>
+        /// Creates an environment with a locked door.
+        /// </summary>
         public void TestLocking()
         {
-
             M.LockingModule.LineWithKey(NodesQueries.LastCreated, 1, Gr.PrL.Garden(), out var lockedArea, out var linearPath);
-
         }
 
+        /// <summary>
+        /// Creates sky and sea for the given level. Also places an area with an npc that gives sky changing items.
+        /// </summary>
+        public void TestSky(int level)
+        {
+            var envState = new EnvironmentState(
+                () =>
+                {
+                    var env = Lib.Objects.EnvironmentMap();
+                    State.World.AddSpecialObject(env.transform);
+                    RenderSettings.sun = env.Sun;
+                    return env;
+                });
+            State.World.OnLevelStart += envState.MakeGeometry;
+
+            Env.One(Gr.PrL.Town(), NodesQueries.All, out var area);
+
+            envState.SetParameters(M.EnvironmentModule.GetSkyParameter(level));
+
+            Func<ItemState>[] skyChangingItems = M.EnvironmentModule.SkyParams
+                .Select<SkyParameters, Func<ItemState>>((skyParams, i) => () => Lib.Items
+                 .NewItem($"Set sky {i}", $"Summon sky of {i}-th level")
+                     .OnUse(user => envState.SetParameters(skyParams))).ToArray();
+
+            area.Get.AddInteractiveObject(
+                Lib.InteractiveObjects.Farmer("Sky distributor")
+                    .SetInteraction(
+                        ins => ins
+                            .Interact("Take all skies", (ios, player) => skyChangingItems.ForEach(itemF => player.AddItem(itemF()))
+                            )
+                        )
+                    );
+        }
     }
 }

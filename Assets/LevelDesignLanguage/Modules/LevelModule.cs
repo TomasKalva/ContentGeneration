@@ -12,13 +12,16 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
     {
         public LevelModule(LanguageParams parameters) : base(parameters) { }
 
+        /// <summary>
+        /// Creates an area where the level starts.
+        /// </summary>
         public void LevelStart()
         {
             Env.One(Gr.PrL.CreateNewHouse(), NodesQueries.All, out var area);
             area.Get.Node.AddSymbol(Gr.Sym.LevelStartMarker);
         }
 
-        public List<Func<ProductionList>> MainPathProductionLists() =>
+        List<Func<ProductionList>> MainPathProductionLists() =>
             new()
                     {
                             () => Gr.PrL.Town(),
@@ -56,6 +59,10 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             );
         }
 
+        /// <summary>
+        /// Creates a path made of two parts ended with transporter to the next level.
+        /// At the end of the first part there is a shortcut.
+        /// </summary>
         public void MainPath(int level)
         {
             var enemyMaker = BasicEnemyMaker();
@@ -103,6 +110,9 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
 
         }
 
+        /// <summary>
+        /// Creates level ending area.
+        /// </summary>
         public void LevelEnd()
         {
             Env.One(Gr.PrL.LevelEnd(), NodesQueries.All, out var area);
@@ -112,6 +122,9 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
 
         }
 
+        /// <summary>
+        /// Adds roofs to all buildings.
+        /// </summary>
         public void AddRoofs()
         {
             Env.Execute(new AllGrammar(Gr.PrL.Roofs()));

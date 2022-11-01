@@ -62,6 +62,9 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             };
         }
 
+        /// <summary>
+        /// Creates an area that can be unlocked with the given unlock action.
+        /// </summary>
         public void LockedArea(NodesQuery startNodes, UnlockAction unlock, out SingleArea lockedArea)
         {
             Env.One(Gr.PrL.BlockedByDoor(), startNodes, out lockedArea);
@@ -69,6 +72,9 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             LockArea(lockedArea.Get, unlock);
         }
 
+        /// <summary>
+        /// Returns items that are consumed by unlockAction.
+        /// </summary>
         public IEnumerable<ItemState> CreateLockItems(string name, int count, string description, out UnlockAction unlockAction)
         {
             var items = Enumerable.Range(0, count).Select(_ =>
@@ -89,6 +95,9 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             return items;
         }
 
+        /// <summary>
+        /// Creates a locked area and key that is put at the end of a new linear path.
+        /// </summary>
         public void LineWithKey(NodesQuery startNodesQuery, int keyLineLength, ProductionList keyLinePr, out SingleArea locked, out LinearPath keyLine)
         {
             var branchNodes = startNodesQuery(State.GrammarState);
@@ -101,6 +110,9 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             locked.Get.AddInteractiveObject(Lib.InteractiveObjects.Item(Lib.Items.NewItem("Unlocked", "The door are unlocked now")));
         }
 
+        /// <summary>
+        /// Creates a locked area and 3 keys randomly put to the dead ends of a new branching paths.
+        /// </summary>
         public void RandomBranchingWithKeys(int areasCount, ProductionList keyBranchPr, out SingleArea locked, out Branching branches)
         {
             Env.BranchRandomly(keyBranchPr, areasCount, out branches);

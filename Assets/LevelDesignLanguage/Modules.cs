@@ -17,7 +17,6 @@ namespace OurFramework.LevelDesignLanguage
         public OutOfDepthEncountersModule OutOfDepthEncountersModule { get; private set; }
         public DetailsModule DetailsModule { get; private set; }
         public EnvironmentModule EnvironmentModule { get; private set; }
-        public NpcModule NpcModule { get; private set; }
         public DeathModule DeathModule { get; private set; }
         public TutorialModule TutorialModule { get; private set; }
 
@@ -40,7 +39,6 @@ namespace OurFramework.LevelDesignLanguage
             OutOfDepthEncountersModule = new OutOfDepthEncountersModule(languageParams);
             DetailsModule = new DetailsModule(languageParams);
             EnvironmentModule = new EnvironmentModule(languageParams);
-            NpcModule = new NpcModule(languageParams);
             DeathModule = new DeathModule(languageParams);
             TutorialModule = new TutorialModule(languageParams);
         }

@@ -9,16 +9,16 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
     {
         public AscendingModule(LanguageParams parameters) : base(parameters) { }
 
-
-        public void AscendingBranch(Func<int> startingAscensionPrice)
+        /// <summary>
+        /// Returns a kiln that let's the player increase the stats. The price of ascending depends on number of already done ascendings by ascensionPriceF.
+        /// </summary>
+        public InteractiveObjectState<Kiln> AscendingKiln(Func<int, int> ascensionPriceF)
         {
-            Env.One(Gr.PrL.Garden(), NodesQueries.All, out var ascending_area);
-
-            int ascensionPrice = startingAscensionPrice();
-            int ascensionPriceIncrease = 50;
-
+            int numberOfAscendingsDone = 0;
+            int ascensionPrice = ascensionPriceF(numberOfAscendingsDone);
             var statsIncreases = CharacterStats.StatIncreases;
-            Func<StatManipulation<Action<CharacterStats>>, InteractOption<Kiln>> increaseOption = null; // Declare function before calling it recursively
+            // Declare function before calling it recursively
+            Func<StatManipulation<Action<CharacterStats>>, InteractOption<Kiln>> increaseOption = null; 
             increaseOption =
                 statIncrease => new InteractOption<Kiln>($"{statIncrease.Stat}",
                     (kiln, player) =>
@@ -26,7 +26,8 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                         if (player.Pay(ascensionPrice))
                         {
                             statIncrease.Manipulate(player.Stats);
-                            ascensionPrice += ascensionPriceIncrease;
+                            numberOfAscendingsDone++;
+                            ascensionPrice = ascensionPriceF(numberOfAscendingsDone);
                             kiln.IntObj.BurstFire();
                             kiln.Interaction =
                                 new InteractionSequence<Kiln>()
@@ -36,20 +37,27 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                         }
                     });
 
-            //Env.One(Gr.PrL.Garden(), NodesQueries.LastCreated, out var farmer_area);
-            Enumerable.Range(0, 1).ForEach(_ => ascending_area.Get.AddInteractiveObject(
-                Lib.InteractiveObjects.Kiln()
+            return Lib.InteractiveObjects.Kiln()
                     .SetInteraction(
                         ins => ins
                             .Say("Ascension kiln is delighted to feel your presence.")
                             .Decide($"What ascension are you longing for? ({ascensionPrice} Spirit)",
                                 statsIncreases.Shuffle().Take(3).Select(si => increaseOption(si)).ToArray())
-                    )
-                )
-            );
+                    );
+        }
 
+        /// <summary>
+        /// Creates an area with the ascending kiln.
+        /// </summary>
+        public void AddAscendingEvents(InteractiveObjectState<Kiln> kiln)
+        {
             // Add the same branch to the next level
-            State.LC.AddNecessaryEvent($"Ascending branch", 90, _ => M.AscendingModule.AscendingBranch(() => ascensionPrice));
+            State.LC.AddNecessaryEvent($"Ascending branch", 
+                90, _ =>
+                {
+                    Env.One(Gr.PrL.Garden(), NodesQueries.All, out var ascendingArea);
+                    ascendingArea.Get.AddInteractiveObject(kiln);
+                }, true);
         }
     }
 }

@@ -10,6 +10,9 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
         {
         }
 
+        /// <summary>
+        /// Restart the level.
+        /// </summary>
         public void DieClasically()
         {
             var playerState = State.World.PlayerState;
@@ -22,7 +25,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
         }
 
         /// <summary>
-        /// Pay item to stay alive. The item is payed automatically on death.
+        /// Pay Vibrant Memory to stay alive. The item is payed automatically on death.
         /// </summary>
         public void DieIfNotProtected()
         {

@@ -14,7 +14,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
     {
         public OutOfDepthEncountersModule(LanguageParams parameters) : base(parameters) { }
 
-        public CharacterStats GetStats(int level)
+        CharacterStats GetStats(int level)
         {
             var stats = new CharacterStats()
             {
@@ -30,18 +30,17 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             return stats;
         }
 
-        public IEnumerable<Func<WeaponItem>> GetWeapon(int level)
+        IEnumerable<Func<WeaponItem>> GetWeapon(int level)
         {
             return new List<Func<WeaponItem>>()
             { 
                 () => Lib.Items.Katana().AddUpgradeEffect(user => target => Lib.Effects.Bleed(3 + 2 * level, 6)),
                 () => Lib.Items.Mace().AddUpgradeEffect(user => target => Lib.Effects.DamagePosture(5 + 10 * level)),
                 () => Lib.Items.SculptureClub().AddUpgradeEffect(user => target => Lib.Effects.PushFrom(50f + 50f * level)(user)),
-                //() => Lib.Items.MayanKnife().AddUpgradeEffect(user => target => Lib.Effects.Heal(3 + 3 * level)(user)),
             };
         }
 
-        public CharacterState EnhanceEnemy(CharacterState enemy, int level) 
+        CharacterState EnhanceEnemy(CharacterState enemy, int level) 
         {
             var weaponF = GetWeapon(level).GetRandom();
             return enemy
@@ -52,7 +51,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                 .SetCreatingStrategy(new CreateIfCondition(() => enemy.DeathCount == 0));
         }
 
-        public IEnumerable<Func<ItemState>> UpgradeRewards(int _)
+        IEnumerable<Func<ItemState>> UpgradeRewards()
         {
             return 
                 new Stat[3]
@@ -68,21 +67,10 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                     );
         }
 
-        public class Encounter
-        {
-            public IEnumerable<CharacterState> Enemies { get; }
-
-            public Encounter(params CharacterState[] enemies)
+        IEnumerable<Func<CharacterState>> Enemies()
+            => new List<Func<CharacterState>>()
             {
-                Enemies = enemies;
-            }
-        }
-
-        public IEnumerable<Func<Encounter>> Encounters()
-            => new List<Func<Encounter>>()
-            {
-                () => new Encounter(
-                    Lib.Enemies.DragonMan()
+                () => Lib.Enemies.DragonMan()
                         .DropItem(
                             () =>
                                 Lib.InteractiveObjects.Item(
@@ -94,9 +82,8 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                                     .OnUse(Lib.Effects.Heal(1000))
                             )
                         )
-                ),
-                () => new Encounter(
-                    Lib.Enemies.Sculpture()
+                ,
+                () => Lib.Enemies.Sculpture()
                         .DropItem(
                             () =>
                                 Lib.InteractiveObjects.Item(
@@ -108,9 +95,8 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                                     .OnUse(Lib.Effects.GiveSpirit(1000))
                             )
                         )
-                ),
-                () => new Encounter(
-                    Lib.Enemies.SkinnyWoman()
+                ,
+                () => Lib.Enemies.SkinnyWoman()
                         .DropItem(
                             () => 
                                 Lib.InteractiveObjects.Item(
@@ -122,7 +108,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                                     .OnUse(Lib.Effects.RegenerateHealth(2, 60))
                             )
                         )
-                    ),
+                    ,
             };
 
         public void DifficultEncounter(int level)
@@ -131,22 +117,22 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             Env.Line(Gr.PrL.Town(), NodesQueries.All, 2, out var path);
 
             // Place the encounter
-            var enemies = Encounters().GetRandom()().Enemies;
+            var enemy = Enemies().GetRandom()();
             var arena = path.AreasList[1];
-            enemies.Select(enemy => EnhanceEnemy(enemy, level)).ForEach(enemy => arena.AddEnemy(enemy));
+            EnhanceEnemy(enemy, level);
+            arena.AddEnemy(enemy);
 
             // Create a locked area after the encounter
-            var key = M.LockingModule.CreateLockItems(State.UniqueNameGenerator.UniqueName("Integral part"), 1, "The pathway rarely opens without the detachment of Integrand from its Integree being achieved.", out var unlock).First();
+            var key = M.LockingModule.CreateLockItems(State.UniqueNameGenerator.UniqueName("Integral part"), 1, "The pathway never opens without the detachment of Integrand from its Integree being achieved.", out var unlock).First();
             M.LockingModule.LockedArea(_ => path.LastArea().Node.ToEnumerable(), unlock, out var locked);
 
             // Give enemy key to the area
-            var mainEnemy = enemies.First();
-            mainEnemy
+            enemy
                 .AddOnDeath(() => Msg.Show("Ancient disintegrated"))
                 .DropItem(() => Lib.InteractiveObjects.Item(key));
 
             // Place rewards
-            var rewards = UpgradeRewards(level).ToList();
+            var rewards = UpgradeRewards().ToList();
             rewards.Shuffle().Take(2).ForEach(reward =>
                 locked.Get.AddInteractiveObject(Lib.InteractiveObjects.Item(reward())));
         }

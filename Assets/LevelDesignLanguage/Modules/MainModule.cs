@@ -6,18 +6,23 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
     {
         public MainModule(LanguageParams parameters) : base(parameters) { }
 
+        /// <summary>
+        /// Called when the game is started.
+        /// </summary>
         public void DeclareGame()
         {
-            //DeclareDebugGame();
+            DeclareDebugGame();
             //State.LC.AddNecessaryEvent($"Tutorial module", 100, level => M.TutorialModule.Main());
-            M.TutorialModule.DeclareGame();
+            //M.TutorialModule.DeclareGame();
             //DeclareEnvironmentForPrettyPictures();
         }
 
         void DeclareDebugGame()
         {
             State.LC.AddNecessaryEvent($"Level Start", 100, level => M.LevelModule.LevelStart(), true);
+            State.LC.AddNecessaryEvent($"Level End", 99, level => M.LevelModule.LevelEnd(), true);
 
+            /*
             State.LC.AddNecessaryEvent($"Death", 99, _ =>
             {
                 //L.DeathLanguage.EnableClassicalDeath();
@@ -28,7 +33,6 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                 //M.DeathModule.EndRunIfOutOfSmile();
             }, true);
 
-            //State.LC.AddNecessaryEvent($"Level End", 99, level => M.LevelModule.LevelEnd(), true);
 
             M.LevelModule.AddOptionalEnd();
 
@@ -40,19 +44,20 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             State.LC.AddNecessaryEvent($"Add Details", 0, level => M.DetailsModule.AddDetails(level), true);
 
             State.LC.AddNecessaryEvent($"Out of depth encounter", 80, level => M.OutOfDepthEncountersModule.DifficultEncounter(level), true);
-
+            */
             State.LC.AddNecessaryEvent($"Sky", 0, level => M.EnvironmentModule.CreateSky(level), true);
 
 
             State.LC.AddNecessaryEvent($"Roofs", -1, level => M.LevelModule.AddRoofs(), true);
 
-            State.LC.AddNecessaryEvent("Ascending", 80, _ => M.AscendingModule.AscendingBranch(() => 100));
+            M.AscendingModule.AddAscendingEvents(M.AscendingModule.AscendingKiln(ad => 100 + 50 * ad));
+            //State.LC.AddNecessaryEvent("Ascending", 80, _ =>);
 
 
             //State.LC.AddNecessaryEvent("Testing enemies", 5, _ => L.TestingLanguage.StatsScalingOfEnemies());
 
 
-            //State.LC.AddNecessaryEvent($"Environment", 0, level => L.EnvironmentLanguage.TestSky(level), true);
+            State.LC.AddNecessaryEvent($"Environment", 0, level => M.TestingModule.TestSky(level), true);
 
             /*
             State.LC.AddNecessaryEvent("Farmer branch", 5, level => L.FarmersLanguage.FarmerBranch(0));
@@ -104,7 +109,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                 Env.Line(Gr.PrL.Chapels(), NodesQueries.All, 20, out var _);
             });
 
-            State.LC.AddNecessaryEvent($"Environment", 90, level => M.EnvironmentModule.TestSky(level), true);
+            State.LC.AddNecessaryEvent($"Environment", 90, level => M.TestingModule.TestSky(level), true);
 
 
             State.LC.AddNecessaryEvent($"Roofs", -1, level => M.LevelModule.AddRoofs(), true);

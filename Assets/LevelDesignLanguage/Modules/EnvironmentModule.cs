@@ -9,6 +9,9 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
 
     class EnvironmentModule : LDLanguage
     {
+        /// <summary>
+        /// Can modify the environment map.
+        /// </summary>
         public struct SkyParameters
         {
             float SkyVariability { get; }
@@ -27,7 +30,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             }
         }
 
-        SkyParameters[] SkyParams { get; }
+        public SkyParameters[] SkyParams { get; }
         public EnvironmentModule(LanguageParams parameters) : base(parameters) 
         {
             SkyParams = new SkyParameters[8]
@@ -43,6 +46,9 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             };
         }
 
+        /// <summary>
+        /// State for EnvironmentMap.
+        /// </summary>
         public class EnvironmentState
         {
             GeometryMaker<EnvironmentMap> GeometryMaker { get; }
@@ -70,10 +76,15 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             }
         }
 
-        SkyParameters GetSkyParameter(int level)
+        /// <summary>
+        /// Returns parameters of the environment map for the given level.
+        /// </summary>
+        public SkyParameters GetSkyParameter(int level)
             => SkyParams[Mathf.Clamp(level, 0, SkyParams.Length - 1)];
 
-
+        /// <summary>
+        /// Creates sky and sea.
+        /// </summary>
         public void CreateSky(int level)
         {
             var envState = new EnvironmentState(
@@ -88,38 +99,6 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
 
             var parameters = GetSkyParameter(level);
             envState.SetParameters(parameters);
-        }
-
-        public void TestSky(int level)
-        {
-            var envState = new EnvironmentState(
-                () =>
-                {
-                    var env = Lib.Objects.EnvironmentMap();
-                    State.World.AddSpecialObject(env.transform);
-                    RenderSettings.sun = env.Sun;
-                    return env;
-                });
-            State.World.OnLevelStart += envState.MakeGeometry;
-
-            Env.One(Gr.PrL.Town(), NodesQueries.All, out var area);
-
-            envState.SetParameters(GetSkyParameter(level));
-            
-            Func<ItemState>[] skyChangingItems = SkyParams
-                .Select<SkyParameters, Func<ItemState>>((skyParams, i) => () => Lib.Items
-                 .NewItem($"Set sky {i}", $"Summon sky of {i}-th level")
-                     .OnUse(user => envState.SetParameters(skyParams))).ToArray();
-
-            area.Get.AddInteractiveObject(
-                Lib.InteractiveObjects.Farmer("Sky distributor")
-                    .SetInteraction(
-                        ins => ins
-                            .Interact("Take all skies", (ios, player) => skyChangingItems.ForEach(itemF => player.AddItem(itemF()))
-                            )
-                        )
-                    );
-            
         }
     }
 }
