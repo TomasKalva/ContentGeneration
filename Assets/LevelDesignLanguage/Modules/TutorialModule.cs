@@ -17,11 +17,10 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
         public void DeclareGame()
         {
             State.LC.AddNecessaryEvent($"Level Start", 100, level => M.LevelModule.LevelStart(), true);
-            State.LC.AddNecessaryEvent($"Level Start", 99, level => M.LevelModule.LevelEnd(), true);
-            /*State.LC.AddNecessaryEvent("Main", 95, _ => Main(), true);
+            State.LC.AddNecessaryEvent("Main", 95, _ => Main(), true);
             State.LC.AddNecessaryEvent("Player initialization", 90, _ => InitializePlayer());
             State.LC.AddNecessaryEvent("Enable death", 90, _ => M.DeathModule.DieClasically(), true);
-            State.LC.AddNecessaryEvent("Roofs", -1, _ => M.LevelModule.AddRoofs(), true);*/
+            State.LC.AddNecessaryEvent("Roofs", -1, _ => M.LevelModule.AddRoofs(), true);
             State.LC.AddNecessaryEvent($"Sky", 0, level => M.EnvironmentModule.CreateSky(level), true);
 
             State.LC.AddPossibleEvent("Quest", 50, _ => StartQuest());

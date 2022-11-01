@@ -14,13 +14,13 @@ namespace OurFramework.LevelDesignLanguage
         /// </summary>
         int Level { get; set; }
 
-        public PriorityPoolLevelConstructionEvent NecessaryEvents { get; set; }
-        public RoundRobinPoolLevelConstructionEvent PossibleEvents { get; set; }
+        public AllEventPool NecessaryEvents { get; set; }
+        public RoundRobinEventPool PossibleEvents { get; set; }
 
         public LevelConstructor()
         {
-            NecessaryEvents = new PriorityPoolLevelConstructionEvent();
-            PossibleEvents = new RoundRobinPoolLevelConstructionEvent(3);
+            NecessaryEvents = new AllEventPool();
+            PossibleEvents = new RoundRobinEventPool(3);
             Level = 0;
         }
 
@@ -50,12 +50,15 @@ namespace OurFramework.LevelDesignLanguage
         {
             var oldNecessaryPool = NecessaryEvents;
             var oldPossiblePool = PossibleEvents;
-            NecessaryEvents = new PriorityPoolLevelConstructionEvent();
-            PossibleEvents = new RoundRobinPoolLevelConstructionEvent(3);
+            NecessaryEvents = new AllEventPool();
+            PossibleEvents = new RoundRobinEventPool(3);
             try
             {
-                oldNecessaryPool.Construct(ev => AddNecessaryEvent(ev), Level);
-                oldPossiblePool.Construct(ev => AddPossibleEvent(ev), Level);
+                var neccesaryConstructions = oldNecessaryPool.GetEventConstuctions(NecessaryEvents, Level);
+                var possibleConstructions = oldPossiblePool.GetEventConstuctions(PossibleEvents, Level);
+                neccesaryConstructions.Concat(possibleConstructions)
+                    .OrderBy(ev => -ev.Priority)
+                    .ForEach(ev => ev.Handle(Level));
                 Level++;
             }
             catch(Exception ex) when (
@@ -80,11 +83,12 @@ namespace OurFramework.LevelDesignLanguage
     public delegate bool LevelConstructionCondition(int level);
     public class LevelConstructionEvent
     {
-        public string Name { get; }
+        string Name { get; }
         public int Priority { get; }
-        public bool Persistent { get; }
+        bool Persistent { get; }
         public LevelConstructionCondition Condition { get; }
         LevelConstruction Construction { get; }
+        public LevelConstructionEventPool ToAddTo { private get; set; }
 
         public LevelConstructionEvent(string name, int priority, LevelConstruction construction, bool persistent = false, LevelConstructionCondition condition = null)
         {
@@ -97,48 +101,48 @@ namespace OurFramework.LevelDesignLanguage
 
         public void Handle(int level)
         {
+            Debug.Log($"Starting: {Name}");
             Construction(level);
+            if (Persistent)
+            {
+                ToAddTo.AddEvent(this);
+            }
+            Debug.Log($"Finished: {Name}");
         }
     }
     
     public abstract class LevelConstructionEventPool
     {
-        public abstract void Construct(Action<LevelConstructionEvent> reAddPersistent, int level);
+        public abstract void AddEvent(LevelConstructionEvent levelConstructionEvent);
+
+        public abstract IEnumerable<LevelConstructionEvent> GetEventConstuctions(LevelConstructionEventPool newPool, int level);
     }
 
-    public class PriorityPoolLevelConstructionEvent : LevelConstructionEventPool
+    public class AllEventPool : LevelConstructionEventPool
     {
         /// <summary>
         /// Events that are used to construct the current level.
         /// </summary>
         List<LevelConstructionEvent> LevelConstructionEvents { get; }
 
-        public PriorityPoolLevelConstructionEvent()
+        public AllEventPool()
         {
             LevelConstructionEvents = new List<LevelConstructionEvent>();
         }
 
-        public void AddEvent(LevelConstructionEvent levelConstructionEvent)
+        public override void AddEvent(LevelConstructionEvent levelConstructionEvent)
         {
             LevelConstructionEvents.Add(levelConstructionEvent);
         }
 
-        public override void Construct(Action<LevelConstructionEvent> reAddPersistent, int level)
+        public override IEnumerable<LevelConstructionEvent> GetEventConstuctions(LevelConstructionEventPool newPool, int level)
         {
-            LevelConstructionEvents.Where(ev => ev.Condition(level)).OrderBy(ev => -ev.Priority).ForEach(ev =>
-            {
-                Debug.Log($"Starting: {ev.Name}");
-                ev.Handle(level);
-                if (ev.Persistent)
-                {
-                    reAddPersistent(ev);
-                }
-                Debug.Log($"Finished: {ev.Name}");
-            });
+            LevelConstructionEvents.ForEach(ev => ev.ToAddTo = newPool);
+            return LevelConstructionEvents.Where(ev => ev.Condition(level));
         }
     }
 
-    public class RoundRobinPoolLevelConstructionEvent : LevelConstructionEventPool
+    public class RoundRobinEventPool : LevelConstructionEventPool
     {
         /// <summary>
         /// Events that are used to construct the current level.
@@ -149,35 +153,26 @@ namespace OurFramework.LevelDesignLanguage
         /// </summary>
         int MaxEvents { get; }
 
-        public RoundRobinPoolLevelConstructionEvent(int maxEvents)
+        public RoundRobinEventPool(int maxEvents)
         {
             LevelConstructionEvents = new List<LevelConstructionEvent>();
             MaxEvents = maxEvents;
         }
 
-        public void AddEvent(LevelConstructionEvent levelConstructionEvent)
+        public override void AddEvent(LevelConstructionEvent levelConstructionEvent)
         {
             LevelConstructionEvents.Add(levelConstructionEvent);
         }
 
-        public override void Construct(Action<LevelConstructionEvent> reAddPersistent, int level)
+        public override IEnumerable<LevelConstructionEvent> GetEventConstuctions(LevelConstructionEventPool newPool, int level)
         {
+            LevelConstructionEvents.ForEach(ev => ev.ToAddTo = newPool);
+
             var toExecute = LevelConstructionEvents.Where(ev => ev.Condition(level)).Take(MaxEvents);
             var toKeep = LevelConstructionEvents.Except(toExecute);
 
-            toKeep.ForEach(ev => reAddPersistent(ev));
-
-            toExecute.ForEach(ev =>
-            {
-                Debug.Log($"Starting: {ev.Name}");
-                ev.Handle(level);
-                if (ev.Persistent)
-                {
-                    reAddPersistent(ev);
-
-                }
-                Debug.Log($"Finished: {ev.Name}");
-            });
+            toKeep.ForEach(ev => newPool.AddEvent(ev));
+            return toExecute;
         }
     }
 }
