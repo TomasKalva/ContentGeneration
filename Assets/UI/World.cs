@@ -16,6 +16,10 @@ namespace ContentGeneration.Assets.UI
     {
         void AddArchitectureElement(Transform el);
         WorldGeometry WorldGeometry { get; }
+
+        Transform ArchitectureParent { get; }
+
+        void AddInteractivePersistentObject(InteractiveObjectState interactivePersistentObject);
     }
 
     public class World : INotifyPropertyChanged, IGridGeometryOwner

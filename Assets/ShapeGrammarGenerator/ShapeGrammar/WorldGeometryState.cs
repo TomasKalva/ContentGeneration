@@ -12,7 +12,7 @@ namespace OurFramework.Environment.ShapeGrammar
     /// <summary>
     /// Represents the nodes in the world.
     /// </summary>
-    public class WorldState
+    public class WorldGeometryState
     {
         /// <summary>
         /// Contains all level elements created.
@@ -27,7 +27,7 @@ namespace OurFramework.Environment.ShapeGrammar
         /// </summary>
         public Func<LevelElement, LevelElement> AfterPushed { get; }
 
-        public WorldState(LevelElement last, Grid<Cube> grid, Func<LevelElement, LevelElement> afterPushed)
+        public WorldGeometryState(LevelElement last, Grid<Cube> grid, Func<LevelElement, LevelElement> afterPushed)
         {
             Grid = grid;
             Added = new LevelGroupElement(grid, AreaStyles.None());
@@ -45,7 +45,7 @@ namespace OurFramework.Environment.ShapeGrammar
             Added = Added.Merge(newLe);
         }
 
-        public IEnumerable<TaskSteps> CreateGeometry(World world)
+        public IEnumerable<TaskSteps> CreateGeometry(IGridGeometryOwner world)
         {
             var cubeSide = world.WorldGeometry.WorldScale;
             int iteration = 0;

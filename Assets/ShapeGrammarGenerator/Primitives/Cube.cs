@@ -77,7 +77,7 @@ namespace OurFramework.Environment.GridMembers
             return this;
         }
 
-        public void CreateGeometry(float scale, World world)
+        public void CreateGeometry(float scale, IGridGeometryOwner world)
         {
             if (!Changed)
                 return;

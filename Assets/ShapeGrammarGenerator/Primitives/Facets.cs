@@ -28,7 +28,7 @@ namespace OurFramework.Environment.GridMembers
             MyCube = myCube;
         }
 
-        public abstract void CreateGeometry(float cubeSide, World world);
+        public abstract void CreateGeometry(float cubeSide, IGridGeometryOwner world);
 
         public FacetT MoveBy<FacetT>(Vector3Int offset) where FacetT : Facet
         {
@@ -64,7 +64,7 @@ namespace OurFramework.Environment.GridMembers
             FacePrimitive = new HorFacePrimitive();
         }
 
-        public override void CreateGeometry(float scale, World world)
+        public override void CreateGeometry(float scale, IGridGeometryOwner world)
         {
             if (FacePrimitive.Resolved)
                 return;
@@ -117,7 +117,7 @@ namespace OurFramework.Environment.GridMembers
             FacePrimitive = new VerFacePrimitive();
         }
 
-        public override void CreateGeometry(float _, World world)
+        public override void CreateGeometry(float _, IGridGeometryOwner world)
         {
             if (FacePrimitive.Resolved)
                 return;
@@ -161,7 +161,7 @@ namespace OurFramework.Environment.GridMembers
             FacePrimitive = new CornerFacetPrimitive();
         }
 
-        public override void CreateGeometry(float scale, World world)
+        public override void CreateGeometry(float scale, IGridGeometryOwner world)
         {
             if (FacePrimitive.Resolved)
                 return;

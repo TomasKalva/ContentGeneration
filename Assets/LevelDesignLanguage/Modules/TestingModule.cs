@@ -269,5 +269,10 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                         )
                     );
         }
+
+        public void NewGrammar()
+        {
+            Env.BranchRandomly(Gr.PrL.NewGrammar()/*, NodesQueries.All*/, 40, out var branching);
+        }
     }
 }

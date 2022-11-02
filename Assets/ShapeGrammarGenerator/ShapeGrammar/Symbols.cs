@@ -51,6 +51,13 @@ namespace OurFramework.Environment.ShapeGrammar
         public Symbol ConnectionMarker { get; } = new Marker("Connection");
         public Symbol LevelStartMarker { get; } = new Marker("LevelStart");
         #endregion
+
+        #region New symbols
+
+        public Symbol NewRoom { get; } = new Symbol("NewRoom");
+        public DirectionalSymbol NewCorridor(Vector3Int direction = default) => new DirectionalSymbol("NewCorridor", direction);
+
+        #endregion
     }
 
     /// <summary>

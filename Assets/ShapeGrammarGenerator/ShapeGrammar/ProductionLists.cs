@@ -265,5 +265,70 @@ namespace OurFramework.Environment.ShapeGrammar
                 pr.Roof(pr.sym.Room, 3, AreaStyles.GableRoof())
             );
         }
+
+        public ProductionList NewGrammar()
+        {
+            var roomStyle = AreaStyles.CastleStyle;
+            return new ProductionList
+            (
+                pr.FullFloorPlaceNear(
+                    pr.sym.Room,
+                    pr.sym.NewRoom,
+                    () => ldk.qc.GetFlatBox(3, 3, 2).SetAreaType(AreaStyles.Room(roomStyle)),
+                    (program, _) => program,
+                    (program, newRoom) => program
+                            .Set(() => newRoom)
+                            .ReserveUpward(2, pr.sym.UpwardReservation)
+                            .PlaceCurrentFrom(newRoom),
+                    ldk.con.ConnectByDoor,
+                    1
+                    ),
+                pr.Extrude(
+                    pr.sym.NewRoom,
+                    _ => ExtensionMethods.HorizontalDirections(),
+                    (cg, dir) => cg.ExtrudeDir(dir, 5).LE(AreaStyles.Room()).GN(pr.sym.NewCorridor(dir), pr.sym.FullFloorMarker),
+                    pr.Empty(),
+                    (program, bridgeTop) => program,
+                    ldk.con.ConnectByDoor,
+                    true
+                ),
+                pr.Extrude(
+                    pr.sym.NewCorridor(),
+                    node => node.GetSymbol(pr.sym.NewCorridor()).Direction.ToEnumerable(),
+                    (cg, dir) => cg.ExtrudeDir(dir, 5).LE(AreaStyles.Garden()).GN(pr.sym.NewCorridor(dir), pr.sym.FullFloorMarker),
+                    pr.Empty(),
+                    (program, bridgeTop) => program,
+                    ldk.con.ConnectByDoor,
+                    true
+                ),
+                pr.FullFloorPlaceNear(
+                    pr.sym.NewCorridor(),
+                    pr.sym.NewRoom,
+                    () => ldk.qc.GetFlatBox(3, 3, 2).SetAreaType(AreaStyles.Room(roomStyle)),
+                    (program, _) => program,
+                    (program, newRoom) => program
+                            .Set(() => newRoom)
+                            .ReserveUpward(2, pr.sym.UpwardReservation)
+                            .PlaceCurrentFrom(newRoom),
+                    ldk.con.ConnectByStairsOutside,
+                    5
+                ),
+                pr.TakeUpwardReservation(
+                    pr.sym.NewRoom,
+                    nextFloor => nextFloor.LE(AreaStyles.Room(roomStyle)).GN(pr.sym.NewRoom, pr.sym.FullFloorMarker),
+                    2,
+                    20,
+                    pr.Reserve(2, pr.sym.UpwardReservation),
+                    ldk.con.ConnectByWallStairsIn
+                    )
+            /*
+            pr.Roof(pr.sym.ChapelHall(default), 3, AreaStyles.GableRoof(AreaStyles.ChapelStyle)),
+            pr.Roof(pr.sym.ChapelRoom, 3, AreaStyles.CrossRoof(AreaStyles.ChapelStyle)),
+            pr.Roof(pr.sym.TowerTop, 3, AreaStyles.PointyRoof()),
+            pr.Roof(pr.sym.TowerBottom, 3, AreaStyles.PointyRoof()),
+            pr.Roof(pr.sym.Room, 3, AreaStyles.GableRoof())
+            */
+            );
+        }
     }
 }

@@ -118,7 +118,7 @@ namespace OurFramework.LevelDesignLanguage
 
 
             stopwatch.Stop();
-            Debug.Log(stopwatch.ElapsedMilliseconds);
+            Debug.Log($"Level generating took {stopwatch.ElapsedMilliseconds} ms");
         }
     }
     class LanguageParams

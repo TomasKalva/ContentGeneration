@@ -30,7 +30,7 @@ namespace OurFramework.Environment.ShapeGrammar
         /// <summary>
         /// For operations that require querying already created world.
         /// </summary>
-        public WorldState WorldState { get; set; }
+        public WorldGeometryState WorldState { get; set; }
 
         public Grid<bool> OffersFoundation { get; }
         /// <summary>
@@ -121,7 +121,7 @@ namespace OurFramework.Environment.ShapeGrammar
             Root = new Node(empty, new List<Symbol>());
             // Applying style after every level element so that face types can be referenced
             //  -usefull for locking door
-            WorldState = new WorldState(empty, grid, le =>
+            WorldState = new WorldGeometryState(empty, grid, le =>
             {
                 le.CG().Cubes.ForEach(cube => cube.Changed = true);
                 return le.ApplyGrammarStyles();

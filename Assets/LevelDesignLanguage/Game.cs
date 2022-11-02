@@ -109,7 +109,7 @@ namespace OurFramework.LevelDesignLanguage
 
         IEnumerable<TaskSteps> InitializeLevelConstructor()
         {
-            var ldk = new LevelDevelopmentKit(GeometricPrimitives, worldParent, libraries);
+            var ldk = new LevelDevelopmentKit(GeometricPrimitives);
 
             yield return TaskSteps.One();
 
