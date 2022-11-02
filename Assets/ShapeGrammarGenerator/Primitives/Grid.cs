@@ -221,6 +221,11 @@ namespace OurFramework.Environment.GridMembers
             return new LevelGroupElement(QueriedGrid, AreaStyles.None(), boxes.Select(box => GetFlatBox(box)).Take(count).ToList<LevelElement>());
         }
 
+        public LevelGroupElement Boxes(IEnumerable<Box3Int> boxes, int count)
+        {
+            return new LevelGroupElement(QueriedGrid, AreaStyles.None(), boxes.Select(box => GetBox(box).LE()).Take(count).ToList<LevelElement>());
+        }
+
         public LevelGroupElement FlatBoxes(int minSize, int maxSize, int count)
         {
             var boxSequence = ExtensionMethods.BoxSequence(() => ExtensionMethods.RandomBox(new Vector2Int(minSize, minSize), new Vector2Int(maxSize, maxSize)));
