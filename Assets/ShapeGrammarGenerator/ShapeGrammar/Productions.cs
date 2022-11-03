@@ -25,7 +25,7 @@ namespace OurFramework.Environment.ShapeGrammar
 
         public Production CreateNewHouse(int bottomHeight)
         {
-            return Place(sym.Room, 3, () => ldk.sgShapes.Room(new Box2Int(0, 0, 5, 5).InflateY(0, 2)), Reserve(2, sym.UpwardReservation));
+            return Place(sym.Room, 3, () => ldk.les.Room(5, 5, 2), Reserve(2, sym.UpwardReservation));
         }
 
         public Production CourtyardFromRoom(PathGuide pathGuide)
@@ -162,7 +162,7 @@ namespace OurFramework.Environment.ShapeGrammar
             return FullFloorPlaceNear(
                 nextToWhat,
                 sym.Room,
-                () => roomF().SetAreaType(AreaStyles.Room()),
+                () => roomF().SetAreaStyle(AreaStyles.Room()),
                 (program, _) => program,
                 (program, newRoom) => program
                         .Set(() => newRoom)
@@ -178,7 +178,7 @@ namespace OurFramework.Environment.ShapeGrammar
                 from,
                 roomSymbol,
                 5,
-                () => leF().SetAreaType(AreaStyles.Room()),
+                () => leF().SetAreaStyle(AreaStyles.Room()),
                 pathGuide,
                 Reserve(2, sym.UpwardReservation));
 
@@ -187,7 +187,7 @@ namespace OurFramework.Environment.ShapeGrammar
                 from,
                 gardenSymbol,
                 5,
-                () => leF().SetAreaType(AreaStyles.Garden()),
+                () => leF().SetAreaStyle(AreaStyles.Garden()),
                 pathGuide,
                 Empty());
 
@@ -201,7 +201,7 @@ namespace OurFramework.Environment.ShapeGrammar
                 leF,
                 (prog, node) => MoveVertically(-2, 3)(prog, node)
                     .Change(node =>
-                        ldk.sgShapes.IslandExtrudeIter(node.LE.CG().BottomLayer(), 2, 0.7f)
+                        ldk.cgs.IslandExtrudeIter(node.LE.CG().BottomLayer(), 2, 0.7f)
                             .LE(AreaStyles.Garden()).Minus(prog.State.WorldState.Added)
                             //To remove disconnected we have to make sure that the or
                             .MapGeom(cg => cg
@@ -398,7 +398,7 @@ namespace OurFramework.Environment.ShapeGrammar
         public Func<ProductionProgram, Node, ProductionProgram> BridgeFoundation(Vector3Int bridgeDirection)
         {
             return (program, bridgeTop) => program
-                        .Set(() => ldk.sgShapes.BridgeFoundation(bridgeTop.LE, bridgeDirection).GN(sym.Foundation))
+                        .Set(() => ldk.les.BridgeFoundation(bridgeTop.LE, bridgeDirection).GN(sym.Foundation))
                         .KeepNotTaken()
                         .PlaceCurrentFrom(bridgeTop);
         }
@@ -804,7 +804,7 @@ namespace OurFramework.Environment.ShapeGrammar
             => FullFloorPlaceNear(
                     nextToWhatSymbol,
                     sym.ChapelEntrance,
-                    () => leF().SetAreaType(AreaStyles.Room(AreaStyles.ChapelStyle)),
+                    () => leF().SetAreaStyle(AreaStyles.Room(AreaStyles.ChapelStyle)),
                     Empty(),
                     Roof(AreaStyles.CrossRoof(AreaStyles.ChapelStyle), roofHeight),
                     ldk.con.ConnectByStairsOutside,
@@ -814,7 +814,7 @@ namespace OurFramework.Environment.ShapeGrammar
             => FullFloorPlaceNear(
                     nearWhatSym,
                     sym.Park,
-                    () => leF().SetAreaType(AreaStyles.Garden()),
+                    () => leF().SetAreaStyle(AreaStyles.Garden()),
                     MoveVertically(heighChange, minHeight),
                     Empty(),
                     ldk.con.ConnectByStairsOutside,
@@ -857,7 +857,7 @@ namespace OurFramework.Environment.ShapeGrammar
             => FullFloorPlaceNear(
                     nearWhatSym,
                     sym.TowerBottom,
-                    () => towerBottomF().SetAreaType(AreaStyles.Room(AreaStyles.CastleStyle)),
+                    () => towerBottomF().SetAreaStyle(AreaStyles.Room(AreaStyles.CastleStyle)),
                     Empty(),
                     Reserve(2, sym.UpwardReservation),
                     ldk.con.ConnectByStairsOutside,
@@ -890,7 +890,7 @@ namespace OurFramework.Environment.ShapeGrammar
             => FullFloorPlaceNear(
                     nearWhatSym,
                     sym.TowerTop,
-                    () => towerTopF().SetAreaType(AreaStyles.Room(AreaStyles.CastleStyle)),
+                    () => towerTopF().SetAreaStyle(AreaStyles.Room(AreaStyles.CastleStyle)),
                     MoveVertically(heightChange, minBottomHeight),
                     Reserve(2, sym.UpwardReservation),
                     ldk.con.ConnectByStairsOutside,
@@ -903,7 +903,7 @@ namespace OurFramework.Environment.ShapeGrammar
                     _ => ExtensionMethods.HorizontalDirections(),
                     (cg, dir) => cg.ExtrudeDir(dir, 1).LE(AreaStyles.Garden()).GN(sym.Garden, sym.FullFloorMarker),
                     (prog, node) => 
-                        prog.Set(() => ldk.sgShapes
+                        prog.Set(() => ldk.cgs
                             .IslandExtrudeIter(node.LE.CG().BottomLayer(), 3, 0.7f)
                             .LE(AreaStyles.Garden())
                             .Minus(prog.State.WorldState.Added)
@@ -937,7 +937,7 @@ namespace OurFramework.Environment.ShapeGrammar
             => FullFloorPlaceNear(
                     nearWhatSym,
                     sym.WatchPost,
-                    () => towerTopF().SetAreaType(AreaStyles.FlatRoof(AreaStyles.CastleStyle)),
+                    () => towerTopF().SetAreaStyle(AreaStyles.FlatRoof(AreaStyles.CastleStyle)),
                     MoveVertically(heightChange, minBottomHeight),
                     Empty(),
                     ldk.con.ConnectByStairsOutside,

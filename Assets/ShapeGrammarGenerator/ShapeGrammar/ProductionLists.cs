@@ -21,13 +21,13 @@ namespace OurFramework.Environment.ShapeGrammar
             pathGuide ??= new RandomPathGuide();
             Func<LevelElement>[] boxFs = new Func<LevelElement>[]
             {
-                () => ldk.qc.GetFlatBox(3, 5, 2),
-                () => ldk.qc.GetFlatBox(6, 4, 3),
+                () => ldk.les.Box(3, 5, 2),
+                () => ldk.les.Box(6, 4, 3),
             };
             return new ProductionList
             (
                 // Connection from other grammars
-                pr.ExtendBridgeToRoom(pr.sym.FullFloorMarker, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 4, 3, 4)), pathGuide),
+                pr.ExtendBridgeToRoom(pr.sym.FullFloorMarker, pr.sym.Room, () => ldk.les.Room(4, 4, 3), pathGuide),
 
                 pr.CourtyardFromRoom(pathGuide),
                 pr.CourtyardFromCourtyardCorner(),
@@ -73,10 +73,10 @@ namespace OurFramework.Environment.ShapeGrammar
             var pathGuide = new RandomPathGuide();
             return new ProductionList
             (
-                pr.ExtendBridgeToRoom(pr.sym.Room, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide),
-                pr.ExtendBridgeToGarden(pr.sym.Garden, pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)), pathGuide),
-                pr.RoomNextTo(pr.sym.Courtyard, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-                pr.RoomNextTo(pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)))
+                pr.ExtendBridgeToRoom(pr.sym.Room, pr.sym.Room, () => ldk.les.Room(3, 3, 3), pathGuide),
+                pr.ExtendBridgeToGarden(pr.sym.Garden, pr.sym.Garden, () => ldk.les.Room(3, 3, 3), pathGuide),
+                pr.RoomNextTo(pr.sym.Courtyard, () => ldk.les.Room(3, 3, 3)),
+                pr.RoomNextTo(pr.sym.Room, () => ldk.les.Room(3, 3, 3))
             );
         }
 
@@ -85,8 +85,8 @@ namespace OurFramework.Environment.ShapeGrammar
             var pathGuide = new RandomPathGuide();
             return new ProductionList
             (
-                pr.ExtendBridgeToRoom(pr.sym.FullFloorMarker, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 4, 3, 4)), pathGuide),
-                pr.ExtendBridgeToRoom(pr.sym.FullFloorMarker, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 4, 3, 4)), pathGuide)
+                pr.ExtendBridgeToRoom(pr.sym.FullFloorMarker, pr.sym.Room, () => ldk.les.Room(4, 4, 3), pathGuide),
+                pr.ExtendBridgeToRoom(pr.sym.FullFloorMarker, pr.sym.Room, () => ldk.les.Room(4, 4, 3), pathGuide)
             );
         }
 
@@ -96,9 +96,9 @@ namespace OurFramework.Environment.ShapeGrammar
             return new ProductionList
             (
                 //pr.GardenFromCourtyard(),
-                pr.ExtendBridgeToRoom(pr.sym.Room, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 5, 3, 4)), pathGuide),
-                pr.ExtendBridgeToGarden(pr.sym.Room, pr.sym.Garden, () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaStyles.Garden()), pathGuide),
-                pr.RoomNextTo(pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 4, 3, 5)))
+                pr.ExtendBridgeToRoom(pr.sym.Room, pr.sym.Room, () => ldk.les.Room(5, 4, 3), pathGuide),
+                pr.ExtendBridgeToGarden(pr.sym.Room, pr.sym.Garden, () => ldk.cgs.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaStyles.Garden()), pathGuide),
+                pr.RoomNextTo(pr.sym.Garden, () => ldk.les.Room(4, 5, 3))
             );
         }
 
@@ -106,8 +106,8 @@ namespace OurFramework.Environment.ShapeGrammar
         {
             return new ProductionList
             (
-                pr.ExtendBridgeToRoom(pr.sym.FullFloorMarker, pr.sym.Room, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 4, 3, 4)), pathGuide),
-                pr.ExtendBridgeToGarden(pr.sym.FullFloorMarker, pr.sym.Garden, () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaStyles.Garden()), pathGuide)
+                pr.ExtendBridgeToRoom(pr.sym.FullFloorMarker, pr.sym.Room, () => ldk.les.Room(4, 4, 3), pathGuide),
+                pr.ExtendBridgeToGarden(pr.sym.FullFloorMarker, pr.sym.Garden, () => ldk.cgs.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaStyles.Garden()), pathGuide)
             );
         }
 
@@ -122,13 +122,13 @@ namespace OurFramework.Environment.ShapeGrammar
                     pr.sym.FullFloorMarker,
                     pr.sym.ChapelRoom,
                     4,
-                    () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 5, 3, 3)).SetAreaType(AreaStyles.Room(AreaStyles.ChapelStyle)),
+                    () => ldk.les.Room(5, 3, 3).SetAreaStyle(AreaStyles.Room(AreaStyles.ChapelStyle)),
                     pathGuide,
                     pr.Reserve(2, pr.sym.UpwardReservation)),
                 //.ExtendBridgeToRoom(pr.sym.FullFloorMarker, pr.sym.ChapelRoom, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3)).SetAreaType(AreaStyles.Room(AreaStyles.ChapelStyle)), pathGuide),
 
-                pr.ChapelEntranceNextTo(pr.sym.Room, 3, () => ldk.qc.GetFlatBox(4, 4, 2)),
-                pr.ChapelEntranceNextTo(pr.sym.Park, 3, () => ldk.qc.GetFlatBox(4, 4, 2)),
+                pr.ChapelEntranceNextTo(pr.sym.Room, 3, () => ldk.les.Box(4, 4, 2)),
+                pr.ChapelEntranceNextTo(pr.sym.Park, 3, () => ldk.les.Box(4, 4, 2)),
 
                 pr.ChapelHall(pr.sym.ChapelEntrance, 5, pathGuide),
 
@@ -142,9 +142,9 @@ namespace OurFramework.Environment.ShapeGrammar
                 pr.ChapelNextFloor(3, 16),
                 pr.ChapelTowerTop(3, 6),
 
-                pr.ParkNear(pr.sym.ChapelTowerTop, -5, 3, () => ldk.qc.GetFlatBox(5, 6, 3)),
-                pr.ParkNear(pr.sym.Park, -1, 3, () => ldk.qc.GetFlatBox(5, 6, 3)),
-                pr.ParkNear(pr.sym.Park, 2, 3, () => ldk.qc.GetFlatBox(5, 6, 3))
+                pr.ParkNear(pr.sym.ChapelTowerTop, -5, 3, () => ldk.les.Box(5, 6, 3)),
+                pr.ParkNear(pr.sym.Park, -1, 3, () => ldk.les.Box(5, 6, 3)),
+                pr.ParkNear(pr.sym.Park, 2, 3, () => ldk.les.Box(5, 6, 3))
             );
         }
 
@@ -157,7 +157,7 @@ namespace OurFramework.Environment.ShapeGrammar
                 //pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
                 //pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden), addFloorAbove: false),
 
-                pr.ChapelEntranceNextTo(pr.sym.Room, 3, () => ldk.qc.GetFlatBox(3, 3, 2)),
+                pr.ChapelEntranceNextTo(pr.sym.Room, 3, () => ldk.les.Box(3, 3, 2)),
 
                 pr.ChapelHall(pr.sym.ChapelEntrance, 4, guideRandomly),
 
@@ -194,10 +194,10 @@ namespace OurFramework.Environment.ShapeGrammar
             return new ProductionList
             (
                 // Connection from other grammars
-                pr.ExtendBridgeToGarden(pr.sym.FullFloorMarker, pr.sym.Garden, () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 4, 3, 3)), pathGuide),
+                pr.ExtendBridgeToGarden(pr.sym.FullFloorMarker, pr.sym.Garden, () => ldk.les.Room(new Box3Int(0, 0, 0, 4, 3, 3)), pathGuide),
 
-                pr.TowerBottomNear(pr.sym.Room, () => ldk.qc.GetFlatBox(4, 4, 4)),
-                pr.TowerBottomNear(pr.sym.Garden, () => ldk.qc.GetFlatBox(4, 4, 4)),
+                pr.TowerBottomNear(pr.sym.Room, () => ldk.les.Box(4, 4, 4)),
+                pr.TowerBottomNear(pr.sym.Garden, () => ldk.les.Box(4, 4, 4)),
 
                 pr.UpwardTowerTop(2),
                 pr.WallTop(pr.sym.TowerTop, 5, 2, pathGuide),
@@ -206,7 +206,7 @@ namespace OurFramework.Environment.ShapeGrammar
                 pr.RoomDown(pr.sym.TowerTop, pr.sym.TowerBottom, AreaStyles.Room(AreaStyles.CastleStyle), 5, 3),
 
                 //pr.GardenFrom(pr.sym.TowerBottom, () => ldk.qc.GetFlatBox(4, 4, 1)),
-                pr.TowerTopNear(pr.sym.TowerTop, 4, 0, 3, () => ldk.qc.GetFlatBox(4, 4, 2)),
+                pr.TowerTopNear(pr.sym.TowerTop, 4, 0, 3, () => ldk.les.Box(4, 4, 2)),
                 pr.GardenFrom(pr.sym.TowerBottom)
             );
         }
@@ -218,7 +218,7 @@ namespace OurFramework.Environment.ShapeGrammar
             return new ProductionList
             (
                 pr.SideWall(2),
-                pr.WatchPostNear(pr.sym.WallTop(default), 1, -3, 4, () => ldk.qc.GetFlatBox(3, 3, 1))
+                pr.WatchPostNear(pr.sym.WallTop(default), 1, -3, 4, () => ldk.les.Box(3, 3, 1))
             );
         }
 
@@ -229,7 +229,7 @@ namespace OurFramework.Environment.ShapeGrammar
                 pr.ConnectByRoom(
                     pr.sym.StartMarker, 
                     pr.sym.EndMarker, 
-                    () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 4, 3, 4)),
+                    () => ldk.les.Room(4, 4, 3),
                     pr.Empty(),
                     ldk.con.ConnectByStairsOutside,
                     ldk.con.ConnectByStairsOutside,
@@ -245,7 +245,7 @@ namespace OurFramework.Environment.ShapeGrammar
                 pr.ConnectByRoom(
                     pr.sym.StartMarker,
                     pr.sym.EndMarker,
-                    () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 4, 3, 4)),
+                    () => ldk.les.Room(4, 4, 3),
                     pr.MoveVertically(1, 2),
                     ldk.con.ConnectByStairsOutside,
                     ldk.con.ConnectByFall,
@@ -274,7 +274,7 @@ namespace OurFramework.Environment.ShapeGrammar
                 pr.FullFloorPlaceNear(
                     pr.sym.Room,
                     pr.sym.NewRoom,
-                    () => ldk.qc.GetFlatBox(3, 3, 2).SetAreaType(AreaStyles.Room(roomStyle)),
+                    () => ldk.les.Box(3, 3, 2).SetAreaStyle(AreaStyles.Room(roomStyle)),
                     (program, _) => program,
                     (program, newRoom) => program
                             .Set(() => newRoom)
@@ -304,7 +304,7 @@ namespace OurFramework.Environment.ShapeGrammar
                 pr.FullFloorPlaceNear(
                     pr.sym.NewCorridor(),
                     pr.sym.NewRoom,
-                    () => ldk.qc.GetFlatBox(3, 3, 2).SetAreaType(AreaStyles.Room(roomStyle)),
+                    () => ldk.les.Box(3, 3, 2).SetAreaStyle(AreaStyles.Room(roomStyle)),
                     (program, _) => program,
                     (program, newRoom) => program
                             .Set(() => newRoom)

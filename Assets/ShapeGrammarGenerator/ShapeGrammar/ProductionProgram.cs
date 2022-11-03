@@ -142,7 +142,7 @@ namespace OurFramework.Environment.ShapeGrammar
         /// </summary>
         public ProductionProgram Found(out Node foundation) =>  Bind(out foundation, () =>
         {
-            CurrentNodes = CurrentNodes.Select(node => Ldk.sgShapes.Foundation(node.LE).GN(Pr.sym.Foundation)).ToList();
+            CurrentNodes = CurrentNodes.Select(node => Ldk.les.Foundation(node.LE).GN(Pr.sym.Foundation)).ToList();
             return CurrentNodes.Select(node => node.LE).ToLevelGroupElement(Ldk.grid).GN();
         });
 

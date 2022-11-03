@@ -241,7 +241,7 @@ namespace OurFramework.Environment.ShapeGrammar
         /// </summary>
         public void ShowVerticallyTaken()
         {
-            VerticallyTaken.SetAreaType(AreaStyles.Garden()).ApplyGrammarStyles();
+            VerticallyTaken.SetAreaStyle(AreaStyles.Garden()).ApplyGrammarStyles();
         }
         #endregion
 

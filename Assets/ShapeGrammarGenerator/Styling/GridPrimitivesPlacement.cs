@@ -8,12 +8,12 @@ namespace OurFramework.Environment.GridMembers
     public class GridPrimitivesPlacement
     {
         Grid<Cube> GridView { get; }
-        QueryContext QC { get; }
+        CGShapes QC { get; }
 
         public GridPrimitivesPlacement(Grid<Cube> gridView)
         {
             GridView = gridView;
-            QC = new QueryContext(GridView);
+            QC = new CGShapes(GridView);
         }
 
         public CubeGroup RoomStyle(GridPrimitivesStyle gpStyle, CubeGroup roomArea)

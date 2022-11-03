@@ -67,7 +67,7 @@ namespace OurFramework.Environment.GridMembers
 
         public abstract IEnumerable<LevelGeometryElement> Leafs();
 
-        public LevelElement SetAreaType(AreaStyle areaType)
+        public LevelElement SetAreaStyle(AreaStyle areaType)
         {
             AreaStyle = areaType;
             return this;
@@ -287,7 +287,7 @@ namespace OurFramework.Environment.GridMembers
 
         public LevelGroupElement SetChildrenAreaType(AreaStyle areaType)
         {
-            LevelElements.ForEach(le => le.SetAreaType(areaType));
+            LevelElements.ForEach(le => le.SetAreaStyle(areaType));
             return this;
         }
 

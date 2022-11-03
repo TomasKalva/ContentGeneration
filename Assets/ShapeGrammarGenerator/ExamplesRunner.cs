@@ -9,6 +9,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Used for testing and visualisation of algorithms operating on LevelElements and CubeGroups.
+/// Some features (e.g. connections) might not work correctly.
+/// </summary>
 public class ExamplesRunner : MonoBehaviour
 {
     [SerializeField]
@@ -52,6 +56,7 @@ public class ExamplesRunner : MonoBehaviour
         var example = exampleF();
         WorldState.Add(example);
 
+        WorldState.Added.CreateGeometry(GO);
         WorldState.CreateGeometry(GO).Evaluate();
     }
 
