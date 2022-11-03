@@ -158,7 +158,7 @@ namespace OurFramework.Environment.ShapeGrammar
                 .Select(node =>
                     State.NewProgram(prog => prog
                         .Set(() => node.LE.CG().ExtrudeVer(Vector3Int.up, height).LE(AreaStyles.Reservation()).GN(reservationSymbolF(node)))
-                        .KeepNotTaken()
+                        .DiscardTaken()
                     )
                 );
             if (reservations.Any(prog => prog.Failed))
@@ -179,7 +179,7 @@ namespace OurFramework.Environment.ShapeGrammar
         /// <summary>
         /// Remove the current nodes which are overlapping already added nodes.
         /// </summary>
-        public ProductionProgram KeepNotTaken()
+        public ProductionProgram DiscardTaken()
             => Bind(() => CurrentNodes = CurrentNodes.Where(node => node.LE.CG().AllAreNotTaken()).ToList());
 
         public ProductionProgram Keep(Func<Node, bool> condition)
@@ -214,6 +214,8 @@ namespace OurFramework.Environment.ShapeGrammar
             if(!condF())
                 SetFailed(true, "Condition failed");
         });
+
+        public ProductionProgram Run(Func<ProductionProgram, ProductionProgram> programF) => RunIf(true, programF);
 
         /// <summary>
         /// Runs the program with the current State and CurrentNodes and its state after being run is applied to this.

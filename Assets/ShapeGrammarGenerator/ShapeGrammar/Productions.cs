@@ -53,7 +53,7 @@ namespace OurFramework.Environment.ShapeGrammar
                                         .LE(AreaStyles.Yard(AreaStyles.YardStyle))
                                         .GN(sym.Courtyard, sym.FullFloorMarker)
                                 )
-                                .KeepNotTaken()
+                                .DiscardTaken()
                                 .CanBeFounded()
                                 ),
                             out var courtyard
@@ -101,7 +101,7 @@ namespace OurFramework.Environment.ShapeGrammar
                                         .MoveBy(2 * Vector3Int.down)
                                     .LE(AreaStyles.Yard(AreaStyles.YardStyle)).GN(sym.Courtyard, sym.FullFloorMarker)
                                 )
-                                .KeepNotTaken()
+                                .DiscardTaken()
                                 .CanBeFounded()
                                 ),
                             out var newCourtyard
@@ -230,7 +230,7 @@ namespace OurFramework.Environment.ShapeGrammar
                 Empty(),
                 (program, terrace) => program
                         .Set(() => terrace.LE.CG().ExtrudeVer(Vector3Int.up, 1).LE(AreaStyles.DirectionalRoof(terrace.GetSymbol(sym.Terrace(default)).Direction)).GN(sym.Roof))
-                        .KeepNotTaken()
+                        .DiscardTaken()
                         .PlaceCurrentFrom(terrace),
                 ldk.con.ConnectByDoor
                 );
@@ -391,7 +391,7 @@ namespace OurFramework.Environment.ShapeGrammar
             return (program, roof) => program
                         .Set(() => roof)
                         .Change(towerTop => towerTop.LE.CG().ExtrudeVer(Vector3Int.up, roofHeight).LE(roofType).GN(sym.Roof))
-                        .KeepNotTaken()
+                        .DiscardTaken()
                         .PlaceCurrentFrom(roof);
         }
 
@@ -399,7 +399,7 @@ namespace OurFramework.Environment.ShapeGrammar
         {
             return (program, bridgeTop) => program
                         .Set(() => ldk.les.BridgeFoundation(bridgeTop.LE, bridgeDirection).GN(sym.Foundation))
-                        .KeepNotTaken()
+                        .DiscardTaken()
                         .PlaceCurrentFrom(bridgeTop);
         }
 
@@ -486,18 +486,12 @@ namespace OurFramework.Environment.ShapeGrammar
                     var whatCG = what.LE.CG();
 
                     return state.NewProgram(prog => prog
-                        .SelectRandomOne(
-                            state.NewProgram(subProg => subProg
-                                .Set(() => newAreaF().GN())
-                                .MoveNearTo(what, dist)
-                                .CurrentFirst(out var newArea)
-                                .RunIf(true,
-                                    thisProg => fromFloorNodeAfterPositionedNear(thisProg, newArea)
-                                )
-                                .Change(node => node.LE.GN(newAreaSym, sym.FullFloorMarker))
-                                ),
-                            out var newNode
-                            )
+                        .Set(() => newAreaF().GN())
+                        .MoveNearTo(what, dist)
+                        .CurrentFirst(out var newArea)
+                        .Run(thisProg => fromFloorNodeAfterPositionedNear(thisProg, newArea))
+                        .Change(node => node.LE.GN(newAreaSym, sym.FullFloorMarker))
+                        .CurrentFirst(out var newNode)
                         .PlaceCurrentFrom(what)
 
                         .Found(out var foundation)
@@ -542,7 +536,7 @@ namespace OurFramework.Environment.ShapeGrammar
                                     dir =>
                                         extrudeNodeFromDirection(from.LE.CG(), dir)
                                 )
-                                .KeepNotTaken()
+                                .DiscardTaken()
                                 .CurrentFirst(out var created)
 
                                 .RunIf(true, p => afterNodeCreated(p, created))
@@ -602,9 +596,7 @@ namespace OurFramework.Environment.ShapeGrammar
                         .CurrentFirst(out var extendedReservation)
 
                         // Only check if the part outside of the reservation was not taken yet
-                        .Set(() => extendedReservation.LE.Minus(reservation.LE).GN())
-                        .KeepNotTaken()
-                        .Set(() => extendedReservation)
+                        .Condition(() => extendedReservation.LE.Minus(reservation.LE).CG().AllAreNotTaken())
 
                         .Change(extr => nodeFromExtrudedUp(extr.LE.CG()))
                         .CurrentFirst(out var nextFloor)
@@ -651,7 +643,7 @@ namespace OurFramework.Environment.ShapeGrammar
 
                         // Only check if the part outside of the reservation was not taken yet
                         .Set(() => extendedDown.LE.Minus(foundationBelow.LE).GN())
-                        .KeepNotTaken()
+                        .DiscardTaken()
                         .Set(() => extendedDown)
 
                         .Change(extr => nodeFromExtrudedDown(extr.LE.CG()))
@@ -687,7 +679,6 @@ namespace OurFramework.Environment.ShapeGrammar
 
                     var createdRoom = toF();
 
-                    // reduced from 1450 to 1050 characters, from 80 lines to 34 lines
                     return state.NewProgram(prog => prog
                         .SelectFirstOne(
                             state.NewProgram(subProg => subProg
@@ -834,7 +825,7 @@ namespace OurFramework.Environment.ShapeGrammar
                 Empty(),
                 (program, chapelSide) => program
                         .Set(() => chapelSide.LE.CG().ExtrudeVer(Vector3Int.up, 1).LE(AreaStyles.DirectionalRoof(chapelSide.GetSymbol(sym.ChapelSide(default)).Direction, AreaStyles.ChapelStyle)).GN(sym.Roof))
-                        .KeepNotTaken()
+                        .DiscardTaken()
                         .PlaceCurrentFrom(chapelSide),
                 ldk.con.ConnectByDoor
                 );
@@ -912,7 +903,7 @@ namespace OurFramework.Environment.ShapeGrammar
                             )
                             .GN(sym.Garden, sym.FullFloorMarker)
                         )
-                        .KeepNotTaken()
+                        .DiscardTaken()
                         .CanBeFounded(),
                     Empty(),
                     ldk.con.ConnectByDoor
@@ -943,6 +934,161 @@ namespace OurFramework.Environment.ShapeGrammar
                     ldk.con.ConnectByStairsOutside,
                     distance
                 );
+
+        #endregion
+
+        #region NewGrammar
+
+        public Production NewStart()
+        {
+            return new Production(
+                "Place New Start",
+                new ProdParamsManager(),
+                (state, _) =>
+                {
+                    return state.NewProgram(
+                        prog => prog
+                            .Set(() => ldk.les.Room(5, 5, 2)
+                                .MoveBottomTo(4)
+                                .GN(sym.NewRoom, sym.FullFloorMarker, sym.LevelStartMarker))
+                            .CurrentFirst(out var first)
+                            .PlaceCurrentFrom(state.Root)
+                            
+                            .Found()
+                            .PlaceCurrentFrom(first)
+
+                            .Set(() => first)
+                            .ReserveUpward(2, sym.UpwardReservation)
+                            .PlaceCurrentFrom(first)
+                            );
+                });
+        }
+
+        public Production NewRoomNear()
+        {
+            return new Production(
+                "New Room Near",
+                new ProdParamsManager().AddNodeSymbols(sym.NewRoom),
+                (state, pp) =>
+                {
+                    var what = pp.Param;
+                    var whatCG = what.LE.CG();
+
+                    return state.NewProgram(prog => prog
+                        .Set(() => ldk.les.Box(3, 3, 2).SetAreaStyle(AreaStyles.Room()).GN())
+                        .MoveNearTo(what, 1)
+                        .Change(node => node.LE.GN(sym.NewRoom, sym.FullFloorMarker))
+                        .CurrentFirst(out var newNode)
+                        .PlaceCurrentFrom(what)
+
+                        .Found(out var foundation)
+                        .PlaceCurrentFrom(newNode)
+
+                        .Set(() => newNode)
+                        .ReserveUpward(2, sym.UpwardReservation)
+                        .PlaceCurrentFrom(newNode)
+
+                        //Replace with open connection
+                        .FindPath(() => ldk.con
+                            .ConnectByDoor(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
+                                (newNode.LE, what.LE)
+                                .GN(sym.ConnectionMarker), out var door)
+                        .PlaceCurrentFrom(what, newNode)
+                        );
+                });
+        }
+
+        public Production ExtrudeNewCorridor()
+        {
+            return new Production(
+                $"Extrude New Corridor",
+                new ProdParamsManager().AddNodeSymbols(sym.NewRoom),
+                (state, pp) =>
+                {
+                    var from = pp.Param;
+                    var fromCG = from.LE.CG();
+
+                    return state.NewProgram(prog => prog
+                        .SelectFirstOne(
+                            state.NewProgram(subProg => subProg
+                                .Directional(ExtensionMethods.HorizontalDirections(),
+                                    dir =>
+                                        fromCG.ExtrudeDir(dir, 5).LE(AreaStyles.Room()).GN(sym.NewCorridor(dir), sym.FullFloorMarker)
+                                )
+                                .DiscardTaken()
+                                .CanBeFounded()
+                                ),
+                            out var newNode
+                            )
+                        .PlaceCurrentFrom(from)
+
+                        .Found()
+                        .PlaceCurrentFrom(newNode)
+
+
+                        .Set(() => newNode)
+                        .ReserveUpward(2, sym.UpwardReservation)
+                        .PlaceCurrentFrom(newNode)
+
+                        .FindPath(() =>
+                        ldk.con
+                            .ConnectByDoor(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
+                            (newNode.LE, from.LE).GN(sym.ConnectionMarker), out var door)
+                        .PlaceCurrentFrom(from, newNode)
+                        );
+                });
+        }
+
+        public Production NewRoomNextFloor(
+            Symbol reservationSymbol,
+            Func<CubeGroup, Node> nodeFromExtrudedUp,
+            int nextFloorHeight,
+            int maxBottomHeight,
+            Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPlaced,
+            ConnectionFromAddedAndPaths connection)
+        {
+            return new Production(
+                "New Room Next Floor",
+                new ProdParamsManager()
+                    .AddNodeSymbols(sym.UpwardReservation(null))
+                    .SetCondition((state, pp) =>
+                    {
+                        bool correctBelowSymbol =
+                            pp.Param.GetSymbol(sym.UpwardReservation(null))
+                            .NodeReference.GetSymbol(sym.NewRoom) != null;
+                        return correctBelowSymbol && pp.Param.LE.CG().RightTopFront().y + 1 <= 10;
+                    }),
+                (state, pp) =>
+                {
+                    var reservation = pp.Param;
+                    var reservationCG = reservation.LE.CG();
+                    var toExtrude = nextFloorHeight - 1;
+                    var roomBelow = pp.Param.GetSymbol(sym.UpwardReservation(null)).NodeReference;
+
+                    return state.NewProgram(prog => prog
+                        .Condition(() => toExtrude >= 0)
+                        .Set(() => reservation)
+                        .Change(res => res.LE.CG().BottomLayer()
+                            .OpAdd().ExtrudeDir(Vector3Int.up, toExtrude).OpNew().LE().GN())
+                        .CurrentFirst(out var extendedReservation)
+
+                        // Only check if the part outside of the reservation was not taken yet
+                        .Condition(() => extendedReservation.LE.Minus(reservation.LE).CG().AllAreNotTaken())
+
+                        .Change(extr => nodeFromExtrudedUp(extr.LE.CG()))
+                        .CurrentFirst(out var nextFloor)
+                        .ReplaceNodes(reservation)
+
+                        .Set(() => extendedReservation)
+                        .ReserveUpward(2, sym.UpwardReservation)
+                        .PlaceCurrentFrom(extendedReservation)
+
+                        .FindPath(() => ldk.con.ConnectByWallStairsIn(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
+                            (nextFloor.LE, roomBelow.LE).GN(sym.ConnectionMarker), out var stairs)
+                        .PlaceCurrentFrom(roomBelow, nextFloor)
+                        );
+                });
+        }
 
         #endregion
     }

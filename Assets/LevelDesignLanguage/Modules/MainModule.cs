@@ -15,8 +15,8 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             //State.LC.AddNecessaryEvent($"Tutorial module", 100, level => M.TutorialModule.Main());
             //M.TutorialModule.DeclareGame();
             //DeclareEnvironmentForPrettyPictures();
-            State.LC.AddNecessaryEvent($"Level Start", 100, level => M.LevelModule.LevelStart(), true);
-            State.LC.AddNecessaryEvent($"New Grammar", 100, level => M.TestingModule.NewGrammar());
+            //State.LC.AddNecessaryEvent($"Level Start", 100, level => M.LevelModule.LevelStart(), true);
+            State.LC.AddNecessaryEvent($"New Grammar", 50, level => M.TestingModule.NewGrammar());
         }
 
         void DeclareDebugGame()

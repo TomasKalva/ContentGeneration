@@ -272,7 +272,11 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
 
         public void NewGrammar()
         {
-            Env.BranchRandomly(Gr.PrL.NewGrammar()/*, NodesQueries.All*/, 40, out var branching);
+            Env.Execute(new RandomGrammar(Gr.PrL.NewStart(), 1));
+            Env.Execute(new RandomGrammar(Gr.PrL.NewGrammar(), 40));
+            Env.Execute(new AllGrammar(Gr.PrL.NewRoofs()));
+
+            //Env.BranchRandomly(/*, NodesQueries.All*/, 40, out var branching);
         }
     }
 }
