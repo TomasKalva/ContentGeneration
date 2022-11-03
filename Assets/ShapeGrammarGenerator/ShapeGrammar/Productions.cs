@@ -25,7 +25,7 @@ namespace OurFramework.Environment.ShapeGrammar
 
         public Production CreateNewHouse(int bottomHeight)
         {
-            return Place(sym.Room, 3, () => ldk.les.Room(5, 5, 2), Reserve(2, sym.UpwardReservation));
+            return Place(bottomHeight, () => ldk.les.Room(5, 5, 2), le => le?.GN(sym.NewRoom, sym.FullFloorMarker), Reserve(2, sym.UpwardReservation));
         }
 
         public Production CourtyardFromRoom(PathGuide pathGuide)
@@ -443,27 +443,26 @@ namespace OurFramework.Environment.ShapeGrammar
 
         #region Operations
 
-        public Production Place(Symbol newSymbol, int bottomHeight, Func<LevelElement> leF, Func<ProductionProgram, Node, ProductionProgram> fromNodeAfterPlaced)
+        public Production Place(int bottomHeight, Func<LevelElement> leF, Func<LevelElement, Node> leToNode, Func<ProductionProgram, Node, ProductionProgram> fromNodeAfterPlaced)
         {
             return new Production(
-                $"Place {newSymbol.Name}",
+                $"Place",
                 new ProdParamsManager(),
                 (state, pp) =>
                 {
                     return state.NewProgram(
                         prog => prog
-                            .Set(() => leF()
+                            .Set(() => leToNode(leF()
                                 .MoveBottomTo(bottomHeight)
                                 .MovesToNotIntersectXZ(state.WorldState.Added.LevelElements)
-                                .TryMove(1)?
-                                .GN(newSymbol, sym.FullFloorMarker))
+                                .TryMove(1)))
                             .CurrentFirst(out var first)
                             .PlaceCurrentFrom(state.Root)
 
                             .Found()
                             .PlaceCurrentFrom(first)
 
-                            .RunIf(true, prog => fromNodeAfterPlaced(prog, first))
+                            .Run(prog => fromNodeAfterPlaced(prog, first))
                             );
                 });
         }
@@ -951,15 +950,15 @@ namespace OurFramework.Environment.ShapeGrammar
                             .Set(() => ldk.les.Room(5, 5, 2)
                                 .MoveBottomTo(4)
                                 .GN(sym.NewRoom, sym.FullFloorMarker, sym.LevelStartMarker))
-                            .CurrentFirst(out var first)
                             .PlaceCurrentFrom(state.Root)
-                            
-                            .Found()
-                            .PlaceCurrentFrom(first)
 
-                            .Set(() => first)
+                            .CurrentFirst(out var room)
+                            .Found()
+                            .PlaceCurrentFrom(room)
+                            
+                            .Set(() => room)
                             .ReserveUpward(2, sym.UpwardReservation)
-                            .PlaceCurrentFrom(first)
+                            .PlaceCurrentFrom(room)
                             );
                 });
         }
@@ -1039,13 +1038,7 @@ namespace OurFramework.Environment.ShapeGrammar
                 });
         }
 
-        public Production NewRoomNextFloor(
-            Symbol reservationSymbol,
-            Func<CubeGroup, Node> nodeFromExtrudedUp,
-            int nextFloorHeight,
-            int maxBottomHeight,
-            Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPlaced,
-            ConnectionFromAddedAndPaths connection)
+        public Production NewRoomNextFloor()
         {
             return new Production(
                 "New Room Next Floor",
@@ -1056,10 +1049,12 @@ namespace OurFramework.Environment.ShapeGrammar
                         bool correctBelowSymbol =
                             pp.Param.GetSymbol(sym.UpwardReservation(null))
                             .NodeReference.GetSymbol(sym.NewRoom) != null;
-                        return correctBelowSymbol && pp.Param.LE.CG().RightTopFront().y + 1 <= 10;
+                        return correctBelowSymbol && pp.Param.LE.CG().RightTopFront().y + 1 <= 20;
                     }),
                 (state, pp) =>
                 {
+                    var nextFloorHeight = 2;
+
                     var reservation = pp.Param;
                     var reservationCG = reservation.LE.CG();
                     var toExtrude = nextFloorHeight - 1;
@@ -1075,10 +1070,10 @@ namespace OurFramework.Environment.ShapeGrammar
                         // Only check if the part outside of the reservation was not taken yet
                         .Condition(() => extendedReservation.LE.Minus(reservation.LE).CG().AllAreNotTaken())
 
-                        .Change(extr => nodeFromExtrudedUp(extr.LE.CG()))
+                        .Change(extr => extr.LE.CG().LE(AreaStyles.Room()).GN(sym.NewRoom, sym.FullFloorMarker))
                         .CurrentFirst(out var nextFloor)
                         .ReplaceNodes(reservation)
-
+                        /*
                         .Set(() => extendedReservation)
                         .ReserveUpward(2, sym.UpwardReservation)
                         .PlaceCurrentFrom(extendedReservation)
@@ -1086,6 +1081,7 @@ namespace OurFramework.Environment.ShapeGrammar
                         .FindPath(() => ldk.con.ConnectByWallStairsIn(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
                             (nextFloor.LE, roomBelow.LE).GN(sym.ConnectionMarker), out var stairs)
                         .PlaceCurrentFrom(roomBelow, nextFloor)
+                        */
                         );
                 });
         }
