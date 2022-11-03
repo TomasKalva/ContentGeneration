@@ -36,7 +36,7 @@ public class ExamplesRunner : MonoBehaviour
 
     public void Init()
     {
-        if (initialized && GO.ArchitectureParent != null)
+        if (initialized && GO != null && GO.ArchitectureParent != null)
         {
             return;
         }
