@@ -230,7 +230,7 @@ namespace OurFramework.Environment.ShapeGrammar
                     pr.sym.StartMarker, 
                     pr.sym.EndMarker, 
                     () => ldk.les.Room(4, 4, 3),
-                    pr.Empty(),
+                    pr.EmptyOp(),
                     ldk.con.ConnectByStairsOutside,
                     ldk.con.ConnectByStairsOutside,
                     3,
@@ -270,71 +270,19 @@ namespace OurFramework.Environment.ShapeGrammar
         {
             return new ProductionList
             (
-                //pr.NewStart()
-                pr.Place(3, () => ldk.les.Room(5, 5, 2), le => le?.GN(pr.sym.NewRoom, pr.sym.LevelStartMarker, pr.sym.FullFloorMarker), pr.Reserve(2, pr.sym.UpwardReservation))
+                pr.NewStart()
             );
         }
         
         public ProductionList NewGrammar()
         {
-            var roomStyle = AreaStyles.CastleStyle;
+            //var roomStyle = AreaStyles.CastleStyle;
             return new ProductionList
             (
-                /*
-                pr.FullFloorPlaceNear(
-                    pr.sym.NewRoom,
-                    pr.sym.NewRoom,
-                    () => ldk.les.Box(3, 3, 2).SetAreaStyle(AreaStyles.Room(roomStyle)),
-                    (program, _) => program,
-                    (program, newRoom) => program
-                            .Set(() => newRoom)
-                            .ReserveUpward(2, pr.sym.UpwardReservation)
-                            .PlaceCurrentFrom(newRoom),
-                    ldk.con.ConnectByDoor,
-                    1
-                    )*/
                 pr.NewRoomNear(),
-                /*pr.Extrude(
-                    pr.sym.NewRoom,
-                    _ => ExtensionMethods.HorizontalDirections(),
-                    (cg, dir) => cg.ExtrudeDir(dir, 5).LE(AreaStyles.Room()).GN(pr.sym.NewCorridor(dir), pr.sym.FullFloorMarker),
-                    pr.Empty(),
-                    pr.Reserve(2, pr.sym.UpwardReservation),
-                    ldk.con.ConnectByDoor,
-                    true
-                )*/
                 pr.ExtrudeNewCorridor(),
-                /*
-                pr.Extrude(
-                    pr.sym.NewCorridor(),
-                    node => node.GetSymbol(pr.sym.NewCorridor()).Direction.ToEnumerable(),
-                    (cg, dir) => cg.ExtrudeDir(dir, 5).LE(AreaStyles.Garden()).GN(pr.sym.NewCorridor(dir), pr.sym.FullFloorMarker),
-                    pr.Empty(),
-                    (program, bridgeTop) => program,
-                    ldk.con.ConnectByDoor,
-                    true
-                ),
-                pr.FullFloorPlaceNear(
-                    pr.sym.NewCorridor(),
-                    pr.sym.NewRoom,
-                    () => ldk.les.Box(3, 3, 2).SetAreaStyle(AreaStyles.Room(roomStyle)),
-                    (program, _) => program,
-                    (program, newRoom) => program
-                            .Set(() => newRoom)
-                            .ReserveUpward(2, pr.sym.UpwardReservation)
-                            .PlaceCurrentFrom(newRoom),
-                    ldk.con.ConnectByStairsOutside,
-                    5
-                ),*/
-                /*
-                pr.TakeUpwardReservation(
-                    pr.sym.NewRoom,
-                    nextFloor => nextFloor.LE(AreaStyles.Room(roomStyle)).GN(pr.sym.NewRoom, pr.sym.FullFloorMarker),
-                    2,
-                    20,
-                    pr.Reserve(2, pr.sym.UpwardReservation),
-                    ldk.con.ConnectByWallStairsIn
-                    )*/
+                pr.ExtendNewCorridor(),
+                pr.NewRoomFromNewCorridor(),
                 pr.NewRoomNextFloor()
             );
         }
@@ -343,8 +291,8 @@ namespace OurFramework.Environment.ShapeGrammar
         {
             return new ProductionList
             (
-                pr.Roof(pr.sym.NewCorridor(), 3, AreaStyles.GableRoof()),
-                pr.Roof(pr.sym.NewRoom, 3, AreaStyles.CrossRoof())
+                pr.Roof(pr.sym.NewRoom, 3, AreaStyles.CrossRoof()),
+                pr.Roof(pr.sym.NewCorridor(), 3, AreaStyles.GableRoof())
             );
         }
     }

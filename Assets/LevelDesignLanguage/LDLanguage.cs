@@ -15,6 +15,7 @@ namespace OurFramework.LevelDesignLanguage
 
     abstract class LDLanguage
     {
+        const int MAX_NUMBER_OF_CONSTRUCTION_TRIES = 5;
         public LanguageState State { get; }
 
         public Libraries Lib { get; }
@@ -23,7 +24,6 @@ namespace OurFramework.LevelDesignLanguage
         public Environments Env { get; }
         public ObjectPlacement<CharacterState> PlC { get; }
         public ObjectPlacement<InteractiveObjectState> PlO { get; }
-        //public MsgPrinter Msg { get; }
 
         public LDLanguage(LanguageParams languageParams)
         {
@@ -97,7 +97,7 @@ namespace OurFramework.LevelDesignLanguage
                 }
 
                 yield return TaskSteps.One();
-                if(constructionTries++ >= 5)
+                if(constructionTries++ >= MAX_NUMBER_OF_CONSTRUCTION_TRIES)
                 {
                     break;
                 }

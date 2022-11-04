@@ -125,7 +125,7 @@ namespace OurFramework.Environment.ShapeGrammar
                     from,
                     node => pathGuide.SelectDirections(node.LE),
                     (cg, dir) => AlterInOrthogonalDirection(cg.ExtrudeDir(dir, 6), dir, 3).LE(AreaStyles.BridgeTop(dir)).GN(sym.Bridge(dir), sym.FullFloorMarker),
-                    Empty(),
+                    EmptyOp(),
                     (program, bridgeTop) => BridgeFoundation(bridgeTop.GetSymbol(sym.Bridge(default)).Direction)(program, bridgeTop),
                     ldk.con.ConnectByDoor,
                     false
@@ -138,7 +138,7 @@ namespace OurFramework.Environment.ShapeGrammar
                     sym.Bridge(),
                     node => node.GetSymbol(sym.Bridge()).Direction.ToEnumerable(),
                     (cg, dir) => cg.ExtrudeDir(dir, 5).LE(AreaStyles.BridgeTop(dir)).GN(sym.Bridge(dir), sym.FullFloorMarker),
-                    Empty(),
+                    EmptyOp(),
                     (program, bridgeTop) => BridgeFoundation(bridgeTop.GetSymbol(sym.Bridge(default)).Direction)(program, bridgeTop),
                     ldk.con.ConnectByDoor,
                     false
@@ -151,8 +151,8 @@ namespace OurFramework.Environment.ShapeGrammar
                     sym.Bridge(),
                     node => node.GetSymbol(sym.Bridge()).Direction.ToEnumerable(),
                     (cg, dir) => AlterInOrthogonalDirection(cg.ExtrudeDir(dir, 6), dir, 7).LE(AreaStyles.Yard(AreaStyles.YardStyle)).GN(sym.Courtyard, sym.FullFloorMarker),
-                    Empty(),
-                    Empty(),
+                    EmptyOp(),
+                    EmptyOp(),
                     ldk.con.ConnectByDoor
                 );
         }
@@ -189,7 +189,7 @@ namespace OurFramework.Environment.ShapeGrammar
                 5,
                 () => leF().SetAreaStyle(AreaStyles.Garden()),
                 pathGuide,
-                Empty());
+                EmptyOp());
 
 
 
@@ -210,7 +210,7 @@ namespace OurFramework.Environment.ShapeGrammar
 
                             .GN(sym.Garden, sym.FullFloorMarker)
                         ),
-                Empty(),
+                EmptyOp(),
                 ldk.con.ConnectByStairsOutside,
                 1
                 );
@@ -227,7 +227,7 @@ namespace OurFramework.Environment.ShapeGrammar
                     => AlterInOrthogonalDirection(cg.ExtrudeDir(dir, 2).BottomLayer()
                             .OpAdd().ExtrudeDir(Vector3Int.up).OpNew(), dir, 3)
                                 .LE(AreaStyles.Colonnade()).GN(sym.Terrace(dir), sym.FullFloorMarker),
-                Empty(),
+                EmptyOp(),
                 (program, terrace) => program
                         .Set(() => terrace.LE.CG().ExtrudeVer(Vector3Int.up, 1).LE(AreaStyles.DirectionalRoof(terrace.GetSymbol(sym.Terrace(default)).Direction)).GN(sym.Roof))
                         .DiscardTaken()
@@ -353,7 +353,7 @@ namespace OurFramework.Environment.ShapeGrammar
                 cg => cg.LE(roofAreaStyle).GN(sym.Roof),
                 roofHeight,
                 int.MaxValue,
-                Empty(),
+                EmptyOp(),
                 ldk.con.NoConnection);
         }
 
@@ -373,9 +373,9 @@ namespace OurFramework.Environment.ShapeGrammar
         /// <summary>
         /// Just returns the program.
         /// </summary>
-        public Func<ProductionProgram, Node, ProductionProgram> Empty()
+        public Func<ProductionProgram, Node, ProductionProgram> EmptyOp()
         {
-            return (program, node) => program;
+            return (program, _) => program;
         }
 
         public Func<ProductionProgram, Node, ProductionProgram> Reserve(int reservationHeight, Func<Node, Symbol> reservationSymbolF)
@@ -496,11 +496,8 @@ namespace OurFramework.Environment.ShapeGrammar
                         .Found(out var foundation)
                         .PlaceCurrentFrom(newNode)
 
-                        .RunIf(true,
-                            thisProg => fromFloorNodeAfterPlaced(thisProg, newNode)
-                        )
+                        .Run(thisProg => fromFloorNodeAfterPlaced(thisProg, newNode))
 
-                        //Replace with open connection
                         .FindPath(() =>
                             connectionNotIntersecting
                                 (AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
@@ -601,7 +598,7 @@ namespace OurFramework.Environment.ShapeGrammar
                         .CurrentFirst(out var nextFloor)
                         .ReplaceNodes(reservation)
 
-                        .RunIf(true, prog => fromFloorNodeAfterPlaced(prog, nextFloor))
+                        .Run(prog => fromFloorNodeAfterPlaced(prog, nextFloor))
 
                         .FindPath(() => connection(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
                             (nextFloor.LE, roomBelow.LE).GN(sym.ConnectionMarker), out var stairs)
@@ -750,7 +747,7 @@ namespace OurFramework.Environment.ShapeGrammar
                 extrudeFrom,
                 node => pathGuide.SelectDirections(node.LE),
                 (cg, dir) => cg.ExtrudeDir(dir, length).LE(AreaStyles.Room(AreaStyles.ChapelStyle)).GN(sym.ChapelHall(dir), sym.FullFloorMarker),
-                Empty(),
+                EmptyOp(),
                 Reserve(2, sym.UpwardReservation),
                 ldk.con.ConnectByDoor
                 );
@@ -762,7 +759,7 @@ namespace OurFramework.Environment.ShapeGrammar
                 sym.ChapelHall(default),
                 node => node.GetSymbol(sym.ChapelHall(default)).Direction.ToEnumerable(),
                 (cg, dir) => cg.ExtrudeDir(dir, extrusionLength).LE(AreaStyles.Room(AreaStyles.ChapelStyle)).GN(sym.ChapelRoom, sym.FullFloorMarker),
-                Empty(),
+                EmptyOp(),
                 Reserve(2, sym.UpwardReservation),
                 ldk.con.ConnectByDoor
                 );
@@ -795,7 +792,7 @@ namespace OurFramework.Environment.ShapeGrammar
                     nextToWhatSymbol,
                     sym.ChapelEntrance,
                     () => leF().SetAreaStyle(AreaStyles.Room(AreaStyles.ChapelStyle)),
-                    Empty(),
+                    EmptyOp(),
                     Roof(AreaStyles.CrossRoof(AreaStyles.ChapelStyle), roofHeight),
                     ldk.con.ConnectByStairsOutside,
                     1);
@@ -806,7 +803,7 @@ namespace OurFramework.Environment.ShapeGrammar
                     sym.Park,
                     () => leF().SetAreaStyle(AreaStyles.Garden()),
                     MoveVertically(heighChange, minHeight),
-                    Empty(),
+                    EmptyOp(),
                     ldk.con.ConnectByStairsOutside,
                     1);
 
@@ -821,7 +818,7 @@ namespace OurFramework.Environment.ShapeGrammar
                                 .OpSub().ExtrudeDir(Vector3Int.up, -1).OpNew()
                                 .LE(AreaStyles.Room()).GN(sym.ChapelSide(orthDir), sym.FullFloorMarker);
                 },
-                Empty(),
+                EmptyOp(),
                 (program, chapelSide) => program
                         .Set(() => chapelSide.LE.CG().ExtrudeVer(Vector3Int.up, 1).LE(AreaStyles.DirectionalRoof(chapelSide.GetSymbol(sym.ChapelSide(default)).Direction, AreaStyles.ChapelStyle)).GN(sym.Roof))
                         .DiscardTaken()
@@ -834,8 +831,8 @@ namespace OurFramework.Environment.ShapeGrammar
                 from,
                 node => ExtensionMethods.HorizontalDirections(),
                 (cg, dir) => cg.ExtrudeDir(dir, 1).LE(AreaStyles.FlatRoof()).GN(sym.Balcony(dir), sym.FullFloorMarker),
-                Empty(),
-                Empty(),
+                EmptyOp(),
+                EmptyOp(),
                 ldk.con.ConnectByDoor,
                 false
                 );
@@ -848,7 +845,7 @@ namespace OurFramework.Environment.ShapeGrammar
                     nearWhatSym,
                     sym.TowerBottom,
                     () => towerBottomF().SetAreaStyle(AreaStyles.Room(AreaStyles.CastleStyle)),
-                    Empty(),
+                    EmptyOp(),
                     Reserve(2, sym.UpwardReservation),
                     ldk.con.ConnectByStairsOutside,
                     3);
@@ -861,8 +858,8 @@ namespace OurFramework.Environment.ShapeGrammar
                 extrudeFrom,
                 node => pathGuide.SelectDirections(node.LE),
                 (cg, dir) => AlterInOrthogonalDirection(cg.ExtrudeDir(dir, length), dir, 2).LE(AreaStyles.FlatRoof(AreaStyles.YardStyle)).GN(sym.WallTop(dir), sym.FullFloorMarker),
-                Empty(),
-                Empty(),
+                EmptyOp(),
+                EmptyOp(),
                 ldk.con.ConnectByDoor
                 );
 
@@ -871,7 +868,7 @@ namespace OurFramework.Environment.ShapeGrammar
                 sym.WallTop(default),
                 node => node.GetSymbol(sym.WallTop(default)).Direction.ToEnumerable(),
                 (cg, dir) => AlterInOrthogonalDirection(cg.ExtrudeDir(dir, length), dir, width).LE(AreaStyles.Room(AreaStyles.CastleStyle)).GN(sym.TowerTop, sym.FullFloorMarker),
-                Empty(),
+                EmptyOp(),
                 Reserve(2, sym.UpwardReservation),
                 ldk.con.ConnectByDoor
                 );
@@ -904,7 +901,7 @@ namespace OurFramework.Environment.ShapeGrammar
                         )
                         .DiscardTaken()
                         .CanBeFounded(),
-                    Empty(),
+                    EmptyOp(),
                     ldk.con.ConnectByDoor
                     );
 
@@ -919,7 +916,7 @@ namespace OurFramework.Environment.ShapeGrammar
                                 .LE(AreaStyles.FlatRoof(AreaStyles.YardStyle)).GN(sym.SideWallTop(orthDir), sym.FullFloorMarker);
                 },
                 MoveVertically(-2, 5),
-                Empty(),
+                EmptyOp(),
                 ldk.con.ConnectByStairsOutside
                 );
 
@@ -929,7 +926,7 @@ namespace OurFramework.Environment.ShapeGrammar
                     sym.WatchPost,
                     () => towerTopF().SetAreaStyle(AreaStyles.FlatRoof(AreaStyles.CastleStyle)),
                     MoveVertically(heightChange, minBottomHeight),
-                    Empty(),
+                    EmptyOp(),
                     ldk.con.ConnectByStairsOutside,
                     distance
                 );
@@ -940,7 +937,7 @@ namespace OurFramework.Environment.ShapeGrammar
 
         public Production NewStart()
         {
-            return new Production(
+            /*return new Production(
                 "Place New Start",
                 new ProdParamsManager(),
                 (state, _) =>
@@ -960,25 +957,31 @@ namespace OurFramework.Environment.ShapeGrammar
                             .ReserveUpward(2, sym.UpwardReservation)
                             .PlaceCurrentFrom(room)
                             );
-                });
+                });*/
+            return Place(
+                4, 
+                () => ldk.les.Room(5, 5, 2), 
+                le => le?.GN(sym.NewRoom, sym.LevelStartMarker, sym.FullFloorMarker), 
+                Reserve(2, sym.UpwardReservation));
         }
 
         public Production NewRoomNear()
         {
+            /*
             return new Production(
                 "New Room Near",
                 new ProdParamsManager().AddNodeSymbols(sym.NewRoom),
                 (state, pp) =>
                 {
                     var what = pp.Param;
-                    var whatCG = what.LE.CG();
 
                     return state.NewProgram(prog => prog
                         .Set(() => ldk.les.Box(3, 3, 2).SetAreaStyle(AreaStyles.Room()).GN())
                         .MoveNearTo(what, 1)
                         .Change(node => node.LE.GN(sym.NewRoom, sym.FullFloorMarker))
-                        .CurrentFirst(out var newNode)
                         .PlaceCurrentFrom(what)
+                        
+                        .CurrentFirst(out var newNode)
 
                         .Found(out var foundation)
                         .PlaceCurrentFrom(newNode)
@@ -987,18 +990,27 @@ namespace OurFramework.Environment.ShapeGrammar
                         .ReserveUpward(2, sym.UpwardReservation)
                         .PlaceCurrentFrom(newNode)
 
-                        //Replace with open connection
                         .FindPath(() => ldk.con
                             .ConnectByDoor(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
                                 (newNode.LE, what.LE)
                                 .GN(sym.ConnectionMarker), out var door)
                         .PlaceCurrentFrom(what, newNode)
                         );
-                });
+                });*/
+            return FullFloorPlaceNear(
+                    sym.NewRoom,
+                    sym.NewRoom,
+                    () => ldk.les.Box(3, 3, 2).SetAreaStyle(AreaStyles.Room()),
+                    EmptyOp(),
+                    Reserve(2, sym.UpwardReservation),
+                    ldk.con.ConnectByDoor,
+                    1
+                    );
         }
 
         public Production ExtrudeNewCorridor()
         {
+            /*
             return new Production(
                 $"Extrude New Corridor",
                 new ProdParamsManager().AddNodeSymbols(sym.NewRoom),
@@ -1010,7 +1022,7 @@ namespace OurFramework.Environment.ShapeGrammar
                     return state.NewProgram(prog => prog
                         .SelectFirstOne(
                             state.NewProgram(subProg => subProg
-                                .Directional(ExtensionMethods.HorizontalDirections(),
+                                .Directional(ExtensionMethods.HorizontalDirections().Shuffle(),
                                     dir =>
                                         fromCG.ExtrudeDir(dir, 5).LE(AreaStyles.Room()).GN(sym.NewCorridor(dir), sym.FullFloorMarker)
                                 )
@@ -1020,7 +1032,7 @@ namespace OurFramework.Environment.ShapeGrammar
                             out var newNode
                             )
                         .PlaceCurrentFrom(from)
-
+                        
                         .Found()
                         .PlaceCurrentFrom(newNode)
 
@@ -1035,11 +1047,47 @@ namespace OurFramework.Environment.ShapeGrammar
                             (newNode.LE, from.LE).GN(sym.ConnectionMarker), out var door)
                         .PlaceCurrentFrom(from, newNode)
                         );
-                });
+                });*/
+            return Extrude(
+                    sym.NewRoom,
+                    _ => ExtensionMethods.HorizontalDirections().Shuffle(),
+                    (cg, dir) => cg.ExtrudeDir(dir, 5).LE(AreaStyles.Room()).GN(sym.NewCorridor(dir), sym.FullFloorMarker),
+                    EmptyOp(),
+                    Reserve(2, sym.UpwardReservation),
+                    ldk.con.ConnectByDoor,
+                    true
+                );
+        }
+
+        public Production ExtendNewCorridor()
+        {
+            return Extrude(
+                       sym.NewCorridor(),
+                       node => node.GetSymbol(sym.NewCorridor()).Direction.ToEnumerable(),
+                       (cg, dir) => cg.ExtrudeDir(dir, 5).LE(AreaStyles.Garden()).GN(sym.NewCorridor(dir), sym.FullFloorMarker),
+                       EmptyOp(),
+                       EmptyOp(),
+                       ldk.con.ConnectByDoor,
+                       true
+                   );
+        }
+
+        public Production NewRoomFromNewCorridor()
+        {
+            return FullFloorPlaceNear(
+                    sym.NewCorridor(),
+                    sym.NewRoom,
+                    () => ldk.les.Box(3, 3, 2).SetAreaStyle(AreaStyles.Room()),
+                    EmptyOp(),
+                    Reserve(2, sym.UpwardReservation),
+                    ldk.con.ConnectByStairsOutside,
+                    5
+                );
         }
 
         public Production NewRoomNextFloor()
         {
+            /*
             return new Production(
                 "New Room Next Floor",
                 new ProdParamsManager()
@@ -1054,10 +1102,10 @@ namespace OurFramework.Environment.ShapeGrammar
                 (state, pp) =>
                 {
                     var nextFloorHeight = 2;
+                    var toExtrude = nextFloorHeight - 1;
 
                     var reservation = pp.Param;
                     var reservationCG = reservation.LE.CG();
-                    var toExtrude = nextFloorHeight - 1;
                     var roomBelow = pp.Param.GetSymbol(sym.UpwardReservation(null)).NodeReference;
 
                     return state.NewProgram(prog => prog
@@ -1073,17 +1121,26 @@ namespace OurFramework.Environment.ShapeGrammar
                         .Change(extr => extr.LE.CG().LE(AreaStyles.Room()).GN(sym.NewRoom, sym.FullFloorMarker))
                         .CurrentFirst(out var nextFloor)
                         .ReplaceNodes(reservation)
-                        /*
-                        .Set(() => extendedReservation)
+
+                        
+                        .Set(() => nextFloor)
                         .ReserveUpward(2, sym.UpwardReservation)
-                        .PlaceCurrentFrom(extendedReservation)
+                        .PlaceCurrentFrom(nextFloor)
 
                         .FindPath(() => ldk.con.ConnectByWallStairsIn(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
-                            (nextFloor.LE, roomBelow.LE).GN(sym.ConnectionMarker), out var stairs)
+                            (nextFloor.LE, roomBelow.LE)
+                            .GN(sym.ConnectionMarker), out var stairs)
                         .PlaceCurrentFrom(roomBelow, nextFloor)
-                        */
                         );
-                });
+                });*/
+            return TakeUpwardReservation(
+                sym.NewRoom,
+                nextFloor => nextFloor.LE(AreaStyles.Room()).GN(sym.NewRoom, sym.FullFloorMarker),
+                2,
+                20,
+                Reserve(2, sym.UpwardReservation),
+                ldk.con.ConnectByWallStairsIn
+                );
         }
 
         #endregion
