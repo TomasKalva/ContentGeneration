@@ -136,5 +136,34 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             rewards.Shuffle().Take(2).ForEach(reward =>
                 locked.Get.AddInteractiveObject(Lib.InteractiveObjects.Item(reward())));
         }
+
+        public void AddLightMaceEncounter()
+        {
+            var enemy = Lib.Enemies.SkinnyWoman()
+                .DropItem(
+                    () =>
+                        Lib.InteractiveObjects.Item(Lib.Items.LightMace())
+                        );
+            State.LC.AddNecessaryEvent($"Light mace encounter", 70, level => M.OutOfDepthEncountersModule.LightMaceEncounter(level, enemy), true, _ => enemy.DeathCount == 0);
+        }
+
+        void LightMaceEncounter(int level, CharacterState enemy)
+        {
+            // Create first path to the encounter
+            Env.One(Gr.PrL.Town(), NodesQueries.All, out var area);
+
+            // Place the encounter
+            enemy
+                .SetStats(new CharacterStats()
+                {
+                    Will = 20 + 10 * level,
+                    Strength = 5 + 5 * level,
+                    Posture = 10
+                })
+                .SetCreatingStrategy(new CreateIfCondition(() => enemy.DeathCount == 0))
+                .SetLeftWeapon(Lib.Items.LightMace())
+                ;
+            area.Get.AddEnemy(enemy);
+        }
     }
 }

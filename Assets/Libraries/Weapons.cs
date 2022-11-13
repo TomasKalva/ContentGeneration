@@ -44,15 +44,13 @@ public class Weapons : ScriptableObject
     [SerializeField]
     Weapon katana;
 
+    [SerializeField]
+    Weapon lightMace;
+
     Weapon CreateWeapon(Weapon prefab)
     {
         var weapon = Instantiate(prefab);
         return weapon.SetHitSelector(Selectors.WeaponSelector(weapon.Detector));
-        /*
-        owner.World.AddOccurence(
-            new Assets.ShapeGrammarGenerator.LevelDesignLanguage.Factions.Occurence(
-                Weapon.GetSelector(),
-                ))*/
     }
 
     public Weapon MayanSword()
@@ -68,14 +66,6 @@ public class Weapons : ScriptableObject
         //knife.Damage = 5f;
         return knife;
     }
-
-    /*
-    public Weapon Fireball()
-    {
-        var fb = Instantiate(fireball);
-        fb.Damage = 5f;
-        return fb;
-    }*/
 
     public Weapon SculptureClub()
     {
@@ -102,5 +92,12 @@ public class Weapons : ScriptableObject
         var katana = CreateWeapon(this.katana);
         //katana.Damage = 19f;
         return katana;
+    }
+
+    public Weapon LightMace()
+    {
+        var mace = CreateWeapon(this.lightMace);
+        //mace.Damage = 19f;
+        return mace;
     }
 }

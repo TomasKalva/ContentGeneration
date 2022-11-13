@@ -18,3 +18,4 @@ MonoBehaviour:
   scythe: {fileID: 1849457314063641004, guid: e23206d515f09b143967a3b562f17e9b, type: 3}
   mace: {fileID: 6546352223966995575, guid: 81f41c4cb88f48141a54bd4fc04b682a, type: 3}
   katana: {fileID: 8067920061552960337, guid: c1adbfd48bc7ea1449bc9cc8ef106a17, type: 3}
+  lightMace: {fileID: 6546352223966995575, guid: 46f75e9306d28cd4a8af3bf8c7c9bcbb, type: 3}

@@ -77,7 +77,7 @@ namespace OurFramework.LevelDesignLanguage
             playerState.Stats = stats;
 
             playerState.Inventory.LeftWeapon.Item = libraries.Items.MayanKnife();
-            playerState.Inventory.RightWeapon.Item = libraries.Items.Katana();
+            playerState.Inventory.RightWeapon.Item = libraries.Items.LightMace();
             playerState.AddAndEquipItem(libraries.Items.FreeWill());
             playerState.AddAndEquipItem(libraries.Items.MayanKnife());
 

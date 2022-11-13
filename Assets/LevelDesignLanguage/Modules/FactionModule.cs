@@ -35,7 +35,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                         Lib.Enemies.Dog,
                     }
                     .Shuffle().ToList(),
-                    Lib.Items.AllWeapons().ToList(),
+                    Lib.Items.AllBasicWeapons().ToList(),
                     Lib.SpellItems.AllSpellsByPower()
                 );
 

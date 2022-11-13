@@ -22,8 +22,8 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
         void DeclareDebugGame()
         {
             State.LC.AddNecessaryEvent($"Level Start", 100, level => M.LevelModule.LevelStart(), true);
-            //State.LC.AddNecessaryEvent($"Level End", 99, level => M.LevelModule.LevelEnd(), true);
-
+            State.LC.AddNecessaryEvent($"Level End", 99, level => M.LevelModule.LevelEnd(), true);
+            
             
             State.LC.AddNecessaryEvent($"Death", 99, _ =>
             {
@@ -36,7 +36,6 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                 M.DeathModule.DropRunEndingBloodstainOnDeath();
                 //M.DeathModule.EndRunIfOutOfSmile();
             }, true);
-
             
             //M.LevelModule.AddOptionalEnd();
 
@@ -48,7 +47,9 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             State.LC.AddNecessaryEvent($"Add Details", 0, level => M.DetailsModule.AddDetails(level), true);
 
             State.LC.AddNecessaryEvent($"Out of depth encounter", 80, level => M.OutOfDepthEncountersModule.DifficultEncounter(level), true);
-            
+
+            M.OutOfDepthEncountersModule.AddLightMaceEncounter();
+
             State.LC.AddNecessaryEvent($"Sky", 0, level => M.EnvironmentModule.CreateSky(level), true);
 
 
@@ -56,13 +57,15 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             
 
             M.AscendingModule.AddAscendingEvents(M.AscendingModule.AscendingKiln(ad => 100 + 50 * ad));
+
             //State.LC.AddNecessaryEvent("Ascending", 80, _ =>);
 
 
             //State.LC.AddNecessaryEvent("Testing enemies", 5, _ => L.TestingLanguage.StatsScalingOfEnemies());
 
 
-            //State.LC.AddNecessaryEvent($"Environment", 0, level => M.TestingModule.TestSky(level), true);
+            //State.LC.AddNecessaryEvent($"Environment", 99, level => M.TestingModule.TestSky(level), true);
+
 
             /*
             State.LC.AddNecessaryEvent("Farmer branch", 5, level => L.FarmersLanguage.FarmerBranch(0));

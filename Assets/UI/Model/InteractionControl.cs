@@ -79,9 +79,6 @@ namespace ContentGeneration.Assets.UI.Model
                         ActionOnInteract
                     )
                 );
-            /*ios.InteractOptions = null;
-            ios.InteractionDescription = InteractionDescription;
-            ios.ActionOnInteract = ActionOnInteract;*/
         }
     }
 

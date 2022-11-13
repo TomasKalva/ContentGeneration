@@ -75,7 +75,7 @@ public class Items : ScriptableObject
         BaseWeaponEffects(ch => 11 + 2 * ch.Stats.Strength, ch => 1f))
         .SetWearable(SlotType.Weapon) as WeaponItem;
 
-    public IEnumerable<Func<WeaponItem>> AllWeapons() => new List<Func<WeaponItem>>()
+    public IEnumerable<Func<WeaponItem>> AllBasicWeapons() => new List<Func<WeaponItem>>()
     {
         SculptureClub,
         MayanKnife,
@@ -84,6 +84,10 @@ public class Items : ScriptableObject
         Mace,
         Katana,
     };
+
+    public WeaponItem LightMace() => new WeaponItem("Light Mace", "Mace imbued with fire.", weapons.LightMace,
+        BaseWeaponEffects(ch => 15 + 2 * ch.Stats.Strength + ch.Stats.Versatility, ch => 1f))
+        .SetWearable(SlotType.Weapon) as WeaponItem;
 
     public IEnumerable<Func<WeaponItem>> GoodWeaponsForEnemies() => new List<Func<WeaponItem>>()
     {
@@ -190,7 +194,7 @@ public class Items : ScriptableObject
 
     public ItemState VibrantMemory() => NewItem("Vibrant Memory", "A memory blurring the border between life and death. Can be relived.")
         .SetStackable(1)
-        .OnUse(ch => ch.AddItem(AllWeapons().GetRandom()()));
+        .OnUse(ch => ch.AddItem(AllBasicWeapons().GetRandom()()));
 
     public ItemState FadingMemory() => NewItem("Fading Memory", "A short lived memory that does not indicate anything worthwile. Recalling hurts.")
         .SetStackable(1)
