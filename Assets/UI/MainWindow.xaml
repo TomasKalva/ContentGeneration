@@ -155,16 +155,14 @@
                     </Style>
                 </Border.Style>
                 <StackPanel>
-                    <TextBlock Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="20">
-                        <Run Text ="E:" FontSize="30"/>
+                    <TextBlock Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="25">
                         <Run Text="{Binding World.PlayerState.CurrentInteractiveObjectState.InteractionDescription}"/>
                     </TextBlock>
                     <ItemsControl ItemsSource="{Binding World.PlayerState.CurrentInteractiveObjectState.InteractOptions.Options}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="20" Margin="20">
-                                    <Run Text ="{Binding Index}" FontSize="25"/>
-                                    <Run Text =":" FontSize="25"/>
+                                    <Run Text ="{Binding Index, StringFormat='[{0}]: '}" FontSize="20"/>
                                     <Run Text ="{Binding Description}"/>
                                 </TextBlock>
                             </DataTemplate>

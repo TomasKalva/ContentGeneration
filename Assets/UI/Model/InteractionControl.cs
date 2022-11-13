@@ -66,7 +66,7 @@ namespace ContentGeneration.Assets.UI.Model
 
         public FastInteraction(string interactionDescription, InteractionDelegate<InteractiveObjectT> actionOnInteract)
         {
-            InteractionDescription = interactionDescription;
+            InteractionDescription = $"[E]: {interactionDescription}";
             ActionOnInteract = actionOnInteract;
         }
 
