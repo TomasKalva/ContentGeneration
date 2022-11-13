@@ -29,7 +29,7 @@
             <StackPanel Orientation="Horizontal">
                 <DockPanel Width="300" Background="Blue" Margin="10">
                     <StackPanel Margin="5" DockPanel.Dock="Top" Orientation="Horizontal">
-                        <Border Width="110" Background="Beige" BorderBrush="Black" BorderThickness="3" Padding="3,3,7,3">
+                        <Border Width="140" Background="Beige" BorderBrush="Black" BorderThickness="3" Padding="3,3,7,3">
                             <Grid>
                                 <Grid.Resources>
                                     <Style TargetType="{x:Type TextBlock}">
