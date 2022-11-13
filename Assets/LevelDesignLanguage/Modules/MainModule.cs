@@ -27,6 +27,8 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             
             State.LC.AddNecessaryEvent($"Death", 99, _ =>
             {
+                State.World.PlayerState.AddItem(Lib.Items.VibrantMemory());
+                State.World.PlayerState.AddItem(Lib.Items.VibrantMemory());
                 //L.DeathLanguage.EnableClassicalDeath();
                 M.DeathModule.DieIfNotProtected();
                 //M.DeathModule.EndRunAfterDeaths(2);

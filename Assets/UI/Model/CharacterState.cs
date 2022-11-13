@@ -262,12 +262,17 @@ namespace ContentGeneration.Assets.UI.Model
             CreatingStrategy = new CreateAlways();
         }
 
-        public virtual void Die()
+        public virtual void TryDie()
         {
             Agent.Stagger();
             World.RemoveEnemy(this);
             DeathCount++;
             OnDeath();
+        }
+
+        public void Die()
+        {
+
         }
 #endif
 
@@ -279,6 +284,10 @@ namespace ContentGeneration.Assets.UI.Model
             Health += Health.Maximum;
             Stamina += Stamina.Maximum;
             Poise += Poise.Maximum;
+            if(Agent != null)
+            {
+                Agent.MyReset();
+            }
 
             VisibleOnCamera = false;
         }

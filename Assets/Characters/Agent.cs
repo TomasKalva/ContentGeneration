@@ -129,11 +129,11 @@ public class Agent : MonoBehaviour
 	public void UpdateAgent()
 	{
 		if(CharacterState.Dead)
-        {
-            if (!died)
+		{
+			if (!died)
 			{
-				CharacterState.Die();
 				died = true;
+				CharacterState.TryDie();
 			}
         }
 
@@ -196,25 +196,6 @@ public class Agent : MonoBehaviour
 		var useItem = acting.SelectAct("UseItem") as UseItem;
 	}
 
-	/// <summary>
-	/// Todo: turn this into movement constraint.
-	/// </summary>
-	public void RunLockedOn(Vector2 direction)
-	{
-		if (!CanMove)
-		{
-			Debug.LogError("Trying to move when CanMove is false!");
-			return;
-		}
-
-		if (direction.sqrMagnitude > 0.0001f && !acting.Busy)
-		{
-			var run = acting.SelectAct("Run") as Move;
-			run.Direction = direction;
-			run.SetDirection = false;
-		}
-	}
-
 	public void SynchronizeWithState(CharacterState state)
     {
 		var inventory = state.Inventory;
@@ -270,7 +251,12 @@ public class Agent : MonoBehaviour
 		CharacterState.viewCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
 	}
 
-	public Vector3 GetGroundPosition()
+    public void MyReset()
+    {
+		died = false;
+    }
+
+    public Vector3 GetGroundPosition()
     {
 		return transform.position;
 	}

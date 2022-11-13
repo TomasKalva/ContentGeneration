@@ -26,6 +26,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
 
         /// <summary>
         /// Pay Vibrant Memory to stay alive. The item is payed automatically on death.
+        /// This effect can be negated by other death events such as RunEndingBloodstain.
         /// </summary>
         public void DieIfNotProtected()
         {
@@ -87,6 +88,9 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                 playerState.OnDeath -= bloodstainRemoval;
             };
             playerState.AddOnDeath(bloodstainRemoval);
+
+            // Spawn th bloodstain now in case the player survives
+            spawnBloodstain();
         }
 
         /// <summary>

@@ -72,7 +72,7 @@ namespace ContentGeneration.Assets.UI.Model
         }
 
 #if NOESIS
-        public override void Die()
+        public override void TryDie()
         {
             //GameObject.Destroy(Agent.gameObject);
             DeathCount++;
