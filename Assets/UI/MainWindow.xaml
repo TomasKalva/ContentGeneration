@@ -68,24 +68,48 @@
         </Canvas>
         
         <!-- UI elements -->
-        <Grid Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-            <!-- Top left bars -->
-            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30">
-                <comp:ProgressBarNum DataContext="{Binding World.PlayerState.Health}" HorizontalAlignment="Left" NoNumbers="False" Color="Red" Width="{Binding Maximum, Converter={StaticResource BarLengthConverter}}" Height="15" Margin="5"/>
-                <comp:ProgressBarNum DataContext="{Binding World.PlayerState.Stamina}" HorizontalAlignment="Left" Color="Green" Width="{Binding Maximum, Converter={StaticResource BarLengthConverter}}" Height="15" Margin="5"/>
-                <comp:ProgressBarNum DataContext="{Binding World.PlayerState.Poise}" HorizontalAlignment="Left" Color="Yellow" Width="{Binding Maximum, Converter={StaticResource BarLengthConverter}}" Height="15" Margin="5"/>
-            </StackPanel>
+        <!-- Top left bars -->
+        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30">
+            <comp:ProgressBarNum DataContext="{Binding World.PlayerState.Health}" HorizontalAlignment="Left" NoNumbers="False" Color="Red" Width="{Binding Maximum, Converter={StaticResource BarLengthConverter}}" Height="15" Margin="5"/>
+            <comp:ProgressBarNum DataContext="{Binding World.PlayerState.Stamina}" HorizontalAlignment="Left" Color="Green" Width="{Binding Maximum, Converter={StaticResource BarLengthConverter}}" Height="15" Margin="5"/>
+            <comp:ProgressBarNum DataContext="{Binding World.PlayerState.Poise}" HorizontalAlignment="Left" Color="Yellow" Width="{Binding Maximum, Converter={StaticResource BarLengthConverter}}" Height="15" Margin="5"/>
+        </StackPanel>
 
-            <!-- Bottom left item -->
-            <StackPanel Margin="40" HorizontalAlignment="Left" VerticalAlignment="Bottom">
-                <Border Width="80" Height="80" >
-                    <comp:ItemSlotView DataContext="{Binding Path=PlayerState.Inventory.SelectedSlot}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70" Height="70">
-                        <!--
-                        Animating the slot when its content changes
+        <!-- Bottom left item -->
+        <StackPanel Margin="40" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+            <Border Width="80" Height="80" >
+                <comp:ItemSlotView DataContext="{Binding Path=PlayerState.Inventory.SelectedSlot}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70" Height="70">
+                    <!--
+                    Animating the slot when its content changes
                     
-                        <comp:ItemSlotView.Triggers>
-                            <EventTrigger RoutedEvent="MouseEnter">
-                                <BeginStoryboard>
+                    <comp:ItemSlotView.Triggers>
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimationUsingKeyFrames
+                                            Storyboard.Target="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:ItemSlotView}}}" 
+                                            Storyboard.TargetProperty="Width"
+                                            Duration="0:0:0.5">
+                                        <LinearDoubleKeyFrame Value="80" KeyTime="0:0:0.25" />
+                                        <LinearDoubleKeyFrame Value="70" KeyTime="0:0:0.5" />
+                                    </DoubleAnimationUsingKeyFrames>
+                                    <DoubleAnimationUsingKeyFrames
+                                            Storyboard.Target="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:ItemSlotView}}}" 
+                                            Storyboard.TargetProperty="Height"
+                                            Duration="0:0:0.5">
+                                        <LinearDoubleKeyFrame Value="80" KeyTime="0:0:0.25" />
+                                        <LinearDoubleKeyFrame Value="70" KeyTime="0:0:0.5" />
+                                    </DoubleAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </comp:ItemSlotView.Triggers>
+                    
+                    
+                    <i:Interaction.Triggers>
+                        <ei:DataTrigger Binding="{Binding PlayerState.Inventory.SelectedSlot}" Value="{x:Null}">
+                            <ei:ControlStoryboardAction ControlStoryboardOption="Play">
+                                <ei:ControlStoryboardAction.Storyboard>
                                     <Storyboard>
                                         <DoubleAnimationUsingKeyFrames
                                                 Storyboard.Target="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:ItemSlotView}}}" 
@@ -102,124 +126,113 @@
                                             <LinearDoubleKeyFrame Value="70" KeyTime="0:0:0.5" />
                                         </DoubleAnimationUsingKeyFrames>
                                     </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                        </comp:ItemSlotView.Triggers>
-                    
-                    
-                        <i:Interaction.Triggers>
-                            <ei:DataTrigger Binding="{Binding PlayerState.Inventory.SelectedSlot}" Value="{x:Null}">
-                                <ei:ControlStoryboardAction ControlStoryboardOption="Play">
-                                    <ei:ControlStoryboardAction.Storyboard>
-                                        <Storyboard>
-                                            <DoubleAnimationUsingKeyFrames
-                                                    Storyboard.Target="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:ItemSlotView}}}" 
-                                                    Storyboard.TargetProperty="Width"
-                                                    Duration="0:0:0.5">
-                                                <LinearDoubleKeyFrame Value="80" KeyTime="0:0:0.25" />
-                                                <LinearDoubleKeyFrame Value="70" KeyTime="0:0:0.5" />
-                                            </DoubleAnimationUsingKeyFrames>
-                                            <DoubleAnimationUsingKeyFrames
-                                                    Storyboard.Target="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:ItemSlotView}}}" 
-                                                    Storyboard.TargetProperty="Height"
-                                                    Duration="0:0:0.5">
-                                                <LinearDoubleKeyFrame Value="80" KeyTime="0:0:0.25" />
-                                                <LinearDoubleKeyFrame Value="70" KeyTime="0:0:0.5" />
-                                            </DoubleAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </ei:ControlStoryboardAction.Storyboard>
-                                </ei:ControlStoryboardAction>
-                            </ei:DataTrigger>
-                        </i:Interaction.Triggers>-->
-                    </comp:ItemSlotView>
-                </Border>
-                <Grid Width="140" Height="60">
-                    <Grid.Resources>
-                        <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="FontSize" Value="20"/>
-                            <Setter Property="TextAlignment" Value="Center"/>
-                        </Style>
-                        <Style TargetType="{x:Type Border}">
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="Margin" Value="3"/>
-                        </Style>
-                    </Grid.Resources>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Border Background="Orange" Grid.Column="0">
-                        <TextBlock Text="&lt;Z&lt;" />
-                    </Border>
-                    <Border Background="Orange" Grid.Column="1">
-                        <TextBlock Text="R" FontSize="25"/>
-                    </Border>
-                    <Border Background="Orange" Grid.Column="2">
-                        <TextBlock Text=">X>"/>
-                    </Border>
-                </Grid>
-            </StackPanel>
-
-            <!-- Bottom right spirit -->
-            <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="Orange" Width="80" Height="20" Margin="30">
-                <TextBlock Foreground="Black" TextAlignment="Center" VerticalAlignment="Center">
-                    <Run>Spirit: </Run>
-                    <Run Text="{Binding World.PlayerState.Spirit}"/>
-                </TextBlock>
+                                </ei:ControlStoryboardAction.Storyboard>
+                            </ei:ControlStoryboardAction>
+                        </ei:DataTrigger>
+                    </i:Interaction.Triggers>-->
+                </comp:ItemSlotView>
             </Border>
-
-            <!-- Press E to interact -->
-            <Border HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="50">
-                <Border.Style>
-                    <Style TargetType="Border">
-                        <Style.Triggers>
-                            <!-- Not showing numbers -->
-                            <DataTrigger Binding="{Binding World.PlayerState.CurrentInteractiveObjectState}" Value="{x:Null}">
-                                <Setter Property="Opacity" Value="0" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                        <Setter Property="Opacity" Value="1"/>
+            <Grid Width="140" Height="60">
+                <Grid.Resources>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="FontSize" Value="20"/>
+                        <Setter Property="TextAlignment" Value="Center"/>
                     </Style>
-                </Border.Style>
-                <StackPanel>
-                    <TextBlock Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="25">
-                        <Run Text="{Binding World.PlayerState.CurrentInteractiveObjectState.InteractionDescription}"/>
-                    </TextBlock>
-                    <ItemsControl ItemsSource="{Binding World.PlayerState.CurrentInteractiveObjectState.InteractOptions.Options}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="20" Margin="20">
-                                    <Run Text ="{Binding Index, StringFormat='[{0}]: '}" FontSize="20"/>
-                                    <Run Text ="{Binding Description}"/>
-                                </TextBlock>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemContainerStyle>
-                            <Style TargetType="{x:Type ContentPresenter}">
-                                <Setter Property="Canvas.Left" Value="{Binding UIScreenPosX}"/>
-                                <Setter Property="Canvas.Top" Value="{Binding UIScreenPosY}"/>
-                            </Style>
-                        </ItemsControl.ItemContainerStyle>
-                    </ItemsControl>
-                </StackPanel>
-            </Border>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="Margin" Value="3"/>
+                    </Style>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Border Background="Orange" Grid.Column="0">
+                    <TextBlock Text="&lt;Z&lt;" />
+                </Border>
+                <Border Background="Orange" Grid.Column="1">
+                    <TextBlock Text="R" FontSize="25"/>
+                </Border>
+                <Border Background="Orange" Grid.Column="2">
+                    <TextBlock Text=">X>"/>
+                </Border>
+            </Grid>
+        </StackPanel>
 
-            <!-- Message -->
-            <Border HorizontalAlignment="Center" VerticalAlignment="Top" Opacity="{Binding MessageOpacity}" Margin="100">
-                <TextBlock Text="{Binding Message}" Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="30">
+        <!-- Bottom right spirit -->
+        <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="Orange" Margin="30">
+            <TextBlock Foreground="Black" Padding="4" TextAlignment="Center" VerticalAlignment="Center">
+                <Run>Spirit: </Run>
+                <Run Text="{Binding World.PlayerState.Spirit}"/>
+            </TextBlock>
+        </Border>
+
+        <!-- Top right invnentory -->
+        <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="30">
+            <Border.Resources>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="Background" Value="Orange"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding World.PlayerState.Inventory.Active}" Value="True">
+                            <Setter Property="Background" Value="Olive"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Resources>
+            <TextBlock Text="[T]: Inventory" Padding="6" TextAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
+        
+        <!-- Press E to interact -->
+        <Border HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="50">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Style.Triggers>
+                        <!-- Not showing numbers -->
+                        <DataTrigger Binding="{Binding World.PlayerState.CurrentInteractiveObjectState}" Value="{x:Null}">
+                            <Setter Property="Opacity" Value="0" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                    <Setter Property="Opacity" Value="1"/>
+                </Style>
+            </Border.Style>
+            <StackPanel>
+                <TextBlock Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="25">
+                    <Run Text="{Binding World.PlayerState.CurrentInteractiveObjectState.InteractionDescription}"/>
                 </TextBlock>
-            </Border>
-            
-            <!-- Player's inventory -->
-            <comp:InventoryView DataContext="{Binding World.PlayerState}"/>
+                <ItemsControl ItemsSource="{Binding World.PlayerState.CurrentInteractiveObjectState.InteractOptions.Options}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="20" Margin="20">
+                                <Run Text ="{Binding Index, StringFormat='[{0}]: '}" FontSize="20"/>
+                                <Run Text ="{Binding Description}"/>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="{x:Type ContentPresenter}">
+                            <Setter Property="Canvas.Left" Value="{Binding UIScreenPosX}"/>
+                            <Setter Property="Canvas.Top" Value="{Binding UIScreenPosY}"/>
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
 
-            <comp:Menu DataContext="{Binding Menu}"></comp:Menu>
-        </Grid>
+        <!-- Message -->
+        <Border HorizontalAlignment="Center" VerticalAlignment="Top" Opacity="{Binding MessageOpacity}" Margin="100">
+            <TextBlock Text="{Binding Message}" Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="30">
+            </TextBlock>
+        </Border>
+            
+        <!-- Player's inventory -->
+        <comp:InventoryView DataContext="{Binding World.PlayerState}"/>
+
+        <comp:Menu DataContext="{Binding Menu}"></comp:Menu>
     </Grid>
 </UserControl>
