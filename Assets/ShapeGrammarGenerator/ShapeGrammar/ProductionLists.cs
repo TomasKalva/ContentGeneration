@@ -2,6 +2,7 @@
 using OurFramework.Environment.ShapeCreation;
 using OurFramework.Environment.StylingAreas;
 using System;
+using System.Linq;
 
 namespace OurFramework.Environment.ShapeGrammar
 {
@@ -256,13 +257,17 @@ namespace OurFramework.Environment.ShapeGrammar
 
         public ProductionList Roofs()
         {
+            Production[] roofs(int height) => new Production[]
+            {
+                pr.Roof(pr.sym.ChapelHall(default), height, AreaStyles.GableRoof(AreaStyles.ChapelStyle)),
+                pr.Roof(pr.sym.ChapelRoom, height, AreaStyles.CrossRoof(AreaStyles.ChapelStyle)),
+                pr.Roof(pr.sym.TowerTop, height, AreaStyles.PointyRoof()),
+                pr.Roof(pr.sym.TowerBottom, height, AreaStyles.PointyRoof()),
+                pr.Roof(pr.sym.Room, height, AreaStyles.GableRoof())
+            };
             return new ProductionList
             (
-                pr.Roof(pr.sym.ChapelHall(default), 3, AreaStyles.GableRoof(AreaStyles.ChapelStyle)),
-                pr.Roof(pr.sym.ChapelRoom, 3, AreaStyles.CrossRoof(AreaStyles.ChapelStyle)),
-                pr.Roof(pr.sym.TowerTop, 3, AreaStyles.PointyRoof()),
-                pr.Roof(pr.sym.TowerBottom, 3, AreaStyles.PointyRoof()),
-                pr.Roof(pr.sym.Room, 3, AreaStyles.GableRoof())
+                roofs(3).Concat(roofs(2)).ToArray()
             );
         }
 
@@ -292,7 +297,10 @@ namespace OurFramework.Environment.ShapeGrammar
             return new ProductionList
             (
                 pr.Roof(pr.sym.NewRoom, 3, AreaStyles.FlatRoof(AreaStyles.CastleStyle)),
-                pr.Roof(pr.sym.NewCorridor(), 3, AreaStyles.GableRoof(AreaStyles.CastleStyle))
+                pr.Roof(pr.sym.NewCorridor(), 3, AreaStyles.GableRoof(AreaStyles.CastleStyle)),
+
+                pr.Roof(pr.sym.NewRoom, 2, AreaStyles.FlatRoof(AreaStyles.CastleStyle)),
+                pr.Roof(pr.sym.NewCorridor(), 2, AreaStyles.GableRoof(AreaStyles.CastleStyle))
             );
         }
     }

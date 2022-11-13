@@ -70,6 +70,10 @@ namespace OurFramework.Environment.ShapeGrammar
         }
     }
 
+    /// <summary>
+    /// Executes until no other productions are applicable. Productions are applied in the same
+    /// order as in the ProductionList.
+    /// </summary>
     public class AllGrammar : Grammar
     {
         ProductionList Productions { get; }
@@ -85,7 +89,7 @@ namespace OurFramework.Environment.ShapeGrammar
             do
             {
                 shapeGrammarState.ActiveNodes = shapeGrammarState.Root.AllDerived();
-                var applicable = Productions.Get.Shuffle();
+                var applicable = Productions.Get;
                 // Grammar evaluates until no production can be applied
                 try
                 {

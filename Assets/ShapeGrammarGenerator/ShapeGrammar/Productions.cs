@@ -558,6 +558,10 @@ namespace OurFramework.Environment.ShapeGrammar
                 });
         }
 
+        /// <summary>
+        /// The next floor has to be at least as high as the reservation 
+        /// (otherwise the current reseravtion blocks reserving next floor).
+        /// </summary>
         public Production TakeUpwardReservation(
             Symbol reservationSymbol,
             Func<CubeGroup, Node> nodeFromExtrudedUp,
@@ -575,7 +579,10 @@ namespace OurFramework.Environment.ShapeGrammar
                         bool correctBelowSymbol =
                             pp.Param.GetSymbol(sym.UpwardReservation(null))
                             .NodeReference.GetSymbol(reservationSymbol) != null;
-                        return correctBelowSymbol && pp.Param.LE.CG().RightTopFront().y + 1 <= maxBottomHeight;
+                        return 
+                            correctBelowSymbol && 
+                            pp.Param.LE.CG().RightTopFront().y + 1 <= maxBottomHeight &&
+                            pp.Param.LE.CG().Extents().y <= nextFloorHeight;
                     }),
                 (state, pp) =>
                 {
