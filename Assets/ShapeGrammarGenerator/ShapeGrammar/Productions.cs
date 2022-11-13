@@ -25,7 +25,7 @@ namespace OurFramework.Environment.ShapeGrammar
 
         public Production CreateNewHouse(int bottomHeight)
         {
-            return Place(bottomHeight, () => ldk.les.Room(5, 5, 2), le => le?.GN(sym.NewRoom, sym.FullFloorMarker), Reserve(2, sym.UpwardReservation));
+            return Place(bottomHeight, () => ldk.les.Room(5, 5, 2), le => le?.GN(sym.Room, sym.FullFloorMarker), Reserve(2, sym.UpwardReservation));
         }
 
         public Production CourtyardFromRoom(PathGuide pathGuide)
@@ -1000,7 +1000,7 @@ namespace OurFramework.Environment.ShapeGrammar
             return FullFloorPlaceNear(
                     sym.NewRoom,
                     sym.NewRoom,
-                    () => ldk.les.Box(3, 3, 2).SetAreaStyle(AreaStyles.Room()),
+                    () => ldk.les.Box(3, 3, 2).SetAreaStyle(AreaStyles.Room(AreaStyles.CastleStyle)),
                     EmptyOp(),
                     Reserve(2, sym.UpwardReservation),
                     ldk.con.ConnectByDoor,
@@ -1064,9 +1064,9 @@ namespace OurFramework.Environment.ShapeGrammar
             return Extrude(
                        sym.NewCorridor(),
                        node => node.GetSymbol(sym.NewCorridor()).Direction.ToEnumerable(),
-                       (cg, dir) => cg.ExtrudeDir(dir, 5).LE(AreaStyles.Garden()).GN(sym.NewCorridor(dir), sym.FullFloorMarker),
+                       (cg, dir) => cg.ExtrudeDir(dir, 5).LE(AreaStyles.Room()).GN(sym.NewCorridor(dir), sym.FullFloorMarker),
                        EmptyOp(),
-                       EmptyOp(),
+                        Reserve(2, sym.UpwardReservation),
                        ldk.con.ConnectByDoor,
                        true
                    );
@@ -1077,7 +1077,7 @@ namespace OurFramework.Environment.ShapeGrammar
             return FullFloorPlaceNear(
                     sym.NewCorridor(),
                     sym.NewRoom,
-                    () => ldk.les.Box(3, 3, 2).SetAreaStyle(AreaStyles.Room()),
+                    () => ldk.les.Box(3, 3, 2).SetAreaStyle(AreaStyles.Room(AreaStyles.CastleStyle)),
                     EmptyOp(),
                     Reserve(2, sym.UpwardReservation),
                     ldk.con.ConnectByStairsOutside,
@@ -1135,11 +1135,11 @@ namespace OurFramework.Environment.ShapeGrammar
                 });*/
             return TakeUpwardReservation(
                 sym.NewRoom,
-                nextFloor => nextFloor.LE(AreaStyles.Room()).GN(sym.NewRoom, sym.FullFloorMarker),
+                nextFloor => nextFloor.LE(AreaStyles.Room(AreaStyles.CastleStyle)).GN(sym.NewRoom, sym.FullFloorMarker),
                 2,
                 20,
                 Reserve(2, sym.UpwardReservation),
-                ldk.con.ConnectByWallStairsIn
+                ldk.con.ConnectByWallStairsOut
                 );
         }
 

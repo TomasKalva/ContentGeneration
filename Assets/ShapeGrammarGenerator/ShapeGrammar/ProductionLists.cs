@@ -291,8 +291,8 @@ namespace OurFramework.Environment.ShapeGrammar
         {
             return new ProductionList
             (
-                pr.Roof(pr.sym.NewRoom, 3, AreaStyles.CrossRoof()),
-                pr.Roof(pr.sym.NewCorridor(), 3, AreaStyles.GableRoof())
+                pr.Roof(pr.sym.NewRoom, 3, AreaStyles.FlatRoof(AreaStyles.CastleStyle)),
+                pr.Roof(pr.sym.NewCorridor(), 3, AreaStyles.GableRoof(AreaStyles.CastleStyle))
             );
         }
     }

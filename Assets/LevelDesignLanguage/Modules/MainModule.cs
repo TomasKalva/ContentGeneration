@@ -11,12 +11,12 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
         /// </summary>
         public void DeclareGame()
         {
-            //DeclareDebugGame();
+            DeclareDebugGame();
             //State.LC.AddNecessaryEvent($"Tutorial module", 100, level => M.TutorialModule.Main());
             //M.TutorialModule.DeclareGame();
             //DeclareEnvironmentForPrettyPictures();
             //State.LC.AddNecessaryEvent($"Level Start", 100, level => M.LevelModule.LevelStart(), true);
-            State.LC.AddNecessaryEvent($"New Grammar", 50, level => M.TestingModule.NewGrammar());
+            //State.LC.AddNecessaryEvent($"New Grammar", 50, level => M.TestingModule.NewGrammar());
         }
 
         void DeclareDebugGame()
@@ -24,7 +24,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             State.LC.AddNecessaryEvent($"Level Start", 100, level => M.LevelModule.LevelStart(), true);
             State.LC.AddNecessaryEvent($"Level End", 99, level => M.LevelModule.LevelEnd(), true);
 
-            /*
+            
             State.LC.AddNecessaryEvent($"Death", 99, _ =>
             {
                 //L.DeathLanguage.EnableClassicalDeath();
@@ -46,7 +46,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             State.LC.AddNecessaryEvent($"Add Details", 0, level => M.DetailsModule.AddDetails(level), true);
 
             State.LC.AddNecessaryEvent($"Out of depth encounter", 80, level => M.OutOfDepthEncountersModule.DifficultEncounter(level), true);
-            */
+            
             State.LC.AddNecessaryEvent($"Sky", 0, level => M.EnvironmentModule.CreateSky(level), true);
 
 
@@ -59,7 +59,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             //State.LC.AddNecessaryEvent("Testing enemies", 5, _ => L.TestingLanguage.StatsScalingOfEnemies());
 
 
-            State.LC.AddNecessaryEvent($"Environment", 0, level => M.TestingModule.TestSky(level), true);
+            //State.LC.AddNecessaryEvent($"Environment", 0, level => M.TestingModule.TestSky(level), true);
 
             /*
             State.LC.AddNecessaryEvent("Farmer branch", 5, level => L.FarmersLanguage.FarmerBranch(0));
