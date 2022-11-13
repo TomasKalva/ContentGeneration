@@ -29,8 +29,10 @@
     </UserControl.Resources>
     <Border Background="Black" Padding="1">
         <Grid Margin="1">
-            <ProgressBar Name="healthBar" Background="DarkGray" Foreground="{Binding ElementName=parent, Path=Color}" 
-                         Value="{Binding ElementName=parent, Path=DataContext.Value, Mode=OneWay}" Maximum="{Binding ElementName=parent, Path=DataContext.Maximum, Mode=OneWay}"/>
+            <ProgressBar Name="healthBar" Background="DarkGray" 
+                         Foreground="{Binding ElementName=parent, Path=Color}" 
+                         Value="{Binding ElementName=parent, Path=DataContext.Value, Mode=OneWay}" 
+                         Maximum="{Binding ElementName=parent, Path=DataContext.Maximum, Mode=OneWay}"/>
 
             <ContentControl x:Name="Text">
                 <ContentControl.Style>

@@ -22,7 +22,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
         void DeclareDebugGame()
         {
             State.LC.AddNecessaryEvent($"Level Start", 100, level => M.LevelModule.LevelStart(), true);
-            State.LC.AddNecessaryEvent($"Level End", 99, level => M.LevelModule.LevelEnd(), true);
+            //State.LC.AddNecessaryEvent($"Level End", 99, level => M.LevelModule.LevelEnd(), true);
 
             
             State.LC.AddNecessaryEvent($"Death", 99, _ =>
@@ -37,8 +37,8 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                 //M.DeathModule.EndRunIfOutOfSmile();
             }, true);
 
-            /*
-            M.LevelModule.AddOptionalEnd();
+            
+            //M.LevelModule.AddOptionalEnd();
 
             M.FactionsModule.InitializeFactions(2);
 
@@ -53,7 +53,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
 
 
             State.LC.AddNecessaryEvent($"Roofs", -1, level => M.LevelModule.AddRoofs(), true);
-            */
+            
 
             M.AscendingModule.AddAscendingEvents(M.AscendingModule.AscendingKiln(ad => 100 + 50 * ad));
             //State.LC.AddNecessaryEvent("Ascending", 80, _ =>);

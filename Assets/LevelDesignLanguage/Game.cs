@@ -66,7 +66,7 @@ namespace OurFramework.LevelDesignLanguage
             playerState.Spirit = 5000;
             var stats = new ContentGeneration.Assets.UI.Model.CharacterStats()
             {
-                Will = 0,
+                Will = 5,
                 Strength = 5,
                 Endurance = 5,
                 Agility = 5,

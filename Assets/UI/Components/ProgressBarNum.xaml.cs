@@ -53,14 +53,14 @@ namespace ContentGeneration.Assets.UI.Components
 
     public class BarLengthConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object value, Type _floatType, object scale, System.Globalization.CultureInfo _)
         {
-            return 5f * (float)value;
+            return float.Parse((string)scale) * (float)value;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object value, Type _floatType, object scale, System.Globalization.CultureInfo _)
         {
-            return 0.2f * (float)value;
+            return (1f / float.Parse((string)scale)) * (float)value;
         }
     }
 }

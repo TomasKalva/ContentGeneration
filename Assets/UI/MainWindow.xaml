@@ -70,9 +70,9 @@
         <!-- UI elements -->
         <!-- Top left bars -->
         <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30">
-            <comp:ProgressBarNum DataContext="{Binding World.PlayerState.Health}" HorizontalAlignment="Left" NoNumbers="False" Color="Red" Width="{Binding Maximum, Converter={StaticResource BarLengthConverter}}" Height="15" Margin="5"/>
-            <comp:ProgressBarNum DataContext="{Binding World.PlayerState.Stamina}" HorizontalAlignment="Left" Color="Green" Width="{Binding Maximum, Converter={StaticResource BarLengthConverter}}" Height="15" Margin="5"/>
-            <comp:ProgressBarNum DataContext="{Binding World.PlayerState.Poise}" HorizontalAlignment="Left" Color="Yellow" Width="{Binding Maximum, Converter={StaticResource BarLengthConverter}}" Height="15" Margin="5"/>
+            <comp:ProgressBarNum DataContext="{Binding World.PlayerState.Health}" HorizontalAlignment="Left" NoNumbers="False" Color="Red" Width="{Binding Maximum, Converter={StaticResource BarLengthConverter}, ConverterParameter=0.6 }" Height="15" Margin="5"/>
+            <comp:ProgressBarNum DataContext="{Binding World.PlayerState.Stamina}" HorizontalAlignment="Left" Color="Green" Width="{Binding Maximum, Converter={StaticResource BarLengthConverter}, ConverterParameter=5 }" Height="15" Margin="5"/>
+            <comp:ProgressBarNum DataContext="{Binding World.PlayerState.Poise}" HorizontalAlignment="Left" Color="Yellow" Width="{Binding Maximum, Converter={StaticResource BarLengthConverter}, ConverterParameter=0.8 }" Height="15" Margin="5"/>
         </StackPanel>
 
         <!-- Bottom left item -->

@@ -182,11 +182,11 @@ public class Items : ScriptableObject
 
     public ItemState Dew() => NewItem("Dew", "Originating from the morning garden, Dew keeps its position of a great refereshment.")
         .SetStackable(1)
-        .OnUse(Effects.RegenerateHealth(2f,  4f));
+        .OnUse(Effects.RegenerateHealth(8f,  5f));
 
     public ItemState HoneyBall() => NewItem("Honey Ball", "Sweet honey can heal wounds.")
         .SetStackable(1)
-        .OnUse(Effects.Heal(5f));
+        .OnUse(Effects.Heal(25f));
 
     public ItemState VibrantMemory() => NewItem("Vibrant Memory", "A memory blurring the border between life and death. Can be relived.")
         .SetStackable(1)
