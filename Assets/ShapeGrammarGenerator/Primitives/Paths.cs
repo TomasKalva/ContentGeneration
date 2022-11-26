@@ -75,5 +75,16 @@ namespace OurFramework.Environment.ShapeCreation
                 // Preserve connectivity for all the other nodes
                 PathNode.PreserveConnectivity(neighbors, startAreaFloor, endAreaFloor, existingPathsCgs));
         }
+
+        public CubeGroup ConnectByValidPath(CubeGroup startGroup, CubeGroup endGroup, CubeGroup startAreaFloor, CubeGroup endAreaFloor, Neighbors<PathNode> neighbors, LevelGroupElement existingPaths)
+        {
+            return ConnectByConnectivityPreservingPath(
+                startGroup,
+                endGroup,
+                startAreaFloor,
+                endAreaFloor,
+                pn => neighbors(pn).Where(nb => nb.cube.Position.y >= 2),
+                existingPaths);
+        }
     }
 }

@@ -59,7 +59,7 @@ namespace OurFramework.Environment.ShapeCreation
                         PathNode.HorizontalNeighbors(),
                         space1.Merge(space2)
                 );
-                var path = paths.ConnectByConnectivityPreservingPath(space1.BottomLayer(), space2.BottomLayer(), le1.CG().BottomLayer(), le2.CG().BottomLayer(), neighbors, existingPaths);
+                var path = paths.ConnectByValidPath(space1.BottomLayer(), space2.BottomLayer(), le1.CG().BottomLayer(), le2.CG().BottomLayer(), neighbors, existingPaths);
                 return path.LE(AreaStyles.Connection());
             };
         }
@@ -75,7 +75,7 @@ namespace OurFramework.Environment.ShapeCreation
                 var space2 = WallSpaceInside(le2);
 
                 Neighbors<PathNode> neighbors = PathNode.BoundedBy(PathNode.StairsNeighbors(), space1.Merge(space2));
-                var path = paths.ConnectByConnectivityPreservingPath(space1.BottomLayer(), space2.BottomLayer(), le1.CG().BottomLayer(), le2.CG().BottomLayer(), neighbors, existingPaths);
+                var path = paths.ConnectByValidPath(space1.BottomLayer(), space2.BottomLayer(), le1.CG().BottomLayer(), le2.CG().BottomLayer(), neighbors, existingPaths);
                 return path.LE(AreaStyles.Path());
             };
         }
@@ -97,7 +97,7 @@ namespace OurFramework.Environment.ShapeCreation
                             searchSpace
                         ), 
                         alreadyAdded.CG().Minus(end));
-                var path = paths.ConnectByConnectivityPreservingPath(start, end, le1.CG().BottomLayer(), le2.CG().BottomLayer(), neighbors, existingPaths);
+                var path = paths.ConnectByValidPath(start, end, le1.CG().BottomLayer(), le2.CG().BottomLayer(), neighbors, existingPaths);
                 return path.LE(AreaStyles.Path());
             };
         }
@@ -115,7 +115,7 @@ namespace OurFramework.Environment.ShapeCreation
                 var end = space2.BottomLayer();
                 Neighbors<PathNode> neighbors = 
                     PathNode.BoundedBy(PathNode.FallNeighbors(end), space1.Merge(space2));
-                var path = paths.ConnectByConnectivityPreservingPath(start, end, start, end, neighbors, existingPaths);
+                var path = paths.ConnectByValidPath(start, end, start, end, neighbors, existingPaths);
                 return path.LE(AreaStyles.Fall());
             };
         }
@@ -137,7 +137,7 @@ namespace OurFramework.Environment.ShapeCreation
                         PathNode.StairsNeighbors(),
                         notIntersectingCG
                     );
-                var path = paths.ConnectByConnectivityPreservingPath(start, end, le1.CG().BottomLayer(), le2.CG().BottomLayer(), neighbors, existingPaths);
+                var path = paths.ConnectByValidPath(start, end, le1.CG().BottomLayer(), le2.CG().BottomLayer(), neighbors, existingPaths);
                 return path.LE(AreaStyles.Path());
             };
         }
@@ -154,7 +154,7 @@ namespace OurFramework.Environment.ShapeCreation
                 var notIntersectingCG = alreadyAdded.CG().Minus(space2);
                 Neighbors<PathNode> neighbors = 
                     PathNode.NotIn(PathNode.StraightHorizontalNeighbors(), notIntersectingCG);
-                var path = paths.ConnectByConnectivityPreservingPath(space1.BottomLayer(), space2.BottomLayer(), le1.CG().BottomLayer(), le2.CG().BottomLayer(), neighbors, existingPaths);
+                var path = paths.ConnectByValidPath(space1.BottomLayer(), space2.BottomLayer(), le1.CG().BottomLayer(), le2.CG().BottomLayer(), neighbors, existingPaths);
                 return path.LE(AreaStyles.Path());
             };
         }
@@ -172,7 +172,7 @@ namespace OurFramework.Environment.ShapeCreation
                 var end = space2.BottomLayer();
                 Neighbors<PathNode> neighbors = 
                     PathNode.BoundedBy(PathNode.StairsNeighbors(), space1.Merge(space2));
-                var path = paths.ConnectByConnectivityPreservingPath(start, end, le1.CG().BottomLayer(), le2.CG().BottomLayer(), neighbors, existingPaths);
+                var path = paths.ConnectByValidPath(start, end, le1.CG().BottomLayer(), le2.CG().BottomLayer(), neighbors, existingPaths);
                 return path.LE(AreaStyles.Path());
             };
         }
