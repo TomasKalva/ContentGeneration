@@ -115,7 +115,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                 State.LC.AddPossibleEvent("Npc", 50, _ =>
                 {
                     Env.One(Gr.PrL.Town(), NodesQueries.All, out var npcArea);
-                    npcArea.Get.AddInteractiveObject(npc);
+                    npcArea.Area.AddInteractiveObject(npc);
                 });
             });
         }
@@ -177,7 +177,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                     State.LC.AddPossibleEvent("Dragon quest", 50,
                         level => ContinueQuest());
                 });
-            area.Get.AddInteractiveObject(Lib.InteractiveObjects.Item(questStarter));
+            area.Area.AddInteractiveObject(Lib.InteractiveObjects.Item(questStarter));
         }
 
         void ContinueQuest()
@@ -214,7 +214,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                 })
                 .SetName("Dragon Slayer")
                 .SetDescription("A powerful weapon whose mission is to slay its chosen dragon. Only those who posses enough Will are fit to carry it and even then it takes its toll.");
-            locked.Get.AddInteractiveObject(Lib.InteractiveObjects.Item(powerSword));
+            locked.Area.AddInteractiveObject(Lib.InteractiveObjects.Item(powerSword));
 
 
             // Continue the quest
@@ -226,7 +226,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                      State.LC.AddPossibleEvent("Dragon quest 2", 50,
                         level => EndQuest(dragon));// Pass the dragon to the next level
                  });
-            locked.Get.AddInteractiveObject(Lib.InteractiveObjects.Item(questContinuer));
+            locked.Area.AddInteractiveObject(Lib.InteractiveObjects.Item(questContinuer));
 
         }
 
@@ -251,7 +251,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                             .OnUse(ch => ch.Stats.Will += 5))
                 );
             dragon.Stats.Will = 40;
-            area.Get.AddEnemy(dragon);
+            area.Area.AddEnemy(dragon);
 
             // Weaken the dragon using an interactive object
             Env.Line(Gr.PrL.Castle(), NodesQueries.All, 4, out var pathToGoblet);

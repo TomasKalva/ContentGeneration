@@ -77,14 +77,14 @@ namespace OurFramework.Environment.ShapeGrammar
 
     public class Production
     {
-        public delegate ProductionProgram Effect(ShapeGrammarState shapeGrammarState, ProdParams prodParams);
+        public delegate ProductionProgram ProductionEffect(ShapeGrammarState shapeGrammarState, ProdParams prodParams);
 
         public string Name { get; }
-        Effect ExpandNewNodes { get; }
+        ProductionEffect ExpandNewNodes { get; }
 
         public ProdParamsManager ProdParamsManager { get; }
 
-        public Production(string name, ProdParamsManager ppm, Effect effect)
+        public Production(string name, ProdParamsManager ppm, ProductionEffect effect)
         {
             Name = name;
             ProdParamsManager = ppm;

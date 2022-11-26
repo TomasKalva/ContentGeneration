@@ -16,7 +16,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
         void LevelStart()
         {
             Env.One(Gr.PrL.CreateNewHouse(), NodesQueries.All, out var area);
-            area.Get.Node.AddSymbol(Gr.Sym.LevelStartMarker);
+            area.Area.Node.AddSymbol(Gr.Sym.LevelStartMarker);
         }
 
         void LevelContinue()

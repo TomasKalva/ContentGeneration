@@ -69,7 +69,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
         {
             Env.One(Gr.PrL.BlockedByDoor(), startNodes, out lockedArea);
             // the locked area has to be connected to some previous area
-            LockArea(lockedArea.Get, unlock);
+            LockArea(lockedArea.Area, unlock);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             keyLine.LastArea().AddInteractiveObject(Lib.InteractiveObjects.Item(keys.First()));
 
             LockedArea(_ => branchNodes, unlock, out locked);
-            locked.Get.AddInteractiveObject(Lib.InteractiveObjects.Item(Lib.Items.NewItem("Unlocked", "The door are unlocked now")));
+            locked.Area.AddInteractiveObject(Lib.InteractiveObjects.Item(Lib.Items.NewItem("Unlocked", "The door are unlocked now")));
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             keyPlacer.Place(branches);
 
             LockedArea(NodesQueries.All, unlock, out locked);
-            locked.Get.AddInteractiveObject(Lib.InteractiveObjects.Item(Lib.Items.NewItem("Unlocked", "The door are unlocked now")));
+            locked.Area.AddInteractiveObject(Lib.InteractiveObjects.Item(Lib.Items.NewItem("Unlocked", "The door are unlocked now")));
         }
     }
 }

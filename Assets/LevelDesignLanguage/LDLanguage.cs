@@ -244,8 +244,8 @@ namespace OurFramework.LevelDesignLanguage
                                 .ToList();
             LanguageState.AddAreas(traversable);
             var connections = newNodes
-                                .Where(node => 
-                                        node.HasSymbols(Sym.ConnectionMarker) && 
+                                .Where(node =>
+                                        node.HasSymbols(Sym.ConnectionMarker) &&
                                         node.LE.CG().Cubes.Any() // Connections with no cubes are ignored
                                         )
                                 .ToList();
@@ -296,7 +296,7 @@ namespace OurFramework.LevelDesignLanguage
                 state =>
                 {
                     // todo: fix null reference exception
-                    var returnToNodes = to; 
+                    var returnToNodes = to;
                     var currentNodesCenter = state.LastCreated.Select(node => node.LE).ToLevelGroupElement(LanguageState.Ldk.grid).CG().Center();
                     var targetPoint = returnToNodes.SelectMany(n => n.LE.Cubes()).ArgMin(cube => (cube.Position - currentNodesCenter).AbsSum()).Position;
                     return Vector3Int.RoundToInt(targetPoint);
@@ -321,6 +321,17 @@ namespace OurFramework.LevelDesignLanguage
             // execute the grammar and get nodes
             var traversableNodes = GenerateAndTakeTraversable(targetedGardenGrammar);
             path = new LinearPath(traversableNodes.ToList());
+        }
+
+        /// <summary>
+        /// Creates a path between from and to. The path is one way and is separated by a jump at the end.
+        /// Jump goes into a newly created walled area so that the player can't jump out of the map or to another
+        /// possibly blocked area.
+        /// </summary>
+        public void Loopback(Func<PathGuide, ProductionList> targetedProductions, ProductionList connectBackProductions, int pathLength, IEnumerable<Node> from, IEnumerable<Node> to, out LinearPath path, out SingleArea connectTo)
+        {
+            One(L.Gr.PrL.WalledAround(), _ => to, out connectTo);
+            MoveFromTo(targetedProductions, connectBackProductions, pathLength, from, connectTo.Area.Node.ToEnumerable(), out path);
         }
     }
 

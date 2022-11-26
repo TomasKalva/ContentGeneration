@@ -7,7 +7,7 @@ namespace OurFramework.Environment.ShapeGrammar
         #region Common symbols
         public Symbol Foundation { get; } = new Symbol("Foundation");
         /// <summary>
-        /// Serves as a space that can be turned into another part of a building or in a roof.
+        /// Serves as a space that can be turned into another part of a building or into a roof.
         /// </summary>
         public ReferenceSymbol UpwardReservation(Node roomBelow) => new ReferenceSymbol("RoomReservation", roomBelow);
         #endregion

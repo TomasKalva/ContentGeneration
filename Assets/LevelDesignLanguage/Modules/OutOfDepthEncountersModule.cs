@@ -134,7 +134,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             // Place rewards
             var rewards = UpgradeRewards().ToList();
             rewards.Shuffle().Take(2).ForEach(reward =>
-                locked.Get.AddInteractiveObject(Lib.InteractiveObjects.Item(reward())));
+                locked.Area.AddInteractiveObject(Lib.InteractiveObjects.Item(reward())));
         }
 
         public void AddLightMaceEncounter()
@@ -163,7 +163,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                 .SetCreatingStrategy(new CreateIfCondition(() => enemy.DeathCount == 0))
                 .SetLeftWeapon(Lib.Items.LightMace())
                 ;
-            area.Get.AddEnemy(enemy);
+            area.Area.AddEnemy(enemy);
         }
     }
 }

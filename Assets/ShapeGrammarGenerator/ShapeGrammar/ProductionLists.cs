@@ -271,6 +271,14 @@ namespace OurFramework.Environment.ShapeGrammar
             );
         }
 
+        public ProductionList WalledAround()
+        {
+            return new ProductionList
+            (
+                pr.RoomNextTo(pr.sym.FullFloorMarker, () => ldk.les.Box(4, 4, 3))
+            );
+        }
+
         public ProductionList NewStart()
         {
             return new ProductionList

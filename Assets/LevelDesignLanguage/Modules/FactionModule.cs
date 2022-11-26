@@ -145,7 +145,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             itemPlacer.Place(lockedArea);
             PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), EnemiesInAreaCount(progress)).Place(linearPath);
 
-            PlaceInEndArea(lockedArea.Get, fe, progress, level);
+            PlaceInEndArea(lockedArea.Area, fe, progress, level);
         }
 
         public void BranchesWithKey(FactionEnvironment fe, int progress, int level)
@@ -157,7 +157,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             itemPlacer.Place(lockedArea);
             PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), EnemiesInAreaCount(progress)).Place(branches);
 
-            PlaceInEndArea(lockedArea.Get, fe, progress, level);
+            PlaceInEndArea(lockedArea.Area, fe, progress, level);
         }
 
         public void RandomBranches(FactionEnvironment fe, int progress, int level)
@@ -172,7 +172,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
 
         public void LinearBranch(FactionEnvironment fe, int progress, int level)
         {
-            Env.MoveFromTo(pathGuide => fe.GetProductionList(pathGuide), Gr.PrL.OneWayConnectBack(), 5, NodesQueries.All(State.GrammarState), NodesQueries.All(State.GrammarState), out var path);
+            Env.Loopback(pathGuide => fe.GetProductionList(pathGuide), Gr.PrL.OneWayConnectBack(), 5, NodesQueries.All(State.GrammarState), NodesQueries.All(State.GrammarState), out var path, out var connectTo);
 
             PlO.RandomAreasPlacer(new UniformDistr(3, 6), ItemsToPlace(fe, 3)).Place(path);
             PlC.ProgressFunctionPlacer(fe.CreateEnemyFactory(), EnemiesInAreaCount(progress)).Place(path);

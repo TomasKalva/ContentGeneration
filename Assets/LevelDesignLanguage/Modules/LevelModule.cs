@@ -18,7 +18,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
         public void LevelStart()
         {
             Env.One(Gr.PrL.CreateNewHouse(), NodesQueries.All, out var area);
-            area.Get.Node.AddSymbol(Gr.Sym.LevelStartMarker);
+            area.Area.Node.AddSymbol(Gr.Sym.LevelStartMarker);
         }
 
         List<Func<ProductionList>> MainPathProductionLists() =>
@@ -103,7 +103,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             State.LC.AddPossibleEvent($"Optional end", 99, level =>
             {
                 Env.One(Gr.PrL.LevelEnd(), NodesQueries.All, out var area);
-                area.Get.AddInteractiveObject(
+                area.Area.AddInteractiveObject(
                     Lib.InteractiveObjects.Transporter(State.GC, () => usedOptionalEnd = true)
                     );
             }, true, _ => !usedOptionalEnd);
@@ -116,7 +116,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
         public void LevelEnd()
         {
             Env.One(Gr.PrL.LevelEnd(), NodesQueries.All, out var area);
-            area.Get.AddInteractiveObject(
+            area.Area.AddInteractiveObject(
                 Lib.InteractiveObjects.Transporter(State.GC)
                 );
 

@@ -56,7 +56,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                 90, _ =>
                 {
                     Env.One(Gr.PrL.Garden(), NodesQueries.All, out var ascendingArea);
-                    ascendingArea.Get.AddInteractiveObject(kiln);
+                    ascendingArea.Area.AddInteractiveObject(kiln);
                 }, true);
         }
     }

@@ -40,6 +40,6 @@ namespace OurFramework.LevelDesignLanguage
         {
         }
 
-        public Area Get => AreasList.First();
+        public Area Area => AreasList.First();
     }
 }

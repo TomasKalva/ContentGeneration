@@ -112,7 +112,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                 State.LC.AddPossibleEvent("Npc", 50, _ =>
                 {
                     Env.One(Gr.PrL.Town(), NodesQueries.All, out var npcArea);
-                    npcArea.Get.AddInteractiveObject(npc);
+                    npcArea.Area.AddInteractiveObject(npc);
                 });
             });
         }

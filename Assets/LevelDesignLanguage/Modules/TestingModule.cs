@@ -92,7 +92,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                 .OnUse(player => statIncrease.Manipulate(player.Stats))
             ).ToArray();
 
-            level_up_area.Get.AddInteractiveObject(
+            level_up_area.Area.AddInteractiveObject(
                 Lib.InteractiveObjects.Farmer("Levelling up object")
                     .SetInteraction(
                         ins => ins
@@ -114,7 +114,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             Func<ItemState>[] s = spellItems.AllSpellItems()
                 .Select<Func<ItemState>, Func<ItemState>>(itemF => () => itemF().SetReplenishable(1)).ToArray();
 
-            area.Get.AddInteractiveObject(
+            area.Area.AddInteractiveObject(
                 Lib.InteractiveObjects.Farmer("Spell objects")
                     .SetInteraction(
                         ins => ins
@@ -260,7 +260,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                  .NewItem($"Set sky {i}", $"Summon sky of {i}-th level")
                      .OnUse(user => envState.SetParameters(skyParams))).ToArray();
 
-            area.Get.AddInteractiveObject(
+            area.Area.AddInteractiveObject(
                 Lib.InteractiveObjects.Farmer("Sky distributor")
                     .SetInteraction(
                         ins => ins

@@ -285,66 +285,6 @@ namespace OurFramework.Environment.ShapeGrammar
                 });
         }
 
-        public Production ConnectByRoom(
-            Symbol from, 
-            Symbol to, 
-            Func<LevelElement> roomFromF,
-            Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPositionedNear,
-            ConnectionFromAddedAndPaths connectFrom,
-            ConnectionFromAddedAndPaths connectTo,
-            int distance,
-            Func<Node, Node, bool> fromToCondition)
-        {
-            return new Production(
-                $"ConnectByRoom",
-                new ProdParamsManager()
-                    .AddNodeSymbols(from, sym.FullFloorMarker)
-                    .AddNodeSymbols(to, sym.FullFloorMarker)
-                    .SetCondition((state, pp) =>
-                    {
-                        var (from, to) = pp;
-                        return fromToCondition(from, to);
-                    }),
-                (state, pp) =>
-                {
-                    var (from, to) = pp;
-                    var fromCG = from.LE.CG();
-                    var toCG = to.LE.CG();
-
-                    return state.NewProgram(prog => prog
-                        .SelectRandomOne(
-                            state.NewProgram(subProg => subProg
-                                .Set(() => roomFromF().GN())
-                                .MoveNearTo(to, distance)
-                                .CurrentFirst(out var newArea)
-                                .RunIf(true,
-                                    thisProg => fromFloorNodeAfterPositionedNear(thisProg, newArea)
-                                )
-                                .Change(node => node.LE.GN(sym.Room, sym.FullFloorMarker))
-                                ),
-                            out var newRoom
-                        )
-                        .PlaceCurrentFrom(from)
-
-                        .Found(out var foundation)
-                        .PlaceCurrentFrom(newRoom)
-
-                        .Set(() => newRoom)
-                        .ReserveUpward(2, sym.UpwardReservation, out var reservation)
-                        .PlaceCurrentFrom(newRoom)
-
-                        .FindPath(() =>
-                        connectFrom(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
-                            (from.LE, newRoom.LE).GN(sym.ConnectionMarker), out var stairs)
-                        .PlaceCurrentFrom(from, newRoom)
-
-                        .FindPath(() =>
-                        connectTo(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
-                            (newRoom.LE, to.LE).GN(), out var fall)
-                        .PlaceCurrentFrom(to, newRoom)
-                        );
-                });
-        }
 
         public Production Roof(Symbol reservationSymbol, int roofHeight, AreaStyle roofAreaStyle)
         {
@@ -721,6 +661,66 @@ namespace OurFramework.Environment.ShapeGrammar
                 });
         }
 
+        public Production ConnectByRoom(
+            Symbol from,
+            Symbol to,
+            Func<LevelElement> roomFromF,
+            Func<ProductionProgram, Node, ProductionProgram> fromFloorNodeAfterPositionedNear,
+            ConnectionFromAddedAndPaths connectFrom,
+            ConnectionFromAddedAndPaths connectTo,
+            int distance,
+            Func<Node, Node, bool> fromToCondition)
+        {
+            return new Production(
+                $"ConnectByRoom",
+                new ProdParamsManager()
+                    .AddNodeSymbols(from, sym.FullFloorMarker)
+                    .AddNodeSymbols(to, sym.FullFloorMarker)
+                    .SetCondition((state, pp) =>
+                    {
+                        var (from, to) = pp;
+                        return fromToCondition(from, to);
+                    }),
+                (state, pp) =>
+                {
+                    var (from, to) = pp;
+                    var fromCG = from.LE.CG();
+                    var toCG = to.LE.CG();
+
+                    return state.NewProgram(prog => prog
+                        .SelectRandomOne(
+                            state.NewProgram(subProg => subProg
+                                .Set(() => roomFromF().GN())
+                                .MoveNearTo(to, distance)
+                                .CurrentFirst(out var newArea)
+                                .RunIf(true,
+                                    thisProg => fromFloorNodeAfterPositionedNear(thisProg, newArea)
+                                )
+                                .Change(node => node.LE.GN(sym.Room, sym.FullFloorMarker))
+                                ),
+                            out var newRoom
+                        )
+                        .PlaceCurrentFrom(from)
+
+                        .Found(out var foundation)
+                        .PlaceCurrentFrom(newRoom)
+
+                        .Set(() => newRoom)
+                        .ReserveUpward(2, sym.UpwardReservation, out var reservation)
+                        .PlaceCurrentFrom(newRoom)
+
+                        .FindPath(() =>
+                        connectFrom(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
+                            (from.LE, newRoom.LE).GN(sym.ConnectionMarker), out var stairs)
+                        .PlaceCurrentFrom(from, newRoom)
+
+                        .FindPath(() =>
+                        connectTo(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog).Merge(stairs.LE))
+                            (newRoom.LE, to.LE).GN(), out var fall)
+                        .PlaceCurrentFrom(to, newRoom)
+                        );
+                });
+        }
         #endregion
 
         public Production RoomDown(Symbol from, Symbol to, AreaStyle roomStyle, int belowRoomHeight, int minFloorHeight)
