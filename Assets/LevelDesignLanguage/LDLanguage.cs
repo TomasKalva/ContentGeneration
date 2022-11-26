@@ -179,7 +179,7 @@ namespace OurFramework.LevelDesignLanguage
                 return;
             }
 
-            var currentAreas = traversabilityGraph.Neighbors(activeArea).Append(activeArea);
+            var currentAreas = traversabilityGraph.Neighbors(activeArea).Append(activeArea).ToList();
 
             // remove no longer active
             var notActive = activeAreas.Where(area => traversabilityGraph.Distance(area, activeArea, int.MaxValue) > 1).ToList();

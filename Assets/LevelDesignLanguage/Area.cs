@@ -254,6 +254,9 @@ namespace OurFramework.LevelDesignLanguage
         }
     }
 
+    /// <summary>
+    /// Areas are vertices and connection between areas edges. The connections are symmetrical.
+    /// </summary>
     class TraversabilityGraph : GraphAlgorithms<Area, AreasConnection, TraversabilityGraph>, IGraph<Area, AreasConnection>
     {
         public List<Area> Areas { get; }
@@ -291,14 +294,17 @@ namespace OurFramework.LevelDesignLanguage
         {
             return Connections.Where(edge => edge.Contains(vert));
         }
+
         public IEnumerable<AreasConnection> EdgesTo(Area vert)
         {
-            return Connections.Where(edge => edge.To == vert);
+            return Connections.Where(edge => edge.Contains(vert));
         }
 
         public IEnumerable<Area> Neighbors(Area vert)
         {
-            return EdgesFrom(vert).Select(edge => edge.Other(vert));
+            return EdgesFrom(vert)
+                .Select(edge => edge.Other(vert))
+                .Distinct();
         }
     }
 

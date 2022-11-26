@@ -278,7 +278,7 @@ namespace OurFramework.Environment.ShapeGrammar
                         // The door doesn't get overwritten by apply style only because it has higher priority, which doesn't feel robust enough
                         .FindPath(() => 
                         ldk.con.ConnectByFall(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
-                            (newRoom.LE, bottomRoom.LE).GN(), out var fall)
+                            (newRoom.LE, bottomRoom.LE).GN(sym.ConnectionMarker), out var fall)
                         .PlaceCurrentFrom(bottomRoom, newRoom)
                         );
 
@@ -716,7 +716,7 @@ namespace OurFramework.Environment.ShapeGrammar
 
                         .FindPath(() =>
                         connectTo(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog).Merge(stairs.LE))
-                            (newRoom.LE, to.LE).GN(), out var fall)
+                            (newRoom.LE, to.LE).GN(sym.ConnectionMarker), out var fall)
                         .PlaceCurrentFrom(to, newRoom)
                         );
                 });
