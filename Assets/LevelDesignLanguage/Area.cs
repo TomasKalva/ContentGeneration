@@ -75,7 +75,7 @@ namespace OurFramework.LevelDesignLanguage
             var paths = L.State.TraversabilityGraph.Connections.Select(areasConnection => areasConnection.Path.LE.CG());
             var pathEnds = paths.SelectMany(path => PathNode.FindPathEndsInFloor(Node.LE.CG().WithFloor(), paths));
 
-            var unoccupiedFloor = Node.LE.CG().WithFloor().Cubes.Except(pathEnds);
+            var unoccupiedFloor = Node.LE.CG().WithFloor().Cubes.Except(paths.SelectMany(cg => cg.Cubes));
             var flooredCubes = new Holder<Cube>(unoccupiedFloor);
 
             var worldGeometry = world.WorldGeometry;

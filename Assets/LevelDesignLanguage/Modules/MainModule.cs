@@ -22,7 +22,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
         void DeclareDebugGame()
         {
             State.LC.AddNecessaryEvent($"Level Start", 100, level => M.LevelModule.LevelStart(), true);
-            /*State.LC.AddNecessaryEvent($"Level End", 99, level => M.LevelModule.LevelEnd(), true);
+            State.LC.AddNecessaryEvent($"Level End", 99, level => M.LevelModule.LevelEnd(), true);
             
             
             State.LC.AddNecessaryEvent($"Death", 99, _ =>
@@ -38,11 +38,11 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             }, true);
             
             //M.LevelModule.AddOptionalEnd();
-            */
+            
             M.FactionsModule.InitializeFactions(2);
             
 
-            //State.LC.AddNecessaryEvent($"Main path", 98, level => M.LevelModule.MainPath(level), true);
+            State.LC.AddNecessaryEvent($"Main path", 98, level => M.LevelModule.MainPath(level), true);
 
             State.LC.AddNecessaryEvent($"Sky", 0, level => M.EnvironmentModule.CreateSky(level), true);
             /*
