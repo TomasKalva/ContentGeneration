@@ -46,7 +46,7 @@ namespace ContentGeneration.Assets.UI
 
         public WorldGeometry WorldGeometry { get; }
 
-        public IEnumerable<CharacterState> AliveEnemies => Enemies;//.Where(ch => ch != null && !ch.Dead);
+        public IEnumerable<CharacterState> AliveEnemies => Enemies;
         public IEnumerable<InteractiveObjectState> InteractiveObjects => interactiveObjects.Concat(interactivePersistentObjects).Where(io => io != null && io.InteractiveObject != null);
 
         public Action OnLevelStart { get; set; }

@@ -22,8 +22,8 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
         void DeclareDebugGame()
         {
             State.LC.AddNecessaryEvent($"Level Start", 100, level => M.LevelModule.LevelStart(), true);
-            /*
-            State.LC.AddNecessaryEvent($"Level End", 99, level => M.LevelModule.LevelEnd(), true);
+            
+            //State.LC.AddNecessaryEvent($"Level End", 99, level => M.LevelModule.LevelEnd(), true);
             
             M.LevelModule.AddOptionalEnd();
             
@@ -31,11 +31,11 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             {
                 State.World.PlayerState.AddItem(Lib.Items.VibrantMemory());
                 State.World.PlayerState.AddItem(Lib.Items.VibrantMemory());
-                //L.DeathLanguage.EnableClassicalDeath();
-                M.DeathModule.DieIfNotProtected();
+                M.DeathModule.DieClasically();
+                //M.DeathModule.DieIfNotProtected();
                 //M.DeathModule.EndRunAfterDeaths(2);
                 //M.DeathModule.DropSpiritBloodstainOnDeath();
-                M.DeathModule.DropRunEndingBloodstainOnDeath();
+                //M.DeathModule.DropRunEndingBloodstainOnDeath();
                 //M.DeathModule.EndRunIfOutOfSmile();
             }, true);
             
@@ -55,7 +55,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             State.LC.AddNecessaryEvent($"Out of depth encounter", 80, level => M.OutOfDepthEncountersModule.DifficultEncounter(level), true);
 
             M.OutOfDepthEncountersModule.AddLightMaceEncounter();
-            */
+            
             M.AscendingModule.AddAscendingEvents(M.AscendingModule.AscendingKiln(ad => 100 + 50 * ad));
             
 

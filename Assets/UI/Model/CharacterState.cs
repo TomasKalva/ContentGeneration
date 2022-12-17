@@ -217,6 +217,9 @@ namespace ContentGeneration.Assets.UI.Model
 
         public Action OnUpdate { get; set; }
 
+        /// <summary>
+        /// Information about recently taken damage.
+        /// </summary>
         public DamageTaken DamageTaken { get; }
 
         public bool PostureBroken { get; set; }
@@ -266,6 +269,7 @@ namespace ContentGeneration.Assets.UI.Model
         {
             Agent.Stagger();
             World.RemoveEnemy(this);
+            DamageTaken.Reset();
             DeathCount++;
             OnDeath();
         }
@@ -281,6 +285,7 @@ namespace ContentGeneration.Assets.UI.Model
         /// </summary>
         public void Reset()
         {
+            DamageTaken.Reset();
             Health += Health.Maximum;
             Stamina += Stamina.Maximum;
             Poise += Poise.Maximum;
@@ -568,6 +573,13 @@ namespace ContentGeneration.Assets.UI.Model
                 TimedOut = true;
                 Damage = 0f;
             }
+        }
+
+        public void Reset()
+        {
+            Damage = 0f;
+            TimedOut = true;
+            timeRemaining = 0f;
         }
     }
 }
