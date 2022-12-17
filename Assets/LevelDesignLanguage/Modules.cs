@@ -18,6 +18,7 @@ namespace OurFramework.LevelDesignLanguage
         public DetailsModule DetailsModule { get; private set; }
         public EnvironmentModule EnvironmentModule { get; private set; }
         public DeathModule DeathModule { get; private set; }
+        public TutorialModule1 TutorialModule1 { get; private set; }
         public TutorialModule TutorialModule { get; private set; }
 
 
@@ -40,6 +41,7 @@ namespace OurFramework.LevelDesignLanguage
             DetailsModule = new DetailsModule(languageParams);
             EnvironmentModule = new EnvironmentModule(languageParams);
             DeathModule = new DeathModule(languageParams);
+            TutorialModule1 = new TutorialModule1(languageParams);
             TutorialModule = new TutorialModule(languageParams);
         }
     }

@@ -120,7 +120,8 @@ namespace ContentGeneration.Assets.UI.Model
                         .AddOption("ok", (ios, _1) =>
                         {
                             TryMoveNext(ios);
-                        }))
+                        })
+                        )
                 );
             return this;
         }

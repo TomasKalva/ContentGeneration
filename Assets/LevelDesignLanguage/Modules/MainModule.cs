@@ -13,7 +13,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
         {
             DeclareDebugGame();
             //State.LC.AddNecessaryEvent($"Tutorial module", 100, level => M.TutorialModule.Main());
-            //M.TutorialModule.DeclareGame();
+            //State.LC.AddNecessaryEvent($"Tutorial1 main", 100, level => M.TutorialModule1.Main(), true);
             //DeclareEnvironmentForPrettyPictures();
             //State.LC.AddNecessaryEvent($"Level Start", 100, level => M.LevelModule.LevelStart(), true);
             //State.LC.AddNecessaryEvent($"New Grammar", 50, level => M.TestingModule.NewGrammar());
@@ -22,8 +22,10 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
         void DeclareDebugGame()
         {
             State.LC.AddNecessaryEvent($"Level Start", 100, level => M.LevelModule.LevelStart(), true);
+            /*
             State.LC.AddNecessaryEvent($"Level End", 99, level => M.LevelModule.LevelEnd(), true);
             
+            M.LevelModule.AddOptionalEnd();
             
             State.LC.AddNecessaryEvent($"Death", 99, _ =>
             {
@@ -37,30 +39,25 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                 //M.DeathModule.EndRunIfOutOfSmile();
             }, true);
             
-            //M.LevelModule.AddOptionalEnd();
+
+            
             
             M.FactionsModule.InitializeFactions(2);
             
-
             State.LC.AddNecessaryEvent($"Main path", 98, level => M.LevelModule.MainPath(level), true);
 
             State.LC.AddNecessaryEvent($"Sky", 0, level => M.EnvironmentModule.CreateSky(level), true);
-            /*
+
+            State.LC.AddNecessaryEvent($"Roofs", -1, level => M.LevelModule.AddRoofs(), true);
+            
             State.LC.AddNecessaryEvent($"Add Details", 0, level => M.DetailsModule.AddDetails(level), true);
 
             State.LC.AddNecessaryEvent($"Out of depth encounter", 80, level => M.OutOfDepthEncountersModule.DifficultEncounter(level), true);
 
             M.OutOfDepthEncountersModule.AddLightMaceEncounter();
-
-
-
-            State.LC.AddNecessaryEvent($"Roofs", -1, level => M.LevelModule.AddRoofs(), true);
-            
-
-            M.AscendingModule.AddAscendingEvents(M.AscendingModule.AscendingKiln(ad => 100 + 50 * ad));
             */
-            //State.LC.AddNecessaryEvent("Ascending", 80, _ =>);
-
+            M.AscendingModule.AddAscendingEvents(M.AscendingModule.AscendingKiln(ad => 100 + 50 * ad));
+            
 
             //State.LC.AddNecessaryEvent("Testing enemies", 5, _ => L.TestingLanguage.StatsScalingOfEnemies());
 
@@ -97,15 +94,15 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
 
 
 
-            //State.LC.AddNecessaryEvent("Testing spells", 90, _ => L.TestingLanguage.Spells());
+            //State.LC.AddNecessaryEvent("Testing spells", 90, _ => M.TestingModule.Spells());
 
-            //State.LC.AddNecessaryEvent("Testing spells", 90, _ => L.TestingLanguage.ItemsTesting());
+            //State.LC.AddNecessaryEvent("Testing items", 90, _ => M.TestingModule.ItemsTesting());
 
 
-            //State.LC.AddNecessaryEvent("Testing Grammars", 90, _ => L.TestingLanguage.GrammarTesting());
-            //State.LC.AddNecessaryEvent("Testing Locking", 90, _ => L.TestingLanguage.TestLocking());
+            //State.LC.AddNecessaryEvent("Testing Grammars", 90, _ => M.TestingModule.GrammarTesting());
+            //State.LC.AddNecessaryEvent("Testing Locking", 90, _ => M.TestingModule.TestLocking());
             //L.NpcLanguage.InitializeNpcs();
-            //State.LC.AddNecessaryEvent("Testing Locking", 90, _ => L.TestingLanguage.NpcLine());
+            //State.LC.AddNecessaryEvent("Testing Locking", 90, _ => M.TestingModule.NpcLine());
         }
 
         void DeclareEnvironmentForPrettyPictures()
@@ -113,6 +110,14 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             State.LC.AddNecessaryEvent($"Level Start", 100, level => M.LevelModule.LevelStart(), true);
             State.LC.AddNecessaryEvent("Testing enemies", 5, _ => 
             {
+                Env.Line(Gr.PrL.Town(), NodesQueries.All, 20, out var _);
+                Env.Line(Gr.PrL.Castle(), NodesQueries.All, 20, out var _);
+                Env.Line(Gr.PrL.Chapels(), NodesQueries.All, 20, out var _);
+
+                Env.Line(Gr.PrL.Town(), NodesQueries.All, 20, out var _);
+                Env.Line(Gr.PrL.Castle(), NodesQueries.All, 20, out var _);
+                Env.Line(Gr.PrL.Chapels(), NodesQueries.All, 20, out var _);
+
                 Env.Line(Gr.PrL.Town(), NodesQueries.All, 20, out var _);
                 Env.Line(Gr.PrL.Castle(), NodesQueries.All, 20, out var _);
                 Env.Line(Gr.PrL.Chapels(), NodesQueries.All, 20, out var _);

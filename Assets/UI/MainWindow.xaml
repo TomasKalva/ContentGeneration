@@ -184,7 +184,7 @@
         </Border>
         
         <!-- Press E to interact -->
-        <Border HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="50">
+        <Border HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="50" Width="800">
             <Border.Style>
                 <Style TargetType="Border">
                     <Style.Triggers>
@@ -197,13 +197,13 @@
                 </Style>
             </Border.Style>
             <StackPanel>
-                <TextBlock Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="25">
+                <TextBlock Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="25" TextWrapping="Wrap">
                     <Run Text="{Binding World.PlayerState.CurrentInteractiveObjectState.InteractionDescription}"/>
                 </TextBlock>
                 <ItemsControl ItemsSource="{Binding World.PlayerState.CurrentInteractiveObjectState.InteractOptions.Options}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="20" Margin="20">
+                            <TextBlock Foreground="White" TextAlignment="Center" VerticalAlignment="Center" FontSize="20" Width="250" Margin="20" TextWrapping="Wrap">
                                 <Run Text ="{Binding Index, StringFormat='[{0}]: '}" FontSize="20"/>
                                 <Run Text ="{Binding Description}"/>
                             </TextBlock>
