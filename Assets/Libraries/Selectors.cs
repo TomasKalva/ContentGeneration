@@ -7,7 +7,9 @@ using Util;
 using OurFramework.Gameplay.RealWorld;
 using OurFramework.Gameplay.Data;
 
-public class SelectorLibrary
+namespace OurFramework.Gameplay.Libraries
+{
+    public class SelectorLibrary
     {
         Libraries lib;
 
@@ -190,3 +192,4 @@ public class SelectorLibrary
             };
         }
     }
+}

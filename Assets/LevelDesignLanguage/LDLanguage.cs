@@ -8,6 +8,7 @@ using OurFramework.Environment.ShapeGrammar;
 using OurFramework.Environment.ShapeCreation;
 using OurFramework.Environment.GridMembers;
 using OurFramework.Gameplay.Data;
+using OurFramework.Gameplay.Libraries;
 
 namespace OurFramework.LevelDesignLanguage
 {

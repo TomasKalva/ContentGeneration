@@ -5,7 +5,9 @@ using System;
 using UnityEngine;
 using Util;
 
-public class EffectLibrary
+namespace OurFramework.Gameplay.Libraries
+{
+    public class EffectLibrary
     {
         SelectorLibrary sel;
 
@@ -95,3 +97,4 @@ public class EffectLibrary
             return _ => levelConstructor.AddPossibleEvent(levelConstructionEvent);
         }
     }
+}

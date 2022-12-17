@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using OurFramework.Gameplay.Data;
 
-public class SpellItems
+namespace OurFramework.Gameplay.Libraries
+{
+    public class SpellItems
     {
         Spells spells;
         VFXs vfxs;
@@ -295,3 +297,5 @@ public class SpellItems
             }
             .OnUse(ch => spells.Replenishment(5f + 1.5f * ch.Stats.Versatility)(ch));
     }
+}
+

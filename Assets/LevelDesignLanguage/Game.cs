@@ -13,6 +13,7 @@ using OurFramework.Environment.StylingAreas;
 using OurFramework.Environment.GridMembers;
 using OurFramework.Environment.ShapeCreation;
 using OurFramework.Gameplay.Data;
+using OurFramework.Gameplay.Libraries;
 
 namespace OurFramework.LevelDesignLanguage
 {

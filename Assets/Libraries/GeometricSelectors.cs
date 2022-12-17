@@ -1,29 +1,32 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public class GeometricSelectors : ScriptableObject
+namespace OurFramework.Gameplay.Libraries
 {
-#if UNITY_EDITOR
-    [MenuItem("Assets/Create/GeometricSelectors")]
-    public static void CreateMyAsset()
+    public class GeometricSelectors : ScriptableObject
     {
-        GeometricSelectors asset = ScriptableObject.CreateInstance<GeometricSelectors>();
+#if UNITY_EDITOR
+        [MenuItem("Assets/Create/GeometricSelectors")]
+        public static void CreateMyAsset()
+        {
+            GeometricSelectors asset = ScriptableObject.CreateInstance<GeometricSelectors>();
 
-        string name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath("Assets/GeometricSelectors.asset");
-        AssetDatabase.CreateAsset(asset, name);
-        AssetDatabase.SaveAssets();
+            string name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath("Assets/GeometricSelectors.asset");
+            AssetDatabase.CreateAsset(asset, name);
+            AssetDatabase.SaveAssets();
 
-        EditorUtility.FocusProjectWindow();
+            EditorUtility.FocusProjectWindow();
 
-        Selection.activeObject = asset;
-    }
+            Selection.activeObject = asset;
+        }
 #endif
 
-    [SerializeField]
-    Libraries lib;
-    /*
-    public FireVFX Fire()
-    {
-        return Instantiate(fireVFX);
-    }*/
+        [SerializeField]
+        Libraries lib;
+        /*
+        public FireVFX Fire()
+        {
+            return Instantiate(fireVFX);
+        }*/
+    }
 }

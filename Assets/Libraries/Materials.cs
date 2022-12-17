@@ -1,36 +1,39 @@
 using UnityEditor;
 using UnityEngine;
 
-public class Materials : ScriptableObject
+namespace OurFramework.Gameplay.Libraries
 {
-#if UNITY_EDITOR
-    [MenuItem("Assets/Create/Materials")]
-    public static void CreateMyAsset()
+    public class Materials : ScriptableObject
     {
-        Materials asset = ScriptableObject.CreateInstance<Materials>();
+#if UNITY_EDITOR
+        [MenuItem("Assets/Create/Materials")]
+        public static void CreateMyAsset()
+        {
+            Materials asset = ScriptableObject.CreateInstance<Materials>();
 
-        string name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath("Assets/Materials.asset");
-        AssetDatabase.CreateAsset(asset, name);
-        AssetDatabase.SaveAssets();
+            string name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath("Assets/Materials.asset");
+            AssetDatabase.CreateAsset(asset, name);
+            AssetDatabase.SaveAssets();
 
-        EditorUtility.FocusProjectWindow();
+            EditorUtility.FocusProjectWindow();
 
-        Selection.activeObject = asset;
-    }
+            Selection.activeObject = asset;
+        }
 #endif
 
-    [SerializeField]
-    public Material stone;
+        [SerializeField]
+        public Material stone;
 
-    [SerializeField]
-    public Material bricks;
+        [SerializeField]
+        public Material bricks;
 
-    [SerializeField]
-    public Material water;
+        [SerializeField]
+        public Material water;
 
-    [SerializeField]
-    public Material tiles;
+        [SerializeField]
+        public Material tiles;
 
-    [SerializeField]
-    public Material wood;
+        [SerializeField]
+        public Material wood;
+    }
 }

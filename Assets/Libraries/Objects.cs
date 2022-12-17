@@ -1,31 +1,34 @@
 using UnityEditor;
 using UnityEngine;
 
-public class Objects : ScriptableObject
+namespace OurFramework.Gameplay.Libraries
 {
-#if UNITY_EDITOR
-    [MenuItem("Assets/Create/Objects")]
-    public static void CreateMyAsset()
+    public class Objects : ScriptableObject
     {
-        Objects asset = CreateInstance<Objects>();
+#if UNITY_EDITOR
+        [MenuItem("Assets/Create/Objects")]
+        public static void CreateMyAsset()
+        {
+            Objects asset = CreateInstance<Objects>();
 
-        string name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath("Assets/Objects.asset");
-        AssetDatabase.CreateAsset(asset, name);
-        AssetDatabase.SaveAssets();
+            string name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath("Assets/Objects.asset");
+            AssetDatabase.CreateAsset(asset, name);
+            AssetDatabase.SaveAssets();
 
-        EditorUtility.FocusProjectWindow();
+            EditorUtility.FocusProjectWindow();
 
-        Selection.activeObject = asset;
-    }
+            Selection.activeObject = asset;
+        }
 #endif
 
-    //public Transform spawnPoint;
+        //public Transform spawnPoint;
 
-    [SerializeField]
-    EnvironmentMap environment;
+        [SerializeField]
+        EnvironmentMap environment;
 
-    public EnvironmentMap EnvironmentMap()
-    {
-        return Instantiate(environment);
+        public EnvironmentMap EnvironmentMap()
+        {
+            return Instantiate(environment);
+        }
     }
 }

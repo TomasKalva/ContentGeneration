@@ -6,7 +6,9 @@ using System.Linq;
 using UnityEngine;
 using Util;
 
-public class Spells
+namespace OurFramework.Gameplay.Libraries
+{
+    public class Spells
     {
         EffectLibrary eff;
         SelectorLibrary sel;
@@ -210,3 +212,5 @@ public class Spells
             return user => eff.Heal(healing)(user);
         }
     }
+}
+
