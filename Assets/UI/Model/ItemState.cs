@@ -7,7 +7,7 @@ using System.Linq;
 using System.ComponentModel;
 using ContentGeneration.Assets.UI.Util;
 #if NOESIS
-using OurFramework.Characters.SpellClasses;
+using OurFramework.Gameplay.RealWorld;
 #endif
 
 namespace ContentGeneration.Assets.UI.Model

@@ -2,67 +2,70 @@ using Animancer;
 using ContentGeneration.Assets.UI.Model;
 using UnityEngine;
 
-public class Door : InteractiveObject
+namespace OurFramework.Gameplay.RealWorld
 {
-    [SerializeField]
-    public AnimancerComponent animancerAnimator;
-
-    [SerializeField]
-    AnimationClip openDoor;
-
-    [SerializeField]
-    AnimationClip closeDoor;
-
-    bool open = false;
-
-    private void Awake()
+    public class Door : InteractiveObject
     {
-        State = new DoorState(this);
+        [SerializeField]
+        public AnimancerComponent animancerAnimator;
+
+        [SerializeField]
+        AnimationClip openDoor;
+
+        [SerializeField]
+        AnimationClip closeDoor;
+
+        bool open = false;
+
+        private void Awake()
+        {
+            State = new DoorState(this);
+        }
+
+        public void SwitchPosition()
+        {
+            var animToPlay = open ? closeDoor : openDoor;
+            open = !open;
+
+            var state = animancerAnimator.Play(animToPlay);
+
+            WorldEventsLog.Get.Log("Door activated", LogPriority.Info);
+        }
     }
 
-    public void SwitchPosition()
+    public class DoorState : InteractiveObjectState<Door>
     {
-        var animToPlay = open ? closeDoor : openDoor;
-        open = !open;
-
-        var state = animancerAnimator.Play(animToPlay);
-
-        WorldEventsLog.Get.Log("Door activated", LogPriority.Info);
-    }
-}
-
-public class DoorState : InteractiveObjectState<Door>
-{
-    public DoorState(Door door)
-    {
-        IntObj = door;
-        SetInteraction(ins => ins.Interact("Open/Close", (door, _) => door.IntObj.SwitchPosition()));
-    }
-}
-
-public enum LogPriority
-{
-    Info,
-}
-
-public class WorldEventsLog
-{
-    public static WorldEventsLog Get { get; }
-
-    static WorldEventsLog()
-    {
-        Get = new WorldEventsLog(true);
+        public DoorState(Door door)
+        {
+            IntObj = door;
+            SetInteraction(ins => ins.Interact("Open/Close", (door, _) => door.IntObj.SwitchPosition()));
+        }
     }
 
-    bool showMessages;
-
-    private WorldEventsLog(bool showMessages) 
+    public enum LogPriority
     {
-        this.showMessages = showMessages;
+        Info,
     }
 
-    public void Log(string msg, LogPriority priority)
+    public class WorldEventsLog
     {
-        Debug.Log(msg);
+        public static WorldEventsLog Get { get; }
+
+        static WorldEventsLog()
+        {
+            Get = new WorldEventsLog(true);
+        }
+
+        bool showMessages;
+
+        private WorldEventsLog(bool showMessages)
+        {
+            this.showMessages = showMessages;
+        }
+
+        public void Log(string msg, LogPriority priority)
+        {
+            Debug.Log(msg);
+        }
     }
 }

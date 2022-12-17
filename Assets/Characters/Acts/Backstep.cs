@@ -1,26 +1,29 @@
 using UnityEngine;
 
-public class Backstep : AnimatedAct
+namespace OurFramework.Gameplay.RealWorld
 {
-    [SerializeField, Curve(0f, 0f, 1f, 30f, true)]
-    AnimationCurve speedF;
-
-    public override void OnStart(Agent agent)
+    public class Backstep : AnimatedAct
     {
-        PlayAnimation(agent);
+        [SerializeField, Curve(0f, 0f, 1f, 30f, true)]
+        AnimationCurve speedF;
 
-        var backDirection = -agent.movement.AgentForward;
-        Direction3F directionF = () => backDirection;
-        agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, directionF);
+        public override void OnStart(Agent agent)
+        {
+            PlayAnimation(agent);
 
-        SetupMovementConstraints(agent, 
-            new VelocityInDirection(directionF),
-            new TurnToDirection(() => -backDirection.XZ())
-            );
-    }
+            var backDirection = -agent.movement.AgentForward;
+            Direction3F directionF = () => backDirection;
+            agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, directionF);
 
-    public override void EndAct(Agent agent)
-    {
-        MovementContraints.ForEach(con => con.Finished = true);
+            SetupMovementConstraints(agent,
+                new VelocityInDirection(directionF),
+                new TurnToDirection(() => -backDirection.XZ())
+                );
+        }
+
+        public override void EndAct(Agent agent)
+        {
+            MovementContraints.ForEach(con => con.Finished = true);
+        }
     }
 }

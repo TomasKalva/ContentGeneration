@@ -1,37 +1,39 @@
-﻿using OurFramework.Characters.SpellClasses;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class SpitFire : MultiEventAct
+namespace OurFramework.Gameplay.RealWorld
 {
-    public ByTransform<Effect> SpitFromPositionDirectionEffect { set; private get; }
-
-    [SerializeField]
-    Transform spirtStart;
-
-    [SerializeField]
-    float startT;
-
-    [SerializeField]
-    float endT;
-
-    [SerializeField]
-    int shotsCount;
-
-    public override void OnStart(Agent agent)
+    public class SpitFire : MultiEventAct
     {
-        base.OnStart(agent);
+        public ByTransform<Effect> SpitFromPositionDirectionEffect { set; private get; }
 
-        timedActions = new List<TimeAction>();
-        timedActions.AddRange(Enumerable.Range(0, shotsCount).Select(i => new TimeAction(startT + i / (float)shotsCount * (endT - startT), () => DoShot(agent))));
-    }
+        [SerializeField]
+        Transform spirtStart;
 
-    void DoShot(Agent agent)
-    {
-        if (SpitFromPositionDirectionEffect != null)
+        [SerializeField]
+        float startT;
+
+        [SerializeField]
+        float endT;
+
+        [SerializeField]
+        int shotsCount;
+
+        public override void OnStart(Agent agent)
         {
-            SpitFromPositionDirectionEffect(spirtStart.position , spirtStart.up)(agent.CharacterState);
+            base.OnStart(agent);
+
+            timedActions = new List<TimeAction>();
+            timedActions.AddRange(Enumerable.Range(0, shotsCount).Select(i => new TimeAction(startT + i / (float)shotsCount * (endT - startT), () => DoShot(agent))));
+        }
+
+        void DoShot(Agent agent)
+        {
+            if (SpitFromPositionDirectionEffect != null)
+            {
+                SpitFromPositionDirectionEffect(spirtStart.position, spirtStart.up)(agent.CharacterState);
+            }
         }
     }
 }

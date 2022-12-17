@@ -1,16 +1,20 @@
-﻿public class IdleAct : AnimatedAct
+﻿
+namespace OurFramework.Gameplay.RealWorld
 {
-    public IdleAct()
+    public class IdleAct : AnimatedAct
     {
-        actName = "Idle";
-        type = ActType.IDLE;
-        priority = -100;
-    }
+        public IdleAct()
+        {
+            actName = "Idle";
+            type = ActType.IDLE;
+            priority = -100;
+        }
 
-    public override bool UpdateAct(Agent agent, float dt)
-    {
-        PlayIfNotActive(agent, 0.1f);
+        public override bool UpdateAct(Agent agent, float dt)
+        {
+            PlayIfNotActive(agent, 0.1f);
 
-        return true;
+            return true;
+        }
     }
 }

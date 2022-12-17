@@ -1,26 +1,29 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(Agent))]
-public class EnemyController : MonoBehaviour
+namespace OurFramework.Gameplay.RealWorld
 {
-	Agent agent;
-
-	void Awake()
+	[RequireComponent(typeof(Agent))]
+	public class EnemyController : MonoBehaviour
 	{
-		agent = GetComponent<Agent>();
-	}
+		Agent agent;
 
-    private void Start()
-    {
-		agent.acting.MyReset();
-	}
+		void Awake()
+		{
+			agent = GetComponent<Agent>();
+		}
 
-    void FixedUpdate()
-	{
-		agent.StartReceivingControls();
+		private void Start()
+		{
+			agent.acting.MyReset();
+		}
 
-		agent.Behaviors.UpdateBehavior(agent);
+		void FixedUpdate()
+		{
+			agent.StartReceivingControls();
 
-		agent.UpdateAgent();
+			agent.Behaviors.UpdateBehavior(agent);
+
+			agent.UpdateAgent();
+		}
 	}
 }

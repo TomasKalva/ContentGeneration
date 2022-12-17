@@ -1,10 +1,10 @@
-﻿using OurFramework.Characters.SpellClasses;
-using ContentGeneration.Assets.UI.Model;
+﻿using ContentGeneration.Assets.UI.Model;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using OurFramework.Gameplay.RealWorld;
 
-    public class SpellItems
+public class SpellItems
     {
         Spells spells;
         VFXs vfxs;

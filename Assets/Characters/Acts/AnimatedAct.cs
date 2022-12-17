@@ -1,68 +1,72 @@
 ﻿using Animancer;
+using OurFramework.Gameplay.RealWorld;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimatedAct : Act
+namespace OurFramework.Gameplay.RealWorld
 {
-    [SerializeField]
-    protected ClipTransition anim;
-
-
-    protected float timeElapsed;
-
-    protected List<MovementConstraint> MovementContraints { get; private set; }
-
-    public void Initialize(Agent agent)
+    public class AnimatedAct : Act
     {
-        // Set speed so that the animation takes duration seconds
-        var speed = anim.Clip.length / Duration;
-        anim.Speed = speed;
-        MovementContraints = new List<MovementConstraint>();
-    }
+        [SerializeField]
+        protected ClipTransition anim;
 
-    public sealed override void StartAct(Agent agent)
-    {
-        Initialize(agent);
-        timeElapsed = 0f;
-        agent.CharacterState.Stamina -= cost;
 
-        OnStart(agent);
-    }
+        protected float timeElapsed;
 
-    public virtual void OnStart(Agent agent) { }
+        protected List<MovementConstraint> MovementContraints { get; private set; }
 
-    public override bool UpdateAct(Agent agent, float dt)
-    {
-        timeElapsed += dt;
-        OnUpdate(agent);
-        return timeElapsed >= Duration;
-    }
-
-    public virtual void OnUpdate(Agent agent) { }
-
-    public override void EndAct(Agent agent)
-    {
-            
-    }
-
-    protected void PlayAnimation(Agent agent)
-    {
-        agent.animancerAnimator.Play(anim, 0.1f);
-    }
-
-    protected AnimancerState PlayIfNotActive(Agent agent, float transitionTime)
-    {
-        if (!agent.animancerAnimator.IsPlaying(anim))
+        public void Initialize(Agent agent)
         {
-            return agent.animancerAnimator.Play(anim, transitionTime);
+            // Set speed so that the animation takes duration seconds
+            var speed = anim.Clip.length / Duration;
+            anim.Speed = speed;
+            MovementContraints = new List<MovementConstraint>();
         }
-        return agent.animancerAnimator.States.Current;
-    }
 
-    protected void SetupMovementConstraints(Agent agent, params MovementConstraint[] movementConstraints)
-    {
-        MovementContraints.Clear();
-        MovementContraints.AddRange(movementConstraints);
-        agent.movement.AddMovementConstraints(movementConstraints);
+        public sealed override void StartAct(Agent agent)
+        {
+            Initialize(agent);
+            timeElapsed = 0f;
+            agent.CharacterState.Stamina -= cost;
+
+            OnStart(agent);
+        }
+
+        public virtual void OnStart(Agent agent) { }
+
+        public override bool UpdateAct(Agent agent, float dt)
+        {
+            timeElapsed += dt;
+            OnUpdate(agent);
+            return timeElapsed >= Duration;
+        }
+
+        public virtual void OnUpdate(Agent agent) { }
+
+        public override void EndAct(Agent agent)
+        {
+
+        }
+
+        protected void PlayAnimation(Agent agent)
+        {
+            agent.animancerAnimator.Play(anim, 0.1f);
+        }
+
+        protected AnimancerState PlayIfNotActive(Agent agent, float transitionTime)
+        {
+            if (!agent.animancerAnimator.IsPlaying(anim))
+            {
+                return agent.animancerAnimator.Play(anim, transitionTime);
+            }
+            return agent.animancerAnimator.States.Current;
+        }
+
+        protected void SetupMovementConstraints(Agent agent, params MovementConstraint[] movementConstraints)
+        {
+            MovementContraints.Clear();
+            MovementContraints.AddRange(movementConstraints);
+            agent.movement.AddMovementConstraints(movementConstraints);
+        }
     }
 }

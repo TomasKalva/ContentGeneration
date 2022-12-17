@@ -1,28 +1,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VFXTesting : MonoBehaviour
+namespace OurFramework.Gameplay.RealWorld
 {
-    [SerializeField]
-    Transform parent;
-
-    [SerializeField]
-    VFXs VFXs;
-
-    [SerializeField]
-    Color color;
-
-    List<VFX> vfxs;
-
-    // Start is called before the first frame update
-    void Start()
+    public class VFXTesting : MonoBehaviour
     {
-        vfxs = VFXs.TestVFXs(parent);
-    }
+        [SerializeField]
+        Transform parent;
 
-    // Update is called once per frame
-    void Update()
-    {
-        vfxs.ForEach(vfx => vfx.SetColor(color));
+        [SerializeField]
+        VFXs VFXs;
+
+        [SerializeField]
+        Color color;
+
+        List<VFX> vfxs;
+
+        // Start is called before the first frame update
+        void Start()
+        {
+            vfxs = VFXs.TestVFXs(parent);
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            vfxs.ForEach(vfx => vfx.SetColor(color));
+        }
     }
 }

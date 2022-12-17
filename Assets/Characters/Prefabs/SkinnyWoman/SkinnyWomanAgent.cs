@@ -1,33 +1,35 @@
-using OurFramework.Characters.SpellClasses;
 using UnityEngine;
 
 
-public class SkinnyWomanAgent : Agent
+namespace OurFramework.Gameplay.RealWorld
 {
-    [SerializeField]
-    public ColliderDetector rushForwardDetector;
-
-    [SerializeField]
-    public ColliderDetector castDetector;
-
-    public Act RushForward()
+    public class SkinnyWomanAgent : Agent
     {
-        var attack = acting.SelectAct("RushForward") as Attack;
-        attack.Direction = movement.AgentForward;
-        return attack;
-    }
+        [SerializeField]
+        public ColliderDetector rushForwardDetector;
 
-    public Act CastFireball(Effect castFireball)
-    {
-        var attack = acting.SelectAct("CastFireball") as Shoot;
-        attack.ShotEffect = castFireball;
-        return attack;
-    }
+        [SerializeField]
+        public ColliderDetector castDetector;
 
-    public Act Enchant()
-    {
-        var attack = acting.SelectAct("Enchant") as Attack;
-        attack.Direction = movement.AgentForward;
-        return attack;
+        public Act RushForward()
+        {
+            var attack = acting.SelectAct("RushForward") as Attack;
+            attack.Direction = movement.AgentForward;
+            return attack;
+        }
+
+        public Act CastFireball(Effect castFireball)
+        {
+            var attack = acting.SelectAct("CastFireball") as Shoot;
+            attack.ShotEffect = castFireball;
+            return attack;
+        }
+
+        public Act Enchant()
+        {
+            var attack = acting.SelectAct("Enchant") as Attack;
+            attack.Direction = movement.AgentForward;
+            return attack;
+        }
     }
 }

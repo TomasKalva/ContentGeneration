@@ -6,6 +6,7 @@ using UnityEngine;
 using static OurFramework.LevelDesignLanguage.AsynchronousEvaluator;
 using OurFramework.Environment.GridMembers;
 using OurFramework.Environment.StylingAreas;
+using OurFramework.Gameplay.RealWorld;
 
 namespace OurFramework.Environment.ShapeGrammar
 {

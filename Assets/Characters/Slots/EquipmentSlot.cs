@@ -1,51 +1,54 @@
 ﻿using ContentGeneration.Assets.UI;
 using UnityEngine;
 
-public class EquipmentSlot<EquipmentT> : EquipmentSlot where EquipmentT : Equipment
+namespace OurFramework.Gameplay.RealWorld
 {
-    [SerializeField]
-    protected float equipmentScale = 1f;
-
-
-    Transform equipmentTransform;
-    EquipmentT equipment;
-
-    public EquipmentT Equipment 
+    public class EquipmentSlot<EquipmentT> : EquipmentSlot where EquipmentT : Equipment
     {
-        get => equipment;
-        set
+        [SerializeField]
+        protected float equipmentScale = 1f;
+
+
+        Transform equipmentTransform;
+        EquipmentT equipment;
+
+        public EquipmentT Equipment
         {
-            RemoveEquipment();
+            get => equipment;
+            set
+            {
+                RemoveEquipment();
 
-            equipment = value;
-            equipmentTransform = value?.transform;
-            AddEquipment(equipmentTransform);
-        }
-    }
-
-    void RemoveEquipment()
-    {
-        if (equipmentTransform == null) return;
-
-        World.PutToCache(equipmentTransform.transform);
-        equipmentTransform.gameObject.SetActive(false);
-    }
-
-    void AddEquipment(Transform newWeapon)
-    {
-        if (newWeapon == null)
-        {
-            this.equipmentTransform = null;
-            return;
+                equipment = value;
+                equipmentTransform = value?.transform;
+                AddEquipment(equipmentTransform);
+            }
         }
 
-        newWeapon.transform.SetParent(transform);
-        newWeapon.gameObject.SetActive(true);
+        void RemoveEquipment()
+        {
+            if (equipmentTransform == null) return;
 
-        newWeapon.transform.localPosition = Vector3.zero;
-        newWeapon.transform.localRotation = Quaternion.identity;
-        newWeapon.transform.localScale = equipmentScale * Vector3.one;
+            World.PutToCache(equipmentTransform.transform);
+            equipmentTransform.gameObject.SetActive(false);
+        }
 
-        this.equipmentTransform = newWeapon;
+        void AddEquipment(Transform newWeapon)
+        {
+            if (newWeapon == null)
+            {
+                this.equipmentTransform = null;
+                return;
+            }
+
+            newWeapon.transform.SetParent(transform);
+            newWeapon.gameObject.SetActive(true);
+
+            newWeapon.transform.localPosition = Vector3.zero;
+            newWeapon.transform.localRotation = Quaternion.identity;
+            newWeapon.transform.localScale = equipmentScale * Vector3.one;
+
+            this.equipmentTransform = newWeapon;
+        }
     }
 }

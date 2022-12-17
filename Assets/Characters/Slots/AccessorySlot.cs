@@ -1,3 +1,7 @@
-﻿public class AccessorySlot : EquipmentSlot<Accessory>
+﻿
+namespace OurFramework.Gameplay.RealWorld
 {
+    public class AccessorySlot : EquipmentSlot<Accessory>
+    {
+    }
 }

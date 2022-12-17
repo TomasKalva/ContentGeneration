@@ -8,8 +8,8 @@ using System.Runtime.CompilerServices;
 using System;
 using System.Linq;
 using OurFramework.Characters.Items.ItemClasses;
-using OurFramework.Characters.SpellClasses;
 using OurFramework.LevelDesignLanguage;
+using OurFramework.Gameplay.RealWorld;
 
 namespace ContentGeneration.Assets.UI.Model
 {

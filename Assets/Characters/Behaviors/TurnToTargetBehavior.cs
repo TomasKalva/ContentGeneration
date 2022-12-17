@@ -1,44 +1,47 @@
 using UnityEngine;
 
-public class TurnToTargetBehavior : Behavior
+namespace OurFramework.Gameplay.RealWorld
 {
-	Transform targetPoint;
-
-	protected Vector3 TargetPoint => targetPoint != null ? targetPoint.position : Vector3.zero;
-
-	float maxAngle;
-
-    float cosMaxAngle;
-
-    public TurnToTargetBehavior(float maxAngle)
+    public class TurnToTargetBehavior : Behavior
     {
-        this.maxAngle = maxAngle;
-        cosMaxAngle = Mathf.Cos(maxAngle * Mathf.Deg2Rad);
-    }
+        Transform targetPoint;
 
-    bool ShouldTurnToTarget(Agent agent)
-	{
-        return Vector2.Dot(agent.movement.direction, (TargetPoint - agent.transform.position).XZ().normalized) < cosMaxAngle;
-	}
+        protected Vector3 TargetPoint => targetPoint != null ? targetPoint.position : Vector3.zero;
 
-    public override bool CanEnter(Agent agent)
-    {
-        return ShouldTurnToTarget(agent);
-    }
+        float maxAngle;
 
-    public override void Enter(Agent agent)
-    {
-        targetPoint = GameObject.FindGameObjectWithTag("Player").transform;
-    }
+        float cosMaxAngle;
 
-    public override int Priority(Agent agent) => 1;
+        public TurnToTargetBehavior(float maxAngle)
+        {
+            this.maxAngle = maxAngle;
+            cosMaxAngle = Mathf.Cos(maxAngle * Mathf.Deg2Rad);
+        }
 
-    public override bool Update(Agent agent)
-    {
-        Vector3 direction = TargetPoint - agent.transform.position;
-        var moveDirection = direction.XZ().normalized;
-        agent.Turn(moveDirection); 
+        bool ShouldTurnToTarget(Agent agent)
+        {
+            return Vector2.Dot(agent.movement.direction, (TargetPoint - agent.transform.position).XZ().normalized) < cosMaxAngle;
+        }
 
-        return !ShouldTurnToTarget(agent);
+        public override bool CanEnter(Agent agent)
+        {
+            return ShouldTurnToTarget(agent);
+        }
+
+        public override void Enter(Agent agent)
+        {
+            targetPoint = GameObject.FindGameObjectWithTag("Player").transform;
+        }
+
+        public override int Priority(Agent agent) => 1;
+
+        public override bool Update(Agent agent)
+        {
+            Vector3 direction = TargetPoint - agent.transform.position;
+            var moveDirection = direction.XZ().normalized;
+            agent.Turn(moveDirection);
+
+            return !ShouldTurnToTarget(agent);
+        }
     }
 }

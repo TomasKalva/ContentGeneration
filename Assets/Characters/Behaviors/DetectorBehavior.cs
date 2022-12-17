@@ -1,59 +1,63 @@
 using System.Linq;
 using UnityEngine;
 
-public class DetectorBehavior : Behavior
+namespace OurFramework.Gameplay.RealWorld
 {
-    ColliderDetector[] detectors;
-
-    ActSelector actSelector;
-
-    Act act;
-
-    public DetectorBehavior(ActSelector actSelector, params ColliderDetector[] detectors)
+    public class DetectorBehavior : Behavior
     {
-        this.detectors = detectors;
-        this.actSelector = actSelector;
-        this.act = actSelector();
-    }
+        ColliderDetector[] detectors;
 
-    public Transform DetectedTarget()
-    { 
-        // Avoids using null coallescing operators on UnityEngine.Object:
-        // https://forum.unity.com/threads/simple-question-about-null-conditional-operator.734864/
-        var maybeOther = detectors.Select(detector =>
+        ActSelector actSelector;
+
+        Act act;
+
+        public DetectorBehavior(ActSelector actSelector, params ColliderDetector[] detectors)
         {
-            if (detector != null)
-            {
-                return detector.other;
-            }
-            return null;
-        }).Where(other => other != null).FirstOrDefault();
-
-        if (maybeOther == null) {
-            return null;
+            this.detectors = detectors;
+            this.actSelector = actSelector;
+            this.act = actSelector();
         }
-        return maybeOther.transform;
+
+        public Transform DetectedTarget()
+        {
+            // Avoids using null coallescing operators on UnityEngine.Object:
+            // https://forum.unity.com/threads/simple-question-about-null-conditional-operator.734864/
+            var maybeOther = detectors.Select(detector =>
+            {
+                if (detector != null)
+                {
+                    return detector.other;
+                }
+                return null;
+            }).Where(other => other != null).FirstOrDefault();
+
+            if (maybeOther == null)
+            {
+                return null;
+            }
+            return maybeOther.transform;
+        }
+
+        public override bool CanEnter(Agent agent)
+        {
+            return act.CanBeUsed(agent) && detectors.Any(detector => detector.Triggered && agent != detector.other.GetComponentInParent<Agent>());
+        }
+        /// <summary>
+        /// Number in [0, 10]. The higher the more the agent wants to do this behaviour.
+        /// </summary>
+        public override int Priority(Agent agent) => 5;
+        public override void Enter(Agent agent)
+        {
+            this.act = actSelector();
+            this.act.TargetPosition = new TargetPosition(DetectedTarget(), Vector3.zero);
+            //agent.acting.SelectAct(currentAct);
+        }
+
+        public override bool Update(Agent agent)
+        {
+            return act.ActEnded;
+        }
     }
 
-    public override bool CanEnter(Agent agent)
-    {
-        return act.CanBeUsed(agent) && detectors.Any(detector => detector.Triggered && agent != detector.other.GetComponentInParent<Agent>());
-    }
-    /// <summary>
-    /// Number in [0, 10]. The higher the more the agent wants to do this behaviour.
-    /// </summary>
-    public override int Priority(Agent agent) => 5;
-    public override void Enter(Agent agent)
-    {
-        this.act = actSelector();
-        this.act.TargetPosition = new TargetPosition(DetectedTarget(), Vector3.zero);
-        //agent.acting.SelectAct(currentAct);
-    }
-
-    public override bool Update(Agent agent)
-    {
-        return act.ActEnded;
-    }
+    public delegate Act ActSelector();
 }
-
-public delegate Act ActSelector();

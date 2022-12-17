@@ -1,10 +1,10 @@
-using OurFramework.Characters.SpellClasses;
 using OurFramework.LevelDesignLanguage;
 using ContentGeneration.Assets.UI.Model;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using OurFramework.Gameplay.RealWorld;
 
 public class Enemies : ScriptableObject
 {

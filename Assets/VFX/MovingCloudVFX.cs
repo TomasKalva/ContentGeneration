@@ -1,13 +1,16 @@
 using UnityEngine;
 
-public class MovingCloudVFX : VFX
+namespace OurFramework.Gameplay.RealWorld
 {
-    [SerializeField]
-    string halfWidthName;
-
-    public MovingCloudVFX SetHalfWidth(float halfWidth)
+    public class MovingCloudVFX : VFX
     {
-        visualEffect.SetFloat(halfWidthName, halfWidth);
-        return this;
+        [SerializeField]
+        string halfWidthName;
+
+        public MovingCloudVFX SetHalfWidth(float halfWidth)
+        {
+            visualEffect.SetFloat(halfWidthName, halfWidth);
+            return this;
+        }
     }
 }

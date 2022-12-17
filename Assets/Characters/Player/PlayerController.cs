@@ -5,38 +5,40 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[RequireComponent(typeof(HumanAgent))]
-public class PlayerController : MonoBehaviour
+namespace OurFramework.Gameplay.RealWorld
 {
-	HumanAgent myAgent;
-
-	PlayerCharacterState PlayerCharacterState => (PlayerCharacterState)myAgent.CharacterState;
-
-	[SerializeField]
-	Transform orbitCameraFocusPoint;
-
-	OrbitCamera orbitCamera;
-
-	SpacePartitioning spacePartitioning;
-
-	Transform playerInputSpace;
-
-	/// <summary>
-	/// The input buttons which are used.
-	/// </summary>
-	Dictionary<string, bool> buttonDown;
-
-	[SerializeField]
-	float interactionDistance = 1f;
-
-	// Start is called before the first frame update
-	void Awake()
+	[RequireComponent(typeof(HumanAgent))]
+	public class PlayerController : MonoBehaviour
 	{
-		myAgent = GetComponent<HumanAgent>();
+		HumanAgent myAgent;
 
-		Application.targetFrameRate = 80;
+		PlayerCharacterState PlayerCharacterState => (PlayerCharacterState)myAgent.CharacterState;
 
-		buttonDown = new Dictionary<string, bool>()
+		[SerializeField]
+		Transform orbitCameraFocusPoint;
+
+		OrbitCamera orbitCamera;
+
+		SpacePartitioning spacePartitioning;
+
+		Transform playerInputSpace;
+
+		/// <summary>
+		/// The input buttons which are used.
+		/// </summary>
+		Dictionary<string, bool> buttonDown;
+
+		[SerializeField]
+		float interactionDistance = 1f;
+
+		// Start is called before the first frame update
+		void Awake()
+		{
+			myAgent = GetComponent<HumanAgent>();
+
+			Application.targetFrameRate = 80;
+
+			buttonDown = new Dictionary<string, bool>()
 		{
 			{"Roll", false },
 			{"Attack", false },
@@ -47,169 +49,170 @@ public class PlayerController : MonoBehaviour
 			{"Option2", false },
 			{"Option3", false },
 		};
-	}
-
-    private void Start()
-	{
-		// lock the cursor
-		Cursor.lockState = CursorLockMode.Locked;
-
-		var camera = GameObject.Find("Main Camera");
-		playerInputSpace = camera.transform;
-		orbitCamera = camera.GetComponent<OrbitCamera>();
-		orbitCamera.DefaultCamUpdater = orbitCamera.FocusPlayer(orbitCameraFocusPoint);
-
-		var viewModel = GameViewModel.ViewModel;
-		myAgent.CharacterState = viewModel.PlayerState;
-		viewModel.PlayerState.Reset();
-	}
-
-    void Update()
-    {
-		if (!PlayerCharacterState.InteractingWithUI)
-		{
-			AddButtonsDown();
 		}
 
-		PlayerCharacterState.CurrentInteractiveObjectState = PlayerCharacterState.World.ObjectsCloseTo(transform.position, interactionDistance).FirstOrDefault();
-
-	}
-
-	void AddButtonsDown()
-    {
-		foreach (var key in new List<string>(buttonDown.Keys))
+		private void Start()
 		{
-			buttonDown[key] |= Input.GetButtonDown(key);
-		}
-	}
+			// lock the cursor
+			Cursor.lockState = CursorLockMode.Locked;
 
-	void ClearButtonsDown()
-	{
-		foreach (var key in new List<string>(buttonDown.Keys))
-		{
-			buttonDown[key] = false;
-		}
-	}
+			var camera = GameObject.Find("Main Camera");
+			playerInputSpace = camera.transform;
+			orbitCamera = camera.GetComponent<OrbitCamera>();
+			orbitCamera.DefaultCamUpdater = orbitCamera.FocusPlayer(orbitCameraFocusPoint);
 
-    // Update is called once per frame
-    void FixedUpdate()
-	{
-		myAgent.StartReceivingControls();
-
-		Vector2 playerInput;
-		playerInput.x = Input.GetAxisRaw("Horizontal");
-		playerInput.y = Input.GetAxisRaw("Vertical");
-
-		playerInput = Vector2.ClampMagnitude(playerInput, 1f);
-
-		var worldInputDirection = InputToWorld(playerInput).XZ().normalized;
-		if (playerInputSpace != null)
-		{
-			myAgent.Run(worldInputDirection);
-		}
-		else
-		{
-			Debug.LogError("Input space is null");
+			var viewModel = GameViewModel.ViewModel;
+			myAgent.CharacterState = viewModel.PlayerState;
+			viewModel.PlayerState.Reset();
 		}
 
-		if (buttonDown["Roll"])
+		void Update()
 		{
-			if( playerInput.sqrMagnitude > 0.001f)
+			if (!PlayerCharacterState.InteractingWithUI)
 			{
-				myAgent.Roll(worldInputDirection);
+				AddButtonsDown();
 			}
-            else
+
+			PlayerCharacterState.CurrentInteractiveObjectState = PlayerCharacterState.World.ObjectsCloseTo(transform.position, interactionDistance).FirstOrDefault();
+
+		}
+
+		void AddButtonsDown()
+		{
+			foreach (var key in new List<string>(buttonDown.Keys))
 			{
-				myAgent.Backstep();
+				buttonDown[key] |= Input.GetButtonDown(key);
 			}
 		}
 
-		if (buttonDown["Attack"])
+		void ClearButtonsDown()
 		{
-			myAgent.Attack();
-		}
-
-		var interactiveObject = PlayerCharacterState.CurrentInteractiveObjectState;
-
-		if(interactiveObject != null)
-		{
-			if (buttonDown["Interact"])
+			foreach (var key in new List<string>(buttonDown.Keys))
 			{
-				interactiveObject.Interact(myAgent);
-            }
-            else
-            {
-				var buttonIndex = buttonDown["Option1"] ? 0 :
-									buttonDown["Option2"] ? 1 :
-										buttonDown["Option3"] ? 2 : -1;
-				interactiveObject.OptionalInteract(myAgent, buttonIndex);
+				buttonDown[key] = false;
 			}
 		}
 
-		if (buttonDown["Suicide"])
+		// Update is called once per frame
+		void FixedUpdate()
 		{
-			myAgent.CharacterState.Health -= 1000f;
-		}
+			myAgent.StartReceivingControls();
 
-		if (buttonDown["UseItem"])
-		{
-			myAgent.UseItem();
-		}
+			Vector2 playerInput;
+			playerInput.x = Input.GetAxisRaw("Horizontal");
+			playerInput.y = Input.GetAxisRaw("Vertical");
 
-		ClearButtonsDown();
+			playerInput = Vector2.ClampMagnitude(playerInput, 1f);
 
-		myAgent.UpdateAgent();
-
-	}
-
-	Vector3 InpForward
-	{
-		get
-		{
+			var worldInputDirection = InputToWorld(playerInput).XZ().normalized;
 			if (playerInputSpace != null)
 			{
-				return playerInputSpace.forward;
+				myAgent.Run(worldInputDirection);
 			}
 			else
 			{
-				return Vector3.forward;
+				Debug.LogError("Input space is null");
 			}
-		}
-	}
 
-	Vector3 InpRight
-	{
-		get
-		{
-			if (playerInputSpace != null)
+			if (buttonDown["Roll"])
 			{
-				return playerInputSpace.right;
+				if (playerInput.sqrMagnitude > 0.001f)
+				{
+					myAgent.Roll(worldInputDirection);
+				}
+				else
+				{
+					myAgent.Backstep();
+				}
 			}
-			else
+
+			if (buttonDown["Attack"])
 			{
-				return Vector3.right;
+				myAgent.Attack();
+			}
+
+			var interactiveObject = PlayerCharacterState.CurrentInteractiveObjectState;
+
+			if (interactiveObject != null)
+			{
+				if (buttonDown["Interact"])
+				{
+					interactiveObject.Interact(myAgent);
+				}
+				else
+				{
+					var buttonIndex = buttonDown["Option1"] ? 0 :
+										buttonDown["Option2"] ? 1 :
+											buttonDown["Option3"] ? 2 : -1;
+					interactiveObject.OptionalInteract(myAgent, buttonIndex);
+				}
+			}
+
+			if (buttonDown["Suicide"])
+			{
+				myAgent.CharacterState.Health -= 1000f;
+			}
+
+			if (buttonDown["UseItem"])
+			{
+				myAgent.UseItem();
+			}
+
+			ClearButtonsDown();
+
+			myAgent.UpdateAgent();
+
+		}
+
+		Vector3 InpForward
+		{
+			get
+			{
+				if (playerInputSpace != null)
+				{
+					return playerInputSpace.forward;
+				}
+				else
+				{
+					return Vector3.forward;
+				}
 			}
 		}
-	}
 
-	Vector3 InpForwardHoriz
-	{
-		get
+		Vector3 InpRight
 		{
-			return ExtensionMethods.ProjectDirectionOnPlane(InpForward, Vector3.up);
+			get
+			{
+				if (playerInputSpace != null)
+				{
+					return playerInputSpace.right;
+				}
+				else
+				{
+					return Vector3.right;
+				}
+			}
 		}
-	}
 
-	Vector3 InpRightHoriz
-	{
-		get
+		Vector3 InpForwardHoriz
 		{
-			return ExtensionMethods.ProjectDirectionOnPlane(InpRight, Vector3.up);
+			get
+			{
+				return ExtensionMethods.ProjectDirectionOnPlane(InpForward, Vector3.up);
+			}
 		}
-	}
 
-	public Vector3 InputToWorld(Vector2 inputVec)
-	{
-		return inputVec.x * InpRightHoriz + inputVec.y * InpForwardHoriz;
+		Vector3 InpRightHoriz
+		{
+			get
+			{
+				return ExtensionMethods.ProjectDirectionOnPlane(InpRight, Vector3.up);
+			}
+		}
+
+		public Vector3 InputToWorld(Vector2 inputVec)
+		{
+			return inputVec.x * InpRightHoriz + inputVec.y * InpForwardHoriz;
+		}
 	}
 }

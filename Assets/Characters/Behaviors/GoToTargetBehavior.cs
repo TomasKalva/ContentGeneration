@@ -1,45 +1,48 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class GoToTargetBehavior : Behavior
+namespace OurFramework.Gameplay.RealWorld
 {
-	Transform targetPoint;
-
-	protected Vector3 TargetPoint => targetPoint ? targetPoint.position : Vector3.zero;
-
-	float maxDistance;
-
-    public GoToTargetBehavior(float maxDistance)
+    public class GoToTargetBehavior : Behavior
     {
-        this.maxDistance = maxDistance;
-    }
+        Transform targetPoint;
 
-    bool ShouldGoToTarget(Agent agent)
-	{
-		return agent.CanMove && Vector3.Distance(agent.transform.position, TargetPoint) > maxDistance;
-	}
+        protected Vector3 TargetPoint => targetPoint ? targetPoint.position : Vector3.zero;
 
-    public override bool CanEnter(Agent agent)
-    {
-        return ShouldGoToTarget(agent);
-    }
+        float maxDistance;
 
-    public override int Priority(Agent agent) => 2;
+        public GoToTargetBehavior(float maxDistance)
+        {
+            this.maxDistance = maxDistance;
+        }
 
-    public override void Enter(Agent agent)
-    {
-        targetPoint = GameObject.FindGameObjectWithTag("Player").transform;
-    }
+        bool ShouldGoToTarget(Agent agent)
+        {
+            return agent.CanMove && Vector3.Distance(agent.transform.position, TargetPoint) > maxDistance;
+        }
 
-    public override bool Update(Agent agent)
-    {
-        NavMeshData nmd;
-        NavMeshAgent nma;
+        public override bool CanEnter(Agent agent)
+        {
+            return ShouldGoToTarget(agent);
+        }
 
-        Vector3 direction = TargetPoint - agent.movement.transform.position;
-        var moveDirection = new Vector2(direction.x, direction.z);
-        agent.Run(moveDirection);
+        public override int Priority(Agent agent) => 2;
 
-        return !ShouldGoToTarget(agent);
+        public override void Enter(Agent agent)
+        {
+            targetPoint = GameObject.FindGameObjectWithTag("Player").transform;
+        }
+
+        public override bool Update(Agent agent)
+        {
+            NavMeshData nmd;
+            NavMeshAgent nma;
+
+            Vector3 direction = TargetPoint - agent.movement.transform.position;
+            var moveDirection = new Vector2(direction.x, direction.z);
+            agent.Run(moveDirection);
+
+            return !ShouldGoToTarget(agent);
+        }
     }
 }

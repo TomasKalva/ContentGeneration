@@ -2,45 +2,48 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MultiEventAct : AnimatedAct
+namespace OurFramework.Gameplay.RealWorld
 {
-    [Serializable]
-    public class TimeAction
+    public class MultiEventAct : AnimatedAct
     {
-        public float time;
-        public Action action;
-
-        public TimeAction(float time, Action action)
+        [Serializable]
+        public class TimeAction
         {
-            this.time = time;
-            this.action = action;
+            public float time;
+            public Action action;
+
+            public TimeAction(float time, Action action)
+            {
+                this.time = time;
+                this.action = action;
+            }
         }
-    }
 
-    [SerializeField]
-    protected List<TimeAction> timedActions;
+        [SerializeField]
+        protected List<TimeAction> timedActions;
 
-    int currentActionI;
+        int currentActionI;
 
-    public override void OnStart(Agent agent)
-    {
-        PlayAnimation(agent);
-
-        timedActions.Sort((ta1, ta2) => (int)(1000_000f * ta1.time - ta2.time));
-        currentActionI = 0;
-    }
-
-    public override void OnUpdate(Agent agent)
-    {
-        if (currentActionI >= timedActions.Count)
-            return;
-
-        var normalizedElapsed = timeElapsed / duration;
-        var current = timedActions[currentActionI];
-        if (normalizedElapsed >= current.time)
+        public override void OnStart(Agent agent)
         {
-            currentActionI++;
-            current.action();
+            PlayAnimation(agent);
+
+            timedActions.Sort((ta1, ta2) => (int)(1000_000f * ta1.time - ta2.time));
+            currentActionI = 0;
+        }
+
+        public override void OnUpdate(Agent agent)
+        {
+            if (currentActionI >= timedActions.Count)
+                return;
+
+            var normalizedElapsed = timeElapsed / duration;
+            var current = timedActions[currentActionI];
+            if (normalizedElapsed >= current.time)
+            {
+                currentActionI++;
+                current.action();
+            }
         }
     }
 }

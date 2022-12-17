@@ -1,42 +1,45 @@
 using UnityEngine;
 
-public class Move : AnimatedAct
+namespace OurFramework.Gameplay.RealWorld
 {
-    [SerializeField]
-    protected float speed = 3f;
-
-    [SerializeField]
-    protected float animMetersPerSecond = 1f;
-
-    protected Vector2 direction;
-
-    public Vector2 Direction 
+    public class Move : AnimatedAct
     {
-        get => direction.normalized;
-        set => direction = value;
-    }
+        [SerializeField]
+        protected float speed = 3f;
 
-    public bool SetDirection { get; set; } = true;
+        [SerializeField]
+        protected float animMetersPerSecond = 1f;
 
-    float Speed => speed * speedMultiplier;
+        protected Vector2 direction;
 
-    float speedMultiplier = 1f;
-    public void SetSpeedMultiplier(float speedMultitplier)
-    {
-        this.speedMultiplier = speedMultitplier;
-        BaseDuration = animMetersPerSecond / Speed;
-    }
+        public Vector2 Direction
+        {
+            get => direction.normalized;
+            set => direction = value;
+        }
 
-    private void Awake()
-    {
-        BaseDuration = animMetersPerSecond / Speed;
-    }
+        public bool SetDirection { get; set; } = true;
 
-    public override bool UpdateAct(Agent agent, float dt)
-    {
-        PlayIfNotActive(agent, 0.1f);
+        float Speed => speed * speedMultiplier;
 
-        agent.movement.Move(Direction, Speed, SetDirection);
-        return true;
+        float speedMultiplier = 1f;
+        public void SetSpeedMultiplier(float speedMultitplier)
+        {
+            this.speedMultiplier = speedMultitplier;
+            BaseDuration = animMetersPerSecond / Speed;
+        }
+
+        private void Awake()
+        {
+            BaseDuration = animMetersPerSecond / Speed;
+        }
+
+        public override bool UpdateAct(Agent agent, float dt)
+        {
+            PlayIfNotActive(agent, 0.1f);
+
+            agent.movement.Move(Direction, Speed, SetDirection);
+            return true;
+        }
     }
 }

@@ -1,14 +1,17 @@
 using UnityEngine;
 using UnityEngine.VFX;
 
-public class Kiln : InteractiveObject
+namespace OurFramework.Gameplay.RealWorld
 {
-    [SerializeField]
-    VisualEffect fire;
-
-    public void BurstFire()
+    public class Kiln : InteractiveObject
     {
-        fire.SendEvent("FireBurst");
-        Debug.Log("FireBurst");
+        [SerializeField]
+        VisualEffect fire;
+
+        public void BurstFire()
+        {
+            fire.SendEvent("FireBurst");
+            Debug.Log("FireBurst");
+        }
     }
 }

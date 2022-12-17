@@ -1,42 +1,45 @@
 using System;
 using UnityEngine;
 
-public class Wait : Behavior
+namespace OurFramework.Gameplay.RealWorld
 {
-	Func<Agent, Vector3> WaitPosition { get; }
-
-    Func<Agent, bool> ShouldWait { get; }
-
-    float MinDistance => 1.5f;
-
-    public Wait(Func<Agent, bool> shouldWait, Func<Agent, Vector3> waitPosition)
+    public class Wait : Behavior
     {
-        ShouldWait = shouldWait;
-        WaitPosition = waitPosition;
-    }
+        Func<Agent, Vector3> WaitPosition { get; }
 
-    public override bool CanEnter(Agent agent)
-    {
-        return ShouldWait(agent);
-    }
+        Func<Agent, bool> ShouldWait { get; }
 
-    public override int Priority(Agent agent) => 100;
+        float MinDistance => 1.5f;
 
-    public override void Enter(Agent agent)
-    {
-    }
-
-    public override bool Update(Agent agent)
-    {
-        var targetPoint = WaitPosition(agent);
-        var toTarget = targetPoint - agent.transform.position;
-        if (toTarget.magnitude > MinDistance &&
-            agent.CanMove)
+        public Wait(Func<Agent, bool> shouldWait, Func<Agent, Vector3> waitPosition)
         {
-            var direction = toTarget.XZ();
-            agent.Run(direction);
+            ShouldWait = shouldWait;
+            WaitPosition = waitPosition;
         }
 
-        return !ShouldWait(agent);
+        public override bool CanEnter(Agent agent)
+        {
+            return ShouldWait(agent);
+        }
+
+        public override int Priority(Agent agent) => 100;
+
+        public override void Enter(Agent agent)
+        {
+        }
+
+        public override bool Update(Agent agent)
+        {
+            var targetPoint = WaitPosition(agent);
+            var toTarget = targetPoint - agent.transform.position;
+            if (toTarget.magnitude > MinDistance &&
+                agent.CanMove)
+            {
+                var direction = toTarget.XZ();
+                agent.Run(direction);
+            }
+
+            return !ShouldWait(agent);
+        }
     }
 }

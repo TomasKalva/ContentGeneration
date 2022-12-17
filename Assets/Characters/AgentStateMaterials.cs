@@ -1,26 +1,29 @@
 using UnityEditor;
 using UnityEngine;
 
-public class MakeScriptableObject
+namespace OurFramework.Gameplay.RealWorld
 {
-#if UNITY_EDITOR
-    [MenuItem("Assets/Create/AgentStateMaterial")]
-    public static void CreateMyAsset()
+    public class MakeScriptableObject
     {
-        AgentStateMaterials asset = ScriptableObject.CreateInstance<AgentStateMaterials>();
+#if UNITY_EDITOR
+        [MenuItem("Assets/Create/AgentStateMaterial")]
+        public static void CreateMyAsset()
+        {
+            AgentStateMaterials asset = ScriptableObject.CreateInstance<AgentStateMaterials>();
 
-        string name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath("Assets/NewScripableObject.asset");
-        AssetDatabase.CreateAsset(asset, name);
-        AssetDatabase.SaveAssets();
+            string name = UnityEditor.AssetDatabase.GenerateUniqueAssetPath("Assets/NewScripableObject.asset");
+            AssetDatabase.CreateAsset(asset, name);
+            AssetDatabase.SaveAssets();
 
-        EditorUtility.FocusProjectWindow();
+            EditorUtility.FocusProjectWindow();
 
-        Selection.activeObject = asset;
-    }
+            Selection.activeObject = asset;
+        }
 #endif
-}
+    }
 
-public class AgentStateMaterials : ScriptableObject
-{
-    public Material[] materials;
+    public class AgentStateMaterials : ScriptableObject
+    {
+        public Material[] materials;
+    }
 }

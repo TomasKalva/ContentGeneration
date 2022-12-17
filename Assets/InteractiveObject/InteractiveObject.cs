@@ -1,19 +1,22 @@
 using ContentGeneration.Assets.UI.Model;
 using UnityEngine;
 
-public class InteractiveObject : MonoBehaviour
+namespace OurFramework.Gameplay.RealWorld
 {
-    
-    public InteractiveObjectState _state;
-    public InteractiveObjectState State
+    public class InteractiveObject : MonoBehaviour
     {
-        get => _state;
-        set
+
+        public InteractiveObjectState _state;
+        public InteractiveObjectState State
         {
-            _state = value;
-            if(_state.InteractiveObject != this)
+            get => _state;
+            set
             {
-                _state.InteractiveObject = this;
+                _state = value;
+                if (_state.InteractiveObject != this)
+                {
+                    _state.InteractiveObject = this;
+                }
             }
         }
     }

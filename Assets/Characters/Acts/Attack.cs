@@ -1,134 +1,138 @@
 using System;
 using UnityEngine;
 
-public enum AgentState
+namespace OurFramework.Gameplay.RealWorld
 {
-    PREPARE,
-    DAMAGE,
-    RESTORE,
-    NORMAL
-}
-
-public class Attack : AnimatedAct
-{
-    [SerializeField, Curve(0f, 0f, 1f, 15f, true)]
-    AnimationCurve speedF;
-
-    Vector3 direction;
-    public Vector3 Direction
+    public enum AgentState
     {
-        get => direction;
-        set => direction = value.normalized;
+        PREPARE,
+        DAMAGE,
+        RESTORE,
+        NORMAL
     }
 
-    [SerializeField]
-    WeaponSlot[] weaponSlots;
-
-    /// <summary>
-    /// Normalized to [0,1].
-    /// </summary>
-    [SerializeField]
-    float damageStartT;
-
-    /// <summary>
-    /// Normalized to [0,1].
-    /// </summary>
-    [SerializeField]
-    float damageEndT;
-
-    Action StopLockOn { get; set; }
-    MovementConstraint lockOnTarget;
-
-    public override void OnStart(Agent agent)
+    public class Attack : AnimatedAct
     {
+        [SerializeField, Curve(0f, 0f, 1f, 15f, true)]
+        AnimationCurve speedF;
 
-        PlayAnimation(agent);
-
-        bool shouldLockOn = true;
-        Vector3 lastDirection = agent.movement.AgentForward;
-        Direction3F directionF = () =>
+        Vector3 direction;
+        public Vector3 Direction
         {
-            if (shouldLockOn)
+            get => direction;
+            set => direction = value.normalized;
+        }
+
+        [SerializeField]
+        WeaponSlot[] weaponSlots;
+
+        /// <summary>
+        /// Normalized to [0,1].
+        /// </summary>
+        [SerializeField]
+        float damageStartT;
+
+        /// <summary>
+        /// Normalized to [0,1].
+        /// </summary>
+        [SerializeField]
+        float damageEndT;
+
+        Action StopLockOn { get; set; }
+        MovementConstraint lockOnTarget;
+
+
+        public override void OnStart(Agent agent)
+        {
+
+            PlayAnimation(agent);
+
+            bool shouldLockOn = true;
+            Vector3 lastDirection = agent.movement.AgentForward;
+            Direction3F directionF = () =>
             {
-                lastDirection = TargetPosition == null ? Direction : TargetPosition.DirectionFrom(agent.transform.position);
-            }
-            return lastDirection;
-            //return TargetPosition == null ? Direction : TargetPosition.DirectionFrom(agent.transform.position);
-        };
-
-        agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, directionF);
-
-        lockOnTarget = new TurnToDirection(() => directionF().XZ().normalized);
-
-        StopLockOn = () =>
-        {
-            shouldLockOn = false;
-            lockOnTarget.Finished = true;
-        };
-
-        SetupMovementConstraints(agent,
-            new VelocityInDirection(directionF),
-            lockOnTarget);
-
-        agent.State = AgentState.PREPARE;
-    }
-
-    float DamageDuration() => (damageEndT - damageStartT) * Duration;
-
-    void SetSlotsActive(bool active, Agent agent)
-    {
-        foreach (var weaponSlot in weaponSlots)
-        {
-            var weapon = weaponSlot.Equipment;
-            if (weapon != null)
-            {
-                // When the damage starts
-                if (!weaponSlot.Equipment.Active && active)
+                if (shouldLockOn)
                 {
-                    weapon.DealDamage(agent, DamageDuration());
+                    lastDirection = TargetPosition == null ? Direction : TargetPosition.DirectionFrom(agent.transform.position);
                 }
-                weaponSlot.Equipment.Active = active;
+                return lastDirection;
+                //return TargetPosition == null ? Direction : TargetPosition.DirectionFrom(agent.transform.position);
+            };
+
+            agent.movement.VelocityUpdater = new CurveVelocityUpdater(speedF, duration, directionF);
+
+            lockOnTarget = new TurnToDirection(() => directionF().XZ().normalized);
+
+            StopLockOn = () =>
+            {
+                shouldLockOn = false;
+                lockOnTarget.Finished = true;
+            };
+
+            SetupMovementConstraints(agent,
+                new VelocityInDirection(directionF),
+                lockOnTarget);
+
+            agent.State = AgentState.PREPARE;
+        }
+
+        float DamageDuration() => (damageEndT - damageStartT) * Duration;
+
+        void SetSlotsActive(bool active, Agent agent)
+        {
+            foreach (var weaponSlot in weaponSlots)
+            {
+                var weapon = weaponSlot.Equipment;
+                if (weapon != null)
+                {
+                    // When the damage starts
+                    if (!weaponSlot.Equipment.Active && active)
+                    {
+                        weapon.DealDamage(agent, DamageDuration());
+                    }
+                    weaponSlot.Equipment.Active = active;
+                }
             }
         }
-    }
 
-    public override void OnUpdate(Agent agent)
-    {
-        var normalizedElapsed = timeElapsed / duration;
-        if(agent.State == AgentState.PREPARE && normalizedElapsed >= damageStartT)
+        public override void OnUpdate(Agent agent)
         {
-            StopLockOn();
-            agent.State = AgentState.DAMAGE;
-            SetSlotsActive(true, agent);
+            var normalizedElapsed = timeElapsed / duration;
+            if(agent.State == AgentState.PREPARE && normalizedElapsed >= damageStartT)
+            {
+                StopLockOn();
+                agent.State = AgentState.DAMAGE;
+                SetSlotsActive(true, agent);
+            }
+
+            if (agent.State == AgentState.DAMAGE && normalizedElapsed >= damageEndT)
+            {
+                agent.State = AgentState.RESTORE;
+                SetSlotsActive(false, agent);
+            }
         }
 
-        if (agent.State == AgentState.DAMAGE && normalizedElapsed >= damageEndT)
+        public override void EndAct(Agent agent)
         {
-            agent.State = AgentState.RESTORE;
             SetSlotsActive(false, agent);
+            agent.State = AgentState.NORMAL;
+            MovementContraints.ForEach(con => con.Finished = true);
         }
     }
 
-    public override void EndAct(Agent agent)
+    public class TargetPosition
     {
-        SetSlotsActive(false, agent);
-        agent.State = AgentState.NORMAL;
-        MovementContraints.ForEach(con => con.Finished = true);
-    }
-}
+        Transform target;
 
-public class TargetPosition
-{
-    Transform target;
+        Vector3 defaultPosition;
 
-    Vector3 defaultPosition;
+        public Vector3 Position => target != null ? target.position : defaultPosition;
+        public Vector3 DirectionFrom(Vector3 from) => (Position - from).normalized;
 
-    public Vector3 Position => target != null ? target.position : defaultPosition;
-    public Vector3 DirectionFrom(Vector3 from) => (Position - from).normalized;
-
-    public TargetPosition(Transform target, Vector3 defaultPosition)
-    {
-        this.target = target;
-        this.defaultPosition = defaultPosition;
+        public TargetPosition(Transform target, Vector3 defaultPosition)
+        {
+            this.target = target;
+            this.defaultPosition = defaultPosition;
+        }
     }
 }

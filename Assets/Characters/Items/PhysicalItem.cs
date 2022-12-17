@@ -1,4 +1,5 @@
 using ContentGeneration.Assets.UI.Model;
+using OurFramework.Gameplay.RealWorld;
 
 public class PhysicalItemState : InteractiveObjectState<InteractiveObject>
 {

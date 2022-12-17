@@ -1,5 +1,8 @@
 using UnityEngine;
 
-public class Equipment : MonoBehaviour
+namespace OurFramework.Gameplay.RealWorld
 {
+    public class Equipment : MonoBehaviour
+    {
+    }
 }

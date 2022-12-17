@@ -1,10 +1,13 @@
 ﻿using ContentGeneration.Assets.UI;
 using UnityEngine;
 
-public class EquipmentSlot : MonoBehaviour
+namespace OurFramework.Gameplay.RealWorld
 {
-    /// <summary>
-    /// To manage destruction of equipment correctly.
-    /// </summary>
-    public World World { protected get; set; }
+    public class EquipmentSlot : MonoBehaviour
+    {
+        /// <summary>
+        /// To manage destruction of equipment correctly.
+        /// </summary>
+        public World World { protected get; set; }
+    }
 }

@@ -1,3 +1,7 @@
-public class FireVFX : VFX
+
+namespace OurFramework.Gameplay.RealWorld
 {
+    public class FireVFX : VFX
+    {
+    }
 }

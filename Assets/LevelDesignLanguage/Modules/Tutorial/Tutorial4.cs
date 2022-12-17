@@ -6,7 +6,7 @@ using Util;
 using System;
 using System.Collections.Generic;
 using ContentGeneration.Assets.UI;
-using OurFramework.Characters.SpellClasses;
+using OurFramework.Gameplay.RealWorld;
 
 namespace OurFramework.LevelDesignLanguage.CustomModules
 {

@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System;
-using OurFramework.Characters.SpellClasses;
+using OurFramework.Gameplay.RealWorld;
 
 namespace ContentGeneration.Assets.UI
 {

@@ -1,58 +1,61 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class Behaviors
+namespace OurFramework.Gameplay.RealWorld
 {
-    List<Behavior> behaviors;
-
-    public Behavior CurrentBehaviour;
-
-    public Behaviors()
+    public class Behaviors
     {
-        behaviors = new List<Behavior>();
-    }
+        List<Behavior> behaviors;
 
-    public Behaviors AddBehavior(Behavior behavior)
-    {
-        behaviors.Add(behavior);
-        return this;
-    }
+        public Behavior CurrentBehaviour;
 
-    public bool BehaviorPossible(Agent agent, int minPriority)
-    {
-        return behaviors.Where(behavior => behavior.CanEnter(agent) && behavior.Priority(agent) > minPriority).Any();
-    }
-
-    public Behavior NextBehavior(Agent agent)
-    {
-        return behaviors.Where(behavior => behavior.CanEnter(agent)).ArgMax(behavior => behavior.Priority(agent));
-    }
-
-    public void UpdateBehavior(Agent agent)
-    {
-        if(CurrentBehaviour == null)
+        public Behaviors()
         {
-            CurrentBehaviour = NextBehavior(agent);
-            //Debug.Log(CurrentBehaviour);
-            if (CurrentBehaviour != null)
+            behaviors = new List<Behavior>();
+        }
+
+        public Behaviors AddBehavior(Behavior behavior)
+        {
+            behaviors.Add(behavior);
+            return this;
+        }
+
+        public bool BehaviorPossible(Agent agent, int minPriority)
+        {
+            return behaviors.Where(behavior => behavior.CanEnter(agent) && behavior.Priority(agent) > minPriority).Any();
+        }
+
+        public Behavior NextBehavior(Agent agent)
+        {
+            return behaviors.Where(behavior => behavior.CanEnter(agent)).ArgMax(behavior => behavior.Priority(agent));
+        }
+
+        public void UpdateBehavior(Agent agent)
+        {
+            if (CurrentBehaviour == null)
             {
-                CurrentBehaviour.Enter(agent);
+                CurrentBehaviour = NextBehavior(agent);
+                //Debug.Log(CurrentBehaviour);
+                if (CurrentBehaviour != null)
+                {
+                    CurrentBehaviour.Enter(agent);
+                }
+                else
+                {
+                    return;
+                }
             }
-            else
+
+            if (CurrentBehaviour.Update(agent))
             {
-                return;
+                CurrentBehaviour.Exit(agent);
+                CurrentBehaviour = null;
             }
         }
 
-        if (CurrentBehaviour.Update(agent))
+        public void Reset()
         {
-            CurrentBehaviour.Exit(agent);
             CurrentBehaviour = null;
         }
-    }
-
-    public void Reset()
-    {
-        CurrentBehaviour = null;
     }
 }

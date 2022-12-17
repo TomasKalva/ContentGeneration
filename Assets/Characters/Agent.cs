@@ -4,294 +4,297 @@ using OurFramework.Characters.Items.ItemClasses;
 using ContentGeneration.Assets.UI.Model;
 using UnityEngine;
 
-[RequireComponent(typeof(Movement))]
-[RequireComponent(typeof(Acting))]
-[RequireComponent(typeof(AnimancerComponent))]
-public class Agent : MonoBehaviour
+namespace OurFramework.Gameplay.RealWorld
 {
-	public Movement movement;
-	public Acting acting;
-	public Animator animator;
-	public AnimancerComponent animancerAnimator;
-	public Renderer myRenderer;
-
-	CharacterState _characterState;
-	public CharacterState CharacterState 
-	{ 
-		get => _characterState;
-        set
-        {
-			_characterState = value;
-			_characterState.Agent = this;
-        }
-	}
-
-	public Behaviors Behaviors { get; set; }
-
-	public bool CanMove { get; set; } = true;
-
-	bool died;
-
-	[SerializeField]
-	float centerOffset = 0f;
-
-	public float CenterOffset => centerOffset;
-
-	[SerializeField]
-	float uiOffset = 1f;
-
-	public float UIOffset => uiOffset;
-
-	[SerializeField]
-	AgentStateMaterials stateMaterials;
-
-	AgentState _state;
-	public AgentState State
-    {
-		get => _state;
-		set
-        {
-			_state = value;
-			GoToState(value);
-		}
-    }
-
-
-
-	[SerializeField]
-	WeaponSlot leftWeaponSlot;
-
-	[SerializeField]
-	WeaponSlot rightWeaponSlot;
-
-	[SerializeField]
-	AccessorySlot leftWristSlot;
-
-	[SerializeField]
-	AccessorySlot rightWristSlot;
-
-	[SerializeField]
-	AccessorySlot headSlot;
-
-	EquipmentSlot[] slots;
-
-	// Start is called before the first frame update
-	void Awake()
+	[RequireComponent(typeof(Movement))]
+	[RequireComponent(typeof(Acting))]
+	[RequireComponent(typeof(AnimancerComponent))]
+	public class Agent : MonoBehaviour
 	{
-		movement = GetComponent<Movement>();
-		acting = GetComponent<Acting>();
-		animator = GetComponent<Animator>();
-		animancerAnimator = GetComponent<AnimancerComponent>();
-		myRenderer = GetComponentInChildren<Renderer>();
-		slots = new EquipmentSlot[]
+		public Movement movement;
+		public Acting acting;
+		public Animator animator;
+		public AnimancerComponent animancerAnimator;
+		public Renderer myRenderer;
+
+		CharacterState _characterState;
+		public CharacterState CharacterState
 		{
+			get => _characterState;
+			set
+			{
+				_characterState = value;
+				_characterState.Agent = this;
+			}
+		}
+
+		public Behaviors Behaviors { get; set; }
+
+		public bool CanMove { get; set; } = true;
+
+		bool died;
+
+		[SerializeField]
+		float centerOffset = 0f;
+
+		public float CenterOffset => centerOffset;
+
+		[SerializeField]
+		float uiOffset = 1f;
+
+		public float UIOffset => uiOffset;
+
+		[SerializeField]
+		AgentStateMaterials stateMaterials;
+
+		AgentState _state;
+		public AgentState State
+		{
+			get => _state;
+			set
+			{
+				_state = value;
+				GoToState(value);
+			}
+		}
+
+
+
+		[SerializeField]
+		WeaponSlot leftWeaponSlot;
+
+		[SerializeField]
+		WeaponSlot rightWeaponSlot;
+
+		[SerializeField]
+		AccessorySlot leftWristSlot;
+
+		[SerializeField]
+		AccessorySlot rightWristSlot;
+
+		[SerializeField]
+		AccessorySlot headSlot;
+
+		EquipmentSlot[] slots;
+
+		// Start is called before the first frame update
+		void Awake()
+		{
+			movement = GetComponent<Movement>();
+			acting = GetComponent<Acting>();
+			animator = GetComponent<Animator>();
+			animancerAnimator = GetComponent<AnimancerComponent>();
+			myRenderer = GetComponentInChildren<Renderer>();
+			slots = new EquipmentSlot[]
+			{
 			leftWeaponSlot,
 			rightWeaponSlot,
 			leftWristSlot,
 			rightWristSlot,
 			headSlot,
-		};
-		Behaviors = new Behaviors();
-	}
+			};
+			Behaviors = new Behaviors();
+		}
 
-    private void Start()
-    {
-		slots.SelectNN(slot => slot).ForEach(slot => slot.World = CharacterState.World);
-
-		SynchronizeWithState(CharacterState);
-		acting.UseItem.Inventory = CharacterState.Inventory;
-	}
-
-    public void StartReceivingControls()
-	{
-		movement.ResetDesiredValues();
-	}
-
-	public void GoToState(AgentState phase)
-    {
-		if(myRenderer == null)
+		private void Start()
 		{
-			Debug.LogError($"Missing renderer");
-			return;
-        }
-		if(stateMaterials.materials.Length < 4)
-        {
-			Debug.LogError($"Missing state materials");
-			return;
-        }
+			slots.SelectNN(slot => slot).ForEach(slot => slot.World = CharacterState.World);
 
-		var materialIndex = phase == AgentState.PREPARE ? 1 :
-							phase == AgentState.DAMAGE ? 2 :
-							phase == AgentState.RESTORE ? 3 : 0;
-		//myRenderer.material = stateMaterials.materials[materialIndex];
-    }
+			SynchronizeWithState(CharacterState);
+			acting.UseItem.Inventory = CharacterState.Inventory;
+		}
 
-	public void UpdateAgent()
-	{
-		if(CharacterState.Dead)
+		public void StartReceivingControls()
 		{
-			if (!died)
+			movement.ResetDesiredValues();
+		}
+
+		public void GoToState(AgentState phase)
+		{
+			if (myRenderer == null)
 			{
-				died = true;
-				CharacterState.TryDie();
+				Debug.LogError($"Missing renderer");
+				return;
 			}
-        }
+			if (stateMaterials.materials.Length < 4)
+			{
+				Debug.LogError($"Missing state materials");
+				return;
+			}
 
-		acting.Act();
-
-		movement.MovementUpdate();
-		CharacterState.Update();
-	}
-
-	public void Run(Vector2 direction)
-    {
-        if (!CanMove)
-        {
-			Debug.LogError("Trying to move when CanMove is false!");
-			return;
-        }
-
-		if (direction.sqrMagnitude > 0.0001f && !acting.Busy)
-		{
-			var run = acting.SelectAct("Run") as Move;
-			run.Direction = direction;
-			run.SetDirection = true;
-        }
-	}
-
-	public void WalkBack(Vector2 direction)
-	{
-		if (!CanMove)
-		{
-			Debug.LogError("Trying to move when CanMove is false!");
-			return;
+			var materialIndex = phase == AgentState.PREPARE ? 1 :
+								phase == AgentState.DAMAGE ? 2 :
+								phase == AgentState.RESTORE ? 3 : 0;
+			//myRenderer.material = stateMaterials.materials[materialIndex];
 		}
 
-		if (direction.sqrMagnitude > 0.0001f && !acting.Busy)
+		public void UpdateAgent()
 		{
-			var walkBack = acting.SelectAct("WalkBack") as MoveBack;
-			walkBack.Direction = direction;
-			walkBack.SetDirection = true;
-		}
-	}
+			if (CharacterState.Dead)
+			{
+				if (!died)
+				{
+					died = true;
+					CharacterState.TryDie();
+				}
+			}
 
-	public void Walk(Vector2 direction)
-	{
-		if (!CanMove)
-		{
-			Debug.LogError("Trying to move when CanMove is false!");
-			return;
-		}
+			acting.Act();
 
-		if (direction.sqrMagnitude > 0.0001f && !acting.Busy)
-		{
-			var walk = acting.SelectAct("Walk") as Move;
-			walk.Direction = direction;
-			walk.SetDirection = true;
-		}
-	}
-
-	public void UseItem()
-	{
-		var useItem = acting.SelectAct("UseItem") as UseItem;
-	}
-
-	public void SynchronizeWithState(CharacterState state)
-    {
-		var inventory = state.Inventory;
-
-		var leftWeaponItem = inventory.LeftWeapon.Item;
-		if(leftWeaponSlot != null)
-		{
-			leftWeaponSlot.Equipment = (leftWeaponItem as WeaponItem)?.Weapon;
+			movement.MovementUpdate();
+			CharacterState.Update();
 		}
 
-		var rightWeaponItem = inventory.RightWeapon.Item;
-		if(rightWeaponSlot != null)
+		public void Run(Vector2 direction)
 		{
-			rightWeaponSlot.Equipment = (rightWeaponItem as WeaponItem)?.Weapon;
-		}
+			if (!CanMove)
+			{
+				Debug.LogError("Trying to move when CanMove is false!");
+				return;
+			}
 
-		
-		var leftWristItem = inventory.LeftWrist.Item;
-		if (leftWristSlot != null)
-		{
-			leftWristSlot.Equipment = (leftWristItem as AccessoryItem)?.Accessory;
-		}
-
-		var rightWristItem = inventory.RightWrist.Item;
-		if (rightWristSlot != null)
-		{
-			rightWristSlot.Equipment = (rightWristItem as AccessoryItem)?.Accessory;
-		}
-
-		var headItem = inventory.Head.Item;
-		if (headSlot != null)
-		{
-			headSlot.Equipment = (headItem as AccessoryItem)?.Accessory;
-		}
-
-		var skinItem = (inventory.Skin.Item as MaterialItem);
-		if(myRenderer != null)
-		{
-			if(skinItem != null) 
-			{ 
-				myRenderer.sharedMaterial = skinItem.Material;
-            }
-            else
-            {
-				// Set some default material
-				myRenderer.sharedMaterial = stateMaterials.materials[0];
+			if (direction.sqrMagnitude > 0.0001f && !acting.Busy)
+			{
+				var run = acting.SelectAct("Run") as Move;
+				run.Direction = direction;
+				run.SetDirection = true;
 			}
 		}
 
-
-		state.Stats.Update();
-
-		CharacterState.viewCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
-	}
-
-    public void MyReset()
-    {
-		died = false;
-    }
-
-    public Vector3 GetGroundPosition()
-    {
-		return transform.position;
-	}
-
-	public Vector3 GetRightHandPosition()
-	{
-		return rightWeaponSlot.transform.position;
-	}
-
-	public Vector3 GetLeftHandPosition()
-	{
-		return leftWeaponSlot.transform.position;
-	}
-
-	public void Turn(Vector2 direction)
-	{
-		if (direction.sqrMagnitude > 0.0001f/* && !acting.Busy*/)
+		public void WalkBack(Vector2 direction)
 		{
-			movement.Turn(direction);
+			if (!CanMove)
+			{
+				Debug.LogError("Trying to move when CanMove is false!");
+				return;
+			}
+
+			if (direction.sqrMagnitude > 0.0001f && !acting.Busy)
+			{
+				var walkBack = acting.SelectAct("WalkBack") as MoveBack;
+				walkBack.Direction = direction;
+				walkBack.SetDirection = true;
+			}
 		}
-	}
 
-	public virtual void PickUpItem(PhysicalItemState physicalItem)
-    {
-		Debug.Log($"Picking up item {physicalItem.Item.Name}");
-		var pickUpItem = acting.SelectAct("PickUpItem") as PickUpItem;
-        if (pickUpItem)
-        {
-			pickUpItem.PhysicalItem = physicalItem;
-        }
-    }
+		public void Walk(Vector2 direction)
+		{
+			if (!CanMove)
+			{
+				Debug.LogError("Trying to move when CanMove is false!");
+				return;
+			}
 
-	public virtual void Stagger()
-    {
-		//acting.Staggered.PushForce = pushForce;
-		acting.ForceIntoAct(acting.Staggered);
+			if (direction.sqrMagnitude > 0.0001f && !acting.Busy)
+			{
+				var walk = acting.SelectAct("Walk") as Move;
+				walk.Direction = direction;
+				walk.SetDirection = true;
+			}
+		}
+
+		public void UseItem()
+		{
+			var useItem = acting.SelectAct("UseItem") as UseItem;
+		}
+
+		public void SynchronizeWithState(CharacterState state)
+		{
+			var inventory = state.Inventory;
+
+			var leftWeaponItem = inventory.LeftWeapon.Item;
+			if (leftWeaponSlot != null)
+			{
+				leftWeaponSlot.Equipment = (leftWeaponItem as WeaponItem)?.Weapon;
+			}
+
+			var rightWeaponItem = inventory.RightWeapon.Item;
+			if (rightWeaponSlot != null)
+			{
+				rightWeaponSlot.Equipment = (rightWeaponItem as WeaponItem)?.Weapon;
+			}
+
+
+			var leftWristItem = inventory.LeftWrist.Item;
+			if (leftWristSlot != null)
+			{
+				leftWristSlot.Equipment = (leftWristItem as AccessoryItem)?.Accessory;
+			}
+
+			var rightWristItem = inventory.RightWrist.Item;
+			if (rightWristSlot != null)
+			{
+				rightWristSlot.Equipment = (rightWristItem as AccessoryItem)?.Accessory;
+			}
+
+			var headItem = inventory.Head.Item;
+			if (headSlot != null)
+			{
+				headSlot.Equipment = (headItem as AccessoryItem)?.Accessory;
+			}
+
+			var skinItem = (inventory.Skin.Item as MaterialItem);
+			if (myRenderer != null)
+			{
+				if (skinItem != null)
+				{
+					myRenderer.sharedMaterial = skinItem.Material;
+				}
+				else
+				{
+					// Set some default material
+					myRenderer.sharedMaterial = stateMaterials.materials[0];
+				}
+			}
+
+
+			state.Stats.Update();
+
+			CharacterState.viewCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
+		}
+
+		public void MyReset()
+		{
+			died = false;
+		}
+
+		public Vector3 GetGroundPosition()
+		{
+			return transform.position;
+		}
+
+		public Vector3 GetRightHandPosition()
+		{
+			return rightWeaponSlot.transform.position;
+		}
+
+		public Vector3 GetLeftHandPosition()
+		{
+			return leftWeaponSlot.transform.position;
+		}
+
+		public void Turn(Vector2 direction)
+		{
+			if (direction.sqrMagnitude > 0.0001f/* && !acting.Busy*/)
+			{
+				movement.Turn(direction);
+			}
+		}
+
+		public virtual void PickUpItem(PhysicalItemState physicalItem)
+		{
+			Debug.Log($"Picking up item {physicalItem.Item.Name}");
+			var pickUpItem = acting.SelectAct("PickUpItem") as PickUpItem;
+			if (pickUpItem)
+			{
+				pickUpItem.PhysicalItem = physicalItem;
+			}
+		}
+
+		public virtual void Stagger()
+		{
+			//acting.Staggered.PushForce = pushForce;
+			acting.ForceIntoAct(acting.Staggered);
+		}
 	}
 }

@@ -1,6 +1,9 @@
 using OurFramework.Characters.Items;
 
-public class Accessory : Equipment
+namespace OurFramework.Gameplay.RealWorld
 {
-    public AccessoryItem AccessoryItem { private get; set; }
+    public class Accessory : Equipment
+    {
+        public AccessoryItem AccessoryItem { private get; set; }
+    }
 }

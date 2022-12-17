@@ -1,14 +1,18 @@
-public class PickUpItem : AnimatedAct
+
+namespace OurFramework.Gameplay.RealWorld
 {
-    public PhysicalItemState PhysicalItem { get; set; }
-
-    public override void OnStart(Agent agent)
+    public class PickUpItem : AnimatedAct
     {
-        PlayAnimation(agent);
-    }
+        public PhysicalItemState PhysicalItem { get; set; }
 
-    public override void EndAct(Agent agent)
-    {
-        PhysicalItem.PickUpItem(agent);
+        public override void OnStart(Agent agent)
+        {
+            PlayAnimation(agent);
+        }
+
+        public override void EndAct(Agent agent)
+        {
+            PhysicalItem.PickUpItem(agent);
+        }
     }
 }

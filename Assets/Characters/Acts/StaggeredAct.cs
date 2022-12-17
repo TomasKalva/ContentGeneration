@@ -1,22 +1,25 @@
 ﻿using UnityEngine;
 
-public class StaggeredAct : AnimatedAct
+namespace OurFramework.Gameplay.RealWorld
 {
-    public Vector3 PushForce { get; set; }
-
-    public StaggeredAct()
+    public class StaggeredAct : AnimatedAct
     {
-        actName = "Staggered";
-        type = ActType.IDLE;
-        priority = 0;
-    }
+        public Vector3 PushForce { get; set; }
 
-    public override void OnStart(Agent agent)
-    {
-        PlayAnimation(agent);
+        public StaggeredAct()
+        {
+            actName = "Staggered";
+            type = ActType.IDLE;
+            priority = 0;
+        }
 
-        agent.movement.Impulse(PushForce);
+        public override void OnStart(Agent agent)
+        {
+            PlayAnimation(agent);
 
-        agent.movement.VelocityUpdater = new DontChangeVelocityUpdater(duration);
+            agent.movement.Impulse(PushForce);
+
+            agent.movement.VelocityUpdater = new DontChangeVelocityUpdater(duration);
+        }
     }
 }

@@ -1,16 +1,19 @@
 using ContentGeneration.Assets.UI.Model;
 
-public class UseItem : AnimatedAct
+namespace OurFramework.Gameplay.RealWorld
 {
-    public Inventory Inventory { private get; set; }
-
-    public override void OnStart(Agent agent)
+    public class UseItem : AnimatedAct
     {
-        PlayAnimation(agent);
-    }
+        public Inventory Inventory { private get; set; }
 
-    public override void EndAct(Agent agent)
-    {
-        Inventory.UseItem();
+        public override void OnStart(Agent agent)
+        {
+            PlayAnimation(agent);
+        }
+
+        public override void EndAct(Agent agent)
+        {
+            Inventory.UseItem();
+        }
     }
 }

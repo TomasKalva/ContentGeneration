@@ -5,6 +5,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 using static OurFramework.LevelDesignLanguage.Game;
+using OurFramework.Gameplay.RealWorld;
 
 public class InteractiveObjects : ScriptableObject
 {

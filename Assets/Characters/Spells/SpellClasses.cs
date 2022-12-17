@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Util;
 
-namespace OurFramework.Characters.SpellClasses
+namespace OurFramework.Gameplay.RealWorld
 {
     public delegate void Effect(CharacterState target);
 

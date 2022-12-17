@@ -1,4 +1,4 @@
-﻿using OurFramework.Characters.SpellClasses;
+﻿using OurFramework.Gameplay.RealWorld;
 using OurFramework.LevelDesignLanguage;
 using System;
 using UnityEngine;

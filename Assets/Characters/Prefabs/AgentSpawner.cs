@@ -1,26 +1,29 @@
 using UnityEngine;
 
-public class AgentSpawner : MonoBehaviour
+namespace OurFramework.Gameplay.RealWorld
 {
-    [SerializeField]
-    bool spawnOnAwake = false;
-
-    [SerializeField]
-    Agent agentPrefab;
-
-    private void Awake()
+    public class AgentSpawner : MonoBehaviour
     {
-        if (spawnOnAwake)
+        [SerializeField]
+        bool spawnOnAwake = false;
+
+        [SerializeField]
+        Agent agentPrefab;
+
+        private void Awake()
         {
-            Spawn();
+            if (spawnOnAwake)
+            {
+                Spawn();
+            }
         }
-    }
 
-    public Agent Spawn()
-    {
-        var spawnedAgent = Instantiate(agentPrefab);
-        spawnedAgent.transform.position = transform.position;
-        spawnedAgent.transform.rotation = transform.rotation;
-        return spawnedAgent;
+        public Agent Spawn()
+        {
+            var spawnedAgent = Instantiate(agentPrefab);
+            spawnedAgent.transform.position = transform.position;
+            spawnedAgent.transform.rotation = transform.rotation;
+            return spawnedAgent;
+        }
     }
 }

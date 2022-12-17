@@ -1,30 +1,33 @@
 using UnityEngine;
 
 
-public class DogAgent : Agent
+namespace OurFramework.Gameplay.RealWorld
 {
-    [SerializeField]
-    public ColliderDetector dashForwardDetector;
-
-    [SerializeField]
-    public ColliderDetector slashDetector;
-
-    public Act DashForward()
+    public class DogAgent : Agent
     {
-        var attack = acting.SelectAct("DashForward") as Attack;
-        attack.Direction = movement.AgentForward;
-        return attack;
-    }
+        [SerializeField]
+        public ColliderDetector dashForwardDetector;
 
-    public Act LeftSlash()
-    {
-        var attack = acting.SelectAct("LeftSlash") as Attack;
-        return attack;
-    }
+        [SerializeField]
+        public ColliderDetector slashDetector;
 
-    public Act RightSlash()
-    {
-        var attack = acting.SelectAct("RightSlash") as Attack;
-        return attack;
+        public Act DashForward()
+        {
+            var attack = acting.SelectAct("DashForward") as Attack;
+            attack.Direction = movement.AgentForward;
+            return attack;
+        }
+
+        public Act LeftSlash()
+        {
+            var attack = acting.SelectAct("LeftSlash") as Attack;
+            return attack;
+        }
+
+        public Act RightSlash()
+        {
+            var attack = acting.SelectAct("RightSlash") as Attack;
+            return attack;
+        }
     }
 }

@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OurFramework.Gameplay.RealWorld;
 
 namespace ContentGeneration.Assets.UI.Model
 {
