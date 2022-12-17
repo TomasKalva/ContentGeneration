@@ -133,18 +133,23 @@ namespace ContentGeneration.Assets.UI
                 }
             }
 
+            HandleInput();
+
+            Menu.Update(GameControl);
+        }
+
+        void HandleInput()
+        {
             if (Input.GetButtonDown("Noesis_Accept"))
             {
                 PlayerState.ToggleEquipCursorSlot();
             }
             else if (Input.GetButtonDown("Noesis_Equip_Left"))
             {
-                Debug.Log("Equipping left");
                 PlayerState.ToggleEquipCursorSlot(0);
             }
             else if (Input.GetButtonDown("Noesis_Equip_Right"))
             {
-                Debug.Log("Equipping right");
                 PlayerState.ToggleEquipCursorSlot(1);
             }
 
@@ -157,8 +162,6 @@ namespace ContentGeneration.Assets.UI
             {
                 PlayerState.PlayerInventory.DropItem();
             }
-
-            Menu.Update(GameControl);
         }
 
         int GetInputDirection(float i)
