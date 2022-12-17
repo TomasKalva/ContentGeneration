@@ -1,4 +1,4 @@
-using OurFramework.Characters.Items;
+using OurFramework.Gameplay.Data;
 
 namespace OurFramework.Gameplay.RealWorld
 {

@@ -4,7 +4,7 @@ using UnityEngine;
 #endif
 using System;
 
-namespace ContentGeneration.Assets.UI.Model
+namespace OurFramework.Gameplay.Data
 {
     [Serializable]
     public class PlayerCharacterState : CharacterState {

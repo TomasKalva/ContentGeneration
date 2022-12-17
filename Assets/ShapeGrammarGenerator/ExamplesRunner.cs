@@ -1,12 +1,10 @@
 using ContentGeneration.Assets.UI;
-using ContentGeneration.Assets.UI.Model;
 using OurFramework.Environment.GridMembers;
 using OurFramework.Environment.ShapeCreation;
 using OurFramework.Environment.ShapeGrammar;
 using OurFramework.Environment.StylingAreas;
+using OurFramework.Gameplay.Data;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>

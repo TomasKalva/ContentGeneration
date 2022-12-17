@@ -10,7 +10,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace ContentGeneration.Assets.UI.Model
+namespace OurFramework.Gameplay.Data
 {
     public enum SlotType
     {

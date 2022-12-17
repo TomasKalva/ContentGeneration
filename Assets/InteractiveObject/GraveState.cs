@@ -1,5 +1,5 @@
-﻿using ContentGeneration.Assets.UI.Model;
-using ContentGeneration.Assets.UI.Util;
+﻿using ContentGeneration.Assets.UI.Util;
+using OurFramework.Gameplay.Data;
 
 namespace OurFramework.Gameplay.RealWorld
 {

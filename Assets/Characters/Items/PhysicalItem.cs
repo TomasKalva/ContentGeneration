@@ -1,17 +1,19 @@
-using ContentGeneration.Assets.UI.Model;
 using OurFramework.Gameplay.RealWorld;
 
-public class PhysicalItemState : InteractiveObjectState<InteractiveObject>
+namespace OurFramework.Gameplay.Data
 {
-    public ItemState Item { get; set; }
-    
-    public void PickUpItem(Agent agent)
+    public class PhysicalItemState : InteractiveObjectState<InteractiveObject>
     {
-        var added = agent.CharacterState.AddItem(Item);
-        if (added)
+        public ItemState Item { get; set; }
+
+        public void PickUpItem(Agent agent)
         {
-            Item = null;
-            World.RemoveItem(this);
+            var added = agent.CharacterState.AddItem(Item);
+            if (added)
+            {
+                Item = null;
+                World.RemoveItem(this);
+            }
         }
     }
 }

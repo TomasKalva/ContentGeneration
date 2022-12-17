@@ -1,8 +1,4 @@
-﻿using ContentGeneration.Assets.UI.Model;
-using OurFramework.Environment.ShapeGrammar;
-using System;
-using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace OurFramework.LevelDesignLanguage.CustomModules
 {

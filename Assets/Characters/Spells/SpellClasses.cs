@@ -1,10 +1,10 @@
-﻿using ContentGeneration.Assets.UI.Model;
+﻿using OurFramework.Gameplay.RealWorld;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Util;
 
-namespace OurFramework.Gameplay.RealWorld
+namespace OurFramework.Gameplay.Data
 {
     public delegate void Effect(CharacterState target);
 

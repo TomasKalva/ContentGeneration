@@ -1,7 +1,6 @@
-﻿using ContentGeneration.Assets.UI.Model;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace OurFramework.Characters.Items
+namespace OurFramework.Gameplay.Data
 {
     public class MaterialItem : ItemState
     {

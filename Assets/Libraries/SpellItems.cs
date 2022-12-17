@@ -1,8 +1,7 @@
-﻿using ContentGeneration.Assets.UI.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using OurFramework.Gameplay.RealWorld;
+using OurFramework.Gameplay.Data;
 
 public class SpellItems
     {

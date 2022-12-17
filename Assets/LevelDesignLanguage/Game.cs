@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using ContentGeneration.Assets.UI.Util;
-using ContentGeneration.Assets.UI.Model;
 using ContentGeneration.Assets.UI;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
@@ -13,6 +12,7 @@ using OurFramework.Environment.ShapeGrammar;
 using OurFramework.Environment.StylingAreas;
 using OurFramework.Environment.GridMembers;
 using OurFramework.Environment.ShapeCreation;
+using OurFramework.Gameplay.Data;
 
 namespace OurFramework.LevelDesignLanguage
 {
@@ -62,9 +62,9 @@ namespace OurFramework.LevelDesignLanguage
 
         void InitializePlayer()
         {
-            var playerState = new ContentGeneration.Assets.UI.Model.PlayerCharacterState();
+            var playerState = new PlayerCharacterState();
             playerState.Spirit = 5000;
-            var stats = new ContentGeneration.Assets.UI.Model.CharacterStats()
+            var stats = new CharacterStats()
             {
                 Will = 5,
                 Strength = 5,

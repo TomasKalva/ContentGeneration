@@ -1,12 +1,10 @@
 ﻿using Animancer;
-using OurFramework.Characters.Items;
-using OurFramework.Characters.Items.ItemClasses;
-using ContentGeneration.Assets.UI.Model;
 using UnityEngine;
+using OurFramework.Gameplay.Data;
 
 namespace OurFramework.Gameplay.RealWorld
 {
-	[RequireComponent(typeof(Movement))]
+    [RequireComponent(typeof(Movement))]
 	[RequireComponent(typeof(Acting))]
 	[RequireComponent(typeof(AnimancerComponent))]
 	public class Agent : MonoBehaviour

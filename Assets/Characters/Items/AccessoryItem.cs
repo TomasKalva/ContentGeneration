@@ -1,8 +1,7 @@
-﻿using OurFramework.Characters.Items.ItemClasses;
-using OurFramework.Gameplay.RealWorld;
+﻿using OurFramework.Gameplay.RealWorld;
 using OurFramework.LevelDesignLanguage;
 
-namespace OurFramework.Characters.Items
+namespace OurFramework.Gameplay.Data
 {
     public class AccessoryItem : EquipmentItem<Accessory>
     {

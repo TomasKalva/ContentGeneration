@@ -1,14 +1,13 @@
-﻿using ContentGeneration.Assets.UI.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using static OurFramework.LevelDesignLanguage.AsynchronousEvaluator;
-using OurFramework.LevelDesignLanguage.CustomModules;
 using OurFramework.Environment.ShapeGrammar;
 using OurFramework.Environment.ShapeCreation;
 using OurFramework.Environment.GridMembers;
+using OurFramework.Gameplay.Data;
 
 namespace OurFramework.LevelDesignLanguage
 {

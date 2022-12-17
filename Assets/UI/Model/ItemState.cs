@@ -10,7 +10,7 @@ using ContentGeneration.Assets.UI.Util;
 using OurFramework.Gameplay.RealWorld;
 #endif
 
-namespace ContentGeneration.Assets.UI.Model
+namespace OurFramework.Gameplay.Data
 {
 #if NOESIS
     [Serializable]

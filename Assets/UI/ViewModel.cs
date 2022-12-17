@@ -7,11 +7,11 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 #endif
-using ContentGeneration.Assets.UI.Model;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using ContentGeneration.Assets.UI.Util;
 using static OurFramework.LevelDesignLanguage.Game;
+using OurFramework.Gameplay.Data;
 
 namespace ContentGeneration.Assets.UI
 {

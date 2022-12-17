@@ -1,9 +1,9 @@
 ﻿using ContentGeneration.Assets.UI;
-using ContentGeneration.Assets.UI.Model;
 using ContentGeneration.Assets.UI.Util;
 using OurFramework.Environment.GridMembers;
 using OurFramework.Environment.ShapeCreation;
 using OurFramework.Environment.ShapeGrammar;
+using OurFramework.Gameplay.Data;
 using OurFramework.Gameplay.RealWorld;
 using System;
 using System.Collections.Generic;

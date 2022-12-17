@@ -1,5 +1,5 @@
-﻿using ContentGeneration.Assets.UI.Model;
-using ContentGeneration.Assets.UI.Util;
+﻿using ContentGeneration.Assets.UI.Util;
+using OurFramework.Gameplay.Data;
 using OurFramework.LevelDesignLanguage;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace OurFramework.Gameplay.RealWorld
 {
-	[RequireComponent(typeof(HumanAgent))]
+    [RequireComponent(typeof(HumanAgent))]
 	public class PlayerController : MonoBehaviour
 	{
 		HumanAgent myAgent;

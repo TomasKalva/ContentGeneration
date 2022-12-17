@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using OurFramework.Gameplay.RealWorld;
 
-namespace ContentGeneration.Assets.UI.Model
+namespace OurFramework.Gameplay.Data
 {
     public class CharacterStats : INotifyPropertyChanged
     {

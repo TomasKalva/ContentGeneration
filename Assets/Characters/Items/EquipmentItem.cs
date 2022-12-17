@@ -1,8 +1,7 @@
 ﻿using OurFramework.LevelDesignLanguage;
-using ContentGeneration.Assets.UI.Model;
 using OurFramework.Gameplay.RealWorld;
 
-namespace OurFramework.Characters.Items.ItemClasses
+namespace OurFramework.Gameplay.Data
 {
     public class EquipmentItem<EquipmentT> : ItemState where EquipmentT : Equipment
     {

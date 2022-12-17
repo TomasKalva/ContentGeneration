@@ -9,8 +9,9 @@ using System;
 using System.Collections.ObjectModel;
 using OurFramework.LevelDesignLanguage;
 using OurFramework.Gameplay.RealWorld;
+using ContentGeneration.Assets.UI;
 
-namespace ContentGeneration.Assets.UI.Model
+namespace OurFramework.Gameplay.Data
 {
     public abstract class InteractiveObjectState : INotifyPropertyChanged
     {

@@ -1,11 +1,11 @@
 using UnityEngine;
-using ContentGeneration.Assets.UI.Model;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System;
 using OurFramework.Gameplay.RealWorld;
+using OurFramework.Gameplay.Data;
 
 namespace ContentGeneration.Assets.UI
 {

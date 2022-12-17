@@ -1,4 +1,4 @@
-using ContentGeneration.Assets.UI.Model;
+using OurFramework.Gameplay.Data;
 
 namespace OurFramework.Gameplay.RealWorld
 {

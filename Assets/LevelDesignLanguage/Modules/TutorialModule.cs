@@ -1,12 +1,12 @@
 ﻿using OurFramework.Environment.ShapeGrammar;
 using System.Linq;
-using ContentGeneration.Assets.UI.Model;
 using UnityEngine;
 using Util;
 using System;
 using System.Collections.Generic;
 using ContentGeneration.Assets.UI;
 using OurFramework.Gameplay.RealWorld;
+using OurFramework.Gameplay.Data;
 
 namespace OurFramework.LevelDesignLanguage.CustomModules
 {

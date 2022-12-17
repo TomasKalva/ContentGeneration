@@ -1,4 +1,5 @@
-﻿using OurFramework.Gameplay.RealWorld;
+﻿using OurFramework.Gameplay.Data;
+using OurFramework.Gameplay.RealWorld;
 using OurFramework.LevelDesignLanguage;
 using System;
 using UnityEngine;

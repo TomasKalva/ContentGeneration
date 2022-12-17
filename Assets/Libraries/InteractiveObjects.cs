@@ -1,11 +1,11 @@
 using OurFramework.LevelDesignLanguage;
 using ContentGeneration.Assets.UI;
-using ContentGeneration.Assets.UI.Model;
 using System;
 using UnityEditor;
 using UnityEngine;
 using static OurFramework.LevelDesignLanguage.Game;
 using OurFramework.Gameplay.RealWorld;
+using OurFramework.Gameplay.Data;
 
 public class InteractiveObjects : ScriptableObject
 {
