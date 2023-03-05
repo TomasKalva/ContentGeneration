@@ -25,7 +25,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             
             //State.LC.AddNecessaryEvent($"Level End", 99, level => M.LevelModule.LevelEnd(), true);
             
-            M.LevelModule.AddOptionalEnd();
+            //M.LevelModule.AddOptionalEnd();
             
             State.LC.AddNecessaryEvent($"Death", 99, _ =>
             {
@@ -38,26 +38,27 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
                 //M.DeathModule.DropRunEndingBloodstainOnDeath();
                 //M.DeathModule.EndRunIfOutOfSmile();
             }, true);
-            
 
-            
-            
-            M.FactionsModule.InitializeFactions(2);
-            
+
             State.LC.AddNecessaryEvent($"Main path", 98, level => M.LevelModule.MainPath(level), true);
 
             State.LC.AddNecessaryEvent($"Sky", 0, level => M.EnvironmentModule.CreateSky(level), true);
-
+            
             State.LC.AddNecessaryEvent($"Roofs", -1, level => M.LevelModule.AddRoofs(), true);
+            
+            M.FactionsModule.InitializeFactions(2);
+            
+
+            /*
             
             State.LC.AddNecessaryEvent($"Add Details", 0, level => M.DetailsModule.AddDetails(level), true);
 
             State.LC.AddNecessaryEvent($"Out of depth encounter", 80, level => M.OutOfDepthEncountersModule.DifficultEncounter(level), true);
-
+            
             M.OutOfDepthEncountersModule.AddLightMaceEncounter();
             
             M.AscendingModule.AddAscendingEvents(M.AscendingModule.AscendingKiln(ad => 100 + 50 * ad));
-            
+            */
 
             //State.LC.AddNecessaryEvent("Testing enemies", 5, _ => L.TestingLanguage.StatsScalingOfEnemies());
 

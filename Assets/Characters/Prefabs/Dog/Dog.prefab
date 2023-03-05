@@ -742,7 +742,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actContainer: {fileID: 5245136111020689035}
   _activeAct: {fileID: 0}
-  agentBaseActingSpeedMultiplier: 0.8
+  agentBaseActingSpeedMultiplier: 1.2
 --- !u!114 &7465914728098360252
 MonoBehaviour:
   m_ObjectHideFlags: 0
