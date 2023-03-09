@@ -7,25 +7,14 @@ using UnityEngine;
 
 namespace OurFramework.Environment.ShapeCreation
 {
+    /// <summary>
+    /// Used for connecting by paths.
+    /// </summary>
     public class Paths
     {
-        public CubeGroup Thicken(CubeGroup pathCubes, int thickness, CubeGroup notIntersecting)
-        {
-            if (thickness > 1)
-            {
-                var halfThickness = (thickness - 1) / 2;
-                // extruding to both sides
-                pathCubes = pathCubes.ExtrudeHorOut(halfThickness, false).Merge(pathCubes).Minus(notIntersecting);
-
-                if (thickness % 2 == 0)
-                {
-                    // extruding to only 1 side
-                    pathCubes = pathCubes.ExtrudeHorOut((thickness - 1) % 2, false).Minus(pathCubes.Merge(notIntersecting)).SplitToConnected().FirstOrDefault().Merge(pathCubes);
-                }
-            }
-            return pathCubes;
-        }
-
+        /// <summary>
+        /// Returns condition for ending pathfinding.
+        /// </summary>
         StopCondition StopAfterIterationsOrTime(int maxIterations, float maxTimeS)
         {
             var stopwatch = new Stopwatch();
@@ -35,6 +24,9 @@ namespace OurFramework.Environment.ShapeCreation
                     stopwatch.ElapsedMilliseconds / 1000f > maxTimeS;
         }
 
+        /// <summary>
+        /// Connects the two groups by a path constructed from neighbors function.
+        /// </summary>
         public CubeGroup ConnectByPath(CubeGroup startGroup, CubeGroup endGroup, Neighbors<PathNode> neighbors)
         {
             startGroup.AssertNonEmpty();
@@ -64,6 +56,9 @@ namespace OurFramework.Environment.ShapeCreation
             return new CubeGroup(startGroup.Grid, pathCubes);
         }
 
+        /// <summary>
+        /// Connects the two groups by a path constructed from neighbors function. It preserves connectedness of other areas.
+        /// </summary>
         public CubeGroup ConnectByConnectivityPreservingPath(CubeGroup startGroup, CubeGroup endGroup, CubeGroup startAreaFloor, CubeGroup endAreaFloor, Neighbors<PathNode> neighbors, LevelGroupElement existingPaths)
         {
             var existingPathsCgs = existingPaths.LevelElements.Select(le => le.CG());
@@ -77,6 +72,9 @@ namespace OurFramework.Environment.ShapeCreation
                 PathNode.PreserveConnectivity(neighbors, startAreaFloor, endAreaFloor, existingPathsCgs));
         }
 
+        /// <summary>
+        /// Connects the two groups by a path constructed from a valid neighbors function. The path doesn't go below y=2.
+        /// </summary>
         public CubeGroup ConnectByValidPath(CubeGroup startGroup, CubeGroup endGroup, CubeGroup startAreaFloor, CubeGroup endAreaFloor, Neighbors<PathNode> neighbors, LevelGroupElement existingPaths)
         {
             return ConnectByConnectivityPreservingPath(

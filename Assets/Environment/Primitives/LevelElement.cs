@@ -10,6 +10,9 @@ using OurFramework.Game;
 
 namespace OurFramework.Environment.GridMembers
 {
+    /// <summary>
+    /// Hierarchical structure for storing cubes. It is immutable.
+    /// </summary>
     public abstract class LevelElement
     {
         public Grid<Cube> Grid { get; }
@@ -23,15 +26,33 @@ namespace OurFramework.Environment.GridMembers
             AreaStyle = areaType;
         }
 
+        /// <summary>
+        /// Create a new empty level element.
+        /// </summary>
         public static LevelElement Empty(Grid<Cube> grid) => new LevelGeometryElement(grid, AreaStyles.None(), new CubeGroup(grid, new List<Cube>()));
 
         #region Collection methods
+        /// <summary>
+        /// All subelements with areaType.
+        /// </summary>
         public IEnumerable<LevelElement> WithAreaType(AreaStyle areaType) => Where(g => g.AreaStyle == areaType).LevelElements.ToList();
 
+        /// <summary>
+        /// All subelements satisfying cond.
+        /// </summary>
         public LevelGroupElement Where(Func<LevelElement, bool> cond) => Flatten().Where(g => cond(g)).ToLevelGroupElement(Grid);
+        /// <summary>
+        /// All leafs that satisfy cond.
+        /// </summary>
         public LevelGroupElement WhereGeom(Func<LevelElement, bool> cond) => Leafs().Where(g => cond(g)).ToLevelGroupElement(Grid);
 
+        /// <summary>
+        /// Replaces leafs.
+        /// </summary>
         public abstract LevelElement ReplaceLeafs(Func<LevelGeometryElement, bool> cond, Func<LevelGeometryElement, LevelElement> replaceF);
+        /// <summary>
+        /// New level element with the same cubes.
+        /// </summary>
         public LevelGeometryElement MapGeom(Func<CubeGroup, CubeGroup> f) => new LevelGeometryElement(Grid, AreaStyle, f(CG()));
 
         #endregion
@@ -43,6 +64,9 @@ namespace OurFramework.Environment.GridMembers
             return MoveByImpl(offset);
         }
 
+        /// <summary>
+        /// Move bottom by yOffset, but not below minY.
+        /// </summary>
         public LevelElement MoveBottomBy(int yOffset, int minY)
         {
             var cg = CG();
@@ -54,6 +78,9 @@ namespace OurFramework.Environment.GridMembers
             return MoveBy((newBottom - bottom) * Vector3Int.up);
         }
 
+        /// <summary>
+        /// Move bottom to yPosition.
+        /// </summary>
         public LevelElement MoveBottomTo(int yPosition)
         {
             var cg = CG();
@@ -64,8 +91,15 @@ namespace OurFramework.Environment.GridMembers
             return MoveBy((yPosition - bottom) * Vector3Int.up);
         }
 
+        /// <summary>
+        /// Returns all subelements.
+        /// </summary>
         public abstract IEnumerable<LevelElement> Flatten();
 
+        /// <summary>
+        /// Returns all geometry elements in leafs.
+        /// </summary>
+        /// <returns></returns>
         public abstract IEnumerable<LevelGeometryElement> Leafs();
 
         public LevelElement SetAreaStyle(AreaStyle areaType)
@@ -74,18 +108,27 @@ namespace OurFramework.Environment.GridMembers
             return this;
         }
 
+        /// <summary>
+        /// Apply style on these cubes.
+        /// </summary>
         public LevelElement ApplyStyle()
         {
             AreaStyle.ApplyStyle(CG());
             return this;
         }
 
+        /// <summary>
+        /// Apply style to all leafs.
+        /// </summary>
         public LevelElement ApplyGrammarStyles()
         {
             Leafs().ForEach(le => le.ApplyStyle());
             return this;
         }
 
+        /// <summary>
+        /// Creates special geometry.
+        /// </summary>
         public LevelElement CreateGeometry(IGridGeometryOwner geometryOwner)
         {
             Leafs().ForEach(
@@ -104,11 +147,14 @@ namespace OurFramework.Environment.GridMembers
 
         #region Movement
 
+        /// <summary>
+        /// Set of moves used for positioning of level elements.
+        /// </summary>
         public class LEMoves
         {
             public LevelElement LE { get; }
             /// <summary>
-            /// Has to be finite.
+            /// All possible moves. Has to be finite.
             /// </summary>
             public IEnumerable<Vector3Int> Ms { get; }
 
@@ -181,6 +227,9 @@ namespace OurFramework.Environment.GridMembers
             return new LEMoves(this, toIntersect.CG().MinkowskiMinus(CG()));
         }
 
+        /// <summary>
+        /// Moves to be inside the bounding element.
+        /// </summary>
         public LEMoves MovesToBeInside(LevelElement bounding)
         {
             var intersectBounding = MovesToIntersect(bounding).Ms;
@@ -190,6 +239,9 @@ namespace OurFramework.Environment.GridMembers
             return new LEMoves(this, intersectBounding.SetMinus(intersectBorder));
         }
 
+        /// <summary>
+        /// Moves to not intereset given level elements.
+        /// </summary>
         public LEMoves DontIntersect(IEnumerable<Vector3Int> possibleMoves, IEnumerable<LevelElement> toNotIntersect)
         {
             var moves = new HashSet<Vector3Int>(possibleMoves);
@@ -197,6 +249,9 @@ namespace OurFramework.Environment.GridMembers
             return new LEMoves(this, moves);
         }
 
+        /// <summary>
+        /// Moves to be near nearThis.
+        /// </summary>
         public LEMoves MovesNearXZ(LevelElement nearThis)
         {
             var intersectNear = nearThis.CG().MinkowskiMinus(CG().AllBoundaryFacesH().Extrude(1)).Where(move => move.y == 0);
@@ -204,6 +259,9 @@ namespace OurFramework.Environment.GridMembers
             return new LEMoves(this, intersectNear.SetMinus(intersect));
         }
 
+        /// <summary>
+        /// Moves to partly intersect the given element.
+        /// </summary>
         public LEMoves MovesToPartlyIntersectXZ(LevelElement partlyIntersectThis)
         {
             var intersectNear = partlyIntersectThis.CG().MinkowskiMinus(CG().AllBoundaryFacesH().Extrude(1, false));
@@ -235,10 +293,6 @@ namespace OurFramework.Environment.GridMembers
 
         #endregion
 
-        /*
-        public abstract LevelGroupElement Merge(params LevelElement[] le);
-        */
-
         public abstract LevelElement Minus(LevelElement le);
 
         public abstract LevelElement MinusInPlace(LevelElement levelElement);
@@ -258,8 +312,14 @@ namespace OurFramework.Environment.GridMembers
 
         public abstract LevelGroupElement Merge(params LevelElement[] les);
 
+        /// <summary>
+        /// Split this element by planes with normal dir.
+        /// </summary>
         public abstract LevelGroupElement Split(Vector3Int dir, AreaStyle subareasType, params int[] dist);
 
+        /// <summary>
+        /// Split this element by planes with normal dir. Distances are relative.
+        /// </summary>
         public abstract LevelGroupElement SplitRel(Vector3Int dir, AreaStyle subareasType, params float[] dist);
 
         public virtual string Print(int indent)
@@ -268,6 +328,9 @@ namespace OurFramework.Environment.GridMembers
         }
     }
 
+    /// <summary>
+    /// Group of level elements.
+    /// </summary>
     public class LevelGroupElement : LevelElement
     {
         public List<LevelElement> LevelElements { get; private set; }

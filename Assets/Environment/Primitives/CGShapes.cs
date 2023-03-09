@@ -8,7 +8,7 @@ using UnityEngine;
 namespace OurFramework.Environment.GridMembers
 {
     /// <summary>
-    /// Used for creating shapes.
+    /// Used for creating cube group shapes.
     /// </summary>
     public class CGShapes
     {

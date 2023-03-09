@@ -8,6 +8,9 @@ using UnityEngine;
 
 namespace OurFramework.Environment.ShapeCreation
 {
+    /// <summary>
+    /// Used for creating level element shapes.
+    /// </summary>
     public class LEShapes
     {
         Grid<Cube> QueriedGrid { get; }

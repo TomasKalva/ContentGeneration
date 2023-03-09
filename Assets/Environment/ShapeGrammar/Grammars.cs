@@ -8,6 +8,9 @@ using static OurFramework.Environment.GridMembers.LevelElement;
 
 namespace OurFramework.Environment.ShapeGrammar
 {
+    /// <summary>
+    /// List of productions.
+    /// </summary>
     public class ProductionList
     {
         public Production[] Get { get; }
@@ -18,6 +21,9 @@ namespace OurFramework.Environment.ShapeGrammar
         }
     }
 
+    /// <summary>
+    /// Shape grammar with derivation strategy.
+    /// </summary>
     public abstract class Grammar
     {
         protected Action<ShapeGrammarState> StartHandler { get; set; }
@@ -48,6 +54,9 @@ namespace OurFramework.Environment.ShapeGrammar
 
     }
 
+    /// <summary>
+    /// All derivations are possible.
+    /// </summary>
     public class RandomGrammar : Grammar
     {
         ProductionList Productions { get; }
@@ -106,6 +115,9 @@ namespace OurFramework.Environment.ShapeGrammar
         }
     }
 
+    /// <summary>
+    /// Query for nodes of the ShapeGrammarState.
+    /// </summary>
     public delegate IEnumerable<Node> NodesQuery(ShapeGrammarState state);
     public static class NodesQueries
     {
@@ -131,6 +143,9 @@ namespace OurFramework.Environment.ShapeGrammar
         }
     }
 
+    /// <summary>
+    /// Custom strategy how to select derivations.
+    /// </summary>
     public class CustomGrammar : Grammar
     {
         ProductionList Productions { get; }
@@ -198,6 +213,9 @@ namespace OurFramework.Environment.ShapeGrammar
         }
     }
 
+    /// <summary>
+    /// Sequence of multiple grammars.
+    /// </summary>
     public class GrammarSequence : Grammar
     {
 
@@ -238,12 +256,19 @@ namespace OurFramework.Environment.ShapeGrammar
         }
     }
 
+    /// <summary>
+    /// Gives an extra parameter of direction or moves to productions that want it.
+    /// It's usually used to guide a path made of multiple nodes.
+    /// </summary>
     public abstract class PathGuide
     {
         public abstract LEMoves SelectMove(LEMoves moves);
         public abstract IEnumerable<Vector3Int> SelectDirections(LevelElement currentElement);
     }
 
+    /// <summary>
+    /// The directions are chosen randomly.
+    /// </summary>
     public class RandomPathGuide : PathGuide
     {
         public override LEMoves SelectMove(LEMoves moves)
@@ -257,6 +282,9 @@ namespace OurFramework.Environment.ShapeGrammar
         }
     }
 
+    /// <summary>
+    /// Go towards a point.
+    /// </summary>
     public class PointPathGuide : PathGuide
     {
         ShapeGrammarState ShapeGrammarState { get; }

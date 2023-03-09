@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace OurFramework.Environment.ShapeCreation
 {
+    /// <summary>
+    /// Node storing a cube with direction. Used for pathfinding.
+    /// </summary>
     public class PathNode : IEqualityComparer<PathNode>
     {
         public static IEqualityComparer<PathNode> Comparer { get; } = new PathNode(null, null);
@@ -60,26 +63,6 @@ namespace OurFramework.Environment.ShapeCreation
             };
         }
 
-        public static Neighbors<PathNode> NotAbove(Neighbors<PathNode> neighbors, CubeGroup forbiddenCubes)
-        {
-            var forbiddenSet = new Dictionary<Vector2Int, int>();
-            forbiddenCubes.Cubes.ForEach(cube =>
-            {
-                var yExists = forbiddenSet.TryGetValue(cube.Position.XZ(), out var max);
-                var newY = cube.Position.y;
-                forbiddenSet.TryAdd(cube.Position.XZ(), yExists ? Mathf.Max(newY, max) : newY);
-            });
-            return pathNode =>
-            {
-                return neighbors(pathNode).Where(neighbor =>
-                {
-                    var pos = neighbor.cube.Position;
-                    var yExists = forbiddenSet.TryGetValue(pos.XZ(), out var y);
-                    return !yExists || pos.y < y;
-                });
-            };
-        }
-
         #region Preserving area connectivity
         
         /// <summary>
@@ -121,6 +104,9 @@ namespace OurFramework.Environment.ShapeCreation
             return IsConnected(newFloor, newPathEnds);
         }
 
+        /// <summary>
+        /// Make the path preserve connectivity of exiting areas.
+        /// </summary>
         public static Neighbors<PathNode> PreserveConnectivity(Neighbors<PathNode> neighbors, CubeGroup cg1, CubeGroup cg2, IEnumerable<CubeGroup> otherPaths)
         {
             var allPathsGroup = otherPaths.SelectMany(cg => cg.Cubes).ToCubeGroup(cg1.Grid);
@@ -153,6 +139,9 @@ namespace OurFramework.Environment.ShapeCreation
 
         #endregion
 
+        /// <summary>
+        /// Creates path for stairs.
+        /// </summary>
         public static Neighbors<PathNode> StairsNeighbors()
         {
             var horizontal = HorizontalNeighbors();
@@ -169,6 +158,9 @@ namespace OurFramework.Environment.ShapeCreation
             return NotRepeatingCubes(repeatingCubesNeighbors);
         }
 
+        /// <summary>
+        /// Neighbors for connecting by a fall.
+        /// </summary>
         public static Neighbors<PathNode> FallNeighbors(CubeGroup end)
         {
             var horizontal = HorizontalNeighbors();
