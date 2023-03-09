@@ -7,7 +7,7 @@ using System;
 using OurFramework.Gameplay.RealWorld;
 using OurFramework.Gameplay.Data;
 
-namespace ContentGeneration.Assets.UI
+namespace OurFramework.UI
 {
     /// <summary>
     /// Used for placing the grid geometry.

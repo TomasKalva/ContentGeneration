@@ -2,7 +2,7 @@
 #define NOESIS
 using Noesis;
 #else
-using ContentGeneration.Assets.UI.Model;
+using OurFramework.UI.Model;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,7 +10,7 @@ using System.Windows.Media;
 
 #endif
 
-namespace ContentGeneration.Assets.UI.Components
+namespace OurFramework.UI.Components
 {
     public partial class InventoryView : UserControl
     {

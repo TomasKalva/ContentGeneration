@@ -9,7 +9,7 @@ using System.Windows.Controls;
 
 #endif
 
-namespace ContentGeneration.Assets.UI
+namespace OurFramework.UI
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

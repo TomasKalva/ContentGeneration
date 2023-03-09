@@ -2,14 +2,14 @@
 #define NOESIS
 using UnityEngine;
 #endif
-using ContentGeneration.Assets.UI.Util;
+using OurFramework.UI.Util;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System;
 using System.Collections.ObjectModel;
 using OurFramework.LevelDesignLanguage;
 using OurFramework.Gameplay.RealWorld;
-using ContentGeneration.Assets.UI;
+using OurFramework.UI;
 
 namespace OurFramework.Gameplay.Data
 {

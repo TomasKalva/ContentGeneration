@@ -9,11 +9,12 @@ using System.Windows.Media;
 #endif
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using ContentGeneration.Assets.UI.Util;
+using OurFramework.UI.Util;
 using static OurFramework.LevelDesignLanguage.Game;
 using OurFramework.Gameplay.Data;
+using OurFramework.UI;
 
-namespace ContentGeneration.Assets.UI
+namespace OurFramework.UI
 {
     /// <summary>
     /// Logic for application ViewModel

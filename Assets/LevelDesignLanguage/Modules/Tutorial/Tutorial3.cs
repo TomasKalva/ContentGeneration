@@ -2,7 +2,7 @@
 using System.Linq;
 using Util;
 using System.Collections.Generic;
-using ContentGeneration.Assets.UI;
+using OurFramework.UI;
 using OurFramework.Gameplay.Data;
 
 namespace OurFramework.LevelDesignLanguage.CustomModules

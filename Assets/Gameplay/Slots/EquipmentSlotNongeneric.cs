@@ -1,4 +1,4 @@
-﻿using ContentGeneration.Assets.UI;
+﻿using OurFramework.UI;
 using UnityEngine;
 
 namespace OurFramework.Gameplay.RealWorld

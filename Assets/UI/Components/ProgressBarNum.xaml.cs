@@ -11,7 +11,7 @@ using System.Windows.Media;
 
 #endif
 
-namespace ContentGeneration.Assets.UI.Components
+namespace OurFramework.UI.Components
 {
     /// <summary>
     /// Interaction logic for ProgressBarNum.xaml.

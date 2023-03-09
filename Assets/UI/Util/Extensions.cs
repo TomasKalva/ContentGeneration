@@ -5,7 +5,7 @@ using UnityEngine;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace ContentGeneration.Assets.UI.Util
+namespace OurFramework.UI.Util
 {
     public static class PropertyChangedEventHandlerExtensions
     {

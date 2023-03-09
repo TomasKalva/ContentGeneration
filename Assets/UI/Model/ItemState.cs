@@ -5,7 +5,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 using System.ComponentModel;
-using ContentGeneration.Assets.UI.Util;
+using OurFramework.UI.Util;
 #if NOESIS
 using OurFramework.Gameplay.RealWorld;
 #endif

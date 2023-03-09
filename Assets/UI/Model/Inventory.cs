@@ -2,7 +2,7 @@
 #define NOESIS
 using UnityEngine;
 #endif
-using ContentGeneration.Assets.UI.Util;
+using OurFramework.UI.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

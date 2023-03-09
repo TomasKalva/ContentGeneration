@@ -1,5 +1,5 @@
 using OurFramework.LevelDesignLanguage;
-using ContentGeneration.Assets.UI;
+using OurFramework.UI;
 using System;
 using UnityEditor;
 using UnityEngine;

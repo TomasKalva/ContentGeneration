@@ -2,13 +2,13 @@
 #define NOESIS
 #endif
 using System.ComponentModel;
-using ContentGeneration.Assets.UI.Util;
+using OurFramework.UI.Util;
 #if NOESIS
 using UnityEngine;
 using static OurFramework.LevelDesignLanguage.Game;
 #endif
 
-namespace ContentGeneration.Assets.UI
+namespace OurFramework.UI
 {
     public class Menu : INotifyPropertyChanged
     {

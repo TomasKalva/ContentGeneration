@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using ContentGeneration.Assets.UI.Util;
-using ContentGeneration.Assets.UI;
+using OurFramework.UI.Util;
+using OurFramework.UI;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 using UnityEngine.SceneManagement;
