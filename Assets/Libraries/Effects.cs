@@ -5,7 +5,7 @@ using System;
 using UnityEngine;
 using Util;
 
-namespace OurFramework.Gameplay.Libraries
+namespace OurFramework.Libraries
 {
     public class EffectLibrary
     {

@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEngine;
 using Util;
 
-namespace OurFramework.Gameplay.Libraries
+namespace OurFramework.Libraries
 {
     public class Spells
     {

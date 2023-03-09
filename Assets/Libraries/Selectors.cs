@@ -7,7 +7,7 @@ using Util;
 using OurFramework.Gameplay.RealWorld;
 using OurFramework.Gameplay.Data;
 
-namespace OurFramework.Gameplay.Libraries
+namespace OurFramework.Libraries
 {
     public class SelectorLibrary
     {

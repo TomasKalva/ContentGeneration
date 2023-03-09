@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using OurFramework.Gameplay.Data;
 
-namespace OurFramework.Gameplay.Libraries
+namespace OurFramework.Libraries
 {
     public class SpellItems
     {

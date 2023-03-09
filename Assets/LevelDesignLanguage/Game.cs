@@ -13,7 +13,7 @@ using OurFramework.Environment.StylingAreas;
 using OurFramework.Environment.GridMembers;
 using OurFramework.Environment.ShapeCreation;
 using OurFramework.Gameplay.Data;
-using OurFramework.Gameplay.Libraries;
+using OurFramework.Libraries;
 
 namespace OurFramework.LevelDesignLanguage
 {
@@ -30,7 +30,7 @@ namespace OurFramework.LevelDesignLanguage
         LoadingScreen LoadingScreen;
 
         [SerializeField]
-        Libraries libraries;
+        Libraries.Libraries libraries;
 
         GameControl GC;
 

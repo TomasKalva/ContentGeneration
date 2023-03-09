@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace OurFramework.Gameplay.Libraries
+namespace OurFramework.Libraries
 {
     public class VFXs : ScriptableObject
     {

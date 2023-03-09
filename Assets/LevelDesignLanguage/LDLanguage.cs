@@ -8,7 +8,6 @@ using OurFramework.Environment.ShapeGrammar;
 using OurFramework.Environment.ShapeCreation;
 using OurFramework.Environment.GridMembers;
 using OurFramework.Gameplay.Data;
-using OurFramework.Gameplay.Libraries;
 
 namespace OurFramework.LevelDesignLanguage
 {
@@ -18,7 +17,7 @@ namespace OurFramework.LevelDesignLanguage
         const int MAX_NUMBER_OF_CONSTRUCTION_TRIES = 5;
         public LanguageState State { get; }
 
-        public Libraries Lib { get; }
+        public Libraries.Libraries Lib { get; }
         public Grammars Gr { get; }
         public Modules M { get; }
         public Environments Env { get; }
@@ -125,11 +124,11 @@ namespace OurFramework.LevelDesignLanguage
     {
         public LanguageState LanguageState { get; }
 
-        public Libraries Lib { get; }
+        public Libraries.Libraries Lib { get; }
         public Grammars Gr { get; }
         public Modules Modules { get; }
 
-        public LanguageParams(Libraries lib, Grammars gr, LanguageState languageState, Modules modules)
+        public LanguageParams(Libraries.Libraries lib, Grammars gr, LanguageState languageState, Modules modules)
         {
             Lib = lib;
             Gr = gr;
