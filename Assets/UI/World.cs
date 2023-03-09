@@ -84,14 +84,6 @@ namespace OurFramework.UI
             OnLevelRestart = () => { };
         }
 
-        /*
-        public void Initialize()
-        {
-            interactiveObjects = new List<InteractiveObjectState>();// (FindObjectsOfType<InteractiveObject>());
-            enemies = new List<CharacterState>();// (FindObjectsOfType<Agent>());
-            objects = new List<Transform>();
-        }*/
-
         public IEnumerable<InteractiveObjectState> ObjectsCloseTo(Vector3 point, float dist)
         {
             return InteractiveObjects.Where(o => (o.InteractiveObject.transform.position - point).sqrMagnitude <= dist * dist);
