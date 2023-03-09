@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace OurFramework.Environment.ShapeCreation
 {
+    /// <summary>
+    /// Used to define connections between areas.
+    /// </summary>
     public class Connections
     {
         Paths paths { get; }

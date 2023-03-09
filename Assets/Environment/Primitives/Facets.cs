@@ -7,7 +7,9 @@ using UnityEngine;
 
 namespace OurFramework.Environment.GridMembers
 {
-
+    /// <summary>
+    /// Facet of a cube.
+    /// </summary>
     public interface IFacet
     {
         Cube MyCube { get; }
@@ -15,6 +17,9 @@ namespace OurFramework.Environment.GridMembers
         Action<Transform> OnObjectCreated { get; }
     }
 
+    /// <summary>
+    /// Facet of a cube.
+    /// </summary>
     public abstract class Facet : IFacet
     {
 
@@ -44,6 +49,9 @@ namespace OurFramework.Environment.GridMembers
         }
     }
 
+    /// <summary>
+    /// Vertical face (with horizontal normal) of a cube.
+    /// </summary>
     public class FaceHor : Facet
     {
         private HorFacePrimitive facePrimitive;
@@ -97,6 +105,9 @@ namespace OurFramework.Environment.GridMembers
         public FaceHor OtherFacet() => OtherCube.FacesHor(-Direction);
     }
 
+    /// <summary>
+    /// Horizontal face (with vertical normal) of a cube.
+    /// </summary>
     public class FaceVer : Facet
     {
         private VerFacePrimitive facePrimitive;
@@ -141,6 +152,9 @@ namespace OurFramework.Environment.GridMembers
         public FaceVerGroup Group() => new FaceVerGroup(MyCube.Grid, new List<FaceVer>() { this });
     }
 
+    /// <summary>
+    /// Corner edge of a cube.
+    /// </summary>
     public class Corner : Facet
     {
         private CornerFacetPrimitive facePrimitive;
@@ -204,6 +218,9 @@ namespace OurFramework.Environment.GridMembers
         }
     }
 
+    /// <summary>
+    /// Types of horizontal faces.
+    /// </summary>
     public enum FACE_HOR
     {
         Nothing,
@@ -212,12 +229,18 @@ namespace OurFramework.Environment.GridMembers
         Door,
     }
 
+    /// <summary>
+    /// Types of vertical faces.
+    /// </summary>
     public enum FACE_VER
     {
         Nothing,
         Floor
     }
 
+    /// <summary>
+    /// Types of corners.
+    /// </summary>
     public enum CORNER
     {
         Nothing,
@@ -225,6 +248,9 @@ namespace OurFramework.Environment.GridMembers
         RailingPillar
     }
 
+    /// <summary>
+    /// Types of objects inside of a cube.
+    /// </summary>
     public enum CUBE
     {
         Nothing,

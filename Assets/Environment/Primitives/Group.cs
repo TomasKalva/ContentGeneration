@@ -7,7 +7,9 @@ using UnityEngine;
 
 namespace OurFramework.Environment.GridMembers
 {
-
+    /// <summary>
+    /// Group of grid primitives. The group is immutable - operations return a new group.
+    /// </summary>
     public class Group
     {
         public Grid<Cube> Grid { get; }
@@ -18,6 +20,9 @@ namespace OurFramework.Environment.GridMembers
         }
     }
 
+    /// <summary>
+    /// Group of cubes.
+    /// </summary>
     public class CubeGroup : Group
     {
         public static CubeGroup Zero(Grid<Cube> grid) => new CubeGroup(grid, grid[0, 0, 0].ToEnumerable().ToList());
@@ -51,6 +56,9 @@ namespace OurFramework.Environment.GridMembers
         public int LengthY() => ExtentsDir(Vector3Int.up);
         public int LengthZ() => ExtentsDir(Vector3Int.forward);
 
+        /// <summary>
+        /// Center of mass of the group.
+        /// </summary>
         public Vector3 Center()
         {
             AssertNonEmpty();
@@ -91,6 +99,9 @@ namespace OurFramework.Environment.GridMembers
             return this;
         }
 
+        /// <summary>
+        /// Sets mode of operations to adding - new cubes will be added to this one.
+        /// </summary>
         public CubeGroup OpAdd()
         {
             CubeGroup add(CubeGroup existing, List<Cube> newCubes)
@@ -101,6 +112,9 @@ namespace OurFramework.Environment.GridMembers
             return this;
         }
 
+        /// <summary>
+        /// Sets mode of operations to subtracting - new cubes will be subtracted from this one.
+        /// </summary>
         public CubeGroup OpSub()
         {
             CubeGroup sub(CubeGroup existing, List<Cube> newCubes)
@@ -111,6 +125,9 @@ namespace OurFramework.Environment.GridMembers
             return this;
         }
 
+        /// <summary>
+        /// Sets mode of operations to replacing - only new cubes will be in the new group.
+        /// </summary>
         public CubeGroup OpNew()
         {
             CubeGroup @new(CubeGroup existing, List<Cube> newCubes)
@@ -121,7 +138,14 @@ namespace OurFramework.Environment.GridMembers
             return this;
         }
 
+        /// <summary>
+        /// True iff none of the cubes are taken.
+        /// </summary>
         public bool AllAreNotTaken() => Cubes.All(cube => !cube.Changed);
+
+        /// <summary>
+        /// Returns cubes that are not taken yet.
+        /// </summary>
         public CubeGroup NotTaken() => Cubes.Where(cube => !cube.Changed).ToCubeGroup(Grid);
 
         /// <summary>
@@ -150,12 +174,18 @@ namespace OurFramework.Environment.GridMembers
             return Constr(this, movedCubes.ToList());
         }
 
+        /// <summary>
+        /// Moves in the direction dir until stopPred is true. All the cubes of the path are taken.
+        /// </summary>
         public CubeGroup MoveInDirUntil(Vector3Int dir, Func<Cube, bool> stopPred)
         {
             var validCubes = Cubes.SelectMany(cube => cube.MoveInDirUntil(dir, stopPred));
             return new CubeGroup(Grid, validCubes.ToList());
         }
 
+        /// <summary>
+        /// Creates level element out of this.
+        /// </summary>
         public LevelGeometryElement LE(AreaStyle areaType = null)
         {
             if(areaType == null)
@@ -167,13 +197,21 @@ namespace OurFramework.Environment.GridMembers
         }
 
         public CubeGroup Where(Func<Cube, bool> pred) => new CubeGroup(Grid, Cubes.Where(pred).ToList());
+        
+        /// <summary>
+        /// For each consecutive triple (l, t, r) of cubes returns t if the triple satisfies the condition.
+        /// </summary>
         public CubeGroup Where3(Func<Cube, Cube, Cube, bool> pred) => new CubeGroup(Grid, Cubes.Where3(pred).ToList());
+        
         /// <summary>
         /// Includes first and last element.
         /// </summary>
         public CubeGroup Where3All(Func<Cube, Cube, Cube, bool> pred) => new CubeGroup(Grid, Cubes.Where3(pred).Prepend(Cubes.FirstOrDefault()).Append(Cubes.LastOrDefault()).ToList());
         public CubeGroup Minus(CubeGroup group) => new CubeGroup(Grid, Cubes.Except(group.Cubes).ToList(), Constr);
 
+        /// <summary>
+        /// Returns Minkowski difference of the two groups.
+        /// </summary>
         public IEnumerable<Vector3Int> MinkowskiMinus(CubeGroup grp) => 
             (from cube1 in Cubes 
             from cube2 in grp.Cubes
@@ -184,6 +222,10 @@ namespace OurFramework.Environment.GridMembers
             return Cubes.Intersect(cg.Cubes).Any();
         }
 
+        /// <summary>
+        /// Splits this group to connected components.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<CubeGroup> SplitToConnected()
         {
             var cubesSet = new HashSet<Cube>(Cubes);
@@ -198,11 +240,17 @@ namespace OurFramework.Environment.GridMembers
             return graphAlgs.ConnectedComponentsSymm(Cubes).Select(cubes => new CubeGroup(Grid, cubes.ToList()));
         }
 
+        /// <summary>
+        /// Merges the two groups and removes all distinct cubes.
+        /// </summary>
         public CubeGroup Merge(CubeGroup cg)
         {
             return new CubeGroup(Grid, Cubes.Concat(cg.Cubes).Distinct().ToList());
         }
 
+        /// <summary>
+        /// Extrudes the group in all horizontal directions.
+        /// </summary>
         public CubeGroup ExtrudeHor(bool outside = true, bool takeChanged = true)
         {
             int dir = outside ? 1 : -1;
@@ -211,6 +259,9 @@ namespace OurFramework.Environment.GridMembers
             return Constr(this, faceCubes.Concat(cornerCubes).Distinct().ToList());
         }
 
+        /// <summary>
+        /// Extrudes the group outside in all horizontal directions.
+        /// </summary>
         public CubeGroup ExtrudeHorOut(int dist, bool takeChanged = true)
         {
             var totalGroup = this;
@@ -221,12 +272,18 @@ namespace OurFramework.Environment.GridMembers
             return Constr(this, totalGroup.Cubes.SetMinus(Cubes).ToList());
         }
 
+        /// <summary>
+        /// Extrude in a vertical direction.
+        /// </summary>
         public CubeGroup ExtrudeVer(Vector3Int dir, int dist, bool takeChanged = true)
         {
             var upCubes = BoundaryFacesV(dir).Extrude(dist, takeChanged).Cubes;
             return Constr(this, upCubes.ToList());
         }
 
+        /// <summary>
+        /// Extrudes in all directions.
+        /// </summary>
         public CubeGroup ExtrudeAll(bool outside = true, bool takeChanged = true)
         {
             var currentConstr = Constr;
@@ -238,6 +295,9 @@ namespace OurFramework.Environment.GridMembers
             return Constr(this, sides.Concat(up.Concat(down)).ToList());
         }
 
+        /// <summary>
+        /// Extrude in direction dir.
+        /// </summary>
         public CubeGroup ExtrudeDir(Vector3Int dir, int dist = 1, bool takeChanged = true)
         {
             var extruded = dir.y == 0 ?
@@ -247,8 +307,14 @@ namespace OurFramework.Environment.GridMembers
         }
 
         public CubeGroup BottomLayer() => CubesMaxLayer(Vector3Int.down).ToCubeGroup(Grid);
+        /// <summary>
+        /// Group of cubes that have floor.
+        /// </summary>
         public CubeGroup WithFloor() => Where(cube => cube.FacesVer(Vector3Int.down).FaceType == FACE_VER.Floor);
 
+        /// <summary>
+        /// Symmetrizes this group with faceHor as an axis.
+        /// </summary>
         public CubeGroup Symmetrize(FaceHor faceHor)
         {
             var myCubePos = faceHor.MyCube.Position;
@@ -286,6 +352,9 @@ namespace OurFramework.Environment.GridMembers
             return Split(dir, relDists.Select(relDist => Mathf.RoundToInt((minMaxDist * relDist))).ToArray());
         }
 
+        /// <summary>
+        /// Put cube primitive to this cube.
+        /// </summary>
         public CubeGroup Fill(CubePrimitive cubePrimitive)
         {
             Cubes.ForEach(cube =>
@@ -317,6 +386,9 @@ namespace OurFramework.Environment.GridMembers
             return BoundaryFacesH(ExtensionMethods.HorizontalDirections().ToArray());
         }
 
+        /// <summary>
+        /// Inside faces between consecutive cubes.
+        /// </summary>
         public FaceHorGroup ConsecutiveInsideFacesH()
         {
             return new FaceHorGroup(Grid,
@@ -332,6 +404,9 @@ namespace OurFramework.Environment.GridMembers
                 );
         }
 
+        /// <summary>
+        /// Faces neighboring with the other group.
+        /// </summary>
         public FaceHorGroup NeighborsInGroupH(CubeGroup cubes)
         {
             var cubesSet = new HashSet<Cube>(Cubes);
@@ -385,6 +460,9 @@ namespace OurFramework.Environment.GridMembers
             return new CornerGroup(Grid, horDirs.Select(verDir => CubeGroupLayer(verDir).Corners(verDir)).SelectMany(i => i.Facets).ToList());
         }
 
+        /// <summary>
+        /// Corners that correspond to real corners in wall. 
+        /// </summary>
         public CornerGroup SpecialCorners(params Vector3Int[] horDirs)
         {
             var specialCorners = BoundaryCorners(horDirs).Facets.Where(corner => corner.AllNeighbors().Where(c => c.In(this)).Count() != 2).ToList();
@@ -404,6 +482,9 @@ namespace OurFramework.Environment.GridMembers
         #endregion
     }
 
+    /// <summary>
+    /// Group of cube facets.
+    /// </summary>
     public abstract class FacetGroup<FacetT> : Group where FacetT : Facet
     {
         public List<FacetT> Facets { get; }
@@ -413,6 +494,10 @@ namespace OurFramework.Environment.GridMembers
             Facets = facets;
         }
 
+        /// <summary>
+        /// Cube group of cubes who own these facets.
+        /// </summary>
+        /// <returns></returns>
         public CubeGroup CG()
         {
             return new CubeGroup(Grid, Facets.Select(face => face.MyCube).ToList());
@@ -427,6 +512,9 @@ namespace OurFramework.Environment.GridMembers
             return cube => countdown.Finished(true);
         }
 
+        /// <summary>
+        /// Extrude cube group from these facets.
+        /// </summary>
         public CubeGroup Extrude(int dist, bool takeChanged = true)
         {
             Func<Func<Cube, bool>> stopConditionFact = () =>
@@ -447,6 +535,9 @@ namespace OurFramework.Environment.GridMembers
         }
     }
 
+    /// <summary>
+    /// Group of facets with horizontal normals.
+    /// </summary>
     public class FaceHorGroup : FacetGroup<FaceHor>
     {
         public FaceHorGroup(Grid<Cube> grid, List<FaceHor> faces) : base(grid, faces)
@@ -482,6 +573,9 @@ namespace OurFramework.Environment.GridMembers
         public FaceHorGroup Minus(FaceHorGroup faceHorGroup) => new FaceHorGroup(Grid, Facets.Except(faceHorGroup.Facets).ToList());
     }
 
+    /// <summary>
+    /// Group of facets with vertical normal.
+    /// </summary>
     public class FaceVerGroup : FacetGroup<FaceVer>
     {
         public FaceVerGroup(Grid<Cube> grid, List<FaceVer> faces) : base(grid, faces)
@@ -500,6 +594,9 @@ namespace OurFramework.Environment.GridMembers
         public FaceVerGroup Minus(FaceVerGroup faceVerGroup) => new FaceVerGroup(Grid, Facets.Except(faceVerGroup.Facets).ToList());
     }
 
+    /// <summary>
+    /// Group of corner edges.
+    /// </summary>
     public class CornerGroup : FacetGroup<Corner>
     {
         public CornerGroup(Grid<Cube> grid, List<Corner> faces) : base(grid, faces)

@@ -2,6 +2,9 @@
 
 namespace OurFramework.Environment.GridMembers
 {
+    /// <summary>
+    /// Thrown when an operation with contents of grid is invalid.
+    /// </summary>
     class GridException : Exception
     {
         public GridException(string message) : base(message)

@@ -8,9 +8,11 @@ using OurFramework.Game;
 
 namespace OurFramework.Environment.GridMembers
 {
+    /// <summary>
+    /// Basic block of the grid. Stores faces and edges.
+    /// </summary>
     public class Cube : IFacet
     {
-
         public Grid<Cube> Grid { get; }
         public Vector3Int Position { get; }
         public Dictionary<Vector3Int, Facet> Facets { get; }

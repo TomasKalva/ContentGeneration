@@ -10,7 +10,9 @@ using UnityEngine.Profiling;
 
 namespace OurFramework.Environment.GridMembers
 {
-
+    /// <summary>
+    /// Grid made of cubes. Stores all information about geometry.
+    /// </summary>
     public class Grid<T> : IEnumerable<T>
     {
         Vector3Int sizes;
@@ -54,12 +56,9 @@ namespace OurFramework.Environment.GridMembers
 
         T GetItem(Vector3Int coords)
         {
-            Profiler.BeginSample("GetCube");
             var chunkCoords = TryCreateChunk(coords);
             var localCoords = coords.Mod(sizes);
             var cube = chunks[chunkCoords][localCoords.x, localCoords.y, localCoords.z];
-            //Debug.Assert(cube != null, $"chunks[{chunkCoords}][{localCoords}] is null");
-            Profiler.EndSample();
             return cube;
         }
 
@@ -134,6 +133,9 @@ namespace OurFramework.Environment.GridMembers
         void AddInteractivePersistentObject(InteractiveObjectState interactivePersistentObject);
     }
 
+    /// <summary>
+    /// Represents size and position of the world geometry.
+    /// </summary>
     public class WorldGeometry
     {
         public Transform WorldParent { get; }

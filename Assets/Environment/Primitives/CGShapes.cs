@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace OurFramework.Environment.GridMembers
 {
+    /// <summary>
+    /// Used for creating shapes.
+    /// </summary>
     public class CGShapes
     {
         Grid<Cube> QueriedGrid { get; }
