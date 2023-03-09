@@ -66,7 +66,7 @@ namespace OurFramework.Libraries
         {
             var tickLength = 0.1f;
             return ch => ch.World.CreateOccurence(
-                    sel.ConstSelector(ch, timeS, new ConstDistr(tickLength)),
+                    sel.ConstSelector(ch, timeS, new ConstDistrFloat(tickLength)),
                     Damage(new DamageDealt(DamageType.Physical, damagePerSecond * tickLength))
             );
         }
@@ -75,7 +75,7 @@ namespace OurFramework.Libraries
         {
             var tickLength = 0.1f;
             return ch => ch.World.CreateOccurence(
-                    sel.ConstSelector(ch, timeS, new ConstDistr(tickLength)),
+                    sel.ConstSelector(ch, timeS, new ConstDistrFloat(tickLength)),
                     ch => ch.Stamina += boostPerSecond * tickLength
             );
         }
@@ -84,7 +84,7 @@ namespace OurFramework.Libraries
         {
             var tickLength = 0.1f;
             return ch => ch.World.CreateOccurence(
-                    sel.ConstSelector(ch, timeS, new ConstDistr(tickLength)),
+                    sel.ConstSelector(ch, timeS, new ConstDistrFloat(tickLength)),
                     Heal(boostPerSecond * tickLength)
             );
         }

@@ -132,7 +132,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
         {
             Env.One(Gr.PrL.Garden(), NodesQueries.All, out var area);
 
-            var itemPlacer = PlO.RandomAreaPlacer(new ConstDistrInt(3), () => Lib.InteractiveObjects.Item(Lib.Items.NewItem("Item", "Description")));
+            var itemPlacer = PlO.RandomAreaPlacer(new ConstDistr(3), () => Lib.InteractiveObjects.Item(Lib.Items.NewItem("Item", "Description")));
             itemPlacer.Place(area);
         }
 

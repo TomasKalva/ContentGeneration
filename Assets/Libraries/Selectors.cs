@@ -32,7 +32,7 @@ namespace OurFramework.Libraries
 
         public ByUser<Selector> SelfSelector() =>
             ch => new Selector(
-                new ConstDistr(1f),
+                new ConstDistrFloat(1f),
                 () =>
                 {
                     return ch.ToEnumerable();
@@ -163,7 +163,7 @@ namespace OurFramework.Libraries
                     .DestroyAtWallTouch()*/
 
                 var selector = new Selector(
-                    new ConstDistr(1f),
+                    new ConstDistrFloat(1f),
                     ts.SelectTargets,
                     dt => ts.Update(dt)
                 );
@@ -182,7 +182,7 @@ namespace OurFramework.Libraries
             {
                 var countdown = new CountdownTimer(duration);
                 var selector = new Selector(
-                    new ConstDistr(10f),
+                    new ConstDistrFloat(10f),
                     () => colliderDetector.Hits.SelectNN(c => c?.GetComponentInParent<Agent>()?.CharacterState),
                     dt => countdown.Finished(dt)
                 );

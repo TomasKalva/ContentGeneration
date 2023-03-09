@@ -114,7 +114,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
         IDistribution<int> EnemiesInAreaCount(int progress)
         {
             var maxEnemies = Math.Min(5, 3 + progress);
-            return new UniformIntDistr(1, maxEnemies);
+            return new UniformDistr(1, maxEnemies);
         }
 
         void PlaceInEndArea(Area endArea, FactionEnvironment fe, int progress, int level)

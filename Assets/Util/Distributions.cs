@@ -8,22 +8,6 @@ namespace OurFramework.Util
         public T Sample();
     }
 
-    public class UniformIntDistr : IDistribution<int>
-    {
-        int min, max;
-
-        public UniformIntDistr(int min, int max)
-        {
-            this.min = min;
-            this.max = max;
-        }
-
-        public int Sample()
-        {
-            return MyRandom.Range(min, max);
-        }
-    }
-
     public class IntSeqDistr : IDistribution<int>
     {
         int start, step;
@@ -110,7 +94,7 @@ namespace OurFramework.Util
         }
     }
 
-    public class WeightedDistribution<T> : IDistribution<T>
+    public class WeightedDistr<T> : IDistribution<T>
     {
         struct WeightItemPair
         {
@@ -126,7 +110,7 @@ namespace OurFramework.Util
 
         WeightItemPair[] Items { get; }
 
-        public WeightedDistribution(params (float, T)[] items)
+        public WeightedDistr(params (float, T)[] items)
         {
             Items = items.Select(item => new WeightItemPair(item.Item1, item.Item2)).ToArray();
         }
@@ -138,11 +122,11 @@ namespace OurFramework.Util
         }
     }
 
-    public class ConstDistr : IDistribution<float>
+    public class ConstDistrFloat : IDistribution<float>
     {
         float val;
 
-        public ConstDistr(float val)
+        public ConstDistrFloat(float val)
         {
             this.val = val;
         }
@@ -153,11 +137,11 @@ namespace OurFramework.Util
         }
     }
 
-    public class ConstDistrInt : IDistribution<int>
+    public class ConstDistr : IDistribution<int>
     {
         int val;
 
-        public ConstDistrInt(int val)
+        public ConstDistr(int val)
         {
             this.val = val;
         }

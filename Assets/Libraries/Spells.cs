@@ -28,7 +28,7 @@ namespace OurFramework.Libraries
         public Effect Periodically(Effect effect, float duration, float tickLength)
         {
             return ch => ch.World.CreateOccurence(
-                    sel.ConstSelector(ch, duration, new ConstDistr(tickLength)),
+                    sel.ConstSelector(ch, duration, new ConstDistrFloat(tickLength)),
                     effect
                     );
         }

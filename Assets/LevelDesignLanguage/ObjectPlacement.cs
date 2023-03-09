@@ -19,7 +19,7 @@ namespace OurFramework.LevelDesignLanguage
             return 
                 new RandomAreaPlacer<T>(
                     placementOp,
-                    new WeightedDistribution<Func<T>>(
+                    new WeightedDistr<Func<T>>(
                         items
                     ),
                     count,
@@ -37,7 +37,7 @@ namespace OurFramework.LevelDesignLanguage
             return
                 new RandomAreasPlacer<T>(
                     placementOp,
-                    new WeightedDistribution<Func<T>>(
+                    new WeightedDistr<Func<T>>(
                         items
                     ),
                     count
@@ -113,10 +113,10 @@ namespace OurFramework.LevelDesignLanguage
     /// </summary>
     class RandomAreaPlacer<T> : Placer<Areas, T>
     {
-        WeightedDistribution<Func<T>> ToPlaceF { get; }
+        WeightedDistr<Func<T>> ToPlaceF { get; }
         IDistribution<int> Count { get; }
 
-        public RandomAreaPlacer(Action<Area, T> placementOp, WeightedDistribution<Func<T>> toPlaceF, IDistribution<int> count, AreasPrioritizer prioritizer) : base(placementOp, prioritizer)
+        public RandomAreaPlacer(Action<Area, T> placementOp, WeightedDistr<Func<T>> toPlaceF, IDistribution<int> count, AreasPrioritizer prioritizer) : base(placementOp, prioritizer)
         {
             ToPlaceF = toPlaceF;
             Count = count != null ? count : new UniformDistr(1, 2);
@@ -133,10 +133,10 @@ namespace OurFramework.LevelDesignLanguage
     /// </summary>
     class RandomAreasPlacer<T> : Placer<Areas, T>
     {
-        WeightedDistribution<Func<T>> ToPlaceF { get; }
+        WeightedDistr<Func<T>> ToPlaceF { get; }
         IDistribution<int> Count { get; }
 
-        public RandomAreasPlacer(Action<Area, T> placementOp, WeightedDistribution<Func<T>> toPlaceF, IDistribution<int> count) : base(placementOp, null)
+        public RandomAreasPlacer(Action<Area, T> placementOp, WeightedDistr<Func<T>> toPlaceF, IDistribution<int> count) : base(placementOp, null)
         {
             ToPlaceF = toPlaceF;
             Count = count != null ? count : new UniformDistr(1, 2);

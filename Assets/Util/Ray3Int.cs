@@ -16,7 +16,7 @@ namespace OurFramework.Util
         }
 
         /// <summary>
-        /// Returns ALL points on the ray.
+        /// Returns points on the ray incremented by direction.
         /// </summary>
         public IEnumerator<Vector3Int> GetEnumerator()
         {
