@@ -4,8 +4,9 @@ using OurFramework.Environment.ShapeGrammar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static OurFramework.LevelDesignLanguage.AsynchronousEvaluator;
-using static OurFramework.LevelDesignLanguage.Game;
+using static OurFramework.Game.Game;
+using OurFramework.Game;
+using static OurFramework.Game.AsynchronousEvaluator;
 
 namespace OurFramework.LevelDesignLanguage
 {

@@ -5,7 +5,7 @@ using System.ComponentModel;
 using OurFramework.UI.Util;
 #if NOESIS
 using UnityEngine;
-using static OurFramework.LevelDesignLanguage.Game;
+using static OurFramework.Game.Game;
 #endif
 
 namespace OurFramework.UI

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using OurFramework.UI;
 using OurFramework.Gameplay.Data;
 using OurFramework.Util;
+using OurFramework.Game;
 
 namespace OurFramework.LevelDesignLanguage.CustomModules
 {

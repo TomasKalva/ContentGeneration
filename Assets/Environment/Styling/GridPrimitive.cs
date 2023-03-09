@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using UnityEngine;
 using OurFramework.Util;
+using OurFramework.Game;
 
 namespace OurFramework.Environment.GridMembers
 {

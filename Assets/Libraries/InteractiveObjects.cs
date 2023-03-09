@@ -3,9 +3,10 @@ using OurFramework.UI;
 using System;
 using UnityEditor;
 using UnityEngine;
-using static OurFramework.LevelDesignLanguage.Game;
 using OurFramework.Gameplay.RealWorld;
 using OurFramework.Gameplay.Data;
+using OurFramework.Game;
+using static OurFramework.Game.Game;
 
 namespace OurFramework.Libraries
 {

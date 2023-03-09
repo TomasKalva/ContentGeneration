@@ -1,4 +1,5 @@
 ﻿using OurFramework.Environment.StylingAreas;
+using OurFramework.Gameplay.Data;
 using OurFramework.Util;
 using System;
 using System.Collections;
@@ -120,5 +121,40 @@ namespace OurFramework.Environment.GridMembers
         }
     }
 
+    /// <summary>
+    /// Used for placing the grid geometry.
+    /// </summary>
+    public interface IGridGeometryOwner
+    {
+        void AddArchitectureElement(Transform el);
+        WorldGeometry WorldGeometry { get; }
 
+        Transform ArchitectureParent { get; }
+
+        void AddInteractivePersistentObject(InteractiveObjectState interactivePersistentObject);
+    }
+
+    public class WorldGeometry
+    {
+        public Transform WorldParent { get; }
+        public Vector3 ParentPosition { get; }
+        public float WorldScale { get; }
+
+        public WorldGeometry(Transform worldParent, float worldScale)
+        {
+            this.WorldParent = worldParent;
+            this.WorldScale = worldScale;
+            ParentPosition = worldParent.position;
+        }
+
+        public Vector3 GridToWorld(Vector3 gridPos)
+        {
+            return ParentPosition + WorldScale * gridPos;
+        }
+
+        public Vector3 WorldToGrid(Vector3 worldPos)
+        {
+            return (worldPos - ParentPosition) / WorldScale;
+        }
+    }
 }

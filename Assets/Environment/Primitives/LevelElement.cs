@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using OurFramework.Util;
+using OurFramework.Game;
 
 namespace OurFramework.Environment.GridMembers
 {

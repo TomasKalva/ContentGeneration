@@ -6,6 +6,7 @@ using System.Linq;
 using OurFramework.Environment.ShapeGrammar;
 using OurFramework.Gameplay.Data;
 using OurFramework.Util;
+using OurFramework.Game;
 
 namespace OurFramework.LevelDesignLanguage.CustomModules
 {

@@ -7,13 +7,14 @@ using System;
 using OurFramework.Gameplay.RealWorld;
 using OurFramework.Gameplay.Data;
 using OurFramework.Util;
+using OurFramework.Environment.GridMembers;
 
-namespace OurFramework.UI
+namespace OurFramework.Game
 {
     /// <summary>
     /// Used for placing the grid geometry.
     /// </summary>
-    public interface IGridGeometryOwner
+    /*public interface IGridGeometryOwner
     {
         void AddArchitectureElement(Transform el);
         WorldGeometry WorldGeometry { get; }
@@ -21,7 +22,7 @@ namespace OurFramework.UI
         Transform ArchitectureParent { get; }
 
         void AddInteractivePersistentObject(InteractiveObjectState interactivePersistentObject);
-    }
+    }*/
 
     public class World : INotifyPropertyChanged, IGridGeometryOwner
     {
@@ -214,6 +215,7 @@ namespace OurFramework.UI
             OnLevelRestart();
         }
     }
+    /*
     public class WorldGeometry
     {
         public Transform WorldParent { get; }
@@ -236,7 +238,7 @@ namespace OurFramework.UI
         {
             return (worldPos - ParentPosition) / WorldScale;
         }
-    }
+    }*/
 
     class OccurrenceManager
     {

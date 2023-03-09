@@ -6,6 +6,7 @@ using OurFramework.Gameplay.RealWorld;
 using OurFramework.Libraries;
 using System.Collections.Generic;
 using System.Linq;
+using OurFramework.Game;
 
 namespace OurFramework.LevelDesignLanguage.CustomModules
 {

@@ -1,25 +1,28 @@
 using UnityEngine;
 
-public class LoadingScreen : MonoBehaviour
+namespace OurFramework.Game
 {
-    [SerializeField]
-    Camera LoadingScreenCamera;
-
-    [SerializeField]
-    Renderer LoadingScreenRenderer;
-
-    public void SetOpacity(float value)
+    public class LoadingScreen : MonoBehaviour
     {
-        LoadingScreenRenderer.material.SetFloat("_Opacity", value);
-    }
+        [SerializeField]
+        Camera LoadingScreenCamera;
 
-    public void StartLoading()
-    {
-        LoadingScreenCamera.gameObject.SetActive(true);
-    }
+        [SerializeField]
+        Renderer LoadingScreenRenderer;
 
-    public void EndLoading()
-    {
-        LoadingScreenCamera.gameObject.SetActive(false);
+        public void SetOpacity(float value)
+        {
+            LoadingScreenRenderer.material.SetFloat("_Opacity", value);
+        }
+
+        public void StartLoading()
+        {
+            LoadingScreenCamera.gameObject.SetActive(true);
+        }
+
+        public void EndLoading()
+        {
+            LoadingScreenCamera.gameObject.SetActive(false);
+        }
     }
 }

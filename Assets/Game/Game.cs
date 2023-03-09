@@ -6,7 +6,6 @@ using OurFramework.UI;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 using UnityEngine.SceneManagement;
-using static OurFramework.LevelDesignLanguage.AsynchronousEvaluator;
 using OurFramework.LevelDesignLanguage.CustomModules;
 using OurFramework.Environment.ShapeGrammar;
 using OurFramework.Environment.StylingAreas;
@@ -15,8 +14,10 @@ using OurFramework.Environment.ShapeCreation;
 using OurFramework.Gameplay.Data;
 using OurFramework.Libraries;
 using OurFramework.Util;
+using static OurFramework.Game.AsynchronousEvaluator;
+using OurFramework.LevelDesignLanguage;
 
-namespace OurFramework.LevelDesignLanguage
+namespace OurFramework.Game
 {
 
     public sealed class Game : MonoBehaviour

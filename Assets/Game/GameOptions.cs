@@ -1,7 +1,11 @@
 using UnityEngine;
 
-public class GameOptions : MonoBehaviour
+
+namespace OurFramework.Game
 {
-    public bool friendlyFire = false;
-    public bool showDetectors = false;
+    public class GameOptions : MonoBehaviour
+    {
+        public bool friendlyFire = false;
+        public bool showDetectors = false;
+    }
 }

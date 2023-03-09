@@ -3,11 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static OurFramework.LevelDesignLanguage.AsynchronousEvaluator;
 using OurFramework.Environment.GridMembers;
 using OurFramework.Environment.StylingAreas;
 using OurFramework.Gameplay.RealWorld;
 using OurFramework.Util;
+using OurFramework.Game;
+using static OurFramework.Game.AsynchronousEvaluator;
 
 namespace OurFramework.Environment.ShapeGrammar
 {

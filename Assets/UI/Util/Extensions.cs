@@ -4,6 +4,7 @@ using UnityEngine;
 #endif
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using OurFramework.Game;
 
 namespace OurFramework.UI.Util
 {

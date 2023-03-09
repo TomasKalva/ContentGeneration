@@ -10,11 +10,11 @@ using System.Windows.Media;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using OurFramework.UI.Util;
-using static OurFramework.LevelDesignLanguage.Game;
 using OurFramework.Gameplay.Data;
 using OurFramework.UI;
+using static OurFramework.Game.Game;
 
-namespace OurFramework.UI
+namespace OurFramework.Game
 {
     /// <summary>
     /// Logic for application ViewModel

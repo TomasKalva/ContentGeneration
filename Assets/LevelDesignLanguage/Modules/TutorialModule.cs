@@ -7,6 +7,7 @@ using OurFramework.UI;
 using OurFramework.Gameplay.RealWorld;
 using OurFramework.Gameplay.Data;
 using OurFramework.Util;
+using OurFramework.Game;
 
 namespace OurFramework.LevelDesignLanguage.CustomModules
 {
