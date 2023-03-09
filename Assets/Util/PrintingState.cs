@@ -1,54 +1,57 @@
 ﻿using System.Text;
 using UnityEngine;
 
-public class PrintingState
+namespace OurFramework.Util
 {
-    public int Indent { get; set; }
-
-    StringBuilder sb;
-
-    public PrintingState()
+    public class PrintingState
     {
-        sb = new StringBuilder();
-        Indent = 0;
+        public int Indent { get; set; }
+
+        StringBuilder sb;
+
+        public PrintingState()
+        {
+            sb = new StringBuilder();
+            Indent = 0;
+        }
+
+        public PrintingState Print(string msg)
+        {
+            sb.Append(msg);
+            return this;
+        }
+
+        public PrintingState PrintIndent(string msg = "")
+        {
+            sb.Append($"{new string('\t', Indent)}{msg}");
+            return this;
+        }
+
+        public PrintingState PrintLine(string msg = "")
+        {
+            sb.AppendLine(msg);
+            return this;
+        }
+
+        public PrintingState ChangeIndent(int change)
+        {
+            Indent += change;
+            return this;
+        }
+
+        public override string ToString()
+        {
+            return sb.ToString();
+        }
+
+        public void Show()
+        {
+            Debug.Log(sb.ToString());
+        }
     }
 
-    public PrintingState Print(string msg)
+    interface IPrintable
     {
-        sb.Append(msg);
-        return this;
+        PrintingState Print(PrintingState state);
     }
-
-    public PrintingState PrintIndent(string msg = "")
-    {
-        sb.Append($"{new string('\t', Indent)}{msg}");
-        return this;
-    }
-
-    public PrintingState PrintLine(string msg = "")
-    {
-        sb.AppendLine(msg);
-        return this;
-    }
-
-    public PrintingState ChangeIndent(int change)
-    {
-        Indent += change;
-        return this;
-    }
-
-    public override string ToString()
-    {
-        return sb.ToString();
-    }
-
-    public void Show()
-    {
-        Debug.Log(sb.ToString());
-    }
-}
-
-interface IPrintable
-{
-    PrintingState Print(PrintingState state);
 }

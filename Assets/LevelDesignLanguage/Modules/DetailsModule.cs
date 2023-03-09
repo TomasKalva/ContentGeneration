@@ -1,9 +1,9 @@
 ﻿using OurFramework.Environment.ShapeGrammar;
 using OurFramework.Gameplay.Data;
+using OurFramework.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Util;
 
 namespace OurFramework.LevelDesignLanguage.CustomModules
 {

@@ -1,4 +1,5 @@
 ﻿using OurFramework.Environment.StylingAreas;
+using OurFramework.Util;
 using System;
 using System.Linq;
 using UnityEngine;
@@ -209,7 +210,7 @@ namespace OurFramework.Environment.GridMembers
             var horFacesInside = path.ConsecutiveInsideFacesH();
 
             // add railing
-            var middleFloorCubes = floorCubes.Cubes.Skip(1).SkipLast(1).ToCubeGroup(GridView);
+            var middleFloorCubes = floorCubes.Cubes.Skip(1).SkipLastEl(1).ToCubeGroup(GridView);
             middleFloorCubes.AllBoundaryFacesH().Minus(horFacesInside).FillIfEmpty(gpStyle.Railing);
             middleFloorCubes.AllBoundaryCorners().FillIfEmpty(gpStyle.RailingPillar);
 

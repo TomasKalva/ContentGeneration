@@ -1,27 +1,31 @@
+using OurFramework.Util;
 using UnityEngine;
 
-public class Resizer : MonoBehaviour
+namespace OurFramework.Util
 {
-    public Vector3 newSize;
-
-    public void Resize()
+    public class Resizer : MonoBehaviour
     {
-        var collider = GetComponent<Collider>();
-        if(collider == null)
+        public Vector3 newSize;
+
+        public void Resize()
         {
-            Debug.LogError($"Not collider component exists on {gameObject.name}");
-            return;
+            var collider = GetComponent<Collider>();
+            if (collider == null)
+            {
+                Debug.LogError($"Not collider component exists on {gameObject.name}");
+                return;
+            }
+
+            var localScale = transform.localScale.ComponentWise(Mathf.Abs);
+            if (localScale.Any(a => a == 0f))
+            {
+                Debug.LogWarning($"Scale component is zero on {gameObject.name}");
+            }
+
+            var bounds = 2f * collider.bounds.extents;
+            var newGlobalScale = newSize.ComponentWise(bounds, (a, b) => a / b).ComponentWise(localScale, (a, b) => a * b);
+            transform.localScale = newGlobalScale;
+
         }
-
-        var localScale = transform.localScale.ComponentWise(Mathf.Abs);
-        if(localScale.Any(a => a == 0f))
-        {
-            Debug.LogWarning($"Scale component is zero on {gameObject.name}");
-        }
-
-        var bounds = 2f * collider.bounds.extents;
-        var newGlobalScale = newSize.ComponentWise(bounds, (a, b) => a/ b).ComponentWise(localScale, (a, b) => a * b);
-        transform.localScale = newGlobalScale;
-
     }
 }

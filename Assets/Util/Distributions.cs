@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using UnityEngine;
 
-namespace Util
+namespace OurFramework.Util
 {
     public interface IDistribution<T>
     {

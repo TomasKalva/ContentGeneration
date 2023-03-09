@@ -1,8 +1,8 @@
 ﻿using OurFramework.Environment.ShapeGrammar;
 using System.Linq;
 using UnityEngine;
-using Util;
 using OurFramework.Gameplay.Data;
+using OurFramework.Util;
 
 namespace OurFramework.LevelDesignLanguage.CustomModules
 {
