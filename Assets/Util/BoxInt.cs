@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace OurFramework.Util
 {
+    /// <summary>
+    /// 3D box.
+    /// </summary>
     public struct Box3Int : IEnumerable<Vector3Int>
     {
         public Vector3Int leftBottomBack;
@@ -50,6 +53,9 @@ namespace OurFramework.Util
         public static Box3Int operator +(Box3Int b, Vector3Int v) => new Box3Int(b.leftBottomBack + v, b.rightTopFront + v);
     }
 
+    /// <summary>
+    /// 2D box.
+    /// </summary>
     public struct Box2Int : IEnumerable<Vector2Int>
     {
         public static Box2Int AtWithSize(Vector2Int center, Vector2Int size)

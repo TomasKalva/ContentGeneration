@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace OurFramework.Util
 {
+    /// <summary>
+    /// Helper class that formats printed text.
+    /// </summary>
     public class PrintingState
     {
         public int Indent { get; set; }
@@ -50,6 +53,9 @@ namespace OurFramework.Util
         }
     }
 
+    /// <summary>
+    /// Can be printed using PrintingState.
+    /// </summary>
     interface IPrintable
     {
         PrintingState Print(PrintingState state);

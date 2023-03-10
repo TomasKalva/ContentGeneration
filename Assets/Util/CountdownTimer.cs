@@ -1,5 +1,8 @@
 ﻿namespace OurFramework.Util
 {
+    /// <summary>
+    /// Counts down time on updates.
+    /// </summary>
     class CountdownTimer
     {
         float timeUntilFinished;
@@ -16,6 +19,9 @@
         }
     }
 
+    /// <summary>
+    /// Counts down on how many events happened.
+    /// </summary>
     class EventsCountdown
     {
         int eventsRemaning;

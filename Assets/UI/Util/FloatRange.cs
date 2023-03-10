@@ -10,7 +10,7 @@ namespace OurFramework.UI.Util
 {
 
     /// <summary>
-    /// (0, Maximum]
+    /// [0, Maximum]
     /// </summary>
 #if NOESIS
     [Serializable]

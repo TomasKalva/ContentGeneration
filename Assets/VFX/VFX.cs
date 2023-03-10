@@ -4,6 +4,9 @@ using UnityEngine.VFX;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// Visual effect.
+    /// </summary>
     public class VFX : MonoBehaviour, IDestroyable
     {
         [SerializeField]

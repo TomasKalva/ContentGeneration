@@ -8,6 +8,9 @@ using OurFramework.Util;
 
 namespace OurFramework.Util
 {
+    /// <summary>
+    /// Helper methods.
+    /// </summary>
     static class ExtensionMethods
     {
         // from https://ericlippert.com/2010/06/28/computing-a-cartesian-product-with-linq/
@@ -808,23 +811,6 @@ namespace OurFramework.Util
         public static float PerFixedSecond(float value)
         {
             return value * Time.fixedDeltaTime;
-        }
-
-
-        // Adapted from: http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect/1968345#1968345
-        public static bool LinesIntersects(Vector2 a0, Vector2 a1, Vector2 b0, Vector2 b1)
-        {
-            float s1_x, s1_y, s2_x, s2_y;
-            s1_x = a1.x - a0.x;
-            s1_y = a1.y - a0.y;
-            s2_x = b1.x - b0.x;
-            s2_y = b1.y - b0.y;
-
-            float s, t;
-            s = (-s1_y * (a0.x - b0.x) + s1_x * (a0.y - b0.y)) / (-s2_x * s1_y + s1_x * s2_y);
-            t = (s2_x * (a0.y - b0.y) - s2_y * (a0.x - b0.x)) / (-s2_x * s1_y + s1_x * s2_y);
-
-            return s > 0 && s < 1 && t > 0 && t < 1;
         }
     }
 

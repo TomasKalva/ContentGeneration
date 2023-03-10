@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace OurFramework.Util
 {
+    /// <summary>
+    /// Resizes the transform to given size.
+    /// </summary>
     public class Resizer : MonoBehaviour
     {
         public Vector3 newSize;

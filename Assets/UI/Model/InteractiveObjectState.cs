@@ -15,6 +15,9 @@ using OurFramework.Game;
 
 namespace OurFramework.Gameplay.Data
 {
+    /// <summary>
+    /// State of interactive object.
+    /// </summary>
     public abstract class InteractiveObjectState : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -26,6 +29,9 @@ namespace OurFramework.Gameplay.Data
 
         public World World { get; set; }
 
+        /// <summary>
+        /// Does the object block path.
+        /// </summary>
         public bool IsBlocking { get; set; }
 
         public Vector3 Position { get; set; }
@@ -225,6 +231,9 @@ namespace OurFramework.Gameplay.Data
 
     }
 
+    /// <summary>
+    /// Options from which the player can choose on interaction.
+    /// </summary>
     public class InteractOptions<InteractiveObjectT> : INotifyPropertyChanged
 #if NOESIS
     where InteractiveObjectT : InteractiveObject
@@ -270,6 +279,9 @@ namespace OurFramework.Gameplay.Data
         }
     }
 
+    /// <summary>
+    /// Option the player can choose on interaction.
+    /// </summary>
     public class InteractOption<InteractiveObjectT>
 #if NOESIS
     where InteractiveObjectT : InteractiveObject

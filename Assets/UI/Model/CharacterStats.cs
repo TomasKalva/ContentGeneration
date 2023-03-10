@@ -39,6 +39,9 @@ namespace OurFramework.Gameplay.Data
         }
 
         private int _will;
+        /// <summary>
+        /// Influences maximum health.
+        /// </summary>
         public int Will
         {
             get { return _will; }
@@ -54,6 +57,9 @@ namespace OurFramework.Gameplay.Data
         }
 
         private int _strength;
+        /// <summary>
+        /// Influences weapon damage.
+        /// </summary>
         public int Strength
         {
             get { return _strength; }
@@ -68,6 +74,9 @@ namespace OurFramework.Gameplay.Data
         }
 
         private int _endurance;
+        /// <summary>
+        /// Influences maximum stamina.
+        /// </summary>
         public int Endurance
         {
             get { return _endurance; }
@@ -83,6 +92,9 @@ namespace OurFramework.Gameplay.Data
         }
 
         private int _agility;
+        /// <summary>
+        /// Influences speed and action speed.
+        /// </summary>
         public int Agility
         {
             get { return _agility; }
@@ -104,6 +116,9 @@ namespace OurFramework.Gameplay.Data
         }
 
         private int _posture;
+        /// <summary>
+        /// Influences maximum poise and physical defense.
+        /// </summary>
         public int Posture
         {
             get { return _posture; }
@@ -120,6 +135,9 @@ namespace OurFramework.Gameplay.Data
         }
 
         private int _resistances;
+        /// <summary>
+        /// Influences resistances.
+        /// </summary>
         public int Resistances
         {
             get { return _resistances; }
@@ -137,6 +155,9 @@ namespace OurFramework.Gameplay.Data
         }
 
         private int _versatility;
+        /// <summary>
+        /// Influences spell power.
+        /// </summary>
         public int Versatility
         {
             get { return _versatility; }
@@ -201,6 +222,9 @@ namespace OurFramework.Gameplay.Data
         Versatility,
     }
 
+    /// <summary>
+    /// Does operation on stat.
+    /// </summary>
     public struct StatManipulation<ManipulationT>
     {
         public Stat Stat { get; }

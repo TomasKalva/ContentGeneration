@@ -50,10 +50,6 @@ namespace OurFramework.Gameplay.Data
                         (_1, _2) => { }
                     )
                 );
-            /*
-            ios.InteractOptions = InteractOptions;
-            ios.InteractionDescription = Message;
-            */
         }
     }
 
@@ -97,12 +93,18 @@ namespace OurFramework.Gameplay.Data
             CurrentState = 0;
         }
 
+        /// <summary>
+        /// Move to the next interaction if it exists.
+        /// </summary>
         public void TryMoveNext(InteractiveObjectState<InteractiveObjectT> ios)
         {
             CurrentState = Math.Min(CurrentState + 1, States.Count - 1);
             States[CurrentState].Enter(ios);
         }
 
+        /// <summary>
+        /// Go back to first interaction state.
+        /// </summary>
         public void Reset(InteractiveObjectState<InteractiveObjectT> ios)
         {
             if (States.Count == 0)
@@ -112,6 +114,9 @@ namespace OurFramework.Gameplay.Data
             States[CurrentState].Enter(ios);
         }
 
+        /// <summary>
+        /// The interactive object says something.
+        /// </summary>
         public InteractionSequence<InteractiveObjectT> Say(string message)
         {
             States.Add(
@@ -127,12 +132,18 @@ namespace OurFramework.Gameplay.Data
             return this;
         }
 
+        /// <summary>
+        /// Decide between multiple options.
+        /// </summary>
         public InteractionSequence<InteractiveObjectT> Decide(string message, params Func<InteractOption<InteractiveObjectT>, InteractOption<InteractiveObjectT>>[] optionCreators)
         {
             Decide(message, optionCreators.Select(oc => oc(new InteractOption<InteractiveObjectT>())).ToArray());
             return this;
         }
 
+        /// <summary>
+        /// Decide between multiple options.
+        /// </summary>
         public InteractionSequence<InteractiveObjectT> Decide(string message, params InteractOption<InteractiveObjectT>[] options)
         {
             States.Add(
@@ -143,6 +154,9 @@ namespace OurFramework.Gameplay.Data
             return this;
         }
 
+        /// <summary>
+        /// Interactive object does something on interaction.
+        /// </summary>
         public InteractionSequence<InteractiveObjectT> Interact(string interactionDescription, InteractionDelegate<InteractiveObjectT> actionOnInteract)
         {
             States.Add(
@@ -154,6 +168,9 @@ namespace OurFramework.Gameplay.Data
             return this;
         }
 
+        /// <summary>
+        /// Enter the state.
+        /// </summary>
         public override void Enter(InteractiveObjectState<InteractiveObjectT> ios)
         {
             if (States.Count == 0)

@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace OurFramework.Util
 {
+    /// <summary>
+    /// Returns a number.
+    /// </summary>
     public interface IDistribution<T>
     {
         public T Sample();

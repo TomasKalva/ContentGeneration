@@ -10,6 +10,9 @@ using static OurFramework.Game.Game;
 
 namespace OurFramework.UI
 {
+    /// <summary>
+    /// Main menu.
+    /// </summary>
     public class Menu : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;

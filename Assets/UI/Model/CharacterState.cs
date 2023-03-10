@@ -77,6 +77,9 @@ namespace OurFramework.Gameplay.Data
         }
     }
 
+    /// <summary>
+    /// State of character.
+    /// </summary>
 #if NOESIS
     [Serializable]
 #endif
@@ -260,7 +263,6 @@ namespace OurFramework.Gameplay.Data
             FireDefense = FindDefense(DamageType.Chaos);
             DarkDefense = FindDefense(DamageType.Dark);
             DivineDefense = FindDefense(DamageType.Divine);
-            //Behaviors = new Behaviors();
             Stats = new CharacterStats();
             DeathCount = 0;
             OnDeath = () => { };
@@ -308,9 +310,11 @@ namespace OurFramework.Gameplay.Data
             Debug.Log($"Adding item: {item}");
 #endif
             return item.AddToInventory(Inventory) != null;
-            //return SetItemToSlot(SlotType.Passive, item);
         }
 
+        /// <summary>
+        /// Pays the cost if has enough.
+        /// </summary>
         public bool Pay(int spiritCost)
         {
             if (Spirit >= spiritCost)
@@ -357,7 +361,7 @@ namespace OurFramework.Gameplay.Data
             }
             if (Poise.Empty())
             {
-                Agent.Stagger(/*damageDealer.PushForce(Agent.transform)*/);
+                Agent.Stagger();
                 PostureBroken = true;
             }
 
@@ -526,7 +530,7 @@ namespace OurFramework.Gameplay.Data
     }
 
     /// <summary>
-    /// Stores amount of damage taken in the last few moments.
+    /// Stores amount of damage taken in the last few moments. To show on screen.
     /// </summary>
     public class DamageTaken : INotifyPropertyChanged
     {

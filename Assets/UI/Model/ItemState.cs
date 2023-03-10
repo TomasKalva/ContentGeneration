@@ -12,6 +12,9 @@ using OurFramework.Gameplay.RealWorld;
 
 namespace OurFramework.Gameplay.Data
 {
+    /// <summary>
+    /// State of item.
+    /// </summary>
 #if NOESIS
     [Serializable]
 #endif
@@ -67,6 +70,9 @@ namespace OurFramework.Gameplay.Data
             set { _isStackable = value; PropertyChanged.OnPropertyChanged(this); }
         }
 
+        /// <summary>
+        /// Describes how the item is used - consumable, stackable, replenishable, wearable.
+        /// </summary>
         ItemUsage Usage { get; set; }
 
         public ItemState SetConsumable()

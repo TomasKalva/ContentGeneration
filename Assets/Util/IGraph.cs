@@ -6,8 +6,14 @@ using System.Linq;
 
 namespace OurFramework.Util
 {
+    /// <summary>
+    /// When to stop based on number of iteartions.
+    /// </summary>
     public delegate bool StopCondition(int iterationsCount);
 
+    /// <summary>
+    /// Edge of a graph.
+    /// </summary>
     public class Edge<VertexT> : IEdge<VertexT> where VertexT : class
     {
         public VertexT From { get; }
@@ -38,6 +44,9 @@ namespace OurFramework.Util
 
     public delegate IEnumerable<VertexT> Neighbors<VertexT>(VertexT v) where VertexT : class;
 
+    /// <summary>
+    /// Graph with edges given as neighbors function.
+    /// </summary>
     public class ImplicitGraph<VertexT> : IGraph<VertexT, Edge<VertexT>> where VertexT : class
     {
         Neighbors<VertexT> neighbors;
@@ -69,6 +78,9 @@ namespace OurFramework.Util
         }
     }
 
+    /// <summary>
+    /// Describes operations that edge should have.
+    /// </summary>
     public interface IEdge<VertexT>
     {
         public VertexT From { get; }
@@ -81,15 +93,19 @@ namespace OurFramework.Util
         public VertexT Other(VertexT vert);
     }
 
+    /// <summary>
+    /// Describes operations that graph should have.
+    /// </summary>
     public interface IGraph<VertexT, EdgeT> where VertexT : class where EdgeT : IEdge<VertexT>
     {
-        /*public IEnumerable<VertexT> Vertices { get; }
-        public IEnumerable<EdgeT> Edges { get; }*/
         bool AreConnected(VertexT from, VertexT to);
         IEnumerable<VertexT> Neighbors(VertexT vert);
         IEnumerable<EdgeT> EdgesFrom(VertexT vert);
     }
 
+    /// <summary>
+    /// Some algorithms on graphs.
+    /// </summary>
     public class GraphAlgorithms<VertexT, EdgeT, GraphT> where VertexT : class where EdgeT : IEdge<VertexT> where GraphT : IGraph<VertexT, EdgeT>
     {
         protected IGraph<VertexT, EdgeT> graph;
@@ -100,7 +116,8 @@ namespace OurFramework.Util
         }
 
         /// <summary>
-        /// Only for symmetrical graphs!
+        /// Finds connected components of the graph.
+        /// Works only for symmetrical graphs.
         /// </summary>
         public IEnumerable<IEnumerable<VertexT>> ConnectedComponentsSymm(IEnumerable<VertexT> rootVertices)
         {
@@ -139,6 +156,9 @@ namespace OurFramework.Util
             return components;
         }
 
+        /// <summary>
+        /// Depth firs search.
+        /// </summary>
         public IEnumerable<VertexT> DFS(VertexT start)
         {
             var found = new HashSet<VertexT>();
@@ -161,6 +181,9 @@ namespace OurFramework.Util
             }
         }
 
+        /// <summary>
+        /// Depth first search that returns iterated edges instead of vertices.
+        /// </summary>
         public IEnumerable<EdgeT> EdgeDFS(VertexT start)
         {
             var found = new HashSet<EdgeT>();
@@ -188,7 +211,8 @@ namespace OurFramework.Util
         }
 
         /// <summary>
-        /// Starting vertices have to be disjoint with the vertices reachable by path, because they have distance 0!
+        /// A* that returns edge when it expands a new node.
+        /// Starting vertices have to be disjoint with the vertices reachable by path, because they have distance 0.
         /// </summary>
         public IEnumerable<EdgeT> EdgeAStar(
             IEnumerable<VertexT> starting,
@@ -232,6 +256,7 @@ namespace OurFramework.Util
 
 
         /// <summary>
+        /// Finds path between starting and goal vertices.
         /// Starting vertices have to be disjoint with the vertices reachable by path, because they have distance 0.
         /// </summary>
         public IEnumerable<VertexT> FindPath(
@@ -276,6 +301,7 @@ namespace OurFramework.Util
         }
 
         /// <summary>
+        /// Finds distance between the two vertices.
         /// Has O(|V|^2) complpexity.
         /// </summary>
         public int Distance(VertexT from, VertexT to, int infinity)
@@ -313,6 +339,9 @@ namespace OurFramework.Util
             return infinity;
         }
 
+        /// <summary>
+        /// Returns if path between the 2 vertices exists.
+        /// </summary>
         public bool PathExists(VertexT from, VertexT to)
         {
             return DFS(from).Contains(to);

@@ -3,6 +3,9 @@ using System.Linq;
 
 namespace OurFramework.Util
 {
+    /// <summary>
+    /// Graph with user defined vertices and edges.
+    /// </summary>
     public class Graph<VertexT> : GraphAlgorithms<VertexT, Edge<VertexT>, Graph<VertexT>>, IGraph<VertexT, Edge<VertexT>> where VertexT : class
     {
         public List<VertexT> Vertices { get; }

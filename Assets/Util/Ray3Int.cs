@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace OurFramework.Util
 {
+    /// <summary>
+    /// Ray that can be iterated.
+    /// </summary>
     public struct Ray3Int : IEnumerable<Vector3Int>
     {
         public Vector3Int Start { get; }

@@ -23,6 +23,9 @@ namespace OurFramework.Gameplay.Data
         Skin
     }
     
+    /// <summary>
+    /// Slot shown in the inventory.
+    /// </summary>
     public class InventorySlot : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -95,6 +98,9 @@ namespace OurFramework.Gameplay.Data
         void Update();
     }
 
+    /// <summary>
+    /// Model of inventory.
+    /// </summary>
     public class Inventory : INotifyPropertyChanged, IInventory
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -168,6 +174,9 @@ namespace OurFramework.Gameplay.Data
             }
         }
 
+        /// <summary>
+        /// Character who owns this inventory.
+        /// </summary>
         protected CharacterState character;
 
         public Inventory(CharacterState character)
@@ -223,7 +232,6 @@ namespace OurFramework.Gameplay.Data
         {
             return item.AddToInventory(this);
         }
-
 
 #if NOESIS
         public void RemoveItems(IEnumerable<ItemState> items)
@@ -311,6 +319,9 @@ namespace OurFramework.Gameplay.Data
         public virtual void UseItem() {}
     }
 
+    /// <summary>
+    /// Inventory of the player.
+    /// </summary>
     public class PlayerInventory : Inventory
     {
         InventorySlot _cursorSlot;
@@ -395,6 +406,9 @@ namespace OurFramework.Gameplay.Data
             CursorSlot.Item = null;
         }
 
+        /// <summary>
+        /// Moves selection in the given direction.
+        /// </summary>
         public void ChangeSelected(bool right)
         {
             if (Active)

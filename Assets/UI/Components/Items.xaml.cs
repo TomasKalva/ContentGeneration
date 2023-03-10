@@ -11,6 +11,9 @@ using System.Windows.Media;
 
 namespace OurFramework.UI.Components
 {
+    /// <summary>
+    /// Shows grid of items.
+    /// </summary>
     public partial class Items : UserControl
     {
         public Items()

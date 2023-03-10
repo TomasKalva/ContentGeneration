@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// Tests the visual effects.
+    /// </summary>
     public class VFXTesting : MonoBehaviour
     {
         [SerializeField]

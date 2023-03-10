@@ -6,6 +6,9 @@ using System;
 
 namespace OurFramework.Gameplay.Data
 {
+    /// <summary>
+    /// State of the player's character.
+    /// </summary>
     [Serializable]
     public class PlayerCharacterState : CharacterState {
 
@@ -74,13 +77,14 @@ namespace OurFramework.Gameplay.Data
 #if NOESIS
         public override void TryDie()
         {
-            //GameObject.Destroy(Agent.gameObject);
             DeathCount++;
             OnDeath();
-            //World.OnPlayerDeath();
         }
 #endif
 
+        /// <summary>
+        /// Equips active inventory item to a free slot or unequip it.
+        /// </summary>
         public void ToggleEquipCursorSlot()
         {
             if (!PlayerInventory.Active)
@@ -90,7 +94,6 @@ namespace OurFramework.Gameplay.Data
             if (cursorSlot.SlotType == SlotType.Passive)
             {
                 EquipItemToFree(cursorSlot);
-                //CursorSlot.Item?.EquipToFree(this, CursorSlot);
             }
             else
             {
@@ -98,6 +101,9 @@ namespace OurFramework.Gameplay.Data
             }
         }
 
+        /// <summary>
+        /// Equips active inventory item to the corresponding slot with the id or unequip it.
+        /// </summary>
         public void ToggleEquipCursorSlot(int slotId)
         {
             if (!PlayerInventory.Active)
@@ -107,7 +113,6 @@ namespace OurFramework.Gameplay.Data
             if (cursorSlot.SlotType == SlotType.Passive)
             {
                 EquipItemToPosition(cursorSlot, slotId);
-                //CursorSlot.Item?.EquipToPosition(this, CursorSlot, slotId);
             }
         }
     }

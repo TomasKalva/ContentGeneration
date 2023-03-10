@@ -1,5 +1,8 @@
 ﻿namespace OurFramework.Util
 {
+    /// <summary>
+    /// Annotates an object with a name and description.
+    /// </summary>
     public class Annotated<T>
     {
         public string Name { get; }

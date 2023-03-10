@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace OurFramework.Util
 {
     /// <summary>
-    /// My random is thread safe, unlike the one from Unity.
+    /// Thread safe random.
     /// </summary>
     static class MyRandom
     {
