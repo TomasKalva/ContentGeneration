@@ -19,7 +19,10 @@ using OurFramework.LevelDesignLanguage;
 
 namespace OurFramework.Game
 {
-
+    /// <summary>
+    /// Starts the game and loads levels. Loading is done asynchronously so
+    /// that the game doesn't freeze.
+    /// </summary>
     public sealed class Game : MonoBehaviour
     {
         [SerializeField]
@@ -179,8 +182,6 @@ namespace OurFramework.Game
                 world.AddInteractiveObject(graveState);
                 world.Grave = graveState;
 
-                //yield return TaskSteps.One();
-
                 world.InitializePlayer();
 
                 yield return TaskSteps.One();
@@ -199,8 +200,6 @@ namespace OurFramework.Game
         {
 
             // Generating the world
-
-            // show transition animation
 
             yield return TaskSteps.Multiple(GameLanguage.GenerateWorld());
 
@@ -224,8 +223,6 @@ namespace OurFramework.Game
             GameLanguage.State.World.OnLevelStart();
 
             yield return TaskSteps.One();
-
-            // hide transition animation
         }
 
         private void FixedUpdate()
@@ -249,6 +246,10 @@ namespace OurFramework.Game
         /// </summary>
         delegate void DoEachStep(float elapsedNormalized);
 
+        /// <summary>
+        /// Waits for transitionTime. Calls doEachStep every step with
+        /// progress from [0,1].
+        /// </summary>
         IEnumerable<TaskSteps> Wait(float transitionTime, DoEachStep doEachStep = null)
         {
             doEachStep = doEachStep ?? (_ => { });
@@ -261,6 +262,9 @@ namespace OurFramework.Game
             }
         }
 
+        /// <summary>
+        /// Blends in a transition screen.
+        /// </summary>
         IEnumerable<TaskSteps> StartScreenTransition(float duration = 0.3f)
         {
             GameViewModel.ViewModel.Visible = false;
@@ -270,6 +274,9 @@ namespace OurFramework.Game
             LoadingScreen.SetOpacity(1f);
         }
 
+        /// <summary>
+        /// Blends in a transition screen.
+        /// </summary>
         IEnumerable<TaskSteps> EndScreenTransition(float duration = 1.0f)
         {
             yield return TaskSteps.Multiple(Wait(duration, secondsElapsed => LoadingScreen.SetOpacity(1f - secondsElapsed)));
@@ -280,6 +287,9 @@ namespace OurFramework.Game
             yield return TaskSteps.One();
         }
 
+        /// <summary>
+        /// Goes back to main menu.
+        /// </summary>
         IEnumerable<TaskSteps> EndRun()
         {
             SceneManager.LoadScene("StartScene");
@@ -287,7 +297,7 @@ namespace OurFramework.Game
         }
 
         /// <summary>
-        /// Public api for Game.
+        /// Public API for Game that can be used during the game.
         /// </summary>
         public class GameControl
         {

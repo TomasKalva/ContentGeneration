@@ -4,6 +4,9 @@ namespace OurFramework.Environment.StylingAreas
 {
     public delegate CubeGroup PlacePrimitives(GridPrimitivesStyle gridPrimitivesStyle, CubeGroup target);
 
+    /// <summary>
+    /// Style of level element. Can be applied to the underlying cube group.
+    /// </summary>
     public class AreaStyle
     {
         public string Name { get; }

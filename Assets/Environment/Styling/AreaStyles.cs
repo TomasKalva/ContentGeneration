@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace OurFramework.Environment.StylingAreas
 {
+    /// <summary>
+    /// Declaration of all area styles.
+    /// </summary>
     public static class AreaStyles
     {
         static GridPrimitives gp { get; set; }
@@ -72,6 +75,5 @@ namespace OurFramework.Environment.StylingAreas
         public static AreaStyle BridgeTopFoundation(Vector3Int bridgeDirection) => new AreaStyle("BridgeTopFoundation", gp.TownStyle(), (gpStyle, roofArea) => gpp.PlaceInDirection(roofArea, gpStyle.BridgeTop, bridgeDirection));
         public static AreaStyle BridgeBottomFoundation(Vector3Int bridgeDirection) => new AreaStyle("BridgeBottomFoundation", gp.TownStyle(), (gpStyle, roofArea) => gpp.PlaceInDirection(roofArea, gpStyle.BridgeBottom, bridgeDirection));
 
-        //public static  AreaStyle NoFloor() => new AreaStyle("NoFloor", gm.DefaultStyle(), gpp.NoFloor);
     }
 }

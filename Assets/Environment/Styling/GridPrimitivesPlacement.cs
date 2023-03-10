@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace OurFramework.Environment.GridMembers
 {
+    /// <summary>
+    /// Strategies how to place grid primitives to areas.
+    /// </summary>
     public class GridPrimitivesPlacement
     {
         Grid<Cube> GridView { get; }
@@ -66,17 +69,8 @@ namespace OurFramework.Environment.GridMembers
         public CubeGroup OpenRoomStyle(GridPrimitivesStyle gpStyle, CubeGroup roomArea)
         {
             roomArea.BoundaryFacesV(Vector3Int.down).Fill(gpStyle.Floor);
-            //roomArea.AllBoundaryCorners().SetStyle(ObjectStyle).Fill(CORNER.Pillar);
             return roomArea;
         }
-
-        /*
-        public CubeGroup NoFloor(GridPrimitivesStyle gpStyle, CubeGroup roomArea)
-        {
-            roomArea.BoundaryFacesV(Vector3Int.down).Fill(FACE_VER.Nothing);
-            return roomArea;
-        }*/
-
 
         public CubeGroup EmptyStyle(GridPrimitivesStyle gpStyle, CubeGroup emptyArea)
         {
@@ -231,14 +225,10 @@ namespace OurFramework.Environment.GridMembers
             verTop.BoundaryFacesV(Vector3Int.down).Fill(gpStyle.NoFloor);
 
             // empty horizontal faces between cubes
-            //var horFacesInside = path.InsideFacesH().Facets;
             horFacesInside.Facets.ForEach(faceH =>
             {
                 faceH.FacePrimitive = GetFittingDoorOrEmpty(gpStyle, faceH);
             });
-
-            //hor.Intersect(path.AllBoundaryFacesH()).SetStyle(ObjectStyle).Fill(FACE_HOR.Railing);
-            //hor.AllBoundaryCorners().Intersect(path.AllBoundaryCorners()).SetStyle(ObjectStyle).Fill(CORNER.RailingPillar);
 
             // add stairs
             path.Cubes.ForEach3(

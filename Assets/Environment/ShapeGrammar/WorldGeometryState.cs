@@ -48,11 +48,13 @@ namespace OurFramework.Environment.ShapeGrammar
             Added = Added.Merge(newLe);
         }
 
+        /// <summary>
+        /// Adds real world geometry to the grid.
+        /// </summary>
         public IEnumerable<TaskSteps> CreateGeometry(IGridGeometryOwner world)
         {
             var cubeSide = world.WorldGeometry.WorldScale;
             int iteration = 0;
-            //var iterChunks = Grid.chunks.Values.ToList();
             foreach (var chunk in Grid.Chunks().ToList())
             {
                 foreach (var cube in chunk)

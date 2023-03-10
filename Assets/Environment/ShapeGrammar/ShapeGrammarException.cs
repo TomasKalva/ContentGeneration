@@ -2,6 +2,9 @@
 
 namespace OurFramework.Environment.ShapeGrammar
 {
+    /// <summary>
+    /// Thrown when shape grammar fails.
+    /// </summary>
     class ShapeGrammarException : Exception
     {
         public ShapeGrammarException(string message) : base(message)

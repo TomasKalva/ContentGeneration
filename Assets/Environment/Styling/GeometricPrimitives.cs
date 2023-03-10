@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace OurFramework.Environment.StylingAreas
 {
+    /// <summary>
+    /// Declarations of geometric primitives.
+    /// </summary>
     public class GeometricPrimitives : ScriptableObject
     {
 #if UNITY_EDITOR

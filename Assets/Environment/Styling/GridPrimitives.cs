@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace OurFramework.Environment.GridMembers
 {
+    /// <summary>
+    /// Declaration of grid primitives.
+    /// </summary>
     public class GridPrimitives
     {
         public GeometricPrimitives GP { get; }
@@ -60,7 +63,7 @@ namespace OurFramework.Environment.GridMembers
             => new FloorPrimitive(GP.woodenFullFloor, GP.empty);
 
         public NoFloorPrimitive NoFloor()
-            => new NoFloorPrimitive();// todo: make floor one sided and add ceiling
+            => new NoFloorPrimitive();
 
 
         public CubeExclusivePrimitive StairPrimitive(Vector3Int direction)
@@ -122,7 +125,10 @@ namespace OurFramework.Environment.GridMembers
     }
 
     /// <summary>
-    /// Factories for the primitives, because each primitive contains a flag if it was resolved already.
+    /// Style that defines specific grid primitives like wall, door, floor. Used in productions
+    /// instead of referencing specific primitives from the library.
+    /// 
+    /// Uses factories for the primitives, because each primitive contains a flag if it was resolved already.
     /// </summary>
     public class GridPrimitivesStyle
     {

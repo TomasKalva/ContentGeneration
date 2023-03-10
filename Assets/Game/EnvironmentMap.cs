@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace OurFramework.Game
 {
+    /// <summary>
+    /// Sky made of multiple planes with a custom shader.
+    /// </summary>
     public class EnvironmentMap : MonoBehaviour
     {
         [SerializeField]

@@ -7,6 +7,9 @@ using System.Linq;
 
 namespace OurFramework.Environment.ShapeGrammar
 {
+    /// <summary>
+    /// Lists of productions.
+    /// </summary>
     public class ProductionLists
     {
         LevelDevelopmentKit ldk { get; }
@@ -150,15 +153,12 @@ namespace OurFramework.Environment.ShapeGrammar
             );
         }
 
-        public ProductionList SuperMegaTower()
+        public ProductionList TallTowerNextToRoom()
         {
             var guideRandomly = new RandomPathGuide();
 
             return new ProductionList
             (
-                //pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.Room(new Box3Int(0, 0, 0, 3, 3, 3))),
-                //pr.ExtendBridgeTo(pr.sym.Room(), () => ldk.sgShapes.IslandExtrudeIter(CubeGroup.Zero(ldk.grid), 4, 0.7f).LE(AreaType.Garden), addFloorAbove: false),
-
                 pr.ChapelEntranceNextTo(pr.sym.Room, 3, () => ldk.les.Box(3, 3, 2)),
 
                 pr.ChapelHall(pr.sym.ChapelEntrance, 4, guideRandomly),
@@ -184,7 +184,6 @@ namespace OurFramework.Environment.ShapeGrammar
             var guideRandomly = new RandomPathGuide();
             return new ProductionList
             (
-                //pr.ChapelTowerTop(3),
                 pr.Roof(pr.sym.ChapelHall(default), 3, AreaStyles.GableRoof(AreaStyles.ChapelStyle)),
                 pr.Roof(pr.sym.ChapelRoom, 3, AreaStyles.CrossRoof(AreaStyles.ChapelStyle))
             );
@@ -207,7 +206,6 @@ namespace OurFramework.Environment.ShapeGrammar
                 pr.TowerTopFromWallTop(4, 4),
                 pr.RoomDown(pr.sym.TowerTop, pr.sym.TowerBottom, AreaStyles.Room(AreaStyles.CastleStyle), 5, 3),
 
-                //pr.GardenFrom(pr.sym.TowerBottom, () => ldk.qc.GetFlatBox(4, 4, 1)),
                 pr.TowerTopNear(pr.sym.TowerTop, 4, 0, 3, () => ldk.les.Box(4, 4, 2)),
                 pr.GardenFrom(pr.sym.TowerBottom)
             );
@@ -290,7 +288,6 @@ namespace OurFramework.Environment.ShapeGrammar
         
         public ProductionList NewGrammar()
         {
-            //var roomStyle = AreaStyles.CastleStyle;
             return new ProductionList
             (
                 pr.NewRoomNear(),

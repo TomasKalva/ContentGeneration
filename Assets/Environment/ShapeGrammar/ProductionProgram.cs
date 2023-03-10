@@ -8,6 +8,9 @@ using UnityEngine;
 
 namespace OurFramework.Environment.ShapeGrammar
 {
+    /// <summary>
+    /// Modifies geometry of the level. Uses fluent interface pattern.
+    /// </summary>
     public class ProductionProgram
     {
         public static LevelDevelopmentKit Ldk { get; set; }
@@ -33,7 +36,10 @@ namespace OurFramework.Environment.ShapeGrammar
             this.State = state;
         }
 
-        private ProductionProgram Bind(Action programChange)
+        /// <summary>
+        /// Does the acation if this program is still valid.
+        /// </summary>
+        private ProductionProgram DoAction(Action programChange)
         {
             if (!Failed)
             {
@@ -43,7 +49,10 @@ namespace OurFramework.Environment.ShapeGrammar
             return this;
         }
 
-        private ProductionProgram Bind<OutT>(out OutT t, Func<OutT> programChange)
+        /// <summary>
+        /// Does the acation if this program is still valid.
+        /// </summary>
+        private ProductionProgram DoAction<OutT>(out OutT t, Func<OutT> programChange)
         {
             t = default;
             if (!Failed)
@@ -54,12 +63,18 @@ namespace OurFramework.Environment.ShapeGrammar
             return this;
         }
 
+        /// <summary>
+        /// Sets value of Failed and prints a debug message.
+        /// </summary>
         T SetFailedReturn<T>(bool value, string failMessage) where T : class
         {
             SetFailed(value, failMessage);
             return null;
         }
 
+        /// <summary>
+        /// Sets value of Failed and prints a debug message.
+        /// </summary>
         void SetFailed(bool value, string failMessage)
         {
             Failed = value;
@@ -70,7 +85,7 @@ namespace OurFramework.Environment.ShapeGrammar
         /// <summary>
         /// Keeps only one of the current nodes. Fails if no current nodes exist.
         /// </summary>
-        public ProductionProgram SelectRandomOne(ProductionProgram program, out Node result) => Bind(out result, () =>
+        public ProductionProgram SelectRandomOne(ProductionProgram program, out Node result) => DoAction(out result, () =>
         {
             if (!program.CurrentNodes.Any())
                 return SetFailedReturn<Node>(true, $"{nameof(SelectRandomOne)}: no current nodes exist");
@@ -83,7 +98,7 @@ namespace OurFramework.Environment.ShapeGrammar
         /// <summary>
         /// Keeps only one of the current nodes. Fails if no current nodes exist.
         /// </summary>
-        public ProductionProgram SelectFirstOne(ProductionProgram program, out Node result) => Bind(out result, () =>
+        public ProductionProgram SelectFirstOne(ProductionProgram program, out Node result) => DoAction(out result, () =>
         {
             if (!program.CurrentNodes.Any())
                 return SetFailedReturn<Node>(true, $"{nameof(SelectFirstOne)}: no current nodes exist");
@@ -93,8 +108,10 @@ namespace OurFramework.Environment.ShapeGrammar
             return node;
         });
         
-        
-        public ProductionProgram FindPath(Func<Node> pathFinder, out Node path) => Bind(out path, () =>
+        /// <summary>
+        /// Gets path out of pathFinder and sets it as a current node.
+        /// </summary>
+        public ProductionProgram FindPath(Func<Node> pathFinder, out Node path) => DoAction(out path, () =>
         {
             Node foundPath;
             try
@@ -112,7 +129,7 @@ namespace OurFramework.Environment.ShapeGrammar
         /// <summary>
         /// Places the current nodes to the level. Each will be child of all nodes contained in from. 
         /// </summary>
-        public ProductionProgram PlaceCurrentFrom(params Node[] from) => Bind(() =>
+        public ProductionProgram PlaceCurrentFrom(params Node[] from) => DoAction(() =>
         {
             if (!CurrentNodes.Any())
             {
@@ -124,7 +141,10 @@ namespace OurFramework.Environment.ShapeGrammar
             AppliedOperations.Add(op);
         });
 
-        public ProductionProgram ReplaceNodes(params Node[] from) => Bind(() =>
+        /// <summary>
+        /// Replaces the from nodes with the current ones.
+        /// </summary>
+        public ProductionProgram ReplaceNodes(params Node[] from) => DoAction(() =>
         {
             if (!CurrentNodes.Any())
             {
@@ -141,7 +161,7 @@ namespace OurFramework.Environment.ShapeGrammar
         /// <summary>
         /// Returned node is not in derivation. It is just a container of newly created level elements.
         /// </summary>
-        public ProductionProgram Found(out Node foundation) =>  Bind(out foundation, () =>
+        public ProductionProgram Found(out Node foundation) =>  DoAction(out foundation, () =>
         {
             CurrentNodes = CurrentNodes.Select(node => Ldk.les.Foundation(node.LE).GN(Pr.sym.Foundation)).ToList();
             return CurrentNodes.Select(node => node.LE).ToLevelGroupElement(Ldk.grid).GN();
@@ -153,7 +173,7 @@ namespace OurFramework.Environment.ShapeGrammar
         /// Returned node is not in derivation. It is just a container of newly created level elements.
         /// </summary>
         public ProductionProgram ReserveUpward(int height, Func<Node, Symbol> reservationSymbolF, out Node reservation)
-            => Bind(out reservation, () =>
+            => DoAction(out reservation, () =>
         {
             var reservations = CurrentNodes
                 .Select(node =>
@@ -175,16 +195,16 @@ namespace OurFramework.Environment.ShapeGrammar
         });
 
         public ProductionProgram Directional(IEnumerable<Vector3Int> directions, Func<Vector3Int, Node> nodeCreator)
-            => Bind(() => CurrentNodes = directions.Select(dir => nodeCreator(dir)).ToList());
+            => DoAction(() => CurrentNodes = directions.Select(dir => nodeCreator(dir)).ToList());
 
         /// <summary>
         /// Remove the current nodes which are overlapping already added nodes.
         /// </summary>
         public ProductionProgram DiscardTaken()
-            => Bind(() => CurrentNodes = CurrentNodes.Where(node => node.LE.CG().AllAreNotTaken()).ToList());
+            => DoAction(() => CurrentNodes = CurrentNodes.Where(node => node.LE.CG().AllAreNotTaken()).ToList());
 
         public ProductionProgram Keep(Func<Node, bool> condition)
-            => Bind(() => CurrentNodes = CurrentNodes.Where(condition).ToList());
+            => DoAction(() => CurrentNodes = CurrentNodes.Where(condition).ToList());
 
         /// <summary>
         /// Remove the current nodes for which foundation can't be created.
@@ -201,28 +221,41 @@ namespace OurFramework.Environment.ShapeGrammar
         /// </summary>
         public ProductionProgram DontIntersectAdded() => Keep(node => !node.LE.CG().Intersects(State.WorldState.Added.CG()));
 
+        /// <summary>
+        /// Changes the current nodes.
+        /// </summary>
         public ProductionProgram Change(Func<Node, Node> changer)
-            => Bind(() => CurrentNodes = CurrentNodes.SelectNN(changer).ToList());
+            => DoAction(() => CurrentNodes = CurrentNodes.SelectNN(changer).ToList());
 
-        public ProductionProgram CurrentFirst(out Node first) => Bind(out first, () =>
+        /// <summary>
+        /// Returns the first current node.
+        /// </summary>
+        public ProductionProgram CurrentFirst(out Node first) => DoAction(out first, () =>
         {
             var first = CurrentNodes.FirstOrDefault();
             return first ?? SetFailedReturn<Node>(true, $"{nameof(CurrentFirst)}: no current nodes exist");
         });
 
-        public ProductionProgram Condition(Func<bool> condF) => Bind(() =>
+        /// <summary>
+        /// Fails the program if condF is not true.
+        /// </summary>
+        public ProductionProgram Condition(Func<bool> condF) => DoAction(() =>
         {
             if(!condF())
                 SetFailed(true, "Condition failed");
         });
 
+        /// <summary>
+        /// Runs the program with the current State and CurrentNodes and its state after being run is applied to this.
+        /// programF takes new program with the same state as argument.
+        /// </summary>
         public ProductionProgram Run(Func<ProductionProgram, ProductionProgram> programF) => RunIf(true, programF);
 
         /// <summary>
         /// Runs the program with the current State and CurrentNodes and its state after being run is applied to this.
         /// programF takes new program with the same state as argument.
         /// </summary>
-        public ProductionProgram RunIf(bool condition, Func<ProductionProgram, ProductionProgram> programF) => Bind(() =>
+        public ProductionProgram RunIf(bool condition, Func<ProductionProgram, ProductionProgram> programF) => DoAction(() =>
         {
             if (condition)
             {
@@ -238,23 +271,32 @@ namespace OurFramework.Environment.ShapeGrammar
             }
         });
 
-        public ProductionProgram Set(Func<Node> nodesF, out Node result) => Bind(out result, () =>
+        /// <summary>
+        /// Sets the current nodes to nodesF() and returns it as result.
+        /// </summary>
+        public ProductionProgram Set(Func<Node> nodesF, out Node result) => DoAction(out result, () =>
         {
             Set(() => nodesF().ToEnumerable());
             return CurrentNodes.First();
         });
 
+        /// <summary>
+        /// Sets the current nodes to nodesF().
+        /// </summary>
         public ProductionProgram Set(Func<Node> nodesF)
-            => Bind(() => Set(() => nodesF().ToEnumerable()));
+            => DoAction(() => Set(() => nodesF().ToEnumerable()));
 
+        /// <summary>
+        /// Sets the current nodes to nodesF().
+        /// </summary>
         public ProductionProgram Set(Func<IEnumerable<Node>> nodesF)
-            => Bind(() => CurrentNodes = nodesF().ToList());
+            => DoAction(() => CurrentNodes = nodesF().ToList());
 
         /// <summary>
         /// Moves current node near to targetNode. None of the cubes of the moved node is vertically taken yet.
         /// Doesn't work correctly for multiple current nodes.
         /// </summary>
-        public ProductionProgram MoveNearTo(Node targetNode, int dist) => Bind(() =>
+        public ProductionProgram MoveNearTo(Node targetNode, int dist) => DoAction(() =>
         {
             if (CurrentNodes.Count() != 1)
             {

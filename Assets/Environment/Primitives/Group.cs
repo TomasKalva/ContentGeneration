@@ -9,6 +9,7 @@ namespace OurFramework.Environment.GridMembers
 {
     /// <summary>
     /// Group of grid primitives. The group is immutable - operations return a new group.
+    /// Uses fluent interface pattern.
     /// </summary>
     public class Group
     {

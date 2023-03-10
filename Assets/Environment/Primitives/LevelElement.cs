@@ -12,6 +12,7 @@ namespace OurFramework.Environment.GridMembers
 {
     /// <summary>
     /// Hierarchical structure for storing cubes. It is immutable.
+    /// Uses fluent interface pattern.
     /// </summary>
     public abstract class LevelElement
     {

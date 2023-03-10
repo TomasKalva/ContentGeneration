@@ -3,9 +3,15 @@ using UnityEngine;
 
 namespace OurFramework.Environment.ShapeGrammar
 {
+    /// <summary>
+    /// All symbols use in shape grammars.
+    /// </summary>
     public class Symbols
     {
         #region Common symbols
+        /// <summary>
+        /// Foundation of a building.
+        /// </summary>
         public Symbol Foundation { get; } = new Symbol("Foundation");
         /// <summary>
         /// Serves as a space that can be turned into another part of a building or into a roof.
@@ -92,6 +98,9 @@ namespace OurFramework.Environment.ShapeGrammar
         }
     }
 
+    /// <summary>
+    /// Marks the node.
+    /// </summary>
     public class Marker : Symbol
     {
         public Marker(string name) : base(name)

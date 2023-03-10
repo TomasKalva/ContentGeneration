@@ -5,6 +5,10 @@ using System.Linq;
 
 namespace OurFramework.Environment.ShapeGrammar
 {
+    /// <summary>
+    /// Declaration of valid parameters for a production. Used to obtain valid production parameters
+    /// that exist in the level.
+    /// </summary>
     public class ProdParamsManager
     {
         public delegate bool Condition(ShapeGrammarState shapeGrammarState, ProdParams pp);
@@ -43,19 +47,9 @@ namespace OurFramework.Environment.ShapeGrammar
         }
     }
 
-    class ProdParamsEqualityComparer : IEqualityComparer<ProdParams>
-    {
-        public bool Equals(ProdParams x, ProdParams y)
-        {
-            return Enumerable.SequenceEqual(x.Parameters, y.Parameters);
-        }
-
-        public int GetHashCode(ProdParams obj)
-        {
-            return obj.Parameters.GetHashCode();
-        }
-    }
-
+    /// <summary>
+    /// Parameters for a production.
+    /// </summary>
     public class ProdParams
     {
         public Node[] Parameters { get; }
@@ -76,6 +70,25 @@ namespace OurFramework.Environment.ShapeGrammar
         }
     }
 
+    /// <summary>
+    /// Compares production parameters.
+    /// </summary>
+    class ProdParamsEqualityComparer : IEqualityComparer<ProdParams>
+    {
+        public bool Equals(ProdParams x, ProdParams y)
+        {
+            return Enumerable.SequenceEqual(x.Parameters, y.Parameters);
+        }
+
+        public int GetHashCode(ProdParams obj)
+        {
+            return obj.Parameters.GetHashCode();
+        }
+    }
+
+    /// <summary>
+    /// Production rule that modifies level geometry.
+    /// </summary>
     public class Production
     {
         public delegate ProductionProgram ProductionEffect(ShapeGrammarState shapeGrammarState, ProdParams prodParams);

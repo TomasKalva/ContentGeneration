@@ -11,6 +11,9 @@ using static OurFramework.Environment.ShapeCreation.Connections;
 
 namespace OurFramework.Environment.ShapeGrammar
 {
+    /// <summary>
+    /// Declarations of productions.
+    /// </summary>
     public class Productions
     {
         public LevelDevelopmentKit ldk { get; }
@@ -237,54 +240,6 @@ namespace OurFramework.Environment.ShapeGrammar
                 );
 
         #endregion
-
-        public Production RoomFallDown(Symbol nextToWhat, Func<LevelElement> roomFromToF)
-        {
-            return new Production(
-                $"RoomNextTo{nextToWhat.Name}",
-                new ProdParamsManager().AddNodeSymbols(nextToWhat),
-                (state, pp) =>
-                {
-                    var what = pp.Param;
-                    var whatCG = what.LE.CG();
-
-                    return state.NewProgram(prog => prog
-                        .SelectFirstOne(
-                            state.NewProgram(subProg => subProg
-                                .Set(() => roomFromToF().GN())
-                                .MoveNearTo(what, 1)
-                                .Change(node => node.LE.GN(sym.BrokenFloorRoom))
-                                ),
-                            out var newRoom
-                        )
-                        .PlaceCurrentFrom(what)
-
-                        .ReserveUpward(2, sym.UpwardReservation)
-                        .PlaceCurrentFrom(what)
-
-                        .Set(() =>
-                            newRoom.LE.CG().ExtrudeVer(Vector3Int.down, 2).LE(AreaStyles.Room()).GN(sym.Room, sym.FullFloorMarker),
-                            out var bottomRoom
-                        )
-                        .PlaceCurrentFrom(newRoom)
-
-                        .Found()
-                        .PlaceCurrentFrom(bottomRoom)
-
-                        .FindPath(() => 
-                        ldk.con.ConnectByDoor(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
-                            (newRoom.LE, what.LE).GN(sym.ConnectionMarker), out var door)
-                        .PlaceCurrentFrom(newRoom, what)
-
-                        // The door doesn't get overwritten by apply style only because it has higher priority, which doesn't feel robust enough
-                        .FindPath(() => 
-                        ldk.con.ConnectByFall(AllAlreadyExisting(state, prog), AllExistingPaths(state, prog))
-                            (newRoom.LE, bottomRoom.LE).GN(sym.ConnectionMarker), out var fall)
-                        .PlaceCurrentFrom(bottomRoom, newRoom)
-                        );
-
-                });
-        }
 
 
         public Production Roof(Symbol reservationSymbol, int roofHeight, AreaStyle roofAreaStyle)

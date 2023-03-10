@@ -8,6 +8,9 @@ using OurFramework.Game;
 
 namespace OurFramework.Environment.GridMembers
 {
+    /// <summary>
+    /// Primitive placed to grid by styles. Used for resolving conflicts.
+    /// </summary>
     public abstract class GridPrimitive
     {
         public float Priority { get; protected set; }
@@ -19,6 +22,9 @@ namespace OurFramework.Environment.GridMembers
 
     public interface IGridPrimitivePlacer<GridPrimitiveT> where GridPrimitiveT : GridPrimitive 
     {
+        /// <summary>
+        /// Places the primitive to the grid and tries to resolve conflicts with other primitives.
+        /// </summary>
         public abstract void PlacePrimitive(IGridGeometryOwner worldGeometry, IFacet facet, GridPrimitiveT otherPrimitive);
     }
     #region Horizontal primitives
@@ -50,6 +56,9 @@ namespace OurFramework.Environment.GridMembers
         }
     }
 
+    /// <summary>
+    /// Places full wall or only inside part of the wall if the other part is already taken by another wall.
+    /// </summary>
     public class WallPrimitive : HorFacePrimitive
     {
         GeometricPrimitive InsideWall { get; }
@@ -67,7 +76,6 @@ namespace OurFramework.Environment.GridMembers
         {
             if(otherPrimitive is WallPrimitive otherWallPrimitive)
             {
-                //todo: replace with the correct implementation
                 PlaceHorizontally(geometryOwner, facet, InsideWall, -facet.Direction);
                 PlaceHorizontally(geometryOwner, facet, otherWallPrimitive.InsideWall, facet.Direction);
             }
@@ -79,6 +87,9 @@ namespace OurFramework.Environment.GridMembers
         }
     }
 
+    /// <summary>
+    /// Places wall with cladding.
+    /// </summary>
     public class CladdedWallPrimitive : WallPrimitive
     {
         GeometricPrimitive Cladding { get; }
@@ -96,6 +107,10 @@ namespace OurFramework.Environment.GridMembers
         }
     }
 
+    /// <summary>
+    /// Primitive that can be placed only from one side - for example door.
+    /// The user of this primitive has to make sure that it's not placed multiple times.
+    /// </summary>
     public class HorFaceExclusivePrimitive : HorFacePrimitive
     {
         GeometricPrimitive Face { get; }
@@ -113,6 +128,9 @@ namespace OurFramework.Environment.GridMembers
         }
     }
 
+    /// <summary>
+    /// Doesn't place any object.
+    /// </summary>
     public class NoWallPrimitive : HorFacePrimitive
     {
         public NoWallPrimitive()
@@ -156,6 +174,9 @@ namespace OurFramework.Environment.GridMembers
         }
     }
 
+    /// <summary>
+    /// Places floor and the ceiling below.
+    /// </summary>
     public class FloorPrimitive : VerFacePrimitive
     {
         GeometricPrimitive Floor { get; }
@@ -176,6 +197,9 @@ namespace OurFramework.Environment.GridMembers
         }
     }
 
+    /// <summary>
+    /// Doesn't place any object.
+    /// </summary>
     public class NoFloorPrimitive : VerFacePrimitive
     {
         public NoFloorPrimitive()
@@ -219,6 +243,10 @@ namespace OurFramework.Environment.GridMembers
         }
     }
 
+    /// <summary>
+    /// Primitive that can be placed only from one side of the corner.
+    /// The user of this primitive has to make sure that it's not placed multiple times.
+    /// </summary>
     public class CornerFaceExclusivePrimitive : CornerFacetPrimitive
     {
         GeometricPrimitive Corner { get; }
@@ -236,6 +264,9 @@ namespace OurFramework.Environment.GridMembers
         }
     }
 
+    /// <summary>
+    /// Beam made of bottom, middle and top part.
+    /// </summary>
     public class BeamPrimitive : CornerFacetPrimitive
     {
         GeometricPrimitive Bottom { get; }
@@ -258,7 +289,6 @@ namespace OurFramework.Environment.GridMembers
             var cornerDirection = facet.Direction;
             var below = facet.MyCube.NeighborsDirections(Vector3Int.down.ToEnumerable()).Select(cube => cube.Corners(cornerDirection)).First().CornerType;
             var above = facet.MyCube.NeighborsDirections(Vector3Int.up.ToEnumerable()).Select(cube => cube.Corners(cornerDirection)).First().CornerType;
-            //todo: rewrite ugly branching
             if(below == CORNER.Beam)
             {
                 if(above == CORNER.Beam)
@@ -312,6 +342,10 @@ namespace OurFramework.Environment.GridMembers
         }
     }
 
+    /// <summary>
+    /// Primitive that can be placed only once.
+    /// The user of this primitive has to make sure that it's not placed multiple times.
+    /// </summary>
     public class CubeExclusivePrimitive : CubePrimitive
     {
         GeometricPrimitive Object { get; }
@@ -328,5 +362,4 @@ namespace OurFramework.Environment.GridMembers
         }
     }
     #endregion
-
 }

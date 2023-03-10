@@ -122,8 +122,7 @@ namespace OurFramework.Environment.ShapeGrammar
                 node.Terminal = true;
             });
             var lge = To.Select(node => node.LE).ToLevelGroupElement(grammarState.WorldState.Grid);
-            /*grammarState.WorldState =*/ grammarState.WorldState.Add(lge);
-            //grammarState.WorldState = grammarState.WorldState.ChangeAll(To.Select<Node, WorldState.ChangeWorld>(gn => ws => ws.TryPush(gn.LE)));
+            grammarState.WorldState.Add(lge);
             AddToCubeToNodes(grammarState);
             AddToFoundation(grammarState, lge);
             return To;
