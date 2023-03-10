@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace OurFramework.Libraries
 {
+    /// <summary>
+    /// Defines objects.
+    /// </summary>
     public class Objects : ScriptableObject
     {
 #if UNITY_EDITOR
@@ -21,8 +24,6 @@ namespace OurFramework.Libraries
             Selection.activeObject = asset;
         }
 #endif
-
-        //public Transform spawnPoint;
 
         [SerializeField]
         EnvironmentMap environment;
