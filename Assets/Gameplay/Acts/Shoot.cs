@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// Shoots something using a spell effect.
+    /// </summary>
     public class Shoot : AnimatedAct
     {
         /// <summary>

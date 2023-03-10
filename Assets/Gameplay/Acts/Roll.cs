@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// Dash forward.
+    /// </summary>
     public class Roll : AnimatedAct
     {
         [SerializeField, Curve(0f, 0f, 1f, 30f, true)]

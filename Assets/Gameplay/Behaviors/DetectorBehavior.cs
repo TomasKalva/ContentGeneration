@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// This behaviour can be activated if any of the detectors are triggerred.
+    /// </summary>
     public class DetectorBehavior : Behavior
     {
         ColliderDetector[] detectors;
@@ -50,7 +53,6 @@ namespace OurFramework.Gameplay.RealWorld
         {
             this.act = actSelector();
             this.act.TargetPosition = new TargetPosition(DetectedTarget(), Vector3.zero);
-            //agent.acting.SelectAct(currentAct);
         }
 
         public override bool Update(Agent agent)

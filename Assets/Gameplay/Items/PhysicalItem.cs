@@ -2,6 +2,9 @@ using OurFramework.Gameplay.RealWorld;
 
 namespace OurFramework.Gameplay.Data
 {
+    /// <summary>
+    /// State of physical item.
+    /// </summary>
     public class PhysicalItemState : InteractiveObjectState<InteractiveObject>
     {
         public ItemState Item { get; set; }

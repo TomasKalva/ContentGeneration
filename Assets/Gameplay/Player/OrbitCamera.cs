@@ -3,7 +3,8 @@
 namespace OurFramework.Gameplay.RealWorld
 {
 	/// <summary>
-	/// Why not use cinemachine?
+	/// Adapted from:
+	/// https://catlikecoding.com/unity/tutorials/movement/orbit-camera/
 	/// </summary>
 	[RequireComponent(typeof(Camera))]
 	public class OrbitCamera : MonoBehaviour

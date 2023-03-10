@@ -5,6 +5,11 @@ using UnityEngine;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+	/// <summary>
+	/// Movement of agents.
+	/// Adapted from:
+	/// https://catlikecoding.com/unity/tutorials/movement/sliding-a-sphere/
+	/// </summary>
 	[RequireComponent(typeof(Rigidbody))]
 	public class Movement : MonoBehaviour
 	{
@@ -332,12 +337,18 @@ namespace OurFramework.Gameplay.RealWorld
 		#endregion
 	}
 
+	/// <summary>
+	/// Constraints movement over time.
+	/// </summary>
 	public abstract class MovementConstraint
 	{
 		public bool Finished { get; set; }
 		public abstract void Apply(Movement movement);
 	}
 
+	/// <summary>
+	/// Keeps setting velocity in direction returned by a callback.
+	/// </summary>
 	public class VelocityInDirection : MovementConstraint
 	{
 		Direction3F directionF;
@@ -356,6 +367,9 @@ namespace OurFramework.Gameplay.RealWorld
 		}
 	}
 
+	/// <summary>
+	/// Keeps turning to direction specified as a function.
+	/// </summary>
 	public class TurnToDirection : MovementConstraint
 	{
 		Direction2F directionF;
@@ -371,6 +385,9 @@ namespace OurFramework.Gameplay.RealWorld
 		}
 	}
 
+	/// <summary>
+	/// Keeps turning to the transform.
+	/// </summary>
 	public class TurnToTransform : MovementConstraint
 	{
 		Transform target;
@@ -396,6 +413,9 @@ namespace OurFramework.Gameplay.RealWorld
 		public abstract bool UpdateVelocity(Movement movement, float dt);
 	}
 
+	/// <summary>
+	/// Keeps the current velocity.
+	/// </summary>
 	public class DontChangeVelocityUpdater : VelocityUpdater
 	{
 		float duration;
@@ -417,7 +437,9 @@ namespace OurFramework.Gameplay.RealWorld
 
 	public delegate Vector3 Direction3F();
 	public delegate Vector2 Direction2F();
-
+	/// <summary>
+	/// Updates velocity over time by a curve.
+	/// </summary>
 	public class CurveVelocityUpdater : VelocityUpdater
 	{
 		AnimationCurve speedF;

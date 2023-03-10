@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// Step back from the forward direction.
+    /// </summary>
     public class Backstep : AnimatedAct
     {
         [SerializeField, Curve(0f, 0f, 1f, 30f, true)]

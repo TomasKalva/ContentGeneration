@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// Spit multiple fireballs with a spell effect.
+    /// </summary>
     public class SpitFire : MultiEventAct
     {
         public ByTransform<Effect> SpitFromPositionDirectionEffect { set; private get; }

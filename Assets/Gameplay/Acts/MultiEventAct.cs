@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// Act that is made of multiple events represented as timed actions. 
+    /// </summary>
     public class MultiEventAct : AnimatedAct
     {
         [Serializable]

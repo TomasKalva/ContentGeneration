@@ -1,6 +1,9 @@
 
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// The behaviour tells the agent how to act. Next behaviour is selected based on priority.
+    /// </summary>
     public abstract class Behavior
     {
         public abstract bool CanEnter(Agent agent);

@@ -5,6 +5,10 @@ using OurFramework.Util;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+	/// <summary>
+	/// Real world body of a character. Defines its movement, acting,
+	/// animations and behaviours.
+	/// </summary>
     [RequireComponent(typeof(Movement))]
 	[RequireComponent(typeof(Acting))]
 	[RequireComponent(typeof(AnimancerComponent))]
@@ -76,7 +80,6 @@ namespace OurFramework.Gameplay.RealWorld
 
 		EquipmentSlot[] slots;
 
-		// Start is called before the first frame update
 		void Awake()
 		{
 			movement = GetComponent<Movement>();
@@ -274,7 +277,7 @@ namespace OurFramework.Gameplay.RealWorld
 
 		public void Turn(Vector2 direction)
 		{
-			if (direction.sqrMagnitude > 0.0001f/* && !acting.Busy*/)
+			if (direction.sqrMagnitude > 0.0001f)
 			{
 				movement.Turn(direction);
 			}
@@ -292,7 +295,6 @@ namespace OurFramework.Gameplay.RealWorld
 
 		public virtual void Stagger()
 		{
-			//acting.Staggered.PushForce = pushForce;
 			acting.ForceIntoAct(acting.Staggered);
 		}
 	}

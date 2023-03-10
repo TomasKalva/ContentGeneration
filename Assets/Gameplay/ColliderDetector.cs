@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Detects colliders that collide with this.
+/// </summary>
 [RequireComponent(typeof(Collider))]
 public class ColliderDetector : MonoBehaviour
 {

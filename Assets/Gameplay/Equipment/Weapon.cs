@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// Detects collisions of other characters.
+    /// </summary>
     public class Weapon : Equipment
     {
         public ColliderDetector Detector { get; private set; }

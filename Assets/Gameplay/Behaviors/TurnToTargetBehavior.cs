@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// The agent turns to the target transform.
+    /// </summary>
     public class TurnToTargetBehavior : Behavior
     {
         Transform targetPoint;

@@ -1,6 +1,9 @@
 
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// Move backward.
+    /// </summary>
     public class MoveBack : Move
     {
         public override bool UpdateAct(Agent agent, float dt)

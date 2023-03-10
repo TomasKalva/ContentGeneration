@@ -1,6 +1,9 @@
 ﻿
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// Just wait ¯\_(ツ)_/¯.
+    /// </summary>
     public class IdleAct : AnimatedAct
     {
         public IdleAct()

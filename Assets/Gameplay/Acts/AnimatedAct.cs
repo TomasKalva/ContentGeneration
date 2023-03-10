@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// Act with animation.
+    /// </summary>
     public class AnimatedAct : Act
     {
         [SerializeField]

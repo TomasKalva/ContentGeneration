@@ -9,6 +9,9 @@ namespace OurFramework.Gameplay.RealWorld
         OFFENSIVE,
     }
 
+    /// <summary>
+    /// Tells agent what to do.
+    /// </summary>
     public class Act : MonoBehaviour
     {
         [SerializeField]

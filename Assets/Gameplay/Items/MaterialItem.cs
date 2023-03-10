@@ -2,6 +2,9 @@
 
 namespace OurFramework.Gameplay.Data
 {
+    /// <summary>
+    /// State of material item.
+    /// </summary>
     public class MaterialItem : ItemState
     {
         public Material Material { get; }

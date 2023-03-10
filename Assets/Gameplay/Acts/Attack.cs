@@ -12,6 +12,9 @@ namespace OurFramework.Gameplay.RealWorld
         NORMAL
     }
 
+    /// <summary>
+    /// Agent uses its weapons to attack.
+    /// </summary>
     public class Attack : AnimatedAct
     {
         [SerializeField, Curve(0f, 0f, 1f, 15f, true)]

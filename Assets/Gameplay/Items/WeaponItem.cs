@@ -5,6 +5,9 @@ using OurFramework.Gameplay.RealWorld;
 
 namespace OurFramework.Gameplay.Data
 {
+    /// <summary>
+    /// State of weapon item.
+    /// </summary>
     public class WeaponItem : EquipmentItem<Weapon>
     {
         public Weapon Weapon

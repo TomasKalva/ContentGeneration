@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// The agent goes to the position and waits.
+    /// </summary>
     public class Wait : Behavior
     {
         Func<Agent, Vector3> WaitPosition { get; }

@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// Defines behaviour of agents.
+    /// </summary>
     public class Behaviors
     {
         List<Behavior> behaviors;

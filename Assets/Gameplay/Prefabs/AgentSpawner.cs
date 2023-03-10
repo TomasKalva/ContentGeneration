@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// Can be used to spawn an agent.
+    /// </summary>
     public class AgentSpawner : MonoBehaviour
     {
         [SerializeField]

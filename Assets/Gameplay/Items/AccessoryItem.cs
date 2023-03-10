@@ -3,6 +3,9 @@ using OurFramework.LevelDesignLanguage;
 
 namespace OurFramework.Gameplay.Data
 {
+    /// <summary>
+    /// State of accessory item.
+    /// </summary>
     public class AccessoryItem : EquipmentItem<Accessory>
     {
         public Accessory Accessory

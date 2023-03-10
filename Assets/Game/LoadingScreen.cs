@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace OurFramework.Game
 {
+    /// <summary>
+    /// Manages loading screen.
+    /// </summary>
     public class LoadingScreen : MonoBehaviour
     {
         [SerializeField]

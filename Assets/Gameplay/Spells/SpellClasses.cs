@@ -8,7 +8,6 @@ namespace OurFramework.Gameplay.Data
 {
     public delegate void Effect(CharacterState target);
 
-    //public delegate Effect EffectByUser(CharacterState user);
     public delegate Selector SelectorByUser(CharacterState user);
 
     public delegate IEnumerable<CharacterState> SelectTargets();

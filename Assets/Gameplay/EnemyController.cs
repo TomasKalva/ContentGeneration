@@ -2,6 +2,9 @@
 
 namespace OurFramework.Gameplay.RealWorld
 {
+	/// <summary>
+	/// Controls enemy agents.
+	/// </summary>
 	[RequireComponent(typeof(Agent))]
 	public class EnemyController : MonoBehaviour
 	{

@@ -22,6 +22,9 @@ namespace OurFramework.Gameplay.RealWorld
 #endif
     }
 
+    /// <summary>
+    /// Materials that show in what part of attack agent is.
+    /// </summary>
     public class AgentStateMaterials : ScriptableObject
     {
         public Material[] materials;

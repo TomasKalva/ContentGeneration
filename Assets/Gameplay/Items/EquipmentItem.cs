@@ -3,6 +3,9 @@ using OurFramework.Gameplay.RealWorld;
 
 namespace OurFramework.Gameplay.Data
 {
+    /// <summary>
+    /// State of equipment item.
+    /// </summary>
     public class EquipmentItem<EquipmentT> : ItemState where EquipmentT : Equipment
     {
         protected GeometryMaker<EquipmentT> EquipmentMaker { get; }

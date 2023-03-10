@@ -8,6 +8,9 @@ using OurFramework.Util;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+	/// <summary>
+	/// Handles player's input.
+	/// </summary>
     [RequireComponent(typeof(HumanAgent))]
 	public class PlayerController : MonoBehaviour
 	{

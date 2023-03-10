@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// Move in the direction.
+    /// </summary>
     public class Move : AnimatedAct
     {
         [SerializeField]

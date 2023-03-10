@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// Agent keeps distance from the player to rest for a bit.
+    /// </summary>
     public class Awareness : Behavior
     {
         Transform targetPoint;

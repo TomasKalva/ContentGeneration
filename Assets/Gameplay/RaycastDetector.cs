@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Finds a collider with raycasting.
+/// </summary>
 public class RaycastDetector : MonoBehaviour
 {
     [SerializeField]

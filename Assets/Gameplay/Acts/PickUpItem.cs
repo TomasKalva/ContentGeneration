@@ -3,6 +3,9 @@ using OurFramework.Gameplay.Data;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// Pick up a physical item.
+    /// </summary>
     public class PickUpItem : AnimatedAct
     {
         public PhysicalItemState PhysicalItem { get; set; }

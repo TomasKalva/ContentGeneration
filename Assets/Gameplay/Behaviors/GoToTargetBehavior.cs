@@ -1,8 +1,10 @@
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// Agent goes to the target transform.
+    /// </summary>
     public class GoToTargetBehavior : Behavior
     {
         Transform targetPoint;
@@ -35,9 +37,6 @@ namespace OurFramework.Gameplay.RealWorld
 
         public override bool Update(Agent agent)
         {
-            NavMeshData nmd;
-            NavMeshAgent nma;
-
             Vector3 direction = TargetPoint - agent.movement.transform.position;
             var moveDirection = new Vector2(direction.x, direction.z);
             agent.Run(moveDirection);

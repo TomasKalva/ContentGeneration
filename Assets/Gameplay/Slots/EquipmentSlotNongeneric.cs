@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// Slot for equipment.
+    /// </summary>
     public class EquipmentSlot : MonoBehaviour
     {
         /// <summary>
