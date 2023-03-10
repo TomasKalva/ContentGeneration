@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// Object that the player can interact with.
+    /// </summary>
     public class InteractiveObject : MonoBehaviour
     {
 

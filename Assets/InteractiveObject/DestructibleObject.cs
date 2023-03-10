@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// This object can get destroyed into smaller objects.
+    /// </summary>
     public class DestructibleObject : MonoBehaviour
     {
         [SerializeField]

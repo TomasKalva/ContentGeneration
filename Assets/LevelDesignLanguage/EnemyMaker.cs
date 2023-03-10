@@ -6,6 +6,9 @@ using OurFramework.Util;
 
 namespace OurFramework.LevelDesignLanguage
 {
+    /// <summary>
+    /// Makes an enemy from the given parameters.
+    /// </summary>
     class EnemyMaker
     {
         public Func<int, CharacterStats> CharacterStats { get; }

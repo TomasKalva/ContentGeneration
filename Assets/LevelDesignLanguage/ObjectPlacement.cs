@@ -5,6 +5,9 @@ using OurFramework.Util;
 
 namespace OurFramework.LevelDesignLanguage
 {
+    /// <summary>
+    /// Declarations of placers.
+    /// </summary>
     class ObjectPlacement<T>
     {
         Action<Area, T> placementOp;
@@ -14,6 +17,9 @@ namespace OurFramework.LevelDesignLanguage
             this.placementOp = placementOp;
         }
 
+        /// <summary>
+        /// Places objects randomly.
+        /// </summary>
         public Placer<Areas, T> RandomAreaPlacer(IDistribution<int> count, params (float, Func<T>)[] items)
         {
             return 
@@ -27,11 +33,17 @@ namespace OurFramework.LevelDesignLanguage
                 );
         }
 
+        /// <summary>
+        /// Places the given number of objects randomly across all areas.
+        /// </summary>
         public Placer<Areas, T> RandomAreasPlacer(IDistribution<int> count, params Func<T>[] items)
         {
             return RandomAreasPlacer(count, items.Select(item => (1f, item)).ToArray());
         }
 
+        /// <summary>
+        /// Places the given number of objects randomly across all areas.
+        /// </summary>
         public Placer<Areas, T> RandomAreasPlacer(IDistribution<int> count, params (float, Func<T>)[] items)
         {
             return
@@ -44,16 +56,25 @@ namespace OurFramework.LevelDesignLanguage
                 );
         }
 
+        /// <summary>
+        /// Places objects randomly.
+        /// </summary>
         public Placer<Areas, T> RandomAreaPlacer(IDistribution<int> count, params Func<T>[] items)
         {
             return RandomAreaPlacer(count, items.Select(item => (1f, item)).ToArray());
         }
 
+        /// <summary>
+        /// Places objects evenly.
+        /// </summary>
         public Placer<Areas, T> EvenPlacer(IEnumerable<T> items)
         {
             return EvenPlacer(items.ToArray());
         }
 
+        /// <summary>
+        /// Places objects evenly.
+        /// </summary>
         public Placer<Areas, T> EvenPlacer(params T[] items)
         {
             return
@@ -64,11 +85,17 @@ namespace OurFramework.LevelDesignLanguage
                 );
         }
 
+        /// <summary>
+        /// Places objects to dead ends first.
+        /// </summary>
         public Placer<Areas, T> DeadEndPlacer(IEnumerable<T> items)
         {
             return DeadEndPlacer(items.ToArray());
         }
 
+        /// <summary>
+        /// Places objects to dead ends first.
+        /// </summary>
         public Placer<Areas, T> DeadEndPlacer(params T[] items)
         {
             return
@@ -79,6 +106,9 @@ namespace OurFramework.LevelDesignLanguage
                 );
         }
 
+        /// <summary>
+        /// Places objects counts based on progress function.
+        /// </summary>
         public Placer<Areas, T> ProgressFunctionPlacer(ProgressFactory<T> progressFunc, IDistribution<int> count)
         {
             return
@@ -90,6 +120,9 @@ namespace OurFramework.LevelDesignLanguage
         }
     }
 
+    /// <summary>
+    /// Define how to split objects between areas.
+    /// </summary>
     abstract class Placer<AreasT, T> where AreasT : Areas
     {
         /// <summary>
@@ -149,6 +182,9 @@ namespace OurFramework.LevelDesignLanguage
         }
     }
 
+    /// <summary>
+    /// Places the objects evenly among areas.
+    /// </summary>
     class EvenPlacer<AreasT, T> : Placer<AreasT, T> where AreasT : Areas
     {
         List<T> ToPlace { get; }
@@ -166,22 +202,11 @@ namespace OurFramework.LevelDesignLanguage
         }
     }
 
-    /*
-    class Iterator<T>
-    {
-        Stack<T> items { get; }
-
-        public Iterator(IEnumerable<T> items)
-        {
-            this.items = new Stack<T>(items);
-        }
-
-        public T Next() => items.Pop();
-        public bool Any() => items.Any();
-    }*/
-
     public delegate T ProgressFactory<T>(float progress);
 
+    /// <summary>
+    /// Picks counts of objects based on a function.
+    /// </summary>
     class ProgressFunctionPlacer<AreasT, T> : Placer<AreasT, T> where AreasT : Areas
     {
 

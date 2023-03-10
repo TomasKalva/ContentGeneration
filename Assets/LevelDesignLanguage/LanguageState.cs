@@ -10,6 +10,9 @@ using static OurFramework.Game.AsynchronousEvaluator;
 
 namespace OurFramework.LevelDesignLanguage
 {
+    /// <summary>
+    /// All state of the language.
+    /// </summary>
     class LanguageState
     {
         public LevelConstructor LC { get; }

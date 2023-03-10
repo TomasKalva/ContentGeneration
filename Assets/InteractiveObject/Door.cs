@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// Physical door that can be openend and closed.
+    /// </summary>
     public class Door : InteractiveObject
     {
         [SerializeField]

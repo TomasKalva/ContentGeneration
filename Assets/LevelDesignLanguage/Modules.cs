@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace OurFramework.LevelDesignLanguage
 {
+    /// <summary>
+    /// All modules that are in the game.
+    /// </summary>
     class Modules
     {
         public LevelModule LevelModule { get; private set; }

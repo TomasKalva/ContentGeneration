@@ -12,7 +12,9 @@ using static OurFramework.Game.AsynchronousEvaluator;
 
 namespace OurFramework.LevelDesignLanguage
 {
-
+    /// <summary>
+    /// Used for defining entire levels and runs.
+    /// </summary>
     abstract class LDLanguage
     {
         const int MAX_NUMBER_OF_CONSTRUCTION_TRIES = 5;
@@ -41,22 +43,8 @@ namespace OurFramework.LevelDesignLanguage
         }
 
         /// <summary>
-        /// Returns true iff constructing was success.
+        /// Creates a new level.
         /// </summary>
-        /*bool TryConstruct()
-        {
-            result = false;
-            State.Restart();
-            yield return TaskSteps.One();
-
-            var task = Task<bool>.Factory.StartNew(() => State.LC.TryConstruct());
-            while (!task.IsCompleted)
-            {
-                yield return TaskSteps.One();
-            }
-            result = task.Result;
-        }*/
-
         public IEnumerable<TaskSteps> GenerateWorld()
         {
             var stopwatch = new System.Diagnostics.Stopwatch();
@@ -121,6 +109,10 @@ namespace OurFramework.LevelDesignLanguage
             Debug.Log($"Level generating took {stopwatch.ElapsedMilliseconds} ms");
         }
     }
+
+    /// <summary>
+    /// Parameters used when initializing languages.
+    /// </summary>
     class LanguageParams
     {
         public LanguageState LanguageState { get; }
@@ -139,89 +131,17 @@ namespace OurFramework.LevelDesignLanguage
     }
 
     #region Primitives
-
-
-    class SpacePartitioning
-    {
-        HashSet<Area> activeAreas;
-        TraversabilityGraph traversabilityGraph;
-        bool initialized = false; // initialize during first update so that UI can get reference to this enemy
-
-        public SpacePartitioning(TraversabilityGraph traversabilityGraph)
-        {
-            this.traversabilityGraph = traversabilityGraph;
-        }
-
-        public void Initialize()
-        {
-            traversabilityGraph.Areas.ForEach(area => area.Disable());
-            activeAreas = new HashSet<Area>();
-        }
-
-        public void Update(Node activeNode)
-        {
-            if (!initialized)
-            {
-                Initialize();
-                initialized = true;
-            }
-            
-            if(activeNode == null)
-            {
-                // Player is outside of all areas
-                return;
-            }
-
-            var activeArea = traversabilityGraph.TryGetArea(activeNode);
-            if(activeArea == null)
-            {
-                // Player is in a non-traversable area
-                return;
-            }
-
-            var currentAreas = traversabilityGraph.Neighbors(activeArea).Append(activeArea).ToList();
-
-            // remove no longer active
-            var notActive = activeAreas.Where(area => traversabilityGraph.Distance(area, activeArea, int.MaxValue) > 1).ToList();
-            notActive.ForEach(area => area.Disable());
-            notActive.ForEach(area => activeAreas.Remove(area));
-
-            // add newly active
-            var newActive = currentAreas.Except(activeAreas);
-            newActive.ForEach(area => area.Enable());
-            newActive.ForEach(area => activeAreas.Add(area));
-        }
-    }
-
-
-    class Item
-    {
-
-    }
-
+    
     public delegate T GeometryMaker<out T>() where T : MonoBehaviour;
-    /*
-    public class GeometryMaker<T> where T : MonoBehaviour
-    {
-        Func<T> GeometryF { get; }
-
-        public GeometryMaker(Func<T> geometryF)
-        {
-            GeometryF = geometryF;
-        }
-
-        public T CreateGeometry()
-        {
-            var geometry = GeometryF();
-            return geometry;
-        }
-    }*/
 
     #endregion
 
 
     #region Language tools
 
+    /// <summary>
+    /// Used for defining environments.
+    /// </summary>
     class Environments
     {
         LDLanguage L { get; }
@@ -335,6 +255,9 @@ namespace OurFramework.LevelDesignLanguage
         }
     }
 
+    /// <summary>
+    /// Definitions for grammars.
+    /// </summary>
     class Grammars
     {
         public ProductionLists PrL { get; }

@@ -3,6 +3,9 @@ using OurFramework.Gameplay.Data;
 
 namespace OurFramework.Gameplay.RealWorld
 {
+    /// <summary>
+    /// State of a grave that can spawn player.
+    /// </summary>
     public class GraveState : InteractiveObjectState<InteractiveObject>
     {
         AgentSpawner PlayerSpawner => IntObj.GetComponentInChildren<AgentSpawner>();

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using OurFramework.Util;
+using OurFramework.Environment.ShapeGrammar;
 
 namespace OurFramework.Gameplay.RealWorld
 {
@@ -217,6 +218,61 @@ namespace OurFramework.Gameplay.RealWorld
 		public Vector3 InputToWorld(Vector2 inputVec)
 		{
 			return inputVec.x * InpRightHoriz + inputVec.y * InpForwardHoriz;
+		}
+	}
+
+	/// <summary>
+	/// Used for despawning enemies in far areas.
+	/// </summary>
+	class SpacePartitioning
+	{
+		HashSet<Area> activeAreas;
+		TraversabilityGraph traversabilityGraph;
+		bool initialized = false; // initialize during first update so that UI can get reference to this enemy
+
+		public SpacePartitioning(TraversabilityGraph traversabilityGraph)
+		{
+			this.traversabilityGraph = traversabilityGraph;
+		}
+
+		public void Initialize()
+		{
+			traversabilityGraph.Areas.ForEach(area => area.Disable());
+			activeAreas = new HashSet<Area>();
+		}
+
+		public void Update(Node activeNode)
+		{
+			if (!initialized)
+			{
+				Initialize();
+				initialized = true;
+			}
+
+			if (activeNode == null)
+			{
+				// Player is outside of all areas
+				return;
+			}
+
+			var activeArea = traversabilityGraph.TryGetArea(activeNode);
+			if (activeArea == null)
+			{
+				// Player is in a non-traversable area
+				return;
+			}
+
+			var currentAreas = traversabilityGraph.Neighbors(activeArea).Append(activeArea).ToList();
+
+			// remove no longer active
+			var notActive = activeAreas.Where(area => traversabilityGraph.Distance(area, activeArea, int.MaxValue) > 1).ToList();
+			notActive.ForEach(area => area.Disable());
+			notActive.ForEach(area => activeAreas.Remove(area));
+
+			// add newly active
+			var newActive = currentAreas.Except(activeAreas);
+			newActive.ForEach(area => area.Enable());
+			newActive.ForEach(area => activeAreas.Add(area));
 		}
 	}
 }

@@ -15,6 +15,10 @@ using static OurFramework.Game.AsynchronousEvaluator;
 
 namespace OurFramework.LevelDesignLanguage
 {
+    /// <summary>
+    /// Room, garden, courtyard, ... 
+    /// Serve as vertices in traversability graph.
+    /// </summary>
     class Area
     {
         LDLanguage L { get; }
@@ -34,11 +38,18 @@ namespace OurFramework.LevelDesignLanguage
             EnemyStates = new List<CharacterState>();
         }
 
+        /// <summary>
+        /// Add interactive object to this area.
+        /// </summary>
+        /// <param name="interactiveObject"></param>
         public void AddInteractiveObject(InteractiveObjectState interactiveObject)
         {
             InteractiveObjectStates.Add(interactiveObject);
         }
 
+        /// <summary>
+        /// Gives the agent a behavior to wait for the player.
+        /// </summary>
         void AddWaitForPlayerBehavior(World world, Agent enemy)
         {
             var worldGeometry = world.WorldGeometry;
@@ -61,6 +72,9 @@ namespace OurFramework.LevelDesignLanguage
                 );
         }
 
+        /// <summary>
+        /// Add an enemy to this area.
+        /// </summary>
         public void AddEnemy(CharacterState enemy)
         {
             EnemyStates.Add(enemy);
@@ -71,6 +85,9 @@ namespace OurFramework.LevelDesignLanguage
             throw new PlacementException($"{objectName} can't be placed to {Node.Print(new PrintingState()).ToString()}");
         }
 
+        /// <summary>
+        /// Calculate positions of objects put to this area.
+        /// </summary>
         public void CalculatePositions(World world)
         {
             var grid = L.State.Ldk.grid;
@@ -125,6 +142,9 @@ namespace OurFramework.LevelDesignLanguage
             }
         }
 
+        /// <summary>
+        /// Makes real world interactive object.
+        /// </summary>
         void CreateInteractiveObject(World world, InteractiveObjectState ios)
         {
             if (!ios.CanBeCreated())
@@ -136,6 +156,9 @@ namespace OurFramework.LevelDesignLanguage
             world.AddInteractiveObject(ios);
         }
 
+        /// <summary>
+        /// Creates a real world enemy.
+        /// </summary>
         void CreateEnemy(World world, CharacterState enemy)
         {
             if (!enemy.CanBeCreated())
@@ -148,6 +171,9 @@ namespace OurFramework.LevelDesignLanguage
             world.AddEnemy(enemy);
         }
 
+        /// <summary>
+        /// Create real world objects for all enemies and interactive objects.
+        /// </summary>
         public IEnumerable<TaskSteps> InstantiateAll(World world)
         {
             // Instantiate interactive objects
@@ -165,6 +191,9 @@ namespace OurFramework.LevelDesignLanguage
             }
         }
 
+        /// <summary>
+        /// Enable objects in this area.
+        /// </summary>
         public void Enable()
         {
             EnemyStates.ForEach(enemy =>
@@ -176,6 +205,9 @@ namespace OurFramework.LevelDesignLanguage
             });
         }
 
+        /// <summary>
+        /// Disable objects in this area.
+        /// </summary>
         public void Disable()
         {
             EnemyStates.ForEach(enemy =>
@@ -226,6 +258,9 @@ namespace OurFramework.LevelDesignLanguage
         public IEnumerable<T> Rest() => _heldObjects;
     }
 
+    /// <summary>
+    /// Edge between the areas.
+    /// </summary>
     class AreasConnection : IEdge<Area>
     {
         public Node Path { get; }

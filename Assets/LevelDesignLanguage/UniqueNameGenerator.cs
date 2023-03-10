@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace OurFramework.LevelDesignLanguage
 {
+    /// <summary>
+    /// Turns a name into a unique name.
+    /// </summary>
     class UniqueNameGenerator
     {
         Dictionary<string, int> AlreadyGenerated { get; }

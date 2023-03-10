@@ -8,6 +8,9 @@ using UnityEngine;
 
 namespace OurFramework.LevelDesignLanguage
 {
+    /// <summary>
+    /// Creates the level.
+    /// </summary>
     public class LevelConstructor
     {
         /// <summary>
@@ -112,6 +115,9 @@ namespace OurFramework.LevelDesignLanguage
         }
     }
     
+    /// <summary>
+    /// Contains events that are executed on start of level.
+    /// </summary>
     public abstract class LevelConstructionEventPool
     {
         public abstract void AddEvent(LevelConstructionEvent levelConstructionEvent);
@@ -119,6 +125,9 @@ namespace OurFramework.LevelDesignLanguage
         public abstract IEnumerable<LevelConstructionEvent> GetEventConstuctions(LevelConstructionEventPool newPool, int level);
     }
 
+    /// <summary>
+    /// All specified events are executed.
+    /// </summary>
     public class AllEventPool : LevelConstructionEventPool
     {
         /// <summary>
@@ -143,6 +152,10 @@ namespace OurFramework.LevelDesignLanguage
         }
     }
 
+    /// <summary>
+    /// Only limited number of events is taken from a priority queue. Persistent
+    /// effects are reinserted at the end.
+    /// </summary>
     public class RoundRobinEventPool : LevelConstructionEventPool
     {
         /// <summary>
