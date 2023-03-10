@@ -6,6 +6,9 @@ using OurFramework.Util;
 
 namespace OurFramework.Libraries
 {
+    /// <summary>
+    /// /Defines items that summon spells.
+    /// </summary>
     public class SpellItems
     {
         Spells spells;

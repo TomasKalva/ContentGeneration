@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace OurFramework.Libraries
 {
+    /// <summary>
+    /// Definitions of accessories.
+    /// </summary>
     public class Accessories : ScriptableObject
     {
 #if UNITY_EDITOR

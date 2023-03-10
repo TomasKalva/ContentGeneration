@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Logic of the main menu.
+/// </summary>
 public class MainMenu : MonoBehaviour
 {
     [SerializeField]

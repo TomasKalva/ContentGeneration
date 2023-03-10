@@ -12,18 +12,8 @@ using OurFramework.Environment.GridMembers;
 namespace OurFramework.Game
 {
     /// <summary>
-    /// Used for placing the grid geometry.
+    /// Contains all geometry of the world.
     /// </summary>
-    /*public interface IGridGeometryOwner
-    {
-        void AddArchitectureElement(Transform el);
-        WorldGeometry WorldGeometry { get; }
-
-        Transform ArchitectureParent { get; }
-
-        void AddInteractivePersistentObject(InteractiveObjectState interactivePersistentObject);
-    }*/
-
     public class World : INotifyPropertyChanged, IGridGeometryOwner
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -42,9 +32,6 @@ namespace OurFramework.Game
         public PlayerCharacterState PlayerState { get; }
         OccurrenceManager Occurences { get; set; }
         public GraveState Grave { get; set; }
-
-        //public delegate void WorldCreated();
-        //public static event WorldCreated OnCreated;
 
         public WorldGeometry WorldGeometry { get; }
 
@@ -90,6 +77,9 @@ namespace OurFramework.Game
             return InteractiveObjects.Where(o => (o.InteractiveObject.transform.position - point).sqrMagnitude <= dist * dist);
         }
 
+        /// <summary>
+        /// Add already spawned enemy to the world.
+        /// </summary>
         public void AddEnemy(CharacterState enemy)
         {
             enemy.World = this;
@@ -98,6 +88,9 @@ namespace OurFramework.Game
             Enemies.Add(enemy);
         }
 
+        /// <summary>
+        /// Add already spawned item to the world.
+        /// </summary>
         public void AddItem(InteractiveObjectState item)
         {
             item.World = this;
@@ -105,18 +98,27 @@ namespace OurFramework.Game
             interactiveObjects.Add(item);
         }
 
+        /// <summary>
+        /// Removes item from the world.
+        /// </summary>
         public void RemoveItem(InteractiveObjectState item)
         {
             interactiveObjects.Remove(item);
             GameObject.Destroy(item.InteractiveObject.gameObject);
         }
 
+        /// <summary>
+        /// Removes enemy from the world.
+        /// </summary>
         public void RemoveEnemy(CharacterState enemy)
         {
             Enemies.Remove(enemy);
             GameObject.Destroy(enemy.Agent.gameObject, 1f);
         }
 
+        /// <summary>
+        /// Adds already spawn interactive object to the world.
+        /// </summary>
         public void AddInteractiveObject(InteractiveObjectState interactiveObject)
         {
             interactiveObject.World = this;
@@ -127,6 +129,9 @@ namespace OurFramework.Game
             interactiveObjects.Add(interactiveObject);
         }
 
+        /// <summary>
+        /// Add already spawned interactive object to the world. It persists over level restarts.
+        /// </summary>
         public void AddInteractivePersistentObject(InteractiveObjectState interactivePersistentObject)
         {
             interactivePersistentObject.World = this;
@@ -215,40 +220,14 @@ namespace OurFramework.Game
             OnLevelRestart();
         }
     }
-    /*
-    public class WorldGeometry
-    {
-        public Transform WorldParent { get; }
-        public Vector3 ParentPosition { get; }
-        public float WorldScale { get; }
-
-        public WorldGeometry(Transform worldParent, float worldScale)
-        {
-            this.WorldParent = worldParent;
-            this.WorldScale = worldScale;
-            ParentPosition = worldParent.position;
-        }
-
-        public Vector3 GridToWorld(Vector3 gridPos)
-        {
-            return ParentPosition + WorldScale * gridPos;
-        }
-
-        public Vector3 WorldToGrid(Vector3 worldPos)
-        {
-            return (worldPos - ParentPosition) / WorldScale;
-        }
-    }*/
 
     class OccurrenceManager
     {
         List<Occurrence> CurrentOccurrences { get; set; }
-        //HashSet<Occurence> FinishedOccurences { get; }
 
         public OccurrenceManager()
         {
             CurrentOccurrences = new List<Occurrence>();
-            //FinishedOccurences = new HashSet<Occurence>();
         }
 
         /// <summary>
@@ -287,17 +266,6 @@ namespace OurFramework.Game
         {
             // todo: somehow optimize this to avoid allocations each update
             CurrentOccurrences = CurrentOccurrences.Where(occurence => !occurence.Update(deltaT)).ToList();
-            /*CurrentOccurences.ForEach(occurence =>
-            {
-                if (occurence.Update(deltaT))
-                {
-                    //FinishedOccurences.Add(occurence);
-                }
-            });*/
-            //CurrentOccurences.RemoveAll(occurence => FinishedOccurences.Contains(occurence));
-            //FinishedOccurences.Clear();
         }
-
-
     }
 }

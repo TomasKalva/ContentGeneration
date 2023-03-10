@@ -8,6 +8,9 @@ using OurFramework.Gameplay.Data;
 
 namespace OurFramework.Libraries
 {
+    /// <summary>
+    /// Selector used for creating spells. It selects the targets.
+    /// </summary>
     public class SelectorLibrary
     {
         Libraries lib;
@@ -152,15 +155,6 @@ namespace OurFramework.Libraries
                         collider,
                         dt => countdown.Finished(dt) || wallHitCountdown.Finished(collider.Hits.SelectNN(hit => hit.gameObject).Where(go => go.layer == LayerMask.NameToLayer("StaticEnvironment")).Any())
                     );
-
-                //vfx.transform.position = ch.Agent.transform.position;
-
-                /*
-                var movingBall = Libraries.GeometricSelectors.Ball()
-                    .PutTo(ch.Agent.rightWeaponSlot)
-                    .MoveDir(ch.Agent.movement.AgentForward)
-                    .Speed()
-                    .DestroyAtWallTouch()*/
 
                 var selector = new Selector(
                     new ConstDistrFloat(1f),

@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace OurFramework.Libraries
 {
+    /// <summary>
+    /// Defines VFXs and textures.
+    /// </summary>
     public class VFXs : ScriptableObject
     {
 #if UNITY_EDITOR

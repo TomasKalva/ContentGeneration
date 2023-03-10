@@ -50,6 +50,9 @@ namespace OurFramework.Game
         }
 
         string _message;
+        /// <summary>
+        /// Message shown on the screen.
+        /// </summary>
         public string Message
         {
             get => _message;
@@ -62,7 +65,9 @@ namespace OurFramework.Game
         }
 
         float _messageOpacity;
-
+        /// <summary>
+        /// Opacity of message shown on the screen.
+        /// </summary>
         public float MessageOpacity
         {
             get => _messageOpacity;
@@ -74,6 +79,9 @@ namespace OurFramework.Game
         }
 
         bool _visible;
+        /// <summary>
+        /// Is UI visible.
+        /// </summary>
         public bool Visible
         {
             get => _visible;
@@ -86,7 +94,6 @@ namespace OurFramework.Game
 
 
         World _world;
-
         public World World
         {
             get => _world;
@@ -97,6 +104,9 @@ namespace OurFramework.Game
             }
         }
 
+        /// <summary>
+        /// For controlling flow of the game.
+        /// </summary>
         public GameControl GameControl { get; set; }
 
         public Menu Menu { get; } = new Menu();
@@ -187,6 +197,10 @@ namespace OurFramework.Game
 #endif
     }
 
+
+    /// <summary>
+    /// Used for showing messages on the screen.
+    /// </summary>
     public static class Msg
     {
         public static void Show(string message)

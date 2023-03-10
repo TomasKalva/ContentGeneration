@@ -8,6 +8,9 @@ using UnityEngine;
 
 namespace OurFramework.Libraries
 {
+    /// <summary>
+    /// Defines spell effects.
+    /// </summary>
     public class Spells
     {
         EffectLibrary eff;

@@ -8,6 +8,9 @@ using OurFramework.Gameplay.Data;
 
 namespace OurFramework.Libraries
 {
+    /// <summary>
+    /// Definitions of enemies.
+    /// </summary>
     public class Enemies : ScriptableObject
     {
 #if UNITY_EDITOR

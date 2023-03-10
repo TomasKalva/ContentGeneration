@@ -10,6 +10,9 @@ using static OurFramework.Game.Game;
 
 namespace OurFramework.Libraries
 {
+    /// <summary>
+    /// Defines interactive objects.
+    /// </summary>
     public class InteractiveObjects : ScriptableObject
     {
 #if UNITY_EDITOR

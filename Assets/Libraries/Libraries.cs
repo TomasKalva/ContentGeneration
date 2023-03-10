@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace OurFramework.Libraries
 {
+    /// <summary>
+    /// Has references to all libraries.
+    /// </summary>
     public class Libraries : ScriptableObject
     {
 #if UNITY_EDITOR
@@ -27,7 +30,6 @@ namespace OurFramework.Libraries
         public Objects Objects;
         public Weapons Weapons;
         public VFXs VFXs;
-        public GeometricSelectors GeometricSelectors;
 
         public EffectLibrary Effects;
         public SelectorLibrary Selectors;

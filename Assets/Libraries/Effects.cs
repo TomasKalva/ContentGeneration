@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace OurFramework.Libraries
 {
+    /// <summary>
+    /// Definitions of effects that modify character.
+    /// </summary>
     public class EffectLibrary
     {
         SelectorLibrary sel;

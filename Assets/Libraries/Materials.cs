@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace OurFramework.Libraries
 {
+    /// <summary>
+    /// Defines materials.
+    /// </summary>
     public class Materials : ScriptableObject
     {
 #if UNITY_EDITOR

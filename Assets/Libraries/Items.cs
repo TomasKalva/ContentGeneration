@@ -8,6 +8,9 @@ using OurFramework.Util;
 
 namespace OurFramework.Libraries
 {
+    /// <summary>
+    /// Defines items.
+    /// </summary>
     public class Items : ScriptableObject
     {
 #if UNITY_EDITOR
