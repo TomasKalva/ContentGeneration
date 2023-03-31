@@ -45,9 +45,10 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             State.LC.AddNecessaryEvent($"Sky", 0, level => M.EnvironmentModule.CreateSky(level), true);
             
             State.LC.AddNecessaryEvent($"Roofs", -1, level => M.LevelModule.AddRoofs(), true);
-            
+
             M.FactionsModule.InitializeFactions(2);
-            
+
+            M.AscendingModule.AddAscendingEvents(M.AscendingModule.AscendingKiln(ad => 100 + 50 * ad));
 
             /*
             
@@ -57,7 +58,6 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             
             M.OutOfDepthEncountersModule.AddLightMaceEncounter();
             
-            M.AscendingModule.AddAscendingEvents(M.AscendingModule.AscendingKiln(ad => 100 + 50 * ad));
             */
 
             //State.LC.AddNecessaryEvent("Testing enemies", 5, _ => L.TestingLanguage.StatsScalingOfEnemies());
