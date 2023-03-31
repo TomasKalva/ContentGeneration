@@ -1,7 +1,7 @@
 ﻿using OurFramework.Gameplay.RealWorld;
 using OurFramework.LevelDesignLanguage;
 
-namespace OurFramework.Gameplay.Data
+namespace OurFramework.Gameplay.State
 {
     /// <summary>
     /// State of accessory item.

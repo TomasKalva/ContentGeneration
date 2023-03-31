@@ -10,11 +10,12 @@ using System.Windows.Media;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using OurFramework.UI.Util;
-using OurFramework.Gameplay.Data;
+using OurFramework.Gameplay.State;
 using OurFramework.UI;
 using static OurFramework.Game.Game;
+using OurFramework.Game;
 
-namespace OurFramework.Game
+namespace OurFramework.UI
 {
     /// <summary>
     /// Logic for application ViewModel

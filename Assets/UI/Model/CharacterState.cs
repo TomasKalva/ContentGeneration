@@ -13,7 +13,7 @@ using OurFramework.UI;
 using OurFramework.Util;
 using OurFramework.Game;
 
-namespace OurFramework.Gameplay.Data
+namespace OurFramework.Gameplay.State
 {
     /// <summary>
     /// Strategy for creating objects multiple times.

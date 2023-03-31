@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace OurFramework.Gameplay.Data
+namespace OurFramework.Gameplay.State
 {
     /// <summary>
     /// State of material item.

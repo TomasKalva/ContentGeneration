@@ -1,7 +1,7 @@
 ﻿using OurFramework.LevelDesignLanguage;
 using OurFramework.Gameplay.RealWorld;
 
-namespace OurFramework.Gameplay.Data
+namespace OurFramework.Gameplay.State
 {
     /// <summary>
     /// State of equipment item.

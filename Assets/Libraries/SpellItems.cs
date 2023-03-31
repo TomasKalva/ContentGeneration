@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using OurFramework.Gameplay.Data;
+using OurFramework.Gameplay.State;
 using OurFramework.Util;
 
 namespace OurFramework.Libraries

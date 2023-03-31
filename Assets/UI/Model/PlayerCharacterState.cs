@@ -4,7 +4,7 @@ using UnityEngine;
 #endif
 using System;
 
-namespace OurFramework.Gameplay.Data
+namespace OurFramework.Gameplay.State
 {
     /// <summary>
     /// State of the player's character.

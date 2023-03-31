@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using OurFramework.Gameplay.Data;
+using OurFramework.Gameplay.State;
 using OurFramework.Util;
 
 namespace OurFramework.Libraries

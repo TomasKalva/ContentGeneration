@@ -10,7 +10,7 @@ using OurFramework.UI.Util;
 using OurFramework.Gameplay.RealWorld;
 #endif
 
-namespace OurFramework.Gameplay.Data
+namespace OurFramework.Gameplay.State
 {
     /// <summary>
     /// State of item.

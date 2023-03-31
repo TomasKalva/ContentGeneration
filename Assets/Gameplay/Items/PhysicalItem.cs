@@ -1,6 +1,6 @@
 using OurFramework.Gameplay.RealWorld;
 
-namespace OurFramework.Gameplay.Data
+namespace OurFramework.Gameplay.State
 {
     /// <summary>
     /// State of physical item.

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using OurFramework.Gameplay.RealWorld;
 
-namespace OurFramework.Gameplay.Data
+namespace OurFramework.Gameplay.State
 {
     /// <summary>
     /// State of weapon item.

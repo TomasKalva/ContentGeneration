@@ -11,7 +11,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using OurFramework.Util;
 
-namespace OurFramework.Gameplay.Data
+namespace OurFramework.Gameplay.State
 {
     public enum SlotType
     {

@@ -11,7 +11,7 @@ using OurFramework.Environment.ShapeGrammar;
 using OurFramework.Environment.StylingAreas;
 using OurFramework.Environment.GridMembers;
 using OurFramework.Environment.ShapeCreation;
-using OurFramework.Gameplay.Data;
+using OurFramework.Gameplay.State;
 using OurFramework.Libraries;
 using OurFramework.Util;
 using static OurFramework.Game.AsynchronousEvaluator;
@@ -88,7 +88,9 @@ namespace OurFramework.Game
             playerState.AddAndEquipItem(libraries.Items.FreeWill());
             playerState.AddAndEquipItem(libraries.Items.MayanKnife());
 
-            playerState.AddItem(libraries.Items.Smile());//.NewItem("Vibrant Memory", "A memory stronger than life itself. Can be relived.").SetStackable(1, false));
+            playerState.AddItem(libraries.Items.Smile());
+            
+            //.NewItem("Vibrant Memory", "A memory stronger than life itself. Can be relived.").SetStackable(1, false));
             //libraries.Items.AllWristItems().ForEach(wi => playerState.AddItem(wi()));
             //playerState.Inventory.Head.Item = libraries.Items.Eggs();
 
