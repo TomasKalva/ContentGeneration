@@ -196,6 +196,7 @@ namespace OurFramework.UI
 
             Message = "Sample text";
             MessageOpacity = 0.5f;
+            Visible = true;
         }
 #endif
     }

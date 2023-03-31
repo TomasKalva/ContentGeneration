@@ -2,7 +2,6 @@ C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\bin\Debug\Conte
 C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\bin\Debug\ContentGeneration.exe
 C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\bin\Debug\ContentGeneration.pdb
 C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\bin\Debug\Microsoft.Expression.Interactions.dll
-C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\bin\Debug\Noesis.GUI.Extensions.dll
 C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\bin\Debug\System.Windows.Interactivity.dll
 C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\bin\Debug\en\Microsoft.Expression.Interactions.resources.dll
 C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\bin\Debug\es\Microsoft.Expression.Interactions.resources.dll
@@ -89,3 +88,4 @@ C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\Conte
 C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\Assets\UI\Components\FloatingHealthBar.g.cs
 C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\Assets\UI\Components\FloatingHealthBar.baml
 C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\Assets\UI\Components\Menu.g.cs
+C:\Users\tomka\Desktop\ContentGeneration\ContentGeneration\Blend\obj\Debug\Assets\UI\Components\Menu.baml

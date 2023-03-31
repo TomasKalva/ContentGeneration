@@ -5,9 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:util="clr-namespace:OurFramework.UI.Util"
              xmlns:comp="clr-namespace:OurFramework.UI.Components"
-             xmlns:state="OurFramework.Gameplay.State"
+             xmlns:state="clr-namespace:OurFramework.Gameplay.State"
              mc:Ignorable="d" 
-             d:DesignHeight="55" d:DesignWidth="180"
+             d:DesignHeight="30" d:DesignWidth="180"
              x:Name="parent"
              d:DataContext="{d:DesignInstance state:CharacterState}">
     <UserControl.Style>

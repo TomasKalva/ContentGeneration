@@ -8,7 +8,6 @@
              d:DesignHeight="45" d:DesignWidth="180"
              x:Name="parent">
     <Border Background="Transparent" Padding="2">
-
         <ItemsControl ItemsSource="{Binding}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>

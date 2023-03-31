@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:util="clr-namespace:OurFramework.UI.Util"
              xmlns:comp="clr-namespace:OurFramework.UI.Components"
-             xmlns:state="OurFramework.Gameplay.State"
+             xmlns:state="clr-namespace:OurFramework.Gameplay.State"
              mc:Ignorable="d"
              d:DesignHeight="50" d:DesignWidth="50"
              x:Name="parent"

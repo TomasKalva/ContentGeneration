@@ -7,14 +7,13 @@
   xmlns:comp="clr-namespace:OurFramework.UI.Components"
   xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
   xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
-  xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
   mc:Ignorable="d"
   d:DesignWidth="767.667" d:DesignHeight="416"
   d:DataContext="{d:DesignInstance {x:Type local:ViewModel}, IsDesignTimeCreatable=True}">
     <UserControl.Resources>
         <comp:BarLengthConverter x:Key="BarLengthConverter" />
     </UserControl.Resources>
-    <Grid  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" RenderTransformOrigin="0, 0.5">
+    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" RenderTransformOrigin="0, 0.5">
         <!-- The UI gets flipped vertically when it's not the last overlay element of camera... -->
         <!--<Grid.RenderTransform>
             <ScaleTransform ScaleY="-1"/>
@@ -37,7 +36,6 @@
                             https://stackoverflow.com/questions/13219321/positioning-an-element-inside-the-canvas-by-its-center-instead-of-the-top-left
                         -->
                         <comp:FloatingHealthBar DataContext="{Binding}" Width="100" Height="55" Margin="-100000"/>
-                        <!--<comp:ProgressBarNum DataContext="{Binding Health}" Color="Red" Width="100" Height="10" Margin="-100000"/>-->
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>
@@ -79,57 +77,6 @@
         <StackPanel Margin="40" HorizontalAlignment="Left" VerticalAlignment="Bottom">
             <Border Width="80" Height="80" >
                 <comp:ItemSlotView DataContext="{Binding Path=PlayerState.Inventory.SelectedSlot}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70" Height="70">
-                    <!--
-                    Animating the slot when its content changes
-                    
-                    <comp:ItemSlotView.Triggers>
-                        <EventTrigger RoutedEvent="MouseEnter">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimationUsingKeyFrames
-                                            Storyboard.Target="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:ItemSlotView}}}" 
-                                            Storyboard.TargetProperty="Width"
-                                            Duration="0:0:0.5">
-                                        <LinearDoubleKeyFrame Value="80" KeyTime="0:0:0.25" />
-                                        <LinearDoubleKeyFrame Value="70" KeyTime="0:0:0.5" />
-                                    </DoubleAnimationUsingKeyFrames>
-                                    <DoubleAnimationUsingKeyFrames
-                                            Storyboard.Target="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:ItemSlotView}}}" 
-                                            Storyboard.TargetProperty="Height"
-                                            Duration="0:0:0.5">
-                                        <LinearDoubleKeyFrame Value="80" KeyTime="0:0:0.25" />
-                                        <LinearDoubleKeyFrame Value="70" KeyTime="0:0:0.5" />
-                                    </DoubleAnimationUsingKeyFrames>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                    </comp:ItemSlotView.Triggers>
-                    
-                    
-                    <i:Interaction.Triggers>
-                        <ei:DataTrigger Binding="{Binding PlayerState.Inventory.SelectedSlot}" Value="{x:Null}">
-                            <ei:ControlStoryboardAction ControlStoryboardOption="Play">
-                                <ei:ControlStoryboardAction.Storyboard>
-                                    <Storyboard>
-                                        <DoubleAnimationUsingKeyFrames
-                                                Storyboard.Target="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:ItemSlotView}}}" 
-                                                Storyboard.TargetProperty="Width"
-                                                Duration="0:0:0.5">
-                                            <LinearDoubleKeyFrame Value="80" KeyTime="0:0:0.25" />
-                                            <LinearDoubleKeyFrame Value="70" KeyTime="0:0:0.5" />
-                                        </DoubleAnimationUsingKeyFrames>
-                                        <DoubleAnimationUsingKeyFrames
-                                                Storyboard.Target="{Binding RelativeSource={RelativeSource AncestorType={x:Type comp:ItemSlotView}}}" 
-                                                Storyboard.TargetProperty="Height"
-                                                Duration="0:0:0.5">
-                                            <LinearDoubleKeyFrame Value="80" KeyTime="0:0:0.25" />
-                                            <LinearDoubleKeyFrame Value="70" KeyTime="0:0:0.5" />
-                                        </DoubleAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </ei:ControlStoryboardAction.Storyboard>
-                            </ei:ControlStoryboardAction>
-                        </ei:DataTrigger>
-                    </i:Interaction.Triggers>-->
                 </comp:ItemSlotView>
             </Border>
             <Grid Width="140" Height="60">

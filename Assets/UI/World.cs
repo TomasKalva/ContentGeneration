@@ -36,9 +36,11 @@ namespace OurFramework.Game
 
         List<InteractiveObjectState> interactiveObjects { get; }
         List<InteractiveObjectState> interactivePersistentObjects { get; }
-        public ObservableCollection<CharacterState> Enemies { get; }
         List<Transform> architectureElements;
+#endif
+        public ObservableCollection<CharacterState> Enemies { get; }
         public PlayerCharacterState PlayerState { get; }
+#if NOESIS
         OccurrenceManager Occurences { get; set; }
         public GraveState Grave { get; set; }
 
