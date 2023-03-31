@@ -1,6 +1,7 @@
 ﻿#if UNITY_5_3_OR_NEWER
 #define NOESIS
 using UnityEngine;
+using static OurFramework.Game.Game;
 #else
 using System;
 using System.Windows.Input;
@@ -12,7 +13,6 @@ using System.ComponentModel;
 using OurFramework.UI.Util;
 using OurFramework.Gameplay.State;
 using OurFramework.UI;
-using static OurFramework.Game.Game;
 using OurFramework.Game;
 
 namespace OurFramework.UI
@@ -105,10 +105,12 @@ namespace OurFramework.UI
             }
         }
 
+#if NOESIS
         /// <summary>
         /// For controlling flow of the game.
         /// </summary>
         public GameControl GameControl { get; set; }
+#endif
 
         public Menu Menu { get; } = new Menu();
 
@@ -206,7 +208,10 @@ namespace OurFramework.UI
     {
         public static void Show(string message)
         {
+
+#if NOESIS
             GameViewModel.ViewModel.Message = message;
+#endif
         }
     }
 }

@@ -4,12 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:util="clr-namespace:OurFramework.UI.Util"
-             xmlns:model="clr-namespace:OurFramework.UI.Model"
              xmlns:comp="clr-namespace:OurFramework.UI.Components"
+             xmlns:state="OurFramework.Gameplay.State"
              mc:Ignorable="d"
              d:DesignHeight="50" d:DesignWidth="50"
              x:Name="parent"
-             d:DataContext="{d:DesignInstance model:InventorySlot}">
+             d:DataContext="{d:DesignInstance state:InventorySlot}">
     <UserControl.Resources>
         <!-- Slot contains item -->
         <DataTemplate x:Key="Full" DataType="ContentControl">

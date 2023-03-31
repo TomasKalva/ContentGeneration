@@ -1,16 +1,16 @@
 ﻿#if UNITY_5_3_OR_NEWER
 #define NOESIS
 using UnityEngine;
+using OurFramework.LevelDesignLanguage;
+using OurFramework.Gameplay.RealWorld;
+using OurFramework.UI;
+using OurFramework.Util;
 #endif
 using OurFramework.UI.Util;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System;
 using System.Linq;
-using OurFramework.LevelDesignLanguage;
-using OurFramework.Gameplay.RealWorld;
-using OurFramework.UI;
-using OurFramework.Util;
 using OurFramework.Game;
 
 namespace OurFramework.Gameplay.State
@@ -282,7 +282,6 @@ namespace OurFramework.Gameplay.State
         {
 
         }
-#endif
 
         /// <summary>
         /// Resets the state of the character.
@@ -300,6 +299,7 @@ namespace OurFramework.Gameplay.State
 
             VisibleOnCamera = false;
         }
+#endif
 
         /// <summary>
         /// Returns true if item was added successfully.
@@ -367,7 +367,6 @@ namespace OurFramework.Gameplay.State
 
             DamageTaken.AddDamage(damage.Amount);
         }
-#endif
 
         #region Equipping and unequipping
         public void EquipItemToFree(InventorySlot itemSlot)
@@ -427,16 +426,15 @@ namespace OurFramework.Gameplay.State
             return this;
         }
         #endregion
-
+       
         public void Rest()
         {
-#if NOESIS
             Inventory.AllSlots.ForEach(slot => slot.Item?.OnRest());
-#endif
             Reset();
 
             OnRest();
         }
+#endif
 
         /// <summary>
         /// To be able to trigger property change from subclasses.
@@ -446,7 +444,7 @@ namespace OurFramework.Gameplay.State
             PropertyChanged?.Invoke(thisInstance, new PropertyChangedEventArgs(name));
         }
 
-#region Screen position of health bars
+        #region Screen position of health bars
 
 #if NOESIS
         private float _uiScreenPosX;

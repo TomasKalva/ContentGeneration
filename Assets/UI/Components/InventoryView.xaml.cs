@@ -2,7 +2,6 @@
 #define NOESIS
 using Noesis;
 #else
-using OurFramework.UI.Model;
 using System;
 using System.Windows;
 using System.Windows.Controls;

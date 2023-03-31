@@ -1,16 +1,16 @@
 ﻿#if UNITY_5_3_OR_NEWER
 #define NOESIS
 using UnityEngine;
+using OurFramework.LevelDesignLanguage;
+using OurFramework.Gameplay.RealWorld;
+using OurFramework.UI;
+using OurFramework.Util;
 #endif
 using OurFramework.UI.Util;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System;
 using System.Collections.ObjectModel;
-using OurFramework.LevelDesignLanguage;
-using OurFramework.Gameplay.RealWorld;
-using OurFramework.UI;
-using OurFramework.Util;
 using OurFramework.Game;
 
 namespace OurFramework.Gameplay.State
@@ -34,9 +34,9 @@ namespace OurFramework.Gameplay.State
         /// </summary>
         public bool IsBlocking { get; set; }
 
+#if NOESIS
         public Vector3 Position { get; set; }
 
-#if NOESIS
         InteractiveObject _interactiveObject;
         public InteractiveObject InteractiveObject 
         { 

@@ -99,6 +99,7 @@ namespace OurFramework.Gameplay.State
             return this;
         }
 
+#if NOESIS
         public ItemState()
         {
             Name = "";
@@ -156,7 +157,7 @@ namespace OurFramework.Gameplay.State
             return this;
             //Debug.Log($"Dropping {Name}");
         }
-
+#endif
         public InventorySlot AddToInventory(Inventory inventory)
         {
             return Usage.AddToInventory(inventory, this);

@@ -4,11 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:util="clr-namespace:OurFramework.UI.Util"
-             xmlns:model="clr-namespace:OurFramework.UI.Model"
              xmlns:comp="clr-namespace:OurFramework.UI.Components"
+             xmlns:state="OurFramework.Gameplay.State"
              mc:Ignorable="d"
              x:Name="parent"
-             d:DataContext="{d:DesignInstance model:ItemState}">
+             d:DataContext="{d:DesignInstance state:ItemState}">
     <DockPanel Background="Black" VerticalAlignment="Stretch">
         <TextBlock Text="{Binding Name}" DockPanel.Dock="Top" Background="Beige" FontSize="22" TextAlignment="Center" Margin="0,0,0,3"></TextBlock>
         <TextBlock Text="{Binding Description}" DockPanel.Dock="Bottom" Background="Beige" TextAlignment="Center" TextWrapping="WrapWithOverflow"></TextBlock>

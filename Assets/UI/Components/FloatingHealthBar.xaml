@@ -5,11 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:util="clr-namespace:OurFramework.UI.Util"
              xmlns:comp="clr-namespace:OurFramework.UI.Components"
-             xmlns:m="clr-namespace:OurFramework.UI.Model"
+             xmlns:state="OurFramework.Gameplay.State"
              mc:Ignorable="d" 
              d:DesignHeight="55" d:DesignWidth="180"
              x:Name="parent"
-             d:DataContext="{d:DesignInstance m:CharacterState}">
+             d:DataContext="{d:DesignInstance state:CharacterState}">
     <UserControl.Style>
         <Style TargetType="{x:Type UserControl}">
             <Style.Triggers>

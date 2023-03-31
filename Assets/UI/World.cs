@@ -1,22 +1,31 @@
-using UnityEngine;
+#if UNITY_5_3_OR_NEWER
+#define NOESIS
+#endif
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System;
-using OurFramework.Gameplay.RealWorld;
 using OurFramework.Gameplay.State;
+#if NOESIS
+using UnityEngine;
+using OurFramework.Gameplay.RealWorld;
 using OurFramework.Util;
 using OurFramework.Environment.GridMembers;
+#endif
 
 namespace OurFramework.Game
 {
     /// <summary>
     /// Contains all geometry of the world.
     /// </summary>
-    public class World : INotifyPropertyChanged, IGridGeometryOwner
+    public class World : INotifyPropertyChanged
+#if NOESIS
+        , IGridGeometryOwner
+#endif
     {
         public event PropertyChangedEventHandler PropertyChanged;
+#if NOESIS
         public Transform ArchitectureParent { get; }
         public Transform EntitiesParent { get; }
         /// <summary>
@@ -267,5 +276,6 @@ namespace OurFramework.Game
             // todo: somehow optimize this to avoid allocations each update
             CurrentOccurrences = CurrentOccurrences.Where(occurence => !occurence.Update(deltaT)).ToList();
         }
+#endif
     }
 }

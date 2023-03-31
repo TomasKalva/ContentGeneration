@@ -80,7 +80,6 @@ namespace OurFramework.Gameplay.State
             DeathCount++;
             OnDeath();
         }
-#endif
 
         /// <summary>
         /// Equips active inventory item to a free slot or unequip it.
@@ -115,5 +114,6 @@ namespace OurFramework.Gameplay.State
                 EquipItemToPosition(cursorSlot, slotId);
             }
         }
+#endif
     }
 }

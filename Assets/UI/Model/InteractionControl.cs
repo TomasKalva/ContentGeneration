@@ -1,4 +1,7 @@
-﻿using OurFramework.Gameplay.RealWorld;
+﻿#if UNITY_5_3_OR_NEWER
+#define NOESIS
+#endif
+using OurFramework.Gameplay.RealWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;

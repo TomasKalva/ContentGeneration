@@ -1,6 +1,7 @@
 ﻿#if UNITY_5_3_OR_NEWER
 #define NOESIS
 using UnityEngine;
+using OurFramework.Util;
 #endif
 using OurFramework.UI.Util;
 using System;
@@ -9,7 +10,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using OurFramework.Util;
 
 namespace OurFramework.Gameplay.State
 {
@@ -38,6 +38,7 @@ namespace OurFramework.Gameplay.State
             get => _item;
             set
             {
+#if NOESIS
                 if (SlotType != SlotType.Passive)
                 {
                     if (_item != null)
@@ -50,7 +51,7 @@ namespace OurFramework.Gameplay.State
                         value.OnEquipDelegate(Owner);
                     }
                 }
-
+#endif
                 _item = value;
                 PropertyChanged.OnPropertyChanged(this);
             }
@@ -302,7 +303,9 @@ namespace OurFramework.Gameplay.State
             var activeItems = from slot in ActiveSlots.Concat(EquipmentSlots) where slot.Item != null select slot.Item;
             foreach (var item in activeItems)
             {
+#if NOESIS
                 item.OnUpdateDelegate(character);
+#endif
             }
         }
 #if NOESIS

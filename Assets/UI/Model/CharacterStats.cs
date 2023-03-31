@@ -1,13 +1,13 @@
 ﻿#if UNITY_5_3_OR_NEWER
 #define NOESIS
 using UnityEditor;
+using OurFramework.Gameplay.RealWorld;
 #endif
 using OurFramework.UI.Util;
 using System.ComponentModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using OurFramework.Gameplay.RealWorld;
 
 namespace OurFramework.Gameplay.State
 {
@@ -103,6 +103,7 @@ namespace OurFramework.Gameplay.State
                 _agility = ValidStatValue(value);
                 if (Character != null)
                 {
+#if NOESIS
                     var agent = Character.Agent;
                     if(agent != null)
                     {
@@ -110,6 +111,7 @@ namespace OurFramework.Gameplay.State
                         var run = agent.acting.GetAct("Run") as Move;
                         run.SetSpeedMultiplier(1f + 0.01f * _agility);
                     }
+#endif
                 }
                 PropertyChanged.OnPropertyChanged(this);
             }
@@ -128,7 +130,9 @@ namespace OurFramework.Gameplay.State
                 if (Character != null)
                 {
                     Character.Poise.Maximum = 20f + 6f * _posture;
+#if NOESIS
                     Character.PhysicalDefense.ReductionPercentage = 0.5f * _posture;
+#endif
                 }
                 PropertyChanged.OnPropertyChanged(this); 
             }
@@ -146,9 +150,11 @@ namespace OurFramework.Gameplay.State
                 _resistances = ValidStatValue(value);
                 if (Character != null)
                 {
+#if NOESIS
                     Character.FireDefense.ReductionPercentage = 0.5f * _resistances;
                     Character.DarkDefense.ReductionPercentage = 0.5f * _resistances;
                     Character.DivineDefense.ReductionPercentage = 0.5f * _resistances;
+#endif
                 }
                 PropertyChanged.OnPropertyChanged(this);
             }
