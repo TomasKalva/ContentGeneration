@@ -1,4 +1,5 @@
 ﻿using OurFramework.Game;
+using OurFramework.Gameplay.State;
 using UnityEngine;
 
 namespace OurFramework.LevelDesignLanguage.CustomModules

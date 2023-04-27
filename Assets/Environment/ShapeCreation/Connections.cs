@@ -47,7 +47,13 @@ namespace OurFramework.Environment.ShapeCreation
         #endregion
 
         // todo: add other paths level element to the api
+        /// <summary>
+        /// Returns Connection that takes into account existing level elements and paths.
+        /// </summary>
         public delegate Connection ConnectionFromAddedAndPaths(LevelElement alreadyAdded, LevelGroupElement existingPaths);
+        /// <summary>
+        /// Creates a path that connects le1 and le2.
+        /// </summary>
         public delegate LevelGeometryElement Connection(LevelElement le1, LevelElement le2);
 
         /// <summary>

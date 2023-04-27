@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: NoesisSettings
   m_EditorClassIdentifier: 
   licenseName: "Tom\xE1\u0161 Kalva"
-  licenseKey: xZ+ELj7UhC5x9htEibR8lc1f2A1G7KaOuNq0K4FIWUbuqECN
+  licenseKey: QiV6UllpelIkm7lZI/A/zznWMT2AoazLwSLo/v/Whb9z8unp
   applicationResources: {fileID: 11400000, guid: 5c9c7b831958db14ba3ac32369eea416, type: 2}
   defaultFont: {fileID: 11400000, guid: b3ab3e4919f1b524381735ffc56c8632, type: 2}
   defaultFontSize: 15

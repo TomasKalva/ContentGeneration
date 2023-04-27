@@ -51,7 +51,7 @@ namespace OurFramework.Gameplay.RealWorld
 
         public bool CanBeUsed(Agent agent)
         {
-            return agent.CharacterState.Stamina >= cost;// detector && detector.Triggered;
+            return agent.CharacterState.Stamina >= cost;
         }
 
         public virtual void StartAct(Agent agent)

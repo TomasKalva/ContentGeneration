@@ -11,6 +11,9 @@ namespace OurFramework.Util
         public T Sample();
     }
 
+    /// <summary>
+    /// Returns numbers starting with start, incremented by step.
+    /// </summary>
     public class IntSeqDistr : IDistribution<int>
     {
         int start, step;
@@ -30,6 +33,9 @@ namespace OurFramework.Util
         }
     }
 
+    /// <summary>
+    /// Returns numbers of the given distribution clamped to the interval.
+    /// </summary>
     public class IntervalDistr : IDistribution<int>
     {
         IDistribution<int> seq;
@@ -81,6 +87,10 @@ namespace OurFramework.Util
             return center + successes - width;
         }
     }
+
+    /// <summary>
+    /// Returns random number between min and max.
+    /// </summary>
     public class UniformDistr : IDistribution<int>
     {
         int min, max;
@@ -97,6 +107,10 @@ namespace OurFramework.Util
         }
     }
 
+    /// <summary>
+    /// Returns the item with probability proportional to its weight. Weights can be
+    /// arbitrary positive numbers.
+    /// </summary>
     public class WeightedDistr<T> : IDistribution<T>
     {
         struct WeightItemPair
@@ -125,6 +139,9 @@ namespace OurFramework.Util
         }
     }
 
+    /// <summary>
+    /// Returns the value.
+    /// </summary>
     public class ConstDistrFloat : IDistribution<float>
     {
         float val;
@@ -140,6 +157,9 @@ namespace OurFramework.Util
         }
     }
 
+    /// <summary>
+    /// Returns the value.
+    /// </summary>
     public class ConstDistr : IDistribution<int>
     {
         int val;

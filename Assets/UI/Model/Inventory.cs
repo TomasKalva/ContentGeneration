@@ -91,18 +91,10 @@ namespace OurFramework.Gameplay.State
         }
     }
 
-    public interface IInventory
-    {
-        InventorySlot AddItem(ItemState item);
-        void UseItem();
-
-        void Update();
-    }
-
     /// <summary>
     /// Model of inventory.
     /// </summary>
-    public class Inventory : INotifyPropertyChanged, IInventory
+    public class Inventory : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

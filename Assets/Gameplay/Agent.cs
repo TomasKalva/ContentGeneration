@@ -16,7 +16,6 @@ namespace OurFramework.Gameplay.RealWorld
 	{
 		public Movement movement;
 		public Acting acting;
-		public Animator animator;
 		public AnimancerComponent animancerAnimator;
 		public Renderer myRenderer;
 
@@ -84,16 +83,15 @@ namespace OurFramework.Gameplay.RealWorld
 		{
 			movement = GetComponent<Movement>();
 			acting = GetComponent<Acting>();
-			animator = GetComponent<Animator>();
 			animancerAnimator = GetComponent<AnimancerComponent>();
 			myRenderer = GetComponentInChildren<Renderer>();
 			slots = new EquipmentSlot[]
 			{
-			leftWeaponSlot,
-			rightWeaponSlot,
-			leftWristSlot,
-			rightWristSlot,
-			headSlot,
+				leftWeaponSlot,
+				rightWeaponSlot,
+				leftWristSlot,
+				rightWristSlot,
+				headSlot,
 			};
 			Behaviors = new Behaviors();
 		}

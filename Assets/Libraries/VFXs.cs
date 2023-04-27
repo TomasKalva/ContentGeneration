@@ -65,11 +65,11 @@ namespace OurFramework.Libraries
         public List<VFX> TestVFXs(Transform parent)
         {
             var textures = new[]{
-            WindTexture,
-            FireTexture,
-            SmokeTexture,
-            LightningTexture,
-        };
+                WindTexture,
+                FireTexture,
+                SmokeTexture,
+                LightningTexture,
+            };
             var vfxs = new Func<VFX>[]
             {
             Fire,

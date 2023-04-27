@@ -19,10 +19,10 @@ namespace OurFramework.LevelDesignLanguage
     {
         const int MAX_NUMBER_OF_CONSTRUCTION_TRIES = 5;
         public LanguageState State { get; }
+        public Modules M { get; }
 
         public Libraries.Libraries Lib { get; }
         public Grammars Gr { get; }
-        public Modules M { get; }
         public Environments Env { get; }
         public ObjectPlacement<CharacterState> PlC { get; }
         public ObjectPlacement<InteractiveObjectState> PlO { get; }
@@ -37,9 +37,8 @@ namespace OurFramework.LevelDesignLanguage
             Env = new Environments(this);
             PlC = new ObjectPlacement<CharacterState>((area, enemy) => area.AddEnemy(enemy));
             PlO = new ObjectPlacement<InteractiveObjectState>((area, io) => area.AddInteractiveObject(io));
-            //Msg = new MsgPrinter();
 
-            M = languageParams.Modules;// Languages.Get(languageParams);
+            M = languageParams.Modules;
         }
 
         /// <summary>
@@ -132,7 +131,6 @@ namespace OurFramework.LevelDesignLanguage
 
     #region Primitives
     
-    public delegate T GeometryMaker<out T>() where T : MonoBehaviour;
 
     #endregion
 

@@ -39,52 +39,24 @@ namespace OurFramework.Libraries
         public DogAgent dogPrefab;
 
         public IEnumerable<Func<CharacterState>> AllAgents() => new List<Func<CharacterState>>()
-    {
-        Sculpture,
-        MayanThrower,
-        MayanSwordsman,
-        SkinnyWoman,
-        DragonMan,
-        Dog,
-    };
+        {
+            Sculpture,
+            MayanThrower,
+            MayanSwordsman,
+            SkinnyWoman,
+            DragonMan,
+            Dog,
+        };
 
 
 
         Behaviors AddDefaultBehaviors(Behaviors behaviors)
         {
-            /*
-            behaviors;
-            behaviors;
-            //behaviors.AddBehavior(new WaitForPlayer(10));
-            behaviors.AddBehavior(new Awareness(10, new Vector2(3.0f, 5.0f), 5f, 10f));*/
             return behaviors
                 .AddBehavior(new TurnToTargetBehavior(10))
                 .AddBehavior(new GoToTargetBehavior(10))
                 .AddBehavior(new Awareness(10, new Vector2(3.0f, 5.0f), 5f, 10f));
         }
-
-        /*
-        public CharacterState Human()
-        {
-            var human = new CharacterState();
-            human.GeometryMaker = Geometry<Agent>(humanPrefab);
-
-            // properties
-            human.Health = 40f;
-            human.Stamina = 20f;
-            human.Poise = 10f;
-
-            // inventory
-            human.AddAndEquipItem(new FreeWill());
-            human.Inventory.LeftWeapon.Item = libraries.Items.MayanKnife();
-            human.Inventory.RightWeapon.Item = libraries.Items.Scythe();
-
-            // behaviors
-            var behaviors = human.Behaviors;
-            AddDefaultBehaviors(behaviors);
-
-            return human;
-        }*/
 
         public CharacterState Sculpture()
         {

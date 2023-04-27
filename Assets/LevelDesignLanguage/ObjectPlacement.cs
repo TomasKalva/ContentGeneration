@@ -8,11 +8,11 @@ namespace OurFramework.LevelDesignLanguage
     /// <summary>
     /// Declarations of placers.
     /// </summary>
-    class ObjectPlacement<T>
+    class ObjectPlacement<Object>
     {
-        Action<Area, T> placementOp;
+        Action<Area, Object> placementOp;
 
-        public ObjectPlacement(Action<Area, T> placementOp)
+        public ObjectPlacement(Action<Area, Object> placementOp)
         {
             this.placementOp = placementOp;
         }
@@ -20,12 +20,12 @@ namespace OurFramework.LevelDesignLanguage
         /// <summary>
         /// Places objects randomly.
         /// </summary>
-        public Placer<Areas, T> RandomAreaPlacer(IDistribution<int> count, params (float, Func<T>)[] items)
+        public Placer<Areas, Object> RandomAreaPlacer(IDistribution<int> count, params (float, Func<Object>)[] items)
         {
             return 
-                new RandomAreaPlacer<T>(
+                new RandomAreaPlacer<Object>(
                     placementOp,
-                    new WeightedDistr<Func<T>>(
+                    new WeightedDistr<Func<Object>>(
                         items
                     ),
                     count,
@@ -36,7 +36,7 @@ namespace OurFramework.LevelDesignLanguage
         /// <summary>
         /// Places the given number of objects randomly across all areas.
         /// </summary>
-        public Placer<Areas, T> RandomAreasPlacer(IDistribution<int> count, params Func<T>[] items)
+        public Placer<Areas, Object> RandomAreasPlacer(IDistribution<int> count, params Func<Object>[] items)
         {
             return RandomAreasPlacer(count, items.Select(item => (1f, item)).ToArray());
         }
@@ -44,12 +44,12 @@ namespace OurFramework.LevelDesignLanguage
         /// <summary>
         /// Places the given number of objects randomly across all areas.
         /// </summary>
-        public Placer<Areas, T> RandomAreasPlacer(IDistribution<int> count, params (float, Func<T>)[] items)
+        public Placer<Areas, Object> RandomAreasPlacer(IDistribution<int> count, params (float, Func<Object>)[] items)
         {
             return
-                new RandomAreasPlacer<T>(
+                new RandomAreasPlacer<Object>(
                     placementOp,
-                    new WeightedDistr<Func<T>>(
+                    new WeightedDistr<Func<Object>>(
                         items
                     ),
                     count
@@ -59,7 +59,7 @@ namespace OurFramework.LevelDesignLanguage
         /// <summary>
         /// Places objects randomly.
         /// </summary>
-        public Placer<Areas, T> RandomAreaPlacer(IDistribution<int> count, params Func<T>[] items)
+        public Placer<Areas, Object> RandomAreaPlacer(IDistribution<int> count, params Func<Object>[] items)
         {
             return RandomAreaPlacer(count, items.Select(item => (1f, item)).ToArray());
         }
@@ -67,7 +67,7 @@ namespace OurFramework.LevelDesignLanguage
         /// <summary>
         /// Places objects evenly.
         /// </summary>
-        public Placer<Areas, T> EvenPlacer(IEnumerable<T> items)
+        public Placer<Areas, Object> EvenPlacer(IEnumerable<Object> items)
         {
             return EvenPlacer(items.ToArray());
         }
@@ -75,10 +75,10 @@ namespace OurFramework.LevelDesignLanguage
         /// <summary>
         /// Places objects evenly.
         /// </summary>
-        public Placer<Areas, T> EvenPlacer(params T[] items)
+        public Placer<Areas, Object> EvenPlacer(params Object[] items)
         {
             return
-                new EvenPlacer<Areas, T>(
+                new EvenPlacer<Areas, Object>(
                     placementOp,
                     items,
                     areas => areas.AreasList.Shuffle()
@@ -88,7 +88,7 @@ namespace OurFramework.LevelDesignLanguage
         /// <summary>
         /// Places objects to dead ends first.
         /// </summary>
-        public Placer<Areas, T> DeadEndPlacer(IEnumerable<T> items)
+        public Placer<Areas, Object> DeadEndPlacer(IEnumerable<Object> items)
         {
             return DeadEndPlacer(items.ToArray());
         }
@@ -96,10 +96,10 @@ namespace OurFramework.LevelDesignLanguage
         /// <summary>
         /// Places objects to dead ends first.
         /// </summary>
-        public Placer<Areas, T> DeadEndPlacer(params T[] items)
+        public Placer<Areas, Object> DeadEndPlacer(params Object[] items)
         {
             return
-                new EvenPlacer<Areas, T>(
+                new EvenPlacer<Areas, Object>(
                     placementOp,
                     items,
                     areas => areas.AreasList.OrderBy(area => area.EdgesFrom.Count)
@@ -109,10 +109,10 @@ namespace OurFramework.LevelDesignLanguage
         /// <summary>
         /// Places objects counts based on progress function.
         /// </summary>
-        public Placer<Areas, T> ProgressFunctionPlacer(ProgressFactory<T> progressFunc, IDistribution<int> count)
+        public Placer<Areas, Object> ProgressFunctionPlacer(ProgressFactory<Object> progressFunc, IDistribution<int> count)
         {
             return
-                new ProgressFunctionPlacer<Areas, T>(
+                new ProgressFunctionPlacer<Areas, Object>(
                     placementOp,
                     count,
                     progressFunc

@@ -15,6 +15,8 @@ using OurFramework.Game;
 
 namespace OurFramework.Gameplay.State
 {
+    public delegate T GeometryMaker<out T>() where T : MonoBehaviour;
+
     /// <summary>
     /// Strategy for creating objects multiple times.
     /// </summary>

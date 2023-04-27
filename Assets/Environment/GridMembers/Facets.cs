@@ -14,6 +14,9 @@ namespace OurFramework.Environment.GridMembers
     {
         Cube MyCube { get; }
         Vector3Int Direction { get; }
+        /// <summary>
+        /// Runs after the object is created.
+        /// </summary>
         Action<Transform> OnObjectCreated { get; }
     }
 

@@ -13,6 +13,9 @@ namespace OurFramework.Gameplay.State
     /// </summary>
     public abstract class Interaction<InteractiveObjectT> where InteractiveObjectT : InteractiveObject
     {
+        /// <summary>
+        /// Sets the current interaction state to InteractiveObjectState.
+        /// </summary>
         public struct InteractionArguments
         {
             public InteractOptions<InteractiveObjectT> InteractOptions { get; }
