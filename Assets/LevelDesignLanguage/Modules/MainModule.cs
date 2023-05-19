@@ -13,7 +13,8 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
         /// </summary>
         public void DeclareGame()
         {
-            DeclareDebugGame();
+            //DeclareDebugGame();
+            M.ExampleLevelsModule.LongerLevel();
             //State.LC.AddNecessaryEvent($"Tutorial module", 100, level => M.TutorialModule.Main());
             //State.LC.AddNecessaryEvent($"Tutorial1 main", 100, level => M.TutorialModule1.Main(), true);
             //DeclareEnvironmentForPrettyPictures();
@@ -52,7 +53,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
 
             M.AscendingModule.AddAscendingEvents(M.AscendingModule.AscendingKiln(ad => 100 + 50 * ad));
 
-            /*
+            
             
             State.LC.AddNecessaryEvent($"Add Details", 0, level => M.DetailsModule.AddDetails(level), true);
 
@@ -60,7 +61,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
             
             M.OutOfDepthEncountersModule.AddLightMaceEncounter();
             
-            */
+            
 
             //State.LC.AddNecessaryEvent("Testing enemies", 5, _ => L.TestingLanguage.StatsScalingOfEnemies());
 

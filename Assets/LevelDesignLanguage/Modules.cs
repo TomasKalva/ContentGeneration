@@ -23,7 +23,7 @@ namespace OurFramework.LevelDesignLanguage
         public DeathModule DeathModule { get; private set; }
         public TutorialModule1 TutorialModule1 { get; private set; }
         public TutorialModule TutorialModule { get; private set; }
-
+        public ExampleLevelsModule ExampleLevelsModule { get; private set; }
 
         public Modules()
         {
@@ -46,6 +46,7 @@ namespace OurFramework.LevelDesignLanguage
             DeathModule = new DeathModule(languageParams);
             TutorialModule1 = new TutorialModule1(languageParams);
             TutorialModule = new TutorialModule(languageParams);
+            ExampleLevelsModule = new ExampleLevelsModule(languageParams);
         }
     }
 }
