@@ -9,6 +9,7 @@ using OurFramework.Environment.GridMembers;
 using OurFramework.Gameplay.State;
 using OurFramework.Util;
 using static OurFramework.Game.AsynchronousEvaluator;
+using OurFramework.Game;
 
 namespace OurFramework.LevelDesignLanguage
 {
@@ -17,7 +18,7 @@ namespace OurFramework.LevelDesignLanguage
     /// </summary>
     abstract class LDLanguage
     {
-        const int MAX_NUMBER_OF_CONSTRUCTION_TRIES = 5;
+        const int MAX_NUMBER_OF_CONSTRUCTION_TRIES = 6;
         public LanguageState State { get; }
         public Modules M { get; }
 
@@ -49,7 +50,7 @@ namespace OurFramework.LevelDesignLanguage
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 
-            int constructionTries = 1;
+            int constructionTries = 0;
 
 
             while (true)
@@ -78,13 +79,15 @@ namespace OurFramework.LevelDesignLanguage
                 {
                     yield return TaskSteps.One();
                 }
+
+                DataCollector.SetData(d => d.Failed = !constructingTask.Result);
                 if (constructingTask.Result)
                 {
                     break;
                 }
 
                 yield return TaskSteps.One();
-                if(constructionTries++ >= MAX_NUMBER_OF_CONSTRUCTION_TRIES)
+                if(++constructionTries >= MAX_NUMBER_OF_CONSTRUCTION_TRIES)
                 {
                     break;
                 }
@@ -106,6 +109,10 @@ namespace OurFramework.LevelDesignLanguage
 
             stopwatch.Stop();
             Debug.Log($"Level generating took {stopwatch.ElapsedMilliseconds} ms");
+
+            DataCollector.SetData(d => d.GenerationTime = stopwatch.ElapsedMilliseconds);
+            //DataCollector.SetData(d => d.NodesCount = State.GrammarState.WorldState.Added.Flatten().Count());
+            DataCollector.SetData(d => d.NodesCount = State.TraversableAreas.Count());
         }
     }
 

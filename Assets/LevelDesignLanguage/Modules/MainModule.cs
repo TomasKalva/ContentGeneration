@@ -14,7 +14,7 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
         public void DeclareGame()
         {
             //DeclareDebugGame();
-            M.ExampleLevelsModule.LongerLevel();
+            M.ExampleLevelsModule.SimpleLevel();
             //State.LC.AddNecessaryEvent($"Tutorial module", 100, level => M.TutorialModule.Main());
             //State.LC.AddNecessaryEvent($"Tutorial1 main", 100, level => M.TutorialModule1.Main(), true);
             //DeclareEnvironmentForPrettyPictures();

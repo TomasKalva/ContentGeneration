@@ -18,12 +18,12 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
         /// <summary>
         /// Paper example A.
         /// </summary>
-        public void Simple()
+        public void SimpleLevel()
         {
             State.LC.AddNecessaryEvent($"Simple level", 100, level => SimpleMain(), true);
         }
 
-        public void SimpleMain()
+        void SimpleMain()
         {
             LevelStart();
             LevelContinue();

@@ -17,6 +17,7 @@ using OurFramework.Util;
 using static OurFramework.Game.AsynchronousEvaluator;
 using OurFramework.LevelDesignLanguage;
 using OurFramework.Gameplay.RealWorld;
+using System;
 
 namespace OurFramework.Game
 {
@@ -62,9 +63,17 @@ namespace OurFramework.Game
             yield return TaskSteps.One();
 
             yield return TaskSteps.Multiple(InitializeLevelConstructor());
+
             yield return TaskSteps.Multiple(GoToNextLevel());
 
+
             yield return TaskSteps.Multiple(EndScreenTransition());
+
+            /*for (int i = 0; i < 25; i++)
+            {
+                yield return TaskSteps.Multiple(GoToNextLevel());
+            }*/
+            DataCollector.PrintData();
         }
 
         void InitializePlayer()
@@ -204,6 +213,7 @@ namespace OurFramework.Game
 
             // Generating the world
 
+            DataCollector.NewData();
             yield return TaskSteps.Multiple(GameLanguage.GenerateWorld());
 
             GameViewModel.ViewModel.World = GameLanguage.State.World;
@@ -445,6 +455,44 @@ namespace OurFramework.Game
                 }
             }
             return false;
+        }
+    }
+
+    /// <summary>
+    /// Helper class for gathering data
+    /// </summary>
+    public static class DataCollector
+    {
+        public class Data
+        {
+            public int NodesCount { get; set; }
+            public long GenerationTime { get; set; }
+            public bool Failed { get; set; }
+        }
+
+        static List<Data> datas = new List<Data>();
+
+        static Data CurrentData { get; set; }
+
+        public static void NewData()
+        {
+            CurrentData = new Data();
+            datas.Add(CurrentData);
+        }
+
+        public static void SetData(Action<Data> change)
+        {
+            change(CurrentData);
+        }
+
+        public static void PrintData()
+        {
+            var data = string.Join('\n', datas.Select(d => $"{d.NodesCount}, {d.GenerationTime}, {d.Failed}"));
+            Debug.Log(data);
+            var averageTime = datas.Average(d => d.GenerationTime);
+            var successRate = datas.Average(d => d.Failed ? 0 : 1);
+            Debug.Log($"Generation time: {averageTime}");
+            Debug.Log($"Success rate: {successRate}");
         }
     }
 }
