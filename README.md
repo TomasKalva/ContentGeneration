@@ -96,7 +96,7 @@ public void Initialize(LanguageParams languageParams)
 
 Now we can go back to Unity and press play. If you've done everything correctly, you should see a similar result:
 
-![Player in a room](./Images/FirstStart.PNG)
+![Player in a room](./Documentation/Images/FirstStart.PNG)
 
 We created a simple room. You can run around the room using `WASD` and rotate the camera with the mouse.  
 
@@ -165,7 +165,7 @@ Now we can go back to Unity and press play. The initial room should now contain 
 
 To better see the environment, we can go back to scene view by pressing `ESC` and then clicking on `Scene` tab at the left right above the scene viewport:
 
-![Scene in scene view](/Images/SceneView.png)
+![Scene in scene view](./Documentation/Images/SceneView.png)
 
 Your scene probably doesn't look the same as the one in the image. The generator applies the production rules randomly which means that every time we run the game we are likely to end up with a very different environment than before. This property is useful for generating unique looking levels that the player can explore, but sometimes we might want to debug something in the same environment.
 
@@ -199,7 +199,7 @@ void AddRoofs()
 
 Once we run the game the buildings finally have roofs:
 
-![Building with roofs](./Images/BuildingsWithRoofs.PNG)
+![Building with roofs](./Documentation/Images/BuildingsWithRoofs.PNG)
 
 We created a variable environment for our game, but right now it's only good for looking at it. In the upcoming chapters we will define a gameplay to give the player something to play with.
 
@@ -252,7 +252,7 @@ firstArea.AddEnemy(Lib.Enemies.MayanSwordsman());
 
 The call `Lib.Enemies.MayanSwordsman()` creates a new swordsman which is added to the first area of our linear environment using `AddEnemy`. When you start the game, you should see a swordsman in the area next to the starting one:
 
-![Enemy attacking the player](./Images/Enemy.PNG)
+![Enemy attacking the player](./Documentation/Images/Enemy.PNG)
 
 He moves towards you and tries to attack you. You can attack it too by pressing the `Left mouse button`. If you remove all of his will (indicated by the red line), he will die and disappear. You maybe noticed that the same isn't true for the player. The player can't die, because we didn't define how dying works yet. To do it let's go back to our module and add a method called `CustomizePlayer`. In this method we will add the handler of the player's death the following way:
 
@@ -409,15 +409,15 @@ void CustomizePlayer()
 
 If you now run the game and press `T` to open the inventory, you should see a new health potion:
 
-![Inventory with a health potion](./Images/InventoryHealthPotion.PNG)
+![Inventory with a health potion](./Documentation/Images/InventoryHealthPotion.PNG)
 
 You can move the cursor to by `X`/`Z` and equip it to an active slot by `E`:
 
-![Inventory with the health potion in active slot](./Images/InventoryUsingHealthPotion.PNG)
+![Inventory with the health potion in active slot](./Documentation/Images/InventoryUsingHealthPotion.PNG)
 
 Once you close the inventory with `T` you can use the health potion by pressing `R`:
 
-![Player fighting right after using the health potion](./Images/HealthPotionUsed.PNG)
+![Player fighting right after using the health potion](./Documentation/Images/HealthPotionUsed.PNG)
 
 If you got lucky, the health potion might have appeared in your inventory twice. Every time the generator runs the `DeclareGame` method of the main module is called. The shape grammar generator uses a greedy search to create the environment. The search can fail sometimes and the `DeclareGame` can be called multiple times, which results in 
 
@@ -446,7 +446,7 @@ Items can't be placed to the environment directly - they have to be wrapped insi
 
 This time we don't use the placer `PlO.RandomAreasPlacer` which places the generated number of objects across all the areas so some areas might have multiple objects and some might have none. The level with added items looks like this:
 
-![Level with generated items](./Images/LevelWithItems.PNG)
+![Level with generated items](./Documentation/Images/LevelWithItems.PNG)
 
 Interactive objects are quite general. They can be used for other purposes than just placing items. Let's create a simple object that will allow us to increase our character's stats. We will put this object into a separate area. The area will be created right after calling the `LevelStart` so that we can immediately go to it when the new game is started.
 
@@ -481,7 +481,7 @@ void LevelUpArea()
 
 If you run the game and enter the area with the kiln you should be able to level up:
 
-![The player standing next to a levelling up kiln](./Images/LevellingUp.PNG)
+![The player standing next to a levelling up kiln](./Documentation/Images/LevellingUp.PNG)
 
 Now let's look at the code. First we created a new interactive object with the method `Lib.InteractiveObjects.Kiln` and then defined custom interaction with `SetInteraction`. This method provides us with a new `InteractionSequence` and wants us to change it. `InteractionSequence` comes with the following useful methods for adding new states:
 
@@ -806,7 +806,7 @@ public void DeclareGame()
 
 Once we run the game, the following object transporting us to next level should be in some room:
 
-![Player standing next to transporter](./Images/Transporter.PNG)
+![Player standing next to transporter](./Documentation/Images/Transporter.PNG)
 
 Using an event that happens right after the `Start Level` event spawns the transporter next to the starting area which can be used for debugging, but to make the game more challenging we might want to put the transporter at the end of the environment we created with `Main` instead. We can do that in the following way:
 
@@ -838,7 +838,7 @@ public void DeclareGame()
 
 If you've done everything correctly, you should see sky and sea:
 
-![Sky and sea observed by the player](./Images/EnvironmentMap.PNG)
+![Sky and sea observed by the player](./Documentation/Images/EnvironmentMap.PNG)
 
 The sky and the sea aren't an actual Unity environment map, but rather a geometry so that its texture can be manipulated using Universal Rendering Pipeline. 
 
@@ -913,7 +913,7 @@ void AddNpcEvents()
 
 It remains to call `AddNpcEvents` from `DeclareGame` and few areas with NPCs will spawn in each level:
 
-![Player interacting with an NPC](./Images/InteractingWithNPC.PNG)
+![Player interacting with an NPC](./Documentation/Images/InteractingWithNPC.PNG)
 
 Note that this is more of an extreme way how to use possible events. Typically each module should declare only a few such events so that everyone gets a chance to be run.
 
@@ -1644,7 +1644,7 @@ public void NewGrammar()
 
 If everything went correctly, you should see the following output:
 
-![A room floating in the air](./Images/FloatingRoom.PNG)
+![A room floating in the air](./Documentation/Images/FloatingRoom.PNG)
 
 We have created a new room, but currently it's floating in the air. We should add a foundation to it. We could create a foundation `Node` by taking the `CubeGroup` of all the cubes under the room. Fortunately, a method that does this already exists in `ProductionProgram`, it is called `Found` and it creates a foundation for all the currently active `Node`s. We set the room as the parent of our newly created foundation. We can use `CurrentFirst` to retrive the room from the active `Node`s. The program will now look like this:
 
@@ -1665,7 +1665,7 @@ return state.NewProgram(
 
 And this is the resulting environment:
 
-![Room with foundtion](./Images/RoomWithFoundation.PNG)
+![Room with foundtion](./Documentation/Images/RoomWithFoundation.PNG)
 
 One more detail which could turn an oridnary room into a full blown house is a roof. Adding foundation immediately is a good idea, because we want to make sure that no other rule will block the space, but other rules might find a way to use the space above our room other than just placing a roof. We still want to make sure that if nobody uses the space above, we can still place the roof. For this reason we create a reservation of the space that can be later used by other productions including the ones that make roofs.
 
@@ -1725,7 +1725,7 @@ public void NewGrammar()
 
 The room now has a roof:
 
-![Room with a roof](./Images/RoomWithRoof.PNG)
+![Room with a roof](./Documentation/Images/RoomWithRoof.PNG)
 
 The class `Productions` already contains some predefined general production factories which can be specialized for specific situations. We can implement `NewStart` by using `Place` instead of writing the program manually:
 
@@ -1801,7 +1801,7 @@ public void NewGrammar()
 
 The resulting environment looks like this:
 
-![Many roofless rooms without foundations](./Images/ManyRooms.PNG)
+![Many roofless rooms without foundations](./Documentation/Images/ManyRooms.PNG)
 
 Using the same methods as before, we can add the roofs and foundations to the rooms:
 
@@ -1831,7 +1831,7 @@ public Production NewRoomNear()
 }
 ```
 
-![Many houses](./Images/ManyHouses.PNG)
+![Many houses](./Documentation/Images/ManyHouses.PNG)
 
 One issue you might have noticed is that the houses have no doors. The connections between `Node`s can be created by using methods of `ldk.con`. It defines factory methods for instances of `Connection`, which take two level elements and try to connect them. The simplest connection we can do is to just place a door:
 
@@ -1867,7 +1867,7 @@ Once we receive the `Connection`, we apply it on the `LevelElement`s of the `Nod
 
 All of our houses are connected now:
 
-![Many doors connecting rooms](./Images/ManyDoors.PNG)
+![Many doors connecting rooms](./Documentation/Images/ManyDoors.PNG)
 
 We can again replace our production by call to a production template:
 
@@ -1957,15 +1957,15 @@ public class ProductionLists
 }
 ```
 
-![Rooms with roofs and corridors](./Images/RoomsAndCorridors.PNG)
+![Rooms with roofs and corridors](./Documentation/Images/RoomsAndCorridors.PNG)
 
 The production we just wrote can fail, for example if the room is already surrounded by other rooms. If a single production fails, we only note the `Node` where it happened to not try to run it there again and then continue. A problem arises when there are no ways to apply any productions anymore, but we still haven't reached the number of `Node`s required by the `RandomGrammar`. In this case `NoApplicableProductionException` is thrown and the game generation decides to restart itself. Number of restarts can be seen in the log:
 
-![Log showing how many times the generation was performed](./Images/ConstructionTriesNumber.PNG)
+![Log showing how many times the generation was performed](./Documentation/Images/ConstructionTriesNumber.PNG)
 
 If we compose our level of a set of grammars so that most of the times the new environment can generated, then repeatedly restarting the game after failure will produce a valid level in a finite time, typically quite quickly. When creating or debugging a new grammar, we can often run into cases when the level can't be generated. `LDLanguage` defines a constant `MAX_NUMBER_OF_CONSTRUCTION_TRIES` which limits the maximum number of restarts. If correct result isn't generate in time, the final environment will be the one existing before the exception was thrown. In our case we can fail in `NewGrammar` which means that the roofs won't be generated:
 
-![Rooms without roofs](./Images/GenerationFailed.PNG)
+![Rooms without roofs](./Documentation/Images/GenerationFailed.PNG)
 
 We could add the foundation, roof and connection to the rule again as before, but since the code is quite repetitive, let's replace the production with a template specialization:
 
@@ -1985,7 +1985,7 @@ public Production ExtrudeNewCorridor()
 }
 ```
 
-![Rooms with roofs and corridors without](./Images/RoomsRoofsCorridorsNo.PNG)
+![Rooms with roofs and corridors without](./Documentation/Images/RoomsRoofsCorridorsNo.PNG)
 
 As you probably noticed on your generated result, the corridors don't have roofs. We defined roofs only `sym.NewRoom`. To create roofs for corridors, we have to duplicate the roof rule for corridors:
 
@@ -2004,7 +2004,7 @@ public ProductionList NewRoofs()
 }
 ```
 
-![Rooms with roofs and corridors without](./Images/RoomsAndCorridorsWithRoofs.PNG)
+![Rooms with roofs and corridors without](./Documentation/Images/RoomsAndCorridorsWithRoofs.PNG)
 
 We added the style `AreaStyles.GableRoof()` to the corridor, but you can use any of the roof styles defined in `AreaStyles`.
 
@@ -2046,7 +2046,7 @@ The production is using the same template as the previous one with a couple diff
 
 Long chains of corridors, like the one in the image below, are quite common result of the current production list. When we got corridors preventing any new productions before, the generation failed and we started anew, but now the corridors can be extended indefinitely.
 
-![Rooms, corridors and gardens](./Images/ExtendingCorridors.PNG)
+![Rooms, corridors and gardens](./Documentation/Images/ExtendingCorridors.PNG)
 
 We typically don't want to have a symbol from which no other symbols can be derived - this reduces the variability of the outcome. The corridor is currently such a symbol. Let's fix it by generating a new room from a corridor:
 
@@ -2081,7 +2081,7 @@ public ProductionList NewGrammar()
 
 The production works pretty much the same as the one placing room next to another one, except that the new room is now further away (in the distance 5) and is no longer connected by a simple door, but rather a wooden path found by pathfinding. The result now looks much better:
 
-![Rooms after bridges have appeared](./Images/RoomsAfterBridges.PNG)
+![Rooms after bridges have appeared](./Documentation/Images/RoomsAfterBridges.PNG)
 
 One thing that could greatly help our environment to be more fun to explore is adding some vertical design to let the player look at the environment from above or to look forward to reaching the mysterious areas towering over the place.
 
@@ -2166,14 +2166,14 @@ public Production NewRoomNextFloor()
 
 After running it we get an environment with multifloored houses:
 
-![Houses most of which have different heights and various connections](./Images/VerticalLevel.PNG)
+![Houses most of which have different heights and various connections](./Documentation/Images/VerticalLevel.PNG)
 
 We can now customize the environment by assigning its `LevelElement`s different styles:
 
 
-![The same environment with chapel style](./Images/ChapelEnvironment.PNG)
+![The same environment with chapel style](./Documentation/Images/ChapelEnvironment.PNG)
 
-![The same environment with castle style](./Images/CastleEnvironment.PNG)
+![The same environment with castle style](./Documentation/Images/CastleEnvironment.PNG)
 
 
 In this chapter the following changes to the files were made:
