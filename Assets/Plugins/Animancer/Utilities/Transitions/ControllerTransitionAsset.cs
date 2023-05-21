@@ -1,4 +1,4 @@
-// Animancer // https://kybernetik.com.au/animancer // Copyright 2022 Kybernetik //
+// Animancer // https://kybernetik.com.au/animancer // Copyright 2018-2023 Kybernetik //
 
 using System;
 using System.Collections.Generic;
@@ -16,6 +16,9 @@ namespace Animancer
 {
     /// <inheritdoc/>
     /// https://kybernetik.com.au/animancer/api/Animancer/ControllerTransitionAsset
+#if !UNITY_EDITOR
+    [System.Obsolete(Validate.ProOnlyMessage)]
+#endif
     [CreateAssetMenu(menuName = Strings.MenuPrefix + "Controller Transition/Base", order = Strings.AssetMenuOrder + 5)]
     [HelpURL(Strings.DocsURLs.APIDocumentation + "/" + nameof(ControllerTransitionAsset))]
     public class ControllerTransitionAsset : AnimancerTransitionAsset<ControllerTransition>
@@ -33,6 +36,9 @@ namespace Animancer
     /// <inheritdoc/>
     /// https://kybernetik.com.au/animancer/api/Animancer/ControllerTransition_1
     [Serializable]
+#if ! UNITY_EDITOR
+    [System.Obsolete(Validate.ProOnlyMessage)]
+#endif
     public abstract class ControllerTransition<TState> : AnimancerTransition<TState>,
         IAnimationClipCollection, ICopyable<ControllerTransition<TState>>
         where TState : ControllerState
@@ -103,7 +109,12 @@ namespace Animancer
         /************************************************************************************************************************/
 
         /// <inheritdoc/>
-        public override bool IsValid => _Controller != null;
+        public override bool IsValid
+#if UNITY_EDITOR
+            => _Controller != null;
+#else
+            => false;
+#endif
 
         /************************************************************************************************************************/
 
@@ -157,6 +168,9 @@ namespace Animancer
     /// <inheritdoc/>
     /// https://kybernetik.com.au/animancer/api/Animancer/ControllerTransition
     [Serializable]
+#if ! UNITY_EDITOR
+    [System.Obsolete(Validate.ProOnlyMessage)]
+#endif
     public class ControllerTransition : ControllerTransition<ControllerState>,
         ControllerState.ITransition, ICopyable<ControllerTransition>
     {
