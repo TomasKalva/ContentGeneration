@@ -13,8 +13,9 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
         /// </summary>
         public void DeclareGame()
         {
+            DeclareOutputGame();
             //DeclareDebugGame();
-            M.ExampleLevelsModule.SimpleLevel();
+            //M.ExampleLevelsModule.SimpleLevel();
             //State.LC.AddNecessaryEvent($"Tutorial module", 100, level => M.TutorialModule.Main());
             //State.LC.AddNecessaryEvent($"Tutorial1 main", 100, level => M.TutorialModule1.Main(), true);
             //DeclareEnvironmentForPrettyPictures();
@@ -131,6 +132,39 @@ namespace OurFramework.LevelDesignLanguage.CustomModules
 
 
             State.LC.AddNecessaryEvent($"Roofs", -1, level => M.LevelModule.AddRoofs(), true);
+        }
+
+        /// <summary>
+        /// The game built for the thesis.
+        /// </summary>
+        void DeclareOutputGame()
+        {
+            State.LC.AddNecessaryEvent($"Level Start", 100, level => M.LevelModule.LevelStart(), true);
+
+            M.LevelModule.AddOptionalEnd();
+
+            State.LC.AddNecessaryEvent($"Death", 99, _ =>
+            {
+                M.DeathModule.DieClasically();
+                M.DeathModule.DropSpiritBloodstainOnDeath();
+            }, true);
+
+
+            State.LC.AddNecessaryEvent($"Main path", 98, level => M.LevelModule.MainPath(level), true);
+
+            State.LC.AddNecessaryEvent($"Sky", 0, level => M.EnvironmentModule.CreateSky(level), true);
+
+            State.LC.AddNecessaryEvent($"Roofs", -1, level => M.LevelModule.AddRoofs(), true);
+
+            M.FactionsModule.InitializeFactions(2);
+
+            M.AscendingModule.AddAscendingEvents(M.AscendingModule.AscendingKiln(ad => 100 + 50 * ad));
+
+            State.LC.AddNecessaryEvent($"Add Details", 0, level => M.DetailsModule.AddDetails(level), true);
+
+            State.LC.AddNecessaryEvent($"Out of depth encounter", 80, level => M.OutOfDepthEncountersModule.DifficultEncounter(level), true);
+
+            M.OutOfDepthEncountersModule.AddLightMaceEncounter();
         }
     }
 }
